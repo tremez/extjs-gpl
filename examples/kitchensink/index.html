@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html manifest="">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="google" content="notranslate" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <title>Ext JS Kitchen Sink</title>
+
+    <link rel="apple-touch-icon" href="resources/images/apple-touch-icon.png"/>
+    <link rel="stylesheet" type="text/css" href="resources/Sencha-Examples/style.css"/>
+
+    <!-- The line below must be kept intact for Sencha Command to build your application -->
+    <script type="text/javascript">
+        var Ext = Ext || {};
+        Ext.beforeLoad = function(tags){
+            var theme = location.href.match(/theme=([\w-]+)/),
+                locale = location.href.match(/locale=([\w-]+)/);
+
+            theme  = (theme && theme[1]) || (tags.desktop ? 'crisp' : 'crisp-touch');
+            locale = (locale && locale[1]) || 'en';
+
+            Ext.manifest = theme + "-" + locale;
+            tags.test = /testMode=true/.test(location.search);
+            Ext.microloaderTags = tags;
+        };
+    </script>
+
+    <script id="microloader" type="text/javascript" src="bootstrap.js"></script>
+</head>
+<body></body>
+</html>
