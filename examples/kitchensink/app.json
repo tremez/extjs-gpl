@@ -3,6 +3,7 @@
      * The application's namespace.
      */
     "name": "KitchenSink",
+    "framework": "ext",
 
     /**
      * Comma-separated string with the paths of directories or files to search. Any classes
@@ -10,33 +11,12 @@
      * to "Ext.require". The "app.dir" variable below is expanded to the path where the
      * application resides (the same folder in which this file is located).
      */
-    "classpath": "${app.dir}/app,${app.dir}/../ux",
-
-    /**
-     * The Sencha Framework for this application: "ext" or "touch".
-     */
-    "framework": "ext",
-
-    /**
-     * The name of the theme for this application.
-     */
-    "theme": "ext-theme-neptune",
-
-    /**
-     * The list of required packages (with optional versions; default is "latest").
-     *
-     * For example,
-     *
-     *      "requires": [
-     *          "sencha-charts"
-     *      ]
-     */
-    "requires": [
-        "ext-locale",
-        "ext-ux",
-        "sencha-amf",
-        "sencha-soap",
-        "sencha-charts"
+    "classpath": [
+        "${app.dir}/app",
+        "${app.dir}/ux",
+        "${app.dir}/samples",
+        "${app.dir}/${toolkit.name}/src",
+        "${app.dir}/${toolkit.name}/samples"
     ],
 
     /**
@@ -51,7 +31,24 @@
          * root namespace, change this to "". Doing so would change the mapping of
          * "KitchenSink.view.Foo" to "sass/src/KitchenSink/view/Foo.scss".
          */
-        "namespace": "KitchenSink"
+        "namespace": "KitchenSink",
+
+        "src": [
+            "${app.dir}/sass/src",
+            "${app.dir}/${toolkit.name}/sass/src",
+            "${app.dir}/${theme.name}/sass/src"
+        ],
+
+        "var": [
+            "${app.dir}/sass/var",
+            "${app.dir}/${toolkit.name}/sass/var",
+            "${app.dir}/${theme.name}/sass/var"
+        ],
+
+        "etc": [
+            "${app.dir}/sass/etc/all.scss",
+            "${app.dir}/${toolkit.name}/sass/etc/all.scss"
+        ]
     },
 
     /**
@@ -112,18 +109,14 @@
      *      }
      */
     "js": [
-        {
-            "path": "app.js",
-            "bundle": true
-        },
     	{
             "path": "lib/prettify/prettify.js",
             "includeInBundle": true
     	},
-    	{
-            "path": "../shared/examples.js",
-            "includeInBundle": true
-    	}
+        {
+            "path": "app.js",
+            "bundle": true
+        }
     ],
 
     /**
@@ -157,7 +150,12 @@
         },
         {
             "path": "${build.out.css.dir}/KitchenSink-all.css",
-            "bootstrap": true
+            "bundle": true,
+            "exclude": ["fashion"]
+        },
+        {
+            "path": "../resources/Sencha-Examples/style.css",
+            "remote": true
         }
     ],
 
@@ -187,6 +185,45 @@
      * Extra resources to be copied along when build
      */
     "resources": [
+        {
+            "path": "${toolkit.name}/samples",
+            "mode": "relative"
+        },
+        {
+            "path": "${toolkit.name}/sass",
+            "mode": "relative"
+        },
+        {
+            "path": "${toolkit.name}/src",
+            "mode": "relative"
+        },
+        {
+            "path": "data",
+            "mode": "relative"
+        },
+        {
+            "path": "samples/data/calendar",
+            "mode": "relative"
+        },
+        {
+            "path": "lib",
+            "mode": "relative"
+        },
+        {
+            "path": "resources",
+            "output": "shared"
+        },
+        {
+            "path": "${toolkit.name}/resources",
+            "mode": "relative"
+        },
+        {
+            "path": "${toolkit.name}/resources/images",
+            "output": "images"
+        },
+        {
+            "path": "${build.id}/resources"
+        }
     ],
 
     /**
@@ -214,20 +251,36 @@
             }
         ]
     },
-    
+
     /**
-     * override objects for setting build environment specific 
+     * override objects for setting build environment specific
      * settings.
      */
     "production": {
+        "compressor": {
+            "type": "yui"
+        },
+        "output": {
+            "appCache": {
+                "enable": false
+            }
+        },
+        "cache": {
+            "enable": false
+        }
     },
-    
+
     "testing": {
     },
-    
+
     "development": {
+        "fashion": {
+            "inliner": {
+                "enable": false
+            }
+        }
     },
-    
+
     /**
      * Controls the name of the manifest file used by the microloader for
      * dev mode
@@ -235,33 +288,33 @@
     "bootstrap": {
         "manifest": "${build.id}.json"
     },
-    
+
     /**
      *  Controls the output directory for build resources.  May be set with
      *  either a string:
-     *  
+     *
      *      outputDir: ""
-     *  
-     *  or an object containing 5 possible values for various types of 
+     *
+     *  or an object containing 5 possible values for various types of
      *  build artifacts:
-     *  
+     *
      *  outputDir: {
      *      // this is the base of the output directory.  all other paths
      *      // are relative to this
      *      base: ""
-     *      
+     *
      *      // output dir for the index.html and manifest.json files.
      *      // defaults to base
      *      page:".",
      *
-     *      // output dir for compile js files.  
+     *      // output dir for compile js files.
      *      // defaults to base
      *      js: ".",
-     *      
+     *
      *      // output dir for compiled app css content.
      *      // defaults to "resources" under the base location
      *      css: "./resources",
-     *      
+     *
      *      // output dir for all other page resources (images, etc.)
      *      // defaults to the css location
      *      resources: ""
@@ -269,46 +322,140 @@
      *
      */
     "output": {
-        "base": "${ext.dir}/build/examples/kitchensink/${build.id}",
-        "page": "../index.html",
-        "manifest": "../${build.id}.json",
+        "base": "${ext.dir}/build/examples/kitchensink",
+        "page": "index.html",
+        "manifest": "${build.id}.json",
+        "js": "${build.id}/app.js",
+        "framework": "${build.id}/framework.js",
+        "resources": {
+            "path": "./${build.id}/resources",
+            "images": "./${build.id}/resources/images",
+            "shared": "./resources",
+            "toolkit": "${toolkit.name}/resources",
+            "base": "."
+        },
         "deltas": {
             "enable": false
         },
-        "cache": {
+        "appCache": {
             "enable": false
         }
     },
-    
+
+    "overrides": [
+        "${app.dir}/overrides",
+        "${app.dir}/locale/${app.locale}",
+        "${app.dir}/${toolkit.name}/overrides",
+        "${app.dir}/${toolkit.name}/locale/${app.locale}"
+    ],
+
+    "requires": [
+        "font-awesome",
+        "ux",
+        "amf",
+        "soap",
+        "pivot",
+        "charts",
+        "d3",
+        "calendar",
+        "pivot-d3"
+    ],
+
+    "classic": {
+        "js": [
+            {
+                "path": "../classic/shared/examples.js",
+                "includeInBundle": true
+            }
+        ],
+        "locales": [
+            "en",
+            "he"
+        ],
+        "requires": [
+            "locale",
+            "font-ext"
+        ]
+    },
+
+    "modern": {
+        "slicer": null,
+        "requires": [
+            "google"
+        ],
+        "locales": [
+            "en"
+        ]
+    },
+
+   "builds": {
+        "classic": {
+            "toolkit": "classic",
+            "theme": "theme-classic"
+        },
+        "gray": {
+            "toolkit": "classic",
+            "theme": "theme-gray"
+        },
+        "crisp": {
+            "toolkit": "classic",
+            "theme": "theme-crisp"
+        },
+        "crisp-touch": {
+            "toolkit": "classic",
+            "theme": "theme-crisp-touch"
+        },
+        "neptune": {
+            "toolkit": "classic",
+            "theme": "theme-neptune"
+        },
+        "neptune-touch": {
+            "toolkit": "classic",
+            "theme": "theme-neptune-touch"
+        },
+        "triton": {
+            "toolkit": "classic",
+            "theme": "theme-triton"
+        },
+
+        "modern-triton": {
+            "toolkit": "modern",
+            "theme": "theme-triton"
+        },
+        "modern-neptune": {
+            "toolkit": "modern",
+            "theme": "theme-neptune"
+        },
+        "material": {
+            "toolkit": "modern",
+            "material" : {
+                "toolbar": {
+                    "color": "#1976d2",
+                    "dynamic": true
+                }
+            },
+            "theme": "theme-material"
+        },
+        "ios": {
+            "toolkit": "modern",
+            "theme": "theme-ios"
+        }
+    },
+
+//    "fashion": {
+//        "inliner": {
+//            "enable": false,
+//            "report": true,
+//            "excludes": [
+//                ".*OpenSans.*",
+//                ".*font.?awesome.*"
+//            ]
+//        }
+//    }
+
     /**
      * Uniquely generated id for this application, used as prefix for localStorage keys.
      * Normally you should never change this value.
      */
-    "id": "7f0d3b50-5cb1-47e0-97b7-ffe69d12d49e",
-
-    "locales": [
-        "en",
-        "he"
-    ],
-
-    "builds": {
-        "classic": {
-            "theme": "ext-theme-classic"
-        },
-        "gray": {
-            "theme": "ext-theme-gray"
-        },
-        "crisp": {
-            "theme": "ext-theme-crisp"
-        },
-        "crisp-touch": {
-            "theme": "ext-theme-crisp-touch"
-        },
-        "neptune": {
-            "theme": "ext-theme-neptune"
-        },
-        "neptune-touch": {
-            "theme": "ext-theme-neptune-touch"
-        }
-    }
+    "id": "7f0d3b50-5cb1-47e0-97b7-ffe69d12d49e"
 }

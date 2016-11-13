@@ -1,0 +1,14 @@
+/* Styling of global error indicator */
+.form-error-state {
+    line-height: 1;
+    background-repeat: no-repeat;
+    background-position: 0 50%;
+    cursor: default;
+    padding: ($form-field-height - $panel-header-font-size) / 2 0 0 $tool-size + 4;
+    font-size: $panel-header-font-size
+}
+
+/* Error details tooltip */
+.errors-tip .error {
+    font-style: italic;
+}
