@@ -13,7 +13,7 @@ Ext.define('Admin.view.pages.ErrorBase', {
 
     cls: 'error-page-container',
 
-    defaults:{
+    defaults: {
         xtype: 'label'
     }
 });

@@ -3,13 +3,12 @@
  */
 Ext.define('Ext.view.DragZone', {
     extend: 'Ext.dd.DragZone',
+
     containerScroll: false,
 
     constructor: function(config) {
         var me = this,
-            view,
-            ownerCt,
-            el;
+            view, ownerCt, el;
 
         Ext.apply(me, config);
 
@@ -23,11 +22,12 @@ Ext.define('Ext.view.DragZone', {
         }
 
         // Ext.dd.DragDrop instances are keyed by the ID of their encapsulating element.
-        // So a View's DragZone cannot use the View's main element because the DropZone must use that
-        // because the DropZone may need to scroll on hover at a scrolling boundary, and it is the View's
-        // main element which handles scrolling.
-        // We use the View's parent element to drag from. Ideally, we would use the internal structure, but that
-        // is transient; DataViews recreate the internal structure dynamically as data changes.
+        // So a View's DragZone cannot use the View's main element because the DropZone
+        // must use that because the DropZone may need to scroll on hover at a scrolling boundary,
+        // and it is the View's main element which handles scrolling.
+        // We use the View's parent element to drag from. Ideally, we would use the internal
+        // structure, but that is transient; DataViews recreate the internal structure dynamically
+        // as data changes.
         // TODO: Ext 5.0 DragDrop must allow multiple DD objects to share the same element.
         view = me.view;
 
@@ -40,13 +40,16 @@ Ext.define('Ext.view.DragZone', {
         view.setItemsDraggable(true);
 
         ownerCt = view.ownerCt;
+
         // We don't just grab the parent el, since the parent el may be
         // some el injected by the layout
         if (ownerCt) {
             el = ownerCt.getTargetEl().dom;
-        } else {
+        }
+        else {
             el = view.el.dom.parentNode;
         }
+
         me.callParent([el]);
 
         me.ddel = document.createElement('div');
@@ -72,12 +75,14 @@ Ext.define('Ext.view.DragZone', {
                 fn: me.onViewContextMenu
             };
         }
+
         me.initTarget(id, sGroup, config);
         me.view.mon(me.view, eventSpec);
     },
 
     onValidDrop: function(target, e, id) {
         this.callParent([target, e, id]);
+
         // focus the view that the node was dropped onto so that keynav will be enabled.
         if (!target.el.contains(Ext.Element.getActiveElement())) {
             target.el.focus();
@@ -112,7 +117,8 @@ Ext.define('Ext.view.DragZone', {
 
         // Only respond to longpress for touch dragging.
         // Reject drag start if mousedown is on the actionable cell of a grid view
-        if ((e.pointerType === 'touch' && e.type !== 'longpress') || (e.position && e.position.isEqual(e.view.actionPosition))) {
+        if ((e.pointerType === 'touch' && e.type !== 'longpress') ||
+            (e.position && e.position.isEqual(e.view.actionPosition))) {
             return;
         }
 
@@ -131,6 +137,7 @@ Ext.define('Ext.view.DragZone', {
             else {
                 navModel.setPosition(index);
             }
+
             this.handleMouseDown(e);
         }
     },
@@ -179,20 +186,23 @@ Ext.define('Ext.view.DragZone', {
         if (!selectionModel.isSelected(record)) {
             selectionModel.selectWithEvent(record, me.DDMInstance.mousedownEvent);
         }
+
         data.records = selectionModel.getSelection();
 
         Ext.fly(me.ddel).setHtml(me.getDragText());
         me.proxy.update(me.ddel);
         me.onStartDrag(x, y);
+
         return true;
     },
 
     getDragText: function() {
         var count = this.dragData.records.length;
+
         return Ext.String.format(this.dragText, count, count === 1 ? '' : 's');
     },
 
-    getRepairXY : function(e, data){
+    getRepairXY: function(e, data) {
         return data ? data.fromPosition : false;
     }
 });

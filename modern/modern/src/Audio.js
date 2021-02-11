@@ -1,25 +1,25 @@
 /**
- * {@link Ext.Audio} is a simple class which provides a container for the 
+ * {@link Ext.Audio} is a simple class which provides a container for the
  * [HTML5 Audio element](http://developer.mozilla.org/en-US/docs/Using_HTML5_audio_and_video).
  *
  * ## Recommended File Types/Compression:
- * 
+ *
  * * Uncompressed WAV and AIF audio
  * * MP3 audio
  * * AAC-LC
  * * HE-AAC audio
  *
  * ## Notes
- * 
- * On Android devices, the audio tags controls do not show. You must use the {@link #method-play}, 
+ *
+ * On Android devices, the audio tags controls do not show. You must use the {@link #method-play},
  * {@link #method-pause}, and {@link #toggle} methods to control the audio (example below).
  *
  * ## Examples
  *
- * This example shows the use of the {@link Ext.Audio} component in a fullscreen container--change 
+ * This example shows the use of the {@link Ext.Audio} component in a fullscreen container--change
  * the url: item for the location of an audio file--note that the audio starts on page load:
  *
- *     @example preview
+ *     @example
  *     Ext.create('Ext.Container', {
  *         fullscreen: true,
  *         layout: {
@@ -40,10 +40,11 @@
  *         ]
  *     });
  *
- * You can also set the {@link #hidden} configuration of the {@link Ext.Audio} component to true by default,
- * and then control the audio by using the {@link #method-play}, {@link #method-pause}, and {@link #toggle} methods:
+ * You can also set the {@link #hidden} configuration of the {@link Ext.Audio} component to true
+ * by default, and then control the audio by using the {@link #method-play}, {@link #method-pause},
+ * and {@link #toggle} methods:
  *
- *     @example preview
+ *     @example
  *     Ext.create('Ext.Container', {
  *         fullscreen: true,
  *         layout: {
@@ -75,8 +76,7 @@
  *                 ]
  *             },
  *             {
- *                 html: 'Hidden audio!',
- *                 styleHtmlContent: true
+ *                 html: 'Hidden audio!'
  *             },
  *             {
  *                 xtype : 'audio',
@@ -88,11 +88,11 @@
  */
 Ext.define('Ext.Audio', {
     extend: 'Ext.Media',
-    xtype : 'audio',
+    xtype: 'audio',
 
     config: {
         /**
-         * @cfg
+         * @cfg cls
          * @inheritdoc
          */
         cls: Ext.baseCSSPrefix + 'audio'
@@ -141,5 +141,6 @@ Ext.define('Ext.Audio', {
         preload: 'auto',
         tag: 'audio',
         cls: Ext.baseCSSPrefix + 'component'
-    }]
+    }
+    ]
 });

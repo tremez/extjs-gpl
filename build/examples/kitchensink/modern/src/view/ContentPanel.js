@@ -3,6 +3,8 @@ Ext.define('KitchenSink.view.ContentPanel', {
     xtype: 'contentPanel',
     classCls: 'main-nav',
 
+    scrollable: true,
+
     header: {
         hidden: true
     }

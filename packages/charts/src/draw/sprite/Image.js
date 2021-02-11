@@ -50,13 +50,13 @@ Ext.define('Ext.draw.sprite.Image', {
         }
     },
 
-    updateSurface: function (surface) {
+    updateSurface: function(surface) {
         if (surface) {
             this.updateSource(this.attr);
         }
     },
 
-    updateSource: function (attr) {
+    updateSource: function(attr) {
         var me = this,
             src = attr.src,
             surface = me.getSurface(),
@@ -81,37 +81,40 @@ Ext.define('Ext.draw.sprite.Image', {
             };
             imageLoader.width = width;
             imageLoader.height = height;
-            imageLoader.onload = function () {
+
+            imageLoader.onload = function() {
                 var item;
-                
+
                 if (!loadingStub.done) {
                     loadingStub.done = true;
-                    
+
                     for (i = 0; i < loadingStub.pendingSprites.length; i++) {
                         item = loadingStub.pendingSprites[i];
-                        
+
                         if (!item.destroyed) {
                             item.setDirty(true);
                         }
                     }
-                    
+
                     for (i = 0; i < loadingStub.pendingSurfaces.length; i++) {
                         item = loadingStub.pendingSurfaces[i];
-                        
+
                         if (!item.destroyed) {
                             item.renderFrame();
                         }
                     }
                 }
             };
+
             imageLoader.src = src;
-        } else {
+        }
+        else {
             Ext.Array.include(loadingStub.pendingSprites, me);
             Ext.Array.include(loadingStub.pendingSurfaces, surface);
         }
     },
 
-    render: function (surface, ctx) {
+    render: function(surface, ctx) {
         var me = this,
             attr = me.attr,
             mat = attr.matrix,
@@ -126,15 +129,19 @@ Ext.define('Ext.draw.sprite.Image', {
         if (loadingStub && loadingStub.done) {
             mat.toContext(ctx);
             image = loadingStub.image;
-            ctx.drawImage(image, x, y,
+            ctx.drawImage(
+                image, x, y,
                 width || (image.naturalWidth || image.width) / surface.devicePixelRatio,
-                height || (image.naturalHeight || image.height) / surface.devicePixelRatio);
+                height || (image.naturalHeight || image.height) / surface.devicePixelRatio
+            );
         }
 
         //<debug>
+        // eslint-disable-next-line vars-on-top
         var debug = attr.debug || this.statics().debug || Ext.draw.sprite.Sprite.debug;
-        if (debug) {
-            debug.bbox && this.renderBBox(surface, ctx);
+
+        if (debug && debug.bbox) {
+            this.renderBBox(surface, ctx);
         }
         //</debug>
     },
@@ -142,7 +149,7 @@ Ext.define('Ext.draw.sprite.Image', {
     /**
      * @private
      */
-    isVisible: function () {
+    isVisible: function() {
         var attr = this.attr,
             parent = this.getParent(),
             hasParent = parent && (parent.isSurface || parent.isVisible()),
@@ -150,5 +157,4 @@ Ext.define('Ext.draw.sprite.Image', {
 
         return !!isSeen;
     }
-
 });

@@ -11,7 +11,7 @@ Ext.define('Admin.view.charts.Bar', {
     ],
 
     title: 'Bar Chart',
-    iconCls: 'x-fa fa-bar-chart',
+    iconCls: 'x-fa fa-chart-bar',
 
     items: [{
         xtype: 'cartesian',

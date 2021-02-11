@@ -12,12 +12,12 @@ Ext.define('KitchenSink.view.tree.XmlTree', {
 
     //<example>
     //</example>
-    
+
     title: 'Files',
     height: 400,
     width: 350,
     useArrows: true,
-    
+
     store: {
         type: 'tree',
         proxy: {
@@ -46,8 +46,9 @@ Ext.define('KitchenSink.view.tree.XmlTree', {
 
     viewConfig: {
         plugins: {
-            ptype: 'treeviewdragdrop',
-            containerScroll: true
+            treeviewdragdrop: {
+                containerScroll: true
+            }
         }
     }
 });

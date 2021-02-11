@@ -47,46 +47,25 @@
  * @private
  * @since 5.1.0
  */
-(function (Cache, prototype) {
+/* eslint-disable indent */
+(function(LRU, fn, Cache) {
+// @require Ext.util.LRU
 // @define Ext.util.Cache
 
     // NOTE: We have to implement this class old-school because it is used by the
     // platformConfig class processor (so Ext.define is not yet ready for action).
-    (Ext.util || (Ext.util = {})).Cache = Cache = function (config) {
-        var me = this,
-            head;
-
-        if (config) {
-            Ext.apply(me, config);
-        }
-
-        // Give all entries the same object shape.
-        me.head = head = {
-            //<debug>
-            id: (me.seed = 0),
-            //</debug>
-            key: null,
-            value: null
-        };
-
-        me.map = {};
-
-        head.next = head.prev = head;
+    Ext.util.Cache = Cache = function(config) {
+        LRU.call(this, config);
     };
 
-    Cache.prototype = prototype = {
+    fn.prototype = LRU.prototype;
+
+    Cache.prototype = Ext.apply(new fn(), {
         /**
          * @cfg {Number} maxSize The maximum size the cache is allowed to grow to before
          * further additions cause removal of the least recently used entry.
          */
         maxSize: 100,
-
-        /**
-         * @property {Number} count
-         * The number of items in this cache.
-         * @readonly
-         */
-        count: 0,
 
         /**
          * This method is called by `{@link #get}` when the key is not found in the cache.
@@ -104,38 +83,8 @@
         /**
          * Removes all items from this cache.
          */
-        clear: function () {
-            var me = this,
-                head = me.head,
-                entry = head.next;
-
-            head.next = head.prev = head;
-
-            if (!me.evict.$nullFn) {
-                for ( ; entry !== head; entry = entry.next) {
-                    me.evict(entry.key, entry.value);
-                }
-            }
-
-            me.count = 0;
-        },
-
-        /**
-         * Calls the given function `fn` for each item in the cache. The items will be passed
-         * to `fn` from most-to-least recently used.
-         * @param {Function} fn The function to call for each cache item.
-         * @param {String} fn.key The cache key for the item.
-         * @param {Object} fn.value The value in the cache for the item.
-         * @param {Object} [scope] The `this` pointer to use for `fn`.
-         */
-        each: function (fn, scope) {
-            scope = scope || this;
-
-            for (var head = this.head, ent = head.next; ent !== head; ent = ent.next) {
-                if (fn.call(scope, ent.key, ent.value)) {
-                    break;
-                }
-            }
+        clear: function() {
+            LRU.prototype.clear.call(this, this.evict);
         },
 
         /**
@@ -147,38 +96,24 @@
          * @param {Object...} args Arguments for the `miss` method should it be needed.
          * @return {Object} The cached object.
          */
-        get: function (key) {
+        get: function(key) {
             var me = this,
-                head = me.head,
-                map = me.map,
-                entry = map[key];
+                entry = me.map[key],
+                value;
 
             if (entry) {
-                if (entry.prev !== head) {
-                    // The entry is not at the front, so remove it and insert it at the front
-                    // (to make it the MRU - Most Recently Used).
-                    me.unlinkEntry(entry);
-                    me.linkEntry(entry);
-                }
-            } else {
-                map[key] = entry = {
-                    //<debug>
-                    id: ++me.seed,
-                    //</debug>
-                    key: key,
-                    value: me.miss.apply(me, arguments)
-                };
+                value = entry.value;
 
-                me.linkEntry(entry);
-                ++me.count;
+                me.touch(key);
+            }
+            else {
+                value = me.miss.apply(me, arguments);
 
-                while (me.count > me.maxSize) {
-                    me.unlinkEntry(head.prev, true);
-                    --me.count;
-                }
+                me.add(key, value);
+                me.trim(me.maxSize, me.evict);
             }
 
-            return entry.value;
+            return value;
         },
 
         //-------------------------------------------------------------------------
@@ -195,41 +130,6 @@
          * @template
          * @protected
          */
-        evict: Ext.emptyFn,
-
-        /**
-         * Inserts the given entry at the front (MRU) end of the entry list.
-         * @param {Object} entry The cache item entry.
-         * @private
-         */
-        linkEntry: function (entry) {
-            var head = this.head,
-                first = head.next;
-
-            entry.next = first;
-            entry.prev = head;
-            head.next = entry;
-            first.prev = entry;
-        },
-
-        /**
-         * Removes the given entry from the entry list.
-         * @param {Object} entry The cache item entry.
-         * @param {Boolean} evicted Pass `true` if `{@link #evict}` should be called.
-         * @private
-         */
-        unlinkEntry: function (entry, evicted) {
-            var next = entry.next,
-                prev = entry.prev;
-
-            prev.next = next;
-            next.prev = prev;
-
-            if (evicted) {
-                this.evict(entry.key, entry.value);
-            }
-        }
-    };
-
-    prototype.destroy = prototype.clear;
-}());
+        evict: Ext.emptyFn
+    });
+}(Ext.util.LRU, function() {}));

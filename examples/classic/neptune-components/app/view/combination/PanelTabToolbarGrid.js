@@ -29,7 +29,7 @@ Ext.define('Neptune.view.combination.PanelTabToolbarGrid', function() {
                                     { xtype: 'smallMenuButton', text: 'Edit', icon: true },
                                     { xtype: 'smallSplitButton', text: 'View' },
                                     '->',
-                                    { xtype: 'searchField'}
+                                    { xtype: 'searchField' }
                                 ]
                             }]
                         },
@@ -44,6 +44,7 @@ Ext.define('Neptune.view.combination.PanelTabToolbarGrid', function() {
             ]
         };
     }
+
     return {
         extend: 'Ext.container.Container',
         xtype: 'panelTabToolbarGrid',

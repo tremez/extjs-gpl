@@ -1,14 +1,16 @@
-/* global Ext, expect, spyOn, jasmine, xit, MockAjaxManager, it */
-
-describe("grid-generallocking-from-no-locking", function() {
+topSuite("grid-general-locking-from-no-locking",
+    [false, 'Ext.grid.Panel', 'Ext.data.ArrayStore'],
+function() {
     var grid, store,
         synchronousLoad = true,
         proxyStoreLoad = Ext.data.ProxyStore.prototype.load,
         loadStore = function() {
             proxyStoreLoad.apply(this, arguments);
+
             if (synchronousLoad) {
                 this.flushLoad.apply(this, arguments);
             }
+
             return this;
         };
 
@@ -38,8 +40,10 @@ describe("grid-generallocking-from-no-locking", function() {
 
             if (Ext.supports.CssTransforms && !Ext.isIE9m) {
                 transform = dom.style[transformStyleName];
+
                 return transform ? parseInt(transform.split(',')[1], 10) : 0;
-            } else {
+            }
+            else {
                 return parseInt(dom.style.top || '0', 10);
             }
         }
@@ -76,13 +80,16 @@ describe("grid-generallocking-from-no-locking", function() {
                     }],
                     data: (function() {
                         var data = [];
+
                         var len = 44; // <-- 43 records does not trigger error
+
                         while (len--) {
                             data.unshift({
                                 name: 'User ' + len,
                                 age: Ext.Number.randomInt(0, 100)
                             });
                         }
+
                         return data;
                     })()
                 },
@@ -110,7 +117,24 @@ describe("grid-generallocking-from-no-locking", function() {
                 expect(grid.lockedScrollbar.isVisible()).toBe(false);
             });
         }
-        
+
+        it('should display the locked side if all columns are locked', function() {
+            var width;
+
+            grid.reconfigure([
+                {
+                    text: 'Locked',
+                    dataIndex: 'name',
+                    locked: true
+                }
+            ]);
+
+            width = grid.lockedGrid.view.getWidth();
+
+            expect(width).not.toBe(0);
+            expect(grid.normalGrid.view.getX()).toBeGreaterThan(width);
+        });
+
         describe('scrolling with no locked columns', function() {
             var oldOnError = window.onerror;
 
@@ -127,7 +151,7 @@ describe("grid-generallocking-from-no-locking", function() {
                         oldOnError();
                     }
                 });
-                
+
                 scroller.on({
                     scrollend: function() {
                         scrollFinished = true;
@@ -135,7 +159,7 @@ describe("grid-generallocking-from-no-locking", function() {
                 });
 
                 scroller.scrollBy(0, 100);
-                
+
                 waitsFor(function() {
                     return scrollFinished;
                 }, 'scroll to be handled', 500);
@@ -148,6 +172,9 @@ describe("grid-generallocking-from-no-locking", function() {
         it('should not throw an error, and should maintain scroll position', function() {
             // Scroll to end (ensureVisible sanitizes the inputs)
             grid.ensureVisible(100);
+
+            // Scroll must have worked.
+            expect(grid.view.normalView.bufferedRenderer.getLastVisibleRowIndex()).toBe(grid.store.getCount() - 1);
 
             // Locked grid is hidden because there are no locked columns
             expect(grid.lockedGrid.isVisible()).toBe(false);

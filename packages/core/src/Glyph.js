@@ -5,7 +5,6 @@
  * information about the selected codepoint and font.
  */
 Ext.define('Ext.Glyph', {
-
     /**
      * @property {Boolean} isGlyph
      * `true` in this class to identify an object as an instantiated Glyph, or subclass thereof.
@@ -47,7 +46,9 @@ Ext.define('Ext.Glyph', {
      *     new Ext.Glyph('xf015@FontAwesome');  // The "home" icon in the FontAwesome font.
      */
     constructor: function(glyph) {
-        glyph && this.setGlyph(glyph);
+        if (glyph) {
+            this.setGlyph(glyph);
+        }
     },
 
     /**
@@ -69,22 +70,30 @@ Ext.define('Ext.Glyph', {
         var glyphParts;
 
         this.glyphConfig = glyph;
+
         if (typeof glyph === 'string') {
             glyphParts = glyph.split('@');
+            glyph = isNaN(glyphParts[0])
+                ? parseInt('0' + glyphParts[0], 16)
+                : parseInt(glyphParts[0], 10);
 
             // If the glyph specification cannot be parsed as a number
             // we use the codepoint of the first character.
             // If the raw string isNaN, we prepend '0' so that a possible 'xf005' will parse as hex,
             // otherwise parse it as decimal.
-            if (isNaN(glyph = isNaN(glyphParts[0]) ? parseInt('0' + glyphParts[0], 16) : parseInt(glyphParts[0], 10)) || !glyph) {
+            if (isNaN(glyph) || !glyph) {
                 glyph = glyphParts[0].charCodeAt(0);
             }
+
             this.fontFamily = glyphParts[1] || Ext._glyphFontFamily;
-        } else {
+        }
+        else {
             this.fontFamily = Ext._glyphFontFamily;
         }
+
         this.codepoint = glyph;
         this.character = Ext.String.fromCodePoint(this.codepoint);
+
         return this;
     },
 
@@ -95,7 +104,8 @@ Ext.define('Ext.Glyph', {
     },
 
     isEqual: function(other) {
-        return other && other.isGlyph && other.codepoint === this.codepoint && other.fontFamily === this.fontFamily;
+        return other && other.isGlyph && other.codepoint === this.codepoint &&
+               other.fontFamily === this.fontFamily;
     },
 
     statics: (function() {
@@ -103,12 +113,14 @@ Ext.define('Ext.Glyph', {
 
         return {
             /**
+             * @method fly
              * @static
-             * Returns a static, *singleton* `Glyph` instance encapsulating the passed configuration.
-             * See {@link #method-setGlyph}
+             * Returns a static, *singleton* `Glyph` instance encapsulating the passed
+             * configuration. See {@link #method-setGlyph}.
              *
-             * Note that the returned `Glyph` is reused upon each call, so only use this whwn the encapsulated
-             * information is consumed immediately. For a persistent `Glyph` instance, instantiate a new one.
+             * Note that the returned `Glyph` is reused upon each call, so only use this when
+             * the encapsulated information is consumed immediately. For a persistent `Glyph`
+             * instance, instantiate a new one.
              *
              * @param {String/Number} glyph
              * If a `string` is passed, it may be the character itself, or the unicode codepoint.
@@ -122,10 +134,13 @@ Ext.define('Ext.Glyph', {
              *
              *     Ext.Glyph.fly('xf015@FontAwesome');  // The "home" icon in the FontAwesome font.
              *
-             * @returns {Ext.Glyph} A static `Glyph` instance encapsulating the passed configuration.
+             * @returns {Ext.Glyph} A static `Glyph` instance encapsulating the passed
+             * configuration.
              */
             fly: function(glyph) {
-                return glyph.isGlyph ? glyph : (instance || (instance = new Ext.Glyph())).setGlyph(glyph);
+                return glyph.isGlyph
+                    ? glyph
+                    : (instance || (instance = new Ext.Glyph())).setGlyph(glyph);
             }
         };
     })()

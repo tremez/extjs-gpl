@@ -10,10 +10,10 @@ Ext.define('Ext.ux.DataView.Animated', {
      * Default configuration options for all DataViewTransition instances
      */
     defaults: {
-        duration  : 750,
+        duration: 750,
         idProperty: 'id'
     },
-    
+
     /**
      * Creates the plugin instance, applies defaults
      * @constructor
@@ -34,7 +34,7 @@ Ext.define('Ext.ux.DataView.Animated', {
             task = {
                 interval: 20
             },
-            duration   = me.duration;
+            duration = me.duration;
 
         /**
          * @property dataview
@@ -42,21 +42,24 @@ Ext.define('Ext.ux.DataView.Animated', {
          * Reference to the DataView this instance is bound to
          */
         me.dataview = dataview;
-        
+
         dataview.blockRefresh = true;
         dataview.updateIndexes = Ext.Function.createSequence(dataview.updateIndexes, function() {
             this.getTargetEl().select(this.itemSelector).each(function(element, composite, index) {
-                element.dom.id = Ext.util.Format.format("{0}-{1}", dataview.id, store.getAt(index).internalId);
+                element.dom.id = Ext.util.Format.format(
+                    "{0}-{1}", dataview.id, store.getAt(index).internalId
+                );
             }, this);
         }, dataview);
-        
+
         /**
          * @property dataviewID
          * @type String
-         * The string ID of the DataView component. This is used internally when animating child objects
+         * The string ID of the DataView component. This is used internally when animating
+         * child objects
          */
         me.dataviewID = dataview.id;
-        
+
         /**
          * @property cachedStoreData
          * @type Object
@@ -64,12 +67,13 @@ Ext.define('Ext.ux.DataView.Animated', {
          * whether any items were added or removed from the store on data change
          */
         me.cachedStoreData = {};
-        
-        //catch the store data with the snapshot immediately
+
+        // catch the store data with the snapshot immediately
         me.cacheStoreData(store.data || store.snapshot);
 
         dataview.on('resize', function() {
             var store = dataview.store;
+
             if (store.getCount() > 0) {
                 // reDraw.call(this, store);
             }
@@ -82,13 +86,13 @@ Ext.define('Ext.ux.DataView.Animated', {
             scope: this,
             buffer: 50
         });
-        
+
         function reDraw() {
             var parentEl = dataview.getTargetEl(),
                 parentElY = parentEl.getY(),
                 parentElPaddingTop = parentEl.getPadding('t'),
-                added    = me.getAdded(store),
-                removed  = me.getRemoved(store),
+                added = me.getAdded(store),
+                removed = me.getRemoved(store),
                 remaining = me.getRemaining(store),
                 itemArray,
                 i, id,
@@ -96,7 +100,8 @@ Ext.define('Ext.ux.DataView.Animated', {
                 rtl = me.dataview.getInherited().rtl,
                 oldPos, newPos,
                 styleSide = rtl ? 'right' : 'left',
-                newStyle = {};
+                newStyle = {},
+                oldPositions, newPositions, doAnimate;
 
             // Not yet rendered
             if (!parentEl) {
@@ -112,6 +117,7 @@ Ext.define('Ext.ux.DataView.Animated', {
                 Ext.fx.Manager.stopAnimation(id);
 
                 item.dom = Ext.getDom(id);
+
                 if (!item.dom) {
                     delete removed[recId];
                 }
@@ -120,17 +126,19 @@ Ext.define('Ext.ux.DataView.Animated', {
             me.cacheStoreData(store);
 
             // stores the current top and left values for each element (discovered below)
-            var oldPositions = {},
-                newPositions = {};
+            oldPositions = {};
+            newPositions = {};
 
             // Find current positions of elements which are to remain after the refresh.
             Ext.iterate(remaining, function(id, item) {
                 if (itemFly.attach(Ext.getDom(me.dataviewID + '-' + id))) {
                     oldPos = oldPositions[id] = {
-                        top : itemFly.getY() - parentElY - itemFly.getMargin('t') - parentElPaddingTop
+                        top: itemFly.getY() - parentElY - itemFly.getMargin('t') -
+                             parentElPaddingTop
                     };
                     oldPos[styleSide] = me.getItemX(itemFly);
-                } else {
+                }
+                else {
                     delete remaining[id];
                 }
             });
@@ -144,14 +152,16 @@ Ext.define('Ext.ux.DataView.Animated', {
                 parentEl.dom.appendChild(item.dom);
                 itemFly.attach(item.dom).animate({
                     duration: duration,
-                    opacity : 0,
+                    opacity: 0,
                     callback: function(anim) {
                         var el = Ext.get(anim.target.id);
+
                         if (el) {
                             el.destroy();
                         }
                     }
                 });
+
                 delete item.dom;
             });
 
@@ -172,7 +182,7 @@ Ext.define('Ext.ux.DataView.Animated', {
 
                 newPositions[id] = {
                     dom: itemFly.dom,
-                    top : itemFly.getY() - parentElY - itemFly.getMargin('t') - parentElPaddingTop
+                    top: itemFly.getY() - parentElY - itemFly.getMargin('t') - parentElPaddingTop
                 };
                 newPositions[id][styleSide] = me.getItemX(itemFly);
 
@@ -181,7 +191,7 @@ Ext.define('Ext.ux.DataView.Animated', {
                 // its old position from where it will be animated.
                 newPos = oldPositions[id] || newPositions[id];
 
-                // set absolute positioning on all DataView items. We need to set position, left and 
+                // set absolute positioning on all DataView items. We need to set position, left and
                 // top at the same time to avoid any flickering
                 newStyle.position = 'absolute';
                 newStyle.top = newPos.top + "px";
@@ -190,30 +200,35 @@ Ext.define('Ext.ux.DataView.Animated', {
             }
 
             // This is the function which moves remaining items to their new position
-            var doAnimate = function() {
-                var elapsed  = new Date() - task.taskStartTime,
-                    fraction = elapsed / duration;
+            doAnimate = function() {
+                var elapsed = new Date() - task.taskStartTime,
+                    fraction = elapsed / duration,
+                    oldPos, newPos, oldTop, newTop, oldLeft, newLeft,
+                    diffTop, diffLeft, midTop, midLeft;
 
                 if (fraction >= 1) {
                     // At end, return all items to natural flow.
                     newStyle.position = newStyle.top = newStyle[styleSide] = '';
+
                     for (id in newPositions) {
                         itemFly.attach(newPositions[id].dom).applyStyles(newStyle);
                     }
+
                     Ext.TaskManager.stop(task);
-                } else {
+                }
+                else {
                     // In frame, move each "remaining" item according to time elapsed
                     for (id in remaining) {
-                        var oldPos  = oldPositions[id],
-                            newPos  = newPositions[id],
-                            oldTop  = oldPos.top,
-                            newTop  = newPos.top,
-                            oldLeft = oldPos[styleSide],
-                            newLeft = newPos[styleSide],
-                            diffTop = fraction * Math.abs(oldTop  - newTop),
-                            diffLeft= fraction * Math.abs(oldLeft - newLeft),
-                            midTop  = oldTop  > newTop  ? oldTop  - diffTop  : oldTop  + diffTop,
-                            midLeft = oldLeft > newLeft ? oldLeft - diffLeft : oldLeft + diffLeft;
+                        oldPos = oldPositions[id];
+                        newPos = newPositions[id];
+                        oldTop = oldPos.top;
+                        newTop = newPos.top;
+                        oldLeft = oldPos[styleSide];
+                        newLeft = newPos[styleSide];
+                        diffTop = fraction * Math.abs(oldTop - newTop);
+                        diffLeft = fraction * Math.abs(oldLeft - newLeft);
+                        midTop = oldTop > newTop ? oldTop - diffTop : oldTop + diffTop;
+                        midLeft = oldLeft > newLeft ? oldLeft - diffLeft : oldLeft + diffLeft;
 
                         newStyle.top = midTop + "px";
                         newStyle[styleSide] = midLeft + "px";
@@ -228,7 +243,7 @@ Ext.define('Ext.ux.DataView.Animated', {
                     itemFly.setOpacity(0);
                     itemFly.animate({
                         duration: duration,
-                        opacity : 1
+                        opacity: 1
                     });
                 }
             });
@@ -248,7 +263,8 @@ Ext.define('Ext.ux.DataView.Animated', {
 
         if (rtl) {
             return parentEl.getViewRegion().right - el.getRegion().right + el.getMargin('r');
-        } else {
+        }
+        else {
             return el.getX() - parentEl.getX() - el.getMargin('l') - parentEl.getPadding('l');
         }
     },
@@ -259,12 +275,12 @@ Ext.define('Ext.ux.DataView.Animated', {
      */
     cacheStoreData: function(store) {
         var cachedStoreData = this.cachedStoreData = {};
-        
+
         store.each(function(record) {
-             cachedStoreData[record.internalId] = record;
+            cachedStoreData[record.internalId] = record;
         });
     },
-    
+
     /**
      * Returns all records that were already in the DataView
      * @return {Object} All existing records
@@ -272,22 +288,23 @@ Ext.define('Ext.ux.DataView.Animated', {
     getExisting: function() {
         return this.cachedStoreData;
     },
-    
+
     /**
      * Returns the total number of items that are currently visible in the DataView
      * @return {Number} The number of existing items
      */
     getExistingCount: function() {
         var count = 0,
-            items = this.getExisting();
-        
-        for (var k in items) {
+            items = this.getExisting(),
+            k; // eslint-disable-line no-unused-vars
+
+        for (k in items) {
             count++;
         }
-        
+
         return count;
     },
-    
+
     /**
      * Returns all records in the given store that were not already present
      * @param {Ext.data.Store} store The updated store instance
@@ -296,16 +313,16 @@ Ext.define('Ext.ux.DataView.Animated', {
     getAdded: function(store) {
         var cachedStoreData = this.cachedStoreData,
             added = {};
-        
+
         store.each(function(record) {
             if (cachedStoreData[record.internalId] == null) {
                 added[record.internalId] = record;
             }
         });
-        
+
         return added;
     },
-    
+
     /**
      * Returns all records that are present in the DataView but not the new store
      * @param {Ext.data.Store} store The updated store instance
@@ -315,20 +332,22 @@ Ext.define('Ext.ux.DataView.Animated', {
         var cachedStoreData = this.cachedStoreData,
             removed = {},
             id;
-        
+
         for (id in cachedStoreData) {
-            if (store.findBy(function(record) {return record.internalId == id;}) == -1) {
+            // eslint-disable-next-line brace-style, semi
+            if (store.findBy(function(record) { return record.internalId === id }) === -1) {
                 removed[id] = cachedStoreData[id];
             }
         }
-        
+
         return removed;
     },
-    
+
     /**
      * Returns all records that are already present and are still present in the new store
      * @param {Ext.data.Store} store The updated store instance
-     * @return {Object} Object of records that are still present from last time in format {id: record}
+     * @return {Object} Object of records that are still present from last time in format
+     * {id: record}
      */
     getRemaining: function(store) {
         var cachedStoreData = this.cachedStoreData,
@@ -339,7 +358,7 @@ Ext.define('Ext.ux.DataView.Animated', {
                 remaining[record.internalId] = record;
             }
         });
-        
+
         return remaining;
     }
 });

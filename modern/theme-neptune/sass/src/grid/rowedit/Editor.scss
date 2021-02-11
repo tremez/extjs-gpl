@@ -1,0 +1,11 @@
+@include roweditor-ui(
+    $background-color: $roweditor-background-color,
+    $border-width: $roweditor-border-width,
+    $border-style: $roweditor-border-style,
+    $border-color: $roweditor-border-color,
+    $box-shadow: $roweditor-box-shadow,
+    $bottom-box-shadow: $roweditor-bottom-box-shadow,
+    $buttons-border-width: $roweditor-buttons-border-width,
+    $buttons-padding: $roweditor-buttons-padding,
+    $transition: $roweditor-transition
+);

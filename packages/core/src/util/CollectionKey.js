@@ -124,7 +124,7 @@ Ext.define('Ext.util.CollectionKey', {
      * @readonly
      */
 
-    constructor: function (config) {
+    constructor: function(config) {
         this.initConfig(config);
 
         //<debug>
@@ -141,8 +141,9 @@ Ext.define('Ext.util.CollectionKey', {
      * the specified `property`.
      * @return {Object}
      */
-    get: function (key) {
+    get: function(key) {
         var map = this.map || this.getMap();
+
         return map[key] || null;
     },
 
@@ -156,7 +157,7 @@ Ext.define('Ext.util.CollectionKey', {
         this.map = null;
     },
 
-    getRootProperty: function () {
+    getRootProperty: function() {
         var me = this,
             root = this.callParent();
 
@@ -183,7 +184,7 @@ Ext.define('Ext.util.CollectionKey', {
      * @return {Number} The index of the first item with the given `key` beyond the given
      * `startAt` index or -1 if there are no such items.
      */
-    indexOf: function (key, startAt) {
+    indexOf: function(key, startAt) {
         var map = this.map || this.getMap(),
             item = map[key],
             collection = this.getCollection(),
@@ -202,16 +203,19 @@ Ext.define('Ext.util.CollectionKey', {
             items = item;
             index = length; // greater than any actual indexOf
 
-            for (n = items.length; n-- > 0; ) {
+            for (n = items.length; n-- > 0;) {
                 i = collection.indexOf(items[n]);
+
                 if (i < index && i > startAt) {
                     index = i;
                 }
             }
+
             if (index === length) {
                 return -1;
             }
-        } else {
+        }
+        else {
             index = collection.indexOf(item);
         }
 
@@ -225,7 +229,7 @@ Ext.define('Ext.util.CollectionKey', {
      * @param {String} oldKey The old key for the `item`.
      * @since 5.0.0
      */
-    updateKey: function (item, oldKey) {
+    updateKey: function(item, oldKey) {
         var me = this,
             map = me.map,
             bucket, index;
@@ -239,14 +243,16 @@ Ext.define('Ext.util.CollectionKey', {
                 if (index >= 0) {
                     if (bucket.length > 2) {
                         bucket.splice(index, 1);
-                    } else {
+                    }
+                    else {
                         // If there is an array of 2 items, replace the array with the
                         // one remaining item. Since index then is either 0 or 1, the
                         // index of the other item is easy.
                         map[oldKey] = bucket[1 - index];  // "1 - 0" = 1, "1 - 1" = 0
                     }
                 }
-            } else if (bucket) {
+            }
+            else if (bucket) {
                 //<debug>
                 if (me.getUnique() && bucket !== item) {
                     Ext.raise('Incorrect oldKey "' + oldKey +
@@ -264,34 +270,35 @@ Ext.define('Ext.util.CollectionKey', {
     //-------------------------------------------------------------------------
     // Calls from our Collection:
 
-    onCollectionAdd: function (collection, add) {
+    onCollectionAdd: function(collection, add) {
         if (this.map) {
             this.add(add.items);
         }
     },
 
-    onCollectionItemChange: function (collection, details) {
+    onCollectionItemChange: function(collection, details) {
         this.map = null;
     },
 
-    onCollectionRefresh: function () {
+    onCollectionRefresh: function() {
         this.map = null;
     },
 
-    onCollectionRemove: function (collection, remove) {
+    onCollectionRemove: function(collection, remove) {
         var me = this,
             map = me.map,
             items = remove.items,
             length = items.length,
-            i, item, key;
+            i, key;
 
         if (map) {
             if (me.getUnique() && length < collection.length / 2) {
                 for (i = 0; i < length; ++i) {
-                    key = me.getKey(item = items[i]);
+                    key = me.getKey(items[i]);
                     delete map[key];
                 }
-            } else {
+            }
+            else {
                 me.map = null;
             }
         }
@@ -300,7 +307,7 @@ Ext.define('Ext.util.CollectionKey', {
     //-------------------------------------------------------------------------
     // Private
 
-    add: function (items) {
+    add: function(items) {
         var me = this,
             map = me.map,
             bucket, i, item, key, length, unique;
@@ -313,7 +320,8 @@ Ext.define('Ext.util.CollectionKey', {
 
             if (unique || !(key in map)) {
                 map[key] = item;
-            } else {
+            }
+            else {
                 if (!((bucket = map[key]) instanceof Array)) {
                     map[key] = bucket = [ bucket ];
                 }
@@ -323,25 +331,26 @@ Ext.define('Ext.util.CollectionKey', {
         }
     },
 
-    applyKeyFn: function (keyFn) {
+    applyKeyFn: function(keyFn) {
         if (Ext.isString(keyFn)) {
-            this.getKey = function (item) {
+            this.getKey = function(item) {
                 return item[keyFn]();
             };
-        } else {
+        }
+        else {
             this.getKey = keyFn;
         }
     },
 
-    updateProperty: function (property) {
+    updateProperty: function(property) {
         var root = this.getRootProperty();
 
-        this.getKey = function (item) {
+        this.getKey = function(item) {
             return (root ? item[root] : item)[property];
         };
     },
 
-    getMap: function () {
+    getMap: function() {
         var me = this,
             map = me.map;
 
@@ -356,11 +365,23 @@ Ext.define('Ext.util.CollectionKey', {
         return map;
     },
 
-    updateCollection: function (collection) {
-        collection.addObserver(this);
+    updateCollection: function(collection, oldCollection) {
+        if (collection) {
+            collection.addObserver(this);
+        }
+
+        if (oldCollection) {
+            oldCollection.removeObserver(this);
+        }
     },
 
     clone: function() {
         return new Ext.util.CollectionKey(this.getCurrentConfig());
+    },
+
+    destroy: function() {
+        this.clear();
+        this.getCollection().removeObserver(this);
+        this.destroyed = true;
     }
 });

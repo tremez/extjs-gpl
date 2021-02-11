@@ -1,17 +1,17 @@
-xdescribe("Ext.grid.filters.filter.DateTime", function () {
+xtopSuite("Ext.grid.filters.filter.DateTime", function() {
     var viewReady = false,
         grid, plugin, store;
 
     function createGrid(pluginCfg, gridCfg, storeCfg) {
         store = new Ext.data.Store(Ext.apply({
-            fields:['name', 'email', 'phone', { name: 'dob', type: 'date'}],
+            fields: ['name', 'email', 'phone', { name: 'dob', type: 'date' }],
             data: [
-                { 'name': 'evan',  'email':'evan@example.com',  'phone':'555-111-1224', 'dob': '12/12/1992 01:00' },
-                { 'name': 'nige',  'email':'nige@example.com',  'phone':'555-222-1234', 'dob': '12/12/1992 02:00' },
-                { 'name': 'phil', 'email':'phil@example.com', 'phone':'555-222-1244', 'dob': '12/12/1992 03:15' },
-                { 'name': 'don', 'email':'don@example.com', 'phone':'555-222-1254', 'dob': '12/12/1992 04:30' },
-                { 'name': 'alex', 'email':'alex@example.com', 'phone':'555-222-1254', 'dob': '12/12/1992 13:00' },
-                { 'name': 'ben', 'email':'ben@example.com', 'phone':'555-222-1264', 'dob': '12/12/1992 22:45' }
+                { 'name': 'evan',  'email': 'evan@example.com',  'phone': '555-111-1224', 'dob': '12/12/1992 01:00' },
+                { 'name': 'nige',  'email': 'nige@example.com',  'phone': '555-222-1234', 'dob': '12/12/1992 02:00' },
+                { 'name': 'phil', 'email': 'phil@example.com', 'phone': '555-222-1244', 'dob': '12/12/1992 03:15' },
+                { 'name': 'don', 'email': 'don@example.com', 'phone': '555-222-1254', 'dob': '12/12/1992 04:30' },
+                { 'name': 'alex', 'email': 'alex@example.com', 'phone': '555-222-1254', 'dob': '12/12/1992 13:00' },
+                { 'name': 'ben', 'email': 'ben@example.com', 'phone': '555-222-1264', 'dob': '12/12/1992 22:45' }
             ],
             autoDestroy: true
         }, storeCfg));
@@ -43,7 +43,7 @@ xdescribe("Ext.grid.filters.filter.DateTime", function () {
             height: 200,
             width: 400,
             listeners: {
-                viewready: function () {
+                viewready: function() {
                     viewReady = true;
                 }
             },
@@ -57,49 +57,49 @@ xdescribe("Ext.grid.filters.filter.DateTime", function () {
         viewReady = false;
     });
 
-    describe("setValue", function () {
+    describe("setValue", function() {
         var parse = Ext.Date.parse,
             columnFilter;
 
-        afterEach(function () {
+        afterEach(function() {
             columnFilter = null;
         });
 
-        it("should update the value of the date whenever called", function () {
+        it("should update the value of the date whenever called", function() {
             // See EXTJSIV-11532.
             createGrid();
 
-            waitsFor(function () {
+            waitsFor(function() {
                 return viewReady;
             });
 
-            runs(function () {
+            runs(function() {
                 columnFilter = grid.columnManager.getHeaderByDataIndex('dob').filter;
                 columnFilter.createMenu();
 
-                columnFilter.setValue({eq: parse('08/08/1992', 'd/m/Y')});
-                columnFilter.setValue({eq: parse('26/09/2009', 'd/m/Y')});
+                columnFilter.setValue({ eq: parse('08/08/1992', 'd/m/Y') });
+                columnFilter.setValue({ eq: parse('26/09/2009', 'd/m/Y') });
 
                 expect(columnFilter.filter.eq.getValue()).toBe(parse('26/09/2009', 'd/m/Y').getTime());
             });
         });
     });
 
-    describe("onMenuSelect handler and setFieldValue", function () {
+    describe("onMenuSelect handler and setFieldValue", function() {
         var columnFilter, headerCt, header, filtersCheckItem, beforeCheckItem, datepicker, timepicker, btn;
 
-        afterEach(function () {
+        afterEach(function() {
             columnFilter = headerCt = header = filtersCheckItem = beforeCheckItem = datepicker = timepicker = btn = null;
         });
 
-        it("should correctly filter based upon picker selections", function () {
+        it("should correctly filter based upon picker selections", function() {
             createGrid();
 
-            waitsFor(function () {
+            waitsFor(function() {
                 return viewReady;
             });
 
-            runs(function () {
+            runs(function() {
                 columnFilter = grid.columnManager.getHeaderByDataIndex('dob').filter;
                 headerCt = grid.headerCt;
                 header = grid.getColumnManager().getLast();
@@ -129,7 +129,7 @@ xdescribe("Ext.grid.filters.filter.DateTime", function () {
                 // The filtering is async.
                 waits(1);
 
-                runs(function () {
+                runs(function() {
                     expect(store.getCount()).toBe(1);
 
                     timepicker.select(timepicker.store.getAt(9));
@@ -138,7 +138,7 @@ xdescribe("Ext.grid.filters.filter.DateTime", function () {
 
                 waits(1);
 
-                runs(function () {
+                runs(function() {
                     expect(store.getCount()).toBe(2);
                 });
             });

@@ -7,7 +7,7 @@ Ext.define('Ext.data.ModelManager', {
     requires: [
         'Ext.data.schema.Schema'
     ],
-    
+
     singleton: true,
 
     deprecated: {
@@ -15,7 +15,7 @@ Ext.define('Ext.data.ModelManager', {
             methods: {
                 clear: null,
 
-                create: function (data, name, id) {
+                create: function(data, name, id) {
                     var T = name;
 
                     if (!T.isEntity) {
@@ -38,12 +38,13 @@ Ext.define('Ext.data.ModelManager', {
                 },
 
                 /**
+                 * @method getModel
                  * Returns the {@link Ext.data.Model} class for a given model name
                  * @param {String/Object} id The classname of the model or the model class itself.
                  * @return {Ext.data.Model} a model class.
-                 * @deprecated Use {@link Ext.data.schema.Schema#lookupEntity} instead.
+                 * @deprecated 5.0 Use {@link Ext.data.schema.Schema#lookupEntity} instead.
                  */
-                getModel: function (id) {
+                getModel: function(id) {
                     return Ext.data.schema.Schema.lookupEntity(id);
                 },
 

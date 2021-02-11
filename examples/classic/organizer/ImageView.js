@@ -10,43 +10,43 @@
  */
 Ext.define('Ext.org.ImageView', {
     extend: 'Ext.view.View',
-    alias : 'widget.imageview',
+    alias: 'widget.imageview',
     requires: ['Ext.data.Store'],
     mixins: {
         dragSelector: 'Ext.ux.DataView.DragSelector',
-        draggable   : 'Ext.ux.DataView.Draggable'
+        draggable: 'Ext.ux.DataView.Draggable'
     },
-    
+
     tpl: [
         '<tpl for=".">',
-            '<div class="thumb-wrap">',
-                '<div class="thumb">',
-                    '<img src="../view/chooser/icons/{thumb}" />',
-                '</div>',
-                '<span>{name}</span>',
-            '</div>',
+        '<div class="thumb-wrap">',
+        '<div class="thumb">',
+        '<img src="../view/chooser/icons/{thumb}" />',
+        '</div>',
+        '<span>{name}</span>',
+        '</div>',
         '</tpl>'
     ],
-    
+
     itemSelector: 'div.thumb-wrap',
     multiSelect: true,
     singleSelect: false,
     cls: 'x-image-view',
     scrollable: true,
-    
+
     initComponent: function() {
         this.store = new Ext.data.Store({
             autoLoad: true,
             model: 'Ext.org.Image',
             proxy: {
                 type: 'ajax',
-                url : '../view/chooser/icons.json',
+                url: '../view/chooser/icons.json',
                 reader: {
                     type: 'json'
                 }
             }
         });
-        
+
         this.mixins.dragSelector.init(this);
         this.mixins.draggable.init(this, {
             ddConfig: {
@@ -54,15 +54,15 @@ Ext.define('Ext.org.ImageView', {
             },
             ghostTpl: [
                 '<tpl for=".">',
-                    '<img src="../view/chooser/icons/{thumb}" />',
-                    '<tpl if="xindex % 4 == 0"><br /></tpl>',
+                '<img src="../view/chooser/icons/{thumb}" />',
+                '<tpl if="xindex % 4 == 0"><br /></tpl>',
                 '</tpl>',
                 '<div class="count">',
-                    '{[values.length]} images selected',
+                '{[values.length]} images selected',
                 '<div>'
             ]
         });
-        
+
         this.callParent();
     }
 });

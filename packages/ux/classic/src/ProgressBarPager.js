@@ -25,36 +25,37 @@ Ext.define('Ext.ux.ProgressBarPager', {
      * @cfg {Object} defaultAnimCfg
      * <p>A {@link Ext.fx.Anim Ext.fx.Anim} configuration object.</p>
      */
-    defaultAnimCfg : {
-		duration: 1000,
-		easing: 'bounceOut'	
-	},	
+    defaultAnimCfg: {
+        duration: 1000,
+        easing: 'bounceOut'
+    },
 
     /**
      * Creates new ProgressBarPager.
      * @param {Object} config Configuration options
      */
-    constructor : function(config) {
+    constructor: function(config) {
         if (config) {
             Ext.apply(this, config);
         }
     },
 
-    init: function (parent) {
+    init: function(parent) {
         var displayItem;
 
         if (parent.displayInfo) {
             this.parent = parent;
 
             displayItem = parent.child("#displayItem");
+
             if (displayItem) {
                 parent.remove(displayItem, true);
             }
 
             this.progressBar = Ext.create('Ext.ProgressBar', {
-                text    : this.defaultText,
-                width   : this.width,
-                animate : this.defaultAnimCfg,
+                text: this.defaultText,
+                width: this.width,
+                animate: this.defaultAnimCfg,
                 style: {
                     cursor: 'pointer'
                 },
@@ -77,12 +78,12 @@ Ext.define('Ext.ux.ProgressBarPager', {
      * This method handles the click for the progress bar
      * @private
      */
-    handleProgressBarClick : function (e) {
+    handleProgressBarClick: function(e) {
         var parent = this.parent,
             displayItem = parent.displayItem,
             box = this.progressBar.getBox(),
             xy = e.getXY(),
-            position = xy[0]- box.x,
+            position = xy[0] - box.x,
             store = parent.store,
             pageSize = parent.pageSize || store.pageSize,
             pages = Math.ceil(store.getTotalCount() / pageSize),
@@ -99,21 +100,25 @@ Ext.define('Ext.ux.ProgressBarPager', {
          * This method updates the information via the progress bar.
          * @private
          */
-        updateInfo : function(){
-            if(this.displayItem){
+        updateInfo: function() {
+            if (this.displayItem) {
+                // eslint-disable-next-line vars-on-top
                 var count = this.store.getCount(),
                     pageData = this.getPageData(),
-                    message = count === 0 ?
-                    this.emptyMsg :
-                    Ext.String.format(
-                        this.displayMsg,
-                        pageData.fromRecord, pageData.toRecord, this.store.getTotalCount()
-                    ),
-                    percentage = pageData.pageCount > 0 ? (pageData.currentPage / pageData.pageCount) : 0;
+                    message = count === 0
+                        ? this.emptyMsg
+                        : Ext.String.format(
+                            this.displayMsg,
+                            pageData.fromRecord, pageData.toRecord, this.store.getTotalCount()
+                        ),
+                    percentage = pageData.pageCount > 0
+                        ? (pageData.currentPage / pageData.pageCount)
+                        : 0;
 
-                this.displayItem.updateProgress(percentage, message, this.animate || this.defaultAnimConfig);
+                this.displayItem.updateProgress(
+                    percentage, message, this.animate || this.defaultAnimConfig
+                );
             }
         }
     }
 });
-

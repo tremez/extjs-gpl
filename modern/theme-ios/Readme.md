@@ -1,2 +1,4 @@
-# theme-ios - Read Me
+# theme-ios 
+
+ Modern iOS Theme.
 

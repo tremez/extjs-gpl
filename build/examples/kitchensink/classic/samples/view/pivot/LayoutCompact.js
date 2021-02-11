@@ -1,8 +1,8 @@
 /**
- *
  * This example shows how to create a pivot grid and display the results in
  * a compact layout.
  *
+ * The compact layout is similar to the "Compact Form" layout in Excel.
  */
 Ext.define('KitchenSink.view.pivot.LayoutCompact', {
     extend: 'Ext.pivot.Grid',
@@ -18,28 +18,47 @@ Ext.define('KitchenSink.view.pivot.LayoutCompact', {
     otherContent: [{
         type: 'Controller',
         path: 'classic/samples/view/pivot/LayoutController.js'
-    },{
+    }, {
         type: 'Model',
         path: 'classic/samples/model/pivot/Sale.js'
-    },{
+    }, {
         type: 'Store',
         path: 'classic/samples/store/pivot/Sales.js'
     }],
     profiles: {
         classic: {
-            width: 600
+            width: 600,
+            height: 350,
+            totalColumnWidth: 90,
+            columnLines: true
         },
         neptune: {
-            width: 750
+            width: 750,
+            height: 350,
+            totalColumnWidth: 90,
+            columnLines: true
+        },
+        graphite: {
+            width: 750,
+            height: 600,
+            totalColumnWidth: 120,
+            columnLines: true
+        },
+        'classic-material': {
+            width: 750,
+            height: 600,
+            totalColumnWidth: 120,
+            columnLines: false
         }
     },
     //</example>
 
     title: 'Compact layout',
     width: '${width}',
-    height: 350,
+    height: '${height}',
     collapsible: true,
     multiSelect: true,
+    columnLines: '${columnLines}',
 
     selModel: {
         type: 'cellmodel'
@@ -71,10 +90,11 @@ Ext.define('KitchenSink.view.pivot.LayoutCompact', {
             dataIndex: 'value',
             header: 'Total',
             aggregator: 'sum',
-            width: 90
+            width: '${totalColumnWidth}'
         }],
 
-        // Configure the left axis dimensions that will be used to generate the grid rows
+        // Configure the left axis dimensions that will be used to generate
+        // the grid rows
         leftAxis: [{
             dataIndex: 'person',
             header: 'Person'
@@ -87,11 +107,15 @@ Ext.define('KitchenSink.view.pivot.LayoutCompact', {
             header: 'Country'
         }],
 
-
-        // Configure the top axis dimensions that will be used to generate the columns.
-        // When columns are generated the aggregate dimensions are also used. If multiple aggregation dimensions
-        // are defined then each top axis result will have in the end a column header with children
-        // columns for each aggregate dimension defined.
+        /**
+         * Configure the top axis dimensions that will be used to generate
+         * the columns.
+         *
+         * When columns are generated the aggregate dimensions are also used.
+         * If multiple aggregation dimensions are defined then each top axis
+         * result will have in the end a column header with children columns
+         * for each aggregate dimension defined.
+         */
         topAxis: [{
             dataIndex: 'year',
             header: 'Year'
@@ -112,41 +136,41 @@ Ext.define('KitchenSink.view.pivot.LayoutCompact', {
         menu: [{
             text: 'Collapse all',
             handler: 'collapseAll'
-        },{
+        }, {
             text: 'Expand all',
             handler: 'expandAll'
         }]
-    },{
+    }, {
         text: 'Subtotals position',
         menu: {
             defaults: {
                 xtype: 'menucheckitem',
-                group:  'subtotals',
+                group: 'subtotals',
                 checkHandler: 'subtotalsHandler'
             },
             items: [{
                 text: 'First',
                 checked: true
-            },{
+            }, {
                 text: 'Last'
-            },{
+            }, {
                 text: 'None'
             }]
         }
-    },{
+    }, {
         text: 'Totals position',
         menu: {
             defaults: {
                 xtype: 'menucheckitem',
-                group:  'totals',
+                group: 'totals',
                 checkHandler: 'totalsHandler'
             },
             items: [{
                 text: 'First'
-            },{
+            }, {
                 text: 'Last',
                 checked: true
-            },{
+            }, {
                 text: 'None'
             }]
         }

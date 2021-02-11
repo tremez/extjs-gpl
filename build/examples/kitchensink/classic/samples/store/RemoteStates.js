@@ -4,7 +4,7 @@ Ext.define('KitchenSink.store.RemoteStates', {
     alias: 'store.remote-states',
 
     model: 'KitchenSink.model.State',
-    
+
     storeId: 'remote-states',
 
     proxy: {

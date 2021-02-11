@@ -5,6 +5,7 @@ Ext.define('Ext.ux.ajax.XmlSimlet', {
     extend: 'Ext.ux.ajax.DataSimlet',
     alias: 'simlet.xml',
 
+    /* eslint-disable indent */
     /**
      * This template is used to populate the XML response. The configuration of the Reader
      * is available so that its `root` and `record` properties can be used as well as the
@@ -22,8 +23,9 @@ Ext.define('Ext.ux.ajax.XmlSimlet', {
             '</tpl>',
         '</{root}>'
     ],
+    /* eslint-enable indent */
 
-    doGet: function (ctx) {
+    doGet: function(ctx) {
         var me = this,
             data = me.getData(ctx),
             page = me.getPage(ctx, data),
@@ -48,13 +50,16 @@ Ext.define('Ext.ux.ajax.XmlSimlet', {
         if (me.xmlTpl) {
             tpl = Ext.XTemplate.getTpl(me, 'xmlTpl');
             xml = tpl.apply(response);
-        } else {
+        }
+        else {
             xml = data;
         }
 
-        if (typeof DOMParser != 'undefined') {
+        if (typeof DOMParser !== 'undefined') {
             doc = (new DOMParser()).parseFromString(xml, "text/xml");
-        } else {
+        }
+        else {
+            /* global ActiveXObject */
             // IE doesn't have DOMParser, but fortunately, there is an ActiveX for XML
             doc = new ActiveXObject("Microsoft.XMLDOM");
             doc.async = false;
@@ -63,12 +68,15 @@ Ext.define('Ext.ux.ajax.XmlSimlet', {
 
         ret.responseText = xml;
         ret.responseXML = doc;
+
         return ret;
     },
 
     fixTree: function() {
-        this.callParent(arguments);
         var buffer = [];
+
+        this.callParent(arguments);
+
         this.buildTreeXml(this.data, buffer);
         this.data = buffer.join('');
     },
@@ -78,19 +86,24 @@ Ext.define('Ext.ux.ajax.XmlSimlet', {
             recordProperty = this.recordProperty;
 
         buffer.push('<', rootProperty, '>');
+
         Ext.Array.forEach(nodes, function(node) {
+            var key;
+
             buffer.push('<', recordProperty, '>');
-            for (var key in node) {
-                if (key == 'children') {
+
+            for (key in node) {
+                if (key === 'children') {
                     this.buildTreeXml(node.children, buffer);
-                } else {
+                }
+                else {
                     buffer.push('<', key, '>', node[key], '</', key, '>');
                 }
             }
+
             buffer.push('</', recordProperty, '>');
         });
+
         buffer.push('</', rootProperty, '>');
     }
-
-
 });

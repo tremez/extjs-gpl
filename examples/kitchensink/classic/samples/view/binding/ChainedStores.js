@@ -20,13 +20,36 @@ Ext.define('KitchenSink.view.binding.ChainedStores', {
         type: 'ViewModel',
         path: 'classic/samples/view/binding/ChainedStoresModel.js'
     }, {
-        type: 'ViewController',
+        type: 'Controller',
         path: 'classic/samples/view/binding/ChainedStoresController.js'
     }, {
         type: 'Model',
         path: 'classic/samples/model/Person.js'
     }],
     //</example>
+
+    profiles: {
+        classic: {
+            removeWidth: 110,
+            labelWidth: 105,
+            width: 300
+        },
+        neptune: {
+            removeWidth: 110,
+            labelWidth: 105,
+            width: 300
+        },
+        graphite: {
+            removeWidth: 140,
+            labelWidth: 150,
+            width: 345
+        },
+        'classic-material': {
+            removeWidth: 140,
+            labelWidth: 150,
+            width: 345
+        }
+    },
 
     width: 680,
     height: 600,
@@ -38,6 +61,7 @@ Ext.define('KitchenSink.view.binding.ChainedStores', {
     viewModel: 'binding.chainedstores',
     controller: 'binding.chainedstores',
 
+    cls: 'binding-chained-stores',
     items: [{
         xtype: 'grid',
         bind: '{everyone}',
@@ -67,19 +91,20 @@ Ext.define('KitchenSink.view.binding.ChainedStores', {
             field: 'textfield'
         }, {
             xtype: 'widgetcolumn',
-            width: 110,
+            width: '${removeWidth}',
             widget: {
                 xtype: 'button',
                 text: 'Remove',
                 handler: 'onRemoveClick'
             }
         }],
-        plugins: [{
-            ptype: 'rowediting',
-            listeners: {
-                edit: 'onEditComplete'
+        plugins: {
+            rowediting: {
+                listeners: {
+                    edit: 'onEditComplete'
+                }
             }
-        }]
+        }
     }, {
         xtype: 'grid',
         bind: {
@@ -92,7 +117,8 @@ Ext.define('KitchenSink.view.binding.ChainedStores', {
         tbar: [{
             xtype: 'slider',
             fieldLabel: 'Minimum Age',
-            width: 300,
+            width: '${width}',
+            labelWidth: '${labelWidth}',
             bind: '{minimumAge}'
         }],
         columns: [{

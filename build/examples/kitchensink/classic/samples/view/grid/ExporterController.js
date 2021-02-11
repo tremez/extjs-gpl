@@ -17,60 +17,28 @@ Ext.define('KitchenSink.view.grid.ExporterController', {
         'Ext.exporter.excel.Xlsx'
     ],
 
-    exportToXml: function(){
-        this.doExport({
-            type:       'excel03',
-            title:      'Grid export demo',
-            fileName:   'GridExport.xml'
-        });
+    exportTo: function(btn) {
+        var cfg = Ext.merge({
+            title: 'Grid export demo',
+            fileName: 'GridExport' + '.' + (btn.cfg.ext || btn.cfg.type)
+        }, btn.cfg);
+
+        this.getView().saveDocumentAs(cfg);
     },
 
-    exportToCSV: function(){
-        this.doExport({
-            type:       'csv',
-            title:      'Grid export demo',
-            fileName:   'GridExport.csv'
-        });
-    },
-
-    exportToTSV: function(){
-        this.doExport({
-            type:       'tsv',
-            title:      'Grid export demo',
-            fileName:   'GridExport.csv'
-        });
-    },
-
-    exportToHtml: function(){
-        this.doExport({
-            type:       'html',
-            title:      'Grid export demo',
-            fileName:   'GridExport.html'
-        });
-    },
-
-    exportToXlsx: function(){
-        this.doExport({
-            type:       'excel07',
-            title:      'Grid export demo',
-            fileName:   'GridExport.xlsx'
-        });
-    },
-
-    doExport: function(config){
-        this.getView().saveDocumentAs(config);
-    },
-
-    onBeforeDocumentSave: function(view){
+    onBeforeDocumentSave: function(view) {
+        this.timeStarted = Date.now();
         view.mask('Document is prepared for export. Please wait ...');
+        Ext.log('export started');
     },
 
-    onDocumentSave: function(view){
+    onDocumentSave: function(view) {
         view.unmask();
+        Ext.log('export finished; time passed = ' + (Date.now() - this.timeStarted));
     },
 
-    onDataReady: function(){
-        Ext.log('"dataready" event fired!');
+    onDataReady: function() {
+        Ext.log('data ready; time passed = ' + (Date.now() - this.timeStarted));
     }
 
 });

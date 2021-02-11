@@ -1,6 +1,10 @@
 $kitchensink-thumbnail-background-color: #888;
 $kitchensink-thumbnail-color: #fff;
 
+$kitchensink-thumbnail-size: 96px;
+$kitchensink-thumbnail-width: $kitchensink-thumbnail-size + 20;
+$kitchensink-thumbnail-height: $kitchensink-thumbnail-size + 60;
+
 @if $theme-name == 'theme-crisp' or $theme-name == 'theme-crisp-touch' {
     $kitchensink-thumbnail-background-color: #2a3f5d;
 } @else if $theme-name == 'theme-neptune' or $theme-name == 'theme-neptune-touch' {
@@ -10,9 +14,16 @@ $kitchensink-thumbnail-color: #fff;
     $kitchensink-thumbnail-background-color: #275287;
 } @else if $theme-name == 'theme-triton' {
     $kitchensink-thumbnail-background-color: darken($base-color, 5%);
+} @else if $theme-name == 'theme-graphite' {
+    $kitchensink-thumbnail-background-color: darken($base-color, 5%);
+    $kitchensink-thumbnail-width: 130px;
+    $kitchensink-thumbnail-height: 190px;
+} @else if $theme-name == 'theme-material' {
+    $kitchensink-thumbnail-background-color: $base-color;
+    $kitchensink-thumbnail-width: 130px;
+    $kitchensink-thumbnail-height: 190px;
 }
 
-$kitchensink-thumbnail-size: 96px;
 
 .thumbnails {
     display: table;
@@ -20,8 +31,8 @@ $kitchensink-thumbnail-size: 96px;
 
 .thumbnail-item {
     float: left;
-    width: $kitchensink-thumbnail-size + 20;
-    height: $kitchensink-thumbnail-size + 60;
+    width: $kitchensink-thumbnail-width;
+    height: $kitchensink-thumbnail-height;
     margin-right: 20px;
     cursor: pointer;
     //overflow: hidden;

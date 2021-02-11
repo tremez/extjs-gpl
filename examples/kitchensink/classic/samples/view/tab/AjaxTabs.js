@@ -8,6 +8,7 @@ Ext.define('KitchenSink.view.tab.AjaxTabs', {
 
     //<example>
     exampleTitle: 'Ajax Tabs',
+    cls: Ext.baseCSSPrefix + 'shadow',
     //</example>
     width: 600,
     height: 400,

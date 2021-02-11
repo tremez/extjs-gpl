@@ -1,0 +1,15 @@
+$splitButton-color: dynamic($highlight-color);
+$splitButton-border-color: dynamic(mix(#000, $neutral-light-color, 7%));
+$splitButton-border-radius: dynamic(null);
+$splitButton-border-radius-big: dynamic(null);
+$splitButton-small-border-radius: dynamic(null);
+$splitButton-back-forward-tip-horizontal-offset: dynamic(0);
+$splitButton-padding: dynamic(7px 8px);
+$splitButton-line-height-big: dynamic(22px);
+$splitButton-padding-big: dynamic(10px);
+$splitButton-icon-color: dynamic($neutral-dark-color);
+
+$splitButton-action-ui: dynamic((
+    background-color: $base-color,
+    color: $light-color
+));

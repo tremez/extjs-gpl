@@ -64,7 +64,7 @@ Ext.define('Ext.event.gesture.DoubleTap', {
 
             me.startTime = e.time;
 
-            clearTimeout(me.singleTapTimer);
+            Ext.undefer(me.singleTapTimer);
         }
 
         return ret;
@@ -124,7 +124,8 @@ Ext.define('Ext.event.gesture.DoubleTap', {
         if (time - me.startTime > maxDuration) {
             me.fire('singletap', e);
             me.reset();
-        } else {
+        }
+        else {
             me.setSingleTapTimer(e);
         }
     },
@@ -141,15 +142,16 @@ Ext.define('Ext.event.gesture.DoubleTap', {
     reset: function() {
         var me = this;
 
-        clearTimeout(me.singleTapTimer);
+        Ext.undefer(me.singleTapTimer);
 
         me.startTime = me.lastTapTime = 0;
- 
+
         me.lastStartPoint = me.startPoint = me.singleTapTimer = null;
 
         return me.callParent();
     }
 }, function(DoubleTap) {
     var gestures = Ext.manifest.gestures;
+
     DoubleTap.instance = new DoubleTap(gestures && gestures.doubleTap);
 });

@@ -7,7 +7,9 @@ Ext.define('Ext.util.CSS', function() {
         rules = null,
         doc = document,
         camelRe = /(-[a-z])/gi,
-        camelFn = function(m, a){ return a.charAt(1).toUpperCase(); };
+        camelFn = function(m, a) {
+            return a.charAt(1).toUpperCase();
+        };
 
     return {
 
@@ -32,7 +34,7 @@ Ext.define('Ext.util.CSS', function() {
          * @param {String} id An id to add to the stylesheet for later removal
          * @return {CSSStyleSheet}
          */
-        createStyleSheet: function (cssText, id) {
+        createStyleSheet: function(cssText, id) {
             var ss,
                 head = doc.getElementsByTagName('head')[0],
                 styleEl = doc.createElement('style');
@@ -40,21 +42,24 @@ Ext.define('Ext.util.CSS', function() {
             styleEl.setAttribute('type', 'text/css');
 
             if (id) {
-               styleEl.setAttribute('id', id);
+                styleEl.setAttribute('id', id);
             }
 
             // Feature detect old IE
             ss = styleEl.styleSheet;
+
             if (ss) {
                 head.appendChild(styleEl);
                 ss.cssText = cssText;
-            } else {
+            }
+            else {
                 styleEl.appendChild(doc.createTextNode(cssText));
                 head.appendChild(styleEl);
                 ss = styleEl.sheet;
             }
 
             CSS.cacheStyleSheet(ss);
+
             return ss;
         },
 
@@ -64,8 +69,9 @@ Ext.define('Ext.util.CSS', function() {
          * reference to remove
          */
         removeStyleSheet: function(stylesheet) {
-            var styleEl = (typeof stylesheet === 'string') ?
-                doc.getElementById(stylesheet) : stylesheet.ownerNode;
+            var styleEl = (typeof stylesheet === 'string')
+                ? doc.getElementById(stylesheet)
+                : stylesheet.ownerNode;
 
             if (styleEl) {
                 styleEl.parentNode.removeChild(styleEl);
@@ -77,8 +83,9 @@ Ext.define('Ext.util.CSS', function() {
          * @param {String} id The id of an existing link tag to remove
          * @param {String} url The href of the new stylesheet to include
          */
-        swapStyleSheet : function(id, url) {
+        swapStyleSheet: function(id, url) {
             var ss;
+
             CSS.removeStyleSheet(id);
             ss = doc.createElement("link");
             ss.setAttribute("rel", "stylesheet");
@@ -91,17 +98,19 @@ Ext.define('Ext.util.CSS', function() {
         /**
          * @private
          */
-        cacheStyleSheet : function(ss) {
+        cacheStyleSheet: function(ss) {
             if (!rules) {
                 rules = CSS.rules = {};
             }
-            try {// try catch for cross domain access issue
+
+            try { // try catch for cross domain access issue
+                // eslint-disable-next-line vars-on-top
                 var ssRules = ss.cssRules || ss.rules,
                     i = ssRules.length - 1,
                     imports = ss.imports,
                     len = imports ? imports.length : 0,
                     rule, j;
-                    
+
                 // Old IE has a different way of handling imports
                 for (j = 0; j < len; ++j) {
                     CSS.cacheStyleSheet(imports[j]);
@@ -109,29 +118,35 @@ Ext.define('Ext.util.CSS', function() {
 
                 for (; i >= 0; --i) {
                     rule = ssRules[i];
+
                     // If it's an @import rule, import its stylesheet
                     if (rule.styleSheet) {
                         CSS.cacheStyleSheet(rule.styleSheet);
                     }
+
                     CSS.cacheRule(rule, ss);
                 }
-            } catch(e) {}
+            }
+            catch (e) {
+                // ignore
+            }
         },
 
         cacheRule: function(cssRule, styleSheet) {
+            var selectorText, selectorCount, j;
+
             // If it's an @import rule, import its stylesheet
             if (cssRule.styleSheet) {
                 return CSS.cacheStyleSheet(cssRule.styleSheet);
             }
 
-            var selectorText = cssRule.selectorText,
-                selectorCount, j;
+            selectorText = cssRule.selectorText;
 
             if (selectorText) {
-
                 // Split in case there are multiple, comma-delimited selectors
                 selectorText = selectorText.split(',');
                 selectorCount = selectorText.length;
+
                 for (j = 0; j < selectorCount; j++) {
                     // IE<8 does not keep a reference to parentStyleSheet in the rule, so we
                     // must cache an object like this until IE<8 is deprecated.
@@ -148,19 +163,21 @@ Ext.define('Ext.util.CSS', function() {
          * @param {Boolean} refreshCache true to refresh the internal cache
          * @return {Object} An object (hash) of rules indexed by selector
          */
-        getRules : function(refreshCache) {
+        getRules: function(refreshCache) {
             var result = {},
                 selector;
 
             if (rules === null || refreshCache) {
                 CSS.refreshCache();
             }
+
             for (selector in rules) {
                 result[selector] = rules[selector].cssRule;
             }
+
             return result;
         },
-        
+
         /**
          * Refresh the rule cache if you have dynamically added stylesheets
          * @return {Object} An object (hash) of rules indexed by selector
@@ -171,20 +188,26 @@ Ext.define('Ext.util.CSS', function() {
                 len = ds.length;
 
             rules = CSS.rules = {};
+
             for (; i < len; i++) {
                 try {
                     if (!ds[i].disabled) {
                         CSS.cacheStyleSheet(ds[i]);
                     }
-                } catch(e) {}
+                }
+                catch (e) {
+                    // ignore
+                }
             }
         },
 
         /**
          * Gets an an individual CSS rule by selector(s)
-         * @param {String/String[]} selector The CSS selector or an array of selectors to try. The first selector that is found is returned.
-         * @param {Boolean} refreshCache true to refresh the internal cache if you have recently updated any rules or added styles dynamically
-         * @return {CSSStyleRule} The CSS rule or null if one is not found
+         * @param {String/String[]} selector The CSS selector or an array of selectors to try.
+         * The first selector that is found is returned.
+         * @param {Boolean} refreshCache true to refresh the internal cache if you have recently
+         * updated any rules or added styles dynamically
+         * @param rawCache The CSS rule or null if one is not found
          */
         getRule: function(selector, refreshCache, rawCache) {
             var i, result;
@@ -192,26 +215,35 @@ Ext.define('Ext.util.CSS', function() {
             if (!rules || refreshCache) {
                 CSS.refreshCache();
             }
+
             if (!Ext.isArray(selector)) {
                 result = rules[selector.toLowerCase()];
+
                 if (result && !rawCache) {
                     result = result.cssRule;
                 }
+
                 return result || null;
             }
+
             for (i = 0; i < selector.length; i++) {
                 if (rules[selector[i]]) {
-                    return rawCache ? rules[selector[i].toLowerCase()] : rules[selector[i].toLowerCase()].cssRule;
+                    return rawCache
+                        ? rules[selector[i].toLowerCase()]
+                        : rules[selector[i].toLowerCase()].cssRule;
                 }
             }
+
             return null;
         },
 
         /**
          * Creates a rule.
-         * @param {CSSStyleSheet} styleSheet The StyleSheet to create the rule in as returned from {@link #createStyleSheet}.
+         * @param {CSSStyleSheet} styleSheet The StyleSheet to create the rule in as returned
+         * from {@link #createStyleSheet}.
          * @param {String} selector The selector to target the rule.
-         * @param {String} property The cssText specification eg `"color:red;font-weight:bold;text-decoration:underline"`
+         * @param {String} cssText The cssText specification e.g.
+         * `"color:red;font-weight:bold;text-decoration:underline"`
          * @return {CSSStyleRule} The created rule
          */
         createRule: function(styleSheet, selector, cssText) {
@@ -221,43 +253,55 @@ Ext.define('Ext.util.CSS', function() {
 
             if (styleSheet.insertRule) {
                 styleSheet.insertRule(selector + ' {' + cssText + '}', index);
-            } else {
-                styleSheet.addRule(selector, cssText||' ');
             }
+            else {
+                styleSheet.addRule(selector, cssText || ' ');
+            }
+
             CSS.cacheRule(result = ruleSet[index], styleSheet);
+
             return result;
         },
 
         /**
          * Updates a rule property
-         * @param {String/String[]} selector If it's an array it tries each selector until it finds one. Stops immediately once one is found.
-         * @param {String} property The css property or a cssText specification eg `"color:red;font-weight:bold;text-decoration:underline"`
+         * @param {String/String[]} selector If it's an array it tries each selector until
+         * it finds one. Stops immediately once one is found.
+         * @param {String} property The css property or a cssText specification e.g.
+         * `"color:red;font-weight:bold;text-decoration:underline"`
          * @param {String} value The new value for the property
          * @return {Boolean} true If a rule was found and updated
          */
-        updateRule : function(selector, property, value) {
+        updateRule: function(selector, property, value) {
             var rule, i, styles;
+
             if (!Ext.isArray(selector)) {
                 rule = CSS.getRule(selector);
+
                 if (rule) {
                     // 2 arg form means cssText sent, so parse it and update each style
                     if (arguments.length === 2) {
                         styles = Ext.Element.parseStyles(property);
+
                         for (property in styles) {
                             rule.style[property.replace(camelRe, camelFn)] = styles[property];
                         }
-                    } else {
+                    }
+                    else {
                         rule.style[property.replace(camelRe, camelFn)] = value;
                     }
+
                     return true;
                 }
-            } else {
+            }
+            else {
                 for (i = 0; i < selector.length; i++) {
                     if (CSS.updateRule(selector[i], property, value)) {
                         return true;
                     }
                 }
             }
+
             return false;
         },
 
@@ -268,11 +312,14 @@ Ext.define('Ext.util.CSS', function() {
             if (rule) {
                 styleSheet = rule.parentStyleSheet;
                 index = Ext.Array.indexOf(styleSheet.cssRules || styleSheet.rules, rule.cssRule);
+
                 if (styleSheet.deleteRule) {
                     styleSheet.deleteRule(index);
-                } else {
+                }
+                else {
                     styleSheet.removeRule(index);
                 }
+
                 delete rules[selector];
             }
         }

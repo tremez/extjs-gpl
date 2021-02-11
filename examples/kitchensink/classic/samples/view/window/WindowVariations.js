@@ -4,7 +4,7 @@
 Ext.define('KitchenSink.view.window.WindowVariations', {
     extend: 'Ext.container.Container',
     xtype: 'window-variations',
-    
+
     //<example>
     width: 10,
     height: 10,
@@ -16,6 +16,20 @@ Ext.define('KitchenSink.view.window.WindowVariations', {
         autoShow: true
     },
 
+    profiles: {
+        classic: {
+            width: 200
+        },
+        neptune: {
+            width: 200
+        },
+        graphite: {
+            width: 260
+        },
+        'classic-material': {
+            width: 260
+        }
+    },
     items: [{
         xtype: 'window',
         title: 'Left Header',
@@ -70,7 +84,7 @@ Ext.define('KitchenSink.view.window.WindowVariations', {
             closable: false,
             // Force the Header to be within its parent
             constrainHeader: true,
-
+            width: '${width}',
             x: 10,
             y: 1000  // will be limited by constrain
         }]

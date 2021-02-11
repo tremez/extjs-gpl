@@ -6,17 +6,25 @@
 Ext.define('Ext.util.translatable.CssTransform', {
     extend: 'Ext.util.translatable.Dom',
 
+    alias: 'translatable.csstransform', // also configures Factoryable
+
     isCssTransform: true,
 
-    doTranslate: function(x, y) {
-        var me = this,
-            element = me.getElement();
+    posRegex: /(\d+)px[^\d]*(\d+)px/,
 
-        if (!me.destroyed && !element.destroyed) {
-            element.translate(x, y);
+    doTranslate: function(x, y) {
+        this.getElement().translate(x, y);
+    },
+
+    syncPosition: function() {
+        var pos = this.posRegex.exec(this.getElement().dom.style.tranform);
+
+        if (pos) {
+            this.x = parseFloat(pos[1]);
+            this.y = parseFloat(pos[2]);
         }
 
-        me.callParent([x, y]);
+        return [this.x, this.y];
     },
 
     destroy: function() {

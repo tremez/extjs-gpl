@@ -1,7 +1,7 @@
 Ext.define('Ticket.view.ticket.Detail', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.ticketdetail',
-    
+
     requires: [
         'Ticket.view.ticket.DetailModel',
         'Ticket.view.ticket.DetailController',
@@ -12,29 +12,29 @@ Ext.define('Ticket.view.ticket.Detail', {
         'Ext.form.field.ComboBox',
         'Ext.view.View'
     ],
-    
+
     bind: {
         title: 'Ticket - {theTicket.id}'
     },
-    
+
     layout: {
         type: 'vbox',
         align: 'stretch'
     },
-    
+
     componentCls: 'ticket-detail',
     bodyPadding: 20,
-    
+
     controller: 'ticketdetail',
     viewModel: {
         type: 'ticketdetail'
     },
-    
+
     tbar: [{
         text: 'Save',
         handler: 'onSaveClick'
     }],
-    
+
     items: [{
         xtype: 'component',
         bind: '{theTicket.title}',

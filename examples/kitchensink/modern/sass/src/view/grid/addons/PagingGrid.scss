@@ -1,0 +1,13 @@
+.sliding-pager {
+    a {
+        text-decoration: if($theme-name == 'theme-material', none, inherit);
+        color: if($theme-name == 'theme-material', $base-color, inherit);
+    }
+
+    .x-pressed,
+    .x-selected {
+        a {
+            color: if($theme-name == 'theme-material', $reverse-color, inherit);
+        }
+    }
+}

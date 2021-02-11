@@ -13,13 +13,31 @@ Ext.define('KitchenSink.view.binding.TwoWayFormulas', {
     bodyPadding: 10,
     //</example>
 
+    profiles: {
+        classic: {
+            width: 450,
+            numberfieldWidth: 100
+        },
+        neptune: {
+            width: 450,
+            numberfieldWidth: 100
+        },
+        graphite: {
+            width: 550,
+            numberfieldWidth: 100
+        },
+        'classic-material': {
+            width: 550,
+            numberfieldWidth: 150
+        }
+    },
     title: 'Two-Way Formulas',
 
     manageHeight: false,
-    width: 450,
+    width: '${width}',
     frame: true,
     resizable: true,
-    
+
     viewModel: {
         // Formulas are defined by the ViewModel:
         type: 'binding-two-way-formulas',
@@ -53,7 +71,7 @@ Ext.define('KitchenSink.view.binding.TwoWayFormulas', {
         },
         items: [{
             xtype: 'numberfield',
-            width: 100,
+            width: '${numberfieldWidth}',
             bind: '{age}',
             minValue: 0
         }, {

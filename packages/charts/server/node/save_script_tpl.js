@@ -1,20 +1,22 @@
-var page = require('webpage').create();
+var page = require('webpage').create(),
 
-var format = '#{format}';
-var data = '#{data}';
-var scale = parseFloat('#{scale}', 10);
-var width = parseInt('#{width}', 10);
-var height = parseInt('#{height}', 10);
+    format = '#{format}',
+    data = '#{data}',
+    scale = parseFloat('#{scale}', 10),
+    width = parseInt('#{width}', 10),
+    height = parseInt('#{height}', 10);
 
 try {
     var pdfOptions = JSON.parse('#{pdf}' || null);
-} catch (e) {
+}
+catch (e) {
     console.error("Parsing PDF options failed.");
 }
 
 try {
     var jpegOptions = JSON.parse('#{jpeg}' || null);
-} catch (e) {
+}
+catch (e) {
     console.error("Parsing JPEG options failed.");
 }
 
@@ -28,10 +30,11 @@ page.content = '<img id="chart" src="' + data + '" style="-webkit-transform-orig
 window.setTimeout(adjustSize, 1);
 
 function adjustSize() {
-    var naturalSize = page.evaluate(function () {
+    var naturalSize = page.evaluate(function() {
         // By default the body has some margin, but we don't want that to be a part of the rendered image.
         var style = document.createElement('style'),
             text = document.createTextNode('body { margin: 0 }');
+
         style.setAttribute('type', 'text/css');
         style.appendChild(text);
         document.head.insertBefore(style, document.head.firstChild);
@@ -54,8 +57,9 @@ function adjustSize() {
     width = Math.round((width || naturalSize.width) * scale);
     height = Math.round((height || naturalSize.height) * scale);
 
-    page.evaluate(function (width, height) {
+    page.evaluate(function(width, height) {
         var img = document.getElementById('chart');
+
         img.style.width = width;
         img.style.height = height;
     }, width, height);

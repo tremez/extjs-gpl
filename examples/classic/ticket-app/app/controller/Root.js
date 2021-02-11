@@ -4,25 +4,26 @@
  */
 Ext.define('Ticket.controller.Root', {
     extend: 'Ext.app.Controller',
-    
+
     requires: [
         'Ticket.view.login.Login',
         'Ticket.view.main.Main',
         'Ticket.LoginManager'
     ],
-    
+
     loadingText: 'Loading...',
-    
-    onLaunch: function () {
+
+    onLaunch: function() {
         if (Ext.isIE8) {
             Ext.Msg.alert('Not Supported', 'This example is not supported on Internet Explorer 8. Please use a different browser.');
+
             return;
         }
-        
+
         this.session = new Ext.data.Session({
             autoDestroy: false
         });
-        
+
         this.login = new Ticket.view.login.Login({
             session: this.session,
             autoShow: true,
@@ -41,16 +42,16 @@ Ext.define('Ticket.controller.Root', {
      * @param organization
      * @param loginManager
      */
-    onLogin: function (loginController, user, organization, loginManager) {
+    onLogin: function(loginController, user, organization, loginManager) {
         this.login.destroy();
 
         this.loginManager = loginManager;
         this.organization = organization;
         this.user = user;
-        
+
         this.showUI();
     },
-    
+
     showUI: function() {
         this.viewport = new Ticket.view.main.Main({
             session: this.session,
@@ -62,7 +63,7 @@ Ext.define('Ticket.controller.Root', {
             }
         });
     },
-    
+
     getSession: function() {
         return this.session;
     }

@@ -2,11 +2,15 @@ Ext.define('KitchenSink.store.Navigation', {
     extend: 'Ext.data.TreeStore',
     alias: 'store.navigation',
 
+    requires: [
+        'KitchenSink.view.window.Toast'
+    ],
+
     // So that a leaf node being filtered in
     // causes its parent to be filtered in too.
     filterer: 'bottomup',
 
-    constructor: function (config) {
+    constructor: function(config) {
         var me = this,
             items = [],
             ver = Ext.getVersion().parts;
@@ -23,7 +27,6 @@ Ext.define('KitchenSink.store.Navigation', {
         if (!Ext.isIE10m) {
             items.push(me.getNavItemsD3());
         }
-
 
         items = {
             text: 'All',
@@ -50,7 +53,7 @@ Ext.define('KitchenSink.store.Navigation', {
      * @param {Object/Object[]} items
      * @param {String} tier
      */
-    fixUp: function (items, tier, parent) {
+    fixUp: function(items, tier, parent) {
         var me = this,
             item = items,
             i, since;
@@ -61,7 +64,8 @@ Ext.define('KitchenSink.store.Navigation', {
 
                 if (item.compat === false) {
                     items.splice(i, 1);
-                } else {
+                }
+                else {
                     me.fixUp(item, tier, parent);
 
                     if (parent && (item.isNew || item.hasNew)) {
@@ -69,15 +73,17 @@ Ext.define('KitchenSink.store.Navigation', {
                     }
                 }
             }
-        } else {
+        }
+        else {
             since = item.since;
+
             if (since) {
                 item.sinceVer = since = new Ext.Version(since);
                 item.isNew = since.gtEq(me.ver);
             }
 
             tier = item.tier || (item.tier = tier || 'standard');
-            
+
             if (!('iconCls' in item)) {
                 item.iconCls = 'icon-' + item.id;
             }
@@ -88,7 +94,7 @@ Ext.define('KitchenSink.store.Navigation', {
         }
     },
 
-    getNavItemsCalendar: function () {
+    getNavItemsCalendar: function() {
         return {
             text: 'Calendar',
             id: 'calendar',
@@ -109,7 +115,7 @@ Ext.define('KitchenSink.store.Navigation', {
         };
     },
 
-    getNavItemsCharts: function () {
+    getNavItemsCharts: function() {
         return {
             text: 'Charts',
             id: 'charts',
@@ -123,9 +129,10 @@ Ext.define('KitchenSink.store.Navigation', {
                 text: 'Column Charts',
                 id: 'column-charts',
 
-                description: 'Column charts provide a visual comparison of numbers or frequency against different discrete ' +
-                             'categories or groups. These charts display vertical bars to represent information in a way + ' +
-                             'that allows for quick generalizations regarding your data.',
+                description: 'Column charts provide a visual comparison of numbers or frequency ' +
+                             'against different discrete categories or groups. These charts ' +
+                             'display vertical bars to represent information in a way that allows' +
+                             ' for quick generalizations regarding your data.',
                 children: [
                     { id: 'column-basic', text: 'Basic', leaf: true },
                     { id: 'column-stacked', text: 'Stacked', leaf: true },
@@ -136,9 +143,10 @@ Ext.define('KitchenSink.store.Navigation', {
             }, {
                 text: '3D Column Charts',
                 id: 'column-charts-3d',
-                description: '3D Column charts provide a visual comparison of numbers or frequency against different discrete ' +
-                             'categories or groups. These charts display vertical bars to represent information in a way + ' +
-                             'that allows for quick generalizations regarding your data.',
+                description: '3D Column charts provide a visual comparison of numbers or ' +
+                             'frequency against different discrete categories or groups. ' +
+                             'These charts display vertical bars to represent information ' +
+                             'in a way that allows for quick generalizations regarding your data.',
                 children: [
                     { id: 'column-basic-3d', text: 'Basic', leaf: true },
                     { id: 'column-grouped-3d', text: 'Grouped', leaf: true },
@@ -151,8 +159,9 @@ Ext.define('KitchenSink.store.Navigation', {
                 text: 'Bar Charts',
                 id: 'bar-charts',
 
-                description: 'Bar charts provide a visual comparison of numbers or frequency against different discrete ' +
-                             'categories or groups. These charts display horizontal bars to represent information in a way + ' +
+                description: 'Bar charts provide a visual comparison of numbers or frequency ' +
+                             'against different discrete categories or groups. These charts ' +
+                             'display horizontal bars to represent information in a way ' +
                              'that allows for quick generalizations regarding your data.',
                 children: [
                     { id: 'bar-basic', text: 'Basic', leaf: true },
@@ -163,9 +172,10 @@ Ext.define('KitchenSink.store.Navigation', {
                 text: '3D Bar Charts',
                 id: 'bar-charts-3d',
 
-                description: '3D Bar charts provide a visual comparison of numbers or frequency against different discrete ' +
-                             'categories or groups. These charts display horizontal bars to represent information in a way + ' +
-                             'that allows for quick generalizations regarding your data.',
+                description: '3D Bar charts provide a visual comparison of numbers or frequency ' +
+                             'against different discrete categories or groups. These charts ' +
+                             'display horizontal bars to represent information in a way that ' +
+                             'allows for quick generalizations regarding your data.',
                 children: [
                     { id: 'bar-basic-3d', text: 'Basic', leaf: true },
                     { id: 'bar-stacked-3d', text: 'Stacked', leaf: true },
@@ -176,8 +186,9 @@ Ext.define('KitchenSink.store.Navigation', {
                 text: 'Line Charts',
                 id: 'line-charts',
 
-                description: 'Line charts display information as a series of markers that are connected by lines.' +
-                             'These charts are excellent for showing underlying patterns between data points.',
+                description: 'Line charts display information as a series of markers ' +
+                             'that are connected by lines. These charts are excellent ' +
+                             'for showing underlying patterns between data points.',
                 children: [
                     { id: 'line-basic', text: 'Basic', leaf: true },
                     { id: 'line-marked', text: 'Basic + Markers', leaf: true },
@@ -187,14 +198,16 @@ Ext.define('KitchenSink.store.Navigation', {
                     { id: 'line-markers', text: 'With Image Markers', leaf: true },
                     { id: 'line-crosszoom', text: 'With Zoom', leaf: true },
                     { id: 'line-renderer', text: 'With Renderer', leaf: true },
-                    { id: 'line-real-time', text: 'Real-time', leaf: true }
+                    { id: 'line-real-time-date', text: 'Real-time (dates)', leaf: true },
+                    { id: 'line-real-time-number', text: 'Real-time (numbers)', leaf: true }
                 ]
             }, {
                 text: 'Area Charts',
                 id: 'area-charts',
 
-                description: 'Area charts display data by differentiating the area between lines. They are often ' +
-                             'used to measure trends by representing totals over time.',
+                description: 'Area charts display data by differentiating the area between ' +
+                             'lines. They are often used to measure trends by representing ' +
+                             'totals over time.',
                 children: [
                     { id: 'area-basic', text: 'Basic', leaf: true },
                     { id: 'area-stacked', text: 'Stacked', leaf: true },
@@ -205,9 +218,9 @@ Ext.define('KitchenSink.store.Navigation', {
                 text: 'Scatter Charts',
                 id: 'scatter-charts',
 
-                description: 'Scatter charts are diagrams that are used to display data as a collection of points.' +
-                             'They are perfect for showing multiple measurements to aid in finding correlation ' +
-                             'between variables.',
+                description: 'Scatter charts are diagrams that are used to display data as a ' +
+                             'collection of points. They are perfect for showing multiple ' +
+                             'measurements to aid in finding correlation  between variables.',
                 children: [
                     { id: 'scatter-basic', text: 'Basic', leaf: true },
                     { id: 'scatter-custom-icons', text: 'Custom Icons', leaf: true },
@@ -217,9 +230,9 @@ Ext.define('KitchenSink.store.Navigation', {
                 text: 'Financial Charts',
                 id: 'financial-charts',
 
-                description : 'Financial charts provide a simple method for showing the change in price over time. ' +
-                              'A quick look at these charts provides information regarding financial highs, lows, ' +
-                              'opens, and closes.',
+                description: 'Financial charts provide a simple method for showing the change ' +
+                             'in price over time. A quick look at these charts provides ' +
+                             'information regarding financial highs, lows, opens, and closes.',
                 children: [
                     { id: 'financial-candlestick', text: 'Candlestick', leaf: true },
                     { id: 'financial-ohlc', text: 'OHLC', leaf: true }
@@ -228,8 +241,9 @@ Ext.define('KitchenSink.store.Navigation', {
                 text: 'Pie Charts',
                 id: 'pie-charts',
 
-                description: 'Pie charts show sectors of data proportional to the whole. They are excellent for ' +
-                             'providing a quick and simple comparison of a category to the whole.',
+                description: 'Pie charts show sectors of data proportional to the whole. ' +
+                             'They are excellent for providing a quick and simple comparison ' +
+                             'of a category to the whole.',
                 children: [
                     { id: 'pie-basic', text: 'Basic', leaf: true },
                     { id: 'pie-custom', text: 'Spie', leaf: true },
@@ -241,8 +255,9 @@ Ext.define('KitchenSink.store.Navigation', {
                 text: 'Radar Charts',
                 id: 'radar-charts',
 
-                description: 'Radar charts offer a flat view of data involving multiple variable quantities. They are ' +
-                             'generally used to show performance metrics because they easily emphasize strengths and ' +
+                description: 'Radar charts offer a flat view of data involving multiple ' +
+                             'variable quantities. They are generally used to show performance ' +
+                             'metrics because they easily emphasize strengths and ' +
                              'weaknesses from a simple two-dimensional perspective.',
                 children: [
                     { id: 'radar-basic', text: 'Basic', leaf: true },
@@ -254,49 +269,68 @@ Ext.define('KitchenSink.store.Navigation', {
                 text: 'Gauge Charts',
                 id: 'gauge-charts',
 
-                description: 'Gauge charts contain a single value axis that provides simple visualization for dashboards.' +
-                             'They are generally used to show the current status or heartbeat with a single point of data.',
+                description: 'Gauge charts contain a single value axis that provides simple ' +
+                             'visualization for dashboards. They are generally used to show ' +
+                             'the current status or heartbeat with a single point of data.',
                 children: [
                     { id: 'gauge-basic', text: 'Basic', leaf: true }
+                ]
+            }, {
+                text: 'Box Plot Charts',
+                id: 'boxplot-charts',
+
+                description: '',
+                children: [
+                    { id: 'boxplot-nobel', text: 'Nobel Prize Winners', leaf: true }
                 ]
             }, {
                 text: 'Combination Charts',
                 id: 'combination-charts',
 
-                description: 'Sencha Charts gives you the ability to easily join several chart types into one chart. ' +
-                             'This gives developers the ability to show multiple series in a single view.',
+                description: 'Sencha Charts gives you the ability to easily join several ' +
+                             'chart types into one chart. This gives developers the ability ' +
+                             'to show multiple series in a single view.',
                 children: [
                     { id: 'combination-pareto', text: 'Pareto', leaf: true },
                     { id: 'combination-dashboard', text: 'Interactive Dashboard', leaf: true },
                     { id: 'unemployment', text: 'Infographic', leaf: true, compat: !Ext.isIE8 },
                     { id: 'combination-theme', text: 'Custom Theme', leaf: true },
-                    { id: 'combination-bindingtabs', text: 'Binding & Tabs', leaf: true}
+                    { id: 'combination-bindingtabs', text: 'Binding & Tabs', leaf: true }
+                ]
+            }, {
+                text: 'Navigator',
+                id: 'navigator-charts',
+
+                description: '',
+                children: [
+                    { id: 'navigator-line', text: 'Line Chart', leaf: true }
                 ]
             }, {
                 text: 'Drawing',
                 id: 'drawing',
 
-                description: 'The Sencha Draw package allows developers to create cross-browser compatible and mobile ' +
-                             'friendly graphics, text, and shapes. You can even create a standalone drawing tool!',
+                description: 'The Sencha Draw package allows developers to create ' +
+                             'cross-browser compatible and mobile friendly graphics, ' +
+                             'text, and shapes. You can even create a standalone drawing tool!',
                 children: [
                     { id: 'free-paint', text: 'Free Paint', leaf: true },
                     { id: 'draw-bounce', text: 'Bouncing Logo', leaf: true, compat: !Ext.isIE8 },
                     { id: 'hit-test', text: 'Hit Testing', leaf: true },
                     { id: 'intersections', text: 'Path Intersections', leaf: true },
                     { id: 'draw-composite', text: 'Composite', leaf: true },
-                    { id: 'sprite-events', text: 'Sprite Events', leaf: true},
+                    { id: 'sprite-events', text: 'Sprite Events', leaf: true },
                     { id: 'easing-functions', text: 'Easing Functions', leaf: true }
                 ]
             }]
         };
     },
 
-    getNavItemsD3: function () {
+    getNavItemsD3: function() {
         return {
             text: 'D3',
             id: 'd3',
             expanded: true,
-            tier: 'pro',
+            tier: 'premium',
             since: '6.2.0',
 
             description: 'Ext JS seamlessly integrates with D3, so you can visualize ' +
@@ -311,9 +345,14 @@ Ext.define('KitchenSink.store.Navigation', {
 
                 children: [
                     { id: 'd3-view-tree', text: 'Tree', leaf: true },
+                    { id: 'd3-view-sencha-tree', text: 'Org Chart', leaf: true },
                     { id: 'd3-view-treemap', text: 'Treemap', leaf: true },
                     { id: 'd3-view-treemap-tooltip', text: 'Treemap Tooltip', leaf: true },
-                    { id: 'd3-view-treemap-pivot-configurator', text: 'Configurable Pivot TreeMap', leaf: true },
+                    {
+                        id: 'd3-view-treemap-pivot-configurator',
+                        text: 'Configurable Pivot TreeMap',
+                        leaf: true
+                    },
                     { id: 'd3-view-pack', text: 'Pack', leaf: true },
                     { id: 'd3-view-words', text: 'Words', leaf: true },
                     { id: 'd3-view-sunburst', text: 'Sunburst', leaf: true },
@@ -330,7 +369,12 @@ Ext.define('KitchenSink.store.Navigation', {
                     { id: 'd3-view-heatmap-purchases', text: 'Purchases by Day', leaf: true },
                     { id: 'd3-view-heatmap-sales', text: 'Sales Per Employee', leaf: true },
                     { id: 'd3-view-heatmap-pivot', text: 'Pivot Heatmap', leaf: true },
-                    { id: 'd3-view-heatmap-pivot-configurator', text: 'Configurable Pivot Heatmap', leaf: true }                ]
+                    {
+                        id: 'd3-view-heatmap-pivot-configurator',
+                        text: 'Configurable Pivot Heatmap',
+                        leaf: true
+                    }
+                ]
             }, {
                 id: 'd3-svg',
                 text: 'Custom SVG',
@@ -356,8 +400,9 @@ Ext.define('KitchenSink.store.Navigation', {
         };
     },
 
-    getNavItemsGeneral: function () {
+    getNavItemsGeneral: function() {
         var me = this;
+
         return {
             text: 'Components',
             id: 'components',
@@ -385,13 +430,14 @@ Ext.define('KitchenSink.store.Navigation', {
         };
     },
 
-    getNavItemsButtons: function () {
+    getNavItemsButtons: function() {
         return {
             text: 'Buttons',
             id: 'buttons',
 
-            description: 'Buttons are a utilitarian component of Ext JS. From forms to grid row widgets, ' +
-                         'they can be used in nearly any application for user interaction and directing usability.',
+            description: 'Buttons are a utilitarian component of Ext JS. From forms to ' +
+                         'grid row widgets, they can be used in nearly any application ' +
+                         'for user interaction and directing usability.',
             children: [
                 { id: 'basic-buttons', text: 'Basic Buttons', leaf: true },
                 { id: 'toggle-buttons', text: 'Toggle Buttons', leaf: true },
@@ -408,13 +454,13 @@ Ext.define('KitchenSink.store.Navigation', {
         };
     },
 
-    getNavItemsDataBinding: function () {
+    getNavItemsDataBinding: function() {
         return {
             text: 'Data Binding',
             id: 'data-binding',
 
-            description: 'Data binding, and the ViewModel that powers it, are powerful pieces of Ext JS. ' +
-                         'Together, they enable you to create a seamless connection between your application UI ' +
+            description: 'Data binding, and the ViewModel that powers it, are powerful ' +
+                         'pieces of Ext JS. Together, they enable you to create a seamless ' +
                          'and your business logic.',
             children: [
                 { id: 'binding-hello-world', text: 'Hello World', leaf: true },
@@ -423,10 +469,10 @@ Ext.define('KitchenSink.store.Navigation', {
                 { id: 'binding-formulas', text: 'Formulas', leaf: true },
                 { id: 'binding-associations', text: 'Associations', leaf: true },
                 { id: 'binding-component-state', text: 'Component State', leaf: true },
-                { id: 'binding-chained-stores', text: 'Chaining Stores', leaf: true},
+                { id: 'binding-chained-stores', text: 'Chaining Stores', leaf: true },
                 { id: 'binding-combo-chaining', text: 'Chained ComboBoxes', leaf: true },
                 { id: 'binding-selection', text: 'Chaining Selection', leaf: true },
-                //{ id: 'binding-gridform', text: 'Grid + Form', leaf: true },
+                // { id: 'binding-gridform', text: 'Grid + Form', leaf: true },
                 { id: 'binding-model-validation', text: 'Model Validation', leaf: true },
                 { id: 'binding-field-validation', text: 'Field Validation', leaf: true },
                 { id: 'binding-two-way-formulas', text: 'Two-Way Formulas', leaf: true },
@@ -440,21 +486,21 @@ Ext.define('KitchenSink.store.Navigation', {
         };
     },
 
-    getNavItemsDataView: function () {
+    getNavItemsDataView: function() {
         return {
             text: 'DataView',
             id: 'data-view',
 
-            description: 'Dataviews are an XTemplate based mechanism for displaying data using custom layout' +
-                         'templates and formatting. They can connect to any store and display data in any way' +
-                         'you see fit.',
+            description: 'Dataviews are an XTemplate based mechanism for displaying data ' +
+                         'using custom layout templates and formatting. They can connect ' +
+                         'to any store and display data in any way you see fit.',
             children: [
                 { id: 'dataview-multisort', text: 'Multisort DataView', leaf: true }
             ]
         };
     },
 
-    getNavItemsDragDrop: function () {
+    getNavItemsDragDrop: function() {
         // id: 'drag-drop-grid',
         // id: 'drag-drop-element',
 
@@ -477,13 +523,14 @@ Ext.define('KitchenSink.store.Navigation', {
         };
     },
 
-    getNavItemsExtDirect: function () {
+    getNavItemsExtDirect: function() {
         return {
             text: 'Ext Direct',
             id: 'direct',
 
-            description: 'Ext Direct streamlines communication between the client and server by providing a single ' +
-                         'interface that reduces much of the common code required to validate and handle data.',
+            description: 'Ext Direct streamlines communication between the client and ' +
+                         'server by providing a single interface that reduces much of ' +
+                         'the common code required to validate and handle data.',
 
             children: [
                 { id: 'direct-grid', text: 'Grid with Direct store', leaf: true },
@@ -495,7 +542,7 @@ Ext.define('KitchenSink.store.Navigation', {
         };
     },
 
-    getNavItemsEnterprise: function () {
+    getNavItemsEnterprise: function() {
         return {
             text: 'Enterprise',
             id: 'enterprise',
@@ -510,14 +557,15 @@ Ext.define('KitchenSink.store.Navigation', {
         };
     },
 
-    getNavItemsFormFields: function () {
+    getNavItemsFormFields: function() {
         return {
             text: 'Form Fields',
             id: 'form-fields',
 
-            description: 'Form Fields offer developers standard HTML form fields with built-in event handling, ' +
-                         'rendering, and other common functionality you may require. Variations of fields include: ' +
-                         'textfields, textareas, htmleditors, radio groups, checkboxes, and more!',
+            description: 'Form Fields offer developers standard HTML form fields with ' +
+                         'built-in event handling, rendering, and other common functionality ' +
+                         'you may require. Variations of fields include: textfields, textareas, ' +
+                         'htmleditors, radio groups, checkboxes, and more!',
             children: [
                 { id: 'form-number', text: 'Number Field', leaf: true },
                 { id: 'form-date', text: 'Date/Month Picker', leaf: true },
@@ -527,14 +575,19 @@ Ext.define('KitchenSink.store.Navigation', {
                     leaf: false,
 
                     description: 'These examples demonstrate that ComboBoxes can use any type of ' +
-                            'Ext.data.Store as a data souce. This means your data can be XML, JSON, '+
-                            'arrays or any other supported format. It can be loaded using Ajax, JSONP or locally.',
+                            'Ext.data.Store as a data souce. This means your data can be XML, ' +
+                            'JSON, arrays or any other supported format. It can be loaded using ' +
+                            'Ajax, JSONP or locally.',
 
                     children: [
-                        {id: 'simple-combo', text: 'Simple ComboBox', leaf: true },
-                        {id: 'remote-combo', text: 'Remote Query ComboBox', leaf: true },
-                        {id: 'remote-loaded-combo', text: 'Remote loaded ComboBox', leaf: true },
-                        {id: 'custom-template-combo', text: 'Custom Template ComboBox', leaf: true }
+                        { id: 'simple-combo', text: 'Simple ComboBox', leaf: true },
+                        { id: 'remote-combo', text: 'Remote Query ComboBox', leaf: true },
+                        { id: 'remote-loaded-combo', text: 'Remote loaded ComboBox', leaf: true },
+                        {
+                            id: 'custom-template-combo',
+                            text: 'Custom Template ComboBox',
+                            leaf: true
+                        }
                     ]
                 },
                 { id: 'form-fileuploads', text: 'File Uploads', leaf: true },
@@ -542,8 +595,8 @@ Ext.define('KitchenSink.store.Navigation', {
                 { id: 'form-grid', text: 'Form with Grid', leaf: true },
                 { id: 'form-tag', text: 'Tag Field', leaf: true },
                 { id: 'multi-selector', text: 'Multi-Selector Grid', leaf: true },
-                { id: 'form-fieldtypes', text: 'Field Types', leaf: true},
-                { id: 'form-fieldcontainer', text: 'Field Container', leaf: true},
+                { id: 'form-fieldtypes', text: 'Field Types', leaf: true },
+                { id: 'form-fieldcontainer', text: 'Field Container', leaf: true },
                 { id: 'form-checkboxgroup', text: 'Checkbox Groups', leaf: true },
                 { id: 'form-radiogroup', text: 'Radio Groups', leaf: true },
                 { id: 'slider-field', text: 'Slider Field', leaf: true }
@@ -551,21 +604,22 @@ Ext.define('KitchenSink.store.Navigation', {
         };
     },
 
-    getNavItemsForms: function () {
+    getNavItemsForms: function() {
         return {
             text: 'Forms',
             id: 'forms',
 
-            description: 'Form Panel extends panel to offer developers the ability to manage data collection in a ' +
-                         'simple and straightforward manner. Field display and handling can be configured in almost ' +
-                         'any conceivable fashion and offers default objects to minimize repetitive code.',
+            description: 'Form Panel extends panel to offer developers the ability to ' +
+                         'manage data collection in a  simple and straightforward manner. ' +
+                         'Field display and handling can be configured in almost any conceivable ' +
+                         'fashion and offers default objects to minimize repetitive code.',
             children: [
                 { id: 'form-login', text: 'Login Form', leaf: true },
                 { id: 'form-contact', text: 'Contact Form', leaf: true },
-                { id: 'form-register', text: 'Register Form', leaf: true  },
+                { id: 'form-register', text: 'Register Form', leaf: true },
                 { id: 'form-checkout', text: 'Checkout Form', leaf: true },
-                { id: 'form-color-picker', text: 'Color Picker', leaf: true},
-                { id: 'form-rating', text: 'Rating Form', leaf: true},
+                { id: 'form-color-picker', text: 'Color Picker', leaf: true },
+                { id: 'form-rating', text: 'Rating Form', leaf: true },
                 { id: 'form-vboxlayout', text: 'VBox Layout', leaf: true },
                 { id: 'form-hboxlayout', text: 'HBox Layout', leaf: true },
                 { id: 'form-multicolumn', text: 'Multi Column Form', leaf: true },
@@ -578,7 +632,7 @@ Ext.define('KitchenSink.store.Navigation', {
         };
     },
 
-    getNavItemsGauge: function () {
+    getNavItemsGauge: function() {
         return {
             text: 'Gauges',
             id: 'gauges',
@@ -588,20 +642,38 @@ Ext.define('KitchenSink.store.Navigation', {
                 'its value in a circular form. The gauge is similar to a gauge chart ' +
                 'except that there is no axis.',
             children: [
-                { id: 'default-gauge', iconCls: 'icon-gauge-basic', text: 'Gauge', leaf: true }
+                {
+                    id: 'default-gauge',
+                    iconCls: 'icon-gauge-basic',
+                    text: 'Basic Gauge',
+                    leaf: true
+                },
+                {
+                    id: 'needle-gauge',
+                    iconCls: 'icon-gauge-basic',
+                    text: 'Needle Gauge',
+                    leaf: true
+                },
+                {
+                    id: 'custom-needle-gauge',
+                    iconCls: 'icon-gauge-basic',
+                    text: 'Custom Needle Gauge',
+                    leaf: true
+                }
             ],
 
             compat: !Ext.isIE8
         };
     },
 
-    getNavItemsLayouts: function () {
+    getNavItemsLayouts: function() {
         return {
             text: 'Layouts',
             id: 'layouts',
 
-            description: 'Layouts can be considered the heart and soul of Ext JS. They manage the DOM flow and ' +
-                         'display of your content. There are multiple layout options that should satisfy almost' +
+            description: 'Layouts can be considered the heart and soul of Ext JS. ' +
+                         'They manage the DOM flow and display of your content. ' +
+                         'There are multiple layout options that should satisfy almost ' +
                          'any application wireframe.',
             children: [
                 { id: 'layout-absolute', text: 'Absolute Layout', leaf: true },
@@ -619,7 +691,7 @@ Ext.define('KitchenSink.store.Navigation', {
         };
     },
 
-    getNavItemsPanels: function () {
+    getNavItemsPanels: function() {
         return {
             text: 'Panels',
             id: 'panels',
@@ -637,7 +709,7 @@ Ext.define('KitchenSink.store.Navigation', {
         };
     },
 
-    getNavItemsWindows: function () {
+    getNavItemsWindows: function() {
         return {
             text: 'Windows',
             id: 'windows',
@@ -649,19 +721,25 @@ Ext.define('KitchenSink.store.Navigation', {
             children: [
                 { id: 'basic-window', text: 'Basic Window', leaf: true },
                 { id: 'message-box', text: 'Message Box', leaf: true },
-                { id: 'window-variations', text: 'Window Variations',
-                    iconCls: 'icon-window', leaf: true }
+                {
+                    id: 'window-variations',
+                    text: 'Window Variations',
+                    iconCls: 'icon-window',
+                    leaf: true
+                },
+                { id: 'toast-view', text: 'Ext.Toast', leaf: true }
             ]
         };
     },
 
-    getNavItemsTabs: function () {
+    getNavItemsTabs: function() {
         return {
             text: 'Tabs',
             id: 'tabs',
 
-            description: 'Tab Panels are panels that have extended support for containing and displaying children ' +
-                         'items. These children are managed using a Card Layout and are shown as tabulated content.',
+            description: 'Tab Panels are panels that have extended support for containing and ' +
+                         'displaying children items. These children are managed using a Card ' +
+                         'Layout and are shown as tabulated content.',
             children: [
                 { id: 'basic-tabs', text: 'Basic Tabs', leaf: true },
                 { id: 'plain-tabs', text: 'Plain Tabs', leaf: true },
@@ -669,7 +747,7 @@ Ext.define('KitchenSink.store.Navigation', {
                 { id: 'icon-tabs', text: 'Icon Tabs', leaf: true },
                 { id: 'ajax-tabs', text: 'Ajax Tabs', leaf: true },
                 { id: 'advanced-tabs', text: 'Advanced Tabs', leaf: true },
-                { id: 'lazy-tabs', text: 'Lazy Instantiating Tabs', leaf: true},
+                { id: 'lazy-tabs', text: 'Lazy Instantiating Tabs', leaf: true },
                 { id: 'navigation-tabs', text: 'Navigation Tabs', leaf: true },
                 { id: 'side-navigation-tabs', text: 'Side Navigation Tabs', leaf: true },
                 { id: 'header-tabs', text: 'Header Tabs', leaf: true },
@@ -678,17 +756,43 @@ Ext.define('KitchenSink.store.Navigation', {
         };
     },
 
-    getNavItemsTips: function () {
-        return { id: 'tooltips', text: 'ToolTips', leaf: true };
+    getNavItemsTips: function() {
+        return {
+            text: 'Tooltips',
+            id: 'tooltips',
+
+            description: 'Tooltip examples',
+
+            children: [
+                {
+                    id: 'anchored-tooltips', text: 'Anchored ToolTips', leaf: true
+                },
+                {
+                    id: 'mousetrack-tooltips',
+                    text: 'Mouse Tracking ToolTips',
+                    leaf: true,
+                    compat: Ext.platformTags.desktop
+                },
+                {
+                    id: 'html-tooltips', text: 'Tooltips embedded in HTML', leaf: true
+                },
+                {
+                    id: 'tip-aligning', text: 'Tooltip align options', leaf: true
+                },
+                {
+                    id: 'closable-tooltips', text: 'Closable ToolTips', leaf: true
+                }
+            ]
+        };
     },
 
-    getNavItemsToolbars: function () {
+    getNavItemsToolbars: function() {
         return {
             text: 'Toolbars',
             id: 'toolbars',
 
-            description: 'Toolbars are easily customizable components that give developers a simple way to display ' +
-                         'a variety of user interfaces.',
+            description: 'Toolbars are easily customizable components that give developers ' +
+                         'a simple way to display a variety of user interfaces.',
             children: [
                 { id: 'basic-toolbar', text: 'Reorderable Toolbar', leaf: true },
                 { id: 'docked-toolbars', text: 'Docked Toolbar', leaf: true },
@@ -700,15 +804,16 @@ Ext.define('KitchenSink.store.Navigation', {
         };
     },
 
-    getNavItemsGrid: function () {
+    getNavItemsGrid: function() {
         return {
             text: 'Grids',
             id: 'grids',
             expanded: true,
 
-            description: 'Grids are one of the centerpieces of Ext JS. They are incredibly versatile components ' +
-                         'that provide an easy path to display, sort, group, and edit data. These examples show a ' +
-                         'number of the most often used grids in Ext JS.',
+            description: 'Grids are one of the centerpieces of Ext JS. They are incredibly ' +
+                         'versatile components that provide an easy path to display, sort, ' +
+                         'group, and edit data. These examples show a number of the most ' +
+                         'often used grids in Ext JS.',
 
             children: [
                 this.getNavItemsGridBasic(),
@@ -718,7 +823,7 @@ Ext.define('KitchenSink.store.Navigation', {
         };
     },
 
-    getNavItemsGridAdvanced: function () {
+    getNavItemsGridAdvanced: function() {
         return {
             text: 'Advanced Features',
             id: 'grid-advanced',
@@ -729,15 +834,16 @@ Ext.define('KitchenSink.store.Navigation', {
                 { id: 'row-widget-grid', text: 'Row Widgets', leaf: true, since: '6.2.0' },
                 { id: 'widget-grid', text: 'Cell Widgets', leaf: true },
                 { id: 'expander-lockable', text: 'Row Expander, lockable columns', leaf: true },
-                { id: 'spreadsheet', text: 'Spreadsheet with locking', leaf: true},
+                { id: 'spreadsheet', text: 'Spreadsheet with locking', leaf: true },
                 { id: 'spreadsheet-checked', text: 'Spreadsheet with Checked Rows', leaf: true },
                 { id: 'reconfigure-grid', text: 'Reconfigure Grid', leaf: true },
-                { id: 'big-data-grid', text: 'Big Data', leaf: true }
+                { id: 'big-data-grid', text: 'Big Data', leaf: true },
+                { id: 'ticker-grid', text: 'Ticker Grid', leaf: true }
             ]
         };
     },
 
-    getNavItemsGridBasic: function () {
+    getNavItemsGridBasic: function() {
         return {
             text: 'Core Features',
             id: 'grid-core',
@@ -755,12 +861,13 @@ Ext.define('KitchenSink.store.Navigation', {
                 { id: 'row-editing', text: 'Row Editing', leaf: true },
                 { id: 'row-expander-grid', text: 'Row Expander', leaf: true },
                 { id: 'property-grid', text: 'Property Grid', leaf: true },
-                { id: 'xml-grid', text: 'XML Grid', leaf: true }
+                { id: 'xml-grid', text: 'XML Grid', leaf: true },
+                { id: 'buffer-grid', text: 'Infinite Grid', leaf: true }
             ]
         };
     },
 
-    getNavItemsGridDecorations: function () {
+    getNavItemsGridDecorations: function() {
         return {
             text: 'Add-ons and Decorations',
             id: 'grid-addons',
@@ -780,7 +887,7 @@ Ext.define('KitchenSink.store.Navigation', {
         };
     },
 
-    getNavItemsGridPivot: function () {
+    getNavItemsGridPivot: function() {
         return {
             text: 'Pivot Grids',
             id: 'pivot-grids',
@@ -794,7 +901,12 @@ Ext.define('KitchenSink.store.Navigation', {
             children: [
                 { id: 'outline-pivot-grid', text: 'Outline layout', leaf: true },
                 { id: 'compact-pivot-grid', text: 'Compact layout', leaf: true },
+                { id: 'tabular-pivot-grid', text: 'Tabular layout', leaf: true },
                 { id: 'locked-pivot-grid', text: 'Locked', leaf: true },
+                { id: 'stateful-pivot-grid', text: 'Stateful', leaf: true },
+                { id: 'collapsible-pivot-grid', text: 'Collapsible', leaf: true },
+                { id: 'datachanges-pivot-grid', text: 'Data changes', leaf: true },
+                { id: 'widgets-pivot-grid', text: 'Widgets', leaf: true },
                 { id: 'drilldown-pivot-grid', text: 'DrillDown plugin', leaf: true },
                 { id: 'configurable-pivot-grid', text: 'Configurator plugin', leaf: true },
                 { id: 'cellediting-pivot-grid', text: 'CellEditing plugin', leaf: true },
@@ -807,14 +919,15 @@ Ext.define('KitchenSink.store.Navigation', {
         };
     },
 
-    getNavItemsTrees: function () {
+    getNavItemsTrees: function() {
         return {
             text: 'Trees',
             id: 'trees',
 
-            description: 'Tree Panels provide a tree-structured UI representation of tree-structured data.' +
-                         'Tree Panel\'s built-in expand/collapse nodes offer a whole new set of opportunities' +
-                         'for user interface and data display.',
+            description: 'Tree Panels provide a tree-structured UI representation ' +
+                         'of tree-structured data. Tree Panel\'s built-in expand/collapse ' +
+                         'nodes offer a whole new set of opportunities for user interface ' +
+                         'and data display.',
             children: [
                 { id: 'basic-trees', text: 'Basic Trees', leaf: true },
                 { id: 'tree-reorder', text: 'Tree Reorder', leaf: true },

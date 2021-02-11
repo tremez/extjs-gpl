@@ -11,7 +11,7 @@ Ext.define('Admin.view.charts.Polar', {
     ],
 
     title: 'Radial Chart',
-    iconCls: 'x-fa fa-dot-circle-o',
+    iconCls: 'x-fa fa-dot-circle',
 
     items: [{
         xtype: 'polar',

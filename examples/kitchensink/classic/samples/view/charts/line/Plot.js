@@ -22,7 +22,7 @@ Ext.define('KitchenSink.view.charts.line.Plot', {
         'Ext.chart.axis.Category'
     ],
 
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     otherContent: [{
         type: 'Controller',
@@ -31,9 +31,24 @@ Ext.define('KitchenSink.view.charts.line.Plot', {
         type: 'Store',
         path: 'classic/samples/store/Plot.js'
     }],
-    // </example>
+    //</example>
     layout: 'fit',
-    width: 650,
+    width: '${width}',
+
+    profiles: {
+        classic: {
+            width: 650
+        },
+        neptune: {
+            width: 650
+        },
+        graphite: {
+            width: 695
+        },
+        'classic-material': {
+            width: 695
+        }
+    },
 
     tbar: {
         reference: 'toolbar',
@@ -67,11 +82,11 @@ Ext.define('KitchenSink.view.charts.line.Plot', {
             type: 'panzoom',
             zoomOnPanGesture: true
         },
-        // <example>
+        //<example>
         // TODO: must be able to control how series are displayed
         // TODO: for undefined data points (apply fillStyle to the series
         // TODO: to see the issue)
-        // </example>
+        //</example>
         series: [
             {
                 type: 'line',
@@ -82,23 +97,23 @@ Ext.define('KitchenSink.view.charts.line.Plot', {
                     strokeStyle: 'rgb(0, 119, 204)'
                 }
             }
-            // <example>
-// TODO: The second line series does not render correctly, it should look the same
-// TODO: as the blue series will look on next refresh button tap, but doesn't,
-// TODO: even though the data looks alright.
-// TODO: add 'me.fn[(me.fnIndex + 1) % me.fn.length]' to Plot store's traverseFunctions
-// TODO: as a third parameter to test this.
-// TODO:               {
-// TODO:                   type: 'line',
-// TODO:                   xField: 'x',
-// TODO:                   yField: 'y2',
-// TODO:                   style: {
-// TODO:                       lineWidth: 2,
-// TODO:                       lineDash: [3, 3],
-// TODO:                       strokeStyle: 'rgb(230, 119, 204)'
-// TODO:                   }
-// TODO:               }
-            // </example>
+            //<example>
+            // TODO: The second line series does not render correctly, it should look the same
+            // TODO: as the blue series will look on next refresh button tap, but doesn't,
+            // TODO: even though the data looks alright.
+            // TODO: add 'me.fn[(me.fnIndex + 1) % me.fn.length]' to Plot store's traverseFunctions
+            // TODO: as a third parameter to test this.
+            // TODO:               {
+            // TODO:                   type: 'line',
+            // TODO:                   xField: 'x',
+            // TODO:                   yField: 'y2',
+            // TODO:                   style: {
+            // TODO:                       lineWidth: 2,
+            // TODO:                       lineDash: [3, 3],
+            // TODO:                       strokeStyle: 'rgb(230, 119, 204)'
+            // TODO:                   }
+            // TODO:               }
+            //</example>
         ],
         axes: [
             {

@@ -4,16 +4,17 @@ Ext.define('KitchenSink.store.Gauges', {
 
     fields: ['mph', 'fuel', 'temp', 'rpm' ],
 
-    generateData: function () {
+    generateData: function() {
         var r = Math.random;
+
         return [{ mph: r() * 100, fuel: r() * 100, temp: r() * 250, rpm: r() * 8000 }];
     },
 
-    refreshData: function () {
+    refreshData: function() {
         this.setData(this.generateData());
     },
 
-    constructor: function (config) {
+    constructor: function(config) {
         config = Ext.apply({
             data: this.generateData()
         }, config);

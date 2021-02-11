@@ -1,9 +1,4 @@
-// This spec will always throw a JS error if we don't wait until the editor is initialized to destroy it.
-// However, even waiting 20 seconds it fails in 50% of the runs on IE, and, even worse, leaves some DIVs
-// in the document body, even cleaning it on afterEach(). So, by now, it's disabled on IE, not only
-// to avoid false positives, but to avoid side-effects in other specs, specially VBox and HBox, which are
-// very sensitive to any garbage left in the body.
-describe('Ext.form.field.HtmlEditor', function() {
+topSuite('Ext.form.field.HtmlEditor', function() {
     var editor;
 
     function createHtmlEditor(cfg) {
@@ -19,30 +14,37 @@ describe('Ext.form.field.HtmlEditor', function() {
             editor = undefined;
         }
     });
-    
-    describe("dirty state", function(){
-        it("should not be dirty when rendered without a value", function(){
-            createHtmlEditor();
-            expect(editor.isDirty()).toBe(false);    
-        }); 
-    }); 
 
-    it("should be able to set the value before rendering", function(){
+    describe("dirty state", function() {
+        it("should not be dirty when rendered without a value", function() {
+            createHtmlEditor();
+
+            // Should initialize 
+            waitsForEvent(editor, 'initialize');
+
+            runs(function() {
+                expect(editor.isDirty()).toBe(false);
+                expect(editor.getDoc().designMode.toLowerCase()).toBe('on');
+            });
+        });
+    });
+
+    it("should be able to set the value before rendering", function() {
         editor = new Ext.form.field.HtmlEditor();
         editor.setValue('foo');
         editor.render(Ext.getBody());
-        expect(editor.getValue()).toBe('foo');    
+        expect(editor.getValue()).toBe('foo');
     });
-    
-    it("should fire the change event", function(){
+
+    it("should fire the change event", function() {
         var newVal,
             oldVal;
-            
+
         createHtmlEditor();
         editor.on('change', function(arg1, arg2, arg3) {
             newVal = arg2;
             oldVal = arg3;
-        });  
+        });
         editor.setValue('foo');
         expect(oldVal).toBe('');
         expect(newVal).toBe('foo');
@@ -54,7 +56,7 @@ describe('Ext.form.field.HtmlEditor', function() {
                 return;
             }
 
-            createHtmlEditor({renderTo: null});
+            createHtmlEditor({ renderTo: null });
             expect(editor.rendered).toBeFalsy();
             editor.destroy();
             editor = undefined;

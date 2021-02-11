@@ -1,8 +1,8 @@
 /*
- * The dirty implementation in this class is quite naive. The reasoning for this is that the dirty state
- * will only be used in very specific circumstances, specifically, after the render process has begun but
- * the component is not yet rendered to the DOM. As such, we want it to perform as quickly as possible
- * so it's not as fully featured as you may expect.
+ * The dirty implementation in this class is quite naive. The reasoning for this is that the dirty
+ * state will only be used in very specific circumstances, specifically, after the render process
+ * has begun but the component is not yet rendered to the DOM. As such, we want it to perform
+ * as quickly as possible so it's not as fully featured as you may expect.
  */
 
 /**
@@ -12,7 +12,7 @@
  * addBodyCls in Panel to share logic with addCls in Component.
  * @private
  */
-Ext.define('Ext.util.ProtoElement', function () {
+Ext.define('Ext.util.ProtoElement', function() {
     var splitWords = Ext.String.splitWords,
         toMap = Ext.Array.toMap;
 
@@ -41,7 +41,7 @@ Ext.define('Ext.util.ProtoElement', function () {
          */
         styleIsText: false,
 
-        constructor: function (config) {
+        constructor: function(config) {
             var me = this,
                 cls, style;
 
@@ -58,10 +58,12 @@ Ext.define('Ext.util.ProtoElement', function () {
             if (style) {
                 if (typeof style === 'string') {
                     me.style = Ext.Element.parseStyles(style);
-                } else if (Ext.isFunction(style)) {
+                }
+                else if (Ext.isFunction(style)) {
                     me.styleFn = style;
                     delete me.style;
-                } else {
+                }
+                else {
                     me.style = Ext.apply({}, style); // don't edit the given object
                 }
             }
@@ -71,7 +73,7 @@ Ext.define('Ext.util.ProtoElement', function () {
          * Indicates that the current state of the object has been flushed to the DOM, so we need
          * to track any subsequent changes
          */
-        flush: function(){
+        flush: function() {
             this.flushClassList = [];
             this.removedClasses = {};
             // clear the style, it will be recreated if we add anything new
@@ -84,11 +86,12 @@ Ext.define('Ext.util.ProtoElement', function () {
          * @param {String} cls One or more classnames separated with spaces.
          * @return {Ext.util.ProtoElement} this
          */
-        addCls: function (cls) {
-
+        addCls: function(cls) {
             if (!cls) {
                 return this;
             }
+
+            // eslint-disable-next-line vars-on-top
             var me = this,
                 add = (typeof cls === 'string') ? splitWords(cls) : cls,
                 length = add.length,
@@ -100,9 +103,11 @@ Ext.define('Ext.util.ProtoElement', function () {
 
             for (; i < length; ++i) {
                 c = add[i];
+
                 if (!map[c]) {
                     map[c] = true;
                     list.push(c);
+
                     if (flushList) {
                         flushList.push(c);
                         delete me.removedClasses[c];
@@ -118,7 +123,7 @@ Ext.define('Ext.util.ProtoElement', function () {
          * @param {String} cls
          * @return {Boolean}
          */
-        hasCls: function (cls) {
+        hasCls: function(cls) {
             return cls in this.classMap;
         },
 
@@ -127,7 +132,7 @@ Ext.define('Ext.util.ProtoElement', function () {
          * @param {String} cls One or more classnames separated with spaces.
          * @return {Ext.util.ProtoElement} this
          */
-        removeCls: function (cls) {
+        removeCls: function(cls) {
             var me = this,
                 list = me.classList,
                 newList = (me.classList = []),
@@ -139,6 +144,7 @@ Ext.define('Ext.util.ProtoElement', function () {
 
             for (i = 0; i < length; ++i) {
                 c = list[i];
+
                 if (remove[c]) {
                     if (removedClasses) {
                         if (map[c]) {
@@ -146,8 +152,10 @@ Ext.define('Ext.util.ProtoElement', function () {
                             Ext.Array.remove(me.flushClassList, c);
                         }
                     }
+
                     delete map[c];
-                } else {
+                }
+                else {
                     newList.push(c);
                 }
             }
@@ -156,20 +164,23 @@ Ext.define('Ext.util.ProtoElement', function () {
         },
 
         /**
+         * @method setStyle
          * @inheritdoc Ext.dom.Element#method-setStyle
          * @return {Ext.util.ProtoElement} this
          */
-        setStyle: function (prop, value) {
+        setStyle: function(prop, value) {
             var me = this,
                 style = me.style || (me.style = {});
 
             if (typeof prop === 'string') {
                 if (arguments.length === 1) {
                     me.setStyle(Ext.Element.parseStyles(prop));
-                } else {
+                }
+                else {
                     style[prop] = value;
                 }
-            } else {
+            }
+            else {
                 Ext.apply(style, prop);
             }
 
@@ -177,7 +188,8 @@ Ext.define('Ext.util.ProtoElement', function () {
         },
 
         unselectable: function() {
-            // See Ext.dom.Element.unselectable for an explanation of what is required to make an element unselectable
+            // See Ext.dom.Element.unselectable for an explanation of what is required
+            // to make an element unselectable
             this.addCls(Ext.dom.Element.unselectableCls);
 
             if (Ext.isOpera) {
@@ -191,7 +203,7 @@ Ext.define('Ext.util.ProtoElement', function () {
          * @param {Object} to
          * @return {Object} to
          */
-        writeTo: function (to) {
+        writeTo: function(to) {
             var me = this,
                 classList = me.flushClassList || me.classList,
                 removedClasses = me.removedClasses,
@@ -200,18 +212,22 @@ Ext.define('Ext.util.ProtoElement', function () {
             if (me.styleFn) {
                 style = Ext.apply({}, me.styleFn());
                 Ext.apply(style, me.style);
-            } else {
+            }
+            else {
                 style = me.style;
             }
 
             to[me.clsProp] = classList.join(' ');
 
             if (style) {
-                to[me.styleProp] = me.styleIsText ? Ext.DomHelper.generateStyles(style, null, true) : style;
+                to[me.styleProp] = me.styleIsText
+                    ? Ext.DomHelper.generateStyles(style, null, true)
+                    : style;
             }
 
             if (removedClasses) {
                 removedClasses = Ext.Object.getKeys(removedClasses);
+
                 if (removedClasses.length) {
                     to[me.removedProp] = removedClasses.join(' ');
                 }

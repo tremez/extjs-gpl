@@ -2,7 +2,7 @@
  * @private
  */
 Ext.define('Ext.device.twitter.Abstract', {
-	/**
+    /**
 	 * Pops up a Twitter compose sheet view with your specified tweet.
 	 * 
 	 * @param {Object} config An object which contains the following config options:
@@ -48,7 +48,7 @@ Ext.define('Ext.device.twitter.Abstract', {
 	 * [Twitter Timeline Doc]: https://dev.twitter.com/docs/api/1/get/statuses/public_timeline
      */
     getMentions: Ext.emptyFn,
-    
+
     /**
      * Gets a specific Twitter user info
 	 * 

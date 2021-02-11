@@ -82,9 +82,8 @@ Ext.define('KitchenSink.data.calendar.Month', {
                 return U.generateIds(ret, 100);
             })(),
             personal: (function() {
-                var ret = [], 
+                var ret = [],
                     d;
-
 
                 d = U.setHours(U.findNext(firstCurrent, 5), 19, 0);
                 ret.push({

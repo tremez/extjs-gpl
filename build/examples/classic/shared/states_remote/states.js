@@ -1,3 +1,4 @@
+/* eslint-disable */
 [
     ['AL', 'Alabama', 'The Heart of Dixie'],
     ['AK', 'Alaska', 'The Land of the Midnight Sun'],
@@ -49,4 +50,4 @@
     ['WV', 'West Virginia', 'Mountain State'],
     ['WI', 'Wisconsin', "America's Dairyland"],
     ['WY', 'Wyoming', 'Like No Place on Earth']
-]
+];

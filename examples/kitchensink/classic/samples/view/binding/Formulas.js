@@ -12,12 +12,30 @@ Ext.define('KitchenSink.view.binding.Formulas', {
         path: 'classic/samples/view/binding/FormulasModel.js'
     }],
     //</example>
+    profiles: {
+        classic: {
+            width: 'auto',
+            bodyPadding: 10
+        },
+        neptune: {
+            width: 'auto',
+            bodyPadding: 10
+        },
+        graphite: {
+            width: 'auto',
+            bodyPadding: 10
+        },
+        'classic-material': {
+            width: 330,
+            bodyPadding: 20
+        }
+    },
 
     title: 'View Model Formulas',
 
     width: 370,
-    bodyPadding: 10,
-    
+    bodyPadding: '${bodyPadding}',
+
     viewModel: {
         // Formulas are defined by the ViewModel:
         type: 'binding-formulas',
@@ -29,6 +47,7 @@ Ext.define('KitchenSink.view.binding.Formulas', {
     items: [{
         xtype: 'numberfield',
         fieldLabel: 'Number',
+        width: '${width}',
         bind: '{x}'
     }, {
         xtype: 'displayfield',

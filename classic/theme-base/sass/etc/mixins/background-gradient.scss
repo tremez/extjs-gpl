@@ -232,7 +232,11 @@
  *
  * @member Global_CSS
  */
-@mixin background-gradient($bg-color, $type: $base-gradient, $direction: top) {
+@mixin background-gradient(
+    $bg-color,
+    $type: $base-gradient,
+    $direction: top
+) {
     background-image: none;
     background-color: $bg-color;
 

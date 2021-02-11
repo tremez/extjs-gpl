@@ -1,5 +1,6 @@
 Ext.define('Neptune.view.AppHeader', function() {
     Neptune.theme = Ext.Object.fromQueryString(location.search).theme || 'neptune';
+
     return {
         extend: 'Ext.container.Container',
         xtype: 'appHeader',
@@ -22,7 +23,7 @@ Ext.define('Neptune.view.AppHeader', function() {
             margin: '0 10 0 0',
             store: Ext.create('Ext.data.Store', {
                 fields: ['value', 'name'],
-                data : [
+                data: [
                     { value: 'classic', name: 'Classic' },
                     { value: 'gray', name: 'Gray' },
                     { value: 'neptune', name: 'Neptune' },
@@ -33,6 +34,7 @@ Ext.define('Neptune.view.AppHeader', function() {
             listeners: {
                 select: function(combo) {
                     var theme = Neptune.theme = combo.getValue();
+
                     location.search = (theme === 'default') ? '' : 'theme=' + theme;
                 }
             }

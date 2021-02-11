@@ -1,23 +1,23 @@
 /**
- * In-memory proxy. This proxy simply uses a local variable for data storage/retrieval, so its contents are lost on
- * every page refresh.
+ * In-memory proxy. This proxy simply uses a local variable for data storage/retrieval, so its
+ * contents are lost on every page refresh.
  *
- * Usually this Proxy isn't used directly, serving instead as a helper to a {@link Ext.data.Store Store} where a reader
- * is required to load data. For example, say we have a Store for a User model and have some inline data we want to
- * load, but this data isn't in quite the right format: we can use a MemoryProxy with a JsonReader to read it into our
- * Store:
+ * Usually this Proxy isn't used directly, serving instead as a helper to a
+ * {@link Ext.data.Store Store} where a reader is required to load data. For example, say we have
+ * a Store for a User model and have some inline data we want to load, but this data isn't in quite
+ * the right format: we can use a MemoryProxy with a JsonReader to read it into our Store:
  *
- *     //this is the model we will be using in the store
+ *     // this is the model we will be using in the store
  *     Ext.define('User', {
  *         extend: 'Ext.data.Model',
  *         fields: [
- *             {name: 'id',    type: 'int'},
- *             {name: 'name',  type: 'string'},
- *             {name: 'phone', type: 'string', mapping: 'phoneNumber'}
+ *             { name: 'id',    type: 'int' },
+ *             { name: 'name',  type: 'string' },
+ *             { name: 'phone', type: 'string', mapping: 'phoneNumber' }
  *         ]
  *     });
  *
- *     //this data does not line up to our model fields - the phone field is called phoneNumber
+ *     // this data does not line up to our model fields - the phone field is called phoneNumber
  *     var data = {
  *         users: [
  *             {
@@ -33,11 +33,11 @@
  *         ]
  *     };
  *
- *     //note how we set the 'root' in the reader to match the data structure above
+ *     // note how we set the 'root' in the reader to match the data structure above
  *     var store = Ext.create('Ext.data.Store', {
  *         autoLoad: true,
  *         model: 'User',
- *         data : data,
+ *         data: data,
  *         proxy: {
  *             type: 'memory',
  *             reader: {
@@ -56,12 +56,13 @@ Ext.define('Ext.data.proxy.Memory', {
 
     config: {
         /**
-        * @cfg {Boolean} [enablePaging]
-        * Configure as `true` to enable this MemoryProxy to honour a read operation's `start` and `limit` options.
+        * @cfg {Boolean} [enablePaging=false]
+        * Configure as `true` to enable this MemoryProxy to honour a read operation's `start`
+        * and `limit` options.
         *
         * When `true`, read operations will be able to read *pages* of records from the data object.
         */
-       enablePaging: false,
+        enablePaging: null,
 
         /**
         * @cfg {Object} data
@@ -69,17 +70,21 @@ Ext.define('Ext.data.proxy.Memory', {
         */
         data: {
             $value: null,
-            // Don't deeply clone the data object, just shallow copy the array
+            // Because of destructive association reading, we always need to clone incoming data
+            // to protect externally owned data objects from mutation
             merge: function(newValue, currentValue, target, mixinClass) {
-                if (Ext.isArray(newValue)) {
-                    return Ext.Array.clone(newValue);
-                } else {
-                    return Ext.clone(newValue);
-                }
+                return newValue ? Ext.clone(newValue) : newValue;
             }
-        }
+        },
+
+        /**
+         * @cfg {Boolean} [clearOnRead=false]
+         * By default MemoryProxy data is persistent, and subsequent reads will read the
+         * same data. If this is not required, configure the proxy using `clearOnRead: true`.
+         */
+        clearOnRead: null
     },
-    
+
     /**
      * @private
      * Fake processing function to commit the records, set the current operation
@@ -88,47 +93,48 @@ Ext.define('Ext.data.proxy.Memory', {
      * processing required for the proxy to register a result from the action.
      */
     finishOperation: function(operation) {
-        var i = 0,
-            recs = operation.getRecords(),
-            len = recs.length;
-            
-        for (i; i < len; i++) {
+        var recs = operation.getRecords(),
+            len = recs.length,
+            i;
+
+        for (i = 0; i < len; i++) {
             // Because Memory proxy is synchronous, the commit must call store#afterErase
             recs[i].dropped = !!operation.isDestroyOperation;
             recs[i].commit();
         }
+
         operation.setSuccessful(true);
     },
-    
+
     /**
-     * Currently this is a hard-coded method that simply commits any records and sets the operation to successful,
-     * then calls the callback function, if provided. It is essentially mocking a server call in memory, but since
-     * there is no real back end in this case there's not much else to do. This method can be easily overridden to 
-     * implement more complex logic if needed.
+     * Currently this is a hard-coded method that simply commits any records and sets the operation
+     * to successful, then calls the callback function, if provided. It is essentially mocking
+     * a server call in memory, but since there is no real back end in this case there's not much
+     * else to do. This method can be easily overridden to  implement more complex logic if needed.
      * @param {Ext.data.operation.Operation} operation The Operation to perform
      * @method
      */
     create: function(operation) {
         this.finishOperation(operation);
     },
-    
+
     /**
-     * Currently this is a hard-coded method that simply commits any records and sets the operation to successful,
-     * then calls the callback function, if provided. It is essentially mocking a server call in memory, but since
-     * there is no real back end in this case there's not much else to do. This method can be easily overridden to 
-     * implement more complex logic if needed.
+     * Currently this is a hard-coded method that simply commits any records and sets the operation
+     * to successful, then calls the callback function, if provided. It is essentially mocking
+     * a server call in memory, but since there is no real back end in this case there's not much
+     * else to do. This method can be easily overridden to  implement more complex logic if needed.
      * @param {Ext.data.operation.Operation} operation The Operation to perform
      * @method
      */
     update: function(operation) {
         this.finishOperation(operation);
     },
-    
+
     /**
-     * Currently this is a hard-coded method that simply commits any records and sets the operation to successful,
-     * then calls the callback function, if provided. It is essentially mocking a server call in memory, but since
-     * there is no real back end in this case there's not much else to do. This method can be easily overridden to 
-     * implement more complex logic if needed.
+     * Currently this is a hard-coded method that simply commits any records and sets the operation
+     * to successful, then calls the callback function, if provided. It is essentially mocking
+     * a server call in memory, but since there is no real back end in this case there's not much
+     * else to do. This method can be easily overridden to  implement more complex logic if needed.
      * @param {Ext.data.operation.Operation} operation The Operation to perform
      * @method
      */
@@ -137,12 +143,16 @@ Ext.define('Ext.data.proxy.Memory', {
     },
 
     /**
-     * Reads data from the configured {@link #data} object. Uses the Proxy's {@link #reader}, if present.
+     * Reads data from the configured {@link #data} object. Uses the Proxy's {@link #reader},
+     * if present.
      * @param {Ext.data.operation.Operation} operation The read Operation
      */
     read: function(operation) {
         var me = this,
-            resultSet = me.getReader().read(me.getData()),
+            reader = me.getReader(),
+            resultSet = reader.read(me.getData(), {
+                recordCreator: reader.defaultRecordCreatorFromServer
+            }),
             records = resultSet.getRecords(),
             sorters = operation.getSorters(),
             grouper = operation.getGrouper(),
@@ -153,28 +163,35 @@ Ext.define('Ext.data.proxy.Memory', {
 
         // Apply filters, sorters, and start/limit options
         if (operation.process(resultSet, null, null, false) !== false) {
+            // If we are configured to read the data one time only, clear our data
+            if (operation.success && me.getClearOnRead()) {
+                this.setData(null);
+            }
+
             // Filter the resulting array of records
             if (filters && filters.length) {
                 // Total will be updated by setting records
+                /* eslint-disable-next-line max-len */
                 resultSet.setRecords(records = Ext.Array.filter(records, Ext.util.Filter.createFilterFn(filters)));
                 resultSet.setTotal(records.length);
             }
 
             // Remotely, grouper just mean top priority sorters
             if (grouper) {
-                // Must concat so as not to mutate passed sorters array which could be the items property of the sorters collection
+                // Must concat so as not to mutate passed sorters array which could be the items
+                // property of the sorters collection
                 sorters = sorters ? sorters.concat(grouper) : sorters;
             }
 
             // Sort by the specified grouper and sorters
             if (sorters && sorters.length) {
+                /* eslint-disable-next-line max-len */
                 resultSet.setRecords(records = Ext.Array.sort(records, Ext.util.Sortable.createComparator(sorters)));
             }
 
             // Reader reads the whole passed data object.
             // If successful and we were given a start and limit, slice the result.
             if (me.getEnablePaging() && start !== undefined && limit !== undefined) {
-
                 // Attempt to read past end of memory dataset - convert to failure
                 if (start >= resultSet.getTotal()) {
                     resultSet.setConfig({
@@ -188,11 +205,15 @@ Ext.define('Ext.data.proxy.Memory', {
                     resultSet.setRecords(Ext.Array.slice(records, start, start + limit));
                 }
             }
+
             operation.setCompleted();
 
             // If a JsonReader detected metadata, process it now.
-            // This will fire the 'metachange' event which the Store processes to fire its own 'metachange'
-            if (meta = resultSet.getMetadata()) {
+            // This will fire the 'metachange' event which the Store processes to fire its own
+            // 'metachange'
+            meta = resultSet.getMetadata();
+
+            if (meta) {
                 me.onMetaChange(meta);
             }
         }

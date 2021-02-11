@@ -1,6 +1,6 @@
-/* global expect, Ext, jasmine, spyOn */
-
-describe('Ext.data.NodeInterface', function() {
+topSuite("Ext.data.NodeInterface",
+    ['Ext.data.TreeModel', 'Ext.data.TreeStore', 'Ext.data.Session'],
+function() {
     var fakeScope = {};
 
     function spyOnEvent(object, eventName, fn) {
@@ -8,7 +8,9 @@ describe('Ext.data.NodeInterface', function() {
             fn: fn || Ext.emptyFn
         },
         spy = spyOn(obj, "fn");
+
         object.addListener(eventName, obj.fn);
+
         return spy;
     }
 
@@ -16,7 +18,7 @@ describe('Ext.data.NodeInterface', function() {
         Ext.define('spec.TreeNode', {
             extend: 'Ext.data.TreeModel',
             fields: [
-                {name: 'text', type: 'string'}
+                { name: 'text', type: 'string' }
             ],
             proxy: {
                 type: 'memory'
@@ -194,21 +196,22 @@ describe('Ext.data.NodeInterface', function() {
         });
         it('should decorate Model class of a given record', function() {
             var MyModel, record1, record2;
+
             MyModel = Ext.define('spec.MyModel', {
                 extend: 'Ext.data.Model',
                 fields: [
-                    {name: 'text', type: 'string'}
+                    { name: 'text', type: 'string' }
                 ],
                 proxy: {
                     type: 'memory'
                 }
             });
-            record1 = MyModel.create({text: 'record1'});
-            record2 = MyModel.create({text: 'record2'});
+            record1 = MyModel.create({ text: 'record1' });
+            record2 = MyModel.create({ text: 'record2' });
             expect(MyModel.prototype.isNode).toBeUndefined();
             expect(record1.isNode).toBeUndefined();
             expect(record2.isNode).toBeUndefined();
-            
+
             Ext.data.NodeInterface.decorate(record1);
             expect(MyModel.prototype.isNode).toBeTruthy();
             expect(record1.isNode).toBeTruthy();
@@ -218,7 +221,6 @@ describe('Ext.data.NodeInterface', function() {
         });
 
     });
-
 
     describe('methods', function() {
         var leftChild, rightChild, rootNode, spareNode, spy;
@@ -239,27 +241,27 @@ describe('Ext.data.NodeInterface', function() {
             leftChild = new spec.TreeNode({
                 id: 'left'
             });
-        
+
             rightChild = new spec.TreeNode({
                 id: 'right'
             });
-        
+
             rootNode = new spec.TreeNode({
                 id: 'root'
             });
-        
-            //we use this in several tests as an example node to add
+
+            // we use this in several tests as an example node to add
             spareNode = new spec.TreeNode({
                 id: 'spare'
             });
 
         });
-        
+
         describe("isFirst", function() {
             beforeEach(function() {
                 insertDefaultChildren.call(this);
             });
-        
+
             it("should have rootNode which is first", function() {
                 expect(rootNode.isFirst()).toBe(true);
             });
@@ -272,10 +274,10 @@ describe('Ext.data.NodeInterface', function() {
         });
 
         describe("isLast", function() {
-            beforeEach(function(){
+            beforeEach(function() {
                 insertDefaultChildren.call(this);
             });
-        
+
             it("should have rootNode which is last", function() {
                 expect(rootNode.isLast()).toBe(true);
             });
@@ -291,7 +293,7 @@ describe('Ext.data.NodeInterface', function() {
             beforeEach(function() {
                 rootNode.appendChild(leftChild);
             });
-        
+
             it("should have rootNode with children", function() {
                 expect(rootNode.hasChildNodes()).toBe(true);
             });
@@ -299,133 +301,162 @@ describe('Ext.data.NodeInterface', function() {
                 expect(leftChild.hasChildNodes()).toBe(false);
             });
         });
-        
+
         describe("isExpandable", function() {
             it("should have node expandable if it has children", function() {
                spareNode.appendChild(leftChild);
                expect(spareNode.isExpandable()).toBe(true);
             });
-    
+
             it("should have node expandable if has no children", function() {
                 expect(spareNode.isExpandable()).toBe(true);
-            });               
+            });
             it("should have node not expandable if it is a leaf node", function() {
                 spareNode.set('leaf', true);
                 expect(spareNode.isExpandable()).toBe(false);
-            });               
+            });
+
+            it("should not be expandable if expandable proprety is explicitly set to false", function() {
+                spareNode.set('expandable', false);
+                spareNode.appendChild(leftChild);
+                expect(spareNode.isExpandable()).toBe(false);
+            });
         });
 
-        describe("append", function(){
+        describe("expand", function() {
+            var store;
+
+            it("should not add phantom children to an expanding empty node", function() {
+                store = new Ext.data.TreeStore({
+                    root: { // if 'data' is used here, the test won't pass
+                        name: 'Root',
+                        children: [
+                            { name: 'Child1' },
+                            { name: 'Child2' }
+                        ]
+                    }
+                });
+                var child2 = store.getRoot().childNodes[1];
+
+                child2.expand();
+                expect(child2.childNodes.length).toBe(0);
+            });
+            afterEach(function() {
+                Ext.destroy(store);
+            });
+        });
+
+        describe("append", function() {
             describe("appending children", function() {
-                
+
                 it("should fire beforeappend", function() {
                     spy = spyOnEvent(rootNode, "beforeappend").andCallThrough();
-        
+
                     rootNode.appendChild(leftChild);
-        
+
                     expect(spy).toHaveBeenCalledWith(rootNode, leftChild);
                 });
-        
+
                 it("should cancel append if beforeappend return false", function() {
                     spy = spyOnEvent(rootNode, "beforeappend").andReturn(false);
                     expect(rootNode.appendChild(leftChild)).toBe(false);
-        
+
                     expect(spy.callCount).toEqual(1);
                 });
-        
+
                 it("should set firstChild", function() {
-        
+
                     rootNode.appendChild(leftChild);
-        
+
                     expect(rootNode.firstChild).toEqual(leftChild);
                 });
-        
+
                 it("should set lastChild", function() {
-        
+
                     rootNode.appendChild(leftChild);
-        
+
                     expect(rootNode.lastChild).toEqual(leftChild);
                 });
-        
+
                 it("should add node to childnodes", function() {
                     var childNodes;
-        
+
                     rootNode.appendChild(leftChild);
-        
+
                     childNodes = rootNode.childNodes;
-        
+
                     expect(childNodes.length).toEqual(1);
                     expect(childNodes[0]).toEqual(leftChild);
                 });
-        
+
                 it("should fire append event", function() {
                     spy = spyOnEvent(rootNode, "append").andCallThrough();
-        
+
                     rootNode.appendChild(leftChild);
-        
+
                     expect(spy).toHaveBeenCalledWith(rootNode, leftChild, 0);
                 });
-        
+
                 it("should return node", function() {
                     var ret = rootNode.appendChild(leftChild);
-        
+
                     expect(ret).toEqual(leftChild);
                 });
-        
+
                 it("should append array of nodes", function() {
                     rootNode.appendChild([leftChild, rightChild]);
-        
+
                     var childNodes = rootNode.childNodes;
-        
+
                     expect(childNodes[0]).toEqual(leftChild);
                     expect(childNodes[1]).toEqual(rightChild);
                     expect(childNodes.length).toEqual(2);
                 });
             });
-        
+
             describe("appending with existing siblings", function() {
                 beforeEach(function() {
-                    insertDefaultChildren.call(this); 
+                    insertDefaultChildren.call(this);
                 });
-        
+
                 it("should set next sibling", function() {
                     expect(leftChild.nextSibling).toEqual(rightChild);
                     expect(rightChild.nextSibling).toBeNull();
                 });
-        
+
                 it("should set previous sibling", function() {
                     expect(rightChild.previousSibling).toEqual(leftChild);
                     expect(leftChild.previousSibling).toBeNull();
                 });
             });
-        
+
             describe("appending children from an existing node", function() {
                 var oldParent, spy;
-        
+
                 beforeEach(function() {
-                    oldParent = new spec.TreeNode({id: 'oldparent'});
+                    oldParent = new spec.TreeNode({ id: 'oldparent' });
                     oldParent.appendChild(spareNode);
                 });
-        
+
                 it("should remove from existing node", function() {
                     spy = spyOn(oldParent, "removeChild").andCallThrough();
-        
+
                     rootNode.appendChild(spareNode);
-        
+
                     expect(spy).toHaveBeenCalledWith(spareNode, false, undefined, true);
                 });
-        
-                it("should fire beforeremove event", function(){
+
+                it("should fire beforeremove event", function() {
                     spy = spyOnEvent(oldParent, "beforeremove").andCallThrough();
-        
+
                     rootNode.appendChild(spareNode);
-        
+
                     expect(spy).toHaveBeenCalledWith(oldParent, spareNode, true);
                 });
-        
-                it("should fire remove event", function(){
+
+                it("should fire remove event", function() {
                     spy = spyOnEvent(oldParent, "remove").andCallThrough();
-        
+
                     rootNode.appendChild(spareNode);
 
                     // Just use the context argumemt from the args as the last arg
@@ -434,76 +465,76 @@ describe('Ext.data.NodeInterface', function() {
 
                 it("should fire beforemove event", function() {
                     spy = spyOnEvent(spareNode, "beforemove").andCallThrough();
-                    
+
                     rootNode.appendChild(spareNode);
 
                     expect(spy).toHaveBeenCalledWith(spareNode, oldParent, rootNode, 0);
                 });
                 it("should fire move event", function() {
                     spy = spyOnEvent(spareNode, "move").andCallThrough();
-        
+
                     rootNode.appendChild(spareNode);
-        
-                    expect(spy).toHaveBeenCalledWith(spareNode, oldParent, rootNode, 0);                    
+
+                    expect(spy).toHaveBeenCalledWith(spareNode, oldParent, rootNode, 0);
                 });
             });
         });
 
-        describe("insert", function(){
-        
-            beforeEach(function(){
+        describe("insert", function() {
+
+            beforeEach(function() {
                 rootNode.appendChild(rightChild);
             });
-        
+
             describe("inserting children", function() {
                 it("should call appendChild if the node to insert before is null", function() {
                     spy = spyOn(rootNode, "appendChild");
-        
+
                     rootNode.insertBefore(leftChild);
-        
+
                     expect(spy).toHaveBeenCalledWith(leftChild);
                 });
-        
+
                 it("should do nothing if the node to insert before is equal to the node to insert", function() {
                     expect(rootNode.insertBefore(leftChild, leftChild)).toBe(false);
                 });
-        
+
                 it("should fire beforeinsert", function() {
                     spy = spyOnEvent(rootNode, "beforeinsert").andCallThrough();
-        
+
                     rootNode.insertBefore(leftChild, rightChild);
-        
-                    expect(spy).toHaveBeenCalledWith(rootNode, leftChild, rightChild);                    
+
+                    expect(spy).toHaveBeenCalledWith(rootNode, leftChild, rightChild);
                 });
-        
+
                 it("should cancel insert if beforeinsert return false", function() {
                     spy = spyOnEvent(rootNode, "beforeinsert").andReturn(false);
-        
+
                     expect(rootNode.insertBefore(leftChild, rightChild)).toBe(false);
-        
+
                     expect(spy.callCount).toEqual(1);
                 });
-        
+
                 it("should set firstChild", function() {
                     rootNode.insertBefore(leftChild, rightChild);
-        
+
                     expect(rootNode.firstChild).toEqual(leftChild);
                 });
-        
+
                 it("should set lastChild", function() {
                     rootNode.insertBefore(leftChild, rightChild);
-        
+
                     expect(rootNode.lastChild).toEqual(rightChild);
                 });
-        
+
                 it("should fire insert", function() {
                     spy = spyOnEvent(rootNode, "insert").andCallThrough();
-        
+
                     rootNode.insertBefore(leftChild, rightChild);
-        
-                    expect(spy).toHaveBeenCalledWith(rootNode, leftChild, rightChild);                    
+
+                    expect(spy).toHaveBeenCalledWith(rootNode, leftChild, rightChild);
                 });
-        
+
                 it("should update indexes for all siblings after the position where the node was inserted", function() {
                     rootNode.insertBefore(spareNode, rightChild);
 
@@ -513,136 +544,135 @@ describe('Ext.data.NodeInterface', function() {
                     expect(rightChild.get('index')).toEqual(2);
                 });
 
-        
-                it("should handle siblings", function(){
+                it("should handle siblings", function() {
                     expect(leftChild.previousSibling).toBeNull();
                     expect(leftChild.nextSibling).toBeNull();
                     expect(rightChild.previousSibling).toBeNull();
                     expect(rightChild.nextSibling).toBeNull();
-        
+
                     rootNode.insertBefore(leftChild, rightChild);
-        
+
                     expect(leftChild.previousSibling).toBeNull();
                     expect(leftChild.nextSibling).toEqual(rightChild);
                     expect(rightChild.previousSibling).toEqual(leftChild);
                     expect(rightChild.nextSibling).toBeNull();
                 });
-        
+
                 describe("move", function() {
                     beforeEach(function() {
                         rootNode.appendChild(leftChild);
                     });
-        
+
                     it("should fire beforemove", function() {
                         spy = spyOnEvent(leftChild, "beforemove").andCallThrough();
-        
+
                         rootNode.insertBefore(leftChild, rightChild);
-        
-                        expect(spy).toHaveBeenCalledWith(leftChild, rootNode, rootNode, 0, rightChild);                    
+
+                        expect(spy).toHaveBeenCalledWith(leftChild, rootNode, rootNode, 0, rightChild);
                     });
-        
+
                     it("should cancel insert if beforemove return false", function() {
                         spy = spyOnEvent(leftChild, "beforemove").andReturn(false);
-        
+
                         expect(rootNode.insertBefore(leftChild, rightChild)).toBe(false);
-        
+
                         expect(spy.callCount).toEqual(1);
                     });
-        
+
                     it("should fire move", function() {
                         spy = spyOnEvent(leftChild, "move").andCallThrough();
-        
+
                         rootNode.insertBefore(leftChild, rightChild);
-        
-                        expect(spy).toHaveBeenCalledWith(leftChild, rootNode, rootNode, 0, rightChild);                    
-                    });                    
-        
+
+                        expect(spy).toHaveBeenCalledWith(leftChild, rootNode, rootNode, 0, rightChild);
+                    });
+
                 });
             });
         });
 
         describe("removing children", function() {
-            it("should return false when removing bad node", function(){
-                expect(rootNode.removeChild(leftChild)).toBe(false); 
+            it("should return false when removing bad node", function() {
+                expect(rootNode.removeChild(leftChild)).toBe(false);
             });
-        
-            it("should fire beforeremove event", function(){
+
+            it("should fire beforeremove event", function() {
                 insertDefaultChildren.call(this);
-        
+
                 spy = spyOnEvent(rootNode, "beforeremove").andCallThrough();
-        
+
                 rootNode.removeChild(leftChild);
-        
+
                 expect(spy).toHaveBeenCalledWith(rootNode, leftChild, false);
             });
-        
+
             it("should cancel remove if beforeremove returns false", function() {
                 insertDefaultChildren.call(this);
-        
+
                 spy = spyOnEvent(rootNode, "beforeremove").andReturn(false);
-        
+
                 expect(rootNode.removeChild(leftChild)).toBe(false);
-        
+
                 expect(spy.callCount).toEqual(1);
             });
-        
+
             it("should fire remove event", function() {
                 insertDefaultChildren.call(this);
-        
+
                 spy = spyOnEvent(rootNode, "remove").andCallThrough();
-        
+
                 rootNode.removeChild(leftChild);
 
                 // Just use the context argumemt from the args as the last arg
                 expect(spy).toHaveBeenCalledWith(rootNode, leftChild, false, spy.mostRecentCall.args[3]);
             });
-        
+
             it("should remove child from childNodes", function() {
                 var childNodes, count;
-        
+
                 insertDefaultChildren.call(this);
-        
+
                 childNodes = rootNode.childNodes;
                 count = childNodes.length;
-        
+
                 rootNode.removeChild(leftChild);
-        
+
                 expect(childNodes.length).toEqual(count - 1);
                 expect(childNodes[0]).toEqual(rightChild);
             });
-        
+
             it("should manage siblings", function() {
                 insertDefaultChildren.call(this);
-        
-                //this gives us a third child - 'right' is actually now center
+
+                // this gives us a third child - 'right' is actually now center
                 rootNode.appendChild(spareNode);
-        
+
                 rootNode.removeChild(rightChild);
-        
+
                 expect(leftChild.nextSibling, spareNode);
-        
+
                 expect(spareNode.previousSibling, leftChild);
             });
-        
+
             it("should erase node if asked", function() {
                 insertDefaultChildren.call(this);
-        
+
                 spy = spyOn(leftChild, "erase").andCallThrough();
-        
+
                 rootNode.removeChild(leftChild, true);
-        
+
                 expect(spy).toHaveBeenCalled();
             });
-        
+
             it("should clear node if asked", function() {
                 insertDefaultChildren.call(this);
-        
+
                 spy = spyOn(leftChild, "clear").andCallThrough();
-        
+
                 rootNode.removeChild(leftChild, false);
-        
+
                 expect(spy).toHaveBeenCalled();
-            });            
+            });
             it("should update indexes for all siblings after the node's old position", function() {
                 insertDefaultChildren.call(this);
 
@@ -654,40 +684,40 @@ describe('Ext.data.NodeInterface', function() {
                 expect(spareNode.get('index')).toEqual(1);
             });
         });
-        
+
         describe("clearing references", function() {
-            beforeEach(function(){
+            beforeEach(function() {
                 insertDefaultChildren.call(this);
                 rootNode.appendChild(spareNode);
             });
-        
+
             it("should nullify parentNode", function() {
                expect(rightChild.parentNode).not.toBeNull();
-        
+
                rightChild.clear();
-        
+
                expect(rightChild.parentNode).toBeNull();
             });
-        
+
             it("should nullifies nextSibling", function() {
                expect(rightChild.nextSibling).not.toBeNull();
-        
+
                rightChild.clear();
-        
+
                expect(rightChild.nextSibling).toBeNull();
             });
-        
+
             it("should nullifies previousSibling", function() {
                expect(rightChild.previousSibling).not.toBeNull();
-        
+
                rightChild.clear();
-        
+
                expect(rightChild.previousSibling).toBeNull();
             });
-        
+
             it("should remove lastChild and firstChild references", function() {
                 rightChild.clear(true);
-        
+
                 expect(rightChild.firstChild).toBeNull();
                 expect(rightChild.lastChild).toBeNull();
             });
@@ -698,7 +728,7 @@ describe('Ext.data.NodeInterface', function() {
                 rootNode.appendChild(leftChild);
                 rootNode.appendChild(rightChild);
                 rootNode.appendChild(spareNode);
-        
+
                 expect(rootNode.getChildAt(0)).toEqual(leftChild);
                 expect(rootNode.getChildAt(1)).toEqual(rightChild);
                 expect(rootNode.getChildAt(2)).toEqual(spareNode);
@@ -708,33 +738,33 @@ describe('Ext.data.NodeInterface', function() {
         describe("silent destroy", function() {
             it("should purge node listeners", function() {
                 spy = spyOn(leftChild, "clearListeners").andCallThrough();
-        
+
                 leftChild.destroy();
-        
+
                 expect(spy).toHaveBeenCalled();
             });
 
             it("should erase children", function() {
                 var spy2;
-        
+
                 insertDefaultChildren.call(this);
-        
+
                 spy = spyOn(leftChild, "erase").andCallThrough();
                 spy2 = spyOn(rightChild, "erase").andCallThrough();
-        
+
                 rootNode.erase();
-        
+
                 expect(spy).toHaveBeenCalled();
                 expect(spy2).toHaveBeenCalled();
             });
-        
+
             it("should nullify childNodes", function() {
                 insertDefaultChildren.call(this);
-        
+
                 expect(rootNode.childNodes).not.toBeNull();
-        
+
                 rootNode.erase(true);
-        
+
                 expect(rootNode.childNodes).toBeNull();
             });
         });
@@ -742,31 +772,31 @@ describe('Ext.data.NodeInterface', function() {
         describe("non-silent destroy", function() {
             it("should remove node", function() {
                insertDefaultChildren.call(this);
-        
+
                spy = spyOn(leftChild, "remove").andCallThrough();
-        
+
                leftChild.erase(false);
-        
+
                expect(spy).toHaveBeenCalled();
             });
         });
-        
+
         describe("remove", function() {
             it("should remove from parent", function() {
                 spy = spyOn(rootNode, "removeChild").andCallThrough();
-        
+
                 rootNode.appendChild(leftChild);
-        
+
                 leftChild.remove();
-        
+
                 expect(spy).toHaveBeenCalledWith(leftChild, undefined, undefined);
             });
-        
+
             it("should return node", function() {
                expect(leftChild.remove()).toEqual(leftChild);
             });
         });
-        
+
         describe("removeAll", function() {
             it("should remove all children", function() {
                 rootNode.appendChild([leftChild, rightChild, spareNode]);
@@ -779,39 +809,39 @@ describe('Ext.data.NodeInterface', function() {
             beforeEach(function() {
                 insertDefaultChildren.call(this);
             });
-        
+
             it("should keep the same childNodes length", function() {
                 var count = rootNode.childNodes.length;
-        
+
                 rootNode.replaceChild(spareNode, leftChild);
-        
+
                 expect(rootNode.childNodes.length).toEqual(count);
             });
-        
+
             it("should replace node", function() {
                 rootNode.replaceChild(spareNode, leftChild);
-        
+
                 expect(rootNode.childNodes[0], spareNode);
             });
         });
-        
+
         describe("getting depth", function() {
             beforeEach(function() {
                 insertDefaultChildren.call(this);
                 leftChild.appendChild(spareNode);
             });
-        
-            it("should have a depth of 0 for rootNode", function(){
+
+            it("should have a depth of 0 for rootNode", function() {
                 expect(rootNode.getDepth()).toEqual(0);
             });
-        
-            it("should have a depth of 1 for leftChild and rightChild", function(){
+
+            it("should have a depth of 1 for leftChild and rightChild", function() {
                 expect(rightChild.getDepth()).toEqual(1);
                 expect(leftChild.getDepth()).toEqual(1);
             });
-        
-            it("should have a depth of 2 for spareNode", function(){
-                expect(spareNode.getDepth()).toEqual(2);                
+
+            it("should have a depth of 2 for spareNode", function() {
+                expect(spareNode.getDepth()).toEqual(2);
             });
         });
 
@@ -820,331 +850,331 @@ describe('Ext.data.NodeInterface', function() {
                 insertDefaultChildren.call(this);
                 leftChild.appendChild(spareNode);
             });
-        
+
             it("should set root path", function() {
                 expect(rootNode.getPath()).toEqual("/root");
             });
-        
+
             it("should set middle path", function() {
                 expect(leftChild.getPath()).toEqual("/root/left");
                 expect(rightChild.getPath()).toEqual("/root/right");
             });
-        
+
             it("should set leaf path", function() {
                 expect(spareNode.getPath()).toEqual("/root/left/spare");
             });
         });
-        
-        describe("indexOf", function(){
-            it("should always return -1 when the node is empty", function(){
+
+        describe("indexOf", function() {
+            it("should always return -1 when the node is empty", function() {
                 expect(rootNode.indexOf(spareNode)).toBe(-1);
             });
-            
-            it("should return -1 when the passed node is not a child", function(){
+
+            it("should return -1 when the passed node is not a child", function() {
                 rootNode.appendChild(leftChild);
-                expect(rootNode.indexOf(spareNode)).toBe(-1);    
+                expect(rootNode.indexOf(spareNode)).toBe(-1);
             });
-            
-            it("should return the correct index when the node exists", function(){
-                rootNode.appendChild([leftChild, spareNode, rightChild]);  
-                expect(rootNode.indexOf(spareNode)).toBe(1);     
+
+            it("should return the correct index when the node exists", function() {
+                rootNode.appendChild([leftChild, spareNode, rightChild]);
+                expect(rootNode.indexOf(spareNode)).toBe(1);
             });
         });
-        
-        describe("indexOfId", function(){
-            it("should always return -1 when the node is empty", function(){
+
+        describe("indexOfId", function() {
+            it("should always return -1 when the node is empty", function() {
                 expect(rootNode.indexOfId('spare')).toBe(-1);
             });
-            
-            it("should return -1 when the passed node is not a child", function(){
+
+            it("should return -1 when the passed node is not a child", function() {
                 rootNode.appendChild(leftChild);
-                expect(rootNode.indexOfId('spare')).toBe(-1);    
+                expect(rootNode.indexOfId('spare')).toBe(-1);
             });
-            
-            it("should return the correct index when the node exists", function(){
-                rootNode.appendChild([leftChild, spareNode, rightChild]);   
-                expect(rootNode.indexOfId('spare')).toBe(1);      
+
+            it("should return the correct index when the node exists", function() {
+                rootNode.appendChild([leftChild, spareNode, rightChild]);
+                expect(rootNode.indexOfId('spare')).toBe(1);
             });
         });
-        
+
         describe("bubbling", function() {
             var bubbleFn;
-        
+
             beforeEach(function() {
                 insertDefaultChildren.call(this);
                 leftChild.appendChild(spareNode);
                 bubbleFn = jasmine.createSpy();
             });
-        
+
             it("should call bubbleFn 3 times", function() {
                 spareNode.bubble(bubbleFn);
-        
+
                 expect(bubbleFn.callCount).toEqual(3);
             });
-        
+
             it("should call bubbleFn with node spare, left, root", function() {
                 spareNode.bubble(bubbleFn);
-        
+
                 expect(bubbleFn.calls[0].args).toEqual([spareNode]);
                 expect(bubbleFn.calls[1].args).toEqual([leftChild]);
                 expect(bubbleFn.calls[2].args).toEqual([rootNode]);
             });
-        
+
             it("should call bubbleFn with a defined scope", function() {
                 spareNode.bubble(bubbleFn, fakeScope);
-        
+
                 expect(bubbleFn.calls[0].object).toBe(fakeScope);
                 expect(bubbleFn.calls[1].object).toBe(fakeScope);
                 expect(bubbleFn.calls[2].object).toBe(fakeScope);
             });
-        
+
             it("should call bubbleFn with customs arguments", function() {
                 var customArgs = ['some', 'args'];
-        
+
                 spareNode.bubble(bubbleFn, spareNode, customArgs);
-        
+
                 expect(bubbleFn.calls[0].args).toEqual(customArgs);
                 expect(bubbleFn.calls[1].args).toEqual(customArgs);
                 expect(bubbleFn.calls[2].args).toEqual(customArgs);
             });
-        
+
             it("should stop when bubbleFn return false", function() {
                 bubbleFn.andCallFake(function(node) {
                     if (node.getId() === 'left') {
                         return false;
                     }
                 });
-        
+
                 spareNode.bubble(bubbleFn);
-        
+
                 expect(bubbleFn.callCount).toEqual(2);
             });
         });
-        
+
         describe("cascading", function() {
             var cascadeFn;
-        
-            beforeEach(function(){
+
+            beforeEach(function() {
                insertDefaultChildren.call(this);
                leftChild.appendChild(spareNode);
                cascadeFn = jasmine.createSpy();
             });
-        
+
             it("should call cascadeFn 4 times", function() {
                 rootNode.cascade(cascadeFn);
-        
+
                 expect(cascadeFn.callCount).toEqual(4);
             });
-        
+
             it("should call cascadeFn with node root, leftChild, spareNode, rightChild", function() {
                 rootNode.cascade(cascadeFn);
-        
+
                 expect(cascadeFn.calls[0].args).toEqual([rootNode]);
                 expect(cascadeFn.calls[1].args).toEqual([leftChild]);
                 expect(cascadeFn.calls[2].args).toEqual([spareNode]);
                 expect(cascadeFn.calls[3].args).toEqual([rightChild]);
             });
-        
+
             it("should call cascadeFn with a defined scope", function() {
                 rootNode.cascade(cascadeFn, fakeScope);
-        
+
                 expect(cascadeFn.calls[0].object).toBe(fakeScope);
                 expect(cascadeFn.calls[1].object).toBe(fakeScope);
                 expect(cascadeFn.calls[2].object).toBe(fakeScope);
                 expect(cascadeFn.calls[3].object).toBe(fakeScope);
             });
-        
+
             it("should call cascadeFn with customs arguments", function() {
                 var customArgs = ['some', 'args'];
-        
+
                 rootNode.cascade(cascadeFn, rootNode, customArgs);
-        
+
                 expect(cascadeFn.calls[0].args).toEqual(customArgs);
                 expect(cascadeFn.calls[1].args).toEqual(customArgs);
                 expect(cascadeFn.calls[2].args).toEqual(customArgs);
                 expect(cascadeFn.calls[3].args).toEqual(customArgs);
             });
-        
+
             it("should stop at end of branch when cascadeFn return false", function() {
                 cascadeFn.andCallFake(function(node) {
                     if (node.getId() === 'left') {
                         return false;
                     }
                 });
-        
+
                 rootNode.cascade(cascadeFn);
-        
+
                 expect(cascadeFn.callCount).toEqual(3);
             });
         });
 
         describe("each child", function() {
             var eachFn;
-        
-            beforeEach(function (){
+
+            beforeEach(function() {
                 insertDefaultChildren.call(this);
                 eachFn = jasmine.createSpy();
             });
-        
+
             it("should be called 2 times", function() {
-        
+
                 rootNode.eachChild(eachFn);
-        
+
                 expect(eachFn.callCount).toEqual(2);
             });
-        
+
             it("should call eachFn with node root, leftChild, rightChild", function() {
                 rootNode.eachChild(eachFn);
-        
+
                 expect(eachFn.calls[0].args).toEqual([leftChild]);
                 expect(eachFn.calls[1].args).toEqual([rightChild]);
             });
-        
+
             it("should call eachFn with a defined scope", function() {
                 rootNode.eachChild(eachFn, fakeScope);
-        
+
                 expect(eachFn.calls[0].object).toBe(fakeScope);
                 expect(eachFn.calls[1].object).toBe(fakeScope);
             });
-        
+
             it("should call eachFn with customs arguments", function() {
                 var customArgs = ['some', 'args'];
-        
+
                 rootNode.eachChild(eachFn, rootNode, customArgs);
-        
+
                 expect(eachFn.calls[0].args).toEqual(customArgs);
                 expect(eachFn.calls[1].args).toEqual(customArgs);
             });
-        
+
             it("should stop when eachFn return false", function() {
                 eachFn.andCallFake(function(node) {
                     if (node.getId() === 'left') {
                         return false;
                     }
                 });
-        
+
                 rootNode.eachChild(eachFn);
-        
+
                 expect(eachFn.callCount).toEqual(1);
             });
         });
-        
+
         describe("ancestors", function() {
-            beforeEach(function (){
+            beforeEach(function() {
                 insertDefaultChildren.call(this);
                 leftChild.appendChild(spareNode);
             });
-        
+
             it("should have parent as ancestor", function() {
                 expect(spareNode.isAncestor(leftChild)).toBe(true);
             });
-        
+
             it("should have root as ancestor", function() {
                 expect(spareNode.isAncestor(rootNode)).toBe(true);
             });
-        
+
             it("should not have uncle as ancestor", function() {
                 expect(spareNode.isAncestor(rightChild)).toBe(false);
-            });            
+            });
         });
-        
+
         describe("contains", function() {
-            beforeEach(function (){
+            beforeEach(function() {
                 insertDefaultChildren.call(this);
                 leftChild.appendChild(spareNode);
             });
-        
+
             it("should contain child", function() {
                 expect(rootNode.contains(leftChild)).toBe(true);
             });
-        
+
             it("should contain grand child", function() {
                 expect(rootNode.contains(spareNode)).toBe(true);
             });
-        
+
             it("should not contain parent", function() {
                 expect(spareNode.contains(leftChild)).toBe(false);
-            });            
+            });
         });
 
         describe("finding children", function() {
-            beforeEach(function (){
+            beforeEach(function() {
                 insertDefaultChildren.call(this);
                 leftChild.appendChild(spareNode);
             });
-        
+
             describe("findChild", function() {
                 it("should find shallow children", function() {
                     expect(rootNode.findChild('id', 'left')).toEqual(leftChild);
                 });
-        
+
                 it("should not find deep children if deep is not specified", function() {
                     expect(rootNode.findChild('id', 'spare')).toBeNull();
                 });
-        
+
                 it("should not find deep children if deep is false", function() {
                     expect(rootNode.findChild('id', 'spare', false)).toBeNull();
                 });
-        
+
                 it("should find deep children if deep is true", function() {
                     expect(rootNode.findChild('id', 'spare', true)).toEqual(spareNode);
-                });                
+                });
             });
-        
+
             describe("findChildBy", function() {
                 var child;
-        
-                it("should find shallow children", function(){
+
+                it("should find shallow children", function() {
                     child = rootNode.findChildBy(function(node) {
                         return node.getId() === 'right';
                     });
-        
+
                     expect(child).toEqual(rightChild);
                 });
-        
-                it("should not find deep children if deep is not specified", function(){
+
+                it("should not find deep children if deep is not specified", function() {
                     child = rootNode.findChildBy(function(node) {
                         return node.getId() === 'spare';
                     });
-        
+
                     expect(child).toBeNull();
                 });
-        
-                it("should not find deep children if deep is false", function(){
+
+                it("should not find deep children if deep is false", function() {
                     child = rootNode.findChildBy(function(node) {
                         return node.getId() === 'spare';
                     }, this, false);
-        
+
                     expect(child).toBeNull();
                 });
-        
-                it("should find deep children if deep is true", function(){
+
+                it("should find deep children if deep is true", function() {
                     child = rootNode.findChildBy(function(node) {
                         return node.getId() === 'spare';
                     }, this, true);
-        
+
                     expect(child).toEqual(spareNode);
                 });
-        
-                it("should call function with good scope", function(){
+
+                it("should call function with good scope", function() {
                     var findChildFn = jasmine.createSpy().andReturn(false);
-        
+
                     child = rootNode.findChildBy(findChildFn, fakeScope, true);
-        
+
                     expect(findChildFn.calls[0].object).toBe(fakeScope);
                     expect(findChildFn.calls[1].object).toBe(fakeScope);
-                    expect(findChildFn.calls[2].object).toBe(fakeScope);  
+                    expect(findChildFn.calls[2].object).toBe(fakeScope);
                 });
             });
         });
-        
+
         describe("sort", function() {
             var node1,
                 node2,
                 node3,
                 node4,
                 sortFn;
-        
+
             beforeEach(function() {
                 Ext.define('spec.EmployeeTreeNode', {
                     extend: 'Ext.data.Model',
@@ -1154,45 +1184,46 @@ describe('Ext.data.NodeInterface', function() {
                     ]
                 });
                 Ext.data.NodeInterface.decorate(spec.EmployeeTreeNode);
-                node1 = new spec.EmployeeTreeNode({lastname: "Avins", firstname: "Jamie"});
-                node2 = new spec.EmployeeTreeNode({lastname: "Dougan", firstname: "Robert"});
-                node3 = new spec.EmployeeTreeNode({lastname: "Ferrero", firstname: "Nicolas"});
-                node4 = new spec.EmployeeTreeNode({lastname: "Spencer", firstname: "Edward"});
-        
+                node1 = new spec.EmployeeTreeNode({ lastname: "Avins", firstname: "Jamie" });
+                node2 = new spec.EmployeeTreeNode({ lastname: "Dougan", firstname: "Robert" });
+                node3 = new spec.EmployeeTreeNode({ lastname: "Ferrero", firstname: "Nicolas" });
+                node4 = new spec.EmployeeTreeNode({ lastname: "Spencer", firstname: "Edward" });
+
                 rootNode.appendChild([node4, node2, node3, node1]);
-        
+
                 sortFn = jasmine.createSpy();
-                sortFn.andCallFake(function(a, b){
+                sortFn.andCallFake(function(a, b) {
                     if (a.get('lastname') ===  b.get('lastname')) {
                         return 0;
                     }
+
                     return (a.get('lastname') < b.get('lastname')) ? -1 : 1;
                 });
-        
+
                 rootNode.sort(sortFn);
             });
             afterEach(function() {
                 Ext.undefine('spec.EmployeeTreeNode');
             });
-        
+
             it("should sort the child by lastname with the correct function", function() {
                 expect(rootNode.childNodes[0]).toEqual(node1);
                 expect(rootNode.childNodes[1]).toEqual(node2);
                 expect(rootNode.childNodes[2]).toEqual(node3);
                 expect(rootNode.childNodes[3]).toEqual(node4);
             });
-        
+
         });
-        
-        describe("copy", function(){
-            it("should not copy childNodes by default", function(){
+
+        describe("copy", function() {
+            it("should not copy childNodes by default", function() {
                 var node = new spec.TreeNode({
                     text: 'Text',
                     id: 1
                 });
 
                 var newNode = node.copy();
-                
+
                 expect(newNode.getData()).toEqual({
                     allowDrag: true,
                     allowDrop: true,
@@ -1223,15 +1254,15 @@ describe('Ext.data.NodeInterface', function() {
                     visible: true
                 });
             });
-            
-            it("should accept a new id", function(){
+
+            it("should accept a new id", function() {
                 var node = new spec.TreeNode({
                     text: 'Text',
                     id: 1
                 });
-                
+
                 var newNode = node.copy(2);
-                
+
                 expect(newNode.getData()).toEqual({
                     allowDrag: true,
                     allowDrop: true,
@@ -1262,20 +1293,23 @@ describe('Ext.data.NodeInterface', function() {
                     visible: true
                 });
             });
-            
-            it("should clone children if deep: true is specified", function(){
+
+            it("should clone children if deep: true is specified", function() {
                 var root = new spec.TreeNode({
                     id: 1,
                     text: 'Root'
-                });    
+                });
+
                 var child1 = root.appendChild(new spec.TreeNode({
                     id: 2,
                     text: 'Child1'
                 }));
+
                 var child2 = child1.appendChild(new spec.TreeNode({
                     id: 3,
                     text: 'Child2'
                 }));
+
                 child2.appendChild(new spec.TreeNode({
                     id: 4,
                     text: 'Child3'
@@ -1286,11 +1320,11 @@ describe('Ext.data.NodeInterface', function() {
 
                 expect(newNode.childNodes[0].getId()).toBe(2);
                 expect(newNode.childNodes[0].get('text')).toBe('Child1');
-                
+
                 newNode = newNode.childNodes[0];
                 expect(newNode.childNodes[0].getId()).toBe(3);
                 expect(newNode.childNodes[0].get('text')).toBe('Child2');
-                
+
                 newNode = newNode.childNodes[0];
                 expect(newNode.childNodes[0].getId()).toBe(4);
                 expect(newNode.childNodes[0].get('text')).toBe('Child3');
@@ -1299,28 +1333,28 @@ describe('Ext.data.NodeInterface', function() {
                 newNode = root.copy(undefined, null, true);
                 expect(newNode.childNodes[0].getId()).toBe(2);
                 expect(newNode.childNodes[0].get('text')).toBe('Child1');
-                
+
                 newNode = newNode.childNodes[0];
                 expect(newNode.childNodes[0].getId()).toBe(3);
                 expect(newNode.childNodes[0].get('text')).toBe('Child2');
-                
+
                 newNode = newNode.childNodes[0];
                 expect(newNode.childNodes[0].getId()).toBe(4);
                 expect(newNode.childNodes[0].get('text')).toBe('Child3');
-                
+
                 // Test new API (newId, session, deep)
                 session = new Ext.data.Session();
                 newNode = root.copy(undefined, session, true);
                 expect(newNode.childNodes[0].getId()).toBe(2);
                 expect(newNode.childNodes[0].get('text')).toBe('Child1');
-                
+
                 // Copy must be in new session
                 expect(session.peekRecord(spec.TreeNode, newNode.id)).toBe(newNode);
 
                 newNode = newNode.childNodes[0];
                 expect(newNode.childNodes[0].getId()).toBe(3);
                 expect(newNode.childNodes[0].get('text')).toBe('Child2');
-                
+
                 newNode = newNode.childNodes[0];
                 expect(newNode.childNodes[0].getId()).toBe(4);
                 expect(newNode.childNodes[0].get('text')).toBe('Child3');
@@ -1331,13 +1365,13 @@ describe('Ext.data.NodeInterface', function() {
                 expect(newNode.childNodes.length).toBe(0);
 
                 // Copy must be in new session
-                expect(session.peekRecord(spec.TreeNode, newNode.id)).toBe(newNode);                
+                expect(session.peekRecord(spec.TreeNode, newNode.id)).toBe(newNode);
             });
         });
-        
+
     });
-    
-    describe("serialize", function(){
+
+    describe("serialize", function() {
         it('should create an object representation of the node', function() {
             var node = new spec.TreeNode({
                 text: 'Root',
@@ -1351,11 +1385,12 @@ describe('Ext.data.NodeInterface', function() {
                 text: 'C1',
                 id: 3
             }));
-            c1.appendChild( new spec.TreeNode({
+
+            c1.appendChild(new spec.TreeNode({
                 text: 'c1.1',
                 id: 4
             }));
-            c2.appendChild( new spec.TreeNode({
+            c2.appendChild(new spec.TreeNode({
                 text: 'c2.1',
                 id: 5
             }));
@@ -1398,41 +1433,43 @@ describe('Ext.data.NodeInterface', function() {
             });
         });
 
-        it("should not include children if there are none", function(){
+        it("should not include children if there are none", function() {
             var o = new spec.TreeNode({
-                text: 'foo'
-            }),  s = o.serialize();
-                
+                    text: 'foo'
+                }),
+                s = o.serialize();
+
             expect(s.text).toBe('foo');
             expect(s.children).toBeUndefined();
         });
-        
-        it("should include children if they exist", function(){
+
+        it("should include children if they exist", function() {
             var o = new spec.TreeNode({
-                text: 'foo'
-            }), s;
-            
+                    text: 'foo'
+                }),
+                s;
+
             o.appendChild(new spec.TreeNode({
                 text: 'bar'
             }));
-                
+
             s = o.serialize();
             expect(s.text).toBe('foo');
             expect(s.children[0].text).toBe('bar');
-        });  
+        });
     });
-    
+
     describe("collapse", function() {
         it("should fire the collapse callback when there are no child nodes", function() {
             var root = new spec.TreeNode(),
                 called;
-                
+
             root.collapseChildren(false, function() {
                 called = true;
             });
             expect(called).toBe(true);
             root = null;
-        });  
+        });
     });
 
     describe("modified property tracking", function() {
@@ -1443,8 +1480,8 @@ describe('Ext.data.NodeInterface', function() {
             Ext.define('spec.PersistentIndexTreeNode', {
                 extend: 'Ext.data.TreeModel',
                 fields: [
-                    {name: 'text', type: 'string'},
-                    {name: 'index', type: 'int', persist: true, defaultValue: -1}
+                    { name: 'text', type: 'string' },
+                    { name: 'index', type: 'int', persist: true, defaultValue: -1 }
                 ],
                 proxy: {
                     type: 'memory'
@@ -1452,15 +1489,16 @@ describe('Ext.data.NodeInterface', function() {
             });
 
             var root = new spec.PersistentIndexTreeNode({
-                id: 'TestRoot'
-            }),
-            root1 = new spec.PersistentIndexTreeNode({
-                id: 'OtherTestRoot'
-            }),
-            node = new spec.PersistentIndexTreeNode({
-                id: 'node'
-            }),
-            node1;
+                    id: 'TestRoot'
+                }),
+                root1 = new spec.PersistentIndexTreeNode({
+                    id: 'OtherTestRoot'
+                }),
+                node = new spec.PersistentIndexTreeNode({
+                    id: 'node'
+                }),
+                node1;
+
             root.appendChild(node);
 
             // The modified shows that parentId was changed *from* null.
@@ -1527,6 +1565,59 @@ describe('Ext.data.NodeInterface', function() {
             root1.appendChild(node1);
 
             Ext.undefine('spec.PersistentIndexTreeNode');
+        });
+    });
+
+    describe('Setting depth on descendant nodes when branch node added', function() {
+        it('should cascade the new depth to all leaf nodes upon add', function() {
+            var root = new spec.TreeNode({
+                    text: 'l0'
+                }),
+                l1_0 = new spec.TreeNode({
+                    text: 'l1_0'
+                }),
+                l1_0_1 = new spec.TreeNode({
+                    text: 'l1_0'
+                }),
+                l1_1 = new spec.TreeNode({
+                    text: 'l1'
+                }),
+                branch = new spec.TreeNode({
+                    text: 'l2'
+                }),
+                l3 = new spec.TreeNode({
+                    text: 'l3'
+                }),
+                l4 = new spec.TreeNode({
+                    text: 'l4'
+                });
+
+            // Create two detached branches
+            l1_0.appendChild(l1_0_1);
+            root.appendChild(l1_0);
+            root.appendChild(l1_1);
+            l3.appendChild(l4);
+            branch.appendChild(l3);
+
+            // Both branches will start at depth 0
+            expect(root.data.depth).toBe(0);
+            expect(l1_0.data.depth).toBe(1);
+            expect(l1_0_1.data.depth).toBe(2);
+            expect(l1_1.data.depth).toBe(1);
+            expect(branch.data.depth).toBe(0);
+            expect(l3.data.depth).toBe(1);
+            expect(l4.data.depth).toBe(2);
+
+            l1_1.appendChild(branch);
+
+            // After adding the branch, it and its descendants will have been redepthed.
+            expect(root.data.depth).toBe(0);
+            expect(l1_0.data.depth).toBe(1);
+            expect(l1_0_1.data.depth).toBe(2);
+            expect(l1_1.data.depth).toBe(1);
+            expect(branch.data.depth).toBe(2);
+            expect(l3.data.depth).toBe(3);
+            expect(l4.data.depth).toBe(4);
         });
     });
 });

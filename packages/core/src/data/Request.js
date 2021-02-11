@@ -1,15 +1,16 @@
 /**
- * Simple class that represents a Request that will be made by any {@link Ext.data.proxy.Server} subclass.
- * All this class does is standardize the representation of a Request as used by any ServerProxy subclass,
- * it does not contain any actual logic or perform the request itself.
+ * Simple class that represents a Request that will be made by any {@link Ext.data.proxy.Server}
+ * subclass. All this class does is standardize the representation of a Request as used by any
+ * ServerProxy subclass, it does not contain any actual logic or perform the request itself.
  */
 Ext.define('Ext.data.Request', {
     isDataRequest: true,
-    
+
     config: {
         /**
          * @cfg {String} action
-         * The name of the action this Request represents. Usually one of 'create', 'read', 'update' or 'destroy'.
+         * The name of the action this Request represents. Usually one of 'create', 'read',
+         * 'update' or 'destroy'.
          */
         action: undefined,
 
@@ -21,7 +22,8 @@ Ext.define('Ext.data.Request', {
 
         /**
          * @cfg {String} method
-         * The HTTP method to use on this Request. Should be one of 'GET', 'POST', 'PUT' or 'DELETE'.
+         * The HTTP method to use on this Request. Should be one of 'GET', 'POST', 'PUT',
+         * or 'DELETE'.
          */
         method: 'GET',
 
@@ -105,7 +107,7 @@ Ext.define('Ext.data.Request', {
          * @accessor
          */
         password: null,
-        
+
         /**
         * @cfg {Boolean} binary
         * True to request binary data from the server.  This feature requires
@@ -122,7 +124,8 @@ Ext.define('Ext.data.Request', {
         // for being able to retrieve them after the request comes back from the server.
         directFn: null,
         args: null,
-        useDefaultXhrHeader: null
+        useDefaultXhrHeader: null,
+        responseType: null
     },
 
     /**
@@ -132,7 +135,7 @@ Ext.define('Ext.data.Request', {
     constructor: function(config) {
         this.initConfig(config);
     },
-    
+
     /**
      * Gets a single param from the {@link #params}.
      * @param {String} key The key for the param.
@@ -141,13 +144,14 @@ Ext.define('Ext.data.Request', {
     getParam: function(key) {
         var params = this.getParams(),
             val;
-            
+
         if (params) {
             return params[key];
         }
+
         return val;
     },
-    
+
     /**
      * Sets a single param value in the {@link #params}.
      * @param {String} key The key to set.
@@ -155,7 +159,9 @@ Ext.define('Ext.data.Request', {
      */
     setParam: function(key, value) {
         var params = this.getParams() || {};
+
         params[key] = value;
+
         this.setParams(params);
     }
 });

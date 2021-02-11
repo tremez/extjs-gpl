@@ -10,7 +10,7 @@ Ext.define('KitchenSink.view.charts.column.Stacked', {
     extend: 'Ext.Panel',
     xtype: 'column-stacked',
     controller: 'column-stacked',
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     bodyStyle: 'background: transparent !important',
     layout: {
@@ -22,9 +22,9 @@ Ext.define('KitchenSink.view.charts.column.Stacked', {
         path: 'classic/samples/view/charts/column/StackedController.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/Browsers.js'
+        path: 'app/store/Browsers.js'
     }],
-    // </example>
+    //</example>
 
     width: 650,
 
@@ -34,6 +34,15 @@ Ext.define('KitchenSink.view.charts.column.Stacked', {
 
         width: '100%',
         height: 460,
+
+        captions: {
+            title: 'Column Charts - Stacked Columns',
+            credits: {
+                text: 'Data: Browser Stats 2012\n' +
+                'Source: http://www.w3schools.com/',
+                align: 'left'
+            }
+        },
 
         store: {
             type: 'browsers'
@@ -48,33 +57,6 @@ Ext.define('KitchenSink.view.charts.column.Stacked', {
                 renderer: 'onEditTipRender'
             }
         },
-        insetPadding: {
-            top: 40,
-            left: 40,
-            right: 40,
-            bottom: 40
-        },
-        sprites: [{
-            type: 'text',
-            text: 'Column Charts - Stacked Columns',
-            fontSize: 22,
-            width: 100,
-            height: 30,
-            x: 40, // the sprite x position
-            y: 20  // the sprite y position
-        }, {
-            type: 'text',
-            text: 'Data: Browser Stats 2012',
-            fontSize: 10,
-            x: 12,
-            y: 380
-        }, {
-            type: 'text',
-            text: 'Source: http://www.w3schools.com/',
-            fontSize: 10,
-            x: 12,
-            y: 395
-        }],
         axes: [{
             type: 'numeric',
             position: 'left',
@@ -107,30 +89,11 @@ Ext.define('KitchenSink.view.charts.column.Stacked', {
                 fillStyle: 'yellow'
             },
             tooltip: {
+                trackMouse: true,
                 renderer: 'onBarTipRender'
             }
         }]
         //<example>
-    }, {
-        style: 'margin-top: 10px;',
-        xtype: 'gridpanel',
-        columns : {
-            defaults: {
-                sortable: false,
-                menuDisabled: true,
-                renderer: 'onGridValueRender'
-            },
-            items: [
-                { text: 'Month', dataIndex: 'month', renderer: 'onGridMonthRender' },
-                { text: 'IE', dataIndex: 'data1' },
-                { text: 'Firefox', dataIndex: 'data2' },
-                { text: 'Chrome', dataIndex: 'data3' },
-                { text: 'Safari', dataIndex: 'data4' }
-            ]
-        },
-        store: {type: 'browsers'},
-        width: '100%'
-        //</example>
     }],
 
     tbar: [

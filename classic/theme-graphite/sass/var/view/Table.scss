@@ -1,0 +1,17 @@
+$grid-cell-special-background-gradient: dynamic($base-gradient);
+$grid-cell-inner-padding: dynamic(10px 10px 6px);
+$grid-empty-color: dynamic(contrast-color-by($body-background-color, 50));
+$grid-resize-marker-background-color: dynamic(contrast-color-by($body-background-color, 94));
+$grid-row-cell-alt-background-color: dynamic(#353535);
+$grid-row-cell-background-color: dynamic($body-background-color);
+$grid-row-cell-border-width: dynamic(0px);
+$grid-row-cell-focus-background-color: dynamic($focus-background-color);
+$grid-row-cell-focus-border-color: dynamic($focus-background-color);
+$grid-row-cell-focus-border-width: dynamic(0px);
+$grid-row-cell-focus-color: dynamic($focus-font-color);
+$grid-row-cell-line-height: dynamic(35px);
+$grid-row-cell-over-background-color: dynamic(#aeaeae);
+$grid-row-cell-over-border-color: dynamic(#aeaeae);
+$grid-row-cell-selected-background-color: dynamic(#d9d9d9);
+$grid-row-cell-selected-color: dynamic(#404040);
+$grid-row-min-height: dynamic(50px);

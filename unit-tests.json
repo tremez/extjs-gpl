@@ -1,0 +1,11 @@
+{
+    "suites": [{
+        "name": "Classic Toolkit",
+        "page": "http://{host}:{port}/ext/classic/classic/test/local/",
+        "capabilities": "classic/classic/test/capabilities.json"
+    }, {
+        "name": "Modern Toolkit",
+        "page": "http://{host}:{port}/ext/modern/modern/test/local/",
+        "capabilities": "modern/modern/test/capabilities.json"
+    }]
+}

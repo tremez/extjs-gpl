@@ -74,7 +74,7 @@ Ext.define('SimpleTasks.view.tasks.ReminderWindow', {
     setTask: function(task) {
         this.task = task;
     },
-    
+
     /**
      * Gets the task associated with this reminder
      * @return {Task.model.Task}

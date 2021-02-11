@@ -8,7 +8,7 @@ Ext.define('KitchenSink.store.LifeExpectancy', {
 
     fields: ['country', 'expectancy', 'spending'],
 
-    constructor: function (config) {
+    constructor: function(config) {
         config = config || {};
 
         // Create data in construct time instead of defining it

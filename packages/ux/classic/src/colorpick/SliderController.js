@@ -6,26 +6,26 @@ Ext.define('Ext.ux.colorpick.SliderController', {
     alias: 'controller.colorpick-slidercontroller',
 
     // After the component is rendered
-    boxReady: function (view) {
-        var me         = this,
-            container  = me.getDragContainer(),
+    boxReady: function(view) {
+        var me = this,
+            container = me.getDragContainer(),
             dragHandle = me.getDragHandle(),
-            dd         = dragHandle.dd;
+            dd = dragHandle.dd;
 
         // configure draggable constraints 
         dd.constrain = true;
         dd.constrainTo = container.getEl();
-        dd.initialConstrainTo = dd.constrainTo; // needed otheriwse error EXTJS-13187
-        
+        dd.initialConstrainTo = dd.constrainTo; // needed otherwise error EXTJS-13187
+
         // event handlers
         dd.on('drag', me.onHandleDrag, me);
     },
 
-    getDragHandle: function () {
+    getDragHandle: function() {
         return this.view.lookupReference('dragHandle');
     },
 
-    getDragContainer: function () {
+    getDragContainer: function() {
         return this.view.lookupReference('dragHandleContainer');
     },
 
@@ -33,14 +33,14 @@ Ext.define('Ext.ux.colorpick.SliderController', {
     // with parameter  "percentY" 0-1, representing the handle position on the slider
     // relative to the height
     onHandleDrag: function(e) {
-        var me              = this,
-            view            = me.getView(),
-            container       = me.getDragContainer(),
-            dragHandle      = me.getDragHandle(),
-            y               = dragHandle.getY() - container.getY(),
-            containerEl     = container.getEl(),
+        var me = this,
+            view = me.getView(),
+            container = me.getDragContainer(),
+            dragHandle = me.getDragHandle(),
+            y = dragHandle.getY() - container.getY(),
+            containerEl = container.getEl(),
             containerHeight = containerEl.getHeight(),
-            yRatio          = y/containerHeight;
+            yRatio = y / containerHeight;
 
         // Adjust y ratio for dragger always being 1 pixel from the edge on the bottom
         if (yRatio > 0.99) {
@@ -52,7 +52,7 @@ Ext.define('Ext.ux.colorpick.SliderController', {
 
     // Whenever we mousedown over the slider area
     onMouseDown: function(e) {
-        var me         = this,
+        var me = this,
             dragHandle = me.getDragHandle(),
             y = e.getY();
 
@@ -67,14 +67,14 @@ Ext.define('Ext.ux.colorpick.SliderController', {
 
     // Whenever we start a drag over the colormap area
     onDragStart: function(e) {
-        var me         = this,
+        var me = this,
             dragHandle = me.getDragHandle();
 
         // tie into the default dd mechanism
         dragHandle.dd.onDragStart(e, dragHandle.dd.el);
     },
 
-    onMouseUp: function () {
+    onMouseUp: function() {
         var dragHandle = this.getDragHandle();
 
         dragHandle.dd.dragEnded = true; // work around DragTracker bug

@@ -17,8 +17,9 @@ Ext.define("Ext.draw.SegmentTree", {
      * @param {Number} dataLow
      * @param {Number} dataClose
      */
-    time: function (result, last, dataX, dataOpen, dataHigh, dataLow, dataClose) {
-        var start = 0, lastOffset, lastOffsetEnd,
+    time: function(result, last, dataX, dataOpen, dataHigh, dataLow, dataClose) {
+        var start = 0,
+            lastOffset, lastOffsetEnd,
             minimum = new Date(dataX[result.startIdx[0]]),
             maximum = new Date(dataX[result.endIdx[last - 1]]),
             extDate = Ext.Date,
@@ -49,10 +50,10 @@ Ext.define("Ext.draw.SegmentTree", {
                 [extDate.YEAR, 5, 'y5', 'y1'],
                 [extDate.YEAR, 10, 'y10', 'y5'],
                 [extDate.YEAR, 100, 'y100', 'y10']
-            ], unitIdx, currentUnit,
+            ],
+            unitIdx, currentUnit,
             plainStart = start,
             plainEnd = last,
-            first = false,
             startIdxs = result.startIdx,
             endIdxs = result.endIdx,
             minIdxs = result.minIdx,
@@ -69,20 +70,23 @@ Ext.define("Ext.draw.SegmentTree", {
             minimum = new Date(dataX[startIdxs[0]]);
             currentUnit = units[unitIdx];
             minimum = extDate.align(minimum, currentUnit[0], currentUnit[1]);
+
+            // eslint-disable-next-line max-len
             if (extDate.diff(minimum, maximum, currentUnit[0]) > dataX.length * 2 * currentUnit[1]) {
                 continue;
             }
+
             if (currentUnit[3] && result.map['time_' + currentUnit[3]]) {
                 lastOffset = result.map['time_' + currentUnit[3]][0];
                 lastOffsetEnd = result.map['time_' + currentUnit[3]][1];
-            } else {
+            }
+            else {
                 lastOffset = plainStart;
                 lastOffsetEnd = plainEnd;
             }
 
             start = last;
             current = minimum;
-            first = true;
 
             startIdxs[last] = startIdxs[lastOffset];
             endIdxs[last] = endIdxs[lastOffset];
@@ -100,17 +104,20 @@ Ext.define("Ext.draw.SegmentTree", {
                 if (dataX[endIdxs[i]] < +current) {
                     endIdxs[last] = endIdxs[i];
                     closes[last] = closes[i];
+
                     if (maxYs[i] > maxYs[last]) {
                         maxYs[last] = maxYs[i];
                         maxXs[last] = maxXs[i];
                         maxIdxs[last] = maxIdxs[i];
                     }
+
                     if (minYs[i] < minYs[last]) {
                         minYs[last] = minYs[i];
                         minXs[last] = minXs[i];
                         minIdxs[last] = minIdxs[i];
                     }
-                } else {
+                }
+                else {
                     last++;
                     startIdxs[last] = startIdxs[i];
                     endIdxs[last] = endIdxs[i];
@@ -125,6 +132,7 @@ Ext.define("Ext.draw.SegmentTree", {
                     current = Ext.Date.add(current, currentUnit[0], currentUnit[1]);
                 }
             }
+
             if (last > start) {
                 result.map['time_' + currentUnit[2]] = [start, last];
             }
@@ -141,8 +149,10 @@ Ext.define("Ext.draw.SegmentTree", {
      * @param {Number} dataLow
      * @param {Number} dataClose
      */
-    "double": function (result, position, dataX, dataOpen, dataHigh, dataLow, dataClose) {
-        var offset = 0, lastOffset, step = 1,
+    "double": function(result, position, dataX, dataOpen, dataHigh, dataLow, dataClose) {
+        var offset = 0,
+            lastOffset,
+            step = 1,
             i,
             startIdx,
             endIdx,
@@ -154,10 +164,12 @@ Ext.define("Ext.draw.SegmentTree", {
             minY,
             maxX,
             maxY;
+
         while (position > offset + 1) {
             lastOffset = offset;
             offset = position;
             step += step;
+
             for (i = lastOffset; i < offset; i += 2) {
                 if (i === offset - 1) {
                     startIdx = result.startIdx[i];
@@ -170,31 +182,37 @@ Ext.define("Ext.draw.SegmentTree", {
                     minY = result.minY[i];
                     maxX = result.maxX[i];
                     maxY = result.maxY[i];
-                } else {
+                }
+                else {
 
                     startIdx = result.startIdx[i];
                     endIdx = result.endIdx[i + 1];
                     open = result.open[i];
                     close = result.close[i];
+
                     if (result.minY[i] <= result.minY[i + 1]) {
                         minIdx = result.minIdx[i];
                         minX = result.minX[i];
                         minY = result.minY[i];
-                    } else {
+                    }
+                    else {
                         minIdx = result.minIdx[i + 1];
                         minX = result.minX[i + 1];
                         minY = result.minY[i + 1];
                     }
+
                     if (result.maxY[i] >= result.maxY[i + 1]) {
                         maxIdx = result.maxIdx[i];
                         maxX = result.maxX[i];
                         maxY = result.maxY[i];
-                    } else {
+                    }
+                    else {
                         maxIdx = result.maxIdx[i + 1];
                         maxX = result.maxX[i + 1];
                         maxY = result.maxY[i + 1];
                     }
                 }
+
                 result.startIdx[position] = startIdx;
                 result.endIdx[position] = endIdx;
                 result.minIdx[position] = minIdx;
@@ -207,6 +225,7 @@ Ext.define("Ext.draw.SegmentTree", {
                 result.maxY[position] = maxY;
                 position++;
             }
+
             result.map['double_' + step] = [offset, position];
         }
     },
@@ -227,7 +246,7 @@ Ext.define("Ext.draw.SegmentTree", {
      * @param {Number} dataClose
      * @return {Object}
      */
-    aggregateData: function (dataX, dataOpen, dataHigh, dataLow, dataClose) {
+    aggregateData: function(dataX, dataOpen, dataHigh, dataLow, dataClose) {
         var length = dataX.length,
             startIdx = [],
             endIdx = [],
@@ -269,9 +288,11 @@ Ext.define("Ext.draw.SegmentTree", {
         result.map = {
             original: [0, length]
         };
+
         if (length) {
             this[this.getStrategy()](result, length, dataX, dataOpen, dataHigh, dataLow, dataClose);
         }
+
         return result;
     },
 
@@ -283,25 +304,33 @@ Ext.define("Ext.draw.SegmentTree", {
      * @param {Number} key
      * @return {*}
      */
-    binarySearchMin: function (items, start, end, key) {
-        var dx = this.dataX;
+    binarySearchMin: function(items, start, end, key) {
+        var dx = this.dataX,
+            mid, val;
+
         if (key <= dx[items.startIdx[0]]) {
             return start;
         }
+
         if (key >= dx[items.startIdx[end - 1]]) {
             return end - 1;
         }
+
         while (start + 1 < end) {
-            var mid = (start + end) >> 1,
-                val = dx[items.startIdx[mid]];
+            mid = (start + end) >> 1;
+            val = dx[items.startIdx[mid]];
+
             if (val === key) {
                 return mid;
-            } else if (val < key) {
+            }
+            else if (val < key) {
                 start = mid;
-            } else {
+            }
+            else {
                 end = mid;
             }
         }
+
         return start;
     },
 
@@ -313,29 +342,37 @@ Ext.define("Ext.draw.SegmentTree", {
      * @param {Number} key
      * @return {*}
      */
-    binarySearchMax: function (items, start, end, key) {
-        var dx = this.dataX;
+    binarySearchMax: function(items, start, end, key) {
+        var dx = this.dataX,
+            mid, val;
+
         if (key <= dx[items.endIdx[0]]) {
             return start;
         }
+
         if (key >= dx[items.endIdx[end - 1]]) {
             return end - 1;
         }
+
         while (start + 1 < end) {
-            var mid = (start + end) >> 1,
-                val = dx[items.endIdx[mid]];
+            mid = (start + end) >> 1;
+            val = dx[items.endIdx[mid]];
+
             if (val === key) {
                 return mid;
-            } else if (val < key) {
+            }
+            else if (val < key) {
                 start = mid;
-            } else {
+            }
+            else {
                 end = mid;
             }
         }
+
         return end;
     },
 
-    constructor: function (config) {
+    constructor: function(config) {
         this.initConfig(config);
     },
 
@@ -347,15 +384,17 @@ Ext.define("Ext.draw.SegmentTree", {
      * @param {Number} dataLow
      * @param {Number} dataClose
      */
-    setData: function (dataX, dataOpen, dataHigh, dataLow, dataClose) {
+    setData: function(dataX, dataOpen, dataHigh, dataLow, dataClose) {
         if (!dataHigh) {
             dataClose = dataLow = dataHigh = dataOpen;
         }
+
         this.dataX = dataX;
         this.dataOpen = dataOpen;
         this.dataHigh = dataHigh;
         this.dataLow = dataLow;
         this.dataClose = dataClose;
+
         if (dataX.length === dataHigh.length &&
             dataX.length === dataLow.length) {
             this.cache = this.aggregateData(dataX, dataOpen, dataHigh, dataLow, dataClose);
@@ -373,10 +412,12 @@ Ext.define("Ext.draw.SegmentTree", {
      * @return {Number} return.end
      * @return {Object} return.data The aggregated data
      */
-    getAggregation: function (min, max, estStep) {
+    getAggregation: function(min, max, estStep) {
         if (!this.cache) {
             return null;
         }
+
+        // eslint-disable-next-line vars-on-top
         var minStep = Infinity,
             range = this.dataX[this.dataX.length - 1] - this.dataX[0],
             cacheMap = this.cache.map,
@@ -387,13 +428,17 @@ Ext.define("Ext.draw.SegmentTree", {
             positions = cacheMap[name];
             ln = positions[1] - positions[0] - 1;
             step = range / ln;
+
             if (estStep <= step && step < minStep) {
                 result = positions;
                 minStep = step;
             }
         }
+
         minIdx = Math.max(this.binarySearchMin(this.cache, result[0], result[1], min), result[0]);
-        maxIdx = Math.min(this.binarySearchMax(this.cache, result[0], result[1], max) + 1, result[1]);
+        maxIdx = Math.min(this.binarySearchMax(this.cache, result[0], result[1], max) + 1,
+                          result[1]);
+
         return {
             data: this.cache,
             start: minIdx,

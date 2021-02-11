@@ -13,6 +13,20 @@ Ext.define('KitchenSink.view.form.FieldTypes', {
     exampleTitle: 'Form Field Types',
     //</example>
 
+    profiles: {
+        classic: {
+            displayfieldColor: 'green'
+        },
+        neptune: {
+            displayfieldColor: 'green'
+        },
+        graphite: {
+            displayfieldColor: '#ccc'
+        },
+        'classic-material': {
+            displayfieldColor: '#2196F3'
+        }
+    },
     frame: true,
     title: 'Form Fields',
     width: 400,
@@ -28,7 +42,7 @@ Ext.define('KitchenSink.view.form.FieldTypes', {
         xtype: 'hiddenfield',
         name: 'hidden1',
         value: 'Hidden field value'
-    },{
+    }, {
         xtype: 'textfield',
         name: 'password1',
         inputType: 'password',
@@ -46,7 +60,7 @@ Ext.define('KitchenSink.view.form.FieldTypes', {
         xtype: 'displayfield',
         name: 'displayfield1',
         fieldLabel: 'Display field',
-        value: 'Display field <span style="color:green;">value</span>'
+        value: 'Display field <span style="color: ${displayfieldColor};">value</span>'
     }, {
         xtype: 'numberfield',
         name: 'numberfield1',

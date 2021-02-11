@@ -28,6 +28,12 @@
     // grid item needs to be the offset parent otherwise celleditors will get 
     // misaligned when rows above it are de-rendered by the bufferedRenderer
     position: relative;
+
+    // IE10 has a repaint issue in some cases with position relative on the
+    // table elements. Forcing into hardware acceleration seems to resolve the issue.
+    .#{$prefix}ie10 & {
+        transform: translateZ(0);
+    }
 }
 
 .#{$prefix}grid-row {

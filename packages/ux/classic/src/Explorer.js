@@ -23,6 +23,7 @@ Ext.define('Ext.ux.Explorer', {
             reference: 'breadcrumb'
         },
 
+        /* eslint-disable max-len, indent */
         /**
          * @cfg {Object} contentView
          * Configuration object for the "content" data view
@@ -45,6 +46,7 @@ Ext.define('Ext.ux.Explorer', {
                     '</div>' +
                 '</tpl>'
         },
+        /* eslint-enable max-len, indent */
 
         /**
          * @cfg {Ext.data.TreeStore} store
@@ -151,9 +153,11 @@ Ext.define('Ext.ux.Explorer', {
         if (treeSelectionModel.getSelection()[0] !== node) {
             treeSelectionModel.select([node]);
             parentNode = node.parentNode;
+
             if (parentNode) {
                 parentNode.expand();
             }
+
             treeView = tree.getView();
             treeView.scrollRowIntoView(treeView.getRow(node));
         }

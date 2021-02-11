@@ -14,8 +14,8 @@ Ext.define('KitchenSink.view.d3.heatmap.Sales', {
     requires: [
         'Ext.d3.HeatMap'
     ],
-    // <example>
-    // Content between example tags is omitted from code preview.
+
+    //<example>
     otherContent: [
         {
             type: 'Controller',
@@ -23,23 +23,31 @@ Ext.define('KitchenSink.view.d3.heatmap.Sales', {
         },
         {
             type: 'Store',
-            path: 'modern/src/store/SalesPerEmployee.js'
+            path: 'app/store/SalesPerEmployee.js'
         }
     ],
     //  </example>
 
     layout: 'vbox',
-    padding: 0,
+    shadow: true,
 
     items: [{
         xtype: 'toolbar',
-        items: [{
-            text: 'Refresh Data',
-            handler: 'onRefreshData'
-        }, {
-            text: 'Refresh Data and Size',
-            handler: 'onRefreshDataAndSize'
-        }]
+        hidden: true,
+        platformConfig: {
+            '!phone': {
+                hidden: false,
+                items: [{
+                    iconCls: 'x-fa fa-sync',
+                    text: 'Refresh Data',
+                    handler: 'onRefreshData'
+                }, {
+                    iconCls: 'x-fa fa-sync fa-table',
+                    text: 'Refresh Size',
+                    handler: 'onRefreshDataAndSize'
+                }]
+            }
+        }
     }, {
         xtype: 'd3-heatmap',
         reference: 'heatmap',
@@ -53,7 +61,7 @@ Ext.define('KitchenSink.view.d3.heatmap.Sales', {
             top: 30,
             right: 30,
             bottom: 40,
-            left: 80
+            left: 100
         },
 
         platformConfig: {
@@ -95,7 +103,7 @@ Ext.define('KitchenSink.view.d3.heatmap.Sales', {
                 orient: 'bottom'
             },
             scale: {
-                type: 'ordinal'
+                type: 'band'
             },
             field: 'employee'
         },
@@ -115,7 +123,7 @@ Ext.define('KitchenSink.view.d3.heatmap.Sales', {
                 orient: 'left'
             },
             scale: {
-                type: 'ordinal'
+                type: 'band'
             },
             field: 'day'
         },
@@ -133,9 +141,7 @@ Ext.define('KitchenSink.view.d3.heatmap.Sales', {
                 'stroke': '#081d58',
                 'stroke-width': 2
             }
-        },
-
-        labels: true
+        }
     }]
 
 });

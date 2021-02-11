@@ -11,15 +11,16 @@ Ext.define('KitchenSink.view.layout.CardTabs', {
     style: 'background-color:#dfe8f6; ',
     width: 500,
     height: 400,
+    cls: Ext.baseCSSPrefix + 'shadow',
 
     defaults: {
         bodyPadding: 15
     },
 
-    items:[
+    items: [
         {
             title: 'Tab 1',
-            html:   'Note that the Ext.tab.Panel (TabPanel) component uses an internal CardLayout -- it is not ' +
+            html: 'Note that the Ext.tab.Panel (TabPanel) component uses an internal CardLayout -- it is not ' +
                     'something you have to explicitly configure.  However, it is still a perfect ' +
                     'example of how this layout style can be used in a complex component.'
         },

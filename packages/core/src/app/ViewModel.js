@@ -142,13 +142,16 @@
  *
  * #### Binding Timings
  *
- * The `ViewModel` has a {@link #scheduler} attached that is used to coordinate the firing of bindings.
+ * The `ViewModel` has a {@link #scheduler} attached that is used to coordinate the firing of
+ * bindings.
  * It serves 2 main purposes:
- * - To coordinate dependencies between bindings. This means bindings will be fired in an order such that
- * the any dependencies for a binding are fired before the binding itself.
- * - To batch binding firings. The scheduler runs on a short timer, so the following code will only trigger
- * a single binding (the last), the changes in between will never be triggered.
- * 
+ * - To coordinate dependencies between bindings. This means bindings will be fired in an order
+ * such that the any dependencies for a binding are fired before the binding itself.
+ * - To batch binding firings. The scheduler runs on a short timer, so the following code will
+ * only trigger a single binding (the last), the changes in between will never be triggered.
+ *
+ * Example:
+ *
  *     viewModel.bind('{val}', function(v) {
  *         console.log(v);
  *     });
@@ -186,10 +189,10 @@
  *
  * ### Model Links
  *
- * A model can be described declaratively using a {@link #links `link`}. In the example code below,
- * We ask the `ViewModel` to construct a record of type `User` with `id: 17`. The model will be loaded
- * from the server and the bindings will trigger once the load has completed. Similarly, we could also
- * attach a model instance to the `ViewModel` data directly.
+ * A model can be described declaratively using {@link #links}. In the example code below,
+ * We ask the `ViewModel` to construct a record of type `User` with `id: 17`. The model will be
+ * loaded from the server and the bindings will trigger once the load has completed. Similarly,
+ * we could also attach a model instance to the `ViewModel` data directly.
  *
  *     Ext.define('MyApp.model.User', {
  *         extend: 'Ext.data.Model',
@@ -249,12 +252,93 @@
  *         console.log(v);
  *     });
  *
+ * ### Record Properties
+ *
+ * It is possible to bind to the certain state properties of a record. The available options are:
+ * - `{@link Ext.data.Model#property-dirty dirty}`
+ * - `{@link Ext.data.Model#property-phantom phantom}`
+ * - `{@link Ext.data.Model#method-isValid valid}`
+ *
+ * Example usage:
+ *
+ *     Ext.define('MyApp.model.User', {
+ *         extend: 'Ext.data.Model',
+ *         fields: [{
+ *             name: 'name',
+ *             validators: 'presence'
+ *         }, {
+ *             name: 'age',
+ *             validators: {
+ *                type: 'range',
+ *                 min: 0
+ *              }
+ *         }]
+ *     });
+ *
+ *     var rec = new MyApp.model.User();
+ *
+ *     var viewModel = new Ext.app.ViewModel({
+ *         data: {
+ *             theUser: rec
+ *         }
+ *     });
+ *
+ *     viewModel.bind({
+ *         dirty: '{theUser.dirty}',
+ *         phantom: '{theUser.phantom}',
+ *         valid: '{theUser.valid}'
+ *     }, function(v) {
+ *         console.log(v.dirty, v.valid);
+ *     });
+ *
+ *     rec.set('name', 'Foo');
+ *     viewModel.notify(); // dirty, not valid
+ *     rec.set('age', 20);
+ *     viewModel.notify(); // dirty, valid
+ *     rec.reject();
+ *     viewModel.notify(); // not dirty, not valid
+ *
+ * ### Advanced Record Binding
+ *
+ * For accessing other record information that is not exposed by the binding API, formulas
+ * can be used to achieve more advanced operations:
+ *
+ *     Ext.define('MyApp.model.User', {
+ *         extend: 'Ext.data.Model',
+ *         fields: ['name', 'age']
+ *     });
+ *
+ *     var rec = new MyApp.model.User();
+ *
+ *     var viewModel = new Ext.app.ViewModel({
+ *         formulas: {
+ *             isNameModified: {
+ *                 bind: {
+ *                     bindTo: '{theUser}',
+ *                     deep: true
+ *                 },
+ *                 get: function(rec) {
+ *                     return rec.isModified('name');
+ *                 }
+ *             }
+ *         },
+ *         data: {
+ *             theUser: rec
+ *         }
+ *     });
+ *
+ *     viewModel.bind('{isNameModified}', function(modified) {
+ *         console.log(modified);
+ *     });
+ *     rec.set('name', 'Foo');
+ *
  * ### Associations
  *
  * In the same way as fields, the bindings can also traverse associations in a bind statement.
  * The `ViewModel` will handle the asynchronous loading of data and only present the value once
- * the full path has been loaded. For more information on associations see {@link Ext.data.schema.OneToOne OneToOne} and
- * {@link Ext.data.schema.ManyToOne ManyToOne} associations.
+ * the full path has been loaded. For more information on associations see
+ * {@link Ext.data.schema.OneToOne OneToOne} and {@link Ext.data.schema.ManyToOne ManyToOne}
+ * associations.
  *
  *     Ext.define('User', {
  *         extend: 'Ext.data.Model',
@@ -321,6 +405,91 @@
  *
  * See {@link #stores} for more detail.
  *
+ * ### Store Properties
+ *
+ * It is possible to bind to the certain state properties of the store. The available options are:
+ * - `{@link Ext.data.Store#method-getCount count}`
+ * - `{@link Ext.data.Store#method-first}`
+ * - `{@link Ext.data.Store#method-last}`
+ * - `{@link Ext.data.Store#method-hasPendingLoad loading}`
+ * - `{@link Ext.data.Store#method-getTotalCount totalCount}`
+ *
+ * Example:
+ *
+ *     Ext.define('MyApp.model.User', {
+ *         extend: 'Ext.data.Model',
+ *         fields: ['name']
+ *     });
+ *
+ *     var viewModel = new Ext.app.ViewModel({
+ *         stores: {
+ *             users: {
+ *                 model: 'MyApp.model.User',
+ *                 data: [{
+ *                     name: 'Foo'
+ *                 }, {
+ *                     name: 'Bar'
+ *                 }]
+ *             }
+ *         }
+ *     });
+ *
+ *     viewModel.bind('{users.first}', function(first) {
+ *         console.log(first ? first.get('name') : 'Nobody');
+ *     });
+ *
+ *     var timer = Ext.interval(function() {
+ *         var store = viewModel.getStore('users');
+ *         if (store.getCount()) {
+ *             store.removeAt(0);
+ *         } else {
+ *             Ext.uninterval(timer);
+ *         }
+ *     }, 100);
+ *
+ * ### Advanced Store Binding
+ *
+ * For accessing other store information that is not exposed by the binding API, formulas
+ * can be used to achieve more advanced operations:
+ *
+ *     Ext.define('MyApp.model.User', {
+ *         extend: 'Ext.data.Model',
+ *         fields: ['name', 'score']
+ *     });
+ *
+ *     var viewModel = new Ext.app.ViewModel({
+ *         stores: {
+ *             users: {
+ *                 model: 'MyApp.model.User',
+ *                 data: [{
+ *                     name: 'Foo',
+ *                     score: 100
+ *                 }, {
+ *                     name: 'Bar',
+ *                     score: 350
+ *                 }]
+ *             }
+ *         },
+ *         formulas: {
+ *             totalScore: {
+ *                 bind: {
+ *                     bindTo: '{users}',
+ *                     deep: true
+ *                 },
+ *                 get: function(store) {
+ *                     return store.sum('score');
+ *                 }
+ *             }
+ *         }
+ *     });
+ *
+ *     viewModel.bind('{totalScore}', function(score) {
+ *         console.log(score);
+ *     });
+ *
+ *     viewModel.notify();
+ *     viewModel.getStore('users').removeAll();
+ *
  * #### Formulas
  *
  * Formulas allow for calculated `ViewModel` data values. The dependencies for these formulas
@@ -341,6 +510,218 @@
  *     });
  *
  * See {@link #formulas} for more detail.
+ *
+ * #### Inheriting Data With Nesting
+ *
+ * ViewModels can have a {@link #parent} which allows values to be consumed from
+ * a shared base. These values that are available from the {@link #parent} are not copied,
+ * rather they are "inherited" in a similar fashion to a javascript closure scope chain. 
+ * This is demonstrated in the example below:
+ *
+ *     var parent = new Ext.app.ViewModel({
+ *         data: {
+ *             foo: 3
+ *         }
+ *     });
+ *     var child = new Ext.app.ViewModel({
+ *         parent: parent
+ *     });
+ *
+ * This is analogous to the following javascript closure:
+ *
+ *     var foo = 3;
+ *     Ext.Ajax.request({
+ *         success: function() {
+ *             // foo is available here
+ *         }
+ *     });
+ *
+ * ### Climbing/Inheriting
+ *
+ * In line with the above, the default behaviour when setting the value of a child ViewModel
+ * (either) through {@link #set} or {@link Ext.app.bind.Binding#method-setValue} is to climb to
+ * where the value  is "owned" and set the value there:
+ *
+ *     var parent = new Ext.app.ViewModel({
+ *         data: {
+ *             foo: 3
+ *         }
+ *     });
+ *     var child = new Ext.app.ViewModel({
+ *         parent: parent
+ *     });
+ *     
+ *     child.set('foo', 100); // Climbs to set the value on parent
+ *     console.log(parent.get('foo')); // 100
+ *     parent.set('foo', 200);
+ *     console.log(child.get('foo')); // 200, inherited from the parent
+ *
+ * Any subsequent sets are also inherited in the same fashion. The inheriting/climbing behavior 
+ * occurs for any arbitrary depth, climbing/inherting can owned by a parent at any level above.
+ *
+ *     function log() {
+ *         console.log([a, b, c, d, e].map(function(vm) {
+ *             return vm.get('foo');
+ *         }));
+ *     }
+ *
+ *     var a = new Ext.app.ViewModel({data: {foo: 3}}),
+ *         b = new Ext.app.ViewModel({parent: a}),
+ *         c = new Ext.app.ViewModel({parent: b}),
+ *         d = new Ext.app.ViewModel({parent: c}),
+ *         e = new Ext.app.ViewModel({parent: d});
+ *
+ *     log(); // [3, 3, 3, 3, 3]
+ *
+ *     e.set('foo', 100);
+ *     log(); // [100, 100, 100, 100, 100]
+ *
+ * This same climbing behavior applies when setting a value on a binding. The climbing begins from
+ * the ViewModel where the binding was attached:
+ *
+ *     function log() {
+ *         console.log([a, b, c].map(function(vm) {
+ *             return vm.get('foo');
+ *         }));
+ *     }
+ *
+ *     var a = new Ext.app.ViewModel({data: {foo: 3}}),
+ *         b = new Ext.app.ViewModel({parent: a}),
+ *         c = new Ext.app.ViewModel({parent: b});
+ *
+ *     var bind = c.bind('{foo}', function() {});
+ *
+ *     bind.setValue(100);
+ *     log(); // [100, 100, 100]
+ *
+ * The exception to this rule is when there is nothing above to climb to. If a value is set and
+ * there is no parent above to hold it, then the value is set where it was called:
+ *
+ *     function log() {
+ *         console.log([a, b, c].map(function(vm) {
+ *             return vm.get('foo');
+ *         }));
+ *     }
+ *
+ *     var a = new Ext.app.ViewModel(),
+ *         b = new Ext.app.ViewModel({parent: a}),
+ *         c = new Ext.app.ViewModel({parent: b});
+ *
+ *     c.set('foo', 3);
+ *     log(); // [null, null, 3]
+ *
+ *     b.set('foo', 2);
+ *     log(); // [null, 2, 3]
+ *
+ *     a.set('foo', 1);
+ *     log(); // [1, 2, 3]
+ *
+ * These values are called local values, which are discussed below.
+ *
+ * ### Local Values
+ *
+ * If the child ViewModel is declared with top level data that also exists in the parent, then that
+ * child is considered to own that local value, so no value is inherited from the parent, nor does
+ * the climbing behaviour occur.
+ *
+ *     var parent = new Ext.app.ViewModel({
+ *         data: {
+ *             foo: 3
+ *         }
+ *     });
+ *     var child = new Ext.app.ViewModel({
+ *         parent: parent,
+ *         data: {
+ *             foo: 5
+ *         }
+ *     });
+ *
+ *     console.log(parent.get('foo'), child.get('foo')); // 3, 5
+ *     child.set('foo', 100);
+ *     console.log(parent.get('foo'), child.get('foo')); // 3, 100
+ *     parent.set('foo', 200);
+ *     console.log(parent.get('foo'), child.get('foo')); // 200, 100
+ *
+ * The inheriting/climbing behavior is limited to local values:
+ *
+ *     function log() {
+ *         console.log([a, b, c, d, e].map(function(vm) {
+ *             return vm.get('foo');
+ *         }));
+ *     }
+ *
+ *     var a = new Ext.app.ViewModel({data: {foo: 1}}),
+ *         b = new Ext.app.ViewModel({parent: a}),
+ *         c = new Ext.app.ViewModel({parent: b, data: {foo: 2}}),
+ *         d = new Ext.app.ViewModel({parent: c}),
+ *         e = new Ext.app.ViewModel({parent: d, data: {foo: 3}});
+ *
+ *     log(); // [1, 1, 2, 2, 3]
+ *
+ *     e.set('foo', 100);
+ *     log(); // [1, 1, 2, 2, 100]
+ *
+ *     d.set('foo', 200);
+ *     log(); // [1, 1, 200, 200, 100]
+ *
+ *     c.set('foo', 201);
+ *     log(); // [1, 1, 201, 201, 100]
+ *
+ *     b.set('foo', 300);
+ *     log(); // [300, 300, 201, 201, 100]
+ *
+ *     a.set('foo', 301);
+ *     log(); // [301, 301, 201, 201, 100]
+ *
+ * ### Attaching/Clearing Local Values Dynamically
+ *
+ * To bypass the climbing behaviour and push a value into a particular point
+ * in the hierarchy, the {@link #setData} method should be used. Once a local value
+ * is set, it will be used as such in the future.
+ *
+ *     function log() {
+ *         console.log([a, b, c, d, e].map(function(vm) {
+ *             return vm.get('foo');
+ *         }));
+ *     }
+ *
+ *     var a = new Ext.app.ViewModel({data: {foo: 3}}),
+ *         b = new Ext.app.ViewModel({parent: a}),
+ *         c = new Ext.app.ViewModel({parent: b}),
+ *         d = new Ext.app.ViewModel({parent: c}),
+ *         e = new Ext.app.ViewModel({parent: d});
+ *
+ *     log(); // [3, 3, 3, 3, 3]
+ *
+ *     c.setData({
+ *         foo: 100
+ *     });
+ *
+ *     log(); // [3, 3, 100, 100, 100]
+ *
+ *     d.set('foo', 200); // Climbs to new local value
+ *     log(); // [3, 3, 200, 200, 200]
+ *
+ * Similarly, data can be cleared from being a local value by setting the value to undefined:
+ *
+ *     function log() {
+ *         console.log([a, b, c, d].map(function(vm) {
+ *             return vm.get('foo');
+ *         }));
+ *     }
+ *
+ *     var a = new Ext.app.ViewModel({data: {foo: 3}}),
+ *         b = new Ext.app.ViewModel({parent: a}),
+ *         c = new Ext.app.ViewModel({parent: b, data: {foo: 100}}),
+ *         d = new Ext.app.ViewModel({parent: c});
+ *
+ *     log(); // [3, 3, 100, 100]
+ *
+ *     c.setData({
+ *         foo: undefined
+ *     });
+ *     log([3, 3, 3, 3]);
+ *
  */
 Ext.define('Ext.app.ViewModel', {
     mixins: [
@@ -371,7 +752,38 @@ Ext.define('Ext.app.ViewModel', {
 
     collectTimeout: 100,
 
-    expressionRe: /^(?:\{(?:(\d+)|([a-z_][\w\-\.]*))\})$/i,
+    expressionRe: /^(?:\{(?:(\d+)|([a-z_][\w.]*))\})$/i,
+
+    statics: {
+        /**
+         * Escape bind strings so they are treated as literals.
+         * 
+         * @param {Object/String} value The value to escape. If the value is
+         * an object, any strings will be recursively escaped.
+         * @return {Object/String} The escaped value. Matches the type of the
+         * passed value.
+         *
+         * @since 6.5.2
+         * @private
+         */
+        escape: function(value) {
+            var ret = value,
+                key;
+
+            if (typeof value === 'string') {
+                ret = '~~' + value;
+            }
+            else if (value && value.constructor === Object) {
+                ret = {};
+
+                for (key in value) {
+                    ret[key] = this.escape(value[key]);
+                }
+            }
+
+            return ret;
+        }
+    },
 
     $configStrict: false, // allow "formulas" to be specified on derived class body
     config: {
@@ -400,7 +812,7 @@ Ext.define('Ext.app.ViewModel', {
          */
         formulas: {
             $value: null,
-            merge: function (newValue, currentValue, target, mixinClass) {
+            merge: function(newValue, currentValue, target, mixinClass) {
                 return this.mergeNew(newValue, currentValue, target, mixinClass);
             }
         },
@@ -507,9 +919,9 @@ Ext.define('Ext.app.ViewModel', {
          *     });
          *
          * This store definition contains a dynamic binding. The store will not be created until
-         * the initial value for groupId is set. Once that occurs, the store is created with the appropriate
-         * filter configuration. Subsequently, once we change the group value, the old filter will be
-         * overwritten with the new value.
+         * the initial value for groupId is set. Once that occurs, the store is created with the
+         * appropriate filter configuration. Subsequently, once we change the group value, the old
+         * filter will be overwritten with the new value.
          *
          *     var viewModel = new Ext.app.ViewModel({
          *         stores: {
@@ -525,10 +937,11 @@ Ext.define('Ext.app.ViewModel', {
          *     viewModel.set('groupId', 1); // This will trigger the store creation with the filter.
          *     viewModel.set('groupId', 2); // The filter value will be changed.
          *
-         * This store uses {@link Ext.data.ChainedStore store chaining} to create a store backed by the
-         * data in another store. By specifying a string as the store, it will bind our creation and backing
-         * to the other store. This functionality is especially useful when wanting to display a different "view"
-         * of a store, for example a different sort order or different filters.
+         * This store uses {@link Ext.data.ChainedStore store chaining} to create a store backed by
+         * the data in another store. By specifying a string as the store, it will bind our creation
+         * and backing to the other store. This functionality is especially useful when wanting to
+         * display a different "view" of a store, for example a different sort order or different
+         * filters.
          *
          *     var viewModel = new Ext.app.ViewModel({
          *         stores: {
@@ -559,7 +972,7 @@ Ext.define('Ext.app.ViewModel', {
         view: null
     },
 
-    constructor: function (config) {
+    constructor: function(config) {
         // Used to track non-stub bindings
         this.bindings = {};
         /*
@@ -588,7 +1001,7 @@ Ext.define('Ext.app.ViewModel', {
         this.initConfig(config);
     },
 
-    destroy: function () {
+    destroy: function() {
         var me = this,
             scheduler = me._scheduler,
             stores = me.storeInfo,
@@ -596,9 +1009,10 @@ Ext.define('Ext.app.ViewModel', {
             task = me.collectTask,
             children = me.children,
             bindings = me.bindings,
-            key, store, autoDestroy;
+            key, store, autoDestroy, storeBinding;
 
         me.destroying = true;
+
         if (task) {
             task.cancel();
             me.collectTask = null;
@@ -617,11 +1031,17 @@ Ext.define('Ext.app.ViewModel', {
         if (stores) {
             for (key in stores) {
                 store = stores[key];
+
+                // Cache this property in case store is destroyed;
+                // Properties are cleared on destroy
+                storeBinding = store.$binding;
                 autoDestroy = store.autoDestroy;
+
                 if (autoDestroy || (!store.$wasInstance && autoDestroy !== false)) {
                     store.destroy();
                 }
-                Ext.destroy(store.$binding);
+
+                Ext.destroy(storeBinding);
             }
         }
 
@@ -629,7 +1049,6 @@ Ext.define('Ext.app.ViewModel', {
             parent.unregisterChild(me);
         }
 
-        
         me.getRoot().destroy();
 
         for (key in bindings) {
@@ -644,7 +1063,9 @@ Ext.define('Ext.app.ViewModel', {
         me.children = me.storeInfo = me._session = me._view = me._scheduler =
                       me.bindings = me._root = me._parent = me.formulaFn = me.$formulaData = null;
 
-        me.destroying = false;
+        // This just makes it hard to ask "was destroy() called?":
+        // me.destroying = false; // removed in 7.0
+
         me.callParent();
     },
 
@@ -679,12 +1100,12 @@ Ext.define('Ext.app.ViewModel', {
      * for details.
      * @param {Function} callback The function to call with the value of the bound property.
      * @param {Object} [scope] The scope (`this` pointer) for the `callback`.
-     * @param {Object} [options] Additional options to configure the {@link Ext.app.bind.Binding binding}.
-     * If this parameter is provided, the `bindTo` form of combining options and bind descriptor is not
-     * recognized.
+     * @param {Object} [options] Additional options to configure the
+     * {@link Ext.app.bind.Binding binding}. If this parameter is provided, the `bindTo` form
+     * of combining options and bind descriptor is not recognized.
      * @return {Ext.app.bind.BaseBinding/Ext.app.bind.Binding} The binding.
      */
-    bind: function (descriptor, callback, scope, options) {
+    bind: function(descriptor, callback, scope, options) {
         var me = this,
             track = true,
             binding;
@@ -698,12 +1119,14 @@ Ext.define('Ext.app.ViewModel', {
 
         if (!Ext.isString(descriptor)) {
             binding = new Ext.app.bind.Multi(descriptor, me, callback, scope, options);
-        } else if (me.expressionRe.test(descriptor)) {
+        }
+        else if (me.expressionRe.test(descriptor)) {
             // If we have '{foo}' alone it is a literal
             descriptor = descriptor.substring(1, descriptor.length - 1);
             binding = me.bindExpression(descriptor, callback, scope, options);
             track = false;
-        } else {
+        }
+        else {
             binding = new Ext.app.bind.TemplateBinding(descriptor, me, callback, scope, options);
         }
 
@@ -715,10 +1138,11 @@ Ext.define('Ext.app.ViewModel', {
     },
 
     /**
-     * Gets the session attached to this (or a parent) ViewModel. See the {@link #session} configuration.
+     * Gets the session attached to this (or a parent) ViewModel. See the {@link #session}
+     * configuration.
      * @return {Ext.data.Session} The session. `null` if no session exists.
      */
-    getSession: function () {
+    getSession: function() {
         var me = this,
             session = me._session,
             parent;
@@ -729,7 +1153,7 @@ Ext.define('Ext.app.ViewModel', {
 
         return session || null;
     },
-    
+
     /**
      * Gets a store configured via the {@link #stores} configuration.
      * @param {String} key The name of the store.
@@ -738,13 +1162,14 @@ Ext.define('Ext.app.ViewModel', {
     getStore: function(key) {
         var storeInfo = this.storeInfo,
             store;
-        
+
         if (storeInfo) {
             store = storeInfo[key];
         }
+
         return store || null;
     },
-    
+
     /**
      * @method getStores
      * @hide
@@ -755,7 +1180,7 @@ Ext.define('Ext.app.ViewModel', {
      * @param {String} key The name for the link.
      * @param {Object} reference The reference descriptor.
      */
-    linkTo: function (key, reference) {
+    linkTo: function(key, reference) {
         var me = this,
             stub, create, id, modelType, linkStub, rec;
 
@@ -771,48 +1196,60 @@ Ext.define('Ext.app.ViewModel', {
                 id: reference.id
             };
         }
+
         // reference is backwards compat, type is preferred.
         modelType = reference.type || reference.reference;
         create = reference.create;
+
         if (modelType) {
             // It's a record
             id = reference.id;
+
             //<debug>
             if (!reference.create && Ext.isEmpty(id)) {
-                Ext.raise('No id specified. To create a phantom model, specify "create: true" as part of the reference.');
+                Ext.raise('No id specified. To create a phantom model, specify "create: true" ' +
+                          'as part of the reference.');
             }
             //</debug>
+
             if (create) {
                 id = undefined;
             }
+
             rec = me.getRecord(modelType, id);
+
             if (Ext.isObject(create)) {
                 rec.set(create);
                 rec.commit();
                 rec.phantom = true;
             }
+
             // Force creation at the root level. If an existing stub is there
             // it will be grafted in place here.
             stub = me.getRoot().createStubChild(key);
             stub.set(rec);
-        } else {
+        }
+        else {
             stub = me.getStub(key);
+
             if (!stub.isLinkStub) {
                 // Pass parent=null since we will graft in this new stub to replace us:
                 linkStub = new Ext.app.bind.LinkStub(me, stub.name);
                 stub.graft(linkStub);
                 stub = linkStub;
             }
+
             stub.link(reference);
         }
     },
 
     /**
-     * Forces all bindings in this ViewModel hierarchy to evaluate immediately. Use this to do a synchronous flush
-     * of all bindings.
+     * Forces all bindings in this ViewModel hierarchy to evaluate immediately. Use this to do
+     * a synchronous flush of all bindings.
      */
-    notify: function () {
+    notify: function() {
         var scheduler = this.getScheduler();
+
         if (!scheduler.firing) {
             scheduler.notify();
         }
@@ -822,7 +1259,7 @@ Ext.define('Ext.app.ViewModel', {
      * Get a value from the data for this viewmodel.
      * @param {String} path The path of the data to retrieve.
      *
-     *    var value = vm.get('theUser.address.city');
+     *     var value = vm.get('theUser.address.city');
      *
      * @return {Object} The data stored at the passed path.
      */
@@ -831,7 +1268,10 @@ Ext.define('Ext.app.ViewModel', {
     },
 
     /**
-     * Set  a value in the data for this viewmodel.
+     * Set a value in the data for this viewmodel. This method will climb to set data on
+     * a parent view model if appropriate. See "Inheriting Data" in the class introduction for
+     * more information.
+     * 
      * @param {Object/String} path The path of the value to set, or an object literal to set
      * at the root of the viewmodel.
      * @param {Object} value The data to set at the value. If the value is an object literal,
@@ -850,7 +1290,7 @@ Ext.define('Ext.app.ViewModel', {
      *     viewModel.set({rootKey: 1});
      *     console.log(viewModel.get('rootKey'));
      */
-    set: function (path, value) {
+    set: function(path, value) {
         var me = this,
             obj, stub;
 
@@ -860,30 +1300,44 @@ Ext.define('Ext.app.ViewModel', {
         if (value === undefined && path && path.constructor === Object) {
             stub = me.getRoot();
             value = path;
-        } else if (path && path.indexOf('.') < 0) {
+        }
+        else if (path && path.indexOf('.') < 0) {
             obj = {};
             obj[path] = value;
             value = obj;
             stub = me.getRoot();
-        } else {
+        }
+        else {
             stub = me.getStub(path);
         }
 
         stub.set(value);
     },
 
+    /**
+     * Sets data directly at the level of this viewmodel. This method does not climb
+     * to set data on parent view models. Passing `undefined` will clear the value
+     * in this viewmodel, which means that this viewmodel is free to inherit data
+     * from a parent. See "Inheriting Data" in the class introduction for more information.
+     * @param {Object} data The new data to set.
+     * @method setData
+     */
+
     //=========================================================================
     privates: {
         registerChild: function(child) {
             var children = this.children;
+
             if (!children) {
                 this.children = children = {};
             }
+
             children[child.getId()] = child;
         },
-        
+
         unregisterChild: function(child) {
             var children = this.children;
+
             // If we're destroying we'll be wiping this collection shortly, so
             // just ignore it here
             if (!this.destroying && children) {
@@ -899,7 +1353,7 @@ Ext.define('Ext.app.ViewModel', {
          * @return {Ext.data.Model} The model instance.
          * @private
          */
-         getRecord: function(type, id) {
+        getRecord: function(type, id) {
             var session = this.getSession(),
                 Model = type,
                 hasId = id !== undefined,
@@ -908,42 +1362,60 @@ Ext.define('Ext.app.ViewModel', {
             if (session) {
                 if (hasId) {
                     record = session.getRecord(type, id);
-                } else {
+                }
+                else {
                     record = session.createRecord(type);
                 }
-            } else {
+            }
+            else {
                 if (!Model.$isClass) {
                     Model = this.getSchema().getEntity(Model);
+
                     //<debug>
                     if (!Model) {
                         Ext.raise('Invalid model name: ' + type);
                     }
                     //</debug>
                 }
+
                 if (hasId) {
                     record = Model.createWithId(id);
                     record.load();
-                } else {
+                }
+                else {
                     record = new Model();
                 }
             }
+
             return record;
         },
 
-        bindExpression: function (descriptor, callback, scope, options) {
+        bindExpression: function(descriptor, callback, scope, options) {
             var stub = this.getStub(descriptor);
+
             return stub.bind(callback, scope, options);
         },
 
-        applyScheduler: function (scheduler) {
+        applyScheduler: function(scheduler) {
             if (scheduler && !scheduler.isInstance) {
+                if (scheduler === true) {
+                    scheduler = {};
+                }
+
+                if (!('preSort' in scheduler)) {
+                    scheduler = Ext.apply({
+                        preSort: 'kind,-depth'
+                    }, scheduler);
+                }
+
                 scheduler = new Ext.util.Scheduler(scheduler);
                 scheduler.$owner = this;
             }
+
             return scheduler;
         },
 
-        getScheduler: function () {
+        getScheduler: function() {
             var me = this,
                 scheduler = me._scheduler,
                 parent;
@@ -954,8 +1426,10 @@ Ext.define('Ext.app.ViewModel', {
                         // See Session#scheduler
                         preSort: 'kind,-depth'
                     });
+
                     scheduler.$owner = me;
-                } else {
+                }
+                else {
                     scheduler = parent.getScheduler();
                 }
 
@@ -971,8 +1445,9 @@ Ext.define('Ext.app.ViewModel', {
          * @return {Ext.app.bind.AbstractStub} The `Stub` associated to the bind descriptor.
          * @private
          */
-        getStub: function (bindDescr) {
+        getStub: function(bindDescr) {
             var root = this.getRoot();
+
             return bindDescr ? root.getChild(bindDescr) : root;
         },
 
@@ -983,6 +1458,7 @@ Ext.define('Ext.app.ViewModel', {
 
             if (parent) {
                 parent.collect();
+
                 return;
             }
 
@@ -993,7 +1469,8 @@ Ext.define('Ext.app.ViewModel', {
             // Useful for testing
             if (me.collectTimeout === 0) {
                 me.doCollect();
-            } else {
+            }
+            else {
                 task.delay(me.collectTimeout);
             }
         },
@@ -1001,7 +1478,7 @@ Ext.define('Ext.app.ViewModel', {
         doCollect: function() {
             var children = this.children,
                 key;
-            
+
             // We need to loop over the children first, since they may have link stubs
             // that create bindings inside our VM. Attempt to clean them up first.
             if (children) {
@@ -1009,7 +1486,19 @@ Ext.define('Ext.app.ViewModel', {
                     children[key].doCollect();
                 }
             }
+
             this.getRoot().collect();
+        },
+
+        invalidateChildLinks: function(name, clear) {
+            var children = this.children,
+                key;
+
+            if (children) {
+                for (key in children) {
+                    children[key].getRoot().invalidateChildLink(name, clear);
+                }
+            }
         },
 
         onBindDestroy: function(binding, fromChild) {
@@ -1025,9 +1514,11 @@ Ext.define('Ext.app.ViewModel', {
             }
 
             parent = me.getParent();
+
             if (parent) {
                 parent.onBindDestroy(binding, true);
-            } else {
+            }
+            else {
                 me.collect();
             }
         },
@@ -1036,12 +1527,13 @@ Ext.define('Ext.app.ViewModel', {
         // Config
         // <editor-fold>
 
-        applyData: function (newData, data) {
+        applyData: function(newData, data) {
             var me = this,
                 linkData, parent;
 
             // Force any session to be invoked so we can access it
             me.getSession();
+
             if (!data) {
                 parent = me.getParent();
 
@@ -1069,7 +1561,7 @@ Ext.define('Ext.app.ViewModel', {
             }
 
             if (newData && newData.constructor === Object) {
-                me.getRoot().set(newData);
+                me.getRoot().set(newData, true);
             }
         },
 
@@ -1077,41 +1569,52 @@ Ext.define('Ext.app.ViewModel', {
             if (parent) {
                 parent.registerChild(this);
             }
+
             return parent;
         },
-        
+
         applyStores: function(stores) {
             var me = this,
                 root = me.getRoot(),
                 key, cfg, storeBind, stub, listeners;
-            
+
             me.storeInfo = {};
+
             me.listenerScopeFn = function() {
                 return me.getView().getInheritedConfig('defaultListenerScope');
             };
+
             for (key in stores) {
                 cfg = stores[key];
+
                 if (cfg.isStore) {
                     cfg.$wasInstance = true;
                     me.setupStore(cfg, key);
+
                     continue;
-                } else if (Ext.isString(cfg)) {
+                }
+                else if (Ext.isString(cfg)) {
                     cfg = {
                         source: cfg
                     };
-                } else {
+                }
+                else {
                     cfg = Ext.apply({}, cfg);
                 }
+
                 // Get rid of listeners so they don't get considered as a bind
                 listeners = cfg.listeners;
                 delete cfg.listeners;
-                storeBind = me.bind(cfg, me.onStoreBind, me, {trackStatics: true});
+
+                storeBind = me.bind(cfg, me.onStoreBind, me, { trackStatics: true });
+
                 if (storeBind.isStatic()) {
                     // Everything is static, we don't need to wait, so remove the
                     // binding because it will only fire the first time.
                     storeBind.destroy();
                     me.createStore(key, cfg, listeners);
-                } else {
+                }
+                else {
                     storeBind.$storeKey = key;
                     storeBind.$listeners = listeners;
                     stub = root.createStubChild(key);
@@ -1119,7 +1622,7 @@ Ext.define('Ext.app.ViewModel', {
                 }
             }
         },
-        
+
         onStoreBind: function(cfg, oldValue, binding) {
             var info = this.storeInfo,
                 key = binding.$storeKey,
@@ -1128,15 +1631,17 @@ Ext.define('Ext.app.ViewModel', {
 
             if (!store) {
                 this.createStore(key, cfg, binding.$listeners, binding);
-            } else {
+            }
+            else {
                 cfg = Ext.merge({}, binding.pruneStaticKeys());
                 proxy = cfg.proxy;
+
                 delete cfg.type;
                 delete cfg.model;
                 delete cfg.fields;
                 delete cfg.proxy;
                 delete cfg.listeners;
-                
+
                 // TODO: possibly optimize this so we can figure out what has changed
                 // instead of smashing the whole lot
                 if (proxy) {
@@ -1144,6 +1649,7 @@ Ext.define('Ext.app.ViewModel', {
                     delete proxy.writer;
                     store.getProxy().setConfig(proxy);
                 }
+
                 store.setConfig(cfg);
             }
         },
@@ -1157,6 +1663,7 @@ Ext.define('Ext.app.ViewModel', {
             if (cfg.session) {
                 cfg.session = session;
             }
+
             if (cfg.source) {
                 cfg.type = cfg.type || 'chained';
             }
@@ -1172,14 +1679,22 @@ Ext.define('Ext.app.ViewModel', {
             this.setupStore(store, key);
         },
 
-        setupStore: function (store, key) {
+        setupStore: function(store, key) {
+            var me = this,
+                obj = {};
+
+            // Force data object creation
+            me.getData();
+
             // May have been given a store instance
-            store.resolveListenerScope = this.listenerScopeFn;
-            this.storeInfo[key] = store;
-            this.set(key, store);
+            store.resolveListenerScope = me.listenerScopeFn;
+            me.storeInfo[key] = store;
+
+            obj[key] = store;
+            me.setData(obj);
         },
 
-        applyFormulas: function (formulas) {
+        applyFormulas: function(formulas) {
             var me = this,
                 root = me.getRoot(),
                 name, stub;
@@ -1192,27 +1707,30 @@ Ext.define('Ext.app.ViewModel', {
                     Ext.raise('Formula names cannot contain dots: ' + name);
                 }
                 //</debug>
-                
+
                 // Force a stub to be created
                 root.createStubChild(name);
 
                 stub = me.getStub(name);
                 stub.setFormula(formulas[name]);
             }
+
             return formulas;
         },
 
-        applyLinks: function (links) {
-            for (var link in links) {
+        applyLinks: function(links) {
+            var link;
+
+            for (link in links) {
                 this.linkTo(link, links[link]);
             }
         },
 
-        applySchema: function (schema) {
+        applySchema: function(schema) {
             return Ext.data.schema.Schema.get(schema);
         },
 
-        applyRoot: function () {
+        applyRoot: function() {
             var root = new Ext.app.bind.RootStub(this),
                 parent = this.getParent();
 
@@ -1236,7 +1754,9 @@ Ext.define('Ext.app.ViewModel', {
                     return me.$formulaData[name];
                 };
             }
+
             me.$formulaData = data;
+
             return fn;
         }
 

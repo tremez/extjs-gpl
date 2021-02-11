@@ -14,16 +14,16 @@ Ext.define('Ext.draw.overrides.hittest.sprite.Path', {
      * @return {Boolean}
      * @member Ext.draw.sprite.Path
      */
-    isPointInPath: function (x, y) {
-        var attr = this.attr;
+    isPointInPath: function(x, y) {
+        var attr = this.attr,
+            path, matrix, params, result;
 
         if (attr.fillStyle === Ext.util.Color.RGBA_NONE) {
             return this.isPointOnPath(x, y);
         }
 
-        var path = attr.path,
-            matrix = attr.matrix,
-            params, result;
+        path = attr.path;
+        matrix = attr.matrix;
 
         if (!matrix.isIdentity()) {
             params = path.params.slice(0);
@@ -35,6 +35,7 @@ Ext.define('Ext.draw.overrides.hittest.sprite.Path', {
         if (params) {
             path.params = params;
         }
+
         return result;
     },
 
@@ -45,7 +46,7 @@ Ext.define('Ext.draw.overrides.hittest.sprite.Path', {
      * @return {Boolean}
      * @member Ext.draw.sprite.Path
      */
-    isPointOnPath: function (x, y) {
+    isPointOnPath: function(x, y) {
         var attr = this.attr,
             path = attr.path,
             matrix = attr.matrix,
@@ -61,13 +62,15 @@ Ext.define('Ext.draw.overrides.hittest.sprite.Path', {
         if (params) {
             path.params = params;
         }
+
         return result;
     },
 
     /**
-     * @inheritdoc
+     * @method hitTest
+     * @inheritdoc Ext.draw.Surface#method-hitTest
      */
-    hitTest: function (point, options) {
+    hitTest: function(point, options) {
         var me = this,
             attr = me.attr,
             path = attr.path,
@@ -77,7 +80,6 @@ Ext.define('Ext.draw.overrides.hittest.sprite.Path', {
             parentResult = me.callParent([point, options]),
             result = null,
             params, isFilled;
-
 
         if (!parentResult) {
             // The sprite is not visible or bounding box wasn't hit.
@@ -94,26 +96,30 @@ Ext.define('Ext.draw.overrides.hittest.sprite.Path', {
         if (options.fill && options.stroke) {
             isFilled = attr.fillStyle !== Ext.util.Color.NONE &&
                        attr.fillStyle !== Ext.util.Color.RGBA_NONE;
+
             if (isFilled) {
                 if (path.isPointInPath(x, y)) {
                     result = {
                         sprite: me
                     };
                 }
-            } else {
+            }
+            else {
                 if (path.isPointInPath(x, y) || path.isPointOnPath(x, y)) {
                     result = {
                         sprite: me
                     };
                 }
             }
-        } else if (options.stroke && !options.fill) {
+        }
+        else if (options.stroke && !options.fill) {
             if (path.isPointOnPath(x, y)) {
                 result = {
                     sprite: me
                 };
             }
-        } else if (options.fill && !options.stroke) {
+        }
+        else if (options.fill && !options.stroke) {
             if (path.isPointInPath(x, y)) {
                 result = {
                     sprite: me
@@ -136,10 +142,12 @@ Ext.define('Ext.draw.overrides.hittest.sprite.Path', {
      * @return {Array}
      * @member Ext.draw.sprite.Path
      */
-    getIntersections: function (path) {
+    getIntersections: function(path) {
         if (!(path.isSprite && path.isPath)) {
             return [];
         }
+
+        // eslint-disable-next-line vars-on-top
         var aAttr = this.attr,
             bAttr = path.attr,
             aPath = aAttr.path,
@@ -153,6 +161,7 @@ Ext.define('Ext.draw.overrides.hittest.sprite.Path', {
             aParams = aPath.params.slice(0);
             aPath.transform(aAttr.matrix);
         }
+
         if (!bMatrix.isIdentity()) {
             bParams = bPath.params.slice(0);
             bPath.transform(bAttr.matrix);
@@ -163,9 +172,11 @@ Ext.define('Ext.draw.overrides.hittest.sprite.Path', {
         if (aParams) {
             aPath.params = aParams;
         }
+
         if (bParams) {
             bPath.params = bParams;
         }
+
         return intersections;
     }
 });

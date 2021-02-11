@@ -6,13 +6,14 @@
  * older browsers.
  */
 Ext.Array = (function() {
+/* eslint-disable indent */
 // @define Ext.lang.Array
 // @define Ext.Array
 // @require Ext
 // @require Ext.lang.Error
     var arrayPrototype = Array.prototype,
         slice = arrayPrototype.slice,
-        supportsSplice = (function () {
+        supportsSplice = (function() {
             var array = [],
                 lengthBefore,
                 j = 20;
@@ -22,15 +23,16 @@ Ext.Array = (function() {
             }
 
             // This detects a bug in IE8 splice method:
-            // see http://social.msdn.microsoft.com/Forums/en-US/iewebdevelopment/thread/6e946d03-e09f-4b22-a4dd-cd5e276bf05a/
-
+            // see http://social.msdn.microsoft.com/Forums/en-US/iewebdevelopment/thread/
+            // 6e946d03-e09f-4b22-a4dd-cd5e276bf05a/
             while (j--) {
                 array.push("A");
             }
 
-            array.splice(15, 0, "F", "F", "F", "F", "F","F","F","F","F","F","F","F","F","F","F","F","F","F","F","F","F");
+            array.splice(15, 0, "F", "F", "F", "F", "F", "F", "F", "F", "F", "F", "F", "F",
+                         "F", "F", "F", "F", "F", "F", "F", "F", "F");
 
-            lengthBefore = array.length; //41
+            lengthBefore = array.length; // 41
             array.splice(13, 0, "XXX"); // add one element
 
             if (lengthBefore + 1 !== array.length) {
@@ -43,8 +45,8 @@ Ext.Array = (function() {
         supportsIndexOf = 'indexOf' in arrayPrototype,
         supportsSliceOnNodeList = true;
 
-    // Sort an array using the comparator, but if the comparator returns zero, use the objects' original indices to tiebreak
-    // This results in a stable sort.
+    // Sort an array using the comparator, but if the comparator returns zero, use the objects'
+    // original indices to tiebreak This results in a stable sort.
     function stableSort(array, userComparator) {
         var len = array.length,
             indices = new Array(len),
@@ -55,7 +57,8 @@ Ext.Array = (function() {
             indices[i] = i;
         }
 
-        // Sort indices array using a comparator which compares the original values at the two indices, and uses those indices as a tiebreaker
+        // Sort indices array using a comparator which compares the original values at the two
+        // indices, and uses those indices as a tiebreaker
         indices.sort(function(index1, index2) {
             return userComparator(array[index1], array[index2]) || (index1 - index2);
         });
@@ -78,13 +81,14 @@ Ext.Array = (function() {
         if (typeof document !== 'undefined') {
             slice.call(document.getElementsByTagName('body'));
         }
-    } catch (e) {
+    }
+    catch (e) {
         supportsSliceOnNodeList = false;
     }
 
-    var fixArrayIndex = function (array, index) {
-        return (index < 0) ? Math.max(0, array.length + index)
-                           : Math.min(array.length, index);
+    /* eslint-disable-next-line vars-on-top */
+    var fixArrayIndex = function(array, index) {
+        return (index < 0) ? Math.max(0, array.length + index) : Math.min(array.length, index);
     },
 
     /*
@@ -117,7 +121,7 @@ Ext.Array = (function() {
     that we don't end up with [0,1,6,7,6,7]. In case B, we have the opposite; we
     must go right-to-left or else we would end up with [0,1,a,b,c,4,4,4,4].
     */
-    replaceSim = function (array, index, removeCount, insert) {
+    replaceSim = function(array, index, removeCount, insert) {
         var add = insert ? insert.length : 0,
             length = array.length,
             pos = fixArrayIndex(array, index);
@@ -127,7 +131,9 @@ Ext.Array = (function() {
             if (add) {
                 array.push.apply(array, insert);
             }
-        } else {
+        }
+        else {
+            /* eslint-disable-next-line vars-on-top */
             var remove = Math.min(removeCount, length - pos),
                 tailOldPos = pos + remove,
                 tailNewPos = tailOldPos + add - remove,
@@ -137,21 +143,24 @@ Ext.Array = (function() {
 
             if (tailNewPos < tailOldPos) { // case A
                 for (i = 0; i < tailCount; ++i) {
-                    array[tailNewPos+i] = array[tailOldPos+i];
+                    array[tailNewPos + i] = array[tailOldPos + i];
                 }
-            } else if (tailNewPos > tailOldPos) { // case B
-                for (i = tailCount; i--; ) {
-                    array[tailNewPos+i] = array[tailOldPos+i];
+            }
+            else if (tailNewPos > tailOldPos) { // case B
+                for (i = tailCount; i--;) {
+                    array[tailNewPos + i] = array[tailOldPos + i];
                 }
             } // else, add == remove (nothing to do)
 
             if (add && pos === lengthAfterRemove) {
                 array.length = lengthAfterRemove; // truncate array
                 array.push.apply(array, insert);
-            } else {
+            }
+            else {
                 array.length = lengthAfterRemove + add; // reserves space
+
                 for (i = 0; i < add; ++i) {
-                    array[pos+i] = insert[i];
+                    array[pos + i] = insert[i];
                 }
             }
         }
@@ -159,7 +168,7 @@ Ext.Array = (function() {
         return array;
     },
 
-    replaceNative = function (array, index, removeCount, insert) {
+    replaceNative = function(array, index, removeCount, insert) {
         if (insert && insert.length) {
             // Inserting at index zero with no removing: use unshift
             if (index === 0 && !removeCount) {
@@ -173,22 +182,25 @@ Ext.Array = (function() {
             else {
                 array.push.apply(array, insert);
             }
-        } else {
+        }
+        else {
             array.splice(index, removeCount);
         }
+
         return array;
     },
 
-    eraseSim = function (array, index, removeCount) {
+    eraseSim = function(array, index, removeCount) {
         return replaceSim(array, index, removeCount);
     },
 
-    eraseNative = function (array, index, removeCount) {
+    eraseNative = function(array, index, removeCount) {
         array.splice(index, removeCount);
+
         return array;
     },
 
-    spliceSim = function (array, index, removeCount) {
+    spliceSim = function(array, index, removeCount) {
         var len = arguments.length,
             pos = fixArrayIndex(array, index),
             removed;
@@ -197,18 +209,19 @@ Ext.Array = (function() {
             removeCount = array.length - pos;
         }
 
-        removed = array.slice(index, fixArrayIndex(array, pos+removeCount));
+        removed = array.slice(index, fixArrayIndex(array, pos + removeCount));
 
         if (len < 4) {
             replaceSim(array, pos, removeCount);
-        } else {
+        }
+        else {
             replaceSim(array, pos, removeCount, slice.call(arguments, 3));
         }
 
         return removed;
     },
 
-    spliceNative = function (array) {
+    spliceNative = function(array) {
         return array.splice.apply(array, slice.call(arguments, 1));
     },
 
@@ -248,7 +261,7 @@ Ext.Array = (function() {
          * @return {Number} The index for the given item in the given array based on
          * the current sorters.
          */
-        binarySearch: function (array, item, begin, end, compareFn) {
+        binarySearch: function(array, item, begin, end, compareFn) {
             var length = array.length,
                 middle, comparison;
 
@@ -256,16 +269,20 @@ Ext.Array = (function() {
                 compareFn = begin;
                 begin = 0;
                 end = length;
-            } else if (end instanceof Function) {
+            }
+            else if (end instanceof Function) {
                 compareFn = end;
                 end = length;
-            } else {
+            }
+            else {
                 if (begin === undefined) {
                     begin = 0;
                 }
+
                 if (end === undefined) {
                     end = length;
                 }
+
                 compareFn = compareFn || ExtArray.lexicalCompare;
             }
 
@@ -274,9 +291,11 @@ Ext.Array = (function() {
             while (begin <= end) {
                 middle = (begin + end) >> 1;
                 comparison = compareFn(item, array[middle]);
+
                 if (comparison >= 0) {
                     begin = middle + 1;
-                } else if (comparison < 0) {
+                }
+                else if (comparison < 0) {
                     end = middle - 1;
                 }
             }
@@ -284,13 +303,13 @@ Ext.Array = (function() {
             return begin;
         },
 
-        defaultCompare: function (lhs, rhs) {
+        defaultCompare: function(lhs, rhs) {
             return (lhs < rhs) ? -1 : ((lhs > rhs) ? 1 : 0);
         },
 
         // Default comparator to use when no comparator is specified for the sort method.
         // Javascript sort does LEXICAL comparison.
-        lexicalCompare: function (lhs, rhs) {
+        lexicalCompare: function(lhs, rhs) {
             lhs = String(lhs);
             rhs = String(rhs);
 
@@ -298,7 +317,8 @@ Ext.Array = (function() {
         },
 
         /**
-         * Iterates an array or an iterable value and invoke the given callback function for each item.
+         * Iterates an array or an iterable value and invoke the given callback function for each
+         * item.
          *
          *     var countries = ['Vietnam', 'Singapore', 'United States', 'Russia'];
          *
@@ -330,7 +350,7 @@ Ext.Array = (function() {
          *
          * {@link Ext#each Ext.each} is alias for {@link Ext.Array#each Ext.Array.each}
          *
-         * @param {Array/NodeList/Object} iterable The value to be iterated. If this
+         * @param {Array/NodeList/Object} array The value to be iterated. If this
          * argument is not iterable, the callback function is called once.
          * @param {Function} fn The callback function. If it returns `false`, the iteration
          * stops and this method returns the current `index`. Returning `undefined` (i.e 
@@ -340,15 +360,19 @@ Ext.Array = (function() {
          * @param {Number} fn.index The current `index` within the `array`
          * @param {Array} fn.allItems The `array` itself which was passed as the first argument
          * @param {Boolean} fn.return Return `false` to stop iteration.
-         * @param {Object} [scope] The scope (`this` reference) in which the specified function is executed.
-         * @param {Boolean} [reverse=false] Reverse the iteration order (loop from the end to the beginning).
-         * @return {Boolean} See description for the `fn` parameter.
+         * @param {Object} [scope] The scope (`this` reference) in which the specified function is
+         * executed.
+         * @param {Boolean} [reverse=false] Reverse the iteration order (loop from the end to the
+         * beginning).
+         * @return {Boolean/Number} If all array entries were iterated, this will be `true. If
+         * iteration was halted early because the passed fuction returned `false`, this will
+         * be the index at which iteration was halted.
          */
         each: function(array, fn, scope, reverse) {
-            array = ExtArray.from(array);
+            var i, ln;
 
-            var i,
-                ln = array.length;
+            array = ExtArray.from(array);
+            ln = array.length;
 
             if (reverse !== true) {
                 for (i = 0; i < ln; i++) {
@@ -368,12 +392,42 @@ Ext.Array = (function() {
             return true;
         },
 
+        /*
+         * Calculates the the insertion index of a passed object into the passed Array according
+         * to the passed comparator function. Note that the passed Array *MUST* already be ordered.
+         * @param {Object} item The item to calculate the insertion index for.
+         * @param {Array} The array into which the item is to be inserted.
+         * @param {Function} comparatorFn The comparison function. Must return -1 or 0 or 1.
+         * @param {Object} comparatorFn.lhs The left object to compare.
+         * @param {Object} comparatorFn.rhs The right object to compare.
+         * @param {Number} index The possible correct index to try first before a binary
+         * search is instigated.
+         */
+        findInsertionIndex: function(item, items, comparatorFn, index) {
+            var len = items.length,
+                beforeCheck, afterCheck;
+
+            comparatorFn = comparatorFn || ExtArray.lexicalCompare;
+
+            if (0 <= index && index < len) {
+                beforeCheck = index > 0 ? comparatorFn(item, items[index - 1]) : 0;
+                afterCheck = (index < len) ? comparatorFn(item, items[index]) : 0;
+
+                if (0 <= beforeCheck && afterCheck < 1) {
+                    return index;
+                }
+            }
+
+            return ExtArray.binarySearch(items, item, comparatorFn);
+        },
+
         /**
          * @method
-         * Iterates an array and invoke the given callback function for each item. Note that this will simply
-         * delegate to the native `Array.prototype.forEach` method if supported. It doesn't support stopping the
-         * iteration by returning `false` in the callback function like {@link Ext.Array#each}. However, performance
-         * could be much better in modern browsers comparing with {@link Ext.Array#each}
+         * Iterates an array and invoke the given callback function for each item. Note that this
+         * will simply delegate to the native `Array.prototype.forEach` method if supported. It
+         * doesn't support stopping the iteration by returning `false` in the callback function
+         * like {@link Ext.Array#each}. However, performance could be much better in modern
+         * browsers comparing with {@link Ext.Array#each}
          *
          * @param {Array} array The array to iterate.
          * @param {Function} fn The callback function.
@@ -383,13 +437,17 @@ Ext.Array = (function() {
          * @param {Object} scope (Optional) The execution scope (`this`) in which the
          * specified function is executed.
          */
-        forEach: ('forEach' in arrayPrototype) ? function(array, fn, scope) {
-            return array.forEach(fn, scope);
-        } : function(array, fn, scope) {
-            for (var i = 0, ln = array.length; i < ln; i++) {
-                fn.call(scope, array[i], i, array);
+        forEach: ('forEach' in arrayPrototype)
+            ? function(array, fn, scope) {
+                array.forEach(fn, scope);
             }
-        },
+            : function(array, fn, scope) {
+                var i, ln;
+
+                for (i = 0, ln = array.length; i < ln; i++) {
+                    fn.call(scope, array[i], i, array);
+                }
+            },
 
         /**
          * @method
@@ -401,20 +459,23 @@ Ext.Array = (function() {
          * @param {Number} from (Optional) The index at which to begin the search.
          * @return {Number} The index of item in the array (or -1 if it is not found).
          */
-        indexOf: supportsIndexOf ? function(array, item, from) {
-            // May be called with no array which causes an error.
-            return array ? arrayPrototype.indexOf.call(array, item, from) : -1;
-         } : function(array, item, from) {
-            var i, length = array ? array.length : 0;
-
-            for (i = (from < 0) ? Math.max(0, length + from) : from || 0; i < length; i++) {
-                if (array[i] === item) {
-                    return i;
-                }
+        indexOf: supportsIndexOf
+            ? function(array, item, from) {
+                // May be called with no array which causes an error.
+                return array ? arrayPrototype.indexOf.call(array, item, from) : -1;
             }
+            : function(array, item, from) {
+                var i,
+                    length = array ? array.length : 0;
 
-            return -1;
-        },
+                for (i = (from < 0) ? Math.max(0, length + from) : from || 0; i < length; i++) {
+                    if (array[i] === item) {
+                        return i;
+                    }
+                }
+
+                return -1;
+            },
 
         /**
          * @method
@@ -424,19 +485,21 @@ Ext.Array = (function() {
          * @param {Object} item The item to find.
          * @return {Boolean} `true` if the array contains the item, `false` otherwise.
          */
-        contains: supportsIndexOf ? function(array, item) {
-            return arrayPrototype.indexOf.call(array, item) !== -1;
-        } : function(array, item) {
-            var i, ln;
-
-            for (i = 0, ln = array.length; i < ln; i++) {
-                if (array[i] === item) {
-                    return true;
-                }
+        contains: supportsIndexOf
+            ? function(array, item) {
+                return arrayPrototype.indexOf.call(array, item) !== -1;
             }
+            : function(array, item) {
+                var i, ln;
 
-            return false;
-        },
+                for (i = 0, ln = array.length; i < ln; i++) {
+                    if (array[i] === item) {
+                        return true;
+                    }
+                }
+
+                return false;
+            },
 
         /**
          * Converts any iterable (numeric indices and a length property) into a true array.
@@ -452,7 +515,8 @@ Ext.Array = (function() {
          *     test('just', 'testing', 'here'); // alerts 'just testing here';
          *                                      // alerts 'testing here';
          *
-         *     Ext.Array.toArray(document.getElementsByTagName('div')); // will convert the NodeList into an array
+         *     // will convert the NodeList into an array
+         *     Ext.Array.toArray(document.getElementsByTagName('div'));
          *     Ext.Array.toArray('splitted'); // returns ['s', 'p', 'l', 'i', 't', 't', 'e', 'd']
          *     Ext.Array.toArray('splitted', 0, 3); // returns ['s', 'p', 'l']
          *
@@ -463,9 +527,12 @@ Ext.Array = (function() {
          * @param {Number} [end=-1] a 1-based index that specifies the end of extraction.
          * @return {Array}
          */
-        toArray: function(iterable, start, end){
+        toArray: function(iterable, start, end) {
+            var array = [],
+                i;
+
             if (!iterable || !iterable.length) {
-                return [];
+                return array;
             }
 
             if (typeof iterable === 'string') {
@@ -475,9 +542,6 @@ Ext.Array = (function() {
             if (supportsSliceOnNodeList) {
                 return slice.call(iterable, start || 0, end || iterable.length);
             }
-
-            var array = [],
-                i;
 
             start = start || 0;
             end = end ? ((end < 0) ? iterable.length + end : end) : iterable.length;
@@ -492,7 +556,8 @@ Ext.Array = (function() {
         /**
          * Plucks the value of a property from each item in the Array. Example:
          *
-         *     Ext.Array.pluck(Ext.query("p"), "className"); // [el1.className, el2.className, ..., elN.className]
+         *     // [el1.className, el2.className, ..., elN.className]
+         *     Ext.Array.pluck(Ext.query("p"), "className");
          *
          * @param {Array/NodeList} array The Array of items to pluck the value from.
          * @param {String} propertyName The property name to pluck from each element.
@@ -513,7 +578,8 @@ Ext.Array = (function() {
 
         /**
          * @method
-         * Creates a new array with the results of calling a provided function on every element in this array.
+         * Creates a new array with the results of calling a provided function on every element
+         * in this array.
          *
          * @param {Array} array
          * @param {Function} fn Callback function for each item.
@@ -523,34 +589,37 @@ Ext.Array = (function() {
          * @param {Object} [scope] Callback function scope
          * @return {Array} results
          */
-        map: ('map' in arrayPrototype) ? function(array, fn, scope) {
-            //<debug>
-            Ext.Assert.isFunction(fn, 
-                'Ext.Array.map must have a callback function passed as second argument.');
-            //</debug>
+        map: ('map' in arrayPrototype)
+            ? function(array, fn, scope) {
+                //<debug>
+                Ext.Assert.isFunction(fn,
+                    'Ext.Array.map must have a callback function passed as second argument.');
+                //</debug>
 
-            return array.map(fn, scope);
-        } : function(array, fn, scope) {
-            //<debug>
-            Ext.Assert.isFunction(fn, 
-                'Ext.Array.map must have a callback function passed as second argument.');
-            //</debug>
-
-            var len = array.length,
-                results = new Array(len),
-                i;
-
-            for (i = 0; i < len; i++) {
-                results[i] = fn.call(scope, array[i], i, array);
+                return array.map(fn, scope);
             }
+            : function(array, fn, scope) {
+                //<debug>
+                Ext.Assert.isFunction(fn,
+                    'Ext.Array.map must have a callback function passed as second argument.');
+                //</debug>
 
-            return results;
-        },
+                /* eslint-disable-next-line vars-on-top */
+                var len = array.length,
+                    results = new Array(len),
+                    i;
+
+                for (i = 0; i < len; i++) {
+                    results[i] = fn.call(scope, array[i], i, array);
+                }
+
+                return results;
+            },
 
         /**
          * @method
-         * Executes the specified function for each array element until the function returns a falsy value.
-         * If such an item is found, the function will return `false` immediately.
+         * Executes the specified function for each array element until the function returns
+         * a falsy value. If such an item is found, the function will return `false` immediately.
          * Otherwise, it will return `true`.
          *
          * @param {Array} array
@@ -559,37 +628,39 @@ Ext.Array = (function() {
          * @param {Number} fn.index Index of the item.
          * @param {Array} fn.array The whole array that's being iterated.
          * @param {Object} scope Callback function scope.
-         * @return {Boolean} `treu` if no false value is returned by the callback function.
+         * @return {Boolean} `true` if no false value is returned by the callback function.
          */
-        every: ('every' in arrayPrototype) ? function(array, fn, scope) {
-            //<debug>
-            Ext.Assert.isFunction(fn, 
-                'Ext.Array.every must have a callback function passed as second argument.');
-            //</debug>
+        every: ('every' in arrayPrototype)
+            ? function(array, fn, scope) {
+                //<debug>
+                Ext.Assert.isFunction(fn,
+                    'Ext.Array.every must have a callback function passed as second argument.');
+                //</debug>
 
-            return array.every(fn, scope);
-        } : function(array, fn, scope) {
-            //<debug>
-            Ext.Assert.isFunction(fn, 
-                'Ext.Array.every must have a callback function passed as second argument.');
-            //</debug>
-
-            var i = 0,
-                ln = array.length;
-
-            for (; i < ln; ++i) {
-                if (!fn.call(scope, array[i], i, array)) {
-                    return false;
-                }
+                return array.every(fn, scope);
             }
+            : function(array, fn, scope) {
+                var i, ln;
 
-            return true;
-        },
+                //<debug>
+                Ext.Assert.isFunction(fn,
+                    'Ext.Array.every must have a callback function passed as second argument.');
+                //</debug>
+
+                for (i = 0, ln = array.length; i < ln; ++i) {
+                    if (!fn.call(scope, array[i], i, array)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            },
 
         /**
          * @method
-         * Executes the specified function for each array element until the function returns a truthy value.
-         * If such an item is found, the function will return `true` immediately. Otherwise, it will return `false`.
+         * Executes the specified function for each array element until the function returns
+         * a truthy value. If such an item is found, the function will return `true` immediately.
+         * Otherwise, it will return `false`.
          *
          * @param {Array} array
          * @param {Function} fn Callback function for each item.
@@ -599,31 +670,32 @@ Ext.Array = (function() {
          * @param {Object} scope Callback function scope.
          * @return {Boolean} `true` if the callback function returns a truthy value.
          */
-        some: ('some' in arrayPrototype) ? function(array, fn, scope) {
-            //<debug>
-            Ext.Assert.isFunction(fn, 
-                'Ext.Array.some must have a callback function passed as second argument.');
-            //</debug>
+        some: ('some' in arrayPrototype)
+            ? function(array, fn, scope) {
+                //<debug>
+                Ext.Assert.isFunction(fn,
+                    'Ext.Array.some must have a callback function passed as second argument.');
+                //</debug>
 
-            return array.some(fn, scope);
-        } : function(array, fn, scope) {
-            //<debug>
-            Ext.Assert.isFunction(fn, 
-                'Ext.Array.some must have a callback function passed as second argument.');
-            //</debug>
-
-            var i = 0,
-                ln = array.length;
-
-            for (; i < ln; ++i) {
-                if (fn.call(scope, array[i], i, array)) {
-                    return true;
-                }
+                return array.some(fn, scope);
             }
+            : function(array, fn, scope) {
+                var i, ln;
 
-            return false;
-        },
-        
+                //<debug>
+                Ext.Assert.isFunction(fn,
+                    'Ext.Array.some must have a callback function passed as second argument.');
+                //</debug>
+
+                for (i = 0, ln = array.length; i < ln; ++i) {
+                    if (fn.call(scope, array[i], i, array)) {
+                        return true;
+                    }
+                }
+
+                return false;
+            },
+
         /**
          * Shallow compares the contents of 2 arrays using strict equality.
          * @param {Array} array1
@@ -634,27 +706,28 @@ Ext.Array = (function() {
             var len1 = array1.length,
                 len2 = array2.length,
                 i;
-                
+
             // Short circuit if the same array is passed twice
             if (array1 === array2) {
                 return true;
             }
-                
+
             if (len1 !== len2) {
                 return false;
             }
-            
+
             for (i = 0; i < len1; ++i) {
                 if (array1[i] !== array2[i]) {
                     return false;
                 }
             }
-            
+
             return true;
         },
 
         /**
-         * Filter through an array and remove empty item as defined in {@link Ext#isEmpty Ext.isEmpty}.
+         * Filter through an array and remove empty item as defined in
+         * {@link Ext#isEmpty Ext.isEmpty}.
          *
          * See {@link Ext.Array#filter}
          *
@@ -663,11 +736,9 @@ Ext.Array = (function() {
          */
         clean: function(array) {
             var results = [],
-                i = 0,
-                ln = array.length,
-                item;
+                i, ln, item;
 
-            for (; i < ln; i++) {
+            for (i = 0, ln = array.length; i < ln; i++) {
                 item = array[i];
 
                 if (!Ext.isEmpty(item)) {
@@ -686,11 +757,9 @@ Ext.Array = (function() {
          */
         unique: function(array) {
             var clone = [],
-                i = 0,
-                ln = array.length,
-                item;
+                i, ln, item;
 
-            for (; i < ln; i++) {
+            for (i = 0, ln = array.length; i < ln; i++) {
                 item = array[i];
 
                 if (ExtArray.indexOf(clone, item) === -1) {
@@ -714,31 +783,32 @@ Ext.Array = (function() {
          * @param {Object} scope Callback function scope.
          * @return {Array} results
          */
-        filter: ('filter' in arrayPrototype) ? function(array, fn, scope) {
-            //<debug>
-            Ext.Assert.isFunction(fn, 
-                'Ext.Array.filter must have a filter function passed as second argument.');
-            //</debug>
+        filter: ('filter' in arrayPrototype)
+            ? function(array, fn, scope) {
+                //<debug>
+                Ext.Assert.isFunction(fn,
+                    'Ext.Array.filter must have a filter function passed as second argument.');
+                //</debug>
 
-            return array.filter(fn, scope);
-        } : function(array, fn, scope) {
-            //<debug>
-            Ext.Assert.isFunction(fn, 
-                'Ext.Array.filter must have a filter function passed as second argument.');
-            //</debug>
-
-            var results = [],
-                i = 0,
-                ln = array.length;
-
-            for (; i < ln; i++) {
-                if (fn.call(scope, array[i], i, array)) {
-                    results.push(array[i]);
-                }
+                return array.filter(fn, scope);
             }
+            : function(array, fn, scope) {
+                var results = [],
+                    i, ln;
 
-            return results;
-        },
+                //<debug>
+                Ext.Assert.isFunction(fn,
+                    'Ext.Array.filter must have a filter function passed as second argument.');
+                //</debug>
+
+                for (i = 0, ln = array.length; i < ln; i++) {
+                    if (fn.call(scope, array[i], i, array)) {
+                        results.push(array[i]);
+                    }
+                }
+
+                return results;
+            },
 
         /**
          * Returns the first item in the array which elicits a truthy return value from the
@@ -752,15 +822,15 @@ Ext.Array = (function() {
          * @return {Object} The first item in the array which returned true from the selection
          * function, or null if none was found.
          */
-        findBy : function(array, fn, scope) {
-            var i = 0,
-                len = array.length;
+        findBy: function(array, fn, scope) {
+            var i, len;
 
-            for (; i < len; i++) {
+            for (i = 0, len = array.length; i < len; i++) {
                 if (fn.call(scope || array, array[i], i)) {
                     return array[i];
                 }
             }
+
             return null;
         },
 
@@ -769,14 +839,18 @@ Ext.Array = (function() {
          *
          * - An empty array if given value is `undefined` or `null`
          * - Itself if given value is already an array
-         * - An array copy if given value is {@link Ext#isIterable iterable} (arguments, NodeList and alike)
+         * - An array copy if given value is {@link Ext#isIterable iterable} (arguments, NodeList
+         * and alike)
          * - An array with one item which is the given value, otherwise
          *
          * @param {Object} value The value to convert to an array if it's not already is an array.
-         * @param {Boolean} [newReference] `true` to clone the given array and return a new reference if necessary.
+         * @param {Boolean} [newReference] `true` to clone the given array and return a new
+         * reference if necessary.
          * @return {Array} array
          */
         from: function(value, newReference) {
+            var type;
+
             if (value === undefined || value === null) {
                 return [];
             }
@@ -785,10 +859,12 @@ Ext.Array = (function() {
                 return (newReference) ? slice.call(value) : value;
             }
 
-            var type = typeof value;
+            type = typeof value;
+
             // Both strings and functions will have a length property. In phantomJS, NodeList
             // instances report typeof=='function' but don't have an apply method...
-            if (value && value.length !== undefined && type !== 'string' && (type !== 'function' || !value.apply)) {
+            if (value && value.length !== undefined && type !== 'string' &&
+                (type !== 'function' || !value.apply)) {
                 return ExtArray.toArray(value);
             }
 
@@ -822,11 +898,13 @@ Ext.Array = (function() {
          */
         removeAt: function(array, index, count) {
             var len = array.length;
+
             if (index >= 0 && index < len) {
                 count = count || 1;
                 count = Math.min(count, len - index);
                 erase(array, index, count);
             }
+
             return array;
         },
 
@@ -844,8 +922,8 @@ Ext.Array = (function() {
 
         /**
          * Clone a flat array without referencing the previous one. Note that this is different
-         * from `Ext.clone` since it doesn't handle recursive cloning. It's simply a convenient, easy-to-remember method
-         * for `Array.prototype.slice.call(array)`.
+         * from `Ext.clone` since it doesn't handle recursive cloning. It's simply a convenient,
+         * easy-to-remember method for `Array.prototype.slice.call(array)`.
          *
          * @param {Array} array The array.
          * @return {Array} The clone array.
@@ -887,17 +965,8 @@ Ext.Array = (function() {
         intersect: function() {
             var intersection = [],
                 arrays = slice.call(arguments),
-                arraysLength,
-                array,
-                arrayLength,
-                minArray,
-                minArrayIndex,
-                minArrayCandidate,
-                minArrayLength,
-                element,
-                elementCandidate,
-                elementCount,
-                i, j, k;
+                arraysLength, array, arrayLength, minArray, minArrayIndex, minArrayCandidate,
+                minArrayLength, element, elementCandidate, elementCount, i, j, k;
 
             if (!arrays.length) {
                 return intersection;
@@ -905,8 +974,10 @@ Ext.Array = (function() {
 
             // Find the smallest array
             arraysLength = arrays.length;
+
             for (i = minArrayIndex = 0; i < arraysLength; i++) {
                 minArrayCandidate = arrays[i];
+
                 if (!minArray || minArrayCandidate.length < minArray.length) {
                     minArray = minArrayCandidate;
                     minArrayIndex = i;
@@ -921,6 +992,7 @@ Ext.Array = (function() {
             // of the inner loop and can terminate the search early.
             minArrayLength = minArray.length;
             arraysLength = arrays.length;
+
             for (i = 0; i < minArrayLength; i++) {
                 element = minArray[i];
                 elementCount = 0;
@@ -928,10 +1000,13 @@ Ext.Array = (function() {
                 for (j = 0; j < arraysLength; j++) {
                     array = arrays[j];
                     arrayLength = array.length;
+
                     for (k = 0; k < arrayLength; k++) {
                         elementCandidate = array[k];
+
                         if (element === elementCandidate) {
                             elementCount++;
+
                             break;
                         }
                     }
@@ -957,7 +1032,7 @@ Ext.Array = (function() {
                 ln = clone.length,
                 i, j, lnB;
 
-            for (i = 0,lnB = arrayB.length; i < lnB; i++) {
+            for (i = 0, lnB = arrayB.length; i < lnB; i++) {
                 for (j = 0; j < ln; j++) {
                     if (clone[j] === arrayB[i]) {
                         erase(clone, j, 1);
@@ -1008,38 +1083,43 @@ Ext.Array = (function() {
          * @method reduce
          * @since 6.0.0
          */
-        reduce: Array.prototype.reduce ?
-            function (array, reduceFn, initialValue) {
+        reduce: Array.prototype.reduce
+            ? function(array, reduceFn, initialValue) {
                 if (arguments.length === 3) {
                     return Array.prototype.reduce.call(array, reduceFn, initialValue);
                 }
+
                 return Array.prototype.reduce.call(array, reduceFn);
-            } :
-            function (array, reduceFn, initialValue) {
+            }
+            : function(array, reduceFn, initialValue) {
                 array = Object(array);
+
                 //<debug>
                 if (!Ext.isFunction(reduceFn)) {
                     Ext.raise('Invalid parameter: expected a function.');
                 }
                 //</debug>
 
+                /* eslint-disable-next-line vars-on-top */
                 var index = 0,
                     length = array.length >>> 0,
                     reduced = initialValue;
 
                 if (arguments.length < 3) {
-                    while (true) {
+                    while (true) { // eslint-disable-line no-constant-condition
                         if (index in array) {
                             reduced = array[index++];
+
                             break;
                         }
+
                         if (++index >= length) {
                             throw new TypeError('Reduce of empty array with no initial value');
                         }
                     }
                 }
 
-                for ( ; index < length; ++index) {
+                for (; index < length; ++index) {
                     if (index in array) {
                         reduced = reduceFn(reduced, array[index], index, array);
                     }
@@ -1064,25 +1144,28 @@ Ext.Array = (function() {
          * @method slice
          */
         // Note: IE8 will return [] on slice.call(x, undefined).
-        slice: ([1,2].slice(1, undefined).length ?
-            function (array, begin, end) {
+        slice: ([1, 2].slice(1, undefined).length
+            ? function(array, begin, end) {
                 return slice.call(array, begin, end);
-            } :
-            function (array, begin, end) {
+            }
+            : function(array, begin, end) {
                 // see http://jsperf.com/slice-fix
                 if (typeof begin === 'undefined') {
                     return slice.call(array);
                 }
+
                 if (typeof end === 'undefined') {
                     return slice.call(array, begin);
                 }
+
                 return slice.call(array, begin, end);
             }
         ),
 
         /**
-         * Sorts the elements of an Array in a stable manner (equivalently keyed values do not move relative to each other).
-         * By default, this method sorts the elements alphabetically and ascending.
+         * Sorts the elements of an Array in a stable manner (equivalently keyed values do not move
+         * relative to each other). By default, this method sorts the elements alphabetically and
+         * ascending.
          * **Note:** This method modifies the passed array, in the same manner as the
          * native javascript Array.sort. 
          *
@@ -1114,7 +1197,8 @@ Ext.Array = (function() {
 
                     if (Ext.isArray(v)) {
                         rFlatten(v);
-                    } else {
+                    }
+                    else {
                         worker.push(v);
                     }
                 }
@@ -1129,7 +1213,8 @@ Ext.Array = (function() {
          * Returns the minimum value in the Array.
          *
          * @param {Array/NodeList} array The Array from which to select the minimum value.
-         * @param {Function} comparisonFn (optional) a function to perform the comparison which determines minimization.
+         * @param {Function} comparisonFn (optional) a function to perform the comparison which
+         * determines minimization.
          * If omitted the "<" operator will be used.
          * __Note:__ gt = 1; eq = 0; lt = -1
          * @param {Mixed} comparisonFn.min Current minimum value.
@@ -1162,7 +1247,8 @@ Ext.Array = (function() {
          * Returns the maximum value in the Array.
          *
          * @param {Array/NodeList} array The Array from which to select the maximum value.
-         * @param {Function} comparisonFn (optional) a function to perform the comparison which determines maximization.
+         * @param {Function} comparisonFn (optional) a function to perform the comparison which
+         * determines maximization.
          * If omitted the ">" operator will be used.
          * __Note:__ gt = 1; eq = 0; lt = -1
          * @param {Mixed} comparisonFn.max Current maximum value.
@@ -1211,7 +1297,7 @@ Ext.Array = (function() {
             var sum = 0,
                 i, ln, item;
 
-            for (i = 0,ln = array.length; i < ln; i++) {
+            for (i = 0, ln = array.length; i < ln; i++) {
                 item = array[i];
 
                 sum += item;
@@ -1244,31 +1330,42 @@ Ext.Array = (function() {
          *              { name: 'a' },
          *              { name: 'b' },
          *              { name: 'c' }
-         *          ], function (obj) { return obj.name.toUpperCase(); });
+         *          ], function(obj) { return obj.name.toUpperCase(); });
          *
          *      // map = { A: 1, B: 2, C: 3 };
          * 
-         * @param {Array} array The Array to create the map from.
+         * @param {String/String[]} strings The strings from which to create the map.
          * @param {String/Function} [getKey] Name of the object property to use
          * as a key or a function to extract the key.
          * @param {Object} [scope] Value of `this` inside callback specified for `getKey`.
          * @return {Object} The resulting map.
          */
-        toMap: function(array, getKey, scope) {
-            var map = {},
-                i = array.length;
+        toMap: function(strings, getKey, scope) {
+            var map, i;
 
-            if (!getKey) {
+            if (!strings) {
+                return null;
+            }
+
+            map = {};
+            i = strings.length;
+
+            if (typeof strings === 'string') {
+                map[strings] = 1;
+            }
+            else if (!getKey) {
                 while (i--) {
-                    map[array[i]] = i+1;
+                    map[strings[i]] = i + 1;
                 }
-            } else if (typeof getKey === 'string') {
+            }
+            else if (typeof getKey === 'string') {
                 while (i--) {
-                    map[array[i][getKey]] = i+1;
+                    map[strings[i][getKey]] = i + 1;
                 }
-            } else {
+            }
+            else {
                 while (i--) {
-                    map[getKey.call(scope, array[i])] = i+1;
+                    map[getKey.call(scope, strings[i])] = i + 1;
                 }
             }
 
@@ -1299,7 +1396,7 @@ Ext.Array = (function() {
          *              { name: 'a' },
          *              { name: 'b' },
          *              { name: 'c' }
-         *          ], function (obj) { return obj.name.toUpperCase(); });
+         *          ], function(obj) { return obj.name.toUpperCase(); });
          *
          *      // map = { A: {name: 'a'}, B: {name: 'b'}, C: {name: 'c'} };
          *
@@ -1325,7 +1422,8 @@ Ext.Array = (function() {
                     value = array[i];
                     map[value] = value;
                 }
-            } else {
+            }
+            else {
                 if (!(fn = (typeof getKey !== 'string'))) {
                     arrayify = scope;
                 }
@@ -1340,16 +1438,20 @@ Ext.Array = (function() {
                     if (alwaysArray) {
                         if (key in map) {
                             map[key].push(value);
-                        } else {
+                        }
+                        else {
                             map[key] = [ value ];
                         }
-                    } else if (autoArray && (key in map)) {
+                    }
+                    else if (autoArray && (key in map)) {
                         if ((entry = map[key]) instanceof Array) {
                             entry.push(value);
-                        } else {
+                        }
+                        else {
                             map[key] = [ entry, value ];
                         }
-                    } else {
+                    }
+                    else {
                         map[key] = value;
                     }
                 }
@@ -1384,7 +1486,7 @@ Ext.Array = (function() {
          * @param {Array} items The array of items to insert at index.
          * @return {Array} The array passed.
          */
-        insert: function (array, index, items) {
+        insert: function(array, index, items) {
             return replace(array, index, 0, items);
         },
 
@@ -1393,13 +1495,15 @@ Ext.Array = (function() {
                 return;
             }
 
+            /* eslint-disable-next-line vars-on-top */
             var item = array[fromIdx],
                 incr = toIdx > fromIdx ? 1 : -1,
                 i;
 
-            for (i = fromIdx; i != toIdx; i += incr) {
+            for (i = fromIdx; i !== toIdx; i += incr) {
                 array[i] = array[i + incr];
             }
+
             array[toIdx] = item;
         },
 
@@ -1437,37 +1541,40 @@ Ext.Array = (function() {
         /**
          * Pushes new items onto the end of an Array.
          *
-         * Passed parameters may be single items, or arrays of items. If an Array is found in the argument list, all its
-         * elements are pushed into the end of the target Array.
+         * Passed parameters may be single items, or arrays of items. If an Array is found in the
+         * argument list, all its elements are pushed into the end of the target Array.
          *
          * @param {Array} target The Array onto which to push new items
          * @param {Object...} elements The elements to add to the array. Each parameter may
-         * be an Array, in which case all the elements of that Array will be pushed into the end of the
-         * destination Array.
+         * be an Array, in which case all the elements of that Array will be pushed into the end
+         * of the destination Array.
          * @return {Array} An array containing all the new items push onto the end.
-         *
          */
         push: function(target) {
-            var len = arguments.length,
-                i = 1,
-                newItem;
+            var args = arguments,
+                len = args.length,
+                i, newItem;
 
             if (target === undefined) {
                 target = [];
-            } else if (!Ext.isArray(target)) {
+            }
+            else if (!Ext.isArray(target)) {
                 target = [target];
             }
-            for (; i < len; i++) {
-                newItem = arguments[i];
+
+            for (i = 1; i < len; i++) {
+                newItem = args[i];
                 Array.prototype.push[Ext.isIterable(newItem) ? 'apply' : 'call'](target, newItem);
             }
+
             return target;
         },
-        
+
         /**
          * A function used to sort an array by numeric value. By default, javascript array values
-         * are coerced to strings when sorting, which can be problematic when using numeric values. To
-         * ensure that the values are sorted numerically, this method can be passed to the sort method:
+         * are coerced to strings when sorting, which can be problematic when using numeric values.
+         * To ensure that the values are sorted numerically, this method can be passed to the sort
+         * method:
          * 
          *     Ext.Array.sort(myArray, Ext.Array.numericSortFn);
          */

@@ -17,7 +17,7 @@ Ext.define('Portal.view.main.Header', {
     items: [{
         xtype: 'component',
         cls: 'app-header-logo'
-    },{
+    }, {
         xtype: 'component',
         cls: 'app-header-title',
         html: document.title,

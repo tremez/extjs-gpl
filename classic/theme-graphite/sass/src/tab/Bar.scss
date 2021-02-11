@@ -1,0 +1,13 @@
+// adding background to scroller on hover for better visibility
+.#{$prefix}box-scroller-tab-bar-default.#{$prefix}box-scroller-hover {
+    background-color: $tabbar-scroller-background-color-over !important;
+    color: $tabbar-base-color;
+}
+
+.#{$prefix}tab-bar-default-right .#{$prefix}box-scroller-tab-bar-default {
+    margin-left: $tab-arrow-scroller-margin;
+}
+
+.#{$prefix}tab-bar-default-bottom .#{$prefix}box-scroller-tab-bar-default{
+    margin-top: $tab-arrow-scroller-margin;
+}

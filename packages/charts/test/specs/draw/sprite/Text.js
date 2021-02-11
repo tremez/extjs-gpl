@@ -1,8 +1,7 @@
-describe('Ext.draw.sprite.Text', function () {
-
+topSuite("Ext.draw.sprite.Text", function() {
     var proto = Ext.draw.sprite.Text.prototype;
 
-    describe('makeFontShorthand', function () {
+    describe('makeFontShorthand', function() {
         var attr = {
             fontVariant: 'small-caps',
             fontStyle: 'italic',
@@ -11,30 +10,35 @@ describe('Ext.draw.sprite.Text', function () {
             fontFamily: '"Times New Roman", serif'
         };
 
-        it('should not have a leading or trailing space', function () {
+        it('should not have a leading or trailing space', function() {
             var font = '';
+
             var fakeSprite = {
-                setAttributes: function (attr) {
+                setAttributes: function(attr) {
                     font = attr.font;
                 }
             };
+
             proto.makeFontShorthand.call(fakeSprite, attr);
             expect(font.length).toEqual(Ext.String.trim(font).length);
         });
 
-        it('should list all available values in the preferred order', function () {
+        it('should list all available values in the preferred order', function() {
             var font;
+
             var fakeSprite = {
-                setAttributes: function (attr) {
+                setAttributes: function(attr) {
                     font = attr.font;
                 }
             };
+
             proto.makeFontShorthand.call(fakeSprite, attr);
             expect(font).toEqual('italic small-caps bold 34px/100px "Times New Roman", serif');
         });
 
-        it('needs to contain at least font-size and font-family', function () {
+        it('needs to contain at least font-size and font-family', function() {
             var sprite = new Ext.draw.sprite.Text();
+
             sprite.setAttributes({
                 fontWeight: 'bold',
                 fontStyle: 'italic'
@@ -43,9 +47,10 @@ describe('Ext.draw.sprite.Text', function () {
         });
     });
 
-    describe('parseFontShorthand', function () {
-        it('needs to handle "normal" values properly', function () {
+    describe('parseFontShorthand', function() {
+        it('needs to handle "normal" values properly', function() {
             var sprite = new Ext.draw.sprite.Text();
+
             sprite.setAttributes({
                 font: 'normal 24px Verdana'
             });
@@ -56,8 +61,9 @@ describe('Ext.draw.sprite.Text', function () {
             expect(sprite.attr.fontFamily).toEqual('Verdana');
         });
 
-        it('should ignore the "inherit" values', function () {
+        it('should ignore the "inherit" values', function() {
             var sprite = new Ext.draw.sprite.Text();
+
             sprite.setAttributes({
                 font: 'inherit 24px Verdana'
             });
@@ -68,16 +74,18 @@ describe('Ext.draw.sprite.Text', function () {
             expect(sprite.attr.fontFamily).toEqual('Verdana');
         });
 
-        it('should support font names with spaces in them', function () {
+        it('should support font names with spaces in them', function() {
             var sprite = new Ext.draw.sprite.Text();
+
             sprite.setAttributes({
                 font: 'x-large/110% "New Century Schoolbook", serif'
             });
             expect(sprite.attr.fontFamily).toEqual('"New Century Schoolbook", serif');
         });
 
-        it('should support font families with more than one font name', function () {
+        it('should support font families with more than one font name', function() {
             var sprite = new Ext.draw.sprite.Text();
+
             sprite.setAttributes({
                 font: 'italic small-caps normal 13px/150% Arial, Helvetica, sans-serif'
             });
@@ -85,48 +93,54 @@ describe('Ext.draw.sprite.Text', function () {
         });
 
         it('should be able to handle fontSize/lineHeight values ' +
-           'by extracting fontSize and discarding lineHeigh', function () {
+           'by extracting fontSize and discarding lineHeigh', function() {
             var sprite = new Ext.draw.sprite.Text();
+
             sprite.setAttributes({
                 font: 'x-large/110% "New Century Schoolbook", serif'
             });
             expect(sprite.attr.fontSize).toEqual('x-large');
         });
 
-        it('should recognize percentage font sizes', function () {
+        it('should recognize percentage font sizes', function() {
             var sprite = new Ext.draw.sprite.Text();
+
             sprite.setAttributes({
                 font: '80% sans-serif'
             });
             expect(sprite.attr.fontSize).toEqual('80%');
         });
 
-        it('should recognize absolute font sizes', function () {
+        it('should recognize absolute font sizes', function() {
             var sprite = new Ext.draw.sprite.Text();
+
             sprite.setAttributes({
                 font: 'small serif'
             });
             expect(sprite.attr.fontSize).toEqual('small');
         });
 
-        it('should recognize font weight values', function () {
+        it('should recognize font weight values', function() {
             var sprite = new Ext.draw.sprite.Text();
+
             sprite.setAttributes({
                 font: 'italic 600 large Palatino, serif'
             });
             expect(sprite.attr.fontWeight).toEqual('600');
         });
 
-        it('should recognize font variant values', function () {
+        it('should recognize font variant values', function() {
             var sprite = new Ext.draw.sprite.Text();
+
             sprite.setAttributes({
                 font: 'normal small-caps 120%/120% fantasy'
             });
             expect(sprite.attr.fontVariant).toEqual('small-caps');
         });
 
-        it('should recognize font style values', function () {
+        it('should recognize font style values', function() {
             var sprite = new Ext.draw.sprite.Text();
+
             sprite.setAttributes({
                 font: 'bold large oblique Palatino, serif'
             });
@@ -134,15 +148,15 @@ describe('Ext.draw.sprite.Text', function () {
         });
     });
 
-    describe('fontWeight processor', function () {
+    describe('fontWeight processor', function() {
         // See: http://www.w3.org/TR/css3-fonts/#propdef-font-weight
 
         var def = Ext.draw.sprite.Text.def,
             fontWeight = def.getProcessors().fontWeight;
 
-        fontWeight = Ext.Function.bind(fontWeight, def);
+        fontWeight = fontWeight.bind(def);
 
-        it('should return an empty string for unrecognized values', function () {
+        it('should return an empty string for unrecognized values', function() {
             var a = fontWeight(Infinity),
                 b = fontWeight(-Infinity),
                 c = fontWeight(101),
@@ -165,17 +179,17 @@ describe('Ext.draw.sprite.Text', function () {
             expect(i).toEqual('');
             expect(j).toEqual('');
         });
-        it('should accept strings that can be parsed to a valid number', function () {
+        it('should accept strings that can be parsed to a valid number', function() {
             var a = fontWeight('700');
 
             expect(a).toEqual('700');
         });
-        it('should always return a string', function () {
+        it('should always return a string', function() {
             var a = fontWeight(400);
 
             expect(a).toEqual('400');
         });
-        it('should only accept numbers that are multiples of 100 in the [100,900] interval', function () {
+        it('should only accept numbers that are multiples of 100 in the [100,900] interval', function() {
             var a = fontWeight(300),
                 b = fontWeight(350),
                 c = fontWeight(0),

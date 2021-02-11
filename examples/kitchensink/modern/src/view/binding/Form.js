@@ -1,98 +1,136 @@
+/**
+ * The style of the color block is controlled by
+ * either the numeric field or the slider. Both
+ * the numeric fields and the slider are bound
+ * to the same value in the ViewModel.
+ */
 Ext.define('KitchenSink.view.binding.Form', {
     extend: 'Ext.form.Panel',
-
-    // <example>
-    requires: [
-        'Ext.app.ViewModel'
-    ],
-    // </example>
+    xtype: 'binding-form',
 
     viewModel: {
         data: {
             red: 255,
             green: 100,
-            blue: 150
+            blue: 150,
+            opacity: 1
         }
     },
 
-    layout: 'vbox',
-    scrollable: true,
-    shadow: true,
-    cls: 'demo-solid-background',
+    requires: [
+        'Ext.field.Container'
+    ],
 
-    items: {
-        xtype: 'fieldset',
-        flex: 1,
-        minHeight: 400,
-        defaultType: 'container',
-        layout: 'vbox',
-        instructions: [
-            'The style of the color block is controlled by either the numeric ',
-            'field or the slider. Both the numeric fields and the slider are bound to ',
-            'the same value in the View Model.'
-        ].join(''),
-        items: [{
-            layout: 'hbox',
+    //<example>
+    profiles: {
+        defaults: {
+            bodyPadding: '15 20 20',
+            labelAlign: undefined,
+            labelWidth: 50,
+            width: 500
+        },
+        material: {
+            labelWidth: undefined
+        },
+        phone: {
             defaults: {
-                maxValue: 255,
-                minValue: 0
+                bodyPadding: '0 20 20',
+                labelAlign: 'top',
+                labelWidth: undefined,
+                width: undefined
             },
-            items: [{
-                xtype: 'numberfield',
-                label: 'Red',
-                labelWidth: '50%',
-                width: 150,
-                bind: '{red}'
-            }, {
-                xtype: 'singlesliderfield',
-                flex: 1,
-                bind: '{red}',
-                liveUpdate: true
-            }]
-        }, {
-            layout: 'hbox',
-            defaults: {
-                maxValue: 255,
-                minValue: 0
-            },
-            items: [{
-                xtype: 'numberfield',
-                label: 'Green',
-                labelWidth: '50%',
-                width: 150,
-                bind: '{green}'
-            }, {
-                xtype: 'singlesliderfield',
-                flex: 1,
-                bind: '{green}',
-                liveUpdate: true
-            }]
-        }, {
-            layout: 'hbox',
-            defaults: {
-                maxValue: 255,
-                minValue: 0
-            },
-            items: [{
-                xtype: 'numberfield',
-                label: 'Blue',
-                labelWidth: '50%',
-                width: 150,
-                bind: '{blue}'
-            }, {
-                xtype: 'singlesliderfield',
-                flex: 1,
-                bind: '{blue}',
-                liveUpdate: true
-            }]
-        }, {
-            xtype: 'component',
-            flex: 1,
-            bind: {
-                style: {
-                    backgroundColor: 'rgba({red}, {green}, {blue}, 1)'
-                }
+            material: {
+                bodyPadding: '15 20 20'
             }
+        }
+    },
+    //</example>
+
+    bodyPadding: '${bodyPadding}',
+    defaultType: 'containerfield',
+    width: '${width}',
+    autoSize: true,
+
+    defaults: {
+        labelAlign: '${labelAlign}',
+        labelWidth: '${labelWidth}',
+        defaults: {
+            maxValue: 255,
+            minValue: 0
+        }
+    },
+
+    items: [{
+        label: 'Red',
+        items: [{
+            xtype: 'numberfield',
+            width: 100,
+            decimals: 0,
+            bind: '{red}'
+        }, {
+            xtype: 'singlesliderfield',
+            flex: 1,
+            padding: '0 5',
+            bind: '{red}',
+            liveUpdate: true
         }]
-    }
+    }, {
+        label: 'Green',
+        items: [{
+            xtype: 'numberfield',
+            width: 100,
+            decimals: 0,
+            bind: '{green}'
+        }, {
+            xtype: 'singlesliderfield',
+            flex: 1,
+            padding: '0 5',
+            bind: '{green}',
+            liveUpdate: true
+        }]
+    }, {
+        label: 'Blue',
+        items: [{
+            xtype: 'numberfield',
+            width: 100,
+            decimals: 0,
+            bind: '{blue}'
+        }, {
+            xtype: 'singlesliderfield',
+            flex: 1,
+            padding: '0 5',
+            bind: '{blue}',
+            liveUpdate: true
+        }]
+    }, {
+        label: 'Opacity',
+        defaults: {
+            maxValue: 1,
+            minValue: 0
+        },
+        items: [{
+            xtype: 'numberfield',
+            width: 100,
+            decimals: 2,
+            trim: false,
+            bind: '{opacity}',
+            stepValue: 0.1
+        }, {
+            xtype: 'singlesliderfield',
+            flex: 1,
+            padding: '0 5',
+            bind: '{opacity}',
+            increment: 0.01,
+            liveUpdate: true
+        }]
+    }, {
+        xtype: 'component',
+        margin: '10 0 0',
+        height: 175,
+        bind: {
+            style: {
+                backgroundColor: 'rgba({red || 0}, {green || 0}, {blue || 0}, {opacity || 0})'
+            }
+        }
+    }]
 });

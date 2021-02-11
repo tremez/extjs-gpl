@@ -19,13 +19,14 @@ Ext.define('Ext.ux.form.ItemSelector', {
     /**
      * @cfg {Boolean} [hideNavIcons=false] True to hide the navigation icons
      */
-    hideNavIcons:false,
+    hideNavIcons: false,
 
     /**
-     * @cfg {Array} buttons Defines the set of buttons that should be displayed in between the ItemSelector
-     * fields. Defaults to <tt>['top', 'up', 'add', 'remove', 'down', 'bottom']</tt>. These names are used
-     * to build the button CSS class names, and to look up the button text labels in {@link #buttonsText}.
-     * This can be overridden with a custom Array to change which buttons are displayed or their order.
+     * @cfg {Array} buttons Defines the set of buttons that should be displayed in between
+     * the ItemSelector fields. Defaults to `['top', 'up', 'add', 'remove', 'down', 'bottom']`.
+     * These names are used to build the button CSS class names, and to look up the button text
+     * labels in {@link #buttonsText}. This can be overridden with a custom Array to change
+     * which buttons are displayed or their order.
      */
     buttons: ['top', 'up', 'add', 'remove', 'down', 'bottom'],
 
@@ -46,7 +47,7 @@ Ext.define('Ext.ux.form.ItemSelector', {
         type: 'hbox',
         align: 'stretch'
     },
-    
+
     ariaRole: 'group',
 
     initComponent: function() {
@@ -55,7 +56,7 @@ Ext.define('Ext.ux.form.ItemSelector', {
         me.ddGroup = me.id + '-dd';
         me.ariaRenderAttributes = me.ariaRenderAttributes || {};
         me.ariaRenderAttributes['aria-labelledby'] = me.id + '-labelEl';
-        
+
         me.callParent();
 
         // bindStore must be called after the fromField has been created because
@@ -63,7 +64,7 @@ Ext.define('Ext.ux.form.ItemSelector', {
         me.bindStore(me.store);
     },
 
-    createList: function(title){
+    createList: function(title) {
         var me = this;
 
         return Ext.create('Ext.ux.form.MultiSelect', {
@@ -71,11 +72,11 @@ Ext.define('Ext.ux.form.ItemSelector', {
             // so override these methods to prevent them from including
             // any of their values
             submitValue: false,
-            getSubmitData: function(){
+            getSubmitData: function() {
                 return null;
             },
-            getModelData: function(){
-                return null;    
+            getModelData: function() {
+                return null;
             },
             flex: 1,
             dragGroup: me.ddGroup,
@@ -140,6 +141,7 @@ Ext.define('Ext.ux.form.ItemSelector', {
                 });
             });
         }
+
         return buttons;
     },
 
@@ -160,14 +162,16 @@ Ext.define('Ext.ux.form.ItemSelector', {
 
             if (a < b) {
                 return -1;
-            } else if (a > b) {
+            }
+            else if (a > b) {
                 return 1;
             }
+
             return 0;
         });
     },
 
-    onTopBtnClick : function() {
+    onTopBtnClick: function() {
         var list = this.toField.boundList,
             store = list.getStore(),
             selected = this.getSelections(list);
@@ -177,11 +181,11 @@ Ext.define('Ext.ux.form.ItemSelector', {
         store.insert(0, selected);
         store.resumeEvents();
         list.refresh();
-        this.syncValue(); 
+        this.syncValue();
         list.getSelectionModel().select(selected);
     },
 
-    onBottomBtnClick : function() {
+    onBottomBtnClick: function() {
         var list = this.toField.boundList,
             store = list.getStore(),
             selected = this.getSelections(list);
@@ -195,7 +199,7 @@ Ext.define('Ext.ux.form.ItemSelector', {
         list.getSelectionModel().select(selected);
     },
 
-    onUpBtnClick : function() {
+    onUpBtnClick: function() {
         var list = this.toField.boundList,
             store = list.getStore(),
             selected = this.getSelections(list),
@@ -206,19 +210,21 @@ Ext.define('Ext.ux.form.ItemSelector', {
 
         // Move each selection up by one place if possible
         store.suspendEvents();
+
         for (; i < len; ++i, index++) {
             rec = selected[i];
             index = Math.max(index, store.indexOf(rec) - 1);
             store.remove(rec, true);
             store.insert(index, rec);
         }
+
         store.resumeEvents();
         list.refresh();
         this.syncValue();
         list.getSelectionModel().select(selected);
     },
 
-    onDownBtnClick : function() {
+    onDownBtnClick: function() {
         var list = this.toField.boundList,
             store = list.getStore(),
             selected = this.getSelections(list),
@@ -228,19 +234,21 @@ Ext.define('Ext.ux.form.ItemSelector', {
 
         // Move each selection down by one place if possible
         store.suspendEvents();
+
         for (; i > -1; --i, index--) {
             rec = selected[i];
             index = Math.min(index, store.indexOf(rec) + 1);
             store.remove(rec, true);
             store.insert(index, rec);
         }
+
         store.resumeEvents();
         list.refresh();
         this.syncValue();
         list.getSelectionModel().select(selected);
     },
 
-    onAddBtnClick : function() {
+    onAddBtnClick: function() {
         var me = this,
             selected = me.getSelections(me.fromField.boundList);
 
@@ -248,7 +256,7 @@ Ext.define('Ext.ux.form.ItemSelector', {
         me.toField.boundList.getSelectionModel().select(selected);
     },
 
-    onRemoveBtnClick : function() {
+    onRemoveBtnClick: function() {
         var me = this,
             selected = me.getSelections(me.toField.boundList);
 
@@ -259,9 +267,9 @@ Ext.define('Ext.ux.form.ItemSelector', {
     moveRec: function(add, recs) {
         var me = this,
             fromField = me.fromField,
-            toField   = me.toField,
+            toField = me.toField,
             fromStore = add ? fromField.store : toField.store,
-            toStore   = add ? toField.store   : fromField.store;
+            toStore = add ? toField.store : fromField.store;
 
         fromStore.suspendEvents();
         toStore.suspendEvents();
@@ -269,7 +277,7 @@ Ext.define('Ext.ux.form.ItemSelector', {
         toStore.add(recs);
         fromStore.resumeEvents();
         toStore.resumeEvents();
-        
+
         // If the list item was focused when moved (e.g. via double-click)
         // then removing it will cause the focus to be thrown back to the
         // document body. Which might disrupt things if ItemSelector is
@@ -287,7 +295,8 @@ Ext.define('Ext.ux.form.ItemSelector', {
 
     // Synchronizes the submit value with the current state of the toStore
     syncValue: function() {
-        var me = this; 
+        var me = this;
+
         me.mixins.field.setValue.call(me, me.setupValue(me.toField.store.getRange()));
     },
 
@@ -309,6 +318,7 @@ Ext.define('Ext.ux.form.ItemSelector', {
                 load: Ext.Function.bind(me.setValue, me, [value]),
                 single: true
             });
+
             return;
         }
 
@@ -328,11 +338,12 @@ Ext.define('Ext.ux.form.ItemSelector', {
         me.populateFromStore(me.store);
 
         // Copy selection across to toStore
-        Ext.Array.forEach(selected, function(rec){
+        Ext.Array.forEach(selected, function(rec) {
             // In the from store, move it over
             if (fromStore.indexOf(rec) > -1) {
                 fromStore.remove(rec);
             }
+
             toStore.add(rec);
         });
 
@@ -344,7 +355,7 @@ Ext.define('Ext.ux.form.ItemSelector', {
         Ext.suspendLayouts();
         fromField.boundList.refresh();
         toField.boundList.refresh();
-        Ext.resumeLayouts(true);        
+        Ext.resumeLayouts(true);
     },
 
     onBindStore: function(store, initial) {
@@ -369,7 +380,8 @@ Ext.define('Ext.ux.form.ItemSelector', {
             // Add everything to the from field as soon as the Store is loaded
             if (store.getCount()) {
                 me.populateFromStore(store);
-            } else {
+            }
+            else {
                 me.store.on('load', me.populateFromStore, me);
             }
         }
@@ -387,31 +399,31 @@ Ext.define('Ext.ux.form.ItemSelector', {
         fromStore.fireEvent('load', fromStore);
     },
 
-    onEnable: function(){
+    onEnable: function() {
         var me = this;
 
         me.callParent();
         me.fromField.enable();
         me.toField.enable();
 
-        Ext.Array.forEach(me.query('[navBtn]'), function(btn){
+        Ext.Array.forEach(me.query('[navBtn]'), function(btn) {
             btn.enable();
         });
     },
 
-    onDisable: function(){
+    onDisable: function() {
         var me = this;
 
         me.callParent();
         me.fromField.disable();
         me.toField.disable();
 
-        Ext.Array.forEach(me.query('[navBtn]'), function(btn){
+        Ext.Array.forEach(me.query('[navBtn]'), function(btn) {
             btn.disable();
         });
     },
 
-    doDestroy: function(){
+    doDestroy: function() {
         this.bindStore(null);
         this.callParent();
     }

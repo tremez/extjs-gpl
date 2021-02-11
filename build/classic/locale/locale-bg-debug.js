@@ -249,10 +249,10 @@ Ext.define("Ext.locale.bg.window.MessageBox", {
         cancel: "Отмени",
         yes: "Да",
         no: "Не"
-    }    
+    }
 });
 
 // This is needed until we can refactor all of the locales into individual files
-Ext.define("Ext.locale.bg.Component", {	
+Ext.define("Ext.locale.bg.Component", {
     override: "Ext.Component"
 });

@@ -2,13 +2,13 @@
  * This is a base class for more advanced "simlets" (simulated servers). A simlet is asked
  * to provide a response given a {@link Ext.ux.ajax.SimXhr} instance.
  */
-Ext.define('Ext.ux.ajax.Simlet', function () {
+Ext.define('Ext.ux.ajax.Simlet', function() {
     var urlRegex = /([^?#]*)(#.*)?$/,
         dateRegex = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)Z$/,
         intRegex = /^[+-]?\d+$/,
         floatRegex = /^[+-]?\d+\.\d+$/;
 
-    function parseParamValue (value) {
+    function parseParamValue(value) {
         var m;
 
         if (Ext.isDefined(value)) {
@@ -16,10 +16,12 @@ Ext.define('Ext.ux.ajax.Simlet', function () {
 
             if (intRegex.test(value)) {
                 value = parseInt(value, 10);
-            } else if (floatRegex.test(value)) {
+            }
+            else if (floatRegex.test(value)) {
                 value = parseFloat(value);
-            } else if (!!(m = dateRegex.exec(value))) {
-                value = new Date(Date.UTC(+m[1], +m[2]-1, +m[3], +m[4], +m[5], +m[6]));
+            }
+            else if (!!(m = dateRegex.exec(value))) {
+                value = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]));
             }
         }
 
@@ -55,27 +57,28 @@ Ext.define('Ext.ux.ajax.Simlet', function () {
          */
         statusText: 'OK',
 
-        constructor: function (config) {
+        constructor: function(config) {
             Ext.apply(this, config);
         },
 
-        doGet: function (ctx) {
-            return this.handleRequest(ctx);
-        },
-        
-        doPost: function (ctx) {
+        doGet: function(ctx) {
             return this.handleRequest(ctx);
         },
 
-        doRedirect: function (ctx) {
+        doPost: function(ctx) {
+            return this.handleRequest(ctx);
+        },
+
+        doRedirect: function(ctx) {
             return false;
         },
 
-        doDelete: function (ctx) {
+        doDelete: function(ctx) {
             var me = this,
                 xhr = ctx.xhr,
                 records = xhr.options.records;
-            me.removeFromData(ctx,records);
+
+            me.removeFromData(ctx, records);
         },
 
         /**
@@ -86,7 +89,7 @@ Ext.define('Ext.ux.ajax.Simlet', function () {
          * @param {Ext.ux.ajax.SimXhr} xhr The simulated XMLHttpRequest instance.
          * @return {Object} The response properties to add to the XMLHttpRequest.
          */
-        exec: function (xhr) {
+        exec: function(xhr) {
             var me = this,
                 ret = {},
                 method = 'do' + Ext.String.capitalize(xhr.method.toLowerCase()), // doGet
@@ -94,14 +97,15 @@ Ext.define('Ext.ux.ajax.Simlet', function () {
 
             if (fn) {
                 ret = fn.call(me, me.getCtx(xhr.method, xhr.url, xhr));
-            } else {
+            }
+            else {
                 ret = { status: 405, statusText: 'Method Not Allowed' };
             }
 
             return ret;
         },
 
-        getCtx: function (method, url, xhr) {
+        getCtx: function(method, url, xhr) {
             return {
                 method: method,
                 params: this.parseQueryString(url),
@@ -115,12 +119,14 @@ Ext.define('Ext.ux.ajax.Simlet', function () {
                 ret = {},
                 val;
 
-            Ext.Array.forEach(me.responseProps, function (prop) {
+            Ext.Array.forEach(me.responseProps, function(prop) {
                 if (prop in me) {
                     val = me[prop];
+
                     if (Ext.isFunction(val)) {
                         val = val.call(me, ctx);
                     }
+
                     ret[prop] = val;
                 }
             });
@@ -128,16 +134,19 @@ Ext.define('Ext.ux.ajax.Simlet', function () {
             return ret;
         },
 
-        openRequest: function (method, url, options, async) {
+        openRequest: function(method, url, options, async) {
             var ctx = this.getCtx(method, url),
                 redirect = this.doRedirect(ctx),
                 xhr;
-            if (options.action === 'destroy'){
+
+            if (options.action === 'destroy') {
                 method = 'delete';
             }
+
             if (redirect) {
                 xhr = redirect;
-            } else {
+            }
+            else {
                 xhr = new Ext.ux.ajax.SimXhr({
                     mgr: this.manager,
                     simlet: this,
@@ -145,19 +154,17 @@ Ext.define('Ext.ux.ajax.Simlet', function () {
                 });
                 xhr.open(method, url, async);
             }
-            
+
             return xhr;
         },
 
-        parseQueryString : function (str) {
+        parseQueryString: function(str) {
             var m = urlRegex.exec(str),
                 ret = {},
-                key,
-                value,
-                i, n;
+                key, value, pair, parts, i, n;
 
             if (m && m[1]) {
-                var pair, parts = m[1].split('&');
+                parts = m[1].split('&');
 
                 for (i = 0, n = parts.length; i < n; ++i) {
                     if ((pair = parts[i].split('='))[0]) {
@@ -166,9 +173,11 @@ Ext.define('Ext.ux.ajax.Simlet', function () {
 
                         if (!(key in ret)) {
                             ret[key] = value;
-                        } else if (Ext.isArray(ret[key])) {
+                        }
+                        else if (Ext.isArray(ret[key])) {
                             ret[key].push(value);
-                        } else {
+                        }
+                        else {
                             ret[key] = [ret[key], value];
                         }
                     }
@@ -178,14 +187,17 @@ Ext.define('Ext.ux.ajax.Simlet', function () {
             return ret;
         },
 
-        redirect: function (method, url, params) {
+        redirect: function(method, url, params) {
             switch (arguments.length) {
                 case 2:
-                    if (typeof url == 'string') {
+                    if (typeof url === 'string') {
                         break;
                     }
+
                     params = url;
                     // fall...
+
+                // eslint-disable-next-line no-fallthrough
                 case 1:
                     url = method;
                     method = 'GET';
@@ -195,6 +207,7 @@ Ext.define('Ext.ux.ajax.Simlet', function () {
             if (params) {
                 url = Ext.urlAppend(url, Ext.Object.toQueryString(params));
             }
+
             return this.manager.openRequest(method, url);
         },
 
@@ -202,11 +215,13 @@ Ext.define('Ext.ux.ajax.Simlet', function () {
             var me = this,
                 data = me.getData(ctx),
                 model = (ctx.xhr.options.proxy && ctx.xhr.options.proxy.getModel()) || {},
-                idProperty = model.idProperty || 'id';
+                idProperty = model.idProperty || 'id',
+                i;
 
             Ext.each(records, function(record) {
                 var id = record.get(idProperty);
-                for (var i = data.length; i-- > 0;) {
+
+                for (i = data.length; i-- > 0;) {
                     if (data[i][idProperty] === id) {
                         me.deleteRecord(i);
                         break;

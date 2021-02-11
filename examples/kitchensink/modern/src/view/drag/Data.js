@@ -5,17 +5,33 @@
 Ext.define('KitchenSink.view.drag.Data', {
     extend: 'Ext.Component',
     xtype: 'drag-data',
+    controller: 'drag-data',
 
-    // <example>
-    requires: ['KitchenSink.view.drag.DataController'],
+    //<example>
     otherContent: [{
         type: 'Controller',
         path: 'modern/src/view/drag/DataController.js'
     }],
-    // </example>
 
-    controller: 'drag-data',
+    profiles: {
+        defaults: {
+            height: 350,
+            width: 250
+        },
+        phone: {
+            defaults: {
+                height: undefined,
+                width: undefined
+            }
+        }
+    },
+
+    cls: 'demo-solid-background',
+    //</example>
+
+    height: '${height}',
     padding: 5,
+    width: '${width}',
 
     html: '<div class="data-source">' +
               '<div data-days="2" class="handle">Overnight</div>' +

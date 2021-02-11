@@ -101,7 +101,8 @@ Ext.define('Ext.event.gesture.Drag', {
             me.startTime = time;
             me.startPoint = point;
             info.longpress = true;
-        } else {
+        }
+        else {
             time = e.time;
         }
 
@@ -274,7 +275,7 @@ Ext.define('Ext.event.gesture.Drag', {
     reset: function() {
         var me = this;
 
-        me.lastPoint =  me.startPoint = me.previousPoint = me.lastPoint = me.lastMoveEvent = null;
+        me.lastPoint = me.startPoint = me.previousPoint = me.lastPoint = me.lastMoveEvent = null;
 
         me.initInfo();
 
@@ -282,5 +283,6 @@ Ext.define('Ext.event.gesture.Drag', {
     }
 }, function(Drag) {
     var gestures = Ext.manifest.gestures;
+
     Drag.instance = new Drag(gestures && gestures.drag);
 });

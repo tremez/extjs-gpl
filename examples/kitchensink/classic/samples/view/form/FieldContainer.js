@@ -24,17 +24,58 @@ Ext.define('KitchenSink.view.form.FieldContainer', {
         type: 'Model',
         path: 'classic/samples/model/PartTimeEmployee.js'
     }, {
-        type: 'ViewController',
+        type: 'Controller',
         path: 'classic/samples/view/form/FieldContainerController.js'
     }],
     //</example>
-
+    profiles: {
+        classic: {
+            width: 600,
+            phone1Width: 45,
+            phone2Width: 45,
+            phone3Width: 60,
+            titleWidth: 75,
+            empLabelWidth: 100,
+            detailsLabelWidth: 90,
+            numberfieldWidth: 95
+        },
+        neptune: {
+            width: 600,
+            phone1Width: 45,
+            phone2Width: 45,
+            phone3Width: 60,
+            titleWidth: 75,
+            empLabelWidth: 100,
+            detailsLabelWidth: 90,
+            numberfieldWidth: 95
+        },
+        graphite: {
+            width: 800,
+            phone1Width: 55,
+            phone2Width: 55,
+            phone3Width: 70,
+            titleWidth: 100,
+            empLabelWidth: 130,
+            detailsLabelWidth: 120,
+            numberfieldWidth: 95
+        },
+        'classic-material': {
+            width: 600,
+            phone1Width: 150,
+            phone2Width: 150,
+            phone3Width: 150,
+            titleWidth: 150,
+            empLabelWidth: 130,
+            detailsLabelWidth: 120,
+            numberfieldWidth: 150
+        }
+    },
     title: 'Employee Information',
-    width: 600,
+    width: '${width}',
     bodyPadding: 10,
     defaults: {
         anchor: '100%',
-        labelWidth: 100
+        labelWidth: '${empLabelWidth}'
     },
     items: [{
         xtype: 'textfield',
@@ -47,7 +88,7 @@ Ext.define('KitchenSink.view.form.FieldContainer', {
         xtype: 'fieldcontainer',
         fieldLabel: 'Availability',
         combineErrors: true,
-        msgTarget : 'side',
+        msgTarget: 'side',
         layout: 'hbox',
         defaults: {
             flex: 1,
@@ -57,12 +98,12 @@ Ext.define('KitchenSink.view.form.FieldContainer', {
             xtype: 'datefield',
             name: 'startDate',
             fieldLabel: 'Start',
-            margin: '0 5 0 0',
             allowBlank: false
         }, {
-            xtype     : 'datefield',
-            name      : 'endDate',
+            xtype: 'datefield',
+            name: 'endDate',
             fieldLabel: 'End',
+            padding: '0 0 0 10',
             allowBlank: false
         }]
     }, {
@@ -70,7 +111,7 @@ Ext.define('KitchenSink.view.form.FieldContainer', {
         title: 'Details',
         collapsible: true,
         defaults: {
-            labelWidth: 90,
+            labelWidth: '${detailsLabelWidth}',
             anchor: '100%',
             layout: 'hbox'
         },
@@ -85,12 +126,12 @@ Ext.define('KitchenSink.view.form.FieldContainer', {
                 maskRe: /[0-9.]/
             },
             items: [
-                {xtype: 'displayfield', value: '(', margin: '0 2 0 0'},
-                {xtype: 'textfield',    fieldLabel: 'Phone 1', name: 'phone-1', width: 45, allowBlank: false, maxLength: 3},
-                {xtype: 'displayfield', value: ')', margin: '0 5 0 2'},
-                {xtype: 'textfield',    fieldLabel: 'Phone 2', name: 'phone-2', width: 45, allowBlank: false, margin: '0 5 0 0', maxLength: 3},
-                {xtype: 'displayfield', value: '-'},
-                {xtype: 'textfield',    fieldLabel: 'Phone 3', name: 'phone-3', width: 60, allowBlank: false, margin: '0 0 0 5', maxLength: 4}
+                { xtype: 'displayfield', value: '(', margin: '0 2 0 0' },
+                { xtype: 'textfield', fieldLabel: 'Phone 1', name: 'phone-1', width: '${phone1Width}', allowBlank: false, maxLength: 3 },
+                { xtype: 'displayfield', value: ')', margin: '0 5 0 2' },
+                { xtype: 'textfield', fieldLabel: 'Phone 2', name: 'phone-2', width: '${phone2Width}', allowBlank: false, margin: '0 5 0 0', maxLength: 3 },
+                { xtype: 'displayfield', value: '-' },
+                { xtype: 'textfield', fieldLabel: 'Phone 3', name: 'phone-3', width: '${phone3Width}', allowBlank: false, margin: '0 0 0 5', maxLength: 4 }
             ]
         }, {
             xtype: 'fieldcontainer',
@@ -101,26 +142,26 @@ Ext.define('KitchenSink.view.form.FieldContainer', {
                 margin: '0 5 0 0'
             },
             items: [{
-               name : 'hours',
-               xtype: 'numberfield',
-               minValue: 0,
-               width: 95,
-               allowBlank: false
-           }, {
-               xtype: 'displayfield',
-               value: 'hours'
-           }, {
-               name : 'minutes',
-               xtype: 'numberfield',
-               minValue: 0,
-               width: 95,
-               allowBlank: false
-           }, {
-               xtype: 'displayfield',
-               value: 'mins'
+                name: 'hours',
+                xtype: 'numberfield',
+                minValue: 0,
+                width: '${numberfieldWidth}',
+                allowBlank: false
+            }, {
+                xtype: 'displayfield',
+                value: 'hours'
+            }, {
+                name: 'minutes',
+                xtype: 'numberfield',
+                minValue: 0,
+                width: '${numberfieldWidth}',
+                allowBlank: false
+            }, {
+                xtype: 'displayfield',
+                value: 'mins'
             }]
         }, {
-            xtype : 'fieldcontainer',
+            xtype: 'fieldcontainer',
             combineErrors: true,
             msgTarget: 'side',
             fieldLabel: 'Full Name',
@@ -129,9 +170,9 @@ Ext.define('KitchenSink.view.form.FieldContainer', {
                 margin: '0 5 0 0'
             },
             items: [{
-                //the width of this field in the HBox layout is set directly
-                //the other 2 items are given flex: 1, so will share the rest of the space
-                width: 75,
+                // the width of this field in the HBox layout is set directly
+                // the other 2 items are given flex: 1, so will share the rest of the space
+                width: '${titleWidth}',
                 xtype: 'combo',
                 queryMode: 'local',
                 value: 'mrs',
@@ -145,35 +186,35 @@ Ext.define('KitchenSink.view.form.FieldContainer', {
                 store: {
                     fields: ['name', 'value'],
                     data: [
-                        {name : 'Mr',   value: 'mr'},
-                        {name : 'Mrs',  value: 'mrs'},
-                        {name : 'Miss', value: 'miss'}
+                        { name: 'Mr', value: 'mr' },
+                        { name: 'Mrs', value: 'mrs' },
+                        { name: 'Miss', value: 'miss' }
                     ]
                 }
             }, {
                 xtype: 'textfield',
-                flex : 1,
-                name : 'firstName',
+                flex: 1,
+                name: 'firstName',
                 fieldLabel: 'First',
                 allowBlank: false
             }, {
                 xtype: 'textfield',
-                flex : 1,
-                name : 'lastName',
+                flex: 1,
+                name: 'lastName',
                 fieldLabel: 'Last',
                 allowBlank: false
             }]
         }]
     }],
-    
+
     buttons: [{
-        text   : 'Load test data',
+        text: 'Load test data',
         handler: 'onLoadClick'
     }, {
-        text   : 'Save',
+        text: 'Save',
         handler: 'onSaveClick'
     }, {
-        text   : 'Reset',
+        text: 'Reset',
         handler: 'onResetClick'
     }]
 });

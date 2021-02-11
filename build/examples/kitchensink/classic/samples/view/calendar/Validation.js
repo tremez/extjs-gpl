@@ -45,7 +45,6 @@ Ext.define('KitchenSink.view.calendar.Validation', {
         startTime: 8,
         endTime: 18,
         visibleDays: 2,
-        timezoneOffset: 0,
         gestureNavigation: false,
         bind: {
             store: '{calStore}',
@@ -60,4 +59,4 @@ Ext.define('KitchenSink.view.calendar.Validation', {
         }
     }]
 
-})
+});

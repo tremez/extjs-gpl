@@ -19,11 +19,11 @@ Ext.define('Books.view.review.List', {
             itemSelector: '.review',
             tpl: new Ext.XTemplate(
                 '<tpl for=".">',
-                    '<div class="review {[xindex === 1 ? "first-review" : ""]}">',
-                        '<div class="title">{title} {[this.stars(values)]}</div>',
-                        '<div class="author">By <span>{author}</span> - {date}</div>',
-                        '<div class="comment">{comment}</div>',
-                    '</div>',
+                '<div class="review {[xindex === 1 ? "first-review" : ""]}">',
+                '<div class="title">{title} {[this.stars(values)]}</div>',
+                '<div class="author">By <span>{author}</span> - {date}</div>',
+                '<div class="comment">{comment}</div>',
+                '</div>',
                 '</tpl>',
                 {
                     stars: function(values) {
@@ -31,12 +31,12 @@ Ext.define('Books.view.review.List', {
                             extension = Ext.isIE6 ? 'gif' : 'png',
                             i = 0;
 
-                        //print out the stars for each of the ratings
+                        // print out the stars for each of the ratings
                         for (; i < values.rating; i++) {
                             res.push('<img src="./resources/images/star.', extension, '" />');
                         }
 
-                        //print out transparent stars for the rest (up to 5)
+                        // print out transparent stars for the rest (up to 5)
                         while (i < 5) {
                             res.push('<img src="./resources/images/star_no.', extension, '" />');
                             i++;
@@ -74,7 +74,7 @@ Ext.define('Books.view.review.List', {
      * @param {Ext.data.Store} store The reviews store used by the application
      */
     bind: function(record, store) {
-        //put the reviews into the store and bind the store to thie dataview
+        // put the reviews into the store and bind the store to thie dataview
         this.dataview.bindStore(record.reviews());
     }
 });

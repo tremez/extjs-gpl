@@ -1,13 +1,15 @@
 /**
  * The subclasses of this class provide actions to perform upon {@link Ext.form.Basic Form}s.
  *
- * Instances of this class are only created by a {@link Ext.form.Basic Form} when the Form needs to perform an action
- * such as submit or load. The Configuration options listed for this class are set through the Form's action methods:
- * {@link Ext.form.Basic#submit submit}, {@link Ext.form.Basic#load load} and {@link Ext.form.Basic#doAction doAction}
+ * Instances of this class are only created by a {@link Ext.form.Basic Form} when the Form needs
+ * to perform an action such as submit or load. The Configuration options listed for this class
+ * are set through the Form's action methods: {@link Ext.form.Basic#submit submit},
+ * {@link Ext.form.Basic#load load} and {@link Ext.form.Basic#doAction doAction}
  *
- * The instance of Action which performed the action is passed to the success and failure callbacks of the Form's action
- * methods ({@link Ext.form.Basic#submit submit}, {@link Ext.form.Basic#load load} and
- * {@link Ext.form.Basic#doAction doAction}), and to the {@link Ext.form.Basic#actioncomplete actioncomplete} and
+ * The instance of Action which performed the action is passed to the success and failure callbacks
+ * of the Form's action methods ({@link Ext.form.Basic#submit submit},
+ * {@link Ext.form.Basic#load load} and {@link Ext.form.Basic#doAction doAction}), and to the
+ * {@link Ext.form.Basic#actioncomplete actioncomplete} and
  * {@link Ext.form.Basic#actionfailed actionfailed} event handlers.
  */
 Ext.define('Ext.form.action.Action', {
@@ -20,15 +22,15 @@ Ext.define('Ext.form.action.Action', {
 
     /**
      * @cfg {String} url
-     * The URL that the Action is to invoke. Will default to the {@link Ext.form.Basic#url url} configured on the
-     * {@link #form}.
+     * The URL that the Action is to invoke. Will default to the {@link Ext.form.Basic#url url}
+     * configured on the {@link #form}.
      */
 
     /**
      * @cfg {Boolean} reset
-     * When set to **true**, causes the Form to be {@link Ext.form.Basic#reset reset} on Action success. If specified,
-     * this happens before the {@link #success} callback is called and before the Form's
-     * {@link Ext.form.Basic#actioncomplete actioncomplete} event fires.
+     * When set to **true**, causes the Form to be {@link Ext.form.Basic#reset reset} on Action
+     * success. If specified, this happens before the {@link #success} callback is called and before
+     * the Form's {@link Ext.form.Basic#actioncomplete actioncomplete} event fires.
      */
 
     /**
@@ -39,10 +41,12 @@ Ext.define('Ext.form.action.Action', {
 
     /**
      * @cfg {Object/String} params
-     * Extra parameter values to pass. These are added to the Form's {@link Ext.form.Basic#baseParams} and passed to the
-     * specified URL along with the Form's input fields.
+     * Extra parameter values to pass. These are added to the Form's
+     * {@link Ext.form.Basic#baseParams} and passed to the specified URL along with the Form's
+     * input fields.
      *
-     * Parameters are encoded as standard HTTP parameters using {@link Ext#urlEncode Ext.Object.toQueryString}.
+     * Parameters are encoded as standard HTTP parameters using
+     * {@link Ext#urlEncode Ext.Object.toQueryString}.
      */
 
     /**
@@ -55,17 +59,17 @@ Ext.define('Ext.form.action.Action', {
 
     /**
      * @cfg {Number} timeout
-     * The number of seconds to wait for a server response before failing with the {@link #failureType} as
-     * {@link Ext.form.action.Action#CONNECT_FAILURE}. If not specified, defaults to the configured
-     * {@link Ext.form.Basic#timeout timeout} of the {@link #form}.
+     * The number of seconds to wait for a server response before failing with the
+     * {@link #failureType} as {@link Ext.form.action.Action#CONNECT_FAILURE}. If not specified,
+     * defaults to the configured {@link Ext.form.Basic#timeout timeout} of the {@link #form}.
      */
 
     /**
      * @cfg {Function/String} success
      * The function to call when a valid success return packet is received.
      * @cfg {Ext.form.Basic} success.form The form that requested the action
-     * @cfg {Ext.form.action.Action} success.action The Action class. The {@link #result} property of this object may
-     * be examined to perform custom post-processing.
+     * @cfg {Ext.form.action.Action} success.action The Action class. The {@link #result} property
+     * of this object may be examined to perform custom post-processing.
      * 
      * @controllable
      */
@@ -90,27 +94,29 @@ Ext.define('Ext.form.action.Action', {
 
     /**
      * @cfg {String} waitMsg
-     * The message to be displayed by a call to {@link Ext.window.MessageBox#wait} during the time the action is being
-     * processed.
+     * The message to be displayed by a call to {@link Ext.window.MessageBox#wait} during the time
+     * the action is being processed.
      */
 
     /**
      * @cfg {String} waitTitle
-     * The title to be displayed by a call to {@link Ext.window.MessageBox#wait} during the time the action is being
-     * processed.
+     * The title to be displayed by a call to {@link Ext.window.MessageBox#wait} during the time
+     * the action is being processed.
      */
 
     /**
      * @cfg {Boolean} submitEmptyText
      * If set to true, the emptyText value will be sent with the form when it is submitted.
      */
-    submitEmptyText : true,
+    submitEmptyText: true,
 
     /**
      * @property {String} type
-     * The type of action this Action instance performs. Currently only "submit" and "load" are supported.
+     * The type of action this Action instance performs. Currently only "submit" and "load"
+     * are supported.
      */
 
+    /* eslint-disable max-len */
     /**
      * @property {String} failureType
      * The type of failure detected will be one of these:
@@ -153,6 +159,7 @@ Ext.define('Ext.form.action.Action', {
      *         }
      *     }]
      */
+    /* eslint-enable max-len */
 
     /**
      * @property {Object} response
@@ -161,7 +168,8 @@ Ext.define('Ext.form.action.Action', {
 
     /**
      * @property {Object} result
-     * The decoded response object containing a boolean `success` property and other, action-specific properties.
+     * The decoded response object containing a boolean `success` property and other,
+     * action-specific properties.
      */
 
     /**
@@ -169,12 +177,15 @@ Ext.define('Ext.form.action.Action', {
      * @param {Object} [config] Config object.
      */
     constructor: function(config) {
+        var params;
+
         if (config) {
             Ext.apply(this, config);
         }
 
         // Normalize the params option to an Object
-        var params = config.params;
+        params = config.params;
+
         if (Ext.isString(params)) {
             this.params = Ext.Object.fromQueryString(params);
         }
@@ -189,14 +200,16 @@ Ext.define('Ext.form.action.Action', {
     /**
      * @private
      * @method onSuccess
-     * Callback method that gets invoked when the action completes successfully. Must be implemented by subclasses.
+     * Callback method that gets invoked when the action completes successfully. Must be implemented
+     * by subclasses.
      * @param {Object} response
      */
 
     /**
      * @private
      * @method handleResponse
-     * Handles the raw response and builds a result object from it. Must be implemented by subclasses.
+     * Handles the raw response and builds a result object from it. Must be implemented
+     * by subclasses.
      * @param {Object} response
      */
 
@@ -205,13 +218,13 @@ Ext.define('Ext.form.action.Action', {
      * Handles a failure response.
      * @param {Object} response
      */
-    onFailure : function(response){
+    onFailure: function(response) {
         var form = this.form,
             formActive = form && !form.destroying && !form.destroyed;
-        
+
         this.response = response;
         this.failureType = Ext.form.action.Action.CONNECT_FAILURE;
-        
+
         if (formActive) {
             form.afterAction(this, false);
         }
@@ -225,11 +238,13 @@ Ext.define('Ext.form.action.Action', {
      * @return {Object/Boolean} The result object as built by handleResponse, or `true` if
      * the response had empty responseText and responseXML.
      */
-    processResponse : function(response){
+    processResponse: function(response) {
         this.response = response;
+
         if (!response.responseText && !response.responseXML) {
             return true;
         }
+
         return (this.result = this.handleResponse(response));
     },
 
@@ -279,40 +294,39 @@ Ext.define('Ext.form.action.Action', {
     statics: {
         /**
          * @property
-         * Failure type returned when client side validation of the Form fails thus aborting a submit action. Client
-         * side validation is performed unless {@link Ext.form.action.Submit#clientValidation} is explicitly set to
-         * false.
+         * Failure type returned when client side validation of the Form fails thus aborting
+         * a submit action. Client side validation is performed unless
+         * {@link Ext.form.action.Submit#clientValidation} is explicitly set to false.
          * @static
          */
         CLIENT_INVALID: 'client',
 
         /**
          * @property
-         * Failure type returned when server side processing fails and the {@link #result}'s `success` property is set to
-         * false.
+         * Failure type returned when server side processing fails and the {@link #result}'s
+         * `success` property is set to false.
          *
-         * In the case of a form submission, field-specific error messages may be returned in the {@link #result}'s
-         * errors property.
+         * In the case of a form submission, field-specific error messages may be returned
+         * in the {@link #result}'s errors property.
          * @static
          */
         SERVER_INVALID: 'server',
 
         /**
          * @property
-         * Failure type returned when a communication error happens when attempting to send a request to the remote
-         * server. The {@link #response} may be examined to provide further information.
+         * Failure type returned when a communication error happens when attempting to send
+         * a request to the remote server. The {@link #response} may be examined to provide
+         * further information.
          * @static
          */
         CONNECT_FAILURE: 'connect',
 
         /**
          * @property
-         * Failure type returned when the response's `success` property is set to false, or no field values are returned
-         * in the response's data property.
+         * Failure type returned when the response's `success` property is set to false,
+         * or no field values are returned in the response's data property.
          * @static
          */
         LOAD_FAILURE: 'load'
-
-
     }
 });

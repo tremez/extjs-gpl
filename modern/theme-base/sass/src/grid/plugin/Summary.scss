@@ -1,0 +1,10 @@
+.#{$prefix}summaryrow {
+    white-space: nowrap;
+    *:focus {
+        outline: none;
+    }
+    .#{$prefix}cells-el, .#{$prefix}cells-el-right-spacer {
+        display: inline-table;
+        vertical-align: middle;
+    }
+}

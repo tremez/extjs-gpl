@@ -40,7 +40,7 @@ Ext.define('KitchenSink.view.charts.combination.UnemploymentController', {
      * @param angles Array with angles to put the ticks at.
      * @param sprites The array to add the created tick sprites to (for future reference).
      */
-    addTicks: function (surface, attr, angles, sprites) {
+    addTicks: function(surface, attr, angles, sprites) {
         var linePadding = this.linePadding,
             tickSize = this.tickSize,
             i, ln, angle;
@@ -67,7 +67,7 @@ Ext.define('KitchenSink.view.charts.combination.UnemploymentController', {
     // on initial chart render. The renderer doesn't actually change
     // the style of the series sprites. Its only job is to create
     // and position the region sprites in the chart.
-    onDummySliceRender: function (sprite, config, data, index) {
+    onDummySliceRender: function(sprite, config, data, index) {
         // Please see the comments in the KitchenSink.store.Unemployment class
         // for more info on the meaning of the record fields.
         var me = this,
@@ -105,7 +105,8 @@ Ext.define('KitchenSink.view.charts.combination.UnemploymentController', {
                     me.startAngle = attr.startAngle;
                     region.startIndex = index;
 
-                } else if (label === region.end) {
+                }
+                else if (label === region.end) {
 
                     me.endAngle = attr.endAngle;
                     region.endIndex = index;
@@ -159,7 +160,7 @@ Ext.define('KitchenSink.view.charts.combination.UnemploymentController', {
         sprite.attr.renderer = null;
     },
 
-    onSliceRender2012: function (sprite, config, data, index) {
+    onSliceRender2012: function(sprite, config, data, index) {
         // Please see the comments in the KitchenSink.store.Unemployment class
         // for more info on the meaning of the record fields.
         var record = data.store.getAt(index),
@@ -170,15 +171,18 @@ Ext.define('KitchenSink.view.charts.combination.UnemploymentController', {
         if (label === '') { // a separating sector
             style.fillStyle = 'none';
             style.strokeStyle = 'none';
-        } else if (label === 'year') { // a sector that shows a year
+        }
+        else if (label === 'year') { // a sector that shows a year
             style.fillStyle = 'rgba(70, 70, 69, 1.0)';
-        } else { // a sector that shows the change in unemployment with a color
+        }
+        else { // a sector that shows the change in unemployment with a color
             style.fillStyle = this.getStateColor(unemployment);
         }
+
         return style;
     },
 
-    onLabelRender2012: function (text, sprite, config, data, index) {
+    onLabelRender2012: function(text, sprite, config, data, index) {
         if (text === 'year') {
             return {
                 text: '2012',
@@ -187,7 +191,7 @@ Ext.define('KitchenSink.view.charts.combination.UnemploymentController', {
         }
     },
 
-    onSliceRender2011: function (sprite, config, data, index) {
+    onSliceRender2011: function(sprite, config, data, index) {
         var record = data.store.getAt(index),
             label = record.get('label'),
             style = {};
@@ -195,27 +199,31 @@ Ext.define('KitchenSink.view.charts.combination.UnemploymentController', {
         if (label === '') {
             style.fillStyle = 'none';
             style.strokeStyle = 'none';
-        } else if (label === 'year') {
+        }
+        else if (label === 'year') {
             style.fillStyle = 'rgba(70, 70, 69, 1.0)';
-        } else {
+        }
+        else {
             style.fillStyle = this.getStateColor(record.get('y2011'));
         }
+
         return style;
     },
 
-    onLabelRender2011: function (text, sprite, config, data, index) {
+    onLabelRender2011: function(text, sprite, config, data, index) {
         if (text === 'year') {
             return {
                 text: '2011'
             };
-        } else {
+        }
+        else {
             return {
                 hidden: true
             };
         }
     },
 
-    onSliceRender2010: function (sprite, config, data, index) {
+    onSliceRender2010: function(sprite, config, data, index) {
         var record = data.store.getAt(index),
             label = record.get('label'),
             style = {};
@@ -223,27 +231,31 @@ Ext.define('KitchenSink.view.charts.combination.UnemploymentController', {
         if (label === '') {
             style.fillStyle = 'none';
             style.strokeStyle = 'none';
-        } else if (label === 'year') {
+        }
+        else if (label === 'year') {
             style.fillStyle = 'rgba(70, 70, 69, 1.0)';
-        } else {
+        }
+        else {
             style.fillStyle = this.getStateColor(record.get('y2010'));
         }
+
         return style;
     },
 
-    onLabelRender2010: function (text, sprite, config, data, index) {
+    onLabelRender2010: function(text, sprite, config, data, index) {
         if (text === 'year') {
             return {
                 text: '2010'
             };
-        } else {
+        }
+        else {
             return {
                 hidden: true
             };
         }
     },
 
-    onSliceRender2009: function (sprite, config, data, index) {
+    onSliceRender2009: function(sprite, config, data, index) {
         var record = data.store.getAt(index),
             label = record.get('label'),
             style = {};
@@ -251,27 +263,31 @@ Ext.define('KitchenSink.view.charts.combination.UnemploymentController', {
         if (label === '') {
             style.fillStyle = 'none';
             style.strokeStyle = 'none';
-        } else if (label === 'year') {
+        }
+        else if (label === 'year') {
             style.fillStyle = 'rgba(70, 70, 69, 1.0)';
-        } else {
+        }
+        else {
             style.fillStyle = this.getStateColor(record.get('y2009'));
         }
+
         return style;
     },
 
-    onLabelRender2009: function (text, sprite, config, data, index) {
+    onLabelRender2009: function(text, sprite, config, data, index) {
         if (text === 'year') {
             return {
                 text: '2009'
             };
-        } else {
+        }
+        else {
             return {
                 hidden: true
             };
         }
     },
 
-    onSliceRender2008: function (sprite, config, data, index) {
+    onSliceRender2008: function(sprite, config, data, index) {
         var record = data.store.getAt(index),
             label = record.get('label'),
             style = {};
@@ -279,27 +295,31 @@ Ext.define('KitchenSink.view.charts.combination.UnemploymentController', {
         if (label === '') {
             style.fillStyle = 'none';
             style.strokeStyle = 'none';
-        } else if (label === 'year') {
+        }
+        else if (label === 'year') {
             style.fillStyle = 'rgba(70, 70, 69, 1.0)';
-        } else {
+        }
+        else {
             style.fillStyle = this.getStateColor(record.get('y2008'));
         }
+
         return style;
     },
 
-    onLabelRender2008: function (text, sprite, config, data, index) {
+    onLabelRender2008: function(text, sprite, config, data, index) {
         if (text === 'year') {
             return {
                 text: '2008'
             };
-        } else {
+        }
+        else {
             return {
                 hidden: true
             };
         }
     },
 
-    onSliceRender2007: function (sprite, config, data, index) {
+    onSliceRender2007: function(sprite, config, data, index) {
         var record = data.store.getAt(index),
             label = record.get('label'),
             style = {};
@@ -307,36 +327,46 @@ Ext.define('KitchenSink.view.charts.combination.UnemploymentController', {
         if (label === '') {
             style.fillStyle = 'none';
             style.strokeStyle = 'none';
-        } else if (label === 'year') {
+        }
+        else if (label === 'year') {
             style.fillStyle = 'rgba(70, 70, 69, 1.0)';
-        } else {
+        }
+        else {
             style.fillStyle = this.getStateColor(record.get('y2007'));
         }
+
         return style;
     },
 
-    onLabelRender2007: function (text, sprite, config, data, index) {
+    onLabelRender2007: function(text, sprite, config, data, index) {
         if (text === 'year') {
             return {
                 text: '2007'
             };
-        } else {
+        }
+        else {
             return {
                 hidden: true
             };
         }
     },
 
-    onItemHighlight: function (chart, item) {
+    onItemHighlight: function(chart, item) {
         // The 'item' parameter here is an object that holds information
         // about the highlighted item, like its 'index', the 'series' it belongs to,
         // the associated store 'record' and its 'field'.
 
-        var regions = this.regions,
-            label = item.record.get('label'),
-            cartesianChart = this.lookupReference('cartesian'),
-            data = item.record.data,
+        var regions, label, cartesianChart, data,
             i, j, ik, jk, region, sprite;
+
+        if (!item || !this.regions) {
+            return;
+        }
+
+        regions = this.regions;
+        label = item.record.get('label');
+        cartesianChart = this.lookup('cartesian');
+        data = item.record.data;
 
         if (!label || label === 'year') {
             // Don't highlight the sectors that separate the regions
@@ -344,7 +374,8 @@ Ext.define('KitchenSink.view.charts.combination.UnemploymentController', {
             item.series.setAttributesForItem(item, {
                 highlighted: false
             });
-        } else {
+        }
+        else {
             chart.getSurface('chart').get('stateName').setAttributes({
                 text: item.record.get('state')
             });
@@ -352,55 +383,59 @@ Ext.define('KitchenSink.view.charts.combination.UnemploymentController', {
             cartesianChart.setStore({
                 fields: ['year', 'percent'],
                 data: [
-                    {year: '2007', percent: data.y2007},
-                    {year: '2008', percent: data.y2008},
-                    {year: '2009', percent: data.y2009},
-                    {year: '2010', percent: data.y2010},
-                    {year: '2011', percent: data.y2011},
-                    {year: '2012', percent: data.y2012}
+                    { year: '2007', percent: data.y2007 },
+                    { year: '2008', percent: data.y2008 },
+                    { year: '2009', percent: data.y2009 },
+                    { year: '2010', percent: data.y2010 },
+                    { year: '2011', percent: data.y2011 },
+                    { year: '2012', percent: data.y2012 }
                 ]
             });
-        }
-
-        if (!regions) {
-            return;
         }
 
         // Find the region the highlighted state sector belongs to and highlight its sprites,
         // while unhighlighting all other regions.
         for (i = 0, ik = regions.length; i < ik; i++) {
             region = regions[i];
+
             if (item.index >= region.startIndex && item.index <= region.endIndex) {
                 if (!region.highlighted) {
                     for (j = 0, jk = region.sprites.length; j < jk; j++) {
                         sprite = region.sprites[j];
+
                         if (sprite.type === 'arctext') {
                             sprite.getTemplate().setAttributes({
                                 fillStyle: 'red'
                             });
-                        } else {
+                        }
+                        else {
                             sprite.setAttributes({
                                 strokeStyle: 'red',
                                 lineWidth: 1.5
                             });
                         }
                     }
+
                     region.highlighted = true;
                 }
-            } else if (region.highlighted) {
+            }
+            else if (region.highlighted) {
                 for (j = 0, jk = region.sprites.length; j < jk; j++) {
                     sprite = region.sprites[j];
+
                     if (sprite.type === 'arctext') {
                         sprite.getTemplate().setAttributes({
                             fillStyle: 'black'
                         });
-                    } else {
+                    }
+                    else {
                         sprite.setAttributes({
                             strokeStyle: 'gray',
                             lineWidth: 1
                         });
                     }
                 }
+
                 region.highlighted = false;
             }
         }
@@ -410,7 +445,7 @@ Ext.define('KitchenSink.view.charts.combination.UnemploymentController', {
         }
     },
 
-    onBarRender: function (sprite, config, data, index) {
+    onBarRender: function(sprite, config, data, index) {
         var percent = data.store.getAt(index).get('percent');
 
         return {
@@ -419,21 +454,25 @@ Ext.define('KitchenSink.view.charts.combination.UnemploymentController', {
     },
 
     // Returns color based on percentage change in unemployment.
-    getStateColor: function (unemployment) {
+    getStateColor: function(unemployment) {
         if (unemployment < -1.5) {
             return 'rgba(114, 166, 185, 1.0)';
-        } else if (unemployment < -0.5) {
+        }
+        else if (unemployment < -0.5) {
             return 'rgba(194, 212, 221, 1.0)';
-        } else if (unemployment < 0.5) {
+        }
+        else if (unemployment < 0.5) {
             return 'rgba(126, 135, 142, 1.0)';
-        } else if (unemployment < 1.5) {
+        }
+        else if (unemployment < 1.5) {
             return 'rgba(179, 113, 114, 1.0)';
-        } else {
+        }
+        else {
             return 'rgba(146, 50, 51, 1.0)';
         }
     },
 
-    onAfterRender: function (chart) {
+    onAfterRender: function(chart) {
         // Get the series used for highlighting (belong to a separate chart,
         // that uses 'itemhighlight' interaction).
         var series = chart.getSeries()[0],
@@ -442,7 +481,7 @@ Ext.define('KitchenSink.view.charts.combination.UnemploymentController', {
 
         chart.resetRegionIndex = true;
         chart.on({
-            redraw: function () {
+            redraw: function() {
                 // Highlight the California state by default.
                 chart.setHighlightItem(series.getItemByIndex(index, 'sprites'));
                 // Re-render the overlay surface with the state region sprites
@@ -453,7 +492,7 @@ Ext.define('KitchenSink.view.charts.combination.UnemploymentController', {
         });
     },
 
-    onBeforeRender: function () {
+    onBeforeRender: function() {
         // Make Ext.draw.TextMeasurer use the Ext.util.TextMetrics to measure text,
         // which is a more precise but much slower solution.
         // For this example it shouldn't be a noticable performace hit,
@@ -461,7 +500,7 @@ Ext.define('KitchenSink.view.charts.combination.UnemploymentController', {
         Ext.draw.TextMeasurer.precise = true;
     },
 
-    destroy: function () {
+    destroy: function() {
         var regions = this.regions,
             i, region;
 

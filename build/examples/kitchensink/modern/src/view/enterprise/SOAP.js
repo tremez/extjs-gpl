@@ -1,23 +1,38 @@
 Ext.define('KitchenSink.view.enterprise.SOAP', {
     extend: 'Ext.grid.Grid',
+    xtype: 'soap',
+    title: 'SOAP',
 
     requires: [
         'Ext.data.soap.Proxy'
     ],
 
-    // <example>
+    //<example>
     otherContent: [{
         type: 'Model',
         path: 'modern/src/model/SoapBook.js'
     }],
-    // </example>
-    
-    shadow: true,
-    cls: 'demo-solid-background',
+
+    profiles: {
+        defaults: {
+            height: 400,
+            width: 600
+        },
+        phone: {
+            defaults: {
+                height: undefined,
+                width: undefined
+            }
+        }
+    },
+    //</example>
+
+    height: '${height}',
+    width: '${width}',
 
     store: {
-        model: 'KitchenSink.model.SoapBook',
         autoLoad: true,
+        model: 'KitchenSink.model.SoapBook',
         proxy: {
             type: 'soap',
             url: 'data/enterprise/soap.xml',
@@ -40,26 +55,23 @@ Ext.define('KitchenSink.view.enterprise.SOAP', {
             }
         }
     },
-    columns: [
-        {
-            text: "Author",
-            width: 160,
-            dataIndex: 'Author'
-        },
-        {
-            text: "Title",
-            width: 200,
-            dataIndex: 'Title'
-        },
-        {
-            text: "Manufacturer",
-            width: 115,
-            dataIndex: 'Manufacturer'
-        },
-        {
-            text: "Product Group",
-            width: 125,
-            dataIndex: 'ProductGroup'
-        }
-    ]
+
+    columns: [{
+        text: 'Author',
+        width: 150,
+        dataIndex: 'Author'
+    }, {
+        text: 'Title',
+        minWidth: 125,
+        flex: 1,
+        dataIndex: 'Title'
+    }, {
+        text: 'Manufacturer',
+        width: 125,
+        dataIndex: 'Manufacturer'
+    }, {
+        text: 'Product Group',
+        width: 125,
+        dataIndex: 'ProductGroup'
+    }]
 });

@@ -65,7 +65,7 @@ $tree-glyph-color: dynamic($color);
  * @var {string/list}
  * Glyph for the "folder" tree icon when {@link Global_CSS#$enable-font-icons} is `true`.
  */
-$tree-folder-glyph: dynamic($fa-var-folder-o $tree-glyph-font-size $font-icon-font-family);
+$tree-folder-glyph: dynamic($fa-var-folder $tree-glyph-font-size $font-icon-font-family);
 
 /**
  * @var {color}
@@ -77,7 +77,7 @@ $tree-folder-glyph-color: dynamic($tree-glyph-color);
  * @var {string/list}
  * Glyph for the "open folder" tree icon when {@link Global_CSS#$enable-font-icons} is `true`.
  */
-$tree-folder-open-glyph: dynamic($fa-var-folder-open-o $tree-glyph-font-size $font-icon-font-family);
+$tree-folder-open-glyph: dynamic($fa-var-folder-open $tree-glyph-font-size $font-icon-font-family);
 
 /**
  * @var {color}
@@ -86,10 +86,10 @@ $tree-folder-open-glyph: dynamic($fa-var-folder-open-o $tree-glyph-font-size $fo
 $tree-folder-open-glyph-color: dynamic($tree-folder-glyph-color);
 
 /**
-* @var {string/list}
-* Glyph for the "leaf" tree icon when {@link Global_CSS#$enable-font-icons} is `true`.
-*/
-$tree-leaf-glyph: dynamic($fa-var-file-o $tree-glyph-font-size $font-icon-font-family);
+ * @var {string/list}
+ * Glyph for the "leaf" tree icon when {@link Global_CSS#$enable-font-icons} is `true`.
+ */
+$tree-leaf-glyph: dynamic($fa-var-file $tree-glyph-font-size $font-icon-font-family);
 
 /**
  * @var {color}
@@ -98,15 +98,15 @@ $tree-leaf-glyph: dynamic($fa-var-file-o $tree-glyph-font-size $font-icon-font-f
 $tree-leaf-glyph-color: dynamic($tree-glyph-color);
 
 /**
-* @var {string/list}
-* Glyph for the "arrow" tree icon when {@link Global_CSS#$enable-font-icons} is `true`.
-*/
+ * @var {string/list}
+ * Glyph for the "arrow" tree icon when {@link Global_CSS#$enable-font-icons} is `true`.
+ */
 $tree-arrow-glyph: dynamic($fa-var-caret-right $tree-glyph-font-size $font-icon-font-family);
 
 /**
-* @var {string/list}
-* Glyph for the RTL "arrow" tree icon when {@link Global_CSS#$enable-font-icons} is `true`.
-*/
+ * @var {string/list}
+ * Glyph for the RTL "arrow" tree icon when {@link Global_CSS#$enable-font-icons} is `true`.
+ */
 $tree-arrow-glyph-rtl: dynamic($fa-var-caret-left $tree-glyph-font-size $font-icon-font-family);
 
 /**
@@ -116,9 +116,9 @@ $tree-arrow-glyph-rtl: dynamic($fa-var-caret-left $tree-glyph-font-size $font-ic
 $tree-arrow-glyph-color: dynamic($tree-glyph-color);
 
 /**
-* @var {string/list}
-* Glyph for the "expanded arrow" tree icon when {@link Global_CSS#$enable-font-icons} is `true`.
-*/
+ * @var {string/list}
+ * Glyph for the "expanded arrow" tree icon when {@link Global_CSS#$enable-font-icons} is `true`.
+ */
 $tree-arrow-expanded-glyph: dynamic($fa-var-caret-down $tree-glyph-font-size $font-icon-font-family);
 
 /**
@@ -128,9 +128,9 @@ $tree-arrow-expanded-glyph: dynamic($fa-var-caret-down $tree-glyph-font-size $fo
 $tree-arrow-expanded-glyph-color: dynamic($tree-arrow-glyph-color);
 
 /**
-* @var {string/list}
-* Glyph for the "expand" tree icon when {@link Global_CSS#$enable-font-icons} is `true`.
-*/
+ * @var {string/list}
+ * Glyph for the "expand" tree icon when {@link Global_CSS#$enable-font-icons} is `true`.
+ */
 $tree-expand-glyph: dynamic($fa-var-plus-square 14px $font-icon-font-family);
 
 /**
@@ -140,9 +140,9 @@ $tree-expand-glyph: dynamic($fa-var-plus-square 14px $font-icon-font-family);
 $tree-expand-glyph-color: dynamic($tree-glyph-color);
 
 /**
-* @var {string/list}
-* Glyph for the "collapse" tree icon when {@link Global_CSS#$enable-font-icons} is `true`.
-*/
+ * @var {string/list}
+ * Glyph for the "collapse" tree icon when {@link Global_CSS#$enable-font-icons} is `true`.
+ */
 $tree-collapse-glyph: dynamic($fa-var-minus-square 14px $font-icon-font-family);
 
 /**

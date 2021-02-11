@@ -27,7 +27,7 @@ Ext.define('Ext.chart.grid.VerticalGrid', {
         }
     },
 
-    render: function (surface, ctx, rect) {
+    render: function(surface, ctx, rect) {
         var attr = this.attr,
             x = surface.roundPixel(attr.x),
             halfLineWidth = ctx.lineWidth * 0.5;

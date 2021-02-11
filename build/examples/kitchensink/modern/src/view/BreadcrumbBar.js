@@ -1,4 +1,6 @@
 Ext.define('KitchenSink.view.BreadcrumbBar', {
     extend: 'Ext.Toolbar',
-    xtype: 'breadcrumb'
+    xtype: 'breadcrumb',
+
+    defaultFocus: ':focusable:last'
 });

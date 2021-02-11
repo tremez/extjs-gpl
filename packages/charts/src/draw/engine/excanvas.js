@@ -1,11 +1,16 @@
 // @define Ext.draw.engine.excanvas
 /**
- * @class Ext.draw.engine.excanvas
  * @private
- * @define Ext.draw.engine.excanvas
  */
-Ext.draw || (Ext.draw = {});
-Ext.draw.engine || (Ext.draw.engine = {});
+
+if (!Ext.draw) {
+    Ext.draw = {};
+}
+
+if (!Ext.draw.engine) {
+    Ext.draw.engine = {};
+}
+
 Ext.draw.engine.excanvas = true;
 
 // Copyright 2006 Google Inc.
@@ -21,7 +26,6 @@ Ext.draw.engine.excanvas = true;
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 
 // Known Issues:
 //
@@ -41,11 +45,12 @@ Ext.draw.engine.excanvas = true;
 // * Non uniform scaling does not correctly scale strokes.
 // * Optimize. There is always room for speed improvements.
 
+/* eslint-disable */
+
 // Only add this code if we do not already have a canvas implementation
 if (!document.createElement('canvas').getContext) {
 
 (function() {
-
   // alias some functions to make (compiled) code shorter
   var m = Math;
   var mr = m.round;
@@ -60,9 +65,9 @@ if (!document.createElement('canvas').getContext) {
 
   var IE_VERSION = +navigator.userAgent.match(/MSIE ([\d.]+)?/)[1];
 
-  /**
-   * This funtion is assigned to the <canvas></canvas> elements as element.getContext().
-   * @this {HTMLElement}
+  /*
+   * @method getContext
+   * This function is assigned to the <canvas></canvas> elements as element.getContext().
    * @return {CanvasRenderingContext2D_}
    */
   function getContext() {
@@ -72,7 +77,8 @@ if (!document.createElement('canvas').getContext) {
 
   var slice = Array.prototype.slice;
 
-  /**
+  /*
+   * @method bind
    * Binds a function to an object. The returned function will always use the
    * passed in {@code obj} as {@code this}.
    *
@@ -141,7 +147,7 @@ if (!document.createElement('canvas').getContext) {
       }
     },
 
-    /**
+    /*
      * Public initializes a canvas element so that it can be used as canvas
      * element from now on. This is called automatically before the page is
      * loaded but if you are creating elements using createElement you need to
@@ -573,16 +579,13 @@ if (!document.createElement('canvas').getContext) {
     return lineCapMap[lineCap] || 'square';
   }
 
-  /**
-   * @class CanvasRenderingContext2D_
+  /*
    * This class implements CanvasRenderingContext2D interface as described by
    * the WHATWG.
    * @param {HTMLElement} canvasElement The element that the 2D context should
    * be associated with
    * @private
    */
-  //
-
   function CanvasRenderingContext2D_(canvasElement) {
     this.m_ = createMatrixIdentity();
 
@@ -1190,7 +1193,7 @@ if (!document.createElement('canvas').getContext) {
     setM(this, m, true);
   };
 
-  /**
+  /*
    * The text drawing function.
    * The maxWidth argument isn't taken in account, since no browser supports
    * it yet.
@@ -1308,7 +1311,7 @@ if (!document.createElement('canvas').getContext) {
     return {width: this.textMeasureEl_.offsetWidth};
   };
 
-  /******** STUBS ********/
+  /* STUBS */
   contextPrototype.clip = function() {
     // TODO: Implement
   };

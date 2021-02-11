@@ -5,9 +5,10 @@ Ext.define('Ext.view.BoundList', {
     extend: 'Ext.view.View',
     alias: 'widget.boundlist',
     alternateClassName: 'Ext.BoundList',
+
     requires: [
         'Ext.view.BoundListKeyNav',
-        'Ext.layout.component.BoundList', 
+        'Ext.layout.component.BoundList',
         'Ext.toolbar.Paging'
     ],
 
@@ -16,9 +17,9 @@ Ext.define('Ext.view.BoundList', {
     ],
 
     /**
-     * @cfg {Number} [pageSize=0]
-     * If greater than `0`, a {@link Ext.toolbar.Paging} is displayed at the bottom of the list and store
-     * queries will execute with page {@link Ext.data.operation.Read#start start} and
+     * @cfg {Number} pageSize
+     * If greater than `0`, a {@link Ext.toolbar.Paging} is displayed at the bottom of the list
+     * and store queries will execute with page {@link Ext.data.operation.Read#start start} and
      * {@link Ext.data.operation.Read#limit limit} parameters.
      */
     pageSize: 0,
@@ -30,33 +31,86 @@ Ext.define('Ext.view.BoundList', {
 
     /**
      * @property {Ext.toolbar.Paging} pagingToolbar
-     * A reference to the PagingToolbar instance in this view. Only populated if {@link #pageSize} is greater
-     * than zero and the BoundList has been rendered.
+     * A reference to the PagingToolbar instance in this view. Only populated if {@link #pageSize}
+     * is greater than zero and the BoundList has been rendered.
      */
 
+    /**
+     * @cfg baseCls
+     * @inheritdoc
+     */
     baseCls: Ext.baseCSSPrefix + 'boundlist',
+
+    /**
+     * @cfg itemCls
+     * @inheritdoc
+     */
     itemCls: Ext.baseCSSPrefix + 'boundlist-item',
     listItemCls: '',
+
+    /**
+     * @cfg shadow
+     * @inheritdoc
+     */
     shadow: false,
+
+    /**
+     * @cfg trackOver
+     * @inheritdoc
+     */
     trackOver: true,
 
+    /**
+     * @cfg preserveScrollOnRefresh
+     * @inheritdoc
+     */
     preserveScrollOnRefresh: true,
     enableInitialSelection: false,
     refreshSelmodelOnRefresh: true,
 
+    /**
+     * @cfg componentLayout
+     * @inheritdoc
+     */
     componentLayout: 'boundlist',
 
+    /**
+     * @cfg navigationModel
+     * @inheritdoc
+     */
     navigationModel: 'boundlist',
 
+    /**
+     * @cfg scrollable
+     * @inheritdoc
+     */
     scrollable: true,
-    
+
+    /**
+     * @property ariaEl
+     * @inheritdoc
+     */
     ariaEl: 'listEl',
+
+    /**
+     * @cfg tabIndex
+     * @inheritdoc
+     */
     tabIndex: -1,
 
+    /**
+     * @cfg childEls
+     * @inheritdoc
+     */
     childEls: [
         'listWrap', 'listEl'
     ],
-    
+
+    /* eslint-disable indent */
+    /**
+     * @cfg renderTpl
+     * @inheritdoc
+     */
     renderTpl: [
         '<div id="{id}-listWrap" data-ref="listWrap"',
                 ' class="{baseCls}-list-ct ', Ext.dom.Element.unselectableCls, '">',
@@ -75,6 +129,7 @@ Ext.define('Ext.view.BoundList', {
             disableFormats: true
         }
     ],
+    /* eslint-enable indent */
 
     /**
      * @cfg {String/Ext.XTemplate} tpl
@@ -112,17 +167,27 @@ Ext.define('Ext.view.BoundList', {
      *
      *     Ext.create('Ext.XTemplate',
      *         '<ul><tpl for=".">',
-     *             '<li role="option" class="' + itemCls + '">' + me.getInnerTpl(me.displayField) + '</li>',
+     *             '<li role="option" class="' + itemCls + '">' + me.getInnerTpl(me.displayField) +
+     *             '</li>',
      *         '</tpl></ul>'
      *     );
      *
      */
 
-     // Override because on non-touch devices, the bound field
-     // retains focus so that typing may narrow the list.
-     // Only when the show is triggered by a touch does the BoundList
-     // get explicitly focused so that the keyboard does not appear.
+    // Override because on non-touch devices, the bound field
+    // retains focus so that typing may narrow the list.
+    // Only when the show is triggered by a touch does the BoundList
+    // get explicitly focused so that the keyboard does not appear.
+    /**
+     * @cfg focusOnToFront
+     * @inheritdoc
+     */
     focusOnToFront: false,
+
+    /**
+     * @cfg alignOnScroll
+     * @inheritdoc
+     */
     alignOnScroll: false,
 
     initComponent: function() {
@@ -131,9 +196,11 @@ Ext.define('Ext.view.BoundList', {
             itemCls = me.itemCls;
 
         me.selectedItemCls = baseCls + '-selected';
+
         if (me.trackOver) {
             me.overItemCls = baseCls + '-item-over';
         }
+
         me.itemSelector = '.' + itemCls;
 
         if (me.floating) {
@@ -144,7 +211,8 @@ Ext.define('Ext.view.BoundList', {
             // should be setting aria-posinset based on entire set of data
             // not filtered set
             me.generateTpl();
-        } else if (!me.tpl.isTemplate) {
+        }
+        else if (!me.tpl.isTemplate) {
             me.tpl = new Ext.XTemplate(me.tpl);
         }
 
@@ -159,14 +227,16 @@ Ext.define('Ext.view.BoundList', {
      * Allow tpl to be generated programmatically to respond to changes in displayField
      * @private
      */
-    generateTpl: function () {
+    generateTpl: function() {
         var me = this;
 
+        /* eslint-disable indent, max-len */
         me.tpl = new Ext.XTemplate(
             '<tpl for=".">',
                 '<li role="option" unselectable="on" class="' + me.itemCls + '">' + me.getInnerTpl(me.displayField) + '</li>',
             '</tpl>'
         );
+        /* eslint-enable indent, max-len */
     },
 
     /**
@@ -174,7 +244,7 @@ Ext.define('Ext.view.BoundList', {
      * an regeneration of the tpl so that the updated displayField can be used
      * @param {String} displayField
      */
-    setDisplayField: function (displayField) {
+    setDisplayField: function(displayField) {
         this.displayField = displayField;
         this.generateTpl();
     },
@@ -186,16 +256,17 @@ Ext.define('Ext.view.BoundList', {
     getRefItems: function() {
         var result = this.callParent(),
             toolbar = this.pagingToolbar;
-        
+
         if (toolbar) {
             result.push(toolbar);
         }
+
         return result;
     },
 
     createPagingToolbar: function() {
         var me = this;
-        
+
         return new Ext.toolbar.Paging({
             id: me.id + '-paging-toolbar',
             pageSize: me.pageSize,
@@ -204,10 +275,6 @@ Ext.define('Ext.view.BoundList', {
             ownerCt: me,
             ownerLayout: me.getComponentLayout()
         });
-    },
-
-    getNodeContainer: function() {
-        return this.listEl;
     },
 
     refresh: function() {
@@ -219,7 +286,7 @@ Ext.define('Ext.view.BoundList', {
         tpl.store = me.store;
         me.callParent();
         tpl.field = tpl.store = null;
-        
+
         if (!me.ariaStaticRoles[me.ariaRole]) {
             me.refreshAriaAttributes();
         }
@@ -227,35 +294,38 @@ Ext.define('Ext.view.BoundList', {
         // The view selectively removes item nodes, so the toolbar
         // will be preserved in the DOM
     },
-    
+
     refreshAriaAttributes: function() {
         var me = this,
             store = me.store,
             selModel = me.getSelectionModel(),
             multiSelect, totalCount, nodes, node, record, index, i, len;
-        
+
         // When the store is filtered or paged, we want to let the Assistive Technology
         // users know that there are more records than currently displayed. This is not
         // a requirement when the whole dataset fits the DOM.
         // Note that it is possible for the store to be filtered but not fit the DOM.
         // In that case we use filtered count as the set size.
-        totalCount = store.isFiltered() ? store.getCount() : store.getTotalCount() || store.getCount();
+        totalCount = store.isFiltered()
+            ? store.getCount()
+            : store.getTotalCount() || store.getCount();
+
         nodes = me.getNodes();
-        
+
         multiSelect = me.pickerField && me.pickerField.multiSelect;
-        
+
         for (i = 0, len = nodes.length; i < len; i++) {
             node = nodes[i];
             record = null;
-            
+
             if (totalCount !== len) {
                 record = me.getRecord(node);
                 index = store.indexOf(record);
-                
+
                 node.setAttribute('aria-setsize', totalCount);
                 node.setAttribute('aria-posinset', index);
             }
-            
+
             // For single-select combos aria-selected must be undefined
             if (multiSelect) {
                 record = record || me.getRecord(node);
@@ -268,6 +338,7 @@ Ext.define('Ext.view.BoundList', {
         var toolbar = this.pagingToolbar;
 
         this.callParent(arguments);
+
         if (toolbar) {
             toolbar.bindStore(store, initial);
         }
@@ -278,24 +349,27 @@ Ext.define('Ext.view.BoundList', {
      * This method is useful to override when using a more complex display value, for example
      * inserting an icon along with the text.
      *
-     * The XTemplate is created with a reference to the owning form field in the `field` property to provide access
-     * to context. For example to highlight the currently typed value, the getInnerTpl may be configured into a
-     * ComboBox as part of the {@link Ext.form.field.ComboBox#listConfig listConfig}:
+     * The XTemplate is created with a reference to the owning form field in the `field` property
+     * to provide access to context. For example to highlight the currently typed value,
+     * the getInnerTpl may be configured into a ComboBox as part of the
+     * {@link Ext.form.field.ComboBox#listConfig listConfig}:
      *
-     *    listConfig: {
-     *        getInnerTpl: function() {
-     *            return '{[values.name.replace(this.field.getRawValue(), "<b>" + this.field.getRawValue() + "</b>")]}';
-     *        }
-     *    }
-     * @param {String} displayField The {@link #displayField} for the BoundList.
+     *     listConfig: {
+     *         getInnerTpl: function() {
+     *             return '{[values.name.replace(this.field.getRawValue(), "<b>" +
+     *                    this.field.getRawValue() + "</b>")]}';
+     *         }
+     *     }
+     * @param {String} displayField The {@link #cfg!displayField} for the BoundList.
      * @return {String} The inner template
      */
     getInnerTpl: function(displayField) {
         return '{' + displayField + '}';
     },
-    
+
     onShow: function() {
         var field = this.pickerField;
+
         this.callParent();
 
         // If the input field is not focused, then focus it.
@@ -315,13 +389,13 @@ Ext.define('Ext.view.BoundList', {
             field.alignPicker();
         }
     },
-    
+
     onItemSelect: function(record) {
         var me = this,
             node;
-        
+
         node = me.callParent([record]);
-        
+
         if (node) {
             if (me.ariaSelectable) {
                 node.setAttribute('aria-selected', 'true');
@@ -330,16 +404,16 @@ Ext.define('Ext.view.BoundList', {
                 node.removeAttribute('aria-selected');
             }
         }
-        
+
         return node;
     },
-    
+
     onItemDeselect: function(record) {
         var me = this,
             node;
-        
+
         node = me.callParent([record]);
-        
+
         if (node && me.ariaSelectable) {
             if (me.pickerField && me.pickerField.multiSelect) {
                 node.setAttribute('aria-selected', 'false');
@@ -348,13 +422,14 @@ Ext.define('Ext.view.BoundList', {
                 node.removeAttribute('aria-selected');
             }
         }
-        
+
         return node;
     },
 
     // Clicking on an already selected item collapses the picker
     onItemClick: function(record) {
-        // The selection change events won't fire when clicking on the selected element. Detect it here.
+        // The selection change events won't fire when clicking on the selected element.
+        // Detect it here.
         var me = this,
             field = me.pickerField,
             valueField, selected;
@@ -368,8 +443,10 @@ Ext.define('Ext.view.BoundList', {
 
         if (!field.multiSelect && selected.length) {
             selected = selected[0];
+
             // Not all pickerField's have a collapse API, i.e. Ext.ux.form.MultiSelect.
-            if (selected && field.isEqual(record.get(valueField), selected.get(valueField)) && field.collapse) {
+            if (selected && field.isEqual(record.get(valueField), selected.get(valueField)) &&
+                field.collapse) {
                 field.collapse();
             }
         }
@@ -378,18 +455,19 @@ Ext.define('Ext.view.BoundList', {
     onContainerClick: function(e) {
         var toolbar = this.pagingToolbar,
             clientRegion;
-        
+
         // Ext.view.View template method
-        // Do not continue to process the event as a container click if it is within the pagingToolbar
+        // Do not continue to process the event as a container click
+        // if it is within the pagingToolbar
         if (toolbar && toolbar.rendered && e.within(toolbar.el)) {
             return false;
         }
-        
+
         // IE10 and IE11 will fire pointer events when user drags listWrap scrollbars,
         // which may result in selection being reset.
         if (Ext.isIE10 || Ext.isIE11) {
             clientRegion = this.listWrap.getClientRegion();
-            
+
             if (!e.getPoint().isContainedBy(clientRegion)) {
                 return false;
             }
@@ -398,11 +476,20 @@ Ext.define('Ext.view.BoundList', {
 
     doDestroy: function() {
         this.pagingToolbar = Ext.destroy(this.pagingToolbar);
-        
+
         this.callParent();
     },
 
     privates: {
+        /**
+         * @method getNodeContainer
+         * @private
+         * @inheritdoc
+         */
+        getNodeContainer: function() {
+            return this.listEl;
+        },
+
         getTargetEl: function() {
             return this.listEl;
         },
@@ -412,7 +499,7 @@ Ext.define('Ext.view.BoundList', {
         },
 
         // Do the job of a container layout at this point even though we are not a Container.
-        finishRenderChildren: function () {
+        finishRenderChildren: function() {
             var toolbar = this.pagingToolbar;
 
             this.callParent(arguments);

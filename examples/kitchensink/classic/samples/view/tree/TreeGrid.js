@@ -14,37 +14,50 @@ Ext.define('KitchenSink.view.tree.TreeGrid', {
     extend: 'Ext.tree.Panel',
     xtype: 'tree-grid',
     controller: 'tree-grid',
-    
+
     requires: [
         'Ext.data.*',
         'Ext.grid.*',
         'Ext.tree.*',
-        'Ext.grid.column.Check'
-    ],    
-    
+        'Ext.grid.column.Check',
+        'Ext.grid.plugin.Exporter'
+    ],
+
     //<example>
     otherContent: [{
         type: 'Controller',
         path: 'classic/samples/view/tree/TreeGridController.js'
-    },{
+    }, {
         type: 'Model',
         path: 'classic/samples/model/tree/Task.js'
-    },{
+    }, {
         type: 'Data',
         path: 'data/tree/treegrid.json'
     }],
     profiles: {
         classic: {
             width: 500,
-            colWidth: 40
+            colWidth: 40,
+            exportOptionWidth: 124
         },
         neptune: {
             width: 600,
-            colWidth: 55
+            colWidth: 55,
+            exportOptionWidth: 124
+        },
+        graphite: {
+            width: 800,
+            colWidth: 75,
+            exportOptionWidth: 154
+        },
+        'classic-material': {
+            width: 800,
+            colWidth: 75,
+            exportOptionWidth: 154
         }
     },
     //</example>
-    
+
     title: 'Core Team Projects',
     width: '${width}',
     height: 370,
@@ -66,10 +79,10 @@ Ext.define('KitchenSink.view.tree.TreeGrid', {
     },
 
     columns: [{
-        xtype: 'treecolumn', //this is so we know which column will show the tree
+        xtype: 'treecolumn', // this is so we know which column will show the tree
         text: 'Task',
         dataIndex: 'task',
-        
+
         flex: 2,
         sortable: true
     }, {
@@ -80,7 +93,7 @@ Ext.define('KitchenSink.view.tree.TreeGrid', {
         sortable: true,
         align: 'center',
         formatter: 'this.formatHours'
-    },{
+    }, {
         text: 'Assigned To',
         dataIndex: 'user',
 
@@ -90,20 +103,67 @@ Ext.define('KitchenSink.view.tree.TreeGrid', {
         xtype: 'checkcolumn',
         header: 'Done',
         dataIndex: 'done',
-        
+
         width: '${colWidth}',
         stopSelection: false,
         menuDisabled: true
     }, {
         xtype: 'actioncolumn',
         text: 'Edit',
-        
+
         width: '${colWidth}',
         menuDisabled: true,
         tooltip: 'Edit task',
         align: 'center',
         iconCls: 'tree-grid-edit-task',
         handler: 'onEditRowAction',
-        isDisabled: 'isRowEditDisabled'
-    }]
+        isActionDisabled: 'isRowEditDisabled'
+    }],
+
+    header: {
+        itemPosition: 1, // after title before collapse tool
+        items: [{
+            ui: 'default-toolbar',
+            xtype: 'button',
+            cls: 'dock-tab-btn',
+            text: 'Export to ...',
+            menu: {
+                defaults: {
+                    handler: 'exportTo',
+                    width: '${exportOptionWidth}'
+                },
+                items: [{
+                    text: 'Excel xlsx',
+                    cfg: {
+                        type: 'excel07',
+                        ext: 'xlsx'
+                    }
+                }, {
+                    text: 'Excel xml',
+                    cfg: {
+                        type: 'excel03',
+                        ext: 'xml'
+                    }
+                }, {
+                    text: 'CSV',
+                    cfg: {
+                        type: 'csv'
+                    }
+                }, {
+                    text: 'TSV',
+                    cfg: {
+                        type: 'tsv',
+                        ext: 'csv'
+                    }
+                }, {
+                    text: 'HTML',
+                    cfg: {
+                        type: 'html'
+                    }
+                }]
+            }
+        }]
+    },
+
+    plugins: 'gridexporter'
 });

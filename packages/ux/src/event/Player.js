@@ -11,7 +11,7 @@
  *          eventQueue: [ ... ],
  *          speed: 2,  // play at 2x speed
  *          listeners: {
- *              stop: function () {
+ *              stop: function() {
  *                  player = null; // all done
  *              }
  *          }
@@ -28,7 +28,7 @@
  *              click: true
  *          },
  *          listeners: {
- *              stop: function () {
+ *              stop: function() {
  *                  // play has completed... probably time for another keyframe...
  *                  player = null;
  *              },
@@ -50,7 +50,7 @@
  *      function onKeyFrame (p, eventDescriptor) {
  *          eventDescriptor.defer(); // pause event playback...
  *
- *          handleKeyFrame(function () {
+ *          handleKeyFrame(function() {
  *              eventDescriptor.finish(); // ...resume event playback
  *          });
  *      }
@@ -61,14 +61,15 @@
  *      function onKeyFrame (p, eventDescriptor) {
  *          var async;
  *
- *          handleKeyFrame(function () {
+ *          handleKeyFrame(function() {
  *              // either this callback is being called immediately by handleKeyFrame (in
  *              // which case async is undefined) or it is being called later (in which case
  *              // async will be true).
  *
  *              if (async) {
  *                  eventDescriptor.finish();
- *              } else {
+ *              }
+ *              else {
  *                  async = false;
  *              }
  *          });
@@ -82,32 +83,33 @@
  *          }
  *      }
  */
-Ext.define('Ext.ux.event.Player', function (Player) {
-var defaults    = {},
+Ext.define('Ext.ux.event.Player', function(Player) {
+/* eslint-disable indent, vars-on-top, one-var */
+var defaults = {},
     mouseEvents = {},
-    keyEvents   = {},
+    keyEvents = {},
     doc,
-    
-    //HTML events supported
-    uiEvents  = {},
-    
-    //events that bubble by default
+
+    // HTML events supported
+    uiEvents = {},
+
+    // events that bubble by default
     bubbleEvents = {
-        //scroll:     1,
-        resize:     1,
-        reset:      1,
-        submit:     1,
-        change:     1,
-        select:     1,
-        error:      1,
-        abort:      1
+        // scroll: 1,
+        resize: 1,
+        reset: 1,
+        submit: 1,
+        change: 1,
+        select: 1,
+        error: 1,
+        abort: 1
     };
 
 Ext.each([ 'click', 'dblclick', 'mouseover', 'mouseout', 'mousedown', 'mouseup', 'mousemove' ],
-    function (type) {
+    function(type) {
         bubbleEvents[type] = defaults[type] = mouseEvents[type] = {
             bubbles: true,
-            cancelable: (type != "mousemove"), // mousemove cannot be cancelled
+            cancelable: (type !== "mousemove"), // mousemove cannot be cancelled
             detail: 1,
             screenX: 0,
             screenY: 0,
@@ -122,7 +124,7 @@ Ext.each([ 'click', 'dblclick', 'mouseover', 'mouseout', 'mousedown', 'mouseup',
     });
 
 Ext.each([ 'keydown', 'keyup', 'keypress' ],
-    function (type) {
+    function(type) {
         bubbleEvents[type] = defaults[type] = keyEvents[type] = {
             bubbles: true,
             cancelable: true,
@@ -136,7 +138,7 @@ Ext.each([ 'keydown', 'keyup', 'keypress' ],
     });
 
 Ext.each([ 'blur', 'change', 'focus', 'resize', 'scroll', 'select' ],
-    function (type) {
+    function(type) {
         defaults[type] = uiEvents[type] = {
             bubbles: (type in bubbleEvents),
             cancelable: false,
@@ -145,24 +147,28 @@ Ext.each([ 'blur', 'change', 'focus', 'resize', 'scroll', 'select' ],
     });
 
 var inputSpecialKeys = {
-        8: function (target, start, end) { // backspace: 8,
+        8: function(target, start, end) { // backspace: 8,
             if (start < end) {
                 target.value = target.value.substring(0, start) +
                                target.value.substring(end);
-            } else if (start > 0) {
+            }
+            else if (start > 0) {
                 target.value = target.value.substring(0, --start) +
                                target.value.substring(end);
             }
+
             this.setTextSelection(target, start, start);
         },
-        46: function (target, start, end) { // delete: 46
+        46: function(target, start, end) { // delete: 46
             if (start < end) {
                 target.value = target.value.substring(0, start) +
                                target.value.substring(end);
-            } else if (start < target.value.length - 1) {
-                target.value = target.value.substring(0, start) +
-                               target.value.substring(start+1);
             }
+            else if (start < target.value.length - 1) {
+                target.value = target.value.substring(0, start) +
+                               target.value.substring(start + 1);
+            }
+
             this.setTextSelection(target, start, start);
         }
     };
@@ -197,19 +203,19 @@ return {
     speed: 1.0,
 
     stallTime: 0,
-    
+
     _inputSpecialKeys: {
         INPUT: inputSpecialKeys,
 
         TEXTAREA: Ext.apply({
-            //13: function (target, start, end) { // enter: 8,
-                //TODO ?
-            //}
+            // 13: function(target, start, end) { // enter: 8,
+                // TODO ?
+            // }
         }, inputSpecialKeys)
     },
 
     tagPathRegEx: /(\w+)(?:\[(\d+)\])?/,
-    
+
     /**
      * @event beforeplay
      * Fires before an event is played.
@@ -225,14 +231,15 @@ return {
      * @param {Object} eventDescriptor The keyframe event descriptor.
      */
 
-    constructor: function (config) {
+    constructor: function(config) {
         var me = this;
-        
+
         me.callParent(arguments);
 
-        me.timerFn = function () {
+        me.timerFn = function() {
             me.onTick();
         };
+
         me.attachTo = me.attachTo || window;
 
         doc = me.attachTo.document;
@@ -243,15 +250,14 @@ return {
      * @param {String} xpath The XPath-like description of the element.
      * @return {HTMLElement}
      */
-    getElementFromXPath: function (xpath) {
+    getElementFromXPath: function(xpath) {
         var me = this,
             parts = xpath.split('/'),
             regex = me.tagPathRegEx,
             i, n, m, count, tag, child,
             el = me.attachTo.document;
 
-        el = (parts[0] == '~') ? el.body
-                    : el.getElementById(parts[0].substring(1)); // remove '#'
+        el = (parts[0] === '~') ? el.body : el.getElementById(parts[0].substring(1)); // remove '#'
 
         for (i = 1, n = parts.length; el && i < n; ++i) {
             m = regex.exec(parts[i]);
@@ -259,10 +265,11 @@ return {
             tag = m[1].toUpperCase();
 
             for (child = el.firstChild; child; child = child.nextSibling) {
-                if (child.tagName == tag) {
-                    if (count == 1) {
+                if (child.tagName === tag) {
+                    if (count === 1) {
                         break;
                     }
+
                     --count;
                 }
             }
@@ -273,22 +280,26 @@ return {
         return el;
     },
 
-    // Moving across a line break only counts as moving one character in a TextRange, whereas a line break in
-    // the textarea value is two characters. This function corrects for that by converting a text offset into a
-    // range character offset by subtracting one character for every line break in the textarea prior to the
-    // offset
+    // Moving across a line break only counts as moving one character in a TextRange, whereas
+    // a line break in the textarea value is two characters. This function corrects for that
+    // by converting a text offset into a range character offset by subtracting one character
+    // for every line break in the textarea prior to the offset
     offsetToRangeCharacterMove: function(el, offset) {
         return offset - (el.value.slice(0, offset).split("\r\n").length - 1);
     },
 
-    setTextSelection: function (el, startOffset, endOffset) {
+    setTextSelection: function(el, startOffset, endOffset) {
+        var range, startCharMove;
+
         // See https://code.google.com/p/rangyinputs/source/browse/trunk/rangyinputs_jquery.js
         if (startOffset < 0) {
             startOffset += el.value.length;
         }
+
         if (endOffset == null) {
             endOffset = startOffset;
         }
+
         if (endOffset < 0) {
             endOffset += el.value.length;
         }
@@ -296,15 +307,17 @@ return {
         if (typeof el.selectionStart === "number") {
             el.selectionStart = startOffset;
             el.selectionEnd = endOffset;
-        } else {
-            var range = el.createTextRange();
-            var startCharMove = this.offsetToRangeCharacterMove(el, startOffset);
+        }
+        else {
+            range = el.createTextRange();
+            startCharMove = this.offsetToRangeCharacterMove(el, startOffset);
 
             range.collapse(true);
 
-            if (startOffset == endOffset) {
+            if (startOffset === endOffset) {
                 range.move("character", startCharMove);
-            } else {
+            }
+            else {
                 range.moveEnd("character", this.offsetToRangeCharacterMove(el, endOffset));
                 range.moveStart("character", startCharMove);
             }
@@ -313,23 +326,24 @@ return {
         }
     },
 
-    getTimeIndex: function () {
+    getTimeIndex: function() {
         var t = this.getTimestamp() - this.stallTime;
+
         return t * this.speed;
     },
 
-    makeToken: function (eventDescriptor, signal) {
+    makeToken: function(eventDescriptor, signal) {
         var me = this,
             t0;
 
         eventDescriptor[signal] = true;
 
-        eventDescriptor.defer = function () {
+        eventDescriptor.defer = function() {
             eventDescriptor[signal] = false;
             t0 = me.getTime();
         };
 
-        eventDescriptor.finish = function () {
+        eventDescriptor.finish = function() {
             eventDescriptor[signal] = true;
             me.stallTime += me.getTime() - t0;
 
@@ -341,14 +355,14 @@ return {
      * This method is called after an event has been played to prepare for the next event.
      * @param {Object} eventDescriptor The descriptor of the event just played.
      */
-    nextEvent: function (eventDescriptor) {
+    nextEvent: function(eventDescriptor) {
         var me = this,
             index = ++me.queueIndex;
 
         // keyframe events are inserted after a keyFrameEvent is played.
         if (me.keyFrameEvents[eventDescriptor.type]) {
             Ext.Array.insert(me.eventQueue, index, [
-                {keyframe: true, ts: eventDescriptor.ts}
+                { keyframe: true, ts: eventDescriptor.ts }
             ]);
         }
     },
@@ -358,7 +372,7 @@ return {
      * dequeue the event. Repeated calls return the same object (until {@link #nextEvent}
      * is called).
      */
-    peekEvent: function () {
+    peekEvent: function() {
         return this.eventQueue[this.queueIndex] || null;
     },
 
@@ -370,7 +384,7 @@ return {
      *      Ext.define('My.Player', {
      *          extend: 'Ext.ux.event.Player',
      *
-     *          peekEvent: function () {
+     *          peekEvent: function() {
      *              var event = this.callParent();
      *
      *              if (event.multiStepSpecial) {
@@ -394,10 +408,10 @@ return {
      * @param {Event[]} events The array of events with which to replace the specified
      * event.
      */
-    replaceEvent: function (index, events) {
+    replaceEvent: function(index, events) {
         for (var t, i = 0, n = events.length; i < n; ++i) {
             if (i) {
-                t = events[i-1];
+                t = events[i - 1];
                 delete t.afterplay;
                 delete t.screenshot;
 
@@ -405,8 +419,7 @@ return {
             }
         }
 
-        Ext.Array.replace(this.eventQueue, (index == null) ? this.queueIndex : index,
-                          1, events);
+        Ext.Array.replace(this.eventQueue, (index == null) ? this.queueIndex : index, 1, events);
     },
 
     /**
@@ -414,7 +427,7 @@ return {
      * no events are ready (based on the time index), this method does nothing.
      * @return {Boolean} True if there is more to do; false if not (at least for now).
      */
-    processEvents: function () {
+    processEvents: function() {
         var me = this,
             animations = me.pauseForAnimations && me.attachTo.Ext.fx.Manager.items,
             eventDescriptor;
@@ -423,22 +436,26 @@ return {
             if (animations && animations.getCount()) {
                 return true;
             }
-            
+
             if (eventDescriptor.keyframe) {
                 if (!me.processKeyFrame(eventDescriptor)) {
                     return false;
                 }
+
                 me.nextEvent(eventDescriptor);
-            } else if (eventDescriptor.ts <= me.getTimeIndex() &&
+            }
+            else if (eventDescriptor.ts <= me.getTimeIndex() &&
                        me.fireEvent('beforeplay', me, eventDescriptor) !== false &&
                        me.playEvent(eventDescriptor)) {
                 me.nextEvent(eventDescriptor);
-            } else {
+            }
+            else {
                 return true;
             }
         }
 
         me.stop();
+
         return false;
     },
 
@@ -448,7 +465,7 @@ return {
      * @param {Object} eventDescriptor The event descriptor of the keyframe.
      * @return {Boolean} True if the keyframe was handled, false if not.
      */
-    processKeyFrame: function (eventDescriptor) {
+    processKeyFrame: function(eventDescriptor) {
         var me = this;
 
         // only fire keyframe event (and setup the eventDescriptor) once...
@@ -467,7 +484,7 @@ return {
      * those of standard DOM events but vary based on the `type` property. For details on
      * event types and their properties, see the class documentation.
      */
-    injectEvent: function (target, event) {
+    injectEvent: function(target, event) {
         var me = this,
             type = event.type,
             options = Ext.apply({}, event, defaults[type]),
@@ -475,39 +492,48 @@ return {
 
         if (type === 'type') {
             handler = me._inputSpecialKeys[target.tagName];
+
             if (handler) {
                 return me.injectTypeInputEvent(target, event, handler);
             }
+
             return me.injectTypeEvent(target, event);
         }
+
         if (type === 'focus' && target.focus) {
             target.focus();
+
             return true;
         }
+
         if (type === 'blur' && target.blur) {
             target.blur();
+
             return true;
         }
+
         if (type === 'scroll') {
             target.scrollLeft = event.pos[0];
             target.scrollTop = event.pos[1];
+
             return true;
         }
+
         if (type === 'mduclick') {
             return me.injectEvent(target, Ext.applyIf({ type: 'mousedown' }, event)) &&
                    me.injectEvent(target, Ext.applyIf({ type: 'mouseup' }, event)) &&
                    me.injectEvent(target, Ext.applyIf({ type: 'click' }, event));
         }
 
-        if (mouseEvents[type]){
+        if (mouseEvents[type]) {
             return Player.injectMouseEvent(target, options, me.attachTo);
         }
 
-        if (keyEvents[type]){
+        if (keyEvents[type]) {
             return Player.injectKeyEvent(target, options, me.attachTo);
         }
 
-        if (uiEvents[type]){
+        if (uiEvents[type]) {
             return Player.injectUIEvent(target, type,
                 options.bubbles,
                 options.cancelable,
@@ -518,11 +544,11 @@ return {
         return false;
     },
 
-    injectTypeEvent: function (target, event) {
+    injectTypeEvent: function(target, event) {
         var me = this,
             text = event.text,
             xlat = [],
-            ch, chUp, i, n, sel, upper, isInput;
+            ch, chUp, i, n, upper;
 
         if (text) {
             delete event.text;
@@ -533,15 +559,16 @@ return {
                 chUp = upper.charCodeAt(i);
 
                 xlat.push(
-                    Ext.applyIf({type: 'keydown', charCode: chUp, keyCode: chUp}, event),
-                    Ext.applyIf({type: 'keypress', charCode: ch, keyCode: ch},    event),
-                    Ext.applyIf({type: 'keyup', charCode: chUp, keyCode: chUp},   event)
+                    Ext.applyIf({ type: 'keydown', charCode: chUp, keyCode: chUp }, event),
+                    Ext.applyIf({ type: 'keypress', charCode: ch, keyCode: ch }, event),
+                    Ext.applyIf({ type: 'keyup', charCode: chUp, keyCode: chUp }, event)
                 );
             }
-        } else {
+        }
+        else {
             xlat.push(
-                Ext.applyIf({type: 'keydown', charCode: event.keyCode}, event),
-                Ext.applyIf({type: 'keyup',   charCode: event.keyCode}, event)
+                Ext.applyIf({ type: 'keydown', charCode: event.keyCode }, event),
+                Ext.applyIf({ type: 'keyup', charCode: event.keyCode }, event)
             );
         }
 
@@ -552,7 +579,7 @@ return {
         return true;
     },
 
-    injectTypeInputEvent: function (target, event, handler) {
+    injectTypeInputEvent: function(target, event, handler) {
         var me = this,
             text = event.text,
             sel, n;
@@ -566,17 +593,22 @@ return {
                                target.value.substring(sel[1]);
                 n += text.length;
                 me.setTextSelection(target, n, n);
-            } else {
+            }
+            else {
                 if (!(handler = handler[event.keyCode])) {
                     // no handler for the special key for this element
                     if ('caret' in event) {
                         me.setTextSelection(target, event.caret, event.caret);
-                    } else if (event.selection) {
+                    }
+                    else if (event.selection) {
                         me.setTextSelection(target, event.selection[0], event.selection[1]);
                     }
+
                     return me.injectTypeEvent(target, event);
                 }
+
                 handler.call(this, target, sel[0], sel[1]);
+
                 return true;
             }
         }
@@ -584,7 +616,7 @@ return {
         return true;
     },
 
-    playEvent: function (eventDescriptor) {
+    playEvent: function(eventDescriptor) {
         var me = this,
             target = me.getElementFromXPath(eventDescriptor.target),
             event;
@@ -608,7 +640,7 @@ return {
         return me.playEventHook(eventDescriptor, 'afterplay');
     },
 
-    playEventHook: function (eventDescriptor, hookName) {
+    playEventHook: function(eventDescriptor, hookName) {
         var me = this,
             doneName = hookName + '.done',
             firedName = hookName + '.fired',
@@ -627,16 +659,18 @@ return {
                     hook.call(me.eventScope || me, eventDescriptor);
                 }
             }
+
             return false;
         }
 
         return true;
     },
 
-    schedule: function () {
+    schedule: function() {
         var me = this;
+
         if (!me.timer) {
-            me.timer = setTimeout(me.timerFn, 10);
+            me.timer = Ext.defer(me.timerFn, 10);
         }
     },
 
@@ -651,7 +685,7 @@ return {
         'selection'
     ],
 
-    translateEvent: function (eventDescriptor, target) {
+    translateEvent: function(eventDescriptor, target) {
         var me = this,
             event = {},
             modKeys = eventDescriptor.modKeys || '',
@@ -661,6 +695,7 @@ return {
 
         while (i--) {
             name = names[i];
+
             if (name in eventDescriptor) {
                 event[name] = eventDescriptor[name];
             }
@@ -675,9 +710,11 @@ return {
             xy = Ext.fly(target).getXY();
             xy[0] += eventDescriptor.x;
             xy[1] += eventDescriptor.y;
-        } else if ('x' in eventDescriptor) {
+        }
+        else if ('x' in eventDescriptor) {
             xy = [ eventDescriptor.x, eventDescriptor.y ];
-        } else if ('px' in eventDescriptor) {
+        }
+        else if ('px' in eventDescriptor) {
             xy = [ eventDescriptor.px, eventDescriptor.py ];
         }
 
@@ -694,38 +731,39 @@ return {
             if ('onwheel' in me.attachTo.document) {
                 event.wheelX = eventDescriptor.dx;
                 event.wheelY = eventDescriptor.dy;
-            } else {
+            }
+            else {
                 event.type = 'mousewheel';
                 event.wheelDeltaX = -40 * eventDescriptor.dx;
                 event.wheelDeltaY = event.wheelDelta = -40 * eventDescriptor.dy;
             }
         }
-    
+
         return event;
     },
 
     //---------------------------------
     // Driver overrides
 
-    onStart: function () {
+    onStart: function() {
         var me = this;
 
         me.queueIndex = 0;
         me.schedule();
     },
 
-    onStop: function () {
+    onStop: function() {
         var me = this;
 
         if (me.timer) {
-            clearTimeout(me.timer);
+            Ext.undefer(me.timer);
             me.timer = null;
         }
     },
 
     //---------------------------------
 
-    onTick: function () {
+    onTick: function() {
         var me = this;
 
         me.timer = null;
@@ -773,17 +811,18 @@ return {
          * the window object.
          * @private
          */
-        injectKeyEvent: function (target, options, view) {
+        injectKeyEvent: function(target, options, view) {
             var type = options.type,
                 customEvent = null;
 
             if (type === 'textevent') {
                 type = 'keypress';
             }
+
             view = view || window;
 
-            //check for DOM-compliant browsers first
-            if (doc.createEvent){
+            // check for DOM-compliant browsers first
+            if (doc.createEvent) {
                 try {
                     customEvent = doc.createEvent("KeyEvents");
 
@@ -799,7 +838,8 @@ return {
                             view, options.ctrlKey, options.altKey, options.shiftKey,
                             options.metaKey, options.keyCode, options.charCode);
 
-                } catch (ex) {
+                }
+                catch (ex) {
                     // If it got here, that means key events aren't officially supported. 
                     // Safari/WebKit is a real problem now. WebKit 522 won't let you
                     // set keyCode, charCode, or other properties if you use a
@@ -809,14 +849,16 @@ return {
                     // deal with this mess.
 
                     try {
-                        //try to create generic event - will fail in Safari 2.x
+                        // try to create generic event - will fail in Safari 2.x
                         customEvent = doc.createEvent("Events");
 
-                    } catch (uierror) {
-                        //the above failed, so create a UIEvent for Safari 2.x
+                    }
+                    catch (uierror) {
+                        // the above failed, so create a UIEvent for Safari 2.x
                         customEvent = doc.createEvent("UIEvents");
 
-                    } finally {
+                    }
+                    finally {
                         customEvent.initEvent(type, options.bubbles, options.cancelable);
 
                         customEvent.view = view;
@@ -826,12 +868,13 @@ return {
                         customEvent.metaKey = options.metaKey;
                         customEvent.keyCode = options.keyCode;
                         customEvent.charCode = options.charCode;
-                    }          
+                    }
                 }
 
                 target.dispatchEvent(customEvent);
 
-            } else if (doc.createEventObject) { //IE
+            }
+            else if (doc.createEventObject) { // IE
                 customEvent = doc.createEventObject();
 
                 customEvent.bubbles = options.bubbles;
@@ -848,9 +891,10 @@ return {
 
                 customEvent.keyCode = (options.charCode > 0) ? options.charCode : options.keyCode;
 
-                target.fireEvent("on" + type, customEvent);  
+                target.fireEvent("on" + type, customEvent);
 
-            } else {
+            }
+            else {
                 return false;
             }
 
@@ -902,25 +946,26 @@ return {
          * the window object.
          * @private
          */
-        injectMouseEvent: function (target, options, view) {
+        injectMouseEvent: function(target, options, view) {
             var type = options.type,
                 customEvent = null;
 
             view = view || window;
 
-            //check for DOM-compliant browsers first
-            if (doc.createEvent){
+            // check for DOM-compliant browsers first
+            if (doc.createEvent) {
                 customEvent = doc.createEvent("MouseEvents");
 
-                //Safari 2.x (WebKit 418) still doesn't implement initMouseEvent()
-                if (customEvent.initMouseEvent){
+                // Safari 2.x (WebKit 418) still doesn't implement initMouseEvent()
+                if (customEvent.initMouseEvent) {
                     customEvent.initMouseEvent(type, options.bubbles, options.cancelable,
                             view, options.detail, options.screenX, options.screenY,
                             options.clientX, options.clientY, options.ctrlKey,
                             options.altKey, options.shiftKey, options.metaKey,
                             options.button, options.relatedTarget);
-                } else { //Safari
-                    //the closest thing available in Safari 2.x is UIEvents
+                }
+                else { // Safari
+                    // the closest thing available in Safari 2.x is UIEvents
                     customEvent = doc.createEvent("UIEvents");
 
                     customEvent.initEvent(type, options.bubbles, options.cancelable);
@@ -948,17 +993,19 @@ return {
                  * for mouseout event and fromElement property for mouseover
                  * event.
                  */
-                if (options.relatedTarget && !customEvent.relatedTarget){
-                    if (type == "mouseout"){
+                if (options.relatedTarget && !customEvent.relatedTarget) {
+                    if (type === "mouseout") {
                         customEvent.toElement = options.relatedTarget;
-                    } else if (type == "mouseover"){
+                    }
+                    else if (type === "mouseover") {
                         customEvent.fromElement = options.relatedTarget;
                     }
                 }
 
                 target.dispatchEvent(customEvent);
 
-            } else if (doc.createEventObject) { //IE
+            }
+            else if (doc.createEventObject) { // IE
                 customEvent = doc.createEventObject();
 
                 customEvent.bubbles = options.bubbles;
@@ -983,7 +1030,8 @@ return {
                 customEvent.relatedTarget = options.relatedTarget;
 
                 target.fireEvent('on' + type, customEvent);
-            } else {
+            }
+            else {
                 return false;
             }
 
@@ -1010,14 +1058,14 @@ return {
          * the window object.
          * @private
          */
-        injectUIEvent: function (target, options, view) {
-            var customEvent = null;    
+        injectUIEvent: function(target, options, view) {
+            var customEvent = null;
 
             view = view || window;
 
-            //check for DOM-compliant browsers first
-            if (doc.createEvent){
-                //just a generic UI Event object is needed
+            // check for DOM-compliant browsers first
+            if (doc.createEvent) {
+                // just a generic UI Event object is needed
                 customEvent = doc.createEvent("UIEvents");
 
                 customEvent.initUIEvent(options.type, options.bubbles, options.cancelable,
@@ -1025,7 +1073,8 @@ return {
 
                 target.dispatchEvent(customEvent);
 
-            } else if (doc.createEventObject){ //IE
+            }
+            else if (doc.createEventObject) { // IE
                 customEvent = doc.createEventObject();
 
                 customEvent.bubbles = options.bubbles;
@@ -1035,7 +1084,8 @@ return {
 
                 target.fireEvent("on" + options.type, customEvent);
 
-            } else {
+            }
+            else {
                 return false;
             }
 

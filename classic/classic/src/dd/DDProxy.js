@@ -72,23 +72,26 @@ Ext.define('Ext.dd.DDProxy', {
             s;
 
         if (!body || !body.firstChild) {
-            Ext.defer( function() { self.createFrame(); }, 50 );
+            Ext.defer(function() {
+                self.createFrame();
+            }, 50);
+
             return;
         }
 
         div = this.getDragEl();
 
         if (!div) {
-            div    = document.createElement("div");
+            div = document.createElement("div");
             div.id = this.dragElId;
             div.setAttribute('role', 'presentation');
-            s  = div.style;
+            s = div.style;
 
-            s.position   = "absolute";
+            s.position = "absolute";
             s.visibility = "hidden";
-            s.cursor     = "move";
-            s.border     = "2px solid #aaa";
-            s.zIndex     = 999;
+            s.cursor = "move";
+            s.border = "2px solid #aaa";
+            s.zIndex = 999;
 
             // appendChild can blow up IE if invoked prior to the window load event
             // while rendering a table.  It is possible there are other scenarios
@@ -128,8 +131,8 @@ Ext.define('Ext.dd.DDProxy', {
         me._resizeProxy();
 
         if (me.centerFrame) {
-            me.setDelta(Math.round(parseInt(s.width,  10)/2),
-                        Math.round(parseInt(s.height, 10)/2));
+            me.setDelta(Math.round(parseInt(s.width, 10) / 2),
+                        Math.round(parseInt(s.height, 10) / 2));
         }
 
         me.setDragElPos(iPageX, iPageY);
@@ -143,8 +146,11 @@ Ext.define('Ext.dd.DDProxy', {
      * @private
      */
     _resizeProxy: function() {
+        var el;
+
         if (this.resizeFrame) {
-            var el = this.getEl();
+            el = this.getEl();
+
             Ext.fly(this.getDragEl()).setSize(el.offsetWidth, el.offsetHeight);
         }
     },
@@ -192,16 +198,15 @@ Ext.define('Ext.dd.DDProxy', {
         this.afterDrag();
     },
 
-    beforeMove : function(){
+    beforeMove: function() {
 
     },
 
-    afterDrag : function(){
+    afterDrag: function() {
 
     },
 
     toString: function() {
         return ("DDProxy " + this.id);
     }
-
 });

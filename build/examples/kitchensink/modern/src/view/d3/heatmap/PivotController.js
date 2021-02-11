@@ -2,41 +2,41 @@ Ext.define('KitchenSink.view.d3.heatmap.PivotController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.heatmap-pivot',
 
-    showConfigurator: function(){
+    showConfigurator: function() {
         this.getView().showConfigurator();
     },
 
-    monthLabelRenderer: function(v){
-        return Ext.Date.monthNames[v];
+    monthLabelRenderer: function(value) {
+        return Ext.Date.monthNames[value];
     },
 
-    onRefreshData: function () {
-        var me = this,
-            heatmap = me.lookupReference('heatmap'),
+    onRefreshData: function() {
+        var heatmap = this.lookup('heatmap'),
             store = heatmap.getMatrix().store;
 
         store.refreshRandomData(100);
     },
 
-    onBeforeAddConfigField: function(panel, config){
+    onBeforeAddConfigField: function(panel, config) {
         var dest = config.toContainer,
             store = dest.getStore();
 
-        if(dest.getFieldType() !== 'all' && store.getCount() >= 1){
+        if (dest.getFieldType() !== 'all' && store.getCount() >= 1) {
             // this will force single fields on both axis and aggregate
             store.removeAll();
         }
     },
 
-    onShowFieldSettings: function(panel, config){
+    onShowFieldSettings: function(panel, config) {
         var align = config.container.down('[name=align]');
+
         // hide the alignment field in settings since it's useless
-        if(align) {
+        if (align) {
             align.hide();
         }
     },
 
-    onTooltip: function (component, tooltip, datum, element, event) {
+    onTooltip: function(component, tooltip, datum, element, event) {
         var d = datum.data,
             x = component.getXAxis().getField(),
             y = component.getYAxis().getField(),
@@ -49,5 +49,4 @@ Ext.define('KitchenSink.view.d3.heatmap.PivotController', {
             '<div>Records: ' + d.records + '</div>'
         );
     }
-
 });

@@ -67,11 +67,13 @@ Ext.define('SimpleTasks.controller.Lists', {
             }
         });
 
-        if(listsStore.isLoading()) {
+        if (listsStore.isLoading()) {
             listsStore.on('load', me.handleListsLoad, me);
-        } else {
+        }
+        else {
             me.handleListsLoad(listsStore);
         }
+
         listsStore.on('write', me.syncListsStores, me, {
             buffer: 1
         });
@@ -112,13 +114,14 @@ Ext.define('SimpleTasks.controller.Lists', {
                 loaded: true // set loaded to true, so the tree won't try to dynamically load children for this node when expanded
             }),
             expandAndEdit = function() {
-                if(parentList.isExpanded()) {
+                if (parentList.isExpanded()) {
                     selectionModel.select(newList);
                     me.addedNode = newList;
                     cellEditingPlugin.startEdit(newList, 0);
-                } else {
+                }
+                else {
                     listTree.on('afteritemexpand', function startEdit(list) {
-                        if(list === parentList) {
+                        if (list === parentList) {
                             selectionModel.select(newList);
                             me.addedNode = newList;
                             cellEditingPlugin.startEdit(newList, 0);
@@ -129,12 +132,14 @@ Ext.define('SimpleTasks.controller.Lists', {
                     parentList.expand();
                 }
             };
-            
+
         parentList.appendChild(newList);
         listTree.getStore().sync();
-        if(listTree.getView().isVisible(true)) {
+
+        if (listTree.getView().isVisible(true)) {
             expandAndEdit();
-        } else {
+        }
+        else {
             listTree.on('expand', function onExpand() {
                 expandAndEdit();
                 listTree.un('expand', onExpand);
@@ -173,13 +178,13 @@ Ext.define('SimpleTasks.controller.Lists', {
             }
         });
     },
-    
+
     /**
      * Handles the list tree's complete edit event
      * @param {Ext.grid.plugin.CellEditing} editor
      * @param {Object} e                                an edit event object
      */
-    handleCompleteEdit: function(editor, e){
+    handleCompleteEdit: function(editor, e) {
         delete this.addedNode;
     },
 
@@ -195,6 +200,7 @@ Ext.define('SimpleTasks.controller.Lists', {
             added = this.addedNode;
 
         delete this.addedNode;
+
         if (added === list) {
             // Only remove it if it's been newly added
             parent.removeChild(list);
@@ -243,7 +249,7 @@ Ext.define('SimpleTasks.controller.Lists', {
             msg: 'Are you sure you want to permanently delete the "' + listName + '" list and all its tasks?',
             buttons: Ext.Msg.YESNO,
             fn: function(response) {
-                if(response === 'yes') {
+                if (response === 'yes') {
                     // recursively remove any tasks from the store that are associated with the list being deleted or any of its children.
                     (function deleteTasks(list) {
                         tasks = tasksStore.queryBy(function(task, id) {
@@ -272,7 +278,7 @@ Ext.define('SimpleTasks.controller.Lists', {
                         }
                     });
 
-                    if(isLocal) {
+                    if (isLocal) {
                         // only need to sync the tasks store when using local storage.
                         // when using an ajax proxy we will allow the server to handle deleting any tasks associated with the deleted list(s)
                         tasksStore.sync();
@@ -283,7 +289,7 @@ Ext.define('SimpleTasks.controller.Lists', {
                     if (!selModel.hasSelection() || !listsStore.getNodeById(selModel.getSelection()[0].getId())) {
                         selModel.select(0);
                     }
-                    
+
                     // refresh the list view so the task counts will be accurate
                     listTree.refreshView();
                 }
@@ -299,16 +305,18 @@ Ext.define('SimpleTasks.controller.Lists', {
      * @param {SimpleTasks.model.List[]} lists
      */
     filterTaskGrid: function(selModel, lists) {
+        var listIds = [],
+            tasksStore, deleteListBtn, deleteFolderBtn, list;
+
         if (lists.length === 0) {
             return;
         }
-        
-        var list = lists[0],
-            tasksStore = this.getTasksStore(),
-            listIds = [],
-            deleteListBtn = Ext.getCmp('delete-list-btn'),
-            deleteFolderBtn = Ext.getCmp('delete-folder-btn'),
-            i = 0;
+
+        list = lists[0];
+        tasksStore = this.getTasksStore();
+        listIds = [];
+        deleteListBtn = Ext.getCmp('delete-list-btn');
+        deleteFolderBtn = Ext.getCmp('delete-folder-btn');
 
         // build an array of all the list_id's in the hierarchy of the selected list
         list.cascade(function(list) {
@@ -324,13 +332,15 @@ Ext.define('SimpleTasks.controller.Lists', {
         this.getTaskGrid().setTitle(list.get('name'));
 
         // enable or disable the "delete list" and "delete folder" buttons depending on what type of node is selected
-        if(list.get('id') === -1) {
+        if (list.get('id') === -1) {
             deleteListBtn.disable();
             deleteFolderBtn.disable();
-        } else if(list.isLeaf()) {
+        }
+        else if (list.isLeaf()) {
             deleteListBtn.enable();
             deleteFolderBtn.disable();
-        } else {
+        }
+        else {
             deleteListBtn.disable();
             deleteFolderBtn.enable();
         }
@@ -381,9 +391,10 @@ Ext.define('SimpleTasks.controller.Lists', {
     reorderList: function(list, overList, position) {
         var listsStore = this.getListsStore();
 
-        if(SimpleTasks.Settings.useLocalStorage) {
+        if (SimpleTasks.Settings.useLocalStorage) {
             listsStore.sync();
-        } else {
+        }
+        else {
             Ext.Ajax.request({
                 url: 'php/list/move.php',
                 jsonData: {
@@ -394,7 +405,7 @@ Ext.define('SimpleTasks.controller.Lists', {
                 success: function(response, options) {
                     var responseData = Ext.decode(response.responseText);
 
-                    if(!responseData.success) {
+                    if (!responseData.success) {
                         Ext.MessageBox.show({
                             title: 'Move Task Failed',
                             msg: responseData.message,
@@ -413,7 +424,7 @@ Ext.define('SimpleTasks.controller.Lists', {
                 }
             });
         }
-        
+
         // refresh the lists view so the task counts will be updated.
         this.getListTree().refreshView();
     },
@@ -451,21 +462,24 @@ Ext.define('SimpleTasks.controller.Lists', {
         var me = this,
             listTree = me.getListTree(),
             tasksStore = me.getTasksStore();
-        
-        if(listTree) {
+
+        if (listTree) {
             // if the list tree exists when the lists store is first loaded, select the root node.
             // when using a server proxy, the list tree will always exist at this point since asyncronous loading of data allows time for the list tree to be created and rendered.
             // when using a local storage proxy, the list tree will not yet exist at this point, so we'll have to select the root node on render instead (see handleAfterListTreeRender)
             listTree.getSelectionModel().select(0);
         }
+
         // wait until lists are done loading to load tasks since the task grid's "list" column renderer depends on lists store being loaded
         me.getTasksStore().load();
+
         // if the tasks store is asynchronous (server proxy) attach load handler for refreshing the list counts after loading is complete
         // if local storage is being used, isLoading will be false here since load() will run syncronously, so there is no need
         // to refresh the lists view because load will have happened before the list tree is even rendered
-        if(tasksStore.isLoading()) {
+        if (tasksStore.isLoading()) {
             tasksStore.on('load', me.handleTasksLoad, me);
         }
+
         // remove the event listener after the first run
         listsStore.un('load', me.handleListsLoad, me);
     },
@@ -486,36 +500,40 @@ Ext.define('SimpleTasks.controller.Lists', {
      * @param {Ext.data.Operation} operation
      */
     syncListsStores: function(listsStore, operation) {
-        var me = this,
-            stores = [
+        var stores = [
                 Ext.getStore('Lists-TaskGrid'),
                 Ext.getStore('Lists-TaskEditWindow'),
                 Ext.getStore('Lists-TaskForm')
             ],
             storesLen = stores.length,
             records = operation.getRecords(),
-            recordsLen = records.length, 
+            recordsLen = records.length,
             i, j, listToSync, node, list, store;
-            
+
         for (i = 0; i < recordsLen; ++i) {
             list = records[i];
+
             for (j = 0; j < storesLen; ++j) {
                 store = stores[j];
+
                 if (store) {
                     listToSync = store.getNodeById(list.getId());
-                    switch(operation.action) {
+
+                    switch (operation.action) {
                         case 'create':
                             node = store.getNodeById(list.parentNode.getId()) || store.getRoot();
                             node.appendChild(list.copy(list.getId()));
                             break;
                         case 'update':
-                            if(listToSync) {
+                            if (listToSync) {
                                 listToSync.set(list.data);
                                 listToSync.commit();
                             }
+
                             break;
+
                         case 'destroy':
-                            if(listToSync) {
+                            if (listToSync) {
                                 listToSync.remove(false);
                             }
                     }
@@ -535,8 +553,9 @@ Ext.define('SimpleTasks.controller.Lists', {
      */
     showActions: function(view, list, node, rowIndex, e) {
         var icons = Ext.fly(node).query('.x-action-col-icon');
-        if(view.getRecord(node).get('id') > 0) {
-            Ext.each(icons, function(icon){
+
+        if (view.getRecord(node).get('id') > 0) {
+            Ext.each(icons, function(icon) {
                 Ext.get(icon).removeCls('x-hidden');
             });
         }
@@ -553,7 +572,8 @@ Ext.define('SimpleTasks.controller.Lists', {
      */
     hideActions: function(view, list, node, rowIndex, e) {
         var icons = Ext.fly(node).query('.x-action-col-icon');
-        Ext.each(icons, function(icon){
+
+        Ext.each(icons, function(icon) {
             Ext.get(icon).addCls('x-hidden');
         });
     },
@@ -574,21 +594,26 @@ Ext.define('SimpleTasks.controller.Lists', {
             deleteFolderItem = Ext.getCmp('delete-folder-item'),
             deleteListItem = Ext.getCmp('delete-list-item');
 
-        if(list.isLeaf()) {
+        if (list.isLeaf()) {
             newListItem.hide();
             newFolderItem.hide();
             deleteFolderItem.hide();
             deleteListItem.show();
-        } else {
+        }
+        else {
             newListItem.show();
             newFolderItem.show();
-            if(list.isRoot()) {
+
+            if (list.isRoot()) {
                 deleteFolderItem.hide();
-            } else {
+            }
+            else {
                 deleteFolderItem.show();
             }
+
             deleteListItem.hide();
         }
+
         contextMenu.setList(list);
         contextMenu.showAt(e.getX(), e.getY());
         e.preventDefault();

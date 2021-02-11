@@ -1,4 +1,4 @@
-//describe('Ext.draw.RMQ', function() {
+// describe('Ext.draw.RMQ', function() {
 //    var seed = 1.24;
 //    var random = function() {
 //        seed *= 29;
@@ -99,4 +99,4 @@
 //            }
 //        }
 //    });
-//});
+// });

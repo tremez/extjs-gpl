@@ -18,6 +18,7 @@ Ext.define('KitchenSink.data.calendar.Util', {
         while (base.getDay() !== d) {
             base = D.add(base, D.DAY, incr);
         }
+
         return base;
     },
 
@@ -33,11 +34,13 @@ Ext.define('KitchenSink.data.calendar.Util', {
         Ext.Array.forEach(data, function(item) {
             item.id = ++start;
         });
+
         return data;
     },
 
     generateOutput: function(data, calendarId, ctx) {
         var filtered = this.filter(data, ctx.params.startDate, ctx.params.endDate);
+
         return this.prepare(filtered, calendarId);
     },
 
@@ -49,12 +52,14 @@ Ext.define('KitchenSink.data.calendar.Util', {
             event.calendarId = calendarId;
             event.startDate = D.format(D.localToUtc(event.startDate), 'C');
             event.endDate = D.format(D.localToUtc(event.endDate), 'C');
+
             return event;
         });
     },
 
     setDate: function(base, d, h, m) {
         var ret = Ext.Date.clone(base);
+
         if (d !== undefined) {
             ret.setDate(d);
         }
@@ -66,6 +71,7 @@ Ext.define('KitchenSink.data.calendar.Util', {
         if (m !== undefined) {
             ret.setMinutes(m);
         }
+
         return ret;
     },
 

@@ -51,11 +51,12 @@ Ext.define('Ext.draw.sprite.Tick', {
                 size: 'tick'
             },
             updaters: {
-                tick: function (attr) {
+                tick: function(attr) {
                     var size = attr.size * 1.5,
                         halfLineWidth = attr.lineWidth / 2,
                         x = attr.x,
                         y = attr.y;
+
                     this.setAttributes({
                         fromX: x - halfLineWidth,
                         fromY: y - size,

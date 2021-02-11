@@ -7,13 +7,13 @@
  * allows its superclass ({@link Ext.data.reader.Json}) to handle converting the
  * raw javascript objects into {@link Ext.data.Model} instances.
  * 
- * For a more detailed tutorial see the [AMF Guide](#/guide/amf).
+ * For a more detailed tutorial see the
+ * [AMF Guide](../guides/backend_connectors/amf.html).
  */
 Ext.define('Ext.data.amf.Reader', {
-
     extend: 'Ext.data.reader.Json',
 
-    alias : 'reader.amf',
+    alias: 'reader.amf',
 
     requires: [
         'Ext.data.amf.Packet'
@@ -25,6 +25,8 @@ Ext.define('Ext.data.amf.Reader', {
      * 0-based index of the message that contains the record data.
      */
     messageIndex: 0,
+
+    responseType: 'arraybuffer',
 
     /**
      * Reads records from a XMLHttpRequest response object containing a binary
@@ -38,18 +40,21 @@ Ext.define('Ext.data.amf.Reader', {
             packet, messages, resultSet;
 
         if (!bytes) {
-            throw "AMF Reader cannot process the response because it does not contain binary data. Make sure the Proxy's 'binary' config is true.";
+            throw "AMF Reader cannot process the response because it does not contain " +
+                  "binary data. Make sure the Proxy's 'binary' config is true.";
         }
-            
+
         packet = new Ext.data.amf.Packet();
         packet.decode(bytes);
         messages = packet.messages;
 
         if (messages.length) {
             resultSet = me.readRecords(messages[me.messageIndex].body);
-        } else {
+        }
+        else {
             // no messages, return null result set
             resultSet = me.nullResultSet;
+
             if (packet.invalid) {
                 // packet contains invalid data
                 resultSet.success = false;
@@ -59,4 +64,3 @@ Ext.define('Ext.data.amf.Reader', {
         return resultSet;
     }
 });
-

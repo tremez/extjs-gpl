@@ -28,6 +28,18 @@
 	color: #555;
 }
 
+@if $theme-name == 'theme-material' {
+    .binding-selection-view .customer {
+        background-color: #ffffff;
+    }
+    .binding-selection-view .customer.x-item-selected .indicator {
+	    border-color: $base-color !important;
+    }
+    .binding-selection-view .customer .indicator:after {
+        background-color: $base-color !important;
+    }
+}
+
 .binding-selection-view .customer.x-item-selected {
 	color: black;
 }
@@ -91,12 +103,26 @@
 	left: 0px;
 }
 
+@if $theme-name == 'theme-material' {
+    .binding-selection-view .customer.x-item-selected .indicator:after {
+        left: 2px;
+        top: 2px;
+        height: 8px;
+	    width: 8px;
+    }
+}
 
 
 /* DATAVIEW ITEM - RTL INDICATOR  :: hidden unless RTL */
 
 .binding-selection-view .customer .indicator.rtl {
 	display: none;
+}
+
+@if $theme-name == 'theme-graphite' {
+    .binding-selection-view .customer .indicator.rtl {
+        margin-top: 7px;
+    }
 }
 
 .binding-selection-view .customer .indicator.rtl:after {
@@ -148,4 +174,14 @@
 
 .x-ie9 .x-rtl .binding-selection-view .customer.x-item-selected .indicator {
 	background-color: #FFB073;
+}
+
+@if $theme-name == 'theme-graphite' {
+    .binding-selection-view h1 {
+        color: #fff;
+    }
+
+    .binding-selection-view .customer {
+        width: 180px;
+    }
 }

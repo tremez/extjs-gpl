@@ -13,7 +13,7 @@ Ext.define('Neptune.view.form.widget.FieldsetForm', {
 
     buttons: [{
         text: 'Save'
-    },{
+    }, {
         text: 'Cancel'
     }]
 });

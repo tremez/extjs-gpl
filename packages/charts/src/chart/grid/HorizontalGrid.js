@@ -27,7 +27,7 @@ Ext.define('Ext.chart.grid.HorizontalGrid', {
         }
     },
 
-    render: function (surface, ctx, rect) {
+    render: function(surface, ctx, rect) {
         var attr = this.attr,
             y = surface.roundPixel(attr.y),
             halfLineWidth = ctx.lineWidth * 0.5;

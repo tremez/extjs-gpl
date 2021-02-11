@@ -1,0 +1,15 @@
+@if $theme-name == 'theme-material' {
+    .binding-chained-stores {
+        .#{$prefix}toolbar-default {
+            background-color: $focus-font-color;
+        }
+    }
+
+    .dark-mode {
+        .binding-chained-stores {
+            .#{$prefix}form-item-label-default {
+                color: #111111;
+            }
+        }
+    }
+}

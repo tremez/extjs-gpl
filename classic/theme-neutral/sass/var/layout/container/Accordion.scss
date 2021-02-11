@@ -6,7 +6,7 @@
  * @var {color}
  * The text color of Accordion headers
  */
-$accordion-header-color: dynamic(#000);
+$accordion-header-color: dynamic($panel-header-color);
 
 /**
  * @var {color}
@@ -63,6 +63,42 @@ $accordion-header-font-family: dynamic($font-family);
 $accordion-header-text-transform: dynamic(none);
 
 /**
+ * @var {color}
+ * The color of the outline around focused Accordion panel title
+ */
+$accordion-header-focus-outline-color: dynamic($panel-header-focus-outline-color);
+
+/**
+ * @var {string}
+ * The outline style of the focused Accordion panel title
+ */
+$accordion-header-focus-outline-style: dynamic($panel-header-focus-outline-style);
+
+/**
+ * @var {number}
+ * The outline width of the focused Accordion panel title
+ */
+$accordion-header-focus-outline-width: dynamic($panel-header-focus-outline-width);
+
+/**
+ * @var {number}
+ * The offset for focused Accordion panel title outline
+ */
+$accordion-header-focus-outline-offset: dynamic($panel-header-focus-outline-offset);
+
+/**
+ * @var {color}
+ * The color of Accordion panel title text when header is focused
+ */
+$accordion-header-focus-color: dynamic($panel-header-focus-color);
+
+/**
+ * @var {color}
+ * The background color of Accordion panel title text when header is focused
+ */
+$accordion-header-focus-background-color: dynamic($panel-header-focus-background-color);
+
+/**
  * @var {number}
  * The body border-width of Accordion layout element
  */
@@ -96,7 +132,7 @@ $accordion-tool-background-image: dynamic('tools/tool-sprites');
  * @var {color}
  * The color to use for Accordion expand/collapse tool icons when {@link Global_CSS#$enable-font-icons} is `true`.
  */
-$accordion-tool-glyph-color: dynamic($base-color);
+$accordion-tool-glyph-color: dynamic($tool-glyph-color);
 
 /**
  * @var {number}
@@ -115,3 +151,45 @@ $accordion-tool-expand-glyph: dynamic($fa-var-plus $accordion-tool-glyph-font-si
  * Glyph for the Accordion's "collapse" tool icon when {@link Global_CSS#$enable-font-icons} is `true`.
  */
 $accordion-tool-collapse-glyph: dynamic($fa-var-minus $accordion-tool-glyph-font-size $font-icon-font-family);
+
+/**
+ * @var {color}
+ * The color of the outline around focused Accordion panel header tools
+ */
+$accordion-tool-focus-outline-color: dynamic($panel-tool-focus-outline-color);
+
+/**
+ * @var {string}
+ * The style of the outline around focused Accordion panel header tools
+ */
+$accordion-tool-focus-outline-style: dynamic($panel-tool-focus-outline-style);
+
+/**
+ * @var {number}
+ * The width of the outline around focused Accordion panel header tools
+ */
+$accordion-tool-focus-outline-width: dynamic($panel-tool-focus-outline-width);
+
+/**
+ * @var {number}
+ * The offset of the outline around focused Accordion panel header tools
+ */
+$accordion-tool-focus-outline-offset: dynamic($panel-tool-focus-outline-offset);
+
+/**
+ * @var {color}
+ * The text color of focused Accordion panel header tool glyph
+ */
+$accordion-tool-focus-color: dynamic($panel-tool-focus-color);
+
+/**
+ * @var {color}
+ * The background color of focused Accordion panel header tool
+ */
+$accordion-tool-focus-background-color: dynamic($panel-tool-focus-background-color);
+
+/**
+ * @var {string}
+ * The background image sprite to use for focused Accordion panel tools
+ */
+$accordion-tool-focus-background-image: dynamic($panel-tool-focus-background-image);

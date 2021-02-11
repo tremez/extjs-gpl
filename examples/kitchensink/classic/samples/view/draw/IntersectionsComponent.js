@@ -22,7 +22,7 @@ Ext.define('KitchenSink.view.IntersectionsComponent', {
         mouseleave: 'onMouseUp'
     },
 
-    findTarget: function (sprites, x, y) {
+    findTarget: function(sprites, x, y) {
         var me = this,
             sprite,
             i, ln;
@@ -32,16 +32,19 @@ Ext.define('KitchenSink.view.IntersectionsComponent', {
                 strokeStyle: 'black'
             });
         }
+
         for (i = 0, ln = sprites.length; i < ln; i++) {
             sprite = sprites[i];
+
             if (sprite.isPath && sprite.isPointInPath(x, y)) {
                 me.target = sprite;
+
                 return sprite;
             }
         }
     },
 
-    onMouseDown: function (e) {
+    onMouseDown: function(e) {
         var me = this,
             surface = me.getSurface(),
             sprites = surface.getItems(),
@@ -64,7 +67,7 @@ Ext.define('KitchenSink.view.IntersectionsComponent', {
         }
     },
 
-    onMouseMove: function (e) {
+    onMouseMove: function(e) {
         var me = this,
             surface = me.getSurface(),
             sprites = surface.getItems(),
@@ -84,26 +87,32 @@ Ext.define('KitchenSink.view.IntersectionsComponent', {
                 translationX: me.translationX + deltaX,
                 translationY: me.translationY + deltaY
             });
+
             for (i = 0, ln = sprites.length; i < ln; i++) {
                 sprite = sprites[i];
+
                 if (sprite !== me.target) {
                     points = me.target.getIntersections(sprite);
                     intersections.push.apply(intersections, points);
                 }
             }
+
             me.showIntersections(intersections);
-        } else {
+        }
+        else {
             target = me.findTarget(sprites, x, y);
+
             if (target) {
                 target.setAttributes({
                     strokeStyle: 'red'
                 });
             }
         }
+
         surface.renderFrame();
     },
 
-    onMouseUp: function (e) {
+    onMouseUp: function(e) {
         var me = this,
             surface = me.getSurface();
 
@@ -112,10 +121,12 @@ Ext.define('KitchenSink.view.IntersectionsComponent', {
         surface.renderFrame();
     },
 
-    showIntersections: function (intersections) {
+    showIntersections: function(intersections) {
         var me = this,
             i, ln, point;
+
         me.dots.clearAll();
+
         for (i = 0, ln = intersections.length; i < ln; i++) {
             point = intersections[i];
             me.dots.createInstance({
@@ -125,9 +136,10 @@ Ext.define('KitchenSink.view.IntersectionsComponent', {
         }
     },
 
-    initComponent: function () {
+    initComponent: function() {
         var me = this,
             surface = me.getSurface();
+
         me.callParent(arguments);
         me.dots = Ext.create('Ext.draw.sprite.Instancing', {
             template: {

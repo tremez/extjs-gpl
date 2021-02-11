@@ -1,6 +1,6 @@
 Ext.define('Ext.theme.neptune.picker.Month', {
-    override:  'Ext.picker.Month',
-    
+    override: 'Ext.picker.Month',
+
     // Monthpicker contains logic that reduces the margins of the month items if it detects
     // that the text has wrapped.  This can happen in the classic theme  in certain
     // locales such as zh_TW.  In order to work around this, Month picker measures

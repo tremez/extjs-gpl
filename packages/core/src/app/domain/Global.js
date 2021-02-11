@@ -13,7 +13,7 @@ Ext.define('Ext.app.domain.Global', {
 
     constructor: function() {
         var me = this;
-        
+
         me.callParent();
         me.monitor(Ext.GlobalEvents);
     },

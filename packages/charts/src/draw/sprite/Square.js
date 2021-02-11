@@ -44,13 +44,14 @@ Ext.define('Ext.draw.sprite.Square', {
         }
     },
 
-    updatePath: function (path, attr) {
+    updatePath: function(path, attr) {
         var size = attr.size * 1.2,
             s = size * 2,
             x = attr.x - attr.lineWidth / 2,
             y = attr.y;
 
-        path.fromSvgString('M'.concat(x - size, ',', y - size, 'l', [s, 0, 0, s, -s, 0, 0, -s, 'z']));
+        path.fromSvgString(
+            'M'.concat(x - size, ',', y - size, 'l', [s, 0, 0, s, -s, 0, 0, -s, 'z'])
+        );
     }
-
 });

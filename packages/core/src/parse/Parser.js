@@ -16,9 +16,12 @@
  * used in this parser.
  * @private
  */
-Ext.define('Ext.parse.Parser', function () {
-    var ITSELF = function () { return this; };
+Ext.define('Ext.parse.Parser', function() {
+    var ITSELF = function() {
+        return this;
+    };
 
+/* eslint-disable indent */
 return {
     extend: 'Ext.util.Fly',
 
@@ -57,14 +60,18 @@ return {
          * `{@link Ext.parse.symbol.Infix operator}`.
          */
         infix: {
-            //'===': 40,
-            //'!==': 40,
-            //'<': 40,
-            //'<=': 40,
-            //'>': 40,
-            //'>=': 40,
+            '===': 40,
+            '!==': 40,
+            '==': 40,
+            '!=': 40,
+            '<': 40,
+            '<=': 40,
+            '>': 40,
+            '>=': 40,
+
             '+': 50,
             '-': 50,
+
             '*': 60,
             '/': 60
         },
@@ -150,7 +157,7 @@ return {
      */
     token: null,
 
-    constructor: function (config) {
+    constructor: function(config) {
         this.symbols = {};
 
         this.initConfig(config);
@@ -161,17 +168,18 @@ return {
      * @param {String} [expected] The type of symbol that is expected to follow.
      * @return {Ext.parse.Symbol}
      */
-    advance: function (expected) {
+    advance: function(expected) {
         var me = this,
             tokenizer = me.tokenizer,
             token = tokenizer.peek(),
             symbols = me.symbols,
             index = tokenizer.index,
-            is, symbol, value;
+            is, name, symbol, value;
 
         if (me.error) {
             throw me.error;
         }
+
         if (expected) {
             me.expect(expected);
         }
@@ -192,6 +200,8 @@ return {
             if (!(symbol = symbols[value])) {
                 me.syntaxError(token.at, 'Unknown operator "' + value + '"');
             }
+
+            name = token.name;
         }
         else if (is.literal) {
             symbol = symbols['(literal)'];
@@ -202,21 +212,27 @@ return {
 
         me.token = symbol = Ext.Object.chain(symbol);
         symbol.at = index;
+        symbol.is = is;
         symbol.value = value;
 
         if (!symbol.arity) {
             symbol.arity = token.type;
         }
 
+        if (name) {
+            symbol.name = name;
+        }
+
         return symbol;
     },
 
-    expect: function (expected) {
+    expect: function(expected) {
         var token = this.token;
 
         if (expected !== token.id) {
             this.syntaxError(token.at, 'Expected "' + expected + '"');
         }
+
         return this;
     },
 
@@ -225,7 +241,7 @@ return {
      * @param {Number} [rightPriority=0] The precedence of the current operator.
      * @return {Ext.parse.Symbol} The parsed expression tree.
      */
-    parseExpression: function (rightPriority) {
+    parseExpression: function(rightPriority) {
         var me = this,
             token = me.token,
             left;
@@ -251,7 +267,7 @@ return {
      * @param {Number} [end] The index of the first character beyond the token range.
      * @return {Ext.parse.Parser}
      */
-    reset: function (text, pos, end) {
+    reset: function(text, pos, end) {
         var me = this;
 
         me.error = me.token = null;
@@ -269,12 +285,13 @@ return {
      * @param {String} message The error message.
      * @return {Object} The error token.
      */
-    syntaxError: function (at, message) {
+    syntaxError: function(at, message) {
         if (typeof at === 'string') {
             message = at;
             at = this.pos;
         }
 
+        // eslint-disable-next-line vars-on-top
         var suffix = (at == null) ? '' : (' (at index ' + at + ')'),
             error = new Error(message + suffix);
 
@@ -296,7 +313,7 @@ return {
          */
         error: null,
 
-        addSymbol: function (id, config, type, update) {
+        addSymbol: function(id, config, type, update) {
             var symbols = this.symbols,
                 symbol = symbols[id],
                 cfg, length, i;
@@ -306,23 +323,29 @@ return {
                 // we either use the config provided in the symbol definition
                 // or we use the `update` param to build a config object.
                 // We usually need to update either `led` or `nud` function
-                if(typeof config === 'object'){
+                if (typeof config === 'object') {
                     cfg = config;
-                }else if(update && type){
+                }
+                else if (update && type) {
                     update = Ext.Array.from(update);
                     length = update.length;
                     cfg = {};
-                    for(i = 0; i < length; i++) {
+
+                    for (i = 0; i < length; i++) {
                         cfg[update[i]] = type.prototype[update[i]];
                     }
-                }else{
+                }
+                else {
                     return symbol;
                 }
+
                 symbol.update(cfg);
-            } else {
+            }
+            else {
                 if (config && config.xclass) {
                     type = Ext.ClassManager.get(config.xclass);
-                } else {
+                }
+                else {
                     type = type || Ext.parse.Symbol;
                 }
 
@@ -333,33 +356,35 @@ return {
             return symbol;
         },
 
-        addSymbols: function (symbols, type, update) {
-            for (var id in symbols) {
+        addSymbols: function(symbols, type, update) {
+            var id;
+
+            for (id in symbols) {
                 this.addSymbol(id, symbols[id], type, update);
             }
         },
 
-        applyConstants: function (constants) {
+        applyConstants: function(constants) {
             this.addSymbols(constants, Ext.parse.symbol.Constant, 'nud');
         },
 
-        applyInfix: function (operators) {
+        applyInfix: function(operators) {
             this.addSymbols(operators, Ext.parse.symbol.Infix, 'led');
         },
 
-        applyInfixRight: function (operators) {
+        applyInfixRight: function(operators) {
             this.addSymbols(operators, Ext.parse.symbol.InfixRight, 'led');
         },
 
-        applyPrefix: function (operators) {
+        applyPrefix: function(operators) {
             this.addSymbols(operators, Ext.parse.symbol.Prefix, 'nud');
         },
 
-        applySymbols: function (symbols) {
+        applySymbols: function(symbols) {
             this.addSymbols(symbols);
         },
 
-        applyTokenizer: function (config) {
+        applyTokenizer: function(config) {
             var ret = config;
 
             if (config && !config.isTokenizer) {
@@ -369,4 +394,5 @@ return {
             this.tokenizer = ret;
         }
     }
-}});
+};
+});

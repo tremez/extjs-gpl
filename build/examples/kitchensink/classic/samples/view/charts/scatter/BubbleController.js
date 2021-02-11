@@ -8,7 +8,7 @@ Ext.define('KitchenSink.view.charts.scatter.BubbleController', {
 
     onRefresh: function() {
         var me = this,
-            chart = me.lookupReference('chart'),
+            chart = me.lookup('chart'),
             leftAxis = chart.getAxes()[0],
             store = chart.getStore();
 
@@ -19,9 +19,9 @@ Ext.define('KitchenSink.view.charts.scatter.BubbleController', {
         store.setData(me.createData(50));
     },
 
-    onDropBubble: function () {
+    onDropBubble: function() {
         var me = this,
-            chart = me.lookupReference('chart'),
+            chart = me.lookup('chart'),
             store = chart.getStore(),
             leftAxis = chart.getAxes()[0];
 
@@ -37,14 +37,15 @@ Ext.define('KitchenSink.view.charts.scatter.BubbleController', {
 
     // The 'target' here is an object that contains information
     // about the target value when the drag operation on the column ends.
-    onEditTipRender: function (tooltip, item, target, e) {
-        tooltip.setHtml('Temperature °F: ' + target.yValue.toFixed(1));
-
+    onEditTipRender: function(tooltip, item, target, e) {
         var parts = [];
+
+        tooltip.setHtml('Temperature °F: ' + target.yValue.toFixed(1));
 
         if (target.xField) {
             parts.push('X: ' + target.xValue.toFixed(2));
         }
+
         if (target.yField) {
             parts.push('Y: ' + target.yValue.toFixed(2));
         }
@@ -52,9 +53,9 @@ Ext.define('KitchenSink.view.charts.scatter.BubbleController', {
         tooltip.setHtml(parts.join('<br>'));
     },
 
-    onAfterRender: function () {
+    onAfterRender: function() {
         var me = this,
-            chart = me.lookupReference('chart'),
+            chart = me.lookup('chart'),
             store = chart.getStore();
 
         store.setData(me.createData(50));
@@ -65,7 +66,7 @@ Ext.define('KitchenSink.view.charts.scatter.BubbleController', {
     },
 
     // Controllable random.
-    random: function () {
+    random: function() {
         var me = this;
 
         me.seed *= 7.3;
@@ -74,12 +75,13 @@ Ext.define('KitchenSink.view.charts.scatter.BubbleController', {
         return me.seed;
     },
 
-    interpolate: function (lambda, minSrc, maxSrc, minDst, maxDst) {
+    interpolate: function(lambda, minSrc, maxSrc, minDst, maxDst) {
         var value = Math.min(1, (lambda - minSrc) / (maxSrc - minSrc));
+
         return minDst + (maxDst - minDst) * Math.max(0, value);
     },
 
-    interpolateColor: function (lambda, minSrc, maxSrc) {
+    interpolateColor: function(lambda, minSrc, maxSrc) {
         var me = this,
             fromHSL = me.fromHSL,
             toHSL = me.toHSL;
@@ -91,7 +93,7 @@ Ext.define('KitchenSink.view.charts.scatter.BubbleController', {
         ).toString();
     },
 
-    onItemRender: function (sprite, config, rendererData, index) {
+    onItemRender: function(sprite, config, rendererData, index) {
         var me = this,
             store = rendererData.store,
             storeItem = store.getData().items[index];
@@ -103,45 +105,49 @@ Ext.define('KitchenSink.view.charts.scatter.BubbleController', {
         config.lineWidth = 3;
     },
 
-    createData: function (count, isZeroed) {
+    createData: function(count, isZeroed) {
         var me = this,
             data = [],
-            record = isZeroed ?
-            {
-                x: 0,
-                g0: 0,
-                g1: 0,
-                g2: 0,
-                g3: 0,
-                name: 'Item-0'
-            } : {
-                x: 0,
-                g0: 300,
-                g1: 700 * me.random() + 100,
-                g2: 700 * me.random() + 100,
-                g3: 700 * me.random() + 100,
-                name: 'Item-0'
-            },
+            record = isZeroed
+                ? {
+                    x: 0,
+                    g0: 0,
+                    g1: 0,
+                    g2: 0,
+                    g3: 0,
+                    name: 'Item-0'
+                }
+                : {
+                    x: 0,
+                    g0: 300,
+                    g1: 700 * me.random() + 100,
+                    g2: 700 * me.random() + 100,
+                    g3: 700 * me.random() + 100,
+                    name: 'Item-0'
+                },
             i;
 
         data.push(record);
+
         for (i = 1; i < count; i++) {
-            record = isZeroed ?
-            {
-                x: i,
-                g0: 0,
-                g1: 0,
-                g2: 0,
-                g3: 0
-            } : {
-                x: i,
-                g0: record.g0 + 30 * me.random(),
-                g1: Math.abs(record.g1 + 300 * me.random() - 140),
-                g2: Math.abs(record.g2 + 300 * me.random() - 140),
-                g3: Math.abs(record.g3 + 300 * me.random() - 140)
-            };
+            record = isZeroed
+                ? {
+                    x: i,
+                    g0: 0,
+                    g1: 0,
+                    g2: 0,
+                    g3: 0
+                }
+                : {
+                    x: i,
+                    g0: record.g0 + 30 * me.random(),
+                    g1: Math.abs(record.g1 + 300 * me.random() - 140),
+                    g2: Math.abs(record.g2 + 300 * me.random() - 140),
+                    g3: Math.abs(record.g3 + 300 * me.random() - 140)
+                };
             data.push(record);
         }
+
         return data;
     }
 

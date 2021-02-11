@@ -1,54 +1,45 @@
 {
-    "namespace": "Ext",
-
-    "name": "font-awesome",
-    "type": "code",
-
-    "framework": "ext",
-    "toolkit": "classic",
-    "theme": "theme-neptune",
-    //"requires": [
-    //    ...
-    //],
-
-    "creator": "Sencha",
-    "summary": "Package wrapper for Font Awesome",
-    "detailedDescription": "Sencha Cmd package wrapper for Font Awesome (http://fortawesome.github.io/Font-Awesome/)",
-
-    "version": "6.2.0.981",
-    "compatVersion": "4.3.0",
-    "format": "1",
-
-    "output": "${framework.dir}/build/packages/${package.name}",
-    "local": true,
-
-    "resource": {
-        "paths": ""
-    },
-
-    "resources": [
-        {
-            "path": "${package.dir}/resources",
-            "output": "shared"
-        }
-    ],
-
-    "sass": {
+    "name": "@extjs/ext-font-awesome",
+    "ext-react-name": "@extjs/ext-react-font-awesome",
+    "ext-name": "@extjs/ext-font-awesome",
+    "SenchaExtName": "@sencha/ext-font-awesome",
+    "SenchaExtReactName": "@sencha/ext-react-font-awesome",
+    "version": "7.0.0.168",
+    "sencha": {
+        "name": "font-awesome",
         "namespace": "Ext",
-
-        "etc": "${package.dir}/sass/etc/all.scss",
-
-        "var": "${package.dir}/sass/var",
-
-        "src": [
-            "${package.dir}/sass/src",
-            "${package.dir}/sass/src/all.scss"
-        ]
-    },
-
-    "classpath": "${package.dir}/src",
-
-    "overrides": "${package.dir}/overrides",
-
-    "slicer": null
+        "type": "code",
+        "framework": "ext",
+        "toolkit": "classic",
+        "theme": "theme-neptune",
+        "creator": "Sencha",
+        "summary": "Package wrapper for Font Awesome",
+        "detailedDescription": "Sencha Cmd package wrapper for Font Awesome (http://fortawesome.github.io/Font-Awesome/)",
+        "version": "7.0.0.168",
+        "compatVersion": "5.6.3",
+        "format": "1",
+        "output": "${framework.dir}/build/packages/${package.name}",
+        "local": true,
+        "resource": {
+            "paths": ""
+        },
+        "resources": [
+            {
+                "path": "${package.dir}/resources",
+                "output": "shared"
+            }
+        ],
+        "sass": {
+            "namespace": "Ext",
+            "etc": "${package.dir}/sass/etc/all.scss",
+            "var": "${package.dir}/sass/var",
+            "src": [
+                "${package.dir}/sass/src",
+                "${package.dir}/sass/src/all.scss"
+            ]
+        },
+        "classpath": "${package.dir}/src",
+        "overrides": "${package.dir}/overrides",
+        "slicer": null
+    }
 }

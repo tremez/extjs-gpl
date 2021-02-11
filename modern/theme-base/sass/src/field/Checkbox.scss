@@ -1,15 +1,26 @@
 .#{$prefix}checkboxfield {
-    .#{$prefix}body-el {
-        text-align: center;
+    .#{$prefix}icon-el {
+        position: relative;
+        overflow: hidden;
     }
 
     .#{$prefix}input-el {
-        display: none;
+        margin: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+    }
+    
+    .#{$prefix}input:before {
+        pointer-events: none;
     }
 }
 
 .#{$prefix}field.#{$prefix}checkboxfield {
     .#{$prefix}input {
-        @include st-box();
+        display: flex;
     }
 }

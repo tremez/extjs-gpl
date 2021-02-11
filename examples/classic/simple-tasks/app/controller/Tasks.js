@@ -62,6 +62,7 @@ Ext.define('SimpleTasks.controller.Tasks', {
 
     init: function() {
         var me = this;
+
         me.control(
             {
                 'taskForm textfield': {
@@ -136,7 +137,7 @@ Ext.define('SimpleTasks.controller.Tasks', {
                     click: me.deleteTaskAndCloseEditWindow
                 },
                 'defaultTimeWindow [name=default_time]': {
-                    
+
                 },
                 '#cancel-default-time-edit-btn': {
                     click: me.hideDefaultTimeWindow
@@ -163,7 +164,7 @@ Ext.define('SimpleTasks.controller.Tasks', {
      * @param {Ext.EventObject} e
      */
     handleSpecialKey: function(field, e) {
-        if(e.getKey() === e.ENTER) {
+        if (e.getKey() === e.ENTER) {
             this.newTask();
         }
     },
@@ -181,7 +182,7 @@ Ext.define('SimpleTasks.controller.Tasks', {
             task = Ext.create('SimpleTasks.model.Task');
 
         // require title field to have a value
-        if(!titleField.getValue()) {
+        if (!titleField.getValue()) {
             return;
         }
 
@@ -191,7 +192,8 @@ Ext.define('SimpleTasks.controller.Tasks', {
         // try to blur all of this form's items to make sure that the user can't type into a field while saving
         form.items.each(function(item) {
             var inputEl = item.getEl().down('input');
-            if(inputEl) {
+
+            if (inputEl) {
                 inputEl.blur();
             }
         });
@@ -234,6 +236,7 @@ Ext.define('SimpleTasks.controller.Tasks', {
         if (task.modified && task.modified.done === false) {
             task.set('reminder', null);
         }
+
         task.save({
             success: function(task, operation) {
                 me.refreshListTree();
@@ -281,18 +284,19 @@ Ext.define('SimpleTasks.controller.Tasks', {
      */
     deleteTask: function(task, successCallback) {
         var me = this;
-        
+
         Ext.Msg.show({
             title: 'Delete Task?',
             msg: 'Are you sure you want to delete this task?',
             buttons: Ext.Msg.YESNO,
             fn: function(response) {
-                if(response === 'yes') {
+                if (response === 'yes') {
                     task.erase({
                         success: function(task, operation) {
                             me.getTasksStore().remove(task);
                             me.refreshListTree();
-                            if(successCallback) {
+
+                            if (successCallback) {
                                 successCallback();
                             }
                         },
@@ -353,11 +357,12 @@ Ext.define('SimpleTasks.controller.Tasks', {
             markCompleteBtn = Ext.getCmp('mark-complete-btn'),
             markActiveBtn = Ext.getCmp('mark-active-btn');
 
-        if(tasks.length === 0) {
+        if (tasks.length === 0) {
             deleteTaskBtn.disable();
             markCompleteBtn.disable();
             markActiveBtn.disable();
-        } else {
+        }
+        else {
             deleteTaskBtn.enable();
             markCompleteBtn.enable();
             markActiveBtn.enable();
@@ -438,6 +443,7 @@ Ext.define('SimpleTasks.controller.Tasks', {
      */
     syncTaskFormFieldWidth: function(headerContainer, column, width) {
         var field = this.getTaskForm().query('[name=' + column.dataIndex + ']')[0];
+
         if (field) {
             field.setWidth(width - 5);
         }
@@ -499,7 +505,8 @@ Ext.define('SimpleTasks.controller.Tasks', {
      */
     showActions: function(view, task, node, rowIndex, e) {
         var icons = Ext.fly(node).query('.x-action-col-icon');
-        Ext.each(icons, function(icon){
+
+        Ext.each(icons, function(icon) {
             Ext.get(icon).removeCls('x-hidden');
         });
     },
@@ -515,7 +522,8 @@ Ext.define('SimpleTasks.controller.Tasks', {
      */
     hideActions: function(view, task, node, rowIndex, e) {
         var icons = Ext.fly(node).query('.x-action-col-icon');
-        Ext.each(icons, function(icon){
+
+        Ext.each(icons, function(icon) {
             Ext.get(icon).addCls('x-hidden');
         });
     },
@@ -534,13 +542,15 @@ Ext.define('SimpleTasks.controller.Tasks', {
             markCompleteItem = Ext.getCmp('mark-complete-item'),
             markActiveItem = Ext.getCmp('mark-active-item');
 
-        if(task.get('done')) {
+        if (task.get('done')) {
             markCompleteItem.hide();
             markActiveItem.show();
-        } else {
+        }
+        else {
             markCompleteItem.show();
             markActiveItem.hide();
         }
+
         contextMenu.setTask(task);
         contextMenu.showAt(e.getX(), e.getY());
         e.preventDefault();
@@ -553,7 +563,7 @@ Ext.define('SimpleTasks.controller.Tasks', {
     showEditWindow: function(task) {
         var me = this,
             taskEditWindow = me.getTaskEditWindow(),
-            form =  taskEditWindow.down('form').getForm(),
+            form = taskEditWindow.down('form').getForm(),
             reminderCheckbox = form.findField('has_reminder'),
             dateField = form.findField('reminder_date'),
             timeField = form.findField('reminder_time'),
@@ -567,22 +577,24 @@ Ext.define('SimpleTasks.controller.Tasks', {
         Ext.getCmp('toggle-complete-btn').setText(task.get('done') ? 'Mark Active' : 'Mark Complete');
         taskEditWindow.show();
 
-        if(task.get('reminder')) {
+        if (task.get('reminder')) {
             // if the task already has a reminder set check the reminder checkbox and populate the reminder date and reminder time fields
             reminderCheckbox.setValue(true);
             dateField.setValue(Ext.Date.clearTime(reminder, true));
-            timeField.setValue(Ext.Date.format(reminder, timeField.format)); 
-        } else {
+            timeField.setValue(Ext.Date.format(reminder, timeField.format));
+        }
+        else {
             // if the task does not have a reminder set uncheck the reminder checkbox and set the reminder date and time fields to null
             reminderCheckbox.setValue(false);
             dateField.setValue(null);
-            timeField.setValue(null); 
+            timeField.setValue(null);
         }
 
-        if(task.get('done')) {
+        if (task.get('done')) {
             // if the task is done disable the reminder checkbox (reminders cannot be set on completed tasks)
             reminderCheckbox.disable();
-        } else {
+        }
+        else {
             reminderCheckbox.enable();
         }
 
@@ -613,27 +625,30 @@ Ext.define('SimpleTasks.controller.Tasks', {
             dateField = form.findField('reminder_date'),
             timeField = form.findField('reminder_time'),
             defaultTimeDate, defaultTimeMilliseconds;
-        
-        if(newValue) { // if the "has reminder" checkbox was checked
+
+        if (newValue) { // if the "has reminder" checkbox was checked
             windowEl.mask('loading');
             // get the default reminder time from the server or cache
             this.getDefaultReminderTime(function(defaultTime) {
                 // enable the date and time fields
                 dateField.enable();
                 timeField.enable();
-                if(!dateField.getValue()) {
+
+                if (!dateField.getValue()) {
                     // if the reminder date has not already been set, default the reminder date to the task's due date
                     // or the current date if the task does not have a due date
                     dateField.setValue(task.get('due') || Ext.Date.clearTime(new Date()));
                     timeField.setValue(defaultTime);
                 }
+
                 // set the form's hidden reminder field by combining the reminder date and time fields
                 defaultTimeDate = timeField.getValue();
                 defaultTimeMilliseconds = defaultTimeDate - Ext.Date.clearTime(defaultTimeDate, true);
                 form.findField('reminder').setValue(new Date(dateField.getValue().getTime() + defaultTimeMilliseconds));
                 windowEl.unmask();
             }, timeField.format);
-        } else { // if the "has reminder" checkbox was unchecked
+        }
+        else { // if the "has reminder" checkbox was unchecked
             // nullify the form's hidden reminder field and disable the reminder date and time fields
             form.findField('reminder').setValue(null);
             dateField.disable();
@@ -663,9 +678,11 @@ Ext.define('SimpleTasks.controller.Tasks', {
         if (form.isValid()) {
             windowEl.mask('saving');
             form.updateRecord(task);
+
             if (task.modified && task.modified.done === false) {
                 task.set('reminder', null);
             }
+
             task.save({
                 success: function(task, operation) {
                     windowEl.unmask();
@@ -674,7 +691,7 @@ Ext.define('SimpleTasks.controller.Tasks', {
                 },
                 failure: function(task, operation) {
                     var error = operation.getError(),
-                       msg = Ext.isObject(error) ? error.status + ' ' + error.statusText : error;
+                        msg = Ext.isObject(error) ? error.status + ' ' + error.statusText : error;
 
                     Ext.MessageBox.show({
                         title: 'Edit Task Failed',
@@ -685,7 +702,8 @@ Ext.define('SimpleTasks.controller.Tasks', {
                     windowEl.unmask();
                 }
             });
-        } else {
+        }
+        else {
             Ext.Msg.alert('Invalid Data', 'Please correct form errors');
         }
     },
@@ -703,10 +721,10 @@ Ext.define('SimpleTasks.controller.Tasks', {
             timeDate = form.findField('reminder_time').getValue(),
             time, reminderDate;
 
-        if(date && timeDate) {
+        if (date && timeDate) {
             time = timeDate - Ext.Date.clearTime(timeDate, true);
             reminderDate = new Date(date.getTime() + time);
-            reminderField.setValue(reminderDate); 
+            reminderField.setValue(reminderDate);
         }
     },
 
@@ -719,11 +737,13 @@ Ext.define('SimpleTasks.controller.Tasks', {
         var taskEditWindow = this.getTaskEditWindow(),
             doneField = taskEditWindow.down('form').getForm().findField('done');
 
-        if(doneField.getValue() === 'true') {
+        if (doneField.getValue() === 'true') {
             doneField.setValue(false);
-        } else {
+        }
+        else {
             doneField.setValue(true);
         }
+
         this.saveEditWindow();
     },
 
@@ -756,24 +776,27 @@ Ext.define('SimpleTasks.controller.Tasks', {
             defaultTimeDate, defaultTimeMilliseconds;
 
         me.getDefaultReminderTime(function(defaultTime) {
-            if(value === 'set') {
+            if (value === 'set') {
                 // if the user selected "Set Default Time", show the default time window.
                 defaultTimeField.setValue(defaultTime);
                 defaultTimeWindow.show();
-            } else {
-                if(Ext.isNumber(value)) {
+            }
+            else {
+                if (Ext.isNumber(value)) {
                     // if the user selected a reminder time, set the reminder by adding the user selected value to the due date
                     defaultTimeDate = Ext.Date.parse(defaultTime, defaultTimeField.format);
                     defaultTimeMilliseconds = defaultTimeDate - Ext.Date.clearTime(defaultTimeDate, true);
                     task.set('reminder', new Date(task.get('due').getTime() - (value * 86400000) + defaultTimeMilliseconds));
-                } else {
+                }
+                else {
                     // if the user selected "No Reminder" set the reminder field to null
                     task.set('reminder', null);
                 }
+
                 task.save({
                     failure: function(task, operation) {
                         var error = operation.getError(),
-                           msg = Ext.isObject(error) ? error.status + ' ' + error.statusText : error;
+                            msg = Ext.isObject(error) ? error.status + ' ' + error.statusText : error;
 
                         Ext.MessageBox.show({
                             title: 'Set Reminder Failed',
@@ -797,17 +820,22 @@ Ext.define('SimpleTasks.controller.Tasks', {
         var me = this,
             defaultReminderTime;
 
-        if(me.defaultReminderTime) {
+        if (me.defaultReminderTime) {
             callback(me.defaultReminderTime);
-        } else {
+        }
+        else {
             me.defaultReminderTime = Ext.Date.format(Ext.Date.parse('8', 'g'), timeFormat || "g:i A"); // the default time if no value can be retrieved from storage
+
             if (SimpleTasks.Settings.useLocalStorage) {
                 defaultReminderTime = localStorage.getItem('SimpleTasks-defaultReminderTime');
+
                 if (defaultReminderTime && Ext.Date.parse(defaultReminderTime, timeFormat)) {
                     me.defaultReminderTime = defaultReminderTime;
                 }
+
                 callback(me.defaultReminderTime);
-            } else {
+            }
+            else {
                 Ext.Ajax.request({
                     url: 'php/config/read.php',
                     params: {
@@ -815,9 +843,11 @@ Ext.define('SimpleTasks.controller.Tasks', {
                     },
                     success: function(response, options) {
                         var responseData = Ext.decode(response.responseText);
-                        if(responseData.success && responseData.value && Ext.Date.parse(responseData.value, timeFormat)) {
+
+                        if (responseData.success && responseData.value && Ext.Date.parse(responseData.value, timeFormat)) {
                             me.defaultReminderTime = responseData.value;
                         }
+
                         callback(me.defaultReminderTime);
                     },
                     failure: function(response, options) {
@@ -848,7 +878,7 @@ Ext.define('SimpleTasks.controller.Tasks', {
             windowEl = defaultTimeWindow.getEl(),
             field = defaultTimeWindow.down('form').getForm().findField('default_time'),
             time = field.getRawValue();
-            
+
         if (!field.isValid()) {
             return;
         }
@@ -857,7 +887,8 @@ Ext.define('SimpleTasks.controller.Tasks', {
             localStorage.setItem('SimpleTasks-defaultReminderTime', time);
             me.defaultReminderTime = time;
             defaultTimeWindow.close();
-        } else {
+        }
+        else {
             windowEl.mask('saving');
             Ext.Ajax.request({
                 url: 'php/config/update.php',
@@ -868,10 +899,11 @@ Ext.define('SimpleTasks.controller.Tasks', {
                 success: function(response, options) {
                     var responseData = Ext.decode(response.responseText);
 
-                    if(responseData.success) {
+                    if (responseData.success) {
                         me.defaultReminderTime = time;
                         defaultTimeWindow.close();
-                    } else {
+                    }
+                    else {
                         Ext.MessageBox.show({
                             title: 'Set Default Time Failed',
                             msg: responseData.message,
@@ -879,6 +911,7 @@ Ext.define('SimpleTasks.controller.Tasks', {
                             buttons: Ext.Msg.OK
                         });
                     }
+
                     windowEl.unmask();
                 },
                 failure: function(response, options) {
@@ -905,7 +938,8 @@ Ext.define('SimpleTasks.controller.Tasks', {
             now = new Date();
             me.getTasksStore().each(function(task) {
                 reminderDate = task.get('reminder');
-                if(reminderDate && reminderDate < now && !task.get('done')) {
+
+                if (reminderDate && reminderDate < now && !task.get('done')) {
                     me.showReminderWindow(task);
                 }
             });
@@ -925,7 +959,7 @@ Ext.define('SimpleTasks.controller.Tasks', {
         task.save({
             failure: function(task, operation) {
                 var error = operation.getError(),
-                   msg = Ext.isObject(error) ? error.status + ' ' + error.statusText : error;
+                    msg = Ext.isObject(error) ? error.status + ' ' + error.statusText : error;
 
                 Ext.MessageBox.show({
                     title: 'Clear Reminder Failed',
@@ -944,7 +978,6 @@ Ext.define('SimpleTasks.controller.Tasks', {
         reminderWindow.show();
     },
 
-
     /**
      * Handles a click on the snooze button on the reminder window.
      * Sets the task's reminder date to the current date plus snooze time selected
@@ -961,7 +994,7 @@ Ext.define('SimpleTasks.controller.Tasks', {
         task.save({
             failure: function(task, operation) {
                 var error = operation.getError(),
-                   msg = Ext.isObject(error) ? error.status + ' ' + error.statusText : error;
+                    msg = Ext.isObject(error) ? error.status + ' ' + error.statusText : error;
 
                 Ext.MessageBox.show({
                     title: 'Set Reminder Failed',

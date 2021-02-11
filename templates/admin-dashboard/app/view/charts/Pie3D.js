@@ -9,7 +9,7 @@ Ext.define('Admin.view.charts.Pie3D', {
     ],
 
     title: '3D Pie Chart',
-    iconCls: 'x-fa fa-pie-chart',
+    iconCls: 'x-fa fa-chart-pie',
 
     items: [{
         xtype: 'polar',

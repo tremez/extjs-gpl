@@ -18,7 +18,7 @@ Ext.theme.addShortcuts({
         config: {
             width: 100,
             height: 40,
-            hide: function(){}
+            hide: function() {}
         }
     }],
 
@@ -32,23 +32,23 @@ Ext.theme.addShortcuts({
                     scale: 'small'
                 },
                 items: [{
-                    xtype:'splitbutton',
+                    xtype: 'splitbutton',
                     text: 'Menu Button',
                     iconCls: 'add16',
-                    menu: [{text: 'Menu Item 1'}]
-                },{
-                    xtype:'splitbutton',
+                    menu: [{ text: 'Menu Item 1' }]
+                }, {
+                    xtype: 'splitbutton',
                     text: 'Cut',
                     iconCls: 'add16',
-                    menu: [{text: 'Cut Menu Item'}]
-                },{
+                    menu: [{ text: 'Cut Menu Item' }]
+                }, {
                     text: 'Copy',
                     iconCls: 'add16'
-                },{
+                }, {
                     text: 'Paste',
                     iconCls: 'add16',
-                    menu: [{text: 'Paste Menu Item'}]
-                },{
+                    menu: [{ text: 'Paste Menu Item' }]
+                }, {
                     text: 'Format',
                     iconCls: 'add16'
                 }]
@@ -64,23 +64,23 @@ Ext.theme.addShortcuts({
                     scale: 'small'
                 },
                 items: [{
-                    xtype:'splitbutton',
+                    xtype: 'splitbutton',
                     text: 'Menu Button',
                     iconCls: 'add16',
-                    menu: [{text: 'Menu Item 1'}]
-                },{
-                    xtype:'splitbutton',
+                    menu: [{ text: 'Menu Item 1' }]
+                }, {
+                    xtype: 'splitbutton',
                     text: 'Cut',
                     iconCls: 'add16',
-                    menu: [{text: 'Cut Menu Item'}]
-                },{
+                    menu: [{ text: 'Cut Menu Item' }]
+                }, {
                     text: 'Copy',
                     iconCls: 'add16'
-                },{
+                }, {
                     text: 'Paste',
                     iconCls: 'add16',
-                    menu: [{text: 'Paste Menu Item'}]
-                },{
+                    menu: [{ text: 'Paste Menu Item' }]
+                }, {
                     text: 'Format',
                     iconCls: 'add16'
                 }]
@@ -685,12 +685,12 @@ Ext.theme.addShortcuts({
     ],
 
     'widget.button': [
-        //small button
+        // small button
         {
             filename: 'btn-{ui}-small',
             config: {
                 scale: 'small',
-                text: '&#160;', 
+                text: '&#160;',
                 width: 100
             }
         },
@@ -717,7 +717,7 @@ Ext.theme.addShortcuts({
             config: {
                 scale: 'small',
                 text: '&#160;',
-				width: 100,
+                width: 100,
                 cls: Ext.baseCSSPrefix + 'btn-pressed'
             }
         },
@@ -744,18 +744,18 @@ Ext.theme.addShortcuts({
             config: {
                 scale: 'small',
                 text: '&#160;',
-				width: 100,
+                width: 100,
                 disabled: true
             }
         },
 
-        //medium button
+        // medium button
         {
             filename: 'btn-{ui}-medium',
             config: {
                 scale: 'medium',
                 text: '&#160;',
-				width: 100
+                width: 100
             }
         },
         {
@@ -764,7 +764,7 @@ Ext.theme.addShortcuts({
             config: {
                 scale: 'medium',
                 text: '&#160;',
-				width: 100
+                width: 100
             }
         },
         {
@@ -772,7 +772,7 @@ Ext.theme.addShortcuts({
             config: {
                 scale: 'medium',
                 text: '&#160;',
-				width: 100,
+                width: 100,
                 cls: Ext.baseCSSPrefix + 'btn-focus'
             }
         },
@@ -781,7 +781,7 @@ Ext.theme.addShortcuts({
             config: {
                 scale: 'medium',
                 text: '&#160;',
-				width: 100,
+                width: 100,
                 cls: Ext.baseCSSPrefix + 'btn-pressed'
             }
         },
@@ -808,18 +808,18 @@ Ext.theme.addShortcuts({
             config: {
                 scale: 'medium',
                 text: '&#160;',
-				width: 100,
+                width: 100,
                 disabled: true
             }
         },
 
-        //large button
+        // large button
         {
             filename: 'btn-{ui}-large',
             config: {
                 scale: 'large',
                 text: '&#160;',
-				width: 100
+                width: 100
             }
         },
         {
@@ -828,7 +828,7 @@ Ext.theme.addShortcuts({
             config: {
                 scale: 'large',
                 text: '&#160;',
-				width: 100
+                width: 100
             }
         },
         {
@@ -836,7 +836,7 @@ Ext.theme.addShortcuts({
             config: {
                 scale: 'large',
                 text: '&#160;',
-				width: 100,
+                width: 100,
                 cls: Ext.baseCSSPrefix + 'btn-focus'
             }
         },
@@ -845,7 +845,7 @@ Ext.theme.addShortcuts({
             config: {
                 scale: 'large',
                 text: '&#160;',
-				width: 100,
+                width: 100,
                 cls: Ext.baseCSSPrefix + 'btn-pressed'
             }
         },
@@ -872,7 +872,7 @@ Ext.theme.addShortcuts({
             config: {
                 scale: 'large',
                 text: '&#160;',
-				width: 100,
+                width: 100,
                 disabled: true
             }
         }

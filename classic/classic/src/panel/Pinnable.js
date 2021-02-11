@@ -12,7 +12,7 @@ Ext.define('Ext.panel.Pinnable', {
 
     unpinnedTip: 'Pin this item',
 
-    initPinnable: function () {
+    initPinnable: function() {
         var me = this,
             pinned = me.isPinned();
 
@@ -25,16 +25,17 @@ Ext.define('Ext.panel.Pinnable', {
         }));
     },
 
-    isPinned: function () {
+    isPinned: function() {
         return !this.floating;
     },
 
-    setPinned: function (pinned) {
+    setPinned: function(pinned) {
         var me = this,
             args;
 
         if (pinned !== me.isPinned()) {
             args = [me, pinned];
+
             if (me.fireEventArgs('beforepinchange', args) !== false) {
                 me.updatePinned(pinned);
                 me.fireEventArgs('pinchange', args);
@@ -42,11 +43,11 @@ Ext.define('Ext.panel.Pinnable', {
         }
     },
 
-    togglePin: function () {
+    togglePin: function() {
         this.setPinned(!this.isPinned());
     },
 
-    updatePinned: function (pinned) {
+    updatePinned: function(pinned) {
         var me = this,
             tool = me.pinTool;
 

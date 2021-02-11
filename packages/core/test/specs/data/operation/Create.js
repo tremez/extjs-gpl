@@ -1,6 +1,6 @@
-describe("Ext.data.operation.Create", function() {
+topSuite("Ext.data.operation.Create", ['Ext.data.ArrayStore'], function() {
     var op, clientAlien1, serverAlien1, clientAlien2, serverAlien2;
-    
+
     function makeOperation(cfg) {
         op = new Ext.data.operation.Create(cfg);
     }
@@ -35,16 +35,17 @@ describe("Ext.data.operation.Create", function() {
             planet: 'Vorash'
         };
     });
-    
-    afterEach(function(){
+
+    afterEach(function() {
         op = clientAlien1 = serverAlien1 = clientAlien2 = serverAlien2 = null;
         Ext.data.Model.schema.clear();
         Ext.undefine('spec.Alien');
     });
-    
+
     describe("execute", function() {
         it("should call the proxy create method and pass itself", function() {
             var proxy = new Ext.data.proxy.Proxy();
+
             spyOn(proxy, 'create').andReturn(new Ext.data.Request());
             makeOperation({
                 proxy: proxy
@@ -53,7 +54,7 @@ describe("Ext.data.operation.Create", function() {
             expect(proxy.create).toHaveBeenCalledWith(op);
         });
     });
-    
+
     describe("creating records", function() {
         describe("single record", function() {
 
@@ -123,13 +124,13 @@ describe("Ext.data.operation.Create", function() {
                 expect(clientAlien2.phantom).toBe(false);
             });
         });
-        
+
         describe("multiple records with a clientIdProperty", function() {
 
             beforeEach(function() {
                 clientAlien1.dirty = true;
                 clientAlien2.dirty = true;
-                
+
                 serverAlien1.clientId = clientAlien2.id;
                 serverAlien2.clientId = clientAlien1.id;
 

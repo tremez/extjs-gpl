@@ -1,150 +1,86 @@
 /**
- * A SimpleListItem is a simplified list item that is used by {@link Ext.dataview.List} when
- * useSimpleItems is set to true.  It supports disclosure icons and headers and generates the
- * slimmest markup possible to achieve this. It doesn't support container functionality like adding
- * or docking items. If you require those features you should have your list use
- * {@link Ext.dataview.ListItem} instances by setting the List's
- * {@link Ext.dataview.List#useSimpleItems useSimpleItems} config to `false`.
+ * This component is the default data item used by {@link Ext.dataview.List}.
+ *
+ * This component supports disclosure icons and generates the slimmest markup possible for
+ * a list data item. It doesn't support container functionality like adding or docking
+ * items. To enable those features, use {@link Ext.dataview.ListItem} instead:
+ *
+ *      {
+ *          xtype: 'list',
+ *          itemConfig: {
+ *              xtype: 'listitem'
+ *          }
+ *      }
  */
 Ext.define('Ext.dataview.SimpleListItem', {
     extend: 'Ext.Component',
     alternateClassName: 'Ext.dataview.component.SimpleListItem',
     xtype: 'simplelistitem',
 
-    requires: [
-        'Ext.dataview.ListItemDisclosure'
+    mixins: [
+        'Ext.dataview.Disclosable', // must come before Toolable
+        'Ext.mixin.Toolable',
+        'Ext.dataview.GenericItem',
+        'Ext.dataview.Pinnable'
     ],
 
-    config: {
-        disclosure: {
-            xtype: 'listitemdisclosure',
-            hidden: true
-        },
-
-        header: {
-            xtype: 'itemheader'
-        },
-
-        /**
-         * @private
-         * @cfg dataview
-         */
-        dataview: null,
-
-        /**
-         * @cfg {Ext.data.Model} record The model instance of this ListTplItem. It is controlled by the List.
-         * @accessor
-         */
-        record: null
-    },
-
     classCls: Ext.baseCSSPrefix + 'listitem',
-    bodyCls: Ext.baseCSSPrefix + 'listitem-body',
 
-    element: {
-        reference: 'element',
-        cls: Ext.baseCSSPrefix + 'simplelistitem',
+    inheritUi: true,
+
+    html: '\xA0',
+
+    template: [{
+        reference: 'bodyElement',
+        cls: Ext.baseCSSPrefix + 'body-el',
+        uiCls: 'body-el',
         children: [{
             reference: 'innerElement',
-            // this element does not follow the normal CSS class naming conventions
-            // for reference elements because it needs to match the same selector
-            // as the "body" component created by ListItem so it can share styling.
-            // it is named "innerElement" so that it will automatically be the container
-            // of the "x-innerhtml" element
-            cls: Ext.baseCSSPrefix + 'listitem-body'
+            cls: Ext.baseCSSPrefix + 'inner-el',
+            uiCls: 'inner-el'
         }]
+    }],
+
+    doDestroy: function() {
+        this.mixins.toolable.doDestroy.call(this);
+        this.callParent();
     },
 
-    initialize: function() {
-        var me = this,
-            disclosure, ui;
-
-        me.callParent();
-
-        disclosure = me.getDisclosure();
-
-        if (disclosure) {
-            ui = me.getUi();
-
-            if (ui) {
-                disclosure.setUi(ui);
-            }
-
-            me.element.appendChild(disclosure.renderElement);
-        }
-    },
-
-    applyHeader: function(header) {
-        if (header && !header.isComponent) {
-            header = Ext.factory(header, Ext.Component, this.getHeader());
-        }
-        return header;
-    },
-
-    updateHeader: function(header, oldHeader) {
-        if (oldHeader) {
-            oldHeader.destroy();
-        }
-    },
-
-    applyDisclosure: function(disclosure) {
-        if (disclosure && !disclosure.isComponent) {
-            disclosure = Ext.factory(disclosure, Ext.Component, this.getDisclosure());
-        }
-        return disclosure;
-    },
-
-    updateDisclosure: function(disclosure, oldDisclosure) {
-        if (disclosure && !this.isConfiguring) {
-            this.element.appendChild(disclosure.renderElement);
-        }
-
-        if (oldDisclosure) {
-            oldDisclosure.destroy();
-        }
-    },
-
-    updateUi: function(ui, oldUi) {
-        var me = this,
-            bodyCls = me.bodyCls,
-            innerElement = me.innerElement,
-            disclosure;
-
-        if (oldUi) {
-            innerElement.removeCls(oldUi, bodyCls);
-        }
-
-        if (ui) {
-            innerElement.addCls(ui, bodyCls);
-        }
-
-        if (!me.isConfiguring) {
-            disclosure = me.getDisclosure();
-
-            if (disclosure) {
-                disclosure.setUi(ui);
-            }
-        }
-
-        me.callParent([ui, oldUi]);
-    },
+    // It must be initialized as focusable, but must never respond itself.
+    // It is a slave of the NavigationModel
+    handleFocusEvent: Ext.emptyFn,
 
     updateRecord: function(record) {
         var me = this,
-            dataview = me.dataview || this.getDataview(),
-            data = record && dataview.prepareData(record.getData(true), dataview.getStore().indexOf(record), record),
-            disclosure = this.getDisclosure();
+            dataview, data;
 
-        me.updateData(data || null);
-
-        if (disclosure && record && dataview.getOnItemDisclosure()) {
-            var disclosureProperty = dataview.getDisclosureProperty();
-            disclosure[(data.hasOwnProperty(disclosureProperty) && data[disclosureProperty] === false) ? 'hide' : 'show']();
+        if (me.destroying || me.destroyed) {
+            return;
         }
+
+        dataview = me.parent;
+        data = dataview && dataview.gatherData(record);
+
+        me.updateData(data);
+
+        me.syncDisclosure(record);
     },
 
-    doDestroy: function() {
-        Ext.destroy(this.getHeader(), this.getDisclosure());
-        this.callParent();
+    updateHtml: function(html, oldHtml) {
+        this.callParent([this.handleEmptyText(html), oldHtml]);
+    },
+
+    privates: {
+        getRenderTarget: function() {
+            return this.innerElement;
+        },
+
+        invokeToolHandler: function(tool, handler, scope, args, e) {
+            if (this.invokeDisclosure(tool, handler, e)) {
+                return false;
+            }
+
+            return tool.invokeToolHandler(tool, handler, scope, args, e);
+        }
     }
 });

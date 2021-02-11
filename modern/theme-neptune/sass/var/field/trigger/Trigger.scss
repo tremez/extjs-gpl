@@ -6,13 +6,13 @@
  * @var {number}
  * Trigger width
  */
-$trigger-width: dynamic(px-to-em(22px, 13px));
+$trigger-width: dynamic(22px);
 
 /**
  * @var {number}
  * Trigger width in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$trigger-width-big: dynamic(px-to-em(30px, 15px));
+$trigger-width-big: dynamic(30px);
 
 /**
  * @var {color}
@@ -84,25 +84,61 @@ $trigger-icon-border-radius: dynamic(null);
  * @var {number}
  * Trigger icon size
  */
-$trigger-icon-size: dynamic(px-to-em(16px, 13px));
+$trigger-icon-size: dynamic(16px);
 
 /**
  * @var {number}
  * Trigger icon size in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$trigger-icon-size-big: dynamic(px-to-em(20px, 15px));
+$trigger-icon-size-big: dynamic(20px);
 
 /**
  * @var {number}
  * Trigger icon font-size
  */
-$trigger-icon-font-size: dynamic($trigger-icon-size);
+$trigger-icon-font-size: dynamic(null);
 
 /**
  * @var {number}
  * Trigger icon font-size in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$trigger-icon-font-size-big: dynamic($trigger-icon-size-big);
+$trigger-icon-font-size-big: dynamic(null);
+
+/**
+ * @var {map}
+ * Parameters for the "alt" textfield trigger UI.
+ */
+$trigger-alt-ui: dynamic((
+    width: 40px,
+    width-big: 45px,
+    icon-color: rgba(255, 255, 255, .6),
+    hovered-icon-color: rgba(255, 255, 255, .6),
+    pressed-icon-color: rgba(255, 255, 255, .6)
+));
+
+/**
+ * @var {map}
+ * Parameters for the "faded" textfield trigger UI.
+ */
+$trigger-faded-ui: dynamic((
+    width: 40px,
+    width-big: 45px,
+    icon-color: rgba(0, 0, 0, .4),
+    hovered-icon-color: rgba(0, 0, 0, .4),
+    pressed-icon-color: rgba(0, 0, 0, .4)
+));
+
+/**
+ * @var {map}
+ * Parameters for the "solo" textfield trigger UI.
+ */
+$trigger-solo-ui: dynamic((
+    width: 40px,
+    width-big: 40px,
+    icon-color: rgba(0, 0, 0, .4),
+    hovered-icon-color: rgba(0, 0, 0, .4),
+    pressed-icon-color: rgba(0, 0, 0, .4)
+));
 
 /**
  * Creates a visual theme for a Trigger.
@@ -199,24 +235,17 @@ $trigger-icon-font-size-big: dynamic($trigger-icon-size-big);
         }
 
         .#{$prefix}icon-el {
-            height: $icon-size;
-            width: $icon-size;
-            color: $icon-color;
             background-color: $icon-background-color;
             border-radius: $icon-border-radius;
 
             @include icon(
                 $icon: $icon,
+                $color: $icon-color,
+                $size: $icon-size,
+                $size-big: $icon-size-big,
                 $font-size: $icon-font-size,
                 $font-size-big: $icon-font-size-big
             );
-
-            @if $enable-big {
-                .#{$prefix}big & {
-                    height: $icon-size-big;
-                    width: $icon-size-big;
-                }
-            }
         }
 
         &.#{$prefix}interactive {

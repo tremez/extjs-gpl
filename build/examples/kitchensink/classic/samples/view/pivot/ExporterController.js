@@ -2,8 +2,7 @@
  * Controls the exporter examples.
  */
 Ext.define('KitchenSink.view.pivot.ExporterController', {
-    extend: 'KitchenSink.view.pivot.PivotController',
-
+    extend: 'Ext.app.ViewController',
     alias: 'controller.pivotexport',
 
     requires: [
@@ -11,110 +10,51 @@ Ext.define('KitchenSink.view.pivot.ExporterController', {
         'Ext.exporter.text.TSV',
         'Ext.exporter.text.Html',
         'Ext.exporter.excel.Xml',
-        'Ext.exporter.excel.Xlsx'
+        'Ext.exporter.excel.Xlsx',
+        'Ext.exporter.excel.PivotXlsx'
     ],
 
     events: ['beforedocumentsave', 'documentsave', 'dataready'],
 
-    exportAllToXml: function(){
+    yearLabelRenderer: function(value) {
+        return 'Year ' + value;
+    },
+
+    monthLabelRenderer: function(value) {
+        return Ext.Date.monthNames[value];
+    },
+
+    exportToPivotXlsx: function() {
         this.doExport({
-            type:       'excel03',
-            title:      'Pivot grid export demo',
-            fileName:   'ExportAll.xml'
+            type: 'pivotxlsx',
+            matrix: this.getView().getMatrix(),
+            title: 'Pivot grid export demo',
+            fileName: 'ExportPivot.xlsx'
         });
     },
 
-    exportVisibleToXml: function(){
-        this.doExport({
-            type:               'excel03',
-            title:              'Pivot grid export demo',
-            fileName:           'ExportVisible.xml',
-            onlyExpandedNodes:  true
-        });
+    exportTo: function(btn) {
+        var cfg = Ext.merge({
+            title: 'Pivot grid export demo',
+            fileName: 'PivotGridExport' + (btn.cfg.onlyExpandedNodes ? 'Visible' : '') + '.' + (btn.cfg.ext || btn.cfg.type)
+        }, btn.cfg);
+
+        this.doExport(cfg);
     },
 
-    exportAllToCSV: function(){
-        this.doExport({
-            type:       'csv',
-            title:      'Pivot grid export demo',
-            fileName:   'ExportAll.csv'
-        });
-    },
-
-    exportVisibleToCSV: function(){
-        this.doExport({
-            type:               'csv',
-            title:              'Pivot grid export demo',
-            fileName:           'ExportVisible.csv',
-            onlyExpandedNodes:  true
-        });
-    },
-
-    exportAllToTSV: function(){
-        this.doExport({
-            type:       'tsv',
-            title:      'Pivot grid export demo',
-            fileName:   'ExportAll.csv'
-        });
-    },
-
-    exportVisibleToTSV: function(){
-        this.doExport({
-            type:               'tsv',
-            title:              'Pivot grid export demo',
-            fileName:           'ExportVisible.csv',
-            onlyExpandedNodes:  true
-        });
-    },
-
-    exportAllToHtml: function(){
-        this.doExport({
-            type:       'html',
-            title:      'Pivot grid export demo',
-            fileName:   'ExportAll.html'
-        });
-    },
-
-    exportVisibleToHtml: function(){
-        this.doExport({
-            type:               'html',
-            title:              'Pivot grid export demo',
-            fileName:           'ExportVisible.html',
-            onlyExpandedNodes:  true
-        });
-    },
-
-    exportAllToXlsx: function(){
-        this.doExport({
-            type:       'excel07',
-            title:      'Pivot grid export demo',
-            fileName:   'ExportAll.xlsx'
-        });
-    },
-
-    exportVisibleToXlsx: function(){
-        this.doExport({
-            type:               'excel07',
-            title:              'Pivot grid export demo',
-            fileName:           'ExportVisible.xlsx',
-            onlyExpandedNodes:  true
-        });
-    },
-
-    doExport: function(config){
+    doExport: function(config) {
         this.getView().saveDocumentAs(config).then(null, this.onError);
     },
 
-    onError: function(error){
+    onError: function(error) {
         Ext.Msg.alert('Error', typeof error === 'string' ? error : 'Unknown error');
     },
 
-    onBeforeDocumentSave: function(view){
+    onBeforeDocumentSave: function(view) {
         view.mask('Document is prepared for export. Please wait ...');
     },
 
-    onDocumentSave: function(view){
+    onDocumentSave: function(view) {
         view.unmask();
     }
-
 });

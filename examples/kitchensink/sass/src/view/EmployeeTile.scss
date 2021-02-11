@@ -1,0 +1,21 @@
+.#{$prefix}employee-tile {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .#{$prefix}employee-tile-avatar {
+        height: 40px;
+        width: 40px;
+        border-radius: 4px;
+        margin: 6px;
+    }
+
+    .#{$prefix}employee-tile-name {
+        text-align: center;
+        font-size: 150%;
+    }
+
+    .#{$prefix}employee-tile-role {
+        text-align: center;
+    }
+}

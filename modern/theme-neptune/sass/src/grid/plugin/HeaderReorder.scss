@@ -1,0 +1,11 @@
+@include header-drop-indicator(
+    $header-drop-down-icon: $header-drop-indicator-down-icon,
+    $header-drop-up-icon: $header-drop-indicator-up-icon,
+    $header-drop-icon-font-family: $font-icon-font-family,
+    $header-drop-vertical-space: $header-drop-indicator-vertical-space,
+    $header-drop-horizontal-space-left: $header-drop-indicator-horizontal-space-left,
+    $header-drop-horizontal-space-right: $header-drop-indicator-horizontal-space-right,
+    $header-drop-icon-color: $confirm-color,
+    $header-drop-icon-font-weight: $header-drop-indicator-font-weight,
+    $header-drop-icon-font-size: $header-drop-indicator-font-size
+)

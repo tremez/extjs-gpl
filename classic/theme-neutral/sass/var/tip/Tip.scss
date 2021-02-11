@@ -259,6 +259,11 @@ $include-tip-form-invalid-ui: dynamic($include-default-uis);
  *
  * @param {number} [$ui-tip-anchor-width=$tip-anchor-width]
  * The width (in all orientations) of the anchor triangle.
+ *
+ * @param {string} $ui-label
+ * This is deprecated, please use $ui instead.
+ *
+ * @member Ext.tip.Tip
  */
 @mixin extjs-tip-ui(
     $ui: null,
@@ -392,14 +397,13 @@ $include-tip-form-invalid-ui: dynamic($include-default-uis);
         }
 
         @if $ui-background-color != $ui-border-color {
-            // This is the overlaying triangle which is $ui-border-width pixels smaller
-            // And has the $ui-background-color to create the impression of the background
-            // continuing into the anchor.
+            // This is the overlaying triangle which has the $ui-background-color to create
+            // the impression of the background continuing into the anchor.
             //
             // Only needed if the background color and border color are different
             .#{$prefix}tip-anchor:after {
                 position: absolute;
-                border: $anchor-border-width - $ui-border-width solid transparent;
+                border: $anchor-border-width solid transparent;
                 content: "";
 
                 @if $include-ie {
@@ -434,30 +438,30 @@ $include-tip-form-invalid-ui: dynamic($include-default-uis);
 
             .#{$prefix}tip-anchor-top:after {
                 border-top-width: 0;
-                border-bottom-color: $ui-background-color;
+                border-bottom: $ui-tip-anchor-height solid $ui-background-color;
                 top: $ui-border-width;
-                margin-left: -($ui-tip-anchor-height) + $ui-border-width;
+                margin-left: -$anchor-border-width;
             }
 
             .#{$prefix}tip-anchor-bottom:after {
                 border-bottom-width: 0;
-                border-top-color: $ui-background-color;
+                border-top: $ui-tip-anchor-height solid $ui-background-color;
                 bottom: $ui-border-width;
-                margin-left: -($ui-tip-anchor-height) + $ui-border-width;
+                margin-left: -$anchor-border-width;
             }
 
             .#{$prefix}tip-anchor-left:after {
                 border-left-width: 0;
-                border-right-color: $ui-background-color;
+                border-right: $ui-tip-anchor-height solid $ui-background-color;
                 left: $ui-border-width;
-                margin-top: -($ui-tip-anchor-height) + $ui-border-width;
+                margin-top: -$anchor-border-width;
             }
 
             .#{$prefix}tip-anchor-right:after {
                 border-right-width: 0;
-                border-left-color: $ui-background-color;
+                border-left: $ui-tip-anchor-height solid $ui-background-color;
                 right: $ui-border-width;
-                margin-top: -($ui-tip-anchor-height) + $ui-border-width;
+                margin-top: -$anchor-border-width;
             }
         } @else {
             .#{$prefix}tip-anchor-top {

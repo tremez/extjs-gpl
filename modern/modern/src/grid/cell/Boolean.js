@@ -9,70 +9,77 @@ Ext.define('Ext.grid.cell.Boolean', {
     extend: 'Ext.grid.cell.Text',
     xtype: 'booleancell',
 
+    isBooleanCell: true,
+
     config: {
         /**
          * @cfg {String} falseText
          * The string to display when the value is falsey (but not undefined).
+         * @locale
          */
         falseText: 'False',
 
         /**
          * @cfg {String} trueText
          * The string to display when the value is not falsey.
+         * @locale
          */
         trueText: 'True',
 
         /**
          * @cfg {String} undefinedText
          * The string to display when the column value is `undefined`.
+         * @locale
          */
-        undefinedText: ''
+        undefinedText: '\xA0'
     },
 
-    updateColumn: function (column, oldColumn) {
-        this.callParent([column, oldColumn]);
+    updateColumn: function(column, oldColumn) {
+        var text;
 
-        if (column) {
-            var text = column.getFalseText();
+        this.callParent([ column, oldColumn ]);
+
+        if (column && column.isBooleanColumn) {
+            text = column.getFalseText();
 
             if (text !== null) {
                 this.setFalseText(text);
             }
 
             text = column.getTrueText();
+
             if (text !== null) {
                 this.setTrueText(text);
             }
 
             text = column.getUndefinedText();
+
             if (text !== null) {
                 this.setUndefinedText(text);
             }
         }
     },
 
-    updateFalseText: function () {
+    updateFalseText: function() {
         if (!this.isConfiguring) {
             this.writeValue();
         }
     },
 
-
-    updateTrueText: function () {
+    updateTrueText: function() {
         if (!this.isConfiguring) {
             this.writeValue();
         }
     },
 
-    updateUndefinedText: function () {
+    updateUndefinedText: function() {
         if (!this.isConfiguring) {
             this.writeValue();
         }
     },
 
-    writeValue: function () {
-        var me = this,
-            value = me.getValue();
+    formatValue: function(value) {
+        var me = this;
 
         if (value === undefined) {
             value = me.getUndefinedText();
@@ -84,6 +91,6 @@ Ext.define('Ext.grid.cell.Boolean', {
             value = me.getTrueText();
         }
 
-        me.setRawValue(value);
+        return value;
     }
 });

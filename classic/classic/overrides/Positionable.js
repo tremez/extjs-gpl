@@ -50,25 +50,29 @@ Ext.define('Ext.overrides.util.Positionable', {
 
         if (scroll) {
             Ext.getWin().on('scroll', action, null,
-                    {buffer: !isNaN(monitorScroll) ? monitorScroll : 50});
+                            { buffer: !isNaN(monitorScroll) ? monitorScroll : 50 });
         }
+
         action(); // align immediately
+
         return me;
     },
 
     getAnchor: function() {
         var el = this.el,
             data, anchor;
-            
+
         if (!el || !el.dom) {
             return;
         }
+
         data = el.getData();
         anchor = data._anchor;
 
-        if(!anchor){
+        if (!anchor) {
             anchor = data._anchor = {};
         }
+
         return anchor;
     },
 
@@ -83,6 +87,7 @@ Ext.define('Ext.overrides.util.Positionable', {
             if (me.maxHeight) {
                 me.setMaxHeight(null);
             }
+
             newMaxHeight = true;
         }
 
@@ -93,9 +98,10 @@ Ext.define('Ext.overrides.util.Positionable', {
         if (newMaxHeight && (newMaxHeight = newRegion.getHeight()) !== me.getHeight()) {
             me.setMaxHeight(newMaxHeight);
         }
+
         return me;
     },
-    
+
     /**
      * @method move
      * Move the element relative to its current position.
@@ -120,11 +126,14 @@ Ext.define('Ext.overrides.util.Positionable', {
 
         if (anchor && anchor.fn) {
             Ext.un('resize', anchor.fn);
+
             if (anchor.scroll) {
                 Ext.getWin().on('scroll', anchor.fn);
             }
+
             delete anchor.fn;
         }
+
         return this;
     },
 
@@ -157,7 +166,8 @@ Ext.define('Ext.overrides.util.Positionable', {
                     afteranimate: Ext.Function.bind(me.afterSetPosition, me, [box.x, box.y])
                 }
             }, animate));
-        } else {
+        }
+        else {
             me.callParent([box]);
         }
 
@@ -191,5 +201,4 @@ Ext.define('Ext.overrides.util.Positionable', {
      * Element animation config object
      * @return {Ext.util.Positionable} this
      */
-
 });

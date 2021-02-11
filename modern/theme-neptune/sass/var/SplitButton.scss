@@ -1,0 +1,1590 @@
+/**
+ * @class Ext.SplitButton
+ */
+
+/**
+ * @var {color}
+ * Split Button background-color
+ */
+$splitButton-background-color: dynamic($neutral-light-color);
+
+/**
+ * @var {boolean}
+ * Determines if styles are added to invert text and background colors for
+ * confirm & decline buttons UIs when combined with the 'alt' UI
+ */
+$enable-inverted-alt-splitButton: dynamic(false);
+
+/**
+ * @var {color}
+ * Split Button background-color when hovered
+ */
+$splitButton-hovered-background-color: dynamic(button-hovered-background-color($splitButton-background-color));
+
+/**
+ * @var {color}
+ * Split Button background-color when pressed
+ */
+$splitButton-pressed-background-color: dynamic(button-pressed-background-color($splitButton-background-color));
+
+/**
+ * @var {color}
+ * Split Button background-color when focused
+ */
+$splitButton-focused-background-color: dynamic(button-focused-background-color($splitButton-background-color));
+
+/**
+ * @var {color}
+ * Split Button background-color when disabled
+ */
+$splitButton-disabled-background-color: dynamic(button-disabled-background-color($splitButton-background-color));
+
+//# fashion replaces $splitButton-shadow
+/**
+ * @var {list}
+ * Split Button box-shadow
+ */
+$splitButton-box-shadow: dynamic(null);
+
+/**
+ * @var {list}
+ * Split Button box-shadow when hovered
+ */
+$splitButton-hovered-box-shadow: dynamic(null);
+
+//# fashion replaces $splitButton-pressed-shadow
+/**
+ * @var {list}
+ * Split Button box-shadow when pressed
+ */
+$splitButton-pressed-box-shadow: dynamic(null);
+
+/**
+ * @var {list}
+ * Split Button box-shadow when focused
+ */
+$splitButton-focused-box-shadow: dynamic(null);
+
+/**
+ * @var {list}
+ * Split Button box-shadow when disabled
+ */
+$splitButton-disabled-box-shadow: dynamic(null);
+
+/**
+ * @var {string/list}
+ * Split Button background-gradient.  Can be either the name of a gradient defined by
+ * {@link Global_CSS#background-gradient} or a list of color stops.
+ */
+$splitButton-background-gradient: dynamic(button-background-gradient($splitButton-background-color));
+
+/**
+ * @var {string/list}
+ * Split Button background-gradient when hovered.  Can be either the name of a gradient
+ * defined by {@link Global_CSS#background-gradient} or a list of color stops.
+ */
+$splitButton-hovered-background-gradient: dynamic(button-hovered-background-gradient($splitButton-hovered-background-color));
+
+/**
+ * @var {string/list}
+ * Split Button background-gradient when pressed.  Can be either the name of a gradient
+ * defined by {@link Global_CSS#background-gradient} or a list of color stops.
+ */
+$splitButton-pressed-background-gradient: dynamic(button-pressed-background-gradient($splitButton-pressed-background-color));
+
+/**
+ * @var {string/list}
+ * Split Button background-gradient when focused.  Can be either the name of a gradient
+ * defined by {@link Global_CSS#background-gradient} or a list of color stops.
+ */
+$splitButton-focused-background-gradient: dynamic(button-focused-background-gradient($splitButton-focused-background-color));
+
+/**
+ * @var {string/list}
+ * Split Button background-gradient when disabled.  Can be either the name of a gradient
+ * defined by {@link Global_CSS#background-gradient} or a list of color stops.
+ */
+$splitButton-disabled-background-gradient: dynamic(button-disabled-background-gradient($splitButton-disabled-background-color));
+
+/**
+ * @var {color}
+ * Split Button text color
+ */
+$splitButton-color: dynamic(button-color($splitButton-background-color));
+
+/**
+ * @var {color}
+ * Split Button text color when hovered
+ */
+$splitButton-hovered-color: dynamic(button-hovered-color($splitButton-hovered-background-color, $splitButton-color));
+
+/**
+ * @var {color}
+ * Split Button text color when pressed
+ */
+$splitButton-pressed-color: dynamic(button-pressed-color($splitButton-pressed-background-color, $splitButton-color));
+
+/**
+ * @var {color}
+ * Split Button text color when focused
+ */
+$splitButton-focused-color: dynamic(button-focused-color($splitButton-focused-background-color, $splitButton-color));
+
+/**
+ * @var {color}
+ * Split Button color when disabled
+ */
+$splitButton-disabled-color: dynamic(button-disabled-color($splitButton-disabled-background-color));
+
+/**
+ * @var {color/list}
+ * Split Button border-color
+ */
+$splitButton-border-color: dynamic(button-border-color($splitButton-background-color));
+
+/**
+ * @var {color/list}
+ * Split Button border-color when hovered
+ */
+$splitButton-hovered-border-color: dynamic(button-hovered-border-color($splitButton-hovered-background-color));
+
+/**
+ * @var {color/list}
+ * Split Button border-color when pressed
+ */
+$splitButton-pressed-border-color: dynamic(button-pressed-border-color($splitButton-pressed-background-color));
+
+/**
+ * @var {color/list}
+ * Split Button border-color when focused
+ */
+$splitButton-focused-border-color: dynamic(button-focused-border-color($splitButton-focused-background-color));
+
+/**
+ * @var {color/list}
+ * Split Button border-color when disabled
+ */
+$splitButton-disabled-border-color: dynamic(button-disabled-border-color($splitButton-disabled-background-color));
+
+/**
+ * @var {color}
+ * Split Button focus outline color
+ */
+$splitButton-focused-outline-color: dynamic(button-focused-outline-color($splitButton-background-color, $splitButton-focused-color));
+
+/**
+ * @var {string}
+ * Split Button focus outline style
+ */
+$splitButton-focused-outline-style: dynamic(solid);
+
+/**
+ * @var {number}
+ * Split Button focus outline width
+ */
+$splitButton-focused-outline-width: dynamic(1px);
+
+/**
+ * @var {number}
+ * Split Button focus outline offset
+ */
+$splitButton-focused-outline-offset: dynamic(-2px);
+
+/**
+ * @var {number/list}
+ * Split Button border-width
+ */
+$splitButton-border-width: dynamic(1px);
+
+/**
+ * @var {string/list}
+ * Split Button border-style
+ */
+$splitButton-border-style: dynamic(solid);
+
+/**
+ * @var {number}
+ * Split Button border-radius
+ */
+$splitButton-border-radius: dynamic(3px);
+
+/**
+ * @var {number}
+ * Split Button border-radius in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$splitButton-border-radius-big: dynamic(3px);
+
+/**
+ * @var {string/number}
+ * Split Button font-weight
+ */
+$splitButton-font-weight: dynamic($font-weight-bold);
+
+/**
+ * @var {number}
+ * Split Button font-size
+ */
+$splitButton-font-size: dynamic($font-size);
+
+/**
+ * @var {number}
+ * Split Button font-size in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$splitButton-font-size-big: dynamic($font-size-big);
+
+/**
+ * @var {number}
+ * Split Button line-height
+ */
+$splitButton-line-height: dynamic(16px);
+
+/**
+ * @var {number}
+ * Split Button line-height in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$splitButton-line-height-big: dynamic(20px);
+
+/**
+ * @var {string}
+ * Split Button font-family
+ */
+$splitButton-font-family: dynamic($font-family);
+
+/**
+ * @var {string}
+ * Split Button text-transform
+ */
+$splitButton-text-transform: dynamic(null);
+
+/**
+ * @var {string}
+ * Split Button text-transform in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$splitButton-text-transform-big: dynamic($splitButton-text-transform);
+
+/**
+ * @var {number/list}
+ * Split Button padding
+ */
+$splitButton-padding: dynamic(3px 8px);
+
+/**
+ * @var {number/list}
+ * Split Button padding in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$splitButton-padding-big: dynamic(5px 10px);
+
+/**
+ * @var {number/list}
+ * Split Button padding when an icon is present without text
+ */
+$splitButton-icon-only-padding: dynamic(nth($splitButton-padding, 1));
+
+/**
+ * @var {number/list}
+ * Split Button padding when an icon is present without text in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$splitButton-icon-only-padding-big: dynamic(nth($splitButton-padding-big, 1));
+
+/**
+ * @var {color}
+ * Split Button icon color.
+ */
+$splitButton-icon-color: dynamic($splitButton-color);
+
+/**
+ * @var {color}
+ * Split Button icon color when hovered.
+ */
+$splitButton-hovered-icon-color: dynamic($splitButton-hovered-color);
+
+/**
+ * @var {color}
+ * Split Button icon color when pressed.
+ */
+$splitButton-pressed-icon-color: dynamic($splitButton-pressed-color);
+
+/**
+ * @var {color}
+ * Split Button icon color when focused
+ */
+$splitButton-focused-icon-color: dynamic($splitButton-focused-color);
+
+/**
+ * @var {color}
+ * Split Button icon color when disabled
+ */
+$splitButton-disabled-icon-color: dynamic($splitButton-disabled-color);
+
+/**
+ * @var {number}
+ * Split Button icon size.
+ */
+$splitButton-icon-size: dynamic($splitButton-line-height);
+
+/**
+ * @var {number}
+ * Split Button icon size in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$splitButton-icon-size-big: dynamic($splitButton-line-height-big);
+
+/**
+ * @var {number}
+ * Split Button icon font-size
+ */
+$splitButton-icon-font-size: dynamic(null);
+
+/**
+ * @var {number}
+ * Split Button icon font-size in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$splitButton-icon-font-size-big: dynamic(null);
+
+/**
+ * @var {number}
+ * The space between the button icon and text when the icon is horizontally aligned
+ */
+$splitButton-icon-horizontal-spacing: dynamic(5px);
+
+/**
+ * @var {number}
+ * The space between the button icon and text when the icon is horizontally aligned
+ * in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$splitButton-icon-horizontal-spacing-big: dynamic(8px);
+
+/**
+ * @var {number}
+ * The space between the button icon and text when the icon is vertically aligned
+ */
+$splitButton-icon-vertical-spacing: dynamic(2px);
+
+/**
+ * @var {number}
+ * The space between the button icon and text when the icon is vertically aligned
+ * in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$splitButton-icon-vertical-spacing-big: dynamic(3px);
+
+/**
+ * @var {number}
+ * Split Button opacity when disabled
+ */
+$splitButton-disabled-opacity: dynamic(.5);
+
+/**
+ * @var {string}
+ * Split Button arrow icon
+ */
+$splitButton-arrow-icon: dynamic($fa-var-caret-down);
+
+/**
+ * @var {color}
+ * Split Button arrow icon color
+ */
+$splitButton-arrow-icon-color: dynamic($splitButton-color);
+
+/**
+ * @var {color}
+ * Split Button arrow icon color when hovered
+ */
+$splitButton-hovered-arrow-icon-color: dynamic($splitButton-hovered-icon-color);
+
+/**
+ * @var {color}
+ * Split Button arrow icon color when pressed
+ */
+$splitButton-pressed-arrow-icon-color: dynamic($splitButton-pressed-icon-color);
+
+/**
+ * @var {color}
+ * Split Button arrow icon color when focused
+ */
+$splitButton-focused-arrow-icon-color: dynamic($splitButton-focused-icon-color);
+
+/**
+ * @var {color}
+ * Split Button arrow icon color when disabled
+ */
+$splitButton-disabled-arrow-icon-color: dynamic($splitButton-disabled-icon-color);
+
+/**
+ * @var {number}
+ * Split Button arrow icon size
+ */
+$splitButton-arrow-icon-size: dynamic($splitButton-line-height);
+
+/**
+ * @var {number}
+ * Split Button arrow icon size in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$splitButton-arrow-icon-size-big: dynamic($splitButton-line-height-big);
+
+/**
+ * @var {number}
+ * Split Button arrow icon font-size
+ */
+$splitButton-arrow-icon-font-size: dynamic(null);
+
+/**
+ * @var {number}
+ * Split Button arrow icon font-size in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$splitButton-arrow-icon-font-size-big: dynamic(null);
+
+/**
+ * @var {number}
+ * The space between the button arrow and text when {@link #arrowAlign} is `'right'`
+ */
+$splitButton-arrow-horizontal-spacing: dynamic(3px);
+
+/**
+ * @var {number}
+ * The space between the button arrow and text when {@link #arrowAlign} is `'right'`
+ * in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$splitButton-arrow-horizontal-spacing-big: dynamic(8px);
+
+/**
+ * @var {number}
+ * The space between the button arrow and text when {@link #arrowAlign} is `'bottom'`
+ */
+$splitButton-arrow-vertical-spacing: dynamic(null);
+
+/**
+ * @var {number}
+ * The space between the button arrow and text when {@link #arrowAlign} is `'bottom'`
+ * in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$splitButton-arrow-vertical-spacing-big: dynamic(null);
+
+/**
+ * @var {number}
+ * Split Button padding
+ */
+$splitButton-Inner-padding: dynamic(14px);
+
+/**
+ * @var {number}
+ * Split Button vertical padding when {@link #arrowAlign} is `'bottom'`
+ */
+$splitButton-bottom-vertical-padding: dynamic(10px);
+
+/**
+ * @var {number}
+ * Split Button arrow element horizontal padding
+ */
+$splitButton-arrow-horizontal-padding: dynamic(3px);
+
+/**
+ * @var {number}
+ * Split Button arrow element vertical padding when arrow {@link #arrowAlign} is `'bottom'`
+ */
+$splitButton-arrow-bottom-vertical-padding: dynamic(5px);
+
+/**
+ * @var {map}
+ * Parameters for the "action" splitButton UI.
+ * Set to `null` to eliminate the UI from the CSS output.
+ */
+$splitButton-action-ui: dynamic((
+    background-color: $base-highlight-color
+));
+
+/**
+ * @var {map}
+ * Parameters for the "alt" splitButton UI.
+ * Set to `null` to eliminate the UI from the CSS output.
+ */
+$splitButton-alt-ui: dynamic((
+    color: $panel-tool-color,
+    background-color: transparent,
+    border-width: 0,
+    pressed-background-color: transparent
+));
+
+/**
+ * @var {map}
+ * Parameters for the "confirm" splitButton UI.
+ * Set to `null` to eliminate the UI from the CSS output.
+ */
+$splitButton-confirm-ui: dynamic((
+    background-color: desaturate(darken($confirm-color, 10%), 5%)
+));
+
+/**
+ * @var {map}
+ * Parameters for the "decline" splitButton UI.
+ * Set to `null` to eliminate the UI from the CSS output.
+ */
+$splitButton-decline-ui: dynamic((
+    background-color: desaturate(darken($alert-color, 10%), 5%)
+));
+
+/**
+ * @var {map}
+ * Parameters for the "round" splitButton UI.
+ * Set to `null` to eliminate the UI from the CSS output.
+ */
+$splitButton-round-ui: dynamic((
+    border-radius: 10000px,
+    border-radius-big: 20000px
+));
+
+/**
+ * @var {map}
+ * Parameters for the "square" splitButton UI.
+ * Set to `null` to eliminate the UI from the CSS output.
+ */
+$splitButton-square-ui: dynamic((
+    border-radius: 0,
+    border-radius-big: 0
+));
+
+/**
+ * @var {map}
+ * Parameters for the "flat" splitButton UI.
+ * Set to `null` to eliminate the UI from the CSS output.
+ */
+$splitButton-flat-ui: dynamic((
+    border-width: 0,
+    background-color: transparent
+));
+
+/**
+ * @var {map}
+ * Parameters for the "plain" splitButton UI.
+ * Set to `null` to eliminate the UI from the CSS output.
+ */
+$splitButton-plain-ui: dynamic((
+    border-width: 0,
+    background-color: transparent
+));
+
+/**
+ * @var {map}
+ * Parameters for the "segmented" splitButton UI.
+ * Set to `null` to eliminate the UI from the CSS output.
+ */
+$splitButton-segmented-ui: dynamic(null);
+
+/**
+ * @var {map}
+ * Parameters for the "raised" splitButton UI.
+ * Set to `null` to eliminate the UI from the CSS output.
+ */
+$splitButton-raised-ui: dynamic((
+    box-shadow: (2px 2px 5px 0 rgba(0, 0, 0, 0.12), 2px 2px 5px 0 rgba(0, 0, 0, 0.08))
+));
+
+/**
+ * Creates a visual theme for a SplitButton.
+ *
+ * @param {string} $ui
+ * The name of the UI being created. Can not included spaces or special punctuation
+ * (used in CSS class names).
+ *
+ * @param {String} [$xtype=splitButton] (protected) The {@link Ext.Class#xtype} to use
+ * in CSS selectors.  For use by UI mixins of derived classes.
+ *
+ * @param {color} $background-color
+ * splitButton background-color
+ *
+ * @param {color} $hovered-background-color
+ * splitButton background-color when hovered
+ *
+ * @param {color} $pressed-background-color
+ * splitButton background-color when pressed
+ *
+ * @param {color} $focused-background-color
+ * splitButton background-color when focused
+ *
+ * @param {color} $disabled-background-color
+ * splitButton background-color when disabled
+ *
+ * @param {list} $box-shadow
+ * splitButton box-shadow
+ *
+ * @param {list} $hovered-box-shadow
+ * splitButton box-shadow when hovered
+ *
+ * @param {list} $pressed-box-shadow
+ * splitButton box-shadow when pressed
+ *
+ * @param {list} $focused-box-shadow
+ * splitButton box-shadow when focused
+ *
+ * @param {list} $disabled-box-shadow
+ * splitButton box-shadow when disabled
+ *
+ * @param {list} $box-shadow-transition
+ * The transition for the splitButton's box-shadow
+ *
+ * @param {string/list} $background-gradient
+ * splitButton background-gradient.  Can be either the name of a gradient defined by
+ * {@link Global_CSS#background-gradient} or a list of color stops.
+ *
+ * @param {string/list} $hovered-background-gradient
+ * splitButton background-gradient when hovered.  Can be either the name of a gradient
+ * defined by {@link Global_CSS#background-gradient} or a list of color stops.
+ *
+ * @param {string/list} $pressed-background-gradient
+ * splitButton background-gradient when pressed.  Can be either the name of a gradient
+ * defined by {@link Global_CSS#background-gradient} or a list of color stops.
+ *
+ * @param {string/list} $focused-background-gradient
+ * splitButton background-gradient when focused.  Can be either the name of a gradient
+ * defined by {@link Global_CSS#background-gradient} or a list of color stops.
+ *
+ * @param {string/list} $disabled-background-gradient
+ * splitButton background-gradient when disabled.  Can be either the name of a gradient
+ * defined by {@link Global_CSS#background-gradient} or a list of color stops.
+ *
+ * @param {color} $color
+ * splitButton text color
+ *
+ * @param {color} $hovered-color
+ * splitButton text color when hovered
+ *
+ * @param {color} $pressed-color
+ * splitButton text color when pressed
+ *
+ * @param {color} $focused-color
+ * splitButton text color when focused
+ *
+ * @param {color} $disabled-color
+ * splitButton color when disabled
+ *
+ * @param {color/list} $border-color
+ * splitButton border-color
+ *
+ * @param {color/list} $hovered-border-color
+ * splitButton border-color when hovered
+ *
+ * @param {color/list} $pressed-border-color
+ * splitButton border-color when pressed
+ *
+ * @param {color/list} $focused-border-color
+ * splitButton border-color when focused
+ *
+ * @param {color/list} $disabled-border-color
+ * splitButton border-color when disabled
+ *
+ * @param {color} $focused-outline-color
+ * splitButton focus outline color
+ *
+ * @param {string} $focused-outline-style
+ * splitButton focus outline style
+ *
+ * @param {number} $focused-outline-width
+ * splitButton focus outline width
+ *
+ * @param {number} $focused-outline-offset
+ * splitButton focus outline offset
+ *
+ * @param {number/list} $border-width
+ * splitButton border-width
+ *
+ * @param {string/list} $border-style
+ * splitButton border-style
+ *
+ * @param {number} $border-radius
+ * splitButton border-radius
+ *
+ * @param {number} $border-radius-big
+ * splitButton border-radius in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {string/number} $font-weight
+ * splitButton font-weight
+ *
+ * @param {number} $font-size
+ * splitButton font-size
+ *
+ * @param {number} $font-size-big
+ * splitButton font-size in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {number} $line-height
+ * splitButton line-height
+ *
+ * @param {number} $line-height-big
+ * splitButton line-height in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {string} $font-family
+ * splitButton font-family
+ *
+ * @param {string} $text-transform
+ * splitButton text-transform
+ *
+ * @param {string} $text-transform-big
+ * splitButton text-transform in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {number/list} $padding
+ * splitButton padding
+ *
+ * @param {number/list} $padding-big
+ * splitButton padding in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {number/list} $icon-only-padding
+ * splitButton padding when an icon is present without text
+ *
+ * @param {number/list} $icon-only-padding-big
+ * splitButton padding when an icon is present without text in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {color} $icon-color
+ * splitButton icon color.
+ *
+ * @param {color} $hovered-icon-color
+ * splitButton icon color when hovered.
+ *
+ * @param {color} $pressed-icon-color
+ * splitButton icon color when pressed.
+ *
+ * @param {color} $focused-icon-color
+ * splitButton icon color when focused
+ *
+ * @param {color} $disabled-icon-color
+ * splitButton icon color when disabled
+ *
+ * @param {number} $icon-size
+ * splitButton icon size.
+ *
+ * @param {number} $icon-size-big
+ * splitButton icon size in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {number} $icon-font-size
+ * splitButton icon font-size
+ *
+ * @param {number} $icon-font-size-big
+ * splitButton icon font-size in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {number} $icon-horizontal-spacing
+ * The space between the splitButton icon and text when the icon is horizontally aligned
+ *
+ * @param {number} $icon-horizontal-spacing-big
+ * The space between the splitButton icon and text when the icon is horizontally aligned
+ * in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {number} $icon-vertical-spacing
+ * The space between the splitButton icon and text when the icon is vertically aligned
+ *
+ * @param {number} $icon-vertical-spacing-big
+ * The space between the splitButton icon and text when the icon is vertically aligned
+ * in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {number} $disabled-opacity
+ * splitButton opacity when disabled
+ *
+ * @param {string} $arrow-icon
+ * splitButton arrow icon
+ *
+ * @param {color} $arrow-icon-color
+ * splitButton arrow icon color
+ *
+ * @param {color} $hovered-arrow-icon-color
+ * splitButton arrow icon color when hovered
+ *
+ * @param {color} $pressed-arrow-icon-color
+ * splitButton arrow icon color when pressed
+ *
+ * @param {color} $focused-arrow-icon-color
+ * splitButton arrow icon color when focused
+ *
+ * @param {color} $disabled-arrow-icon-color
+ * splitButton arrow icon color when disabled
+ *
+ * @param {number} $arrow-icon-size
+ * splitButton arrow icon size
+ *
+ * @param {number} $arrow-icon-size-big
+ * splitButton arrow icon size in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {number} $arrow-icon-font-size
+ * splitButton arrow icon font-size
+ *
+ * @param {number} $arrow-icon-font-size-big
+ * splitButton arrow icon font-size in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {number} $arrow-horizontal-spacing
+ * The space between the splitButton arrow and text when {@link #arrowAlign} is `'right'`
+ *
+ * @param {number} $arrow-horizontal-spacing-big
+ * The space between the splitButton arrow and text when {@link #arrowAlign} is `'right'`
+ * in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {number} $arrow-vertical-spacing
+ * The space between the splitButton arrow and text when {@link #arrowAlign} is `'bottom'`
+ *
+ * @param {number} $arrow-vertical-spacing-big
+ * The space between the splitButton arrow and text when {@link #arrowAlign} is `'bottom'`
+ * in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {boolean} [$derive-colors=true]
+ * Private
+ *
+ * @param {boolean} [$derive-border-colors=true]
+ * Private
+ *
+ * @param {boolean} [$derive-outline-colors=true]
+ * Private
+ *
+ * @param {boolean} [$derive-background-colors=true]
+ * Private
+ *
+ * @param {boolean} [$derive-background-gradients=true]
+ * Private
+ *
+ * @param {boolean} [$derive-icon-colors=true]
+ * Private
+ *
+ * @param {boolean} [$derive-arrow-colors=true]
+ * Private
+ */
+@mixin splitButton-ui(
+    $ui: null,
+    $xtype: splitButton,
+    $background-color: null,
+    $hovered-background-color: null,
+    $pressed-background-color: null,
+    $focused-background-color: null,
+    $disabled-background-color: null,
+    $box-shadow: null,
+    $hovered-box-shadow: null,
+    $pressed-box-shadow: null,
+    $focused-box-shadow: null,
+    $disabled-box-shadow: null,
+    $box-shadow-transition: null,
+    $background-gradient: null,
+    $hovered-background-gradient: null,
+    $pressed-background-gradient: null,
+    $focused-background-gradient: null,
+    $disabled-background-gradient: null,
+    $color: null,
+    $hovered-color: null,
+    $pressed-color: null,
+    $focused-color: null,
+    $disabled-color: null,
+    $border-color: null,
+    $hovered-border-color: null,
+    $pressed-border-color: null,
+    $focused-border-color: null,
+    $disabled-border-color: null,
+    $focused-outline-color: null,
+    $focused-outline-style: null,
+    $focused-outline-width: null,
+    $focused-outline-offset: null,
+    $border-width: null,
+    $border-style: null,
+    $border-radius: null,
+    $border-radius-big: null,
+    $font-weight: null,
+    $font-size: null,
+    $font-size-big: null,
+    $line-height: null,
+    $line-height-big: null,
+    $font-family: null,
+    $text-transform: null,
+    $text-transform-big: null,
+    $padding: null,
+    $padding-big: null,
+    $icon-only-padding: null,
+    $icon-only-padding-big: null,
+    $icon-color: null,
+    $hovered-icon-color: null,
+    $pressed-icon-color: null,
+    $focused-icon-color: null,
+    $disabled-icon-color: null,
+    $icon-size: null,
+    $icon-size-big: null,
+    $icon-font-size: null,
+    $icon-font-size-big: null,
+    $icon-horizontal-spacing: null,
+    $icon-horizontal-spacing-big: null,
+    $icon-vertical-spacing: null,
+    $icon-vertical-spacing-big: null,
+    $disabled-opacity: null,
+    $arrow-icon: null,
+    $arrow-icon-color: null,
+    $hovered-arrow-icon-color: null,
+    $pressed-arrow-icon-color: null,
+    $focused-arrow-icon-color: null,
+    $disabled-arrow-icon-color: null,
+    $arrow-icon-size: null,
+    $arrow-icon-size-big: null,
+    $arrow-icon-font-size: null,
+    $arrow-icon-font-size-big: null,
+    $arrow-horizontal-spacing: null,
+    $arrow-horizontal-spacing-big: null,
+    $arrow-vertical-spacing: null,
+    $arrow-vertical-spacing-big: null,
+
+    // private
+    $derive-colors: true,
+    $derive-border-colors: true,
+    $derive-outline-colors: true,
+    $derive-background-colors: true,
+    $derive-background-gradients: true,
+    $derive-icon-colors: true,
+    $derive-arrow-colors: true
+) {
+    $ui-suffix: ui-suffix($ui);
+
+    @if $background-color != null {
+        @if $derive-background-colors and ($hovered-background-color == null) {
+            $hovered-background-color: button-hovered-background-color($background-color);
+        }
+
+        @if $derive-background-colors and ($pressed-background-color == null) {
+            $pressed-background-color: button-pressed-background-color($background-color);
+        }
+
+        @if $derive-background-colors and ($focused-background-color == null) {
+            $focused-background-color: button-focused-background-color($background-color);
+        }
+
+        @if $derive-background-colors and ($disabled-background-color == null) {
+            $disabled-background-color: button-disabled-background-color($background-color);
+        }
+
+        @if $derive-border-colors and ($border-color == null) {
+            $border-color: button-border-color($background-color);
+        }
+
+        @if $derive-colors and ($color == null) {
+            $color: button-color($background-color);
+        }
+
+        @if $derive-background-gradients and ($background-gradient == null) {
+            $background-gradient: button-background-gradient($background-color);
+        }
+    }
+
+    @if $hovered-background-color != null {
+        @if $derive-border-colors and ($hovered-border-color == null) {
+            $hovered-border-color: button-hovered-border-color($hovered-background-color);
+        }
+
+        @if $derive-colors and ($hovered-color == null) {
+            $hovered-color: button-hovered-color($hovered-background-color, $color);
+        }
+
+        @if $derive-background-gradients and ($hovered-background-gradient == null) {
+            $hovered-background-gradient: button-hovered-background-gradient($hovered-background-color);
+        }
+    }
+
+    @if $pressed-background-color != null {
+        @if $derive-border-colors and ($pressed-border-color == null) {
+            $pressed-border-color: button-pressed-border-color($pressed-background-color);
+        }
+
+        @if $derive-colors and ($pressed-color == null) {
+            $pressed-color: button-pressed-color($pressed-background-color, $color);
+        }
+
+        @if $derive-background-gradients and ($pressed-background-gradient == null) {
+            $pressed-background-gradient: button-pressed-background-gradient($pressed-background-color);
+        }
+    }
+
+    @if $focused-background-color != null {
+        @if $derive-border-colors and ($focused-border-color == null) {
+            $focused-border-color: button-focused-border-color($focused-background-color);
+        }
+
+        @if $derive-colors and ($focused-color == null) {
+            $focused-color: button-focused-color($focused-background-color, $color);
+        }
+
+        @if $derive-background-gradients and ($focused-background-gradient == null) {
+            $focused-background-gradient: button-focused-background-gradient($focused-background-color);
+        }
+    }
+
+    @if $disabled-background-color != null {
+        @if $derive-border-colors and ($disabled-border-color == null) {
+            $disabled-border-color: button-disabled-border-color($disabled-background-color);
+        }
+
+        @if $derive-colors and ($disabled-color == null) {
+            $disabled-color: button-disabled-color($disabled-background-color, $color);
+        }
+
+        @if $derive-background-gradients and ($disabled-background-gradient == null) {
+            $disabled-background-gradient: button-disabled-background-gradient($disabled-background-color);
+        }
+    }
+
+    @if $derive-outline-colors and ($focused-outline-color == null) {
+        $focused-outline-color: button-focused-outline-color($focused-background-color or $background-color, $focused-color or $color);
+    }
+
+    @if $derive-icon-colors {
+        @if $icon-color == null {
+            $icon-color: $color;
+        }
+
+        @if $hovered-icon-color == null {
+            $hovered-icon-color: $hovered-color;
+        }
+
+        @if $pressed-icon-color == null {
+            $pressed-icon-color: $pressed-color;
+        }
+
+        @if $focused-icon-color == null {
+            $focused-icon-color: $focused-color;
+        }
+
+        @if $disabled-icon-color == null {
+            $disabled-icon-color: $disabled-color;
+        }
+    }
+
+    @if $derive-arrow-colors {
+        @if $arrow-icon-color == null {
+            $arrow-icon-color: $color;
+        }
+
+        @if $hovered-arrow-icon-color == null {
+            $hovered-arrow-icon-color: $hovered-color;
+        }
+
+        @if $pressed-arrow-icon-color == null {
+            $pressed-arrow-icon-color: $pressed-color;
+        }
+
+        @if $focused-arrow-icon-color == null {
+            $focused-arrow-icon-color: $focused-color;
+        }
+
+        @if $disabled-arrow-icon-color == null {
+            $disabled-arrow-icon-color: $disabled-color;
+        }
+    }
+
+    .#{$prefix}#{$xtype}#{$ui-suffix} {
+        color: $color;
+        box-shadow: $box-shadow;
+        @include font($font-weight, $font-size, $line-height, $font-family);
+        border-radius: $border-radius;
+
+        @if $enable-big {
+            .#{$prefix}big & {
+                font-size: $font-size-big;
+                line-height: $line-height-big;
+                border-radius: $border-radius-big;
+            }
+        }
+
+        .#{$prefix}splitBody-el {
+            @include border($border-width, $border-style, $border-color);
+            @include background-gradient($background-color, $background-gradient);
+            border-radius: $border-radius;
+
+            @if $enable-big {
+                .#{$prefix}big & {
+                    border-radius: $border-radius-big;
+                }
+            }
+        }
+
+        .#{$prefix}splitInner-el {
+            padding: $splitButton-Inner-padding;
+            position: relative;
+        }
+
+        .#{$prefix}splitArrow-el {
+            padding: $splitButton-Inner-padding;
+            padding-left: $splitButton-arrow-horizontal-padding;
+            padding-right: $splitButton-arrow-horizontal-padding;
+            position: relative;
+        }
+
+        &.#{$prefix}arrow-align-right .#{$prefix}splitInner-el {
+            border-bottom-left-radius: $border-radius;
+            border-top-left-radius: $border-radius;
+
+            @if $enable-big {
+                .#{$prefix}big & {
+                    border-bottom-left-radius: $border-radius-big;
+                    border-top-left-radius: $border-radius-big;
+                }
+            }
+        }
+
+        &.#{$prefix}arrow-align-right .#{$prefix}splitArrow-el {
+            border-left: 1px solid $color;
+            border-bottom-right-radius: $border-radius;
+            border-top-right-radius: $border-radius;
+
+            @if $enable-big {
+                .#{$prefix}big & {
+                    border-bottom-right-radius: $border-radius-big;
+                    border-top-right-radius: $border-radius-big;
+                }
+            }
+
+            &.#{$prefix}hovered {
+                color: $hovered-color;
+                border-left: 1px solid $color;
+            }
+
+            &.#{$prefix}focused {
+                color: $focused-color;
+                border-left: 1px solid $color;
+            }
+
+            &.#{$prefix}pressing, &.#{$prefix}pressed {
+                color: $pressed-color;
+                border-left: 1px solid $color;
+            }
+        }
+
+        &.#{$prefix}arrow-align-bottom .#{$prefix}splitInner-el  {
+            padding: $splitButton-Inner-padding;
+            padding-top: $splitButton-bottom-vertical-padding;
+            padding-bottom: $splitButton-bottom-vertical-padding;
+            border-top-left-radius: $border-radius;
+            border-top-right-radius: $border-radius;
+
+            @if $enable-big {
+                .#{$prefix}big & {
+                    border-top-left-radius: $border-radius-big;
+                    border-top-right-radius: $border-radius-big;
+                }
+            }
+        }
+        
+        &.#{$prefix}arrow-align-bottom .#{$prefix}splitArrow-el {
+            padding: $splitButton-Inner-padding;
+            padding-top: $splitButton-arrow-bottom-vertical-padding;
+            padding-bottom: $splitButton-arrow-bottom-vertical-padding;
+            width:100%;
+            border-top: 1px solid $color;
+            border-bottom-left-radius: $border-radius;
+            border-bottom-right-radius: $border-radius;
+
+            @if $enable-big {
+                .#{$prefix}big & {
+                    border-bottom-left-radius: $border-radius-big;
+                    border-bottom-right-radius: $border-radius-big;
+                }
+            }
+
+            &.#{$prefix}hovered {
+                color: $hovered-color;
+                border-top: 1px solid $color;
+            }
+
+            &.#{$prefix}focused {
+                color: $focused-color;
+                border-top: 1px solid $color;
+            }
+
+            &.#{$prefix}pressing, &.#{$prefix}pressed {
+                color: $pressed-color;
+                border-top: 1px solid $color;
+            }
+        }
+        
+        &.#{$prefix}arrow-align-bottom .#{$prefix}arrow-el {
+            margin:auto;
+        }
+
+        .#{$prefix}icon-el {
+            @include icon(
+                $color: $color,
+                $size: $icon-size,
+                $size-big: $icon-size-big,
+                $font-size: $icon-font-size,
+                $font-size-big: $icon-font-size-big,
+            );
+        }
+
+        &.#{$prefix}has-text.#{$prefix}icon-align-left .#{$prefix}icon-el {
+            margin-right: $icon-horizontal-spacing;
+
+            @if $enable-big {
+                .#{$prefix}big & {
+                    margin-right: $icon-horizontal-spacing-big;
+                }
+            }
+        }
+
+        &.#{$prefix}has-text.#{$prefix}icon-align-right .#{$prefix}icon-el {
+            margin-left: $icon-horizontal-spacing;
+
+            @if $enable-big {
+                .#{$prefix}big & {
+                    margin-left: $icon-horizontal-spacing-big;
+                }
+            }
+        }
+
+        &.#{$prefix}has-text.#{$prefix}icon-align-top .#{$prefix}icon-el {
+            margin-bottom: $icon-vertical-spacing;
+
+            @if $enable-big {
+                .#{$prefix}big & {
+                    margin-bottom: $icon-vertical-spacing-big;
+                }
+            }
+        }
+
+        &.#{$prefix}has-text.#{$prefix}icon-align-bottom .#{$prefix}icon-el {
+            margin-top: $icon-vertical-spacing;
+
+            @if $enable-big {
+                .#{$prefix}big & {
+                    margin-top: $icon-vertical-spacing-big;
+                }
+            }
+        }
+
+        .#{$prefix}arrow-el {
+            @include icon(
+                $icon: $arrow-icon,
+                $color: $arrow-icon-color,
+                $size: $arrow-icon-size,
+                $size-big: $arrow-icon-size-big,
+                $font-size: $arrow-icon-font-size,
+                $font-size-big: $arrow-icon-font-size-big
+            );
+        }
+
+        &.#{$prefix}arrow-align-right .#{$prefix}arrow-el {
+            margin-left: $arrow-horizontal-spacing;
+            margin-right: $arrow-horizontal-spacing;
+
+            @if $enable-big {
+                .#{$prefix}big & {
+                    margin-left: $arrow-horizontal-spacing-big;
+                }
+            }
+        }
+
+        &.#{$prefix}arrow-align-bottom .#{$prefix}arrow-el {
+            margin-top: $arrow-vertical-spacing;
+
+            @if $enable-big {
+                .#{$prefix}big & {
+                    margin-top: $arrow-vertical-spacing-big;
+                }
+            }
+        }
+
+        .#{$prefix}text-el {
+            // prevents the button height from shrinking when it has no text
+            min-height: $line-height;
+            text-transform: $text-transform;
+
+            @if $enable-big {
+                .#{$prefix}big & {
+                    min-height: $line-height-big;
+                    text-transform: $text-transform-big;
+                }
+            }
+        }
+
+        .#{$prefix}hovered {
+            color: $hovered-color;
+            box-shadow: $hovered-box-shadow;
+
+            &.#{$prefix}splitBody-el {
+                border-color: $hovered-border-color;
+                @include background-gradient($hovered-background-color, $hovered-background-gradient);
+            }
+
+            .#{$prefix}icon-el {
+                color: $hovered-icon-color;
+            }
+
+            .#{$prefix}arrow-el {
+                color: $hovered-arrow-icon-color;
+            }
+
+            &.#{$prefix}splitInner-el {
+                border-color: $hovered-border-color;
+                @include background-gradient($hovered-background-color, $hovered-background-gradient);
+            }
+
+            &.#{$prefix}splitArrow-el {
+                border-color: $hovered-border-color;
+                @include background-gradient($hovered-background-color, $hovered-background-gradient);
+            }
+        }
+
+        &:before {
+            @if $pressed-box-shadow {
+                content: '';
+            }
+
+            border-radius: $border-radius;
+            box-shadow: $pressed-box-shadow;
+            transition: $box-shadow-transition;
+        }
+
+        .#{$prefix}pressing, .#{$prefix}pressed {
+            color: $pressed-color;
+
+            &.#{$prefix}splitBody-el {
+                border-color: $pressed-border-color;
+                @include background-gradient($pressed-background-color, $pressed-background-gradient);
+            }
+
+            .#{$prefix}icon-el {
+                color: $pressed-icon-color;
+            }
+
+            .#{$prefix}arrow-el {
+                color: $pressed-arrow-icon-color;
+            }
+
+            &.#{$prefix}splitInner-el {
+                border-color: $pressed-border-color;
+                @include background-gradient($pressed-background-color, $pressed-background-gradient);
+            }
+
+            &.#{$prefix}splitArrow-el {
+                border-color: $pressed-border-color;
+                @include background-gradient($pressed-background-color, $pressed-background-gradient);
+            }
+        }
+
+        .#{$prefix}focused {
+            .#{$prefix}keyboard-mode & {
+                color: $focused-color;
+                box-shadow: $focused-box-shadow;
+
+                &.#{$prefix}splitBody-el {
+                    border-color: $focused-border-color;
+                    @include background-gradient($focused-background-color, $focused-background-gradient);
+                }
+
+                .#{$prefix}icon-el {
+                    color: $focused-icon-color;
+                }
+
+                .#{$prefix}arrow-el {
+                    color: $focused-arrow-icon-color;
+                }
+
+                &.#{$prefix}splitInner-el {
+                    border-color: $focused-border-color;
+                    @include background-gradient($focused-background-color, $focused-background-gradient);
+                }
+
+                &.#{$prefix}splitArrow-el {
+                    border-color: $focused-border-color;
+                    @include background-gradient($focused-background-color, $focused-background-gradient);
+                }
+
+                &:after {
+                    // This is a pseudo element for simulating a focus outline.
+                    // We can't use regular css outline because it does not support radius.
+                    // We also can't simulate an outline using box-shadow because buttons may
+                    // already have a box-shadow configured using the $splitButton-shadow var.
+                    @if $focused-outline-offset != null {
+                        margin-top: -$focused-outline-offset;
+                        margin-right: -$focused-outline-offset;
+                        margin-left: -$focused-outline-offset;
+                        margin-bottom: -$focused-outline-offset;
+                    }
+
+                    @include border($focused-outline-width, $focused-outline-style, $focused-outline-color);
+
+                    border-radius: $border-radius;
+
+                    @if $enable-big {
+                        .#{$prefix}big & {
+                            border-radius: $border-radius-big;
+                        }
+                    }
+                }
+            }
+        }
+
+        &.#{$prefix}disabled {
+            opacity: $disabled-opacity;
+            box-shadow: $disabled-box-shadow;
+
+            .#{$prefix}splitBody-el {
+                color: $disabled-color;
+                border-color: $disabled-border-color;
+                @include background-gradient($disabled-background-color, $disabled-background-gradient);    
+            }
+
+            .#{$prefix}icon-el {
+                color: $disabled-icon-color;
+            }
+
+            .#{$prefix}arrow-el {
+                color: $disabled-arrow-icon-color;
+            }
+
+            .#{$prefix}splitInner-el {
+            }
+
+            .#{$prefix}splitArrow-el {
+            }
+
+            &.#{$prefix}arrow-align-right .#{$prefix}splitArrow-el {
+                border-left: 1px solid $disabled-color;
+            }
+
+            &.#{$prefix}arrow-align-bottom .#{$prefix}splitArrow-el {
+                border-top: 1px solid $disabled-color;
+            }
+        }
+    }
+
+}
+
+/**
+ * alt uis + decline/confirm have some magic to swap foreground and background colors.
+ * this creates a "alt decline" and "alt confirm".
+ * @private
+ */
+@mixin splitButton-alt-invert-ui($ui, $ui-selector) {
+    $background-color: map_get($ui, 'color');
+    $color: map_get($ui, 'background-color');
+
+    @if $color == null {
+        $color: map_get($splitButton-alt-ui, 'color');
+    }
+
+    .#{$prefix}splitButton-alt.#{$ui-selector} {
+        color: $color;
+
+        .#{$prefix}icon-el {
+            color: $color;
+        }
+
+        .#{$prefix}arrow-el {
+            color: $color;
+        }
+
+        .#{$prefix}splitBody-el {
+            background-color: $background-color;
+        }
+
+        .#{$prefix}splitInner-el {
+        }
+
+        .#{$prefix}splitArrow-el {
+        }
+
+        &.#{$prefix}arrow-align-right .#{$prefix}splitArrow-el {
+              border-left: 1px solid $color;
+              color: $color;
+            &.#{$prefix}hovered {
+                border-left: 1px solid $color;
+            }
+
+            &.#{$prefix}focused {
+                border-left: 1px solid $color;
+            }
+
+            &.#{$prefix}pressing, &.#{$prefix}pressed {
+                border-left: 1px solid $color;
+            }
+        }
+
+        &.#{$prefix}arrow-align-bottom .#{$prefix}splitArrow-el {
+            border-top: 1px solid $color;
+
+            &.#{$prefix}hovered {
+                border-top: 1px solid $color;
+            }
+
+            &.#{$prefix}focused {
+                border-top: 1px solid $color;
+            }
+
+            &.#{$prefix}pressing, &.#{$prefix}pressed {
+                border-top: 1px solid $color;
+            }
+        }
+
+        &.#{$prefix}hovered {
+            color: $color;
+
+            .#{$prefix}icon-el {
+                color: $color;
+            }
+        }
+
+        .#{$prefix}hovered {
+            color: $color;
+
+            &.#{$prefix}splitBody-el {
+                background-color: $background-color;
+            }
+
+            &.#{$prefix}splitInner-el {
+                background-color: $background-color;
+            }
+
+            &.#{$prefix}splitArrow-el {
+                background-color: $background-color;
+            }
+        }
+
+        &.#{$prefix}pressing, &.#{$prefix}pressed {
+            color: $color;
+
+            .#{$prefix}icon-el {
+                color: $color;
+            }
+        }
+
+        .#{$prefix}pressing, .#{$prefix}pressed {
+            color: $color;
+
+            &.#{$prefix}splitBody-el {
+                background-color: $background-color;
+            }
+
+            &.#{$prefix}splitInner-el {
+                background-color: $background-color;
+            }
+
+            &.#{$prefix}splitArrow-el {
+                background-color: $background-color;
+            }
+        }
+
+        &.#{$prefix}focused {
+            .#{$prefix}keyboard-mode & {
+                color: $color;
+
+                .#{$prefix}icon-el {
+                    color: $color;
+                }
+            }
+        }
+
+        .#{$prefix}focused {
+            .#{$prefix}keyboard-mode & {
+                color: $color;
+
+                &.#{$prefix}splitBody-el {
+                    background-color: $background-color;
+                }
+
+                &.#{$prefix}splitInner-el {
+                    background-color: $background-color;
+                }
+
+                &.#{$prefix}splitArrow-el {
+                    background-color: $background-color;
+                }
+            }
+        }
+    }
+}
+
+@if ($enable-inverted-alt-splitButton) {
+    @include splitButton-alt-invert-ui($splitButton-decline-ui, #{$prefix}splitButton-decline);
+    @include splitButton-alt-invert-ui($splitButton-confirm-ui, #{$prefix}splitButton-confirm);
+}

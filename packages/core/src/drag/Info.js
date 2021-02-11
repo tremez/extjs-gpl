@@ -15,37 +15,43 @@ Ext.define('Ext.drag.Info', {
             return;
         }
 
+        /* eslint-disable-next-line vars-on-top */
         var me = this,
-            xy = e.getXY(),
-            pageX = xy[0],
-            pageY = xy[1],
-            el, x, y, proxyEl, proxy;
+            local = source.getLocal(),
+            el, proxyEl, proxy, x, xy, y, pageXY, elPageXY;
 
         me.source = source;
+        me.local = local;
+
+        xy = me.getEventXY(e);
+        pageXY = e.getXY();
 
         el = source.getElement();
-        xy = el.getXY();
+        elPageXY = el.getXY();
+        xy = local ? el.getLocalXY() : elPageXY;
+
         x = xy[0];
         y = xy[1];
 
+        me.initialEvent = e;
         me.eventTarget = e.target;
 
         me.cursor = {
             current: {
-                x: pageX,
-                y: pageY
+                x: x,
+                y: y
             },
             delta: {
                 x: 0,
                 y: 0
             },
             initial: {
-                x: pageX,
-                y: pageY
+                x: pageXY[0],
+                y: pageXY[1]
             },
             offset: {
-                x: pageX - x,
-                y: pageY - y
+                x: pageXY[0] - elPageXY[0],
+                y: pageXY[1] - elPageXY[1]
             }
         };
 
@@ -65,6 +71,7 @@ Ext.define('Ext.drag.Info', {
         };
 
         me.proxy = {
+            instance: source.getProxy(),
             current: {
                 x: x,
                 y: y
@@ -87,11 +94,12 @@ Ext.define('Ext.drag.Info', {
 
         source.describe(me);
 
-        proxyEl = source.getProxy().getElement(me);
         proxy = me.proxy;
+        proxyEl = proxy.instance.setupElement(me);
 
         proxy.isElement = proxyEl === source.getElement();
         proxy.element = proxyEl;
+
         if (proxyEl) {
             proxy.width = proxyEl.getWidth();
             proxy.height = proxyEl.getHeight();
@@ -335,13 +343,16 @@ Ext.define('Ext.drag.Info', {
 
         if (dt) {
             ret = dt.getData(type);
-        } else {
+        }
+        else {
             //<debug>
             if (!me.finalized) {
                 Ext.raise('Unable to call getData until the drop is complete');
             }
             //</debug>
+
             ret = data[type];
+
             if (typeof ret === 'function') {
                 data[type] = ret = ret.call(me.source, me);
             }
@@ -350,6 +361,7 @@ Ext.define('Ext.drag.Info', {
                 ret = '';
             }
         }
+
         return Ext.Promise.resolve(ret);
     },
 
@@ -370,8 +382,8 @@ Ext.define('Ext.drag.Info', {
     destroy: function() {
         var me = this;
 
-        me.eventTarget = me.data = me.proxy = me.targetMap = me.targetMap = 
-            me.types = me.elementMap = me.possibleTargets = me.target = null;
+        me.eventTarget = me.data = me.proxy = me.targetMap = me.targetMap =
+        me.types = me.elementMap = me.possibleTargets = me.target = null;
 
         me.callParent();
     },
@@ -435,11 +447,10 @@ Ext.define('Ext.drag.Info', {
          */
         finalize: function() {
             var me = this,
-                target = me.target,
-                source = me.source,
-                result;
+                target = me.target;
 
             me.finalized = true;
+
             if (target) {
                 target.info = null;
                 target.handleDrop(me);
@@ -469,7 +480,8 @@ Ext.define('Ext.drag.Info', {
                 if (me.proxy.isElement) {
                     xy[0] -= cursorOffset.x;
                     xy[1] -= cursorOffset.y;
-                } else {
+                }
+                else {
                     xy = proxy.adjustCursorOffset(me, xy);
                 }
 
@@ -477,6 +489,18 @@ Ext.define('Ext.drag.Info', {
                     xy = constrain.constrain(xy, me);
                 }
             }
+
+            return xy;
+        },
+
+        getEventXY: function(e) {
+            var xy = e.getXY(), // page coordinates
+                source = this.source;
+
+            if (this.local) {
+                xy = source.convertToLocalXY(xy);
+            }
+
             return xy;
         },
 
@@ -485,11 +509,13 @@ Ext.define('Ext.drag.Info', {
 
             me.valid = target.accepts(me);
             target.info = me;
+
             me.copyNativeData(target, e);
         },
 
         onNativeDragLeave: function(target, e) {
             var me = this;
+
             // With native events, enter fires before leave, so when the leave fires
             // check that we are the current target, another target may have already
             // taken over here
@@ -534,8 +560,10 @@ Ext.define('Ext.drag.Info', {
                     target.handleDragEnter(me);
                     target.info = me;
                 }
+
                 target.handleDragMove(me);
-            } else {
+            }
+            else {
                 me.valid = false;
             }
 
@@ -546,27 +574,26 @@ Ext.define('Ext.drag.Info', {
 
         /**
          * Update with the current position information.
-         * @param {Ext.event.Event} The event.
+         * @param {Ext.event.Event} event The event.
          * @param {Boolean} beforeStart `true` if the update is occurring
          * before the drag starts.
          *
          * @private
          */
-        update: function(e, beforeStart) {
+        update: function(event, beforeStart) {
             var me = this,
-                xy = e.getXY(),
+                xy = me.getEventXY(event),
                 x = xy[0],
                 y = xy[1],
                 alignXY = me.getAlignXY(x, y),
                 alignX = alignXY[0],
                 alignY = alignXY[1],
-                proxy = me.proxy,
+                proxyData = me.proxy,
                 cursor = me.cursor,
                 current = cursor.current,
                 delta = cursor.delta,
                 initial = cursor.initial,
-                proxyEl = proxy.element;
-
+                proxy = proxyData.instance;
 
             current.x = x;
             current.y = y;
@@ -574,9 +601,9 @@ Ext.define('Ext.drag.Info', {
             delta.x = x - initial.x;
             delta.y = y - initial.y;
 
-            current = proxy.current;
-            delta = proxy.delta;
-            initial = proxy.initial;
+            current = proxyData.current;
+            delta = proxyData.delta;
+            initial = proxyData.initial;
 
             current.x = alignX;
             current.y = alignY;
@@ -584,13 +611,12 @@ Ext.define('Ext.drag.Info', {
             delta.y = alignY - initial.y;
 
             if (me.needsCursorCheck) {
-                proxy.isUnderCursor = !(x < alignX || y < alignY || x > proxy.width + alignX || y > proxy.height + alignY);
+                proxyData.isUnderCursor = !(x < alignX || y < alignY || x > proxyData.width + alignX || y > proxyData.height + alignY); // eslint-disable-line max-len
             }
 
-            if (!beforeStart && proxyEl) {
-                proxyEl.setXY(alignXY);
+            if (!beforeStart && proxy) {
+                proxy.setXY(me, alignXY);
             }
         }
     }
-
 });

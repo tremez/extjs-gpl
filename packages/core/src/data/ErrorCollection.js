@@ -24,11 +24,11 @@ Ext.define('Ext.data.ErrorCollection', {
         'Ext.data.Error'
     ],
 
-    init: function (record) {
+    init: function(record) {
         var me = this,
             fields = record.fields,
             data = record.data,
-            before, field, item, i, len, msg, val, name;
+            before, field, i, len, msg, val, name;
 
         for (i = 0, len = fields.length; i < len; ++i) {
             field = fields[i];
@@ -38,6 +38,7 @@ Ext.define('Ext.data.ErrorCollection', {
             if (field.validate && !field.validate.$nullFn) {
                 before = me.length;
                 msg = field.validate(val, null, me, record);
+
                 if (before === me.length && msg !== true) {
                     me.add(name, msg);
                 }
@@ -47,7 +48,7 @@ Ext.define('Ext.data.ErrorCollection', {
         return me;
     },
 
-    add: function (key, value) {
+    add: function(key, value) {
         var me = this,
             defaultMessage = Ext.data.field.Field.defaultInvalidMessage,
             obj = key, // for single argument form
@@ -58,7 +59,8 @@ Ext.define('Ext.data.ErrorCollection', {
                 field: key,
                 message: value || defaultMessage
             });
-        } else {
+        }
+        else {
             if (!(obj.isError)) {
                 obj = new Ext.data.Error({
                     field: obj.field || obj.name,
@@ -70,9 +72,11 @@ Ext.define('Ext.data.ErrorCollection', {
         }
 
         current = me.get(key);
+
         if (current) {
             if (Ext.isArray(current)) {
                 current.push(obj);
+
                 return current;
             }
 
@@ -88,7 +92,7 @@ Ext.define('Ext.data.ErrorCollection', {
         return me.callParent([ obj ]);
     },
 
-    getKey: function (item) {
+    getKey: function(item) {
         return item.field;
     },
 

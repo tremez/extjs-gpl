@@ -1,4 +1,6 @@
-describe("Ext.toolbar.Paging", function() {
+topSuite("Ext.toolbar.Paging",
+    ['Ext.grid.Panel', 'Ext.Button', 'Ext.grid.feature.Grouping'],
+function() {
     var keyEvent = Ext.supports.SpecialKeyDownRepeat ? 'keydown' : 'keypress',
         tb, store, store2,
         describeNotIE9_10 = Ext.isIE9 || Ext.isIE10 ? xdescribe : describe,
@@ -6,24 +8,29 @@ describe("Ext.toolbar.Paging", function() {
         proxyStoreLoad = Ext.data.ProxyStore.prototype.load,
         loadStore = function() {
             proxyStoreLoad.apply(this, arguments);
+
             if (synchronousLoad) {
                 this.flushLoad.apply(this, arguments);
             }
+
             return this;
         };
-    
+
     function makeToolbar(cfg, preventRender) {
         cfg = cfg || {};
+
         if (!preventRender) {
             cfg.renderTo = Ext.getBody();
         }
+
         if (cfg.store === undefined) {
             cfg.store = makeStore();
         }
+
         tb = new Ext.toolbar.Paging(cfg);
-    }   
-    
-    function makeStore (pageSize) {
+    }
+
+    function makeStore(pageSize) {
         store = new Ext.data.Store({
             model: 'spec.PagingToolbarModel',
             storeId: 'pagingToolbarStore',
@@ -38,36 +45,37 @@ describe("Ext.toolbar.Paging", function() {
                 }
             }
         });
+
         return store;
     }
-    
+
     function makeData(total, start, limit) {
         var data = [],
             i;
-            
+
         if (limit === undefined) {
             limit = start + store.pageSize;
         }
-            
+
         for (i = start; i < limit; ++i) {
             data.push({
                 name: 'Item ' + (i + 1)
             });
         }
-            
+
         return Ext.encode({
             data: data,
             total: total
         });
     }
-    
+
     function mockComplete(responseText, status) {
         Ext.Ajax.mockComplete({
             status: status || 200,
             responseText: responseText
         });
     }
-    
+
     beforeEach(function() {
         // Override so that we can control asynchronous loading
         Ext.data.ProxyStore.prototype.load = loadStore;
@@ -78,7 +86,7 @@ describe("Ext.toolbar.Paging", function() {
         });
         MockAjaxManager.addMethods();
     });
-    
+
     afterEach(function() {
         // Undo the overrides.
         Ext.data.ProxyStore.prototype.load = proxyStoreLoad;
@@ -93,10 +101,20 @@ describe("Ext.toolbar.Paging", function() {
         Ext.data.Model.schema.clear();
     });
 
+    describe("alternate class name", function() {
+        it("should have Ext.PagingToolbar as the alternate class name", function() {
+            expect(Ext.toolbar.Paging.prototype.alternateClassName).toEqual("Ext.PagingToolbar");
+        });
+
+        it("should allow the use of Ext.PagingToolbar", function() {
+            expect(Ext.PagingToolbar).toBeDefined();
+        });
+    });
+
     describe("auto store", function() {
         var view;
 
-        beforeEach(function () {
+        beforeEach(function() {
             view = Ext.create({
                 xtype: 'grid',
                 store: makeStore(20),
@@ -115,15 +133,16 @@ describe("Ext.toolbar.Paging", function() {
             });
         });
 
-        afterEach(function () {
+        afterEach(function() {
             view = Ext.destroy(view);
         });
 
-        it('should associate to owner store', function () {
+        it('should associate to owner store', function() {
             store.load();
             mockComplete(makeData(200, 0));
 
             var c = view.down('pagingtoolbar');
+
             expect(c.store).toBe(view.store);
             expect(c.store).toBe(store);
 
@@ -145,31 +164,31 @@ describe("Ext.toolbar.Paging", function() {
                     store: null
                 });
             }).not.toThrow();
-        });  
-        
+        });
+
         it("should accept a store instance", function() {
             store = makeStore();
             makeToolbar({
                 store: store
             });
             expect(tb.getStore()).toBe(store);
-        });  
-        
+        });
+
         it("should accept a store config", function() {
             makeToolbar({
                 store: {
                     model: 'spec.PagingToolbarModel'
                 }
-            });  
-            expect(tb.getStore().model).toBe(spec.PagingToolbarModel);  
+            });
+            expect(tb.getStore().model).toBe(spec.PagingToolbarModel);
         });
-        
+
         it("should accept a store id", function() {
             store = makeStore();
             makeToolbar({
                 store: 'pagingToolbarStore'
-            });   
-            expect(tb.getStore()).toBe(store);   
+            });
+            expect(tb.getStore()).toBe(store);
         });
 
         it("should update the toolbar info if the store is already loaded at render time", function() {
@@ -218,7 +237,7 @@ describe("Ext.toolbar.Paging", function() {
             });
         });
     });
-    
+
     describe("child items", function() {
         it("should add items after the default buttons", function() {
             makeToolbar({
@@ -229,7 +248,7 @@ describe("Ext.toolbar.Paging", function() {
             });
             expect(tb.items.last().getItemId()).toBe('foo');
         });
-        
+
         it("should add items before the default buttons with prependButtons: true", function() {
             makeToolbar({
                 prependButtons: true,
@@ -240,30 +259,31 @@ describe("Ext.toolbar.Paging", function() {
             });
             expect(tb.items.first().getItemId()).toBe('foo');
         });
-        
+
         it("should add the info display if displayInfo is true", function() {
             makeToolbar({
                 displayInfo: true
             });
             var items = tb.items;
+
             expect(items.getAt(items.getCount() - 2).isXType('tbfill')).toBe(true);
             expect(items.last().getItemId()).toBe('displayItem');
         });
     });
-    
+
     describe("disabling/enabling items", function() {
         function expectEnabled(id) {
             expectState(id, false);
-        }   
-        
+        }
+
         function expectDisabled(id) {
             expectState(id, true);
-        } 
-        
+        }
+
         function expectState(id, state) {
             expect(tb.child('#' + id).disabled).toBe(state);
         }
-        
+
         it("should disable everything except refresh when the store hasn't been loaded", function() {
             makeToolbar();
             expectDisabled('first');
@@ -273,11 +293,11 @@ describe("Ext.toolbar.Paging", function() {
             expectDisabled('last');
             expectEnabled('refresh');
         });
-        
+
         describe("store loads before render", function() {
             it("should set the state if the store is loaded", function() {
                 makeToolbar({}, true);
-                store.load();    
+                store.load();
                 mockComplete(makeData(20, 0));
                 tb.render(Ext.getBody());
                 expectDisabled('first');
@@ -288,11 +308,11 @@ describe("Ext.toolbar.Paging", function() {
                 expectEnabled('refresh');
             });
         });
-        
+
         describe("store loads after render", function() {
             it("should set the state if the store is loaded", function() {
                 makeToolbar();
-                store.load();    
+                store.load();
                 mockComplete(makeData(20, 0));
                 expectDisabled('first');
                 expectDisabled('prev');
@@ -302,11 +322,11 @@ describe("Ext.toolbar.Paging", function() {
                 expectEnabled('refresh');
             });
         });
-        
+
         describe("based on current page", function() {
             it("should disable first/prev buttons on the first page", function() {
                 makeToolbar();
-                store.loadPage(1);    
+                store.loadPage(1);
                 mockComplete(makeData(20, 0));
                 expectDisabled('first');
                 expectDisabled('prev');
@@ -315,10 +335,10 @@ describe("Ext.toolbar.Paging", function() {
                 expectEnabled('last');
                 expectEnabled('refresh');
             });
-        
+
             it("should disable next/last buttons on the last page", function() {
                 makeToolbar();
-                store.loadPage(4);    
+                store.loadPage(4);
                 mockComplete(makeData(20, 0));
                 expectEnabled('first');
                 expectEnabled('prev');
@@ -327,10 +347,10 @@ describe("Ext.toolbar.Paging", function() {
                 expectDisabled('last');
                 expectEnabled('refresh');
             });
-        
+
             it("should enable all buttons when the page is not first or last", function() {
                 makeToolbar();
-                store.loadPage(2);    
+                store.loadPage(2);
                 mockComplete(makeData(20, 0));
                 expectEnabled('first');
                 expectEnabled('prev');
@@ -340,7 +360,7 @@ describe("Ext.toolbar.Paging", function() {
                 expectEnabled('refresh');
             });
         });
-        
+
         describe("refresh icon", function() {
             it("should disable the refresh icon if the store is loading during construction", function() {
                 makeStore();
@@ -350,14 +370,14 @@ describe("Ext.toolbar.Paging", function() {
                 });
                 expectDisabled('refresh');
             });
-            
+
             it("should disable the refresh icon during a load", function() {
                 makeToolbar();
                 store.load();
                 expectDisabled('refresh');
             });
         });
-        
+
         describe("empty store", function() {
             it("should disable the inputItem & buttons", function() {
                 makeToolbar();
@@ -369,14 +389,15 @@ describe("Ext.toolbar.Paging", function() {
                 expectDisabled('next');
                 expectDisabled('last');
                 expectEnabled('refresh');
-            });    
+            });
         });
     });
-    
+
     describe("move/refresh methods", function() {
         var spy;
+
         beforeEach(function() {
-            makeToolbar();    
+            makeToolbar();
             store.load();
             mockComplete(makeData(20, 0));
             spy = jasmine.createSpy();
@@ -385,7 +406,7 @@ describe("Ext.toolbar.Paging", function() {
         afterEach(function() {
             spy = null;
         });
-        
+
         describe("moveFirst", function() {
             it("should fire the beforechange event with the toolbar & the new page", function() {
                 tb.on('beforechange', spy);
@@ -393,19 +414,19 @@ describe("Ext.toolbar.Paging", function() {
                 expect(spy.mostRecentCall.args[0]).toBe(tb);
                 expect(spy.mostRecentCall.args[1]).toBe(1);
             });
-            
+
             it("should return false if the beforechange event is vetoed", function() {
                 tb.on('beforechange', spy.andReturn(false));
                 expect(tb.moveFirst()).toBe(false);
             });
-            
+
             it("should return true & load the store with the first page", function() {
                 spyOn(store, 'loadPage');
                 expect(tb.moveFirst()).toBe(true);
-                expect(store.loadPage.mostRecentCall.args[0]).toBe(1);    
+                expect(store.loadPage.mostRecentCall.args[0]).toBe(1);
             });
         });
-        
+
         describe("movePrevious", function() {
             it("should fire the beforechange event with the toolbar & the new page", function() {
                 tb.on('beforechange', spy);
@@ -415,27 +436,27 @@ describe("Ext.toolbar.Paging", function() {
                 expect(spy.mostRecentCall.args[0]).toBe(tb);
                 expect(spy.mostRecentCall.args[1]).toBe(2);
             });
-            
+
             it("should return false if moving to the previous page is not valid, the change event should not fire", function() {
                 tb.on('beforechange', spy);
                 expect(tb.movePrevious()).toBe(false);
                 expect(spy).not.toHaveBeenCalled();
             });
-            
+
             it("should return false if the beforechange event is vetoed", function() {
                 tb.on('beforechange', spy.andReturn(false));
                 expect(tb.movePrevious()).toBe(false);
             });
-            
+
             it("should return true & load the store with the previous page", function() {
                 spyOn(store, 'previousPage');
                 store.loadPage(3);
                 mockComplete(makeData(20, 10));
                 expect(tb.movePrevious()).toBe(true);
-                expect(store.previousPage).toHaveBeenCalled();    
+                expect(store.previousPage).toHaveBeenCalled();
             });
         });
-        
+
         describe("moveNext", function() {
             it("should fire the beforechange event with the toolbar & the new page", function() {
                 tb.on('beforechange', spy);
@@ -443,7 +464,7 @@ describe("Ext.toolbar.Paging", function() {
                 expect(spy.mostRecentCall.args[0]).toBe(tb);
                 expect(spy.mostRecentCall.args[1]).toBe(2);
             });
-            
+
             it("should return false if moving to the next page is not valid, the change event should not fire", function() {
                 tb.on('beforechange', spy);
                 store.loadPage(4);
@@ -451,19 +472,19 @@ describe("Ext.toolbar.Paging", function() {
                 expect(tb.moveNext()).toBe(false);
                 expect(spy).not.toHaveBeenCalled();
             });
-            
+
             it("should return false if the beforechange event is vetoed", function() {
                 tb.on('beforechange', spy.andReturn(false));
                 expect(tb.moveNext()).toBe(false);
             });
-            
+
             it("should return true & load the store with the next page", function() {
                 spyOn(store, 'nextPage');
                 expect(tb.moveNext()).toBe(true);
-                expect(store.nextPage).toHaveBeenCalled();    
+                expect(store.nextPage).toHaveBeenCalled();
             });
         });
-        
+
         describe("moveLast", function() {
             it("should fire the beforechange event with the toolbar & the new page", function() {
                 tb.on('beforechange', spy);
@@ -471,19 +492,19 @@ describe("Ext.toolbar.Paging", function() {
                 expect(spy.mostRecentCall.args[0]).toBe(tb);
                 expect(spy.mostRecentCall.args[1]).toBe(4);
             });
-            
+
             it("should return false if the beforechange event is vetoed", function() {
                 tb.on('beforechange', spy.andReturn(false));
                 expect(tb.moveLast()).toBe(false);
             });
-            
+
             it("should return true & load the store with the last page", function() {
                 spyOn(store, 'loadPage');
                 expect(tb.moveLast()).toBe(true);
-                expect(store.loadPage.mostRecentCall.args[0]).toBe(4);    
+                expect(store.loadPage.mostRecentCall.args[0]).toBe(4);
             });
         });
-        
+
         describe("doRefresh", function() {
             it("should fire the beforechange event with the toolbar & the current page", function() {
                 tb.on('beforechange', spy);
@@ -491,20 +512,20 @@ describe("Ext.toolbar.Paging", function() {
                 expect(spy.mostRecentCall.args[0]).toBe(tb);
                 expect(spy.mostRecentCall.args[1]).toBe(1);
             });
-            
+
             it("should return false if the beforechange event is vetoed", function() {
                 tb.on('beforechange', spy.andReturn(false));
                 expect(tb.doRefresh()).toBe(false);
             });
-            
+
             it("should return true & load the store with the last page", function() {
                 spyOn(store, 'loadPage');
                 expect(tb.doRefresh()).toBe(true);
-                expect(store.loadPage.mostRecentCall.args[0]).toBe(1);    
+                expect(store.loadPage.mostRecentCall.args[0]).toBe(1);
             });
         });
     });
-    
+
     describe("change event", function() {
         var spy;
 
@@ -529,8 +550,8 @@ describe("Ext.toolbar.Paging", function() {
                 fromRecord: 11,
                 toRecord: 15
             });
-        });  
-        
+        });
+
         it("should not fire if configured with an empty store", function() {
             makeToolbar(undefined, true);
             tb.on('change', spy);
@@ -553,7 +574,7 @@ describe("Ext.toolbar.Paging", function() {
             });
         });
     });
-    
+
     // Opera has a problem handling key specs
     (Ext.isOpera ? xdescribe : describe)("inputItem", function() {
         var TAB = 9,
@@ -567,20 +588,21 @@ describe("Ext.toolbar.Paging", function() {
             UP = 38,
             RIGHT = 39,
             DOWN = 40;
-        
+
         function triggerKeyEvent(key) {
             var dom = tb.down('#inputItem').inputEl.dom;
+
             dom.focus();
             jasmine.fireKeyEvent(dom, keyEvent, key);
         }
-        
+
         it("should set the value to the new page on load", function() {
             makeToolbar();
             store.loadPage(3);
             mockComplete(makeData(20, 10));
             expect(tb.getInputItem().getValue()).toBe(3);
         });
-        
+
         it("should set the value to the current page on blur", function() {
             makeToolbar();
             var input = tb.getInputItem();
@@ -588,7 +610,7 @@ describe("Ext.toolbar.Paging", function() {
             // Will auto disable if not attached to a Store. Programatically enable so that it will focus and blur.
             input.enable();
             input.focus();
-            
+
             waitsFor(function() {
                 return input.hasFocus;
             });
@@ -603,8 +625,8 @@ describe("Ext.toolbar.Paging", function() {
                 return input.getValue() === 1;
             });
         });
-        
-        describe('reconfiguring a grid using buffered rendering and grouping', function () {
+
+        describe('reconfiguring a grid using buffered rendering and grouping', function() {
             // This test demonstrates that the paging toolbar will update its input item when the grid
             // is configured in a very specific way.
             //
@@ -616,18 +638,18 @@ describe("Ext.toolbar.Paging", function() {
             // See EXTJSIV-11860 and EXTJSIV-11892.
             var grid;
 
-            afterEach(function () {
+            afterEach(function() {
                 grid.destroy();
                 grid = null;
             });
 
-            it('should update the input item when paging', function () {
+            it('should update the input item when paging', function() {
                 grid = Ext.create('Ext.grid.Panel', {
                     width: 100,
                     height: 100,
                     store: makeStore(),
-                    features: [{ftype:'grouping'}],
-                    columns:[{
+                    features: [{ ftype: 'grouping' }],
+                    columns: [{
                         text: 'Name',
                         dataIndex: 'name',
                         width: 100
@@ -652,7 +674,7 @@ describe("Ext.toolbar.Paging", function() {
                 triggerKeyEvent(HOME);
                 expect(tb.getInputItem().getValue()).toBe(1);
             });
-            
+
             it("should set the value to the last page on end", function() {
                 makeToolbar();
                 store.loadPage(1);
@@ -660,7 +682,7 @@ describe("Ext.toolbar.Paging", function() {
                 triggerKeyEvent(END);
                 expect(tb.getInputItem().getValue()).toBe(4);
             });
-            
+
             describe("down", function() {
                 it("should set the value to the previous page on pagedown", function() {
                     makeToolbar();
@@ -669,7 +691,7 @@ describe("Ext.toolbar.Paging", function() {
                     triggerKeyEvent(PAGE_DOWN);
                     expect(tb.getInputItem().getValue()).toBe(2);
                 });
-            
+
                 it("should set the value to the previous page on down", function() {
                     makeToolbar();
                     store.loadPage(3);
@@ -677,7 +699,7 @@ describe("Ext.toolbar.Paging", function() {
                     triggerKeyEvent(DOWN);
                     expect(tb.getInputItem().getValue()).toBe(2);
                 });
-                
+
                 describe("shift", function() {
                     it("should not change the page if it will go over the limit with pagedown", function() {
                         makeToolbar();
@@ -687,10 +709,11 @@ describe("Ext.toolbar.Paging", function() {
                             e.shiftKey = true;
                             Ext.toolbar.Paging.prototype.processKeyEvent.call(tb, field, e);
                         });
+
                         triggerKeyEvent(PAGE_DOWN);
                         expect(tb.getInputItem().getValue()).toBe(3);
                     });
-                    
+
                     it("should not change the page if it will go over the limit with down", function() {
                         makeToolbar();
                         store.loadPage(3);
@@ -702,7 +725,7 @@ describe("Ext.toolbar.Paging", function() {
                         triggerKeyEvent(DOWN);
                         expect(tb.getInputItem().getValue()).toBe(3);
                     });
-                    
+
                     it("should decrement by 10 when using shift + pagedown", function() {
                         makeToolbar();
                         store.loadPage(15);
@@ -714,7 +737,7 @@ describe("Ext.toolbar.Paging", function() {
                         triggerKeyEvent(PAGE_DOWN);
                         expect(tb.getInputItem().getValue()).toBe(5);
                     });
-                    
+
                     it("should decrement by 10 when using shift + down", function() {
                         makeToolbar();
                         store.loadPage(15);
@@ -728,7 +751,7 @@ describe("Ext.toolbar.Paging", function() {
                     });
                 });
             });
-            
+
             describe("up", function() {
                 it("should set the value to the next page on pageup", function() {
                     makeToolbar();
@@ -737,7 +760,7 @@ describe("Ext.toolbar.Paging", function() {
                     triggerKeyEvent(PAGE_UP);
                     expect(tb.getInputItem().getValue()).toBe(4);
                 });
-            
+
                 it("should set the value to the next page on up", function() {
                     makeToolbar();
                     store.loadPage(3);
@@ -745,7 +768,7 @@ describe("Ext.toolbar.Paging", function() {
                     triggerKeyEvent(UP);
                     expect(tb.getInputItem().getValue()).toBe(4);
                 });
-                
+
                 describe("shift", function() {
                     it("should not change the page if it will go over the limit with pageup", function() {
                         makeToolbar();
@@ -755,10 +778,11 @@ describe("Ext.toolbar.Paging", function() {
                             e.shiftKey = true;
                             Ext.toolbar.Paging.prototype.processKeyEvent.call(tb, field, e);
                         });
+
                         triggerKeyEvent(PAGE_UP);
                         expect(tb.getInputItem().getValue()).toBe(1);
                     });
-                    
+
                     it("should not change the page if it will go over the limit with up", function() {
                         makeToolbar();
                         store.loadPage(1);
@@ -770,7 +794,7 @@ describe("Ext.toolbar.Paging", function() {
                         triggerKeyEvent(UP);
                         expect(tb.getInputItem().getValue()).toBe(1);
                     });
-                    
+
                     it("should increment by 10 when using shift + pageup", function() {
                         makeToolbar();
                         store.loadPage(1);
@@ -782,7 +806,7 @@ describe("Ext.toolbar.Paging", function() {
                         triggerKeyEvent(PAGE_UP);
                         expect(tb.getInputItem().getValue()).toBe(11);
                     });
-                    
+
                     it("should increment by 10 when using shift + up", function() {
                         makeToolbar();
                         store.loadPage(1);
@@ -796,7 +820,7 @@ describe("Ext.toolbar.Paging", function() {
                     });
                 });
             });
-            
+
             // These tests fails unreliably on IE9 and 10 on a VM
             describeNotIE9_10("enter", function() {
                 it("should load the page in the field", function() {
@@ -806,9 +830,9 @@ describe("Ext.toolbar.Paging", function() {
                     tb.getInputItem().setRawValue(3);
                     spyOn(store, 'loadPage');
                     triggerKeyEvent(ENTER);
-                    expect(store.loadPage.mostRecentCall.args[0]).toBe(3);    
+                    expect(store.loadPage.mostRecentCall.args[0]).toBe(3);
                 });
-                
+
                 it("should do nothing if the value isn't valid", function() {
                     makeToolbar();
                     store.loadPage(1);
@@ -818,7 +842,7 @@ describe("Ext.toolbar.Paging", function() {
                     triggerKeyEvent(ENTER);
                     expect(store.loadPage).not.toHaveBeenCalled();
                 });
-                
+
                 it("should do nothing if the page hasn't changed", function() {
                     makeToolbar();
                     store.loadPage(1);
@@ -828,7 +852,7 @@ describe("Ext.toolbar.Paging", function() {
                     triggerKeyEvent(ENTER);
                     expect(store.loadPage).not.toHaveBeenCalled();
                 });
-                
+
                 // This test fails unreliably on IE9 and 10 on a VM
                 it("should pull the value up to the minimum", function() {
                     makeToolbar();
@@ -837,9 +861,9 @@ describe("Ext.toolbar.Paging", function() {
                     tb.getInputItem().setRawValue(-2);
                     spyOn(store, 'loadPage');
                     triggerKeyEvent(ENTER);
-                    expect(store.loadPage.mostRecentCall.args[0]).toBe(1);  
+                    expect(store.loadPage.mostRecentCall.args[0]).toBe(1);
                 });
-                
+
                 it("should limit the value up to the maximum", function() {
                     makeToolbar();
                     store.loadPage(1);
@@ -847,28 +871,29 @@ describe("Ext.toolbar.Paging", function() {
                     tb.getInputItem().setRawValue(50);
                     spyOn(store, 'loadPage');
                     triggerKeyEvent(ENTER);
-                    expect(store.loadPage.mostRecentCall.args[0]).toBe(4);  
+                    expect(store.loadPage.mostRecentCall.args[0]).toBe(4);
                 });
-                
+
                 it("should fire the beforechange event with the toolbar & the new page", function() {
                     makeToolbar();
                     store.loadPage(1);
                     mockComplete(makeData(20, 0));
                     tb.getInputItem().setRawValue(3);
-                    
+
                     var spy = jasmine.createSpy();
+
                     tb.on('beforechange', spy);
                     triggerKeyEvent(ENTER);
                     expect(spy.mostRecentCall.args[0]).toBe(tb);
                     expect(spy.mostRecentCall.args[1]).toBe(3);
                 });
-                
+
                 it("should not call load if vetoing the event", function() {
                     makeToolbar();
                     store.loadPage(1);
                     mockComplete(makeData(20, 0));
                     tb.getInputItem().setRawValue(3);
-                    
+
                     spyOn(store, 'loadPage');
                     tb.on('beforechange', function() {
                         return false;
@@ -879,12 +904,12 @@ describe("Ext.toolbar.Paging", function() {
             });
         });
     });
-    
+
     describe("after invalid load", function() {
         it("should load the largest available page when we've gone outside the dataset", function() {
             var spy = jasmine.createSpy();
-                
-            makeToolbar();    
+
+            makeToolbar();
             store.loadPage(5);
             mockComplete(makeData(25, 20));
             tb.on('change', spy);
@@ -892,7 +917,7 @@ describe("Ext.toolbar.Paging", function() {
             spyOn(store, 'loadPage');
             mockComplete(makeData(10, 5));
             expect(spy).not.toHaveBeenCalled();
-            expect(store.loadPage.mostRecentCall.args[0]).toBe(2);  
-        });  
+            expect(store.loadPage.mostRecentCall.args[0]).toBe(2);
+        });
     });
 });

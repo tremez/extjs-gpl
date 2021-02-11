@@ -96,9 +96,11 @@ Ext.define('Ext.device.communicator.Default', {
 
         if (!scope) {
             scopeId = this.globalScopeId;
-        } else if (scope.isIdentifiable) {
+        }
+        else if (scope.isIdentifiable) {
             scopeId = scope.getId();
-        } else {
+        }
+        else {
             scopeId = this.getId(scope);
         }
 
@@ -137,7 +139,8 @@ Ext.define('Ext.device.communicator.Default', {
 
         if (!args) {
             args = {};
-        } else if (args.callbacks) {
+        }
+        else if (args.callbacks) {
             callbacks = args.callbacks;
             scope = args.scope;
 
@@ -148,7 +151,7 @@ Ext.define('Ext.device.communicator.Default', {
                 if (callbacks.hasOwnProperty(name)) {
                     callback = callbacks[name];
 
-                    if (typeof callback == 'function') {
+                    if (typeof callback === 'function') {
                         args[name] = this.getCallbackId(callback, scope);
                     }
                 }
@@ -173,10 +176,12 @@ Ext.define('Ext.device.communicator.Default', {
             xhr.send(null);
 
             return xhr.responseText;
-        } catch(e) {
+        }
+        catch (e) {
             if (args.failure) {
                 this.invoke(args.failure);
-            } else if (args.callback) {
+            }
+            else if (args.callback) {
                 this.invoke(args.callback);
             }
         }

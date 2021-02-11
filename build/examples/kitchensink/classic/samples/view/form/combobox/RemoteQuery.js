@@ -10,25 +10,47 @@ Ext.define('KitchenSink.view.form.combobox.RemoteQuery', {
         'KitchenSink.model.State',
         'KitchenSink.store.RemoteStates'
     ],
-    
+
     exampleTitle: 'Remote Query ComboBox',
     otherContent: [{
         type: 'Model',
-        path: 'classic/samples/model/State.js'
+        path: 'app/model/State.js'
     }, {
         type: 'Store',
         path: 'classic/samples/store/RemoteStates.js'
     }],
     //</example>
-    
+
+    profiles: {
+        classic: {
+            labelWidth: 110,
+            anchor: '-15'
+        },
+        neptune: {
+            labelWidth: 110,
+            anchor: '-15'
+        },
+        graphite: {
+            labelWidth: 140,
+            anchor: '-15'
+        },
+        'classic-material': {
+            labelWidth: 140,
+            anchor: '0'
+        }
+    },
     title: 'Remote Query ComboBox',
     width: 500,
     layout: 'form',
+    cls: 'simple-combo remote-combo',
     viewModel: {},
-    
+
     items: [{
         xtype: 'fieldset',
         layout: 'anchor',
+        fieldDefaults: {
+            labelWidth: '${labelWidth}'
+        },
         items: [{
             xtype: 'component',
             anchor: '100%',
@@ -48,7 +70,7 @@ Ext.define('KitchenSink.view.form.combobox.RemoteQuery', {
             publishes: 'value',
             fieldLabel: 'Select State',
             displayField: 'state',
-            anchor: '-15',
+            anchor: '${anchor}',
             store: {
                 type: 'remote-states'
             },

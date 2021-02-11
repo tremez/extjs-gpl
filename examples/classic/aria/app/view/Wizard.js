@@ -1,41 +1,41 @@
 Ext.define('Aria.view.Wizard', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.mysimplewizard',
-    
+
     requires: [
         'Ext.layout.container.Card',
         'Ext.layout.container.Form',
         'Aria.view.WizardController'
     ],
-    
+
     title: 'Wizard',
-    
+
     ariaAttributes: {
         'aria-live': 'polite',
         'aria-atomic': true,
         'aria-relevant': 'all'
     },
-    
+
     layout: 'fit',
-    
+
     items: [{
         xtype: 'panel',
         title: 'Sample wizard widget',
         ariaRole: 'region',
-        
+
         controller: 'wizard',
-        
+
         layout: 'card',
-        
+
         defaults: {
             bodyPadding: 30,
             layout: 'form',
             defaultFocus: 'textfield'
         },
-        
+
         items: [{
             xtype: 'form',
-            
+
             items: [{
                 xtype: 'textfield',
                 fieldLabel: 'First name'
@@ -43,7 +43,7 @@ Ext.define('Aria.view.Wizard', {
                 xtype: 'textfield',
                 fieldLabel: 'Last name'
             }],
-            
+
             buttons: [{
                 direction: 'next',
                 text: 'Next panel',
@@ -53,7 +53,7 @@ Ext.define('Aria.view.Wizard', {
             }]
         }, {
             xtype: 'form',
-            
+
             items: [{
                 xtype: 'textfield',
                 fieldLabel: 'Company'
@@ -61,7 +61,7 @@ Ext.define('Aria.view.Wizard', {
                 xtype: 'textfield',
                 fieldLabel: 'E-mail'
             }],
-            
+
             buttons: [{
                 direction: 'prev',
                 text: 'Previous panel',
@@ -77,7 +77,7 @@ Ext.define('Aria.view.Wizard', {
             }]
         }, {
             xtype: 'form',
-            
+
             items: [{
                 xtype: 'datefield',
                 fieldLabel: 'Birth date'
@@ -85,7 +85,7 @@ Ext.define('Aria.view.Wizard', {
                 xtype: 'timefield',
                 fieldLabel: 'Time'
             }],
-            
+
             buttons: [{
                 direction: 'prev',
                 text: 'Back to Second panel',

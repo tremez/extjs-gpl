@@ -3,9 +3,9 @@
  */
 Ext.define('Ticket.view.user.User', {
     extend: 'Ext.window.Window',
-    
+
     controller: 'user', // links to Ticket.view.user.UserController
-    
+
     width: 300,
     minHeight: 250,
     height: 450,
@@ -27,7 +27,7 @@ Ext.define('Ticket.view.user.User', {
         // Call is routed to our ViewController (Ticket.view.user.UserController):
         callback: 'onGroupsClick'
     }],
-    
+
     items: [{
         xtype: 'textfield',
         fieldLabel: 'Name',

@@ -1,0 +1,11 @@
+.#{$prefix}datepicker-arrow {
+    top: 0px;
+}
+
+.#{$prefix}datepicker-today .#{$prefix}datepicker-date {
+    color: $datepicker-item-today-color;
+}
+
+.#{$prefix}datepicker-month .#{$prefix}btn-wrap.#{$prefix}btn-split-right:before {
+    border-right: none;
+}

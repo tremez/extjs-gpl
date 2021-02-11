@@ -5,9 +5,11 @@ Ext.define('Calendar.view.profile.SideViewModel', {
     formulas: {
         icon: function(get) {
             var user = get('user');
+
             if (user && user.icon) {
                 return user.icon;
-            } else {
+            }
+            else {
                 return './resources/images/guest.png';
             }
         }

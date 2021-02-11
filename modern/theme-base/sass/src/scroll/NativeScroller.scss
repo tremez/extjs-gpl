@@ -1,0 +1,39 @@
+.#{$prefix}nativescroller {
+    -webkit-overflow-scrolling: touch; // enable momentum scrolling on iOS
+    overflow-anchor: none;             // Chrome 56 enables this by default
+
+    &.#{$prefix}overflow-x-auto {
+        overflow-x: auto !important;
+    }
+
+    &.#{$prefix}overflow-x-hidden {
+        overflow-x: hidden !important;
+    }
+
+    &.#{$prefix}overflow-x-scroll {
+        overflow-x: scroll !important;
+    }
+
+    &.#{$prefix}overflow-y-auto {
+        overflow-y: auto !important;
+    }
+
+    &.#{$prefix}overflow-y-hidden {
+        overflow-y: hidden !important;
+    }
+
+    &.#{$prefix}overflow-y-scroll {
+        overflow-y: scroll !important;
+    }
+
+    > .#{$prefix}scroller-spacer {
+        position: absolute;
+        top: 0; // Positioned using translate3d
+        overflow: hidden; // Needed for a translated element to stretch scroll range in IE
+        height: 1px;
+        width: 1px;
+        font-size: 0;
+        line-height: 0;
+        pointer-events: none;
+    }
+}

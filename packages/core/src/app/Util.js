@@ -9,7 +9,7 @@ Ext.define('Ext.app.Util', {
             Ext: {}
         },
 
-       /**
+        /**
         * Adds namespace(s) to known list.
         * @private
         *
@@ -28,7 +28,7 @@ Ext.define('Ext.app.Util', {
             }
         },
 
-       /**
+        /**
         * Clear all namespaces from known list.
         * @private
         */
@@ -36,7 +36,7 @@ Ext.define('Ext.app.Util', {
             Ext.app.namespaces = {};
         },
 
-       /**
+        /**
         * Get namespace prefix for a class name.
         * @private
         * @param {String} className
@@ -44,12 +44,12 @@ Ext.define('Ext.app.Util', {
         * @return {String} Namespace prefix if it's known, otherwise undefined
         */
         getNamespace: function(className) {
-            var namespaces    = Ext.apply({}, Ext.ClassManager.paths, Ext.app.namespaces),
+            var namespaces = Ext.apply({}, Ext.ClassManager.paths, Ext.app.namespaces),
                 deepestPrefix = '',
                 prefix;
 
             for (prefix in namespaces) {
-                if (namespaces.hasOwnProperty(prefix)    &&
+                if (namespaces.hasOwnProperty(prefix) &&
                     prefix.length > deepestPrefix.length &&
                     (prefix + '.' === className.substring(0, prefix.length + 1))) {
                     deepestPrefix = prefix;
@@ -67,7 +67,7 @@ Ext.define('Ext.app.Util', {
          * @private
          * @since 6.0.0
          */
-        setupPaths: function (appName, appFolder, paths) {
+        setupPaths: function(appName, appFolder, paths) {
             var manifestPaths = Ext.manifest,
                 ns;
 

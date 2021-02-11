@@ -2,7 +2,8 @@
  *
  * This example shows how to create a pivot grid and inline edit the results.
  *
- * Click into a cell to open the editor. The input value will be used to overwrite all records behind that cell.
+ * Click into a cell to open the editor. The input value will be used to overwrite
+ * all records behind that cell.
  *
  */
 Ext.define('KitchenSink.view.pivot.CellEditing', {
@@ -20,38 +21,60 @@ Ext.define('KitchenSink.view.pivot.CellEditing', {
     otherContent: [{
         type: 'Controller',
         path: 'classic/samples/view/pivot/PivotController.js'
-    },{
+    }, {
         type: 'Model',
         path: 'classic/samples/model/pivot/Sale.js'
-    },{
+    }, {
         type: 'Store',
         path: 'classic/samples/store/pivot/Sales.js'
     }],
     profiles: {
         classic: {
-            width: 600
+            width: 600,
+            height: 350,
+            columnWidth: 100,
+            columnLines: true
         },
         neptune: {
-            width: 750
+            width: 750,
+            height: 400,
+            columnWidth: 100,
+            columnLines: true
+        },
+        graphite: {
+            width: 780,
+            height: 600,
+            columnWidth: 130,
+            columnLines: true
+        },
+        'classic-material': {
+            width: 780,
+            height: 600,
+            columnWidth: 150,
+            columnLines: false
         }
     },
     //</example>
 
     title: 'Pivot Grid with CellEditing plugin',
     width: '${width}',
-    height: 350,
+    height: '${height}',
     collapsible: true,
     multiSelect: true,
+    columnLines: '${columnLines}',
 
     selModel: {
         type: 'spreadsheet'
     },
 
-    plugins: [{
-        ptype: 'pivotcellediting',
-        clicksToEdit: 1,
-        defaultUpdater: 'uniform' // define here the type of editing: 'overwrite', 'increment', 'percentage', 'uniform'
-    }],
+    plugins: {
+        pivotcellediting: {
+            clicksToEdit: 1,
+            // define here the type of editing: 'overwrite', 'increment',
+            // 'percentage', 'uniform'
+            defaultUpdater: 'uniform'
+        }
+    },
 
     matrix: {
         type: 'local',
@@ -64,11 +87,14 @@ Ext.define('KitchenSink.view.pivot.CellEditing', {
             dataIndex: 'value',
             header: 'Sum of value',
             aggregator: 'sum',
-            // if you want an aggregate dimension to be editable you need to specify its editor
+            width: '${columnWidth}',
+            // if you want an aggregate dimension to be editable you need to
+            // specify its editor
             editor: 'numberfield'
         }],
 
-        // Configure the left axis dimensions that will be used to generate the grid rows
+        // Configure the left axis dimensions that will be used to generate
+        // the grid rows
         leftAxis: [{
             dataIndex: 'year',
             header: 'Year'
@@ -78,10 +104,13 @@ Ext.define('KitchenSink.view.pivot.CellEditing', {
         }],
 
         /**
-         * Configure the top axis dimensions that will be used to generate the columns.
-         * When columns are generated the aggregate dimensions are also used. If multiple aggregation dimensions
-         * are defined then each top axis result will have in the end a column header with children
-         * columns for each aggregate dimension defined.
+         * Configure the top axis dimensions that will be used to generate
+         * the columns.
+         *
+         * When columns are generated the aggregate dimensions are also used.
+         * If multiple aggregation dimensions are defined then each top axis
+         * result will have in the end a column header with children columns
+         * for each aggregate dimension defined.
          */
         topAxis: [{
             dataIndex: 'continent',

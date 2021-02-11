@@ -5,6 +5,8 @@
 Ext.define('Ext.app.bind.BaseBinding', {
     extend: 'Ext.util.Schedulable',
 
+    isBinding: true,
+
     calls: 0,
 
     kind: 20,
@@ -20,7 +22,7 @@ Ext.define('Ext.app.bind.BaseBinding', {
      * @since 5.0.0
      */
 
-    constructor: function (owner, callback, scope, options) {
+    constructor: function(owner, callback, scope, options) {
         var me = this;
 
         me.options = options;
@@ -36,6 +38,7 @@ Ext.define('Ext.app.bind.BaseBinding', {
 
         // If given a string callback name, preserve the late binding:
         me.lateBound = Ext.isString(callback);
+
         if (options && options.deep) {
             me.deep = true;
         }
@@ -43,7 +46,7 @@ Ext.define('Ext.app.bind.BaseBinding', {
         me.callParent();
     },
 
-    destroy: function () {
+    destroy: function() {
         var me = this,
             owner = me.owner;
 
@@ -52,7 +55,7 @@ Ext.define('Ext.app.bind.BaseBinding', {
         }
 
         me.callParent();
-        
+
         me.scope = me.callback = me.owner = null;
     },
 
@@ -61,17 +64,19 @@ Ext.define('Ext.app.bind.BaseBinding', {
     },
 
     privates: {
-        getScheduler: function () {
+        getScheduler: function() {
             var owner = this.owner;
+
             return owner && owner.getScheduler();
         },
 
-        getSession: function () {
+        getSession: function() {
             var owner = this.owner;
+
             return owner.isSession ? owner : owner.getSession();
         },
 
-        notify: function (value) {
+        notify: function(value) {
             var me = this,
                 options = me.options || me.defaultOptions,
                 previous = me.lastValue;
@@ -79,7 +84,8 @@ Ext.define('Ext.app.bind.BaseBinding', {
             // We want to deliver if:
             // 1) We've never been called
             // 2) We're a deep binding, which means that our object reference may not have changed,
-            //    but something under us has changed. For example a link stub or a model field binding
+            //    but something under us has changed. For example a link stub or a model field
+            //    binding
             // 3) If the value has changed
             // 4) If the value is an array. It's difficult to tell if the underlying data changed
             if (!me.calls || me.deep || me.valueChanged(value, previous)) {
@@ -90,7 +96,8 @@ Ext.define('Ext.app.bind.BaseBinding', {
                     // Interestingly, lateBound-ness may be more efficient since it does
                     // not use the "call" method.
                     me.scope[me.callback](value, previous, me);
-                } else {
+                }
+                else {
                     me.callback.call(me.scope, value, previous, me);
                 }
 
@@ -107,9 +114,11 @@ Ext.define('Ext.app.bind.BaseBinding', {
                 if (value && previous && value instanceof Date && previous instanceof Date) {
                     ret = value.getTime() !== previous.getTime();
                 }
-            } else {
+            }
+            else {
                 ret = Ext.isArray(value);
             }
+
             return ret;
         }
     }

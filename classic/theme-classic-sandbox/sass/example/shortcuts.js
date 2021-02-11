@@ -9,23 +9,23 @@ $Shortcuts = {
                     scale: 'small'
                 },
                 items: [{
-                    xtype:'splitbutton',
+                    xtype: 'splitbutton',
                     text: 'Menu Button',
                     iconCls: 'add16',
-                    menu: [{text: 'Menu Item 1'}]
-                },{
-                    xtype:'splitbutton',
+                    menu: [{ text: 'Menu Item 1' }]
+                }, {
+                    xtype: 'splitbutton',
                     text: 'Cut',
                     iconCls: 'add16',
-                    menu: [{text: 'Cut Menu Item'}]
-                },{
+                    menu: [{ text: 'Cut Menu Item' }]
+                }, {
                     text: 'Copy',
                     iconCls: 'add16'
-                },{
+                }, {
                     text: 'Paste',
                     iconCls: 'add16',
-                    menu: [{text: 'Paste Menu Item'}]
-                },{
+                    menu: [{ text: 'Paste Menu Item' }]
+                }, {
                     text: 'Format',
                     iconCls: 'add16'
                 }]
@@ -41,23 +41,23 @@ $Shortcuts = {
                     scale: 'small'
                 },
                 items: [{
-                    xtype:'splitbutton',
+                    xtype: 'splitbutton',
                     text: 'Menu Button',
                     iconCls: 'add16',
-                    menu: [{text: 'Menu Item 1'}]
-                },{
-                    xtype:'splitbutton',
+                    menu: [{ text: 'Menu Item 1' }]
+                }, {
+                    xtype: 'splitbutton',
                     text: 'Cut',
                     iconCls: 'add16',
-                    menu: [{text: 'Cut Menu Item'}]
-                },{
+                    menu: [{ text: 'Cut Menu Item' }]
+                }, {
                     text: 'Copy',
                     iconCls: 'add16'
-                },{
+                }, {
                     text: 'Paste',
                     iconCls: 'add16',
-                    menu: [{text: 'Paste Menu Item'}]
-                },{
+                    menu: [{ text: 'Paste Menu Item' }]
+                }, {
                     text: 'Format',
                     iconCls: 'add16'
                 }]
@@ -115,7 +115,7 @@ $Shortcuts = {
         {
             filename: 'tab-{ui}-top',
             config: {
-                //hack for 4.0.5
+                // hack for 4.0.5
                 up: function(which) {
                     if (which == 'tabbar') {
                         return {
@@ -130,7 +130,7 @@ $Shortcuts = {
         {
             filename: 'tab-{ui}-top-active',
             config: {
-                //hack for 4.0.5
+                // hack for 4.0.5
                 up: function(which) {
                     if (which == 'tabbar') {
                         return {
@@ -146,7 +146,7 @@ $Shortcuts = {
         {
             filename: 'tab-{ui}-top-over',
             config: {
-                //hack for 4.0.5
+                // hack for 4.0.5
                 up: function(which) {
                     if (which == 'tabbar') {
                         return {
@@ -162,7 +162,7 @@ $Shortcuts = {
         {
             filename: 'tab-{ui}-top-disabled',
             config: {
-                //hack for 4.0.5
+                // hack for 4.0.5
                 up: function(which) {
                     if (which == 'tabbar') {
                         return {
@@ -178,7 +178,7 @@ $Shortcuts = {
         {
             filename: 'tab-{ui}-bottom',
             config: {
-                //hack for 4.0.5
+                // hack for 4.0.5
                 up: function(which) {
                     if (which == 'tabbar') {
                         return {
@@ -194,7 +194,7 @@ $Shortcuts = {
         {
             filename: 'tab-{ui}-bottom-active',
             config: {
-                //hack for 4.0.5
+                // hack for 4.0.5
                 up: function(which) {
                     if (which == 'tabbar') {
                         return {
@@ -211,7 +211,7 @@ $Shortcuts = {
         {
             filename: 'tab-{ui}-bottom-over',
             config: {
-                //hack for 4.0.5
+                // hack for 4.0.5
                 up: function(which) {
                     if (which == 'tabbar') {
                         return {
@@ -228,7 +228,7 @@ $Shortcuts = {
         {
             filename: 'tab-{ui}-bottom-disabled',
             config: {
-                //hack for 4.0.5
+                // hack for 4.0.5
                 up: function(which) {
                     if (which == 'tabbar') {
                         return {
@@ -293,7 +293,7 @@ $Shortcuts = {
                 setup: function(window, ct) {
                     this.show();
                 },
-                floating: {shadow:false},
+                floating: { shadow: false },
                 height: 200,
                 width: 200,
                 x: 500,
@@ -313,7 +313,7 @@ $Shortcuts = {
     ],
 
     'widget.panel': [
-        //framed panel
+        // framed panel
         {
             xtype: 'widget.header',
             folder: 'panel-header',
@@ -443,7 +443,7 @@ $Shortcuts = {
             }
         },
 
-        //panel
+        // panel
         {
             xtype: 'widget.header',
             filename: 'panel-header-{ui}-top',
@@ -515,7 +515,7 @@ $Shortcuts = {
     ],
 
     'widget.button': [
-        //small button
+        // small button
         {
             filename: 'btn-{ui}-small',
             config: {
@@ -556,7 +556,7 @@ $Shortcuts = {
             }
         },
 
-        //medium button
+        // medium button
         {
             filename: 'btn-{ui}-medium',
             config: {
@@ -597,7 +597,7 @@ $Shortcuts = {
             }
         },
 
-        //large button
+        // large button
         {
             filename: 'btn-{ui}-large',
             config: {
@@ -638,7 +638,7 @@ $Shortcuts = {
             }
         },
 
-        //small toolbar button
+        // small toolbar button
         {
             filename: 'btn-{ui}-toolbar-small',
             config: {
@@ -684,7 +684,7 @@ $Shortcuts = {
             }
         },
 
-        //medium toolbar button
+        // medium toolbar button
         {
             filename: 'btn-{ui}-toolbar-medium',
             config: {
@@ -730,7 +730,7 @@ $Shortcuts = {
             }
         },
 
-        //large toolbar button
+        // large toolbar button
         {
             filename: 'btn-{ui}-toolbar-large',
             config: {

@@ -4,21 +4,21 @@
 Ext.define('Ext.form.field.FileButton', {
     extend: 'Ext.button.Button',
     alias: 'widget.filebutton',
-    
+
     childEls: [
         'fileInputEl'
     ],
-    
+
     inputCls: Ext.baseCSSPrefix + 'form-file-input',
-    
+
     cls: Ext.baseCSSPrefix + 'form-file-btn',
-    
+
     preventDefault: false,
-    
+
     // Button element *looks* focused but it should never really receive focus itself,
     // and with it being a <div></div> we don't need to render tabindex attribute at all
     tabIndex: undefined,
-    
+
     // IE and Edge implement File input as two elements: text box and a button,
     // both are focusable and have a tab stop. Since we make file input transparent,
     // this results in users having to press Tab key twice with no visible action
@@ -38,7 +38,8 @@ Ext.define('Ext.form.field.FileButton', {
         tag: 'div',
         unselectable: 'on'
     },
-    
+
+    /* eslint-disable indent */
     /*
      * This <input type="file"/> element is placed above the button element to intercept
      * mouse clicks, as well as receive focus. This is the only way to make browser file input
@@ -53,7 +54,8 @@ Ext.define('Ext.form.field.FileButton', {
             '<tpl if="tabIndex != null">tabindex="{tabIndex}"</tpl>',
         '>'
     ],
-    
+    /* eslint-enable indent */
+
     keyMap: null,
     ariaEl: 'fileInputEl',
 
@@ -63,28 +65,28 @@ Ext.define('Ext.form.field.FileButton', {
     getAfterMarkup: function(values) {
         return this.lookupTpl('afterTpl').apply(values);
     },
-    
+
     getTemplateArgs: function() {
         var me = this,
             args;
-        
+
         args = me.callParent();
-        
+
         args.inputCls = me.inputCls;
         args.inputName = me.inputName || me.id;
         args.tabIndex = me.tabIndex != null ? me.tabIndex : null;
         args.accept = me.accept || null;
         args.role = me.ariaRole;
-        
+
         return args;
     },
-    
+
     afterRender: function() {
         var me = this,
             listeners, cfg;
-        
+
         me.callParent(arguments);
-        
+
         // We place focus and blur listeners on fileInputEl to activate Button's
         // focus and blur style treatment
         listeners = {
@@ -93,9 +95,10 @@ Ext.define('Ext.form.field.FileButton', {
             keydown: me.handlePrompt,
             change: me.fireChange,
             focus: me.onFileFocus,
-            blur: me.onFileBlur
+            blur: me.onFileBlur,
+            destroyable: true
         };
-        
+
         if (me.useTabGuards) {
             cfg = {
                 tag: 'span',
@@ -107,29 +110,49 @@ Ext.define('Ext.form.field.FileButton', {
                     width: 0
                 }
             };
-            
+
             cfg.tabIndex = me.tabIndex != null ? me.tabIndex : 0;
-            
+
             // We are careful about inserting tab guards *around* the fileInputEl.
             // Keep in mind that IE8/9 have framed buttons so DOM structure
             // can be complex.
             me.beforeInputGuard = me.el.createChild(cfg, me.fileInputEl);
             me.afterInputGuard = me.el.createChild(cfg);
             me.afterInputGuard.insertAfter(me.fileInputEl);
-            
+
             me.beforeInputGuard.on('focus', me.onInputGuardFocus, me);
             me.afterInputGuard.on('focus', me.onInputGuardFocus, me);
 
             listeners.keydown = me.onFileInputKeydown;
         }
-        
-        me.fileInputEl.on(listeners);
+
+        me.fileInputElListeners = me.fileInputEl.on(listeners);
     },
-    
+
+    doDestroy: function() {
+        var me = this;
+
+        if (me.fileInputElListeners) {
+            me.fileInputElListeners.destroy();
+        }
+
+        if (me.beforeInputGuard) {
+            me.beforeInputGuard.destroy();
+            me.beforeInputGuard = null;
+        }
+
+        if (me.afterInputGuard) {
+            me.afterInputGuard.destroy();
+            me.afterInputGuard = null;
+        }
+
+        me.callParent();
+    },
+
     fireChange: function(e) {
         this.fireEvent('change', this, e, this.fileInputEl.dom.value);
     },
-    
+
     /**
      * @private
      * Creates the file input element. It is inserted into the trigger button component, made
@@ -152,15 +175,15 @@ Ext.define('Ext.form.field.FileButton', {
 
         // This is our focusEl
         fileInputEl.dom.setAttribute('data-componentid', me.id);
-        
+
         if (me.tabIndex != null) {
             me.setTabIndex(me.tabIndex);
         }
-        
+
         if (me.accept) {
             fileInputEl.dom.setAttribute('accept', me.accept);
         }
-        
+
         // We place focus and blur listeners on fileInputEl to activate Button's
         // focus and blur style treatment
         listeners = {
@@ -171,7 +194,7 @@ Ext.define('Ext.form.field.FileButton', {
             focus: me.onFileFocus,
             blur: me.onFileBlur
         };
-        
+
         if (me.useTabGuards) {
             listeners.keydown = me.onFileInputKeydown;
         }
@@ -182,22 +205,23 @@ Ext.define('Ext.form.field.FileButton', {
     handlePrompt: function(e) {
         var key;
 
-        if (e.type == 'keydown') {
+        if (e.type === 'keydown') {
             key = e.getKey();
             // We need this conditional here because IE doesn't open the prompt on ENTER
             this.promptCalled = ((!Ext.isIE && key === e.ENTER) || key === e.SPACE) ? true : false;
-        } else {
+        }
+        else {
             this.promptCalled = true;
         }
     },
 
     onFileFocus: function(e) {
         var ownerCt = this.ownerCt;
-        
+
         if (!this.hasFocus) {
             this.onFocus(e);
         }
-        
+
         if (ownerCt && !ownerCt.hasFocus) {
             ownerCt.onFocus(e);
         }
@@ -211,79 +235,81 @@ Ext.define('Ext.form.field.FileButton', {
         if (this.promptCalled) {
             this.promptCalled = false;
             e.preventDefault();
+
             return;
         }
 
         if (this.hasFocus) {
             this.onBlur(e);
         }
-        
+
         if (ownerCt && ownerCt.hasFocus) {
             ownerCt.onBlur(e);
         }
     },
-    
+
     onInputGuardFocus: function(e) {
         this.fileInputEl.focus();
     },
-    
+
     onFileInputKeydown: function(e) {
         var key = e.getKey(),
             focusTo;
 
         if (key === e.TAB) {
             focusTo = e.shiftKey ? this.beforeInputGuard : this.afterInputGuard;
-            
+
             if (focusTo) {
                 // We need to skip the next focus to avoid it bouncing back
                 // to the input field.
                 focusTo.suspendEvent('focus');
                 focusTo.focus();
-                
+
                 // In IE focus events are asynchronous so we can't enable focus event
                 // in the same event loop.
-                setTimeout(function() {
+                Ext.defer(function() {
                     focusTo.resumeEvent('focus');
-                }, 0);
+                }, 1);
             }
-        } else if (key === e.ENTER || key === e.SPACE) {
+        }
+        else if (key === e.ENTER || key === e.SPACE) {
             this.handlePrompt(e);
         }
-        
+
         // Returning true will allow the event to take default action
         return true;
     },
-    
+
     reset: function(remove) {
         var me = this;
-        
+
         if (remove) {
             me.fileInputEl.destroy();
         }
-        
+
         me.createFileInput(!remove);
-        
+
         if (remove) {
             me.ariaEl = me.fileInputEl;
         }
     },
-    
+
     restoreInput: function(el) {
         var me = this;
-        
+
         me.fileInputEl.destroy();
         el = Ext.get(el);
-        
+
         if (me.useTabGuards) {
             el.insertBefore(me.afterInputGuard);
         }
         else {
             me.el.appendChild(el);
         }
-        
+
         me.fileInputEl = el;
     },
-    
+
     onDisable: function() {
         this.callParent();
         this.fileInputEl.dom.disabled = true;
@@ -293,29 +319,29 @@ Ext.define('Ext.form.field.FileButton', {
         this.callParent();
         this.fileInputEl.dom.disabled = false;
     },
-    
+
     privates: {
         getFocusEl: function() {
             return this.fileInputEl;
         },
-        
+
         getFocusClsEl: function() {
             return this.el;
         },
-        
+
         setTabIndex: function(tabIndex) {
             var me = this;
-            
+
             if (!me.focusable) {
                 return;
             }
-            
+
             me.tabIndex = tabIndex;
-            
+
             if (!me.rendered || me.destroying || me.destroyed) {
                 return;
             }
-            
+
             if (me.useTabGuards) {
                 me.fileInputEl.dom.setAttribute('tabIndex', -1);
                 me.beforeInputGuard.dom.setAttribute('tabIndex', tabIndex);

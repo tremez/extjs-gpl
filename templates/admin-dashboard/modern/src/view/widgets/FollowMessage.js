@@ -6,13 +6,6 @@ Ext.define('Admin.view.widgets.FollowMessage', {
     xtype: 'followmessage',
     border: false,
 
-    /**
-     * @event follow
-     */
-    /**
-     * @event message
-     */
-
     layout: {
         pack: 'center'
     },
@@ -24,18 +17,10 @@ Ext.define('Admin.view.widgets.FollowMessage', {
     items: [{
         text: 'Follow',
         ui: 'soft-green',
-
-        handler: function () {
-            var parent = this.getParent();
-            parent.fireEvent('follow', parent);
-        }
+        handler: 'onFollow'
     }, {
         text: 'Message',
         ui: 'soft-blue',
-
-        handler: function () {
-            var parent = this.getParent();
-            parent.fireEvent('message', parent);
-        }
+        handler: 'onMessage'
     }]
 });

@@ -1,0 +1,12 @@
+@if $theme-name == 'theme-material'  {
+    .company-grid-combo {
+        .#{$prefix}form-trigger-default,
+        input {
+            border-bottom: 1px solid #ffffff !important;  
+            color: #ffffff !important;
+        }
+        .#{$prefix}form-item-label-default {
+            color: #ffffff !important;
+        }
+    }
+}

@@ -49,11 +49,13 @@ Ext.define('Ext.ux.desktop.StartMenu', {
 
     addMenuItem: function() {
         var cmp = this.menu;
+
         cmp.add.apply(cmp, arguments);
     },
 
     addToolItem: function() {
         var cmp = this.toolbar;
+
         cmp.add.apply(cmp, arguments);
     }
 }); // StartMenu

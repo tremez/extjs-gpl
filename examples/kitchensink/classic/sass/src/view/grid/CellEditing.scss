@@ -4,8 +4,14 @@
     }
 } @else {
     .cell-editing-delete-row:before {
-        font: $grid-actioncolumn-icon-height/1 FontAwesome;
+        font: $grid-actioncolumn-icon-height/1 'Font Awesome 5 Free';
         color: $red-icon-color;
         content: $fa-var-minus-circle;
+    }
+}
+
+@if $theme-name == 'theme-material' {
+    .#{$prefix}column-header-text-inner {
+        font-size: $font-size;
     }
 }

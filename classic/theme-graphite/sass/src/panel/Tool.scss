@@ -1,0 +1,22 @@
+.#{$prefix}tool-tool-el {
+    margin: $panel-tool-margin;
+}
+ 
+.#{$prefix}keyboard-mode {
+    .#{$prefix}tool-focus {
+        background-color: $panel-tool-focus-background-color;
+
+        .#{$prefix}tool-tool-el {
+            color: $panel-tool-focus-color; 
+        }
+    }
+}
+
+.#{$prefix}tool-over {
+    background-color: $panel-tool-over-background-color;
+
+    .#{$prefix}tool-tool-el {
+        color: $panel-tool-over-color;
+        background-color: $panel-tool-over-background-color;
+    }
+}

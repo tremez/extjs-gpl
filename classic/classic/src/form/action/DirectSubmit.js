@@ -55,11 +55,11 @@ Ext.define('Ext.form.action.DirectSubmit', {
     extend: 'Ext.form.action.Submit',
     alternateClassName: 'Ext.form.Action.DirectSubmit',
     alias: 'formaction.directsubmit',
-    
+
     requires: [
         'Ext.direct.Manager'
     ],
-    
+
     mixins: [
         'Ext.form.action.DirectAction'
     ],
@@ -72,10 +72,10 @@ Ext.define('Ext.form.action.DirectSubmit', {
             metadata = me.metadata || form.metadata,
             timeout = me.timeout || form.timeout,
             fn, formInfo, args;
-        
-        fn       = me.resolveMethod('submit');
+
+        fn = me.resolveMethod('submit');
         formInfo = me.buildForm();
-        
+
         args = fn.directCfg.method.getArgs({
             params: formInfo.formEl,
             options: timeout != null ? { timeout: timeout * 1000 } : null,
@@ -83,9 +83,9 @@ Ext.define('Ext.form.action.DirectSubmit', {
             callback: me.onComplete,
             scope: me
         });
-        
+
         fn.apply(window, args);
-        
+
         me.cleanup(formInfo);
     },
 
@@ -95,11 +95,12 @@ Ext.define('Ext.form.action.DirectSubmit', {
     processResponse: function(result) {
         return (this.result = result);
     },
-    
-    onComplete: function(data){
+
+    onComplete: function(data) {
         if (data) {
             this.onSuccess(data);
-        } else {
+        }
+        else {
             this.onFailure(null);
         }
     }

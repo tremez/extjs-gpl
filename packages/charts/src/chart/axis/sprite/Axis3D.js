@@ -29,19 +29,22 @@ Ext.define('Ext.chart.axis.sprite.Axis3D', {
     },
 
     config: {
-        fx: {
+        animation: {
             customDurations: {
                 depth: 0
             }
         }
     },
 
-    layoutUpdater: function () {
+    layoutUpdater: function() {
         var me = this,
             chart = me.getAxis().getChart();
+
         if (chart.isInitializing) {
             return;
         }
+
+        // eslint-disable-next-line vars-on-top, one-var
         var attr = me.attr,
             layout = me.getLayout(),
             depth = layout.isDiscrete ? 0 : attr.depth,
@@ -62,12 +65,15 @@ Ext.define('Ext.chart.axis.sprite.Axis3D', {
             attr.scalingCenterY = 0;
             attr.scalingCenterX = 0;
             me.applyTransformations(true);
-        } else if (attr.position === 'top' || attr.position === 'bottom') {
+        }
+        else if (attr.position === 'top' || attr.position === 'bottom') {
             if (isRtl) {
                 attr.translationX = attr.length + min * attr.length / (max - min) + 1;
-            } else {
+            }
+            else {
                 attr.translationX = -min * attr.length / (max - min);
             }
+
             attr.translationY = 0;
             attr.scalingX = (isRtl ? -1 : 1) * (attr.length - depth) / (max - min);
             attr.scalingY = 1;
@@ -82,11 +88,11 @@ Ext.define('Ext.chart.axis.sprite.Axis3D', {
         }
     },
 
-    renderAxisLine: function (surface, ctx, layout, clipRect) {
+    renderAxisLine: function(surface, ctx, layout, clipRect) {
         var me = this,
             attr = me.attr,
             halfLineWidth = attr.lineWidth * 0.5,
-            layout = me.getLayout(),
+            layout = me.getLayout(), // eslint-disable-line no-redeclare
             depth = layout.isDiscrete ? 0 : attr.depth,
             docked = attr.position,
             position, gaugeAngles;
@@ -98,28 +104,34 @@ Ext.define('Ext.chart.axis.sprite.Axis3D', {
                     ctx.moveTo(position, -attr.endGap + depth);
                     ctx.lineTo(position, attr.length + attr.startGap);
                     break;
+
                 case 'right':
                     ctx.moveTo(halfLineWidth, -attr.endGap);
                     ctx.lineTo(halfLineWidth, attr.length + attr.startGap);
                     break;
+
                 case 'bottom':
                     ctx.moveTo(-attr.startGap, halfLineWidth);
                     ctx.lineTo(attr.length - depth + attr.endGap, halfLineWidth);
                     break;
+
                 case 'top':
                     position = surface.roundPixel(clipRect[3]) - halfLineWidth;
                     ctx.moveTo(-attr.startGap, position);
                     ctx.lineTo(attr.length + attr.endGap, position);
                     break;
+
                 case 'angular':
                     ctx.moveTo(attr.centerX + attr.length, attr.centerY);
                     ctx.arc(attr.centerX, attr.centerY, attr.length, 0, Math.PI * 2, true);
                     break;
+
                 case 'gauge':
                     gaugeAngles = me.getGaugeAngles();
                     ctx.moveTo(attr.centerX + Math.cos(gaugeAngles.start) * attr.length,
-                        attr.centerY + Math.sin(gaugeAngles.start) * attr.length);
-                    ctx.arc(attr.centerX, attr.centerY, attr.length, gaugeAngles.start, gaugeAngles.end, true);
+                               attr.centerY + Math.sin(gaugeAngles.start) * attr.length);
+                    ctx.arc(attr.centerX, attr.centerY, attr.length, gaugeAngles.start,
+                            gaugeAngles.end, true);
                     break;
             }
         }

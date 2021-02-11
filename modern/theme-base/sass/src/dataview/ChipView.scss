@@ -1,0 +1,6 @@
+// Chip items wrap
+.#{$prefix}chipview .#{$prefix}chipview-body-el {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: start;
+}

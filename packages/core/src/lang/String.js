@@ -4,17 +4,20 @@
  * A collection of useful static methods to deal with strings.
  * @singleton
  */
+/* eslint-disable indent */
 Ext.String = (function() {
-// @define Ext.lang.String
-// @define Ext.String
-// @require Ext
-// @require Ext.lang.Array
-    var trimRegex     = /^[\x09\x0a\x0b\x0c\x0d\x20\xa0\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u2028\u2029\u202f\u205f\u3000]+|[\x09\x0a\x0b\x0c\x0d\x20\xa0\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u2028\u2029\u202f\u205f\u3000]+$/g,
-        escapeRe      = /('|\\)/g,
+    // @define Ext.lang.String
+    // @define Ext.String
+    // @require Ext
+    // @require Ext.lang.Array
+    // eslint-disable-next-line no-control-regex
+    var trimRegex = /^[\x09\x0a\x0b\x0c\x0d\x20\xa0\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u2028\u2029\u202f\u205f\u3000]+|[\x09\x0a\x0b\x0c\x0d\x20\xa0\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u2028\u2029\u202f\u205f\u3000]+$/g,
+        escapeRe = /('|\\)/g,
+        // eslint-disable-next-line no-useless-escape
         escapeRegexRe = /([-.*+?\^${}()|\[\]\/\\])/g,
-        basicTrimRe   = /^\s+|\s+$/g,
-        whitespaceRe  = /\s+/,
-        varReplace    = /(^[^a-z]*|[^\w])/gi,
+        basicTrimRe = /^\s+|\s+$/g,
+        whitespaceRe = /\s+/,
+        varReplace = /(^[^a-z]*|[^\w])/gi,
         charToEntity,
         entityToChar,
         charToEntityRegex,
@@ -23,14 +26,16 @@ Ext.String = (function() {
             return charToEntity[capture];
         },
         htmlDecodeReplaceFn = function(match, capture) {
-            return (capture in entityToChar) ? entityToChar[capture] : String.fromCharCode(parseInt(capture.substr(2), 10));
+            return (capture in entityToChar)
+                ? entityToChar[capture]
+                : String.fromCharCode(parseInt(capture.substr(2), 10));
         },
-        boundsCheck = function(s, other){
+        boundsCheck = function(s, other) {
             if (s === null || s === undefined || other === null || other === undefined) {
                 return false;
             }
 
-            return other.length <= s.length; 
+            return other.length <= s.length;
         },
         fromCharCode = String.fromCharCode,
         ExtString;
@@ -38,6 +43,7 @@ Ext.String = (function() {
     return ExtString = {
 
         /**
+         * @method
          * Creates a string created by using the specified sequence of code points.
          * @param {Number...} codePoint Codepoints from which to build the string.
          * @return {String} A string built from the sequence of code points passed.
@@ -51,6 +57,7 @@ Ext.String = (function() {
 
             while (++index < length) {
                 codePoint = Number(arguments[index]);
+
                 if (
                     !isFinite(codePoint) ||       // `NaN`, `+Infinity`, or `-Infinity`
                     codePoint < 0 ||              // not a valid Unicode code point
@@ -59,18 +66,22 @@ Ext.String = (function() {
                 ) {
                     Ext.raise('Invalid code point: ' + codePoint);
                 }
+
                 if (codePoint <= 0xFFFF) { // BMP code point
                     codeUnits.push(codePoint);
-                } else { // Astral code point; split in surrogate halves
+                }
+                else { // Astral code point; split in surrogate halves
                     // http://mathiasbynens.be/notes/javascript-encoding#surrogate-formulae
                     codePoint -= 0x10000;
                     codeUnits.push((codePoint >> 10) + 0xD800, (codePoint % 0x400) + 0xDC00);
                 }
+
                 if (index + 1 === length) {
                     result += fromCharCode(codeUnits);
                     codeUnits.length = 0;
                 }
             }
+
             return result;
         },
 
@@ -78,90 +89,101 @@ Ext.String = (function() {
          * Inserts a substring into a string.
          * @param {String} s The original string.
          * @param {String} value The substring to insert.
-         * @param {Number} index The index to insert the substring. Negative indexes will insert from the end of
-         * the string. Example: 
+         * @param {Number} index The index to insert the substring. Negative indexes will insert
+         * from the end of the string. Example: 
          *
          *     Ext.String.insert("abcdefg", "h", -1); // abcdefhg
          *
          * @return {String} The value with the inserted substring
          */
         insert: function(s, value, index) {
+            var len;
+
             if (!s) {
                 return value;
             }
-            
+
             if (!value) {
                 return s;
             }
-            
-            var len = s.length;
-            
+
+            len = s.length;
+
             if (!index && index !== 0) {
                 index = len;
             }
-            
+
             if (index < 0) {
                 index *= -1;
+
                 if (index >= len) {
                     // negative overflow, insert at start
                     index = 0;
-                } else {
+                }
+                else {
                     index = len - index;
                 }
             }
-            
+
             if (index === 0) {
                 s = value + s;
-            } else if (index >= s.length) {
+            }
+            else if (index >= s.length) {
                 s += value;
-            } else {
+            }
+            else {
                 s = s.substr(0, index) + value + s.substr(index);
             }
+
             return s;
         },
-        
+
         /**
          * Checks if a string starts with a substring
          * @param {String} s The original string
          * @param {String} start The substring to check
          * @param {Boolean} [ignoreCase=false] True to ignore the case in the comparison
          */
-        startsWith: function(s, start, ignoreCase){
+        startsWith: function(s, start, ignoreCase) {
             var result = boundsCheck(s, start);
-            
+
             if (result) {
                 if (ignoreCase) {
                     s = s.toLowerCase();
                     start = start.toLowerCase();
                 }
+
                 result = s.lastIndexOf(start, 0) === 0;
             }
+
             return result;
         },
-        
+
         /**
          * Checks if a string ends with a substring
          * @param {String} s The original string
          * @param {String} end The substring to check
          * @param {Boolean} [ignoreCase=false] True to ignore the case in the comparison
          */
-        endsWith: function(s, end, ignoreCase){
+        endsWith: function(s, end, ignoreCase) {
             var result = boundsCheck(s, end);
-            
+
             if (result) {
                 if (ignoreCase) {
                     s = s.toLowerCase();
                     end = end.toLowerCase();
                 }
+
                 result = s.indexOf(end, s.length - end.length) !== -1;
             }
+
             return result;
         },
 
         /**
-         * Converts a string of characters into a legal, parse-able JavaScript `var` name as long as the passed
-         * string contains at least one alphabetic character. Non alphanumeric characters, and *leading* non alphabetic
-         * characters will be removed.
+         * Converts a string of characters into a legal, parse-able JavaScript `var` name
+         * as long as the passed string contains at least one alphabetic character.
+         * Non alphanumeric characters, and *leading* non alphabetic characters will be removed.
          * @param {String} s A string to be converted into a `var` name.
          * @return {String} A legal JavaScript `var` name.
          */
@@ -170,7 +192,8 @@ Ext.String = (function() {
         },
 
         /**
-         * Convert certain characters (&, <, >, ', and ") to their HTML character equivalents for literal display in web pages.
+         * Convert certain characters (&, <, >, ', and ") to their HTML character equivalents
+         * for literal display in web pages.
          * @param {String} value The string to encode.
          * @return {String} The encoded text.
          * @method
@@ -188,7 +211,7 @@ Ext.String = (function() {
         htmlDecode: function(value) {
             return (!value) ? value : String(value).replace(entityToCharRegex, htmlDecodeReplaceFn);
         },
-        
+
         /**
          * Checks if a string has values needing to be html encoded.
          * @private
@@ -232,6 +255,7 @@ Ext.String = (function() {
             var charKeys = [],
                 entityKeys = [],
                 key, echar;
+
             for (key in newEntities) {
                 echar = newEntities[key];
                 entityToChar[key] = echar;
@@ -239,8 +263,10 @@ Ext.String = (function() {
                 charKeys.push(echar);
                 entityKeys.push(key);
             }
+
             charToEntityRegex = new RegExp('(' + charKeys.join('|') + ')', 'g');
-            entityToCharRegex = new RegExp('(' + entityKeys.join('|') + '|&#[0-9]{1,5};' + ')', 'g');
+            entityToCharRegex =
+                new RegExp('(' + entityKeys.join('|') + '|&#[0-9]{1,5};' + ')', 'g');
         },
 
         /**
@@ -253,11 +279,11 @@ Ext.String = (function() {
             entityToChar = {};
             // add the default set
             this.addCharacterEntities({
-                '&amp;'     :   '&',
-                '&gt;'      :   '>',
-                '&lt;'      :   '<',
-                '&quot;'    :   '"',
-                '&#39;'     :   "'"
+                '&amp;': '&',
+                '&gt;': '>',
+                '&lt;': '<',
+                '&quot;': '"',
+                '&#39;': "'"
             });
         },
 
@@ -268,7 +294,7 @@ Ext.String = (function() {
          * @param {String} string The content to append to the URL.
          * @return {String} The resulting URL
          */
-        urlAppend : function(url, string) {
+        urlAppend: function(url, string) {
             if (!Ext.isEmpty(string)) {
                 return url + (url.indexOf('?') === -1 ? '?' : '&') + string;
             }
@@ -277,7 +303,8 @@ Ext.String = (function() {
         },
 
         /**
-         * Trims whitespace from either end of a string, leaving spaces within the string intact.  Example:
+         * Trims whitespace from either end of a string, leaving spaces within the string intact.
+         * Example:
          *
          *     var s = '  foo bar  ';
          *     alert('-' + s + '-');                   //alerts "- foo bar -"
@@ -290,6 +317,7 @@ Ext.String = (function() {
             if (string) {
                 string = string.replace(trimRegex, "");
             }
+
             return string || '';
         },
 
@@ -302,6 +330,7 @@ Ext.String = (function() {
             if (string) {
                 string = string.charAt(0).toUpperCase() + string.substr(1);
             }
+
             return string || '';
         },
 
@@ -314,27 +343,35 @@ Ext.String = (function() {
             if (string) {
                 string = string.charAt(0).toLowerCase() + string.substr(1);
             }
+
             return string || '';
         },
 
         /**
-         * Truncate a string and add an ellipsis ('...') to the end if it exceeds the specified length.
+         * Truncate a string and add an ellipsis ('...') to the end if it exceeds
+         * the specified length.
          * @param {String} value The string to truncate.
          * @param {Number} length The maximum length to allow before truncating.
          * @param {Boolean} [word=false] `true` to try to find a common word break.
          * @return {String} The converted text.
          */
         ellipsis: function(value, length, word) {
+            var vs, index;
+
             if (value && value.length > length) {
                 if (word) {
-                    var vs = value.substr(0, length - 2),
-                    index = Math.max(vs.lastIndexOf(' '), vs.lastIndexOf('.'), vs.lastIndexOf('!'), vs.lastIndexOf('?'));
+                    vs = value.substr(0, length - 2);
+                    index = Math.max(vs.lastIndexOf(' '), vs.lastIndexOf('.'),
+                                     vs.lastIndexOf('!'), vs.lastIndexOf('?'));
+
                     if (index !== -1 && index >= (length - 15)) {
                         return vs.substr(0, index) + "...";
                     }
                 }
+
                 return value.substr(0, length - 3) + "...";
             }
+
             return value;
         },
 
@@ -373,7 +410,7 @@ Ext.String = (function() {
          * @since 5.0.0
          * @return {RegExp}
          */
-        createRegex: function (value, startsWith, endsWith, ignoreCase) {
+        createRegex: function(value, startsWith, endsWith, ignoreCase) {
             var ret = value;
 
             if (value != null && !value.exec) { // not a regex
@@ -382,6 +419,7 @@ Ext.String = (function() {
                 if (startsWith !== false) {
                     ret = '^' + ret;
                 }
+
                 if (endsWith !== false) {
                     ret += '$';
                 }
@@ -402,9 +440,10 @@ Ext.String = (function() {
         },
 
         /**
-         * Utility function that allows you to easily switch a string between two alternating values.  The passed value
-         * is compared to the current string, and if they are equal, the other value that was passed in is returned.  If
-         * they are already different, the first value passed in is returned.  Note that this method returns the new value
+         * Utility function that allows you to easily switch a string between two alternating
+         * values. The passed value is compared to the current string, and if they are equal,
+         * the other value that was passed in is returned. If they are already different,
+         * the first value passed in is returned.  Note that this method returns the new value
          * but does not change the current string.
          *
          *     // alternate sort directions
@@ -415,7 +454,8 @@ Ext.String = (function() {
          *
          * @param {String} string The current string.
          * @param {String} value The value to compare to the current string.
-         * @param {String} other The new value to use if the string already equals the first value passed in.
+         * @param {String} other The new value to use if the string already equals the first value
+         * passed in.
          * @return {String} The new value.
          */
         toggle: function(string, value, other) {
@@ -431,15 +471,19 @@ Ext.String = (function() {
          *
          * @param {String} string The original string.
          * @param {Number} size The total length of the output string.
-         * @param {String} [character=' '] (optional) The character with which to pad the original string.
+         * @param {String} [character=' '] (optional) The character with which to pad the original
+         * string.
          * @return {String} The padded string.
          */
         leftPad: function(string, size, character) {
             var result = String(string);
+
             character = character || " ";
+
             while (result.length < size) {
                 result = character + result;
             }
+
             return result;
         },
 
@@ -455,12 +499,17 @@ Ext.String = (function() {
          * @param {String} sep An option string to separate each pattern.
          */
         repeat: function(pattern, count, sep) {
+            var buf = [],
+                i;
+
             if (count < 1) {
                 count = 0;
             }
-            for (var buf = [], i = count; i--; ) {
+
+            for (i = count; i--;) {
                 buf.push(pattern);
             }
+
             return buf.join(sep || '');
         },
 
@@ -470,10 +519,11 @@ Ext.String = (function() {
          *
          * @param {String/Array} words
          */
-        splitWords: function (words) {
-            if (words && typeof words == 'string') {
+        splitWords: function(words) {
+            if (words && typeof words === 'string') {
                 return words.replace(basicTrimRe, '').split(whitespaceRe);
             }
+
             return words || [];
         }
     };
@@ -483,18 +533,13 @@ Ext.String = (function() {
 Ext.String.resetCharacterEntities();
 
 /**
- * Old alias to {@link Ext.String#htmlEncode}
- * @deprecated Use {@link Ext.String#htmlEncode} instead
  * @method htmlEncode
  * @member Ext
  * @inheritdoc Ext.String#htmlEncode
  */
 Ext.htmlEncode = Ext.String.htmlEncode;
 
-
 /**
- * Old alias to {@link Ext.String#htmlDecode}
- * @deprecated Use {@link Ext.String#htmlDecode} instead
  * @method htmlDecode
  * @member Ext
  * @inheritdoc Ext.String#htmlDecode
@@ -502,8 +547,6 @@ Ext.htmlEncode = Ext.String.htmlEncode;
 Ext.htmlDecode = Ext.String.htmlDecode;
 
 /**
- * Old alias to {@link Ext.String#urlAppend}
- * @deprecated Use {@link Ext.String#urlAppend} instead
  * @method urlAppend
  * @member Ext
  * @inheritdoc Ext.String#urlAppend

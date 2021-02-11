@@ -50,3 +50,13 @@
     z-index: 1;
     border: 1px solid red;
 }
+
+@if $theme-name == 'theme-graphite' {
+    .#{$prefix}dark-mode {
+        .#{$prefix}grid-cell {
+            a, a:visited {
+                color: $grid-row-cell-color;
+            }
+        }
+    }
+}

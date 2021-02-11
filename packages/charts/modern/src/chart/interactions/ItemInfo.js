@@ -56,7 +56,6 @@ Ext.define('Ext.chart.interactions.ItemInfo', {
             centered: true,
             width: 300,
             height: 200,
-            styleHtmlContent: true,
             scrollable: 'vertical',
             hideOnMaskTap: true,
             fullscreen: false,
@@ -67,23 +66,25 @@ Ext.define('Ext.chart.interactions.ItemInfo', {
 
     item: null,
 
-    applyPanel: function (panel, oldPanel) {
+    applyPanel: function(panel, oldPanel) {
         return Ext.factory(panel, 'Ext.Panel', oldPanel);
     },
 
-    updatePanel: function (panel, oldPanel) {
+    updatePanel: function(panel, oldPanel) {
         if (panel) {
             panel.on('hide', "reset", this);
         }
+
         if (oldPanel) {
             oldPanel.un('hide', "reset", this);
         }
     },
 
-    onInfoGesture: function (e, element) {
+    onInfoGesture: function(e, element) {
         var me = this,
             panel = me.getPanel(),
             item = me.getItemForEvent(e);
+
         if (item) {
             me.item = item;
             me.fireEvent('show', me, item, panel);
@@ -92,12 +93,14 @@ Ext.define('Ext.chart.interactions.ItemInfo', {
             item.series.setAttributesForItem(item, { highlighted: true });
             me.sync();
         }
+
         return false;
     },
 
-    reset: function () {
+    reset: function() {
         var me = this,
             item = me.item;
+
         if (item) {
             item.series.setAttributesForItem(item, { highlighted: false });
             me.item = null;

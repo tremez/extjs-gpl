@@ -28,12 +28,14 @@ Ext.define('Portal.view.Portlet', {
             this.closing = true;
             this.el.animate({
                 opacity: 0,
-                callback: function(){
+                callback: function() {
                     var closeAction = this.closeAction;
+
                     this.closing = false;
                     this.fireEvent('close', this);
                     this[closeAction]();
-                    if (closeAction == 'hide') {
+
+                    if (closeAction === 'hide') {
                         this.el.setOpacity(1);
                     }
                 },

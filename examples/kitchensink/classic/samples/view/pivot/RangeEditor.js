@@ -21,36 +21,55 @@ Ext.define('KitchenSink.view.pivot.RangeEditor', {
     otherContent: [{
         type: 'Controller',
         path: 'classic/samples/view/pivot/PivotController.js'
-    },{
+    }, {
         type: 'Model',
         path: 'classic/samples/model/pivot/Sale.js'
-    },{
+    }, {
         type: 'Store',
         path: 'classic/samples/store/pivot/Sales.js'
     }],
     profiles: {
         classic: {
-            width: 600
+            width: 600,
+            height: 350,
+            totalColumnWidth: 100,
+            columnLines: true
         },
         neptune: {
-            width: 750
+            width: 750,
+            height: 400,
+            totalColumnWidth: 100,
+            columnLines: true
+        },
+        graphite: {
+            width: 780,
+            height: 600,
+            totalColumnWidth: 130,
+            columnLines: true
+        },
+        'classic-material': {
+            width: 780,
+            height: 600,
+            totalColumnWidth: 130,
+            columnLines: false
         }
     },
     //</example>
 
     title: 'Pivot Grid with RangeEditor plugin',
     width: '${width}',
-    height: 350,
+    height: '${height}',
     collapsible: true,
     multiSelect: true,
+    columnLines: '${columnLines}',
 
     selModel: {
         type: 'spreadsheet'
     },
 
-    plugins: [{
-        ptype: 'pivotrangeeditor'
-    }],
+    plugins: {
+        pivotrangeeditor: true
+    },
 
     matrix: {
         type: 'local',
@@ -62,10 +81,12 @@ Ext.define('KitchenSink.view.pivot.RangeEditor', {
         aggregate: [{
             dataIndex: 'value',
             header: 'Total',
-            aggregator: 'sum'
+            aggregator: 'sum',
+            width: '${totalColumnWidth}'
         }],
 
-        // Configure the left axis dimensions that will be used to generate the grid rows
+        // Configure the left axis dimensions that will be used to generate
+        // the grid rows
         leftAxis: [{
             dataIndex: 'year',
             header: 'Year'
@@ -75,10 +96,13 @@ Ext.define('KitchenSink.view.pivot.RangeEditor', {
         }],
 
         /**
-         * Configure the top axis dimensions that will be used to generate the columns.
-         * When columns are generated the aggregate dimensions are also used. If multiple aggregation dimensions
-         * are defined then each top axis result will have in the end a column header with children
-         * columns for each aggregate dimension defined.
+         * Configure the top axis dimensions that will be used to generate
+         * the columns.
+         *
+         * When columns are generated the aggregate dimensions are also used.
+         * If multiple aggregation dimensions are defined then each top axis
+         * result will have in the end a column header with children columns
+         * for each aggregate dimension defined.
          */
         topAxis: [{
             dataIndex: 'continent',

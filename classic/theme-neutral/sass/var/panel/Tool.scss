@@ -61,7 +61,7 @@ $tool-glyph-font-size: dynamic(16px);
  * @var {string/list}
  * Glyph for the "close" tool icon when {@link Global_CSS#$enable-font-icons} is `true`.
  */
-$tool-close-glyph: dynamic($fa-var-close $tool-glyph-font-size $font-icon-font-family);
+$tool-close-glyph: dynamic($fa-var-times $tool-glyph-font-size $font-icon-font-family);
 
 /**
  * @var {string/list}
@@ -115,7 +115,7 @@ $tool-next-glyph: dynamic($fa-var-chevron-right $tool-glyph-font-size $font-icon
  * @var {string/list}
  * Glyph for the "pin" tool icon when {@link Global_CSS#$enable-font-icons} is `true`.
  */
-$tool-pin-glyph: dynamic($fa-var-thumb-tack $tool-glyph-font-size $font-icon-font-family);
+$tool-pin-glyph: dynamic($fa-var-thumbtack $tool-glyph-font-size $font-icon-font-family);
 
 /**
  * @var {string/list}
@@ -151,7 +151,7 @@ $tool-up-glyph: dynamic($fa-var-caret-up $tool-glyph-font-size $font-icon-font-f
  * @var {string/list}
  * Glyph for the "refresh" tool icon when {@link Global_CSS#$enable-font-icons} is `true`.
  */
-$tool-refresh-glyph: dynamic($fa-var-refresh $tool-glyph-font-size $font-icon-font-family);
+$tool-refresh-glyph: dynamic($fa-var-sync $tool-glyph-font-size $font-icon-font-family);
 
 /**
  * @var {string/list}

@@ -1,6 +1,6 @@
 Ext.require('Ext.panel.Panel');
 
-Ext.onReady(function(){
+Ext.onReady(function() {
     var data = {
         name: 'Abe Elias',
         company: 'Sencha Inc',
@@ -10,13 +10,13 @@ Ext.onReady(function(){
         zip: '44102',
         kids: [{
             name: 'Solomon',
-            age:3
-        },{
+            age: 3
+        }, {
             name: 'Rebecca',
-            age:2
-        },{
+            age: 2
+        }, {
             name: 'Rebecca 1',
-            age:0
+            age: 0
         }]
     };
 
@@ -52,7 +52,7 @@ Ext.onReady(function(){
             '<p>Location: {city}, {state}</p>',
             '<p>Kids: ',
             '<tpl for="kids">',
-                '<tpl if="age &gt; 1"><p>{#}. {parent.name}\'s kid - {name}</p></tpl>',
+            '<tpl if="age &gt; 1"><p>{#}. {parent.name}\'s kid - {name}</p></tpl>',
             '</tpl></p>'
         ],
         tbar: [{

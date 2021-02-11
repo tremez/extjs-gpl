@@ -4,14 +4,14 @@
 Ext.define('Ext.device.twitter.Cordova', {
     compose: function(config) {
     	window.plugins.twitter.composeTweet(
-			config.success,
-			config.failure,
-			config.tweet,
-			{
-				urlAttach: config.url,
-				imageAttach: config.image
-			}
-		);
+            config.success,
+            config.failure,
+            config.tweet,
+            {
+                urlAttach: config.url,
+                imageAttach: config.image
+            }
+        );
     },
 
     getPublicTimeline: function(config) {
@@ -27,7 +27,7 @@ Ext.define('Ext.device.twitter.Cordova', {
     		config.failure
     	);
     },
-    
+
     getTwitterUsername: function(config) {
     	window.plugins.twitter.getTwitterUsername(
     		config.success,

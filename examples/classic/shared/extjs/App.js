@@ -6,15 +6,15 @@
 Ext.define('Ext.App', {
     extend: 'Ext.util.Observable',
 
-    /***
+    /** *
      * response status codes.
      */
-    STATUS_EXCEPTION :          'exception',
-    STATUS_VALIDATION_ERROR :   "validation",
-    STATUS_ERROR:               "error",
-    STATUS_NOTICE:              "notice",
-    STATUS_OK:                  "ok",
-    STATUS_HELP:                "help",
+    STATUS_EXCEPTION: 'exception',
+    STATUS_VALIDATION_ERROR: "validation",
+    STATUS_ERROR: "error",
+    STATUS_NOTICE: "notice",
+    STATUS_OK: "ok",
+    STATUS_HELP: "help",
 
     /**
      * @cfg {Object} api
@@ -27,7 +27,7 @@ Ext.define('Ext.App', {
     },
 
     // private, ref to message-box Element.
-    msgCt : null,
+    msgCt: null,
 
     constructor: function(config) {
         this.views = [];
@@ -46,25 +46,29 @@ Ext.define('Ext.App', {
     },
 
     // @protected, onReady, executes when Ext.onReady fires.
-    onReady : function() {
+    onReady: function() {
         // create the msgBox container.  used for App.setAlert
-        this.msgCt = Ext.DomHelper.append(document.body, {id:'msg-div'}, true);
+        this.msgCt = Ext.DomHelper.append(document.body, { id: 'msg-div' }, true);
         this.msgCt.setStyle('position', 'absolute');
         this.msgCt.setStyle('z-index', 9999);
         this.msgCt.setWidth(300);
     },
 
-    initStateProvider : function() {
+    initStateProvider: function() {
+        var days = '', // expires when browser closes
+            date, exptime;
+
         /*
          * set days to be however long you think cookies should last
          */
-        var days = '';        // expires when browser closes
-        if(days){
-            var date = new Date();
-            date.setTime(date.getTime()+(days*24*60*60*1000));
-            var exptime = "; expires="+date.toGMTString();
-        } else {
-            var exptime = null;
+        if (days) {
+            date = new Date();
+
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            exptime = "; expires=" + date.toGMTString();
+        }
+        else {
+            exptime = null;
         }
 
         // register provider with state manager.
@@ -81,7 +85,7 @@ Ext.define('Ext.App', {
      * register an application view component.
      * @param {Object} view
      */
-    registerView : function(view) {
+    registerView: function(view) {
         this.views.push(view);
     },
 
@@ -89,7 +93,7 @@ Ext.define('Ext.App', {
      * getViews
      * return list of registered views
      */
-    getViews : function() {
+    getViews: function() {
         return this.views;
     },
 
@@ -98,7 +102,7 @@ Ext.define('Ext.App', {
      * registers new actions for API
      * @param {Object} actions
      */
-    registerActions : function(actions) {
+    registerActions: function(actions) {
         Ext.apply(this.api.actions, actions);
     },
 
@@ -106,32 +110,35 @@ Ext.define('Ext.App', {
      * getAPI
      * return Ext Remoting api
      */
-    getAPI : function() {
+    getAPI: function() {
         return this.api;
     },
 
-    /***
+    /** *
      * setAlert
      * show the message box.  Aliased to addMessage
      * @param {String} msg
      * @param {Bool} status
      */
-    setAlert : function(status, msg) {
+    setAlert: function(status, msg) {
         this.addMessage(status, msg);
     },
 
-    /***
+    /** *
      * adds a message to queue.
      * @param {String} msg
      * @param {Bool} status
      */
-    addMessage : function(status, msg) {
+    addMessage: function(status, msg) {
         var delay = 3;    // <-- default delay of msg box is 1 second.
-        if (status == false) {
+
+        if (status === false) {
             delay = 5;    // <-- when status is error, msg box delay is 3 seconds.
         }
+
         // add some smarts to msg's duration (div by 13.3 between 3 & 9 seconds)
         delay = msg.length / 13.3;
+
         if (delay < 3) {
             delay = 3;
         }
@@ -143,13 +150,13 @@ Ext.define('Ext.App', {
         // layout#isValidParent's DOM ordering requirements.
         document.body.appendChild(this.msgCt.dom);
         this.msgCt.alignTo(document, 't-t');
-        Ext.DomHelper.append(this.msgCt, {html:this.buildMessageBox(status, String.format.apply(String, Array.prototype.slice.call(arguments, 1)))}, true).slideIn('t').pause(delay).ghost("t", {remove:true});
+        Ext.DomHelper.append(this.msgCt, { html: this.buildMessageBox(status, String.format.apply(String, Array.prototype.slice.call(arguments, 1))) }, true).slideIn('t').pause(delay).ghost("t", { remove: true });
     },
 
-    /***
+    /** *
      * buildMessageBox
      */
-    buildMessageBox : function(title, msg) {
+    buildMessageBox: function(title, msg) {
         switch (title) {
             case true:
                 title = this.STATUS_OK;
@@ -158,6 +165,7 @@ Ext.define('Ext.App', {
                 title = this.STATUS_ERROR;
                 break;
         }
+
         return [
             '<div class="app-msg">',
             '<div class="x-box-tl"><div class="x-box-tr"><div class="x-box-tc"></div></div></div>',
@@ -171,8 +179,9 @@ Ext.define('Ext.App', {
      * decodeStatusIcon
      * @param {Object} status
      */
-    decodeStatusIcon : function(status) {
+    decodeStatusIcon: function(status) {
         var iconCls = '';
+
         switch (status) {
             case true:
             case this.STATUS_OK:
@@ -189,23 +198,24 @@ Ext.define('Ext.App', {
                 iconCls = this.ICON_HELP;
                 break;
         }
+
         return iconCls;
     },
 
-    /***
+    /** *
      * setViewState, alias for Ext.state.Manager.set
      * @param {Object} key
      * @param {Object} value
      */
-    setViewState : function(key, value) {
+    setViewState: function(key, value) {
         Ext.state.Manager.set(key, value);
     },
 
-    /***
+    /** *
      * getViewState, aliaz for Ext.state.Manager.get
      * @param {Object} cmd
      */
-    getViewState : function(key) {
+    getViewState: function(key) {
         return Ext.state.Manager.get(key);
     },
 
@@ -215,20 +225,21 @@ Ext.define('Ext.App', {
      * @param {String} to translate
      * @return {String} translated.
      */
-    t : function(words) {
+    t: function(words) {
         return words;
     },
 
-    handleResponse : function(res) {
-        if (res.type == this.STATUS_EXCEPTION) {
+    handleResponse: function(res) {
+        if (res.type === this.STATUS_EXCEPTION) {
             return this.handleException(res);
         }
+
         if (res.message.length > 0) {
             this.setAlert(res.status, res.message);
         }
     },
 
-    handleException : function(res) {
+    handleException: function(res) {
         Ext.MessageBox.alert(res.type.toUpperCase(), res.message);
     }
 });

@@ -7,5 +7,6 @@ Ext.define('Ext.field.trigger.SpinUp', {
     alias: 'trigger.spinup',
     classCls: Ext.baseCSSPrefix + 'spinuptrigger',
     handler: 'onSpinUp',
-    scope: 'this'
+    scope: 'this',
+    focusOnTap: false
 });

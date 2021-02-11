@@ -5,7 +5,7 @@ Ext.define('Ext.ux.ajax.JsonSimlet', {
     extend: 'Ext.ux.ajax.DataSimlet',
     alias: 'simlet.json',
 
-    doGet: function (ctx) {
+    doGet: function(ctx) {
         var me = this,
             data = me.getData(ctx),
             page = me.getPage(ctx, data),
@@ -17,7 +17,8 @@ Ext.define('Ext.ux.ajax.JsonSimlet', {
         if (root && Ext.isArray(page)) {
             response[root] = page;
             response[reader.getTotalProperty()] = data.length;
-        } else {
+        }
+        else {
             response = page;
         }
 
@@ -26,10 +27,11 @@ Ext.define('Ext.ux.ajax.JsonSimlet', {
         }
 
         ret.responseText = Ext.encode(response);
+
         return ret;
     },
 
-    doPost : function(ctx) {
+    doPost: function(ctx) {
         return this.doGet(ctx);
     }
 });

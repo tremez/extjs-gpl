@@ -8,12 +8,12 @@ Ext.define('KitchenSink.view.calendar.Days', {
         'Ext.calendar.List'
     ],
 
-    // <example>
+    //<example>
     otherContent: [{
         type: 'Store',
         path: 'samples/data/calendar/MultiDay.js'
     }],
-    // </example>
+    //</example>
 
     viewModel: {
         data: {
@@ -34,8 +34,6 @@ Ext.define('KitchenSink.view.calendar.Days', {
         }
     },
 
-    shadow: true,
-
     layout: {
         type: 'hbox',
         align: 'stretch'
@@ -53,17 +51,16 @@ Ext.define('KitchenSink.view.calendar.Days', {
         width: 150,
         bodyPadding: 5,
         hidden: Ext.os.is.Phone,
-        items: {
+        items: [{
             xtype: 'calendar-list',
             bind: '{calStore}'
-        }
+        }]
     }, {
         xtype: 'calendar-days',
         flex: 1,
         startTime: 8,
         endTime: 20,
         visibleDays: 2,
-        timezoneOffset: 0,
         gestureNavigation: false,
         bind: {
             value: '{value}',
@@ -71,4 +68,4 @@ Ext.define('KitchenSink.view.calendar.Days', {
         }
     }]
 
-})
+});

@@ -10,29 +10,64 @@ Ext.define('KitchenSink.view.layout.Absolute', {
     //<example>
     exampleTitle: 'Absolute Layout',
     //</example>
+    profiles: {
+        classic: {
+            panelWidth: 200,
+            panelHeight: 100,
+            panel1xAxis: 50,
+            panel1yAxis: 50,
+            panel2xAxis: 125,
+            panel2yAxis: 125
+        },
+        neptune: {
+            panelWidth: 200,
+            panelHeight: 100,
+            panel1xAxis: 50,
+            panel1yAxis: 50,
+            panel2xAxis: 125,
+            panel2yAxis: 125
+        },
+        graphite: {
+            panelWidth: 300,
+            panelHeight: 150,
+            panel1xAxis: 55,
+            panel1yAxis: 55,
+            panel2xAxis: 155,
+            panel2yAxis: 155
+        },
+        'classic-material': {
+            panelWidth: 300,
+            panelHeight: 150,
+            panel1xAxis: 55,
+            panel1yAxis: 55,
+            panel2xAxis: 155,
+            panel2yAxis: 155
+        }
+    },
     layout: 'absolute',
     width: 500,
     height: 400,
-    
+    cls: Ext.baseCSSPrefix + 'shadow',
+
     defaults: {
         bodyPadding: 15,
-        width: 200,
-        height: 100,
+        width: '${panelWidth}',
+        height: '${panelHeight}',
         frame: true
     },
 
-    items:[
+    items: [
         {
             title: 'Panel 1',
-            x: 50,
-            y: 50,
-            html: 'Positioned at x:50, y:50'
+            x: '${panel1xAxis}',
+            y: '${panel1yAxis}',
+            html: 'Positioned at x:${panel1xAxis}, y:${panel1yAxis}'
         },
         {
             title: 'Panel 2',
-            x: 125,
-            y: 125,
-            html: 'Positioned at x:125, y:125'
+            x: '${panel2xAxis}',
+            y: '${panel2yAxis}',
+            html: 'Positioned at x:${panel2xAxis}, y:${panel2yAxis}'
         }
     ]
 

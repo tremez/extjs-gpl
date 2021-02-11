@@ -32,7 +32,9 @@ Ext4.onReady(function() {
         var data = [],
             i,
             names = a,
-            rest = a.length, total = rest, consume;
+            rest = a.length,
+            consume;
+
         for (i = 0; i < a.length; i++) {
             consume = Math.floor(Math.random() * rest * 100) / 100 + 2;
             rest = rest - (consume - 5);
@@ -55,13 +57,15 @@ Ext4.onReady(function() {
         data: generateData(processArray)
     });
 
-    cpuLoadStore = Ext4.create('store.json', { 
-      fields: ['core1', 'core2', 'time'] 
+    cpuLoadStore = Ext4.create('store.json', {
+        fields: ['core1', 'core2', 'time']
     });
 
     data = [];
 
     function generateCpuLoad() {
+        var i, lastData;
+
         function generate(factor) {
             var value = factor + ((Math.floor(Math.random() * 2) % 2) ? -1 : 1) * Math.floor(Math.random() * 9);
 
@@ -79,7 +83,7 @@ Ext4.onReady(function() {
                 time: 0
             });
 
-            for (var i = 1; i < 100; i++) {
+            for (i = 1; i < 100; i++) {
                 data.push({
                     core1: generate(data[i - 1].core1),
                     core2: generate(data[i - 1].core2),
@@ -95,7 +99,8 @@ Ext4.onReady(function() {
                 item.data.time = key;
             });
 
-            var lastData = cpuLoadStore.last().data;
+            lastData = cpuLoadStore.last().data;
+
             cpuLoadStore.loadData([{
                 core1: generate(lastData.core1),
                 core2: generate(lastData.core2),
@@ -132,8 +137,9 @@ Ext4.onReady(function() {
                 width: 140,
                 height: 28,
                 renderer: function(storeItem, item) {
-                    //calculate percentage.
+                    // calculate percentage.
                     var total = 0;
+
                     memoryStore.each(function(rec) {
                         total += rec.get('memory');
                     });
@@ -179,7 +185,7 @@ Ext4.onReady(function() {
             label: {
                 font: '11px Arial'
             }
-        },{
+        }, {
             type: 'Category',
             position: 'bottom',
             fields: ['name'],
@@ -192,7 +198,7 @@ Ext4.onReady(function() {
                     degrees: 45
                 }
             }
-        },{
+        }, {
             type: 'Numeric',
             position: 'top',
             fields: ['memory'],
@@ -215,8 +221,7 @@ Ext4.onReady(function() {
             xField: 'name',
             yField: 'memory',
             renderer: function(sprite, record, attr, index, store) {
-                var highColor = Ext4.draw.Color.fromString('#e84b67'),
-                    lowColor = Ext4.draw.Color.fromString('#b1da5a'),
+                var lowColor = Ext4.draw.Color.fromString('#b1da5a'),
                     value = record.get('memory'),
                     color;
 
@@ -364,6 +369,7 @@ Ext4.onReady(function() {
     });
 
     pass = 0;
+
     function doGenerateCpuLoad() {
         clearTimeout(cpuLoadTimer);
         cpuLoadTimer = setTimeout(function() {

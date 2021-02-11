@@ -1,15 +1,16 @@
 Ext.define('Ext.grid.selection.SelectionExtender', {
     extend: 'Ext.dd.DragTracker',
-    
+
     maskBox: {},
-    
+
     constructor: function(config) {
         var me = this;
 
         // We can only initialize properly if there are elements to work with
         if (config.view.rendered) {
             me.initSelectionExtender(config);
-        } else {
+        }
+        else {
             me.view = config.view;
             config.view.on({
                 render: me.initSelectionExtender,
@@ -29,12 +30,13 @@ Ext.define('Ext.grid.selection.SelectionExtender', {
             cls: Ext.baseCSSPrefix + 'ssm-extender-drag-handle',
             style: 'display:none'
         }).setVisibilityMode(displayMode);
+
         me.handle.on({
             contextmenu: function(e) {
                 e.stopEvent();
             }
         });
-        
+
         me.mask = me.el.createChild({
             cls: Ext.baseCSSPrefix + 'ssm-extender-mask',
             style: 'display:none'
@@ -50,6 +52,7 @@ Ext.define('Ext.grid.selection.SelectionExtender', {
             scope: me,
             destroyable: true
         });
+
         me.gridListeners = me.view.ownerGrid.on({
             columnResize: me.alignHandle,
             scope: me,
@@ -69,6 +72,7 @@ Ext.define('Ext.grid.selection.SelectionExtender', {
                 args: [firstPos, lastPos],
                 scope: me
             });
+
             return;
         }
 
@@ -77,33 +81,53 @@ Ext.define('Ext.grid.selection.SelectionExtender', {
 
         // If we've done a "select all rows" and there is buffered rendering, then
         // the cells might not be rendered, so we can't activate the replicator.
-        if (firstPos && lastPos && firstPos.getCell() && lastPos.getCell()) {
+        if (firstPos && lastPos && firstPos.getCell(true) && lastPos.getCell(true)) {
             if (me.curPos) {
                 me.curPos.setPosition(lastPos);
-            } else {
+            }
+            else {
                 me.curPos = lastPos.clone();
             }
 
             // Align centre of handle with bottom-right corner of last cell if possible.
             me.alignHandle();
-        } else {
+        }
+        else {
             me.disable();
         }
     },
 
     alignHandle: function() {
         var me = this,
-            firstCell = me.firstPos && me.firstPos.getCell(),
-            lastCell = me.lastPos && me.lastPos.getCell();
+            firstCell = me.firstPos && me.firstPos.getCell(true),
+            lastCell = me.lastPos && me.lastPos.getCell(true),
+            handle = me.handle,
+            shouldDisplay;
 
         // Cell corresponding to the position might not be rendered.
         // This will be called upon scroll
         if (firstCell && lastCell) {
             me.enable();
-            me.handle.alignTo(lastCell, 'c-br');
-        } else {
+            handle.alignTo(lastCell, 'c-br');
+
+            shouldDisplay = me.isHandleWithinView(Ext.fly(lastCell).up('.x-grid-view'));
+            handle.setVisible(shouldDisplay);
+        }
+        else {
             me.disable();
         }
+    },
+
+    isHandleWithinView: function(view) {
+        var me = this,
+            viewBox = view.getBox(),
+            handleBox = me.handle.getBox(),
+            withinX;
+
+        withinX = viewBox.left <= handleBox.left &&
+                  viewBox.right >= (handleBox.right - handleBox.width);
+
+        return withinX;
     },
 
     enable: function() {
@@ -127,6 +151,7 @@ Ext.define('Ext.grid.selection.SelectionExtender', {
             this.mask.show();
         }
 
+        // eslint-disable-next-line vars-on-top
         var me = this,
             view = me.view,
             viewTop = view.el.getY(),
@@ -142,6 +167,7 @@ Ext.define('Ext.grid.selection.SelectionExtender', {
         // Dragged outside the view; stop scrolling.
         if (!me.el.contains(e.target)) {
             scrollBy[0] = scrollBy[1] = 0;
+
             return scrollTask.stop();
         }
 
@@ -152,7 +178,7 @@ Ext.define('Ext.grid.selection.SelectionExtender', {
                 scrollTask.start();
             }
         }
-        
+
         // Near top of view
         else if (me.lastXY[1] < viewTop + 10) {
             if (me.extendY) {
@@ -168,7 +194,7 @@ Ext.define('Ext.grid.selection.SelectionExtender', {
                 scrollTask.start();
             }
         }
-        
+
         // Near left edge of view
         else if (me.lastXY[0] < viewLeft + 10) {
             if (me.extendX) {
@@ -176,7 +202,7 @@ Ext.define('Ext.grid.selection.SelectionExtender', {
                 scrollTask.start();
             }
         }
-        
+
         // Not near an edge, cancel autoscrolling
         else {
             scrollBy[0] = scrollBy[1] = 0;
@@ -199,8 +225,10 @@ Ext.define('Ext.grid.selection.SelectionExtender', {
 
         // Mouseover does not fire on autoscroll so see where the mouse is over on each scroll
         scrollOverCell = document.elementFromPoint.apply(document, me.lastXY);
+
         if (scrollOverCell) {
             scrollOverCell = Ext.fly(scrollOverCell).up(view.cellSelector);
+
             if (scrollOverCell && scrollOverCell !== me.lastOverCell) {
                 me.lastOverCell = scrollOverCell;
                 me.syncMaskOnCell(scrollOverCell);
@@ -214,12 +242,13 @@ Ext.define('Ext.grid.selection.SelectionExtender', {
         if (me.scrollTask) {
             me.scrollTask.stop();
         }
+
         if (me.extensionDescriptor) {
             me.disable();
             me.view.getSelectionModel().extendSelection(me.extensionDescriptor);
         }
     },
-    
+
     onViewScroll: function() {
         var me = this;
 
@@ -246,13 +275,15 @@ Ext.define('Ext.grid.selection.SelectionExtender', {
             firstPos = me.firstPos.clone(),
             lastPos = me.lastPos.clone(),
             extensionStart = me.firstPos.clone(),
-            extensionEnd = me.lastPos.clone();
+            extensionEnd = me.lastPos.clone(),
+            preventReduce = !me.allowReduceSelection;
 
         // Constrain cell positions to be within rendered range.
         firstPos.setRow(Math.min(Math.max(firstPos.rowIdx, rows.startIndex), rows.endIndex));
-        lastPos.setRow( Math.min(Math.max(lastPos.rowIdx,  rows.startIndex), rows.endIndex));
+        lastPos.setRow(Math.min(Math.max(lastPos.rowIdx, rows.startIndex), rows.endIndex));
 
-        me.selectionRegion = selRegion = firstPos.getCell().getRegion().union(lastPos.getCell().getRegion());
+        me.selectionRegion = selRegion =
+            firstPos.getCell().getRegion().union(lastPos.getCell().getRegion());
 
         curPos.setPosition(view.getRecord(overCell), view.getHeaderByCell(overCell));
 
@@ -261,7 +292,8 @@ Ext.define('Ext.grid.selection.SelectionExtender', {
 
         // Reset border to default, which is the overall border setting from SASS
         // We disable the border which is contiguous to the selection.
-        me.mask.dom.style.borderTopWidth = me.mask.dom.style.borderRightWidth = me.mask.dom.style.borderBottomWidth = me.mask.dom.style.borderLeftWidth = '';
+        me.mask.dom.style.borderTopWidth = me.mask.dom.style.borderRightWidth =
+            me.mask.dom.style.borderBottomWidth = me.mask.dom.style.borderLeftWidth = '';
 
         // Dragged above the selection
         if (curPos.rowIdx < me.firstPos.rowIdx && me.extendY) {
@@ -278,7 +310,6 @@ Ext.define('Ext.grid.selection.SelectionExtender', {
             maskBox.width = selRegion.right - selRegion.left;
             maskBox.height = selRegion.top - overCell.getY();
         }
-
         // Dragged below selection
         else if (curPos.rowIdx > me.lastPos.rowIdx && me.extendY) {
             me.extensionDescriptor = {
@@ -294,10 +325,27 @@ Ext.define('Ext.grid.selection.SelectionExtender', {
             maskBox.width = selRegion.right - selRegion.left;
             maskBox.height = overCell.getRegion().bottom - selRegion.bottom;
         }
+        // reducing Y selection dragged from the bottom
+        else if (!preventReduce && curPos.rowIdx < me.lastPos.rowIdx && me.extendY &&
+                 curPos.colIdx === me.lastPos.colIdx) {
+            me.extensionDescriptor = {
+                type: 'rows',
+                start: extensionStart.setRow(me.firstPos.rowIdx),
+                end: extensionEnd.setRow(curPos.rowIdx),
+                rows: -1,
+                mousePosition: me.lastXY,
+                reduce: true
+            };
+
+            me.mask.dom.style.borderTopWidth = '0';
+            maskBox.x = selRegion.x;
+            maskBox.y = selRegion.top;
+            maskBox.width = selRegion.right - selRegion.left;
+            maskBox.height = overCell.getRegion().bottom - selRegion.top;
+        }
 
         // row position is within selected row range
         else {
-
             // Dragged to left of selection
             if (curPos.colIdx < me.firstPos.colIdx && me.extendX) {
                 me.extensionDescriptor = {
@@ -310,10 +358,9 @@ Ext.define('Ext.grid.selection.SelectionExtender', {
                 me.mask.dom.style.borderRightWidth = '0';
                 maskBox.x = overCell.getX();
                 maskBox.y = selRegion.top;
-                maskBox.width = selRegion.left - overCell.getX();
+                maskBox.width = selRegion.left - overCell.getRegion().left;
                 maskBox.height = selRegion.bottom - selRegion.top;
             }
-
             // Dragged to right of selection
             else if (curPos.colIdx > me.lastPos.colIdx && me.extendX) {
                 me.extensionDescriptor = {
@@ -328,24 +375,47 @@ Ext.define('Ext.grid.selection.SelectionExtender', {
                 maskBox.y = selRegion.top;
                 maskBox.width = overCell.getRegion().right - selRegion.right;
                 maskBox.height = selRegion.bottom - selRegion.top;
-            } else {
+            }
+            // reducing X selection dragged from the right
+            else if (!preventReduce && curPos.colIdx < me.lastPos.colIdx && me.extendX) {
+                me.extensionDescriptor = {
+                    type: 'columns',
+                    start: extensionStart.setColumn(me.firstPos.colIdx),
+                    end: extensionEnd.setColumn(curPos.colIdx),
+                    columns: -1,
+                    mousePosition: me.lastXY,
+                    reduce: true
+                };
+                me.mask.dom.style.borderLeftWidth = '0';
+                maskBox.x = selRegion.left;
+                maskBox.y = selRegion.top;
+                maskBox.width = overCell.getRegion().right - selRegion.left;
+                maskBox.height = selRegion.bottom - selRegion.top;
+            }
+            else {
                 me.extensionDescriptor = null;
             }
         }
 
         if (view.ownerGrid.hasListeners.selectionextenderdrag) {
-            view.ownerGrid.fireEvent('selectionextenderdrag', view.ownerGrid, view.getSelectionModel().getSelected(), me.extensionDescriptor);
+            view.ownerGrid.fireEvent(
+                'selectionextenderdrag', view.ownerGrid, view.getSelectionModel().getSelected(),
+                me.extensionDescriptor
+            );
         }
+
         if (me.extensionDescriptor) {
             me.mask.show();
             me.mask.setBox(maskBox);
-        } else {
+        }
+        else {
             me.mask.hide();
         }
     },
 
     destroy: function() {
         var me = this;
+
         Ext.destroy(me.gridListeners, me.viewListeners, me.mask, me.handle);
         me.callParent();
     }

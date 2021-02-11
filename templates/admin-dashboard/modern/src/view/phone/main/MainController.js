@@ -12,18 +12,14 @@ Ext.define('Admin.view.phone.main.MainController', {
     showNavigation: false,
 
     init: function (view) {
-        var me = this,
-            refs = me.getReferences(),
-            logo = refs.logo,
-            nav;
+        var logo = view.lookup('logo'),
+            nav = view.lookup('navigation');
 
-        me.callParent([ view ]);
-
-        nav = me.nav;
+        this.callParent([ view ]);
 
         // Detach the navigation container so we can float it in from the edge.
         nav.getParent().remove(nav, false);
-        nav.addCls(['x-floating', 'main-nav-floated', me.slidOutCls]);
+        nav.addCls(['x-floating', 'main-nav-floated', this.slidOutCls]);
         nav.setScrollable(true);
         nav.getRefOwner = function () {
             // we still need events to route here or our base
@@ -51,7 +47,7 @@ Ext.define('Admin.view.phone.main.MainController', {
     onNavigationTreeSelectionChange: function (tree, node) {
         this.setShowNavigation(false);
 
-        this.callParent(arguments);
+        this.callParent([tree, node]);
     },
 
     updateShowNavigation: function (showNavigation, oldValue) {
@@ -64,7 +60,8 @@ Ext.define('Admin.view.phone.main.MainController', {
         //
         if (oldValue !== undefined) {
             var me = this,
-                nav = me.nav,
+                view = this.getView(),
+                nav = view.lookup('navigation'),
                 mask = me.mask;
 
             if (showNavigation) {
@@ -74,13 +71,12 @@ Ext.define('Admin.view.phone.main.MainController', {
                 });
 
                 mask.element.on({
-                    tap: me.onToggleNavigationSize,
+                    tap: 'onToggleNavigationSize',
                     scope: me,
                     single: true
                 });
             } else if (mask) {
-                mask.destroy();
-                me.mask = null;
+                me.mask = Ext.destroy(mask);
             }
 
             nav.toggleCls(me.slidOutCls, !showNavigation);

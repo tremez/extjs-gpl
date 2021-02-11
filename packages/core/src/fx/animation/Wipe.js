@@ -7,6 +7,7 @@ Ext.define('Ext.fx.animation.Wipe', {
 
     config: {
         /**
+         * @cfg {String}
          * Valid values are 'ease', 'linear', ease-in', 'ease-out', 'ease-in-out',
          * or a cubic-bezier curve as defined by CSS.
          */
@@ -27,27 +28,29 @@ Ext.define('Ext.fx.animation.Wipe', {
 
     refresh: function() {
         var me = this,
-            el        = me.getElement(),
-            elBox     = el.dom.getBoundingClientRect(),
-            elWidth   = elBox.width,
-            elHeight  = elBox.height,
-            from      = me.getFrom(),
-            to        = me.getTo(),
-            out       = me.getOut(),
+            el = me.getElement(),
+            elBox = el.dom.getBoundingClientRect(),
+            elWidth = elBox.width,
+            elHeight = elBox.height,
+            from = me.getFrom(),
+            to = me.getTo(),
+            out = me.getOut(),
             direction = me.getDirection(),
             maskFromX = 0,
             maskFromY = 0,
-            maskToX   = 0,
-            maskToY   = 0,
+            maskToX = 0,
+            maskToY = 0,
             mask, tmp;
 
+        /* eslint-disable max-len */
         switch (direction) {
             case 'up':
                 if (out) {
                     mask = '-webkit-gradient(linear, left top, left bottom, from(#000), to(transparent), color-stop(33%, #000), color-stop(66%, transparent))';
                     maskFromY = elHeight * 3 + 'px';
                     maskToY = elHeight + 'px';
-                } else {
+                }
+                else {
                     mask = '-webkit-gradient(linear, left top, left bottom, from(transparent), to(#000), color-stop(66%, #000), color-stop(33%, transparent))';
                     maskFromY = -elHeight * 2 + 'px';
                     maskToY = 0;
@@ -60,7 +63,8 @@ Ext.define('Ext.fx.animation.Wipe', {
                     mask = '-webkit-gradient(linear, left top, left bottom, from(transparent), to(#000), color-stop(66%, #000), color-stop(33%, transparent))';
                     maskFromY = -elHeight * 2 + 'px';
                     maskToY = 0;
-                } else {
+                }
+                else {
                     mask = '-webkit-gradient(linear, left top, left bottom, from(#000), to(transparent), color-stop(33%, #000), color-stop(66%, transparent))';
                     maskFromY = elHeight * 3 + 'px';
                     maskToY = elHeight + 'px';
@@ -73,7 +77,8 @@ Ext.define('Ext.fx.animation.Wipe', {
                     mask = '-webkit-gradient(linear, right top, left top, from(#000), to(transparent), color-stop(33%, #000), color-stop(66%, transparent))';
                     maskFromX = -elWidth * 2 + 'px';
                     maskToX = 0;
-                } else {
+                }
+                else {
                     mask = '-webkit-gradient(linear, right top, left top, from(transparent), to(#000), color-stop(66%, #000), color-stop(33%, transparent))';
                     maskToX = -elWidth * 2 + 'px';
                 }
@@ -84,7 +89,8 @@ Ext.define('Ext.fx.animation.Wipe', {
                 if (out) {
                     mask = '-webkit-gradient(linear, right top, left top, from(transparent), to(#000), color-stop(66%, #000), color-stop(33%, transparent))';
                     maskToX = -elWidth * 2 + 'px';
-                } else {
+                }
+                else {
                     mask = '-webkit-gradient(linear, right top, left top, from(#000), to(transparent), color-stop(33%, #000), color-stop(66%, transparent))';
                     maskFromX = -elWidth * 2 + 'px';
                     maskToX = 0;
@@ -92,6 +98,7 @@ Ext.define('Ext.fx.animation.Wipe', {
 
                 break;
         }
+        /* eslint-enable max-len */
 
         if (!out) {
             tmp = maskFromY;

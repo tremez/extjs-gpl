@@ -1,17 +1,17 @@
 /**
- * @private
  * @class Ext.draw.ContainerBase
+ * @private
  */
 Ext.define('Ext.draw.ContainerBase', {
     extend: 'Ext.panel.Panel',
 
     requires: ['Ext.window.Window'],
-    
+
     /**
      * @cfg {String} previewTitleText The text to place in Preview Chart window title.
      */
     previewTitleText: 'Chart Preview',
-    
+
     /**
      * @cfg {String} previewAltText The text to place in the Preview image alt attribute.
      */
@@ -28,7 +28,8 @@ Ext.define('Ext.draw.ContainerBase', {
 
         if (me.rendered) {
             me.el.on.apply(me.el, args);
-        } else {
+        }
+        else {
             me.on('render', function() {
                 me.el.on.apply(me.el, args);
             });
@@ -36,10 +37,10 @@ Ext.define('Ext.draw.ContainerBase', {
     },
 
     removeElementListener: function() {
-        var me = this,
-            args = arguments;
+        var me = this;
+
         if (me.rendered) {
-            me.el.un.apply(me.el, args);
+            me.el.un.apply(me.el, arguments);
         }
     },
 
@@ -65,11 +66,12 @@ Ext.define('Ext.draw.ContainerBase', {
     onRender: function() {
         this.callParent(arguments);
         this.element = this.el;
-        this.innerElement = this.body;
+        this.bodyElement = this.body;
     },
 
     setItems: function(items) {
         this.items = items;
+
         return items;
     },
 
@@ -81,30 +83,29 @@ Ext.define('Ext.draw.ContainerBase', {
         this.renderFrame();
     },
 
-    onResize: function (width, height, oldWidth, oldHeight) {
-        var me = this;
-
-        me.callParent([width, height, oldWidth, oldHeight]);
-        me.handleResize({
+    onResize: function(width, height, oldWidth, oldHeight) {
+        this.handleResize({
             width: width,
             height: height
-        });
+        }, !this.size); // First resize should be performed without any delay.
     },
 
-    preview: function () {
-        var image = this.getImage(),
-            items;
+    preview: function(image) {
+        var items;
 
         if (Ext.isIE8) {
             return false;
         }
+
+        image = image || this.getImage();
 
         if (image.type === 'svg-markup') {
             items = {
                 xtype: 'container',
                 html: image.data
             };
-        } else {
+        }
+        else {
             items = {
                 xtype: 'image',
                 mode: 'img',
@@ -112,20 +113,23 @@ Ext.define('Ext.draw.ContainerBase', {
                 alt: this.previewAltText,
                 src: image.data,
                 listeners: {
-                    afterrender: function () {
+                    afterrender: function() {
                         var me = this,
                             img = me.imgEl.dom,
+                            // eslint-disable-next-line dot-notation
                             ratio = image.type === 'svg' ? 1 : (window['devicePixelRatio'] || 1),
                             size;
 
                         if (!img.naturalWidth || !img.naturalHeight) {
-                            img.onload = function () {
+                            img.onload = function() {
                                 var width = img.naturalWidth,
                                     height = img.naturalHeight;
+
                                 me.setWidth(Math.floor(width / ratio));
                                 me.setHeight(Math.floor(height / ratio));
-                            }
-                        } else {
+                            };
+                        }
+                        else {
                             size = me.getSize();
                             me.setWidth(Math.floor(size.width / ratio));
                             me.setHeight(Math.floor(size.height / ratio));
@@ -137,7 +141,7 @@ Ext.define('Ext.draw.ContainerBase', {
 
         new Ext.window.Window({
             title: this.previewTitleText,
-            closeable: true,
+            closable: true,
             renderTo: Ext.getBody(),
             autoShow: true,
             maximizeable: true,
@@ -157,15 +161,17 @@ Ext.define('Ext.draw.ContainerBase', {
 
     privates: {
         getTargetEl: function() {
-            return this.innerElement;
+            return this.bodyElement;
         },
 
         reattachToBody: function() {
             // This is to ensure charts work properly as grid column widgets.
             var me = this;
+
             if (me.pendingDetachSize) {
                 me.handleResize();
             }
+
             me.pendingDetachSize = false;
             me.callParent();
         }

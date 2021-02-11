@@ -1,5 +1,6 @@
 /**
- * A simple class that adds a vertical separator bar between toolbar items (css class: 'x-toolbar-separator').
+ * A simple class that adds a vertical separator bar between toolbar items
+ * (css class: 'x-toolbar-separator').
  *
  *     @example
  *     Ext.create('Ext.panel.Panel', {
@@ -16,12 +17,14 @@
  */
 Ext.define('Ext.toolbar.Separator', {
     extend: 'Ext.toolbar.Item',
+    alias: 'widget.tbseparator',
+    alternateClassName: 'Ext.Toolbar.Separator',
+
     // Toolbar required here because we'll try to decorate it's alternateClassName
     // with this class' alternate name
     requires: ['Ext.toolbar.Toolbar'],
-    alias: 'widget.tbseparator',
-    alternateClassName: 'Ext.Toolbar.Separator',
+
     baseCls: Ext.baseCSSPrefix + 'toolbar-separator',
-    
+
     ariaRole: 'separator'
 });

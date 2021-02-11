@@ -17,7 +17,7 @@ Ext.define('KitchenSink.view.d3.Words', {
         'KitchenSink.view.d3.TreeViewModel',
         'Ext.d3.hierarchy.Pack'
     ],
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     otherContent: [
         {
@@ -33,7 +33,7 @@ Ext.define('KitchenSink.view.d3.Words', {
             path: 'classic/sass/src/view/d3/Words.scss'
         }
     ],
-    // </example>
+    //</example>
 
     width: 930,
     height: 900,
@@ -44,13 +44,15 @@ Ext.define('KitchenSink.view.d3.Words', {
     items: {
         xtype: 'd3-pack',
         reference: 'pack',
+        rootVisible: false,
         padding: 0,
         nodeText: 'word',
-        nodeValue: function (node) {
+        textPadding: [-8, 0],
+        nodeValue: function(node) {
             // Instead of using `nodeValue: 'count'` as a config,
             // take a qubic root of the 'count' to downplay
             // differences in the relative size of nodes.
-            return Math.pow(node.data.count, 1/3);
+            return Math.pow(node.data.count, 1 / 3);
         },
         colorAxis: {
             // For this example, we want all nodes to have the same color.
@@ -59,8 +61,10 @@ Ext.define('KitchenSink.view.d3.Words', {
                 range: ['white']
             }
         },
-        rootVisible: false,
-        textPadding: [-8, 0],
+        // In this example the tree store is flat (one level deep
+        // from the root node), so we want to prevent any node
+        // expansion attempts, as they are meaningless in this case.
+        expandEventName: null,
         selectEventName: 'mouseenter',
         tooltip: {
             renderer: 'onTooltip'

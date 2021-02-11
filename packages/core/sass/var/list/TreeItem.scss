@@ -37,7 +37,7 @@ $treelist-item-line-height: dynamic(36px);
 
 /**
  * @var {number}
- * The line height for tree items in the {@link Global_CSS#$enable-big big} sizing scheme
+ * The line height for tree items in the {@link Global_CSS#css_var-S-$enable-big big} sizing scheme
  */
 $treelist-item-line-height-big: dynamic(null);
 
@@ -151,7 +151,7 @@ $treelist-item-expander-width: dynamic(18px);
 
 /**
  * @var {number}
- * The width of the expander icon in the {@link Global_CSS#$enable-big big} sizing scheme
+ * The width of the expander icon in the {@link Global_CSS#css_var-S-$enable-big big} sizing scheme
  */
 $treelist-item-expander-width-big: dynamic(null);
 
@@ -163,7 +163,7 @@ $treelist-item-expander-font-size: dynamic(16px);
 
 /**
  * @var {number}
- * The size of the expander icon font in the {@link Global_CSS#$enable-big big} sizing scheme
+ * The size of the expander icon font in the {@link Global_CSS#css_var-S-$enable-big big} sizing scheme
  */
 $treelist-item-expander-font-size-big: dynamic(null);
 
@@ -189,7 +189,7 @@ $treelist-item-icon-width: dynamic(22px);
 
 /**
  * @var {number}
- * The width of the item icon in the {@link Global_CSS#$enable-big big} sizing scheme
+ * The width of the item icon in the {@link Global_CSS#css_var-S-$enable-big big} sizing scheme
  */
 $treelist-item-icon-width-big: dynamic(null);
 
@@ -201,7 +201,7 @@ $treelist-item-icon-font-size: dynamic(18px);
 
 /**
  * @var {number}
- * The size of the item icon font in the {@link Global_CSS#$enable-big big} sizing scheme
+ * The size of the item icon font in the {@link Global_CSS#css_var-S-$enable-big big} sizing scheme
  */
 $treelist-item-icon-font-size-big: dynamic(null);
 
@@ -268,3 +268,38 @@ $treelist-row-selected-over-background-color: dynamic(null);
  * The background color of a row on hover
  */
 $treelist-row-over-background-color: dynamic(null);
+
+$treelist-row-over-transition: dynamic(null);
+
+/**
+ * @var {Map} $treelist-nav-ui
+ * This map holds the treelist mixin parameters used to produce the nav UI for treelist.
+ */
+$treelist-nav-ui: dynamic((
+    padding: 0 10px,
+    background-color: #32404e,
+    toolstrip-background-color: #32404e,
+    tool-selected-color: #f0f0f0,
+    tool-selected-background-color: #5fa2dd,
+    tool-float-indicator-width: 4px,
+    tool-float-indicator-color: #5fa2dd,
+    item-expanded-background-color: #2c3845,
+    item-line-height: 44px,
+    item-icon-color: #ADB3B8,
+    item-expander-color: #ADB3B8,
+    item-text-color: #ADB3B8,
+    row-over-background-color: #4f606f,
+    item-icon-over-color: #fff,
+    item-expander-over-color: #fff,
+    item-text-over-color: #fff,
+    row-indicator-width: 6px,
+    row-indicator-selected-color: $base-color,
+    row-indicator-selected-over-color: lighten($base-color, 10%),
+    row-indicator-over-color: lighten($base-color, 10%),
+    item-text-font-size: 16px,
+    item-icon-font-size: 18px,
+    item-icon-width: 24px,
+    item-expander-font-size: 16px,
+    item-expander-width: 24px,
+    row-selected-background-color: #3f505f
+));

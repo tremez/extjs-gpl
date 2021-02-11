@@ -8,7 +8,7 @@ Ext.define('KitchenSink.view.charts.line.Basic', {
     xtype: 'line-basic',
     controller: 'line-basic',
 
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     bodyStyle: 'background: transparent !important',
     layout: {
@@ -20,9 +20,9 @@ Ext.define('KitchenSink.view.charts.line.Basic', {
         path: 'classic/samples/view/charts/line/BasicController.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/Browsers.js'
+        path: 'app/store/Browsers.js'
     }],
-    // </example>
+    //</example>
     width: 650,
 
     items: {
@@ -40,32 +40,17 @@ Ext.define('KitchenSink.view.charts.line.Basic', {
         store: {
             type: 'browsers'
         },
-        insetPadding: 40,
         innerPadding: {
             left: 40,
             right: 40
         },
-        sprites: [{
-            type: 'text',
-            text: 'Line Charts - Basic Line',
-            fontSize: 22,
-            width: 100,
-            height: 30,
-            x: 40, // the sprite x position
-            y: 20  // the sprite y position
-        }, {
-            type: 'text',
-            text: 'Data: Browser Stats 2012',
-            fontSize: 10,
-            x: 12,
-            y: 470
-        }, {
-            type: 'text',
-            text: 'Source: http://www.w3schools.com/',
-            fontSize: 10,
-            x: 12,
-            y: 485
-        }],
+        captions: {
+            title: 'Line Charts - Basic Line',
+            credits: {
+                text: 'Data: Browser Stats 2012\nSource: http://www.w3schools.com/',
+                align: 'left'
+            }
+        },
         axes: [{
             type: 'numeric',
             position: 'left',
@@ -113,7 +98,7 @@ Ext.define('KitchenSink.view.charts.line.Basic', {
             }
         }],
         listeners: {
-            itemhighlightchange: 'onItemHighlightChange'
+            itemhighlight: 'onItemHighlight'
         }
     },
 

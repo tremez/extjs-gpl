@@ -1,14 +1,14 @@
-/*!
+/* !
  * Ext JS Library 3.3.1
  * Copyright(c) 2006-2014 Sencha Inc.
  * licensing@sencha.com
  * http://www.sencha.com/license
  */
-Ext.app.App = function(cfg){
+Ext.app.App = function(cfg) {
     Ext.apply(this, cfg);
     this.addEvents({
-        'ready' : true,
-        'beforeunload' : true
+        'ready': true,
+        'beforeunload': true
     });
 
     Ext.onReady(this.initApp, this);
@@ -19,19 +19,20 @@ Ext.extend(Ext.app.App, Ext.util.Observable, {
     startMenu: null,
     modules: null,
 
-    getStartConfig : function(){
+    getStartConfig: function() {
 
     },
 
-    initApp : function(){
-    	this.startConfig = this.startConfig || this.getStartConfig();
+    initApp: function() {
+        this.startConfig = this.startConfig || this.getStartConfig();
 
         this.desktop = new Ext.Desktop(this);
 
-		this.launcher = this.desktop.taskbar.startMenu;
+        this.launcher = this.desktop.taskbar.startMenu;
 
-		this.modules = this.getModules();
-        if(this.modules){
+        this.modules = this.getModules();
+
+        if (this.modules) {
             this.initModules(this.modules);
         }
 
@@ -42,41 +43,48 @@ Ext.extend(Ext.app.App, Ext.util.Observable, {
         this.isReady = true;
     },
 
-    getModules : Ext.emptyFn,
-    init : Ext.emptyFn,
+    getModules: Ext.emptyFn,
+    init: Ext.emptyFn,
 
-    initModules : function(ms){
-		for(var i = 0, len = ms.length; i < len; i++){
-            var m = ms[i];
+    initModules: function(ms) {
+        var i, len, m;
+
+        for (i = 0, len = ms.length; i < len; i++) {
+            m = ms[i];
+
             this.launcher.add(m.launcher);
             m.app = this;
         }
     },
 
-    getModule : function(name){
-    	var ms = this.modules;
-    	for(var i = 0, len = ms.length; i < len; i++){
-    		if(ms[i].id == name || ms[i].appType == name){
-    			return ms[i];
-			}
+    getModule: function(name) {
+        var ms = this.modules,
+            i, len;
+
+        for (i = 0, len = ms.length; i < len; i++) {
+            if (ms[i].id === name || ms[i].appType === name) {
+                return ms[i];
+            }
         }
+
         return '';
     },
 
-    onReady : function(fn, scope){
-        if(!this.isReady){
+    onReady: function(fn, scope) {
+        if (!this.isReady) {
             this.on('ready', fn, scope);
-        }else{
+        }
+        else {
             fn.call(scope, this);
         }
     },
 
-    getDesktop : function(){
+    getDesktop: function() {
         return this.desktop;
     },
 
-    onUnload : function(e){
-        if(this.fireEvent('beforeunload', this) === false){
+    onUnload: function(e) {
+        if (this.fireEvent('beforeunload', this) === false) {
             e.stopEvent();
         }
     }

@@ -1,37 +1,38 @@
-describe("Ext.util.Cache", function () {
+topSuite("Ext.util.Cache", function() {
     var evicted = [],
         cache;
 
-    function dump () {
+    function dump() {
         var a = [],
             i = 0;
 
-        cache.each(function (key, value) {
+        cache.each(function(key, value) {
             a.push(key + '=' + value);
             ++i;
         });
 
         a.unshift(i);
+
         return a.join(',');
     }
 
-    beforeEach(function () {
+    beforeEach(function() {
         evicted.length = 0;
 
         cache = new Ext.util.Cache({
             maxSize: 3,
 
-            evict: function (key, value) {
+            evict: function(key, value) {
                 evicted.push('evict:' + key + '=' + value);
             },
 
-            miss: function (key) {
+            miss: function(key) {
                 return '{' + key + '}';
             }
         });
     });
 
-    it('should add entries until maxSize', function () {
+    it('should add entries until maxSize', function() {
         expect(cache.count).toBe(0);
         expect(dump()).toBe('0');
 
@@ -54,9 +55,11 @@ describe("Ext.util.Cache", function () {
         expect(dump()).toBe('3,c={c},b={b},a={a}');
     });
 
-    it('should reorder entries', function () {
+    it('should reorder entries', function() {
         var a = cache.get('a');
+
         var b = cache.get('b');
+
         var c = cache.get('c');
 
         expect(cache.count).toBe(3);
@@ -70,9 +73,11 @@ describe("Ext.util.Cache", function () {
         expect(dump()).toBe('3,b={b},c={c},a={a}');
     });
 
-    it('should remove oldest entry after maxSize', function () {
+    it('should remove oldest entry after maxSize', function() {
         var a = cache.get('a');
+
         var b = cache.get('b');
+
         var c = cache.get('c');
         // full
 
@@ -87,9 +92,11 @@ describe("Ext.util.Cache", function () {
         expect(dump()).toBe('3,d={d},c={c},b={b}');
     });
 
-    it('should remove everything on clear', function () {
+    it('should remove everything on clear', function() {
         var a = cache.get('a');
+
         var b = cache.get('b');
+
         var c = cache.get('c');
         // full
 
@@ -100,9 +107,11 @@ describe("Ext.util.Cache", function () {
         expect(dump()).toBe('0');
     });
 
-    it('should evict everything on clear', function () {
+    it('should evict everything on clear', function() {
         var a = cache.get('a');
+
         var b = cache.get('b');
+
         var c = cache.get('c');
         // full
 
@@ -113,9 +122,11 @@ describe("Ext.util.Cache", function () {
         expect(evicted).toEqual([ 'evict:c={c}', 'evict:b={b}', 'evict:a={a}' ]);
     });
 
-    it('should evict everything on destroy', function () {
+    it('should evict everything on destroy', function() {
         var a = cache.get('a');
+
         var b = cache.get('b');
+
         var c = cache.get('c');
         // full
 

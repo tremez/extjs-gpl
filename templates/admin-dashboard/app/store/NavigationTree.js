@@ -20,7 +20,7 @@ Ext.define('Admin.store.NavigationTree', {
             },
             {
                 text: 'Email',
-                iconCls: 'x-fa fa-send',
+                iconCls: 'x-fa fa-paper-plane',
                 rowCls: 'nav-tree-badge nav-tree-badge-hot',
                 viewType: 'email',
                 leaf: true
@@ -45,7 +45,7 @@ Ext.define('Admin.store.NavigationTree', {
             },
             {
                 text: 'Pages',
-                iconCls: 'x-fa fa-leanpub',
+                iconCls: 'x-fab fa-leanpub',
                 expanded: false,
                 selectable: false,
                 //routeId: 'pages-parent',
@@ -54,7 +54,7 @@ Ext.define('Admin.store.NavigationTree', {
                 children: [
                     {
                         text: 'Blank Page',
-                        iconCls: 'x-fa fa-file-o',
+                        iconCls: 'x-fa fa-file',
                         viewType: 'pageblank',
                         leaf: true
                     },
@@ -86,13 +86,13 @@ Ext.define('Admin.store.NavigationTree', {
                     },
                     {
                         text: 'Register',
-                        iconCls: 'x-fa fa-pencil-square-o',
+                        iconCls: 'x-fa fa-edit',
                         viewType: 'register',
                         leaf: true
                     },
                     {
                         text: 'Password Reset',
-                        iconCls: 'x-fa fa-lightbulb-o',
+                        iconCls: 'x-fa fa-lightbulb',
                         viewType: 'passwordreset',
                         leaf: true
                     }
@@ -112,7 +112,7 @@ Ext.define('Admin.store.NavigationTree', {
             },
             {
                 text: 'Charts',
-                iconCls: 'x-fa fa-pie-chart',
+                iconCls: 'x-fa fa-chart-pie',
                 viewType: 'charts',
                 leaf: true
             }

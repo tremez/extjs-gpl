@@ -66,13 +66,14 @@ Ext.define('Ext.util.LocalStorage', {
     id: null,
 
     /**
-     * This property is set to `true` when the instance's `destroy` method is called.
      * @property {Boolean} destroyed
+     * This property is set to `true` when the instance's `destroy` method is called.
      * @readonly
      */
     destroyed: false,
 
     /**
+     * @cfg {Boolean} lazyKeys
      * Determines if the keys collection is continuously maintained by this object. By
      * default the keys array is lazily fetched from the underlying store and when keys
      * are removed, the array is discarded. This heuristic tends to be safer than doing
@@ -80,46 +81,45 @@ Ext.define('Ext.util.LocalStorage', {
      * to `removeItem`. If the cost of scanning `localStorage` for keys is high enough
      * and if the keys are frequently needed, then this flag can be set to `false` to
      * instruct this class to maintain the keys array once it has been determined.
-     * @cfg {Boolean} [lazyKeys=true]
      */
     lazyKeys: true,
 
     /**
+     * @cfg {String} prefix
      * The prefix to apply to all `localStorage` keys manages by this instance. This does
      * not apply to the legacy IE mechanism but only to the HTML5 `localStorage` keys. If
      * not provided, the `id` property initializes this value with `"id-"`.
-     * @cfg {String} [prefix]
      */
     prefix: '',
 
     /**
+     * @cfg {Boolean} session
      * Specify this as `true` to use `sessionStorage` instead of the default `localStoreage`.
      * This option is not supported in legacy IE browsers (IE 6 and 7) and is ignored.
-     * @cfg {Boolean} [session=false]
      */
     session: false,
 
     /**
+     * @property {String[]} _keys
      * The array of all key names. This will be `null` if the keys need to be redetermined
      * by the `getKeys` method.
-     * @property {String[]} _keys
      * @private
      * @readonly
      */
     _keys: null,
 
     /**
-     * The Storage instance used to store items. This is based on the `session` config.
      * @property _store
+     * The Storage instance used to store items. This is based on the `session` config.
      * @private
      * @readonly
      */
     _store: null,
 
     /**
+     * @property {Number} _users
      * The number of users that have requested this instance using the `get` method and
      * have not yet called `release`.
-     * @property {Number} _users
      * @private
      * @readonly
      */
@@ -143,7 +143,7 @@ Ext.define('Ext.util.LocalStorage', {
          * with an `id` property at a minimum.
          * @return {Ext.util.LocalStorage} The desired instance, created if needed.
          */
-        get: function (id) {
+        get: function(id) {
             var me = this,
                 cache = me.cache,
                 config = {
@@ -153,13 +153,15 @@ Ext.define('Ext.util.LocalStorage', {
 
             if (Ext.isString(id)) {
                 config.id = id;
-            } else {
+            }
+            else {
                 Ext.apply(config, id);
             }
 
             if (!(instance = cache[config.id])) {
                 instance = new me(config);
-            } else {
+            }
+            else {
                 //<debug>
                 if (instance === true) {
                     Ext.raise('Creating a shared instance of private local store "' +
@@ -181,7 +183,7 @@ Ext.define('Ext.util.LocalStorage', {
         supported: true
     },
 
-    constructor: function (config) {
+    constructor: function(config) {
         var me = this;
 
         Ext.apply(me, config);
@@ -201,7 +203,7 @@ Ext.define('Ext.util.LocalStorage', {
         //<debug>
         else {
             // else we are being created directly so check that this id is not also in the
-            // cache ... that would be "extraordinaly bad".
+            // cache ... that would be "extraordinarily bad".
 
             if (Ext.util.LocalStorage.cache[me.id]) {
                 Ext.raise('Cannot create duplicate instance of local store "' +
@@ -221,13 +223,14 @@ Ext.define('Ext.util.LocalStorage', {
      * Initializes this instance.
      * @private
      */
-    init: function () {
+    init: function() {
         var me = this,
             id = me.id;
 
         if (!me.prefix && id) {
             me.prefix = id + '-';
         }
+
         me._store = (me.session ? window.sessionStorage : window.localStorage);
     },
 
@@ -240,7 +243,7 @@ Ext.define('Ext.util.LocalStorage', {
      * method. In legacy IE, however, failing to call this method can result in memory
      * leaks.
      */
-    destroy: function () {
+    destroy: function() {
         var me = this;
 
         //<debug>
@@ -259,7 +262,7 @@ Ext.define('Ext.util.LocalStorage', {
      * @return {String[]} The keys for this storage. This array should be considered as
      * readonly.
      */
-    getKeys: function () {
+    getKeys: function() {
         var me = this,
             store = me._store,
             prefix = me.prefix,
@@ -270,8 +273,9 @@ Ext.define('Ext.util.LocalStorage', {
         if (!keys) {
             me._keys = keys = [];
 
-            for (i = store.length; i--; ) {
+            for (i = store.length; i--;) {
                 key = store.key(i);
+
                 if (key.length > n) {
                     if (prefix === key.substring(0, n)) {
                         keys.push(key.substring(n));
@@ -290,7 +294,7 @@ Ext.define('Ext.util.LocalStorage', {
      * 
      * *NOTE:* Failing to call this method will result in memory leaks.
      */
-    release: function () {
+    release: function() {
         if (! --this._users) {
             this.destroy();
         }
@@ -307,14 +311,14 @@ Ext.define('Ext.util.LocalStorage', {
      * Removes all of the keys of this storage.
      * **NOTE:** This method conforms to the standard HTML5 Storage interface.
      */
-    clear: function () {
+    clear: function() {
         var me = this,
             store = me._store,
             prefix = me.prefix,
             keys = me._keys || me.getKeys(),
             i;
 
-        for (i = keys.length; i--; ) {
+        for (i = keys.length; i--;) {
             store.removeItem(prefix + keys[i]);
         }
 
@@ -328,7 +332,7 @@ Ext.define('Ext.util.LocalStorage', {
      * @param {Number} index The index of the desired key.
      * @return {String} The key.
      */
-    key: function (index) {
+    key: function(index) {
         var keys = this._keys || this.getKeys();
 
         return (0 <= index && index < keys.length) ? keys[index] : null;
@@ -340,7 +344,7 @@ Ext.define('Ext.util.LocalStorage', {
      * @param {String} key The key.
      * @return {String} The value associated with the given `key`.
      */
-    getItem: function (key) {
+    getItem: function(key) {
         var k = this.prefix + key;
 
         return this._store.getItem(k);
@@ -351,7 +355,7 @@ Ext.define('Ext.util.LocalStorage', {
      * **NOTE:** This method conforms to the standard HTML5 Storage interface.
      * @param {String} key The key.
      */
-    removeItem: function (key) {
+    removeItem: function(key) {
         var me = this,
             k = me.prefix + key,
             store = me._store,
@@ -363,7 +367,8 @@ Ext.define('Ext.util.LocalStorage', {
         if (keys && length !== store.length) {
             if (me.lazyKeys) {
                 me._keys = null;
-            } else {
+            }
+            else {
                 Ext.Array.remove(keys, key);
             }
         }
@@ -375,7 +380,7 @@ Ext.define('Ext.util.LocalStorage', {
      * @param {String} key The key.
      * @param {String} value The new associated value for `key`.
      */
-    setItem: function (key, value) {
+    setItem: function(key, value) {
         var me = this,
             k = me.prefix + key,
             store = me._store,
@@ -389,171 +394,4 @@ Ext.define('Ext.util.LocalStorage', {
             keys.push(key);
         }
     }
-}, function () {
-    var LocalStorage = this;
-
-    if ('localStorage' in window) {
-        return;
-    }
-    if (!Ext.isIE) {
-        LocalStorage.supported = false;
-        //<debug>
-        LocalStorage.prototype.init = function () {
-            Ext.raise("Local storage is not supported on this browser");
-        };
-        //</debug>
-        return;
-    }
-
-    // The legacy IE polyfill has to store values as attributes which have strict rules on
-    // valid names. Rather than handle that per-key, we just JSON enocde an object and use
-    // just the "xdata" attribute.
-    //
-    LocalStorage.override({
-        /**
-         * The parsed data object. This is JSON encoded and saved in storage as the `xdata`
-         * attribute.
-         * @property {Object} data
-         * @private
-         * @readonly
-         */
-        data: null,
-
-        /**
-         * The IE `userData` enabled element. This property is used to support legacy IE
-         * mode.
-         * @property {HTMLElement} el
-         * @private
-         * @readonly
-         */
-
-        /**
-         * The number of milliseconds to delay writing changes to the underlying store.
-         * This applies only to legacy IE mode and helps batch multiple writes into one
-         * flush to storage.
-         * @cfg {Number} [flushDelay=1]
-         */
-        flushDelay: 1,
-
-        init: function () {
-            var me = this,
-                data = me.data,
-                el;
-
-            me.el = el = document.createElement('div');
-
-            el.id = (me.id || (me.id = 'extjs-localstore'));
-            el.addBehavior('#default#userdata');
-
-            // Add to <head> to ensure the div is invisible
-            Ext.getHead().dom.appendChild(el);
-
-            el.load(me.id);
-            data = el.getAttribute('xdata');
-
-            me.data = data = (data ? Ext.decode(data) : {});
-
-            me._flushFn = function () {
-                me._timer = null;
-                me.save(0);
-            };
-        },
-
-        destroy: function () {
-            var me = this,
-                el = me.el;
-
-            if (el) {
-                // If we have a save pending, flush that now:
-                if (me._timer) {
-                    me.save();
-                }
-
-                el.parentNode.removeChild(el);
-                me.data = me.el = null;
-
-                me.callParent();
-            }
-        },
-
-        getKeys: function () {
-            var me = this,
-                keys = me._keys;
-
-            if (!keys) {
-                me._keys = keys = Ext.Object.getKeys(me.data);
-            }
-
-            return keys;
-        },
-
-        /**
-         * This method ensures the content of the store is saved to the underlying storage.
-         * This applies only to legacy IE. This is not normally called by user code but can
-         * be called to ensure storage is saved.
-         * @param {Number} [delay=0]
-         */
-        save: function (delay) {
-            var me = this;
-
-            if (!delay) {
-                if (me._timer) {
-                    clearTimeout(me._timer);
-                    me._timer = null;
-                }
-
-                me.el.setAttribute('xdata', Ext.encode(me.data));
-                me.el.save(me.id);
-            } else if (!me._timer) {
-                me._timer = Ext.defer(me._flushFn, delay);
-            }
-        },
-
-        clear: function () {
-            var me = this;
-
-            me.data = {};
-            me._keys = null;
-            me.save(me.flushDelay);
-        },
-
-        getItem: function (key) {
-            var data = this.data;
-
-            return (key in data) ? data[key] : null;
-        },
-
-        removeItem: function (key) {
-            var me = this,
-                keys = me._keys,
-                data = me.data;
-
-            if (key in data) {
-                delete data[key];
-
-                if (keys) {
-                    if (me.lazyKeys) {
-                        me._keys = null;
-                    } else {
-                        Ext.Array.remove(keys, key);
-                    }
-                }
-
-                me.save(me.flushDelay);
-            }
-        },
-
-        setItem: function (key, value) {
-            var me = this,
-                data = me.data,
-                keys = me._keys;
-
-            if (keys && !(key in data)) {
-                keys.push(key);
-            }
-
-            data[key] = value;
-            me.save(me.flushDelay);
-        }
-    });
 });

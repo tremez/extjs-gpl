@@ -1,0 +1,17 @@
+@if $theme-name == 'theme-material' {
+    .header-tabs-fieldset {
+        .#{$prefix}segmented-button {
+            margin-top: 8px;
+        }
+    }
+
+    .header-tabs-tabpanel {
+        .#{$prefix}tab-default,
+        .#{$prefix}tab-over {
+            .#{$prefix}tab-inner,
+            .#{$prefix}tab-icon-el {
+                color: $focus-font-color !important;
+            }
+        }
+    }
+}

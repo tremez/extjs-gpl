@@ -6,7 +6,7 @@ Ext.define('KitchenSink.view.drag.DataController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.drag-data',
 
-    afterRender: function (view) {
+    afterRender: function(view) {
         // When the drag starts, the describe method is used to extract the
         // relevant data that the drag represents and is pushed into the info
         // object for consumption by the target.
@@ -40,11 +40,12 @@ Ext.define('KitchenSink.view.drag.DataController', {
         });
     },
 
-    onDrop: function (target, info) {
+    onDrop: function(target, info) {
         // Get the data from the info object and use it to display
         // the expectation to the user.
         info.getData('postage-duration').then(function(duration) {
             var s = Ext.String.format('Your parcel will arrive within {0} days', duration);
+
             Ext.toast({
                 html: s,
                 closable: false,
@@ -55,7 +56,7 @@ Ext.define('KitchenSink.view.drag.DataController', {
         });
     },
 
-    destroy: function () {
+    destroy: function() {
         this.target = this.source = Ext.destroy(this.source, this.target);
 
         this.callParent();

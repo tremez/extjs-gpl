@@ -5,7 +5,7 @@ Ext.define('KitchenSink.view.drag.ConstraintController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.drag-constraint',
 
-    afterRender: function (view) {
+    afterRender: function(view) {
         // Constrain to the direct parent element
         this.toParentSource = new Ext.drag.Source({
             element: view.el.down('.constrain-parent'),
@@ -47,7 +47,7 @@ Ext.define('KitchenSink.view.drag.ConstraintController', {
         });
     },
 
-    destroy: function () {
+    destroy: function() {
         this.toParentSource = Ext.destroy(this.toParentSource);
         this.verticalSource = Ext.destroy(this.verticalSource);
         this.horizontalSource = Ext.destroy(this.horizontalSource);

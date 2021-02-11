@@ -1,0 +1,44 @@
+{
+    "name": "@extjs/ext-classic-theme-material",
+    "ext-react-name": "@extjs/ext-react-classic-theme-material",
+    "ext-name": "@extjs/ext-classic-theme-material",
+    "SenchaExtName": "@sencha/ext-classic-theme-material",
+    "SenchaExtReactName": "@sencha/ext-react-classic-theme-material",
+    "version": "7.0.0.168",
+    "sencha": {
+        "name": "theme-material",
+        "namespace": "Ext",
+        "type": "theme",
+        "extend": "theme-triton",
+        "framework": "ext",
+        "toolkit": "classic",
+        "creator": "Sencha",
+        "summary": "Ext JS Material Theme",
+        "detailedDescription": "Material Design theme for Classic toolkit with Ripple animation effects for buttons",
+        "version": "7.0.0.168",
+        "compatVersion": "7.0.0",
+        "format": "1",
+        "output": "${workspace.subpkg.prefix}/${package.name}",
+        "local": true,
+        "sass": {
+            "namespace": "Ext",
+            "etc": "${package.dir}/sass/etc/all.scss",
+            "var": "${package.dir}/sass/var",
+            "src": "${package.dir}/sass/src"
+        },
+        "classpath": "${package.dir}/src",
+        "overrides": "${package.dir}/overrides",
+        "slicer": {
+            "js": [
+                {
+                    "path": "${package.dir}/sass/example/custom.js",
+                    "isWidgetManifest": true
+                }
+            ]
+        },
+        
+        "properties": {
+            "skip.pkg": 1
+        }
+    }
+}

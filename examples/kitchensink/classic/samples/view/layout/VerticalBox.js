@@ -10,15 +10,38 @@ Ext.define('KitchenSink.view.layout.VerticalBox', {
     //<example>
     exampleTitle: 'Vertical Box Layout',
     //</example>
+    profiles: {
+        classic: {
+            panel1Flex: 1,
+            panelHeight: 100,
+            panel2Flex: 2
+        },
+        neptune: {
+            panel1Flex: 1,
+            panelHeight: 100,
+            panel2Flex: 2
+        },
+        graphite: {
+            panel1Flex: 2,
+            panelHeight: 110,
+            panel2Flex: 3
+        },
+        'classic-material': {
+            panel1Flex: 2,
+            panelHeight: 110,
+            panel2Flex: 3
+        }
+    },
     width: 500,
     height: 400,
-    
+    cls: Ext.baseCSSPrefix + 'shadow',
+
     layout: {
         type: 'vbox',
         pack: 'start',
         align: 'stretch'
     },
-    
+
     bodyPadding: 10,
 
     defaults: {
@@ -29,20 +52,20 @@ Ext.define('KitchenSink.view.layout.VerticalBox', {
     items: [
         {
             title: 'Panel 1',
-            flex: 1,
+            flex: '${panel1Flex}',
             margin: '0 0 10 0',
-            html: 'flex : 1'
+            html: 'flex: ${panel1Flex}'
         },
         {
             title: 'Panel 2',
-            height: 100,
+            height: '${panelHeight}',
             margin: '0 0 10 0',
-            html: 'height: 100'
+            html: 'height: ${panelHeight}'
         },
         {
             title: 'Panel 3',
-            flex: 2,
-            html: 'flex : 2'
+            flex: '${panel2Flex}',
+            html: 'flex: ${panel2Flex}'
         }
     ]
 

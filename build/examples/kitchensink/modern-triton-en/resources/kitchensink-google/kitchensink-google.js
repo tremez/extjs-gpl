@@ -1,0 +1,1 @@
+Ext.namespace('Ext.theme.is')['kitchensink-google']=!0;Ext.theme.name='kitchensink-google';Ext.define('KitchenSink.view.map.Basic',{extend:'Ext.Panel',xtype:'map-basic',sourcePreviewPath:'packages/kitchensink-google/src/view/Basic.js',requires:['Ext.ux.google.Map'],layout:'fit',shadow:!0,items:[{xtype:'google-map',mapOptions:{center:{latitude:38.96,longitude:-95.26}}}]});

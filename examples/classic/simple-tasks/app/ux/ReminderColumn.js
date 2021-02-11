@@ -40,11 +40,11 @@ Ext.define('SimpleTasks.ux.ReminderColumn', {
                 listeners: {
                     click: Ext.bind(me.handleMenuItemClick, me, [value], true)
                 }
-            }
+            };
         }
 
         items.push(createItem('No Reminder'));
-        items.push({xtype: 'menuseparator'});
+        items.push({ xtype: 'menuseparator' });
         items.push(createItem('1 day before', 1));
         items.push(createItem('2 days before', 2));
         items.push(createItem('3 days before', 3));
@@ -54,7 +54,7 @@ Ext.define('SimpleTasks.ux.ReminderColumn', {
 
         me.menu = Ext.create('Ext.menu.Menu', {
             plain: true,
-            items:  items
+            items: items
         });
     },
 
@@ -80,14 +80,16 @@ Ext.define('SimpleTasks.ux.ReminderColumn', {
             target = Ext.get(e.getTarget());
 
         if (target.hasCls(cssPrefix + 'grid-reminder')) {
-            if(type === 'click') {
-                if(!me.menu) {
+            if (type === 'click') {
+                if (!me.menu) {
                     me.initMenu();
                 }
+
                 me.record = view.store.getAt(rowIndex);
                 me.menu.showBy(target, me.menuPosition);
             }
-        } else {
+        }
+        else {
             return me.callParent(arguments);
         }
     },
@@ -103,11 +105,11 @@ Ext.define('SimpleTasks.ux.ReminderColumn', {
      * @param {SimpleTasks.store.Tasks} store
      * @param {Ext.grid.View} view
      */
-    renderer : function(value, metaData, task, rowIndex, colIndex, store, view){
+    renderer: function(value, metaData, task, rowIndex, colIndex, store, view) {
         var cssPrefix = Ext.baseCSSPrefix,
             cls = [cssPrefix + 'grid-reminder'];
 
-        if(task.get('done') || !task.get('due')) {
+        if (task.get('done') || !task.get('due')) {
             // if the task is done or has no due date, a reminder cannot be set
             return '';
         }
@@ -115,6 +117,7 @@ Ext.define('SimpleTasks.ux.ReminderColumn', {
         if (!value) {
             cls.push(cssPrefix + 'grid-reminder-empty');
         }
+
         return '<div class="' + cls.join(' ') + '"></div>';
     }
 });

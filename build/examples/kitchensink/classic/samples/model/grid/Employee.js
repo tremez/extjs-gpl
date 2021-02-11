@@ -58,8 +58,9 @@ Ext.define('KitchenSink.model.grid.Employee', {
     idField: 'employeeNo',
 
     // Override set to update dependent fields
-    set: function (name, value) {
-        var data = name;
+    set: function(name, value) {
+        var data = name,
+            names;
 
         // Convert 2 arg form to object form
         if (Ext.isString(name)) {
@@ -73,16 +74,18 @@ Ext.define('KitchenSink.model.grid.Employee', {
         }
         // Likewise, update two name fields if whole name gets updated
         else if (data.name) {
-            var names = this.convertName(data.name);
+            names = this.convertName(data.name);
+
             data.forename = names[0];
             data.surname = names[1];
         }
 
         return this.callParent([data]);
     },
-    
+
     convertName: function(name) {
         var names = /([^\s+]+)(?:\s+(.*))?/.exec(name);
-        return names ? [names[1], names[2]||''] : ['', ''];
+
+        return names ? [names[1], names[2] || ''] : ['', ''];
     }
 });

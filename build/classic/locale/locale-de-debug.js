@@ -6,10 +6,10 @@
  * 2010-Mar-10 update by Volker Grabsch
  */
 Ext.onReady(function() {
-    
+
     if (Ext.Date) {
         Ext.Date.monthNames = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
-        
+
         Ext.Date.defaultFormat = 'd.m.Y';
 
         Ext.Date.getShortMonthName = function(month) {
@@ -44,6 +44,7 @@ Ext.onReady(function() {
 
     if (Ext.util && Ext.util.Format) {
         Ext.util.Format.__number = Ext.util.Format.number;
+
         Ext.util.Format.number = function(v, format) {
             return Ext.util.Format.__number(v, format || "0.000,00/i");
         };
@@ -307,7 +308,7 @@ Ext.define("Ext.locale.de.form.field.Time", {
 
 Ext.define("Ext.locale.de.form.CheckboxGroup", {
     override: "Ext.form.CheckboxGroup",
-    blankText: "Du mußt mehr als einen Eintrag aus der Gruppe auswählen"
+    blankText: "Du mußt mindestens einen Eintrag aus der Gruppe auswählen"
 });
 
 Ext.define("Ext.locale.de.form.RadioGroup", {
@@ -322,11 +323,11 @@ Ext.define("Ext.locale.de.window.MessageBox", {
         cancel: "Abbrechen",
         yes: "Ja",
         no: "Nein"
-    }    
+    }
 });
 
 Ext.define("Ext.locale.de.view.MultiSelectorSearch", {
-    override: "Ext.view.MultiSelectorSearch" ,
+    override: "Ext.view.MultiSelectorSearch",
     searchText: "Suche..."
 });
 
@@ -338,6 +339,6 @@ Ext.define("Ext.locale.de.view.MultiSelector", {
 });
 
 // This is needed until we can refactor all of the locales into individual files
-Ext.define("Ext.locale.de.Component", {	
+Ext.define("Ext.locale.de.Component", {
     override: "Ext.Component"
 });

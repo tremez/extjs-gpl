@@ -29,7 +29,7 @@
  * `Ext.Configurator` for that class.
  * @private
  */
-Ext.Config = function (name) {
+Ext.Config = function(name) {
 // @define Ext.class.Config
 // @define Ext.Config
 
@@ -90,7 +90,7 @@ Ext.Config = function (name) {
 
 Ext.Config.map = {};
 
-Ext.Config.get = function (name) {
+Ext.Config.get = function(name) {
     var map = Ext.Config.map,
         ret = map[name] || (map[name] = new Ext.Config(name));
 
@@ -120,7 +120,8 @@ Ext.Config.prototype = {
 
     /**
      * @cfg {Boolean} [evented=false]
-     * When set as `true` the config property will be treated as a {@link Ext.Evented Evented Config}.
+     * When set as `true` the config property will be treated as a
+     * {@link Ext.Evented Evented Config}.
      * @private
      * @since 6.0.0
      */
@@ -143,19 +144,40 @@ Ext.Config.prototype = {
      * the `newValue` is not being provided by a mixin.
      */
 
-    getGetter: function () {
+    combine: function(value, baseValue, instance, clone) {
+        var cfg = this;
+
+        if (cfg.merge) {
+            value = cfg.merge(clone ? Ext.clone(value) : value, baseValue, instance);
+        }
+        else if (value && value.constructor === Object &&
+                 baseValue && baseValue.constructor === Object) {
+            value = Ext.merge({}, baseValue, value);
+        }
+        else if (clone && value) {
+            value = Ext.clone(value);
+        }
+
+        return value;
+    },
+
+    equals: function(value1, value2) {
+        return value1 === value2;
+    },
+
+    getGetter: function() {
         return this.getter || (this.root.getter = this.makeGetter());
     },
-    
-    getInitGetter: function () {
+
+    getInitGetter: function() {
         return this.initGetter || (this.root.initGetter = this.makeInitGetter());
     },
 
-    getSetter: function () {
+    getSetter: function() {
         return this.setter || (this.root.setter = this.makeSetter());
     },
 
-    getEventedSetter: function () {
+    getEventedSetter: function() {
         return this.eventedSetter || (this.root.eventedSetter = this.makeEventedSetter());
     },
 
@@ -165,18 +187,20 @@ Ext.Config.prototype = {
      * @param {Object} target
      * @return {String}
      */
-    getInternalName: function (target) {
+    getInternalName: function(target) {
         return target.$configPrefixed ? this.names.internal : this.name;
     },
 
-    mergeNew: function (newValue, oldValue, target, mixinClass) {
+    mergeNew: function(newValue, oldValue, target, mixinClass) {
         var ret, key;
 
         if (!oldValue) {
             ret = newValue;
-        } else if (!newValue) {
+        }
+        else if (!newValue) {
             ret = oldValue;
-        } else {
+        }
+        else {
             ret = Ext.Object.chain(oldValue);
 
             for (key in newValue) {
@@ -185,6 +209,7 @@ Ext.Config.prototype = {
                 }
             }
         }
+
         return ret;
     },
 
@@ -208,26 +233,30 @@ Ext.Config.prototype = {
      * @private
      * @since 5.0.0
      */
-    mergeSets: function (newValue, oldValue, preserveExisting) {
+    mergeSets: function(newValue, oldValue, preserveExisting) {
         var ret = oldValue ? Ext.Object.chain(oldValue) : {},
             i, val;
 
         if (newValue instanceof Array) {
-            for (i = newValue.length; i--; ) {
+            for (i = newValue.length; i--;) {
                 val = newValue[i];
+
                 if (!preserveExisting || !(val in ret)) {
                     ret[val] = true;
                 }
             }
-        } else if (newValue) {
+        }
+        else if (newValue) {
             if (newValue.constructor === Object) {
                 for (i in newValue) {
                     val = newValue[i];
+
                     if (!preserveExisting || !(i in ret)) {
                         ret[i] = val;
                     }
                 }
-            } else if (!preserveExisting || !(newValue in ret)) {
+            }
+            else if (!preserveExisting || !(newValue in ret)) {
                 ret[newValue] = true;
             }
         }
@@ -238,24 +267,25 @@ Ext.Config.prototype = {
     //--------------------------------------------------
     // Factories
 
-    makeGetter: function () {
+    makeGetter: function() {
         var name = this.name,
             prefixedName = this.names.internal;
 
-        return function () {
+        return function() {
             var internalName = this.$configPrefixed ? prefixedName : name;
+
             return this[internalName];
         };
     },
 
-    makeInitGetter: function () {
+    makeInitGetter: function() {
         var name = this.name,
             names = this.names,
             setName = names.set,
             getName = names.get,
             initializingName = names.initializing;
 
-        return function () {
+        return function() {
             var me = this;
 
             me[initializingName] = true;
@@ -269,7 +299,7 @@ Ext.Config.prototype = {
         };
     },
 
-    makeSetter: function () {
+    makeSetter: function() {
         var name = this.name,
             names = this.names,
             prefixedName = names.internal,
@@ -280,10 +310,11 @@ Ext.Config.prototype = {
 
         // http://jsperf.com/method-call-apply-or-direct
         // http://jsperf.com/method-detect-invoke
-        setter = function (value) {
+        setter = function(value) {
             var me = this,
                 internalName = me.$configPrefixed ? prefixedName : name,
-                oldValue = me[internalName];
+                oldValue = me[internalName],
+                watch;
 
             // Remove the initGetter from the instance now that the value has been set.
             delete me[getName];
@@ -297,6 +328,14 @@ Ext.Config.prototype = {
                     if (me[updateName]) {
                         me[updateName](value, oldValue);
                     }
+
+                    watch = me.$configWatch;
+
+                    if (watch && !me.isConfiguring) {
+                        // Since the updater could have modified things (tho unlikely), just
+                        // re-read the stored value:
+                        watch.fire(name, [ me, name, me[internalName], oldValue ]);
+                    }
                 }
             }
 
@@ -308,7 +347,7 @@ Ext.Config.prototype = {
         return setter;
     },
 
-    makeEventedSetter: function () {
+    makeEventedSetter: function() {
         var name = this.name,
             names = this.names,
             prefixedName = names.internal,
@@ -316,17 +355,25 @@ Ext.Config.prototype = {
             applyName = names.apply,
             updateName = names.update,
             changeEventName = names.changeEvent,
-            updateFn = function (me, value, oldValue, internalName) {
+            updateFn = function(me, value, oldValue, internalName) {
                 me[internalName] = value;
+
                 if (me[updateName]) {
                     me[updateName](value, oldValue);
+                }
+
+                // eslint-disable-next-line vars-on-top
+                var watch = me.$configWatch;
+
+                if (watch) { // !me.isConfiguring is assured
+                    watch.fire(name, [ me, name, value, oldValue ]);
                 }
             },
             setter;
 
         // http://jsperf.com/method-call-apply-or-direct
         // http://jsperf.com/method-detect-invoke
-        setter = function (value) {
+        setter = function(value) {
             var me = this,
                 internalName = me.$configPrefixed ? prefixedName : name,
                 oldValue = me[internalName];
@@ -338,16 +385,16 @@ Ext.Config.prototype = {
                 // The old value might have been changed at this point
                 // (after the apply call chain) so it should be read again
                 if (value !== (oldValue = me[internalName])) {
-
                     if (me.isConfiguring) {
                         me[internalName] = value;
 
                         if (me[updateName]) {
                             me[updateName](value, oldValue);
                         }
-                    } else {
+                    }
+                    else {
                         me.fireEventedAction(changeEventName, [me, value, oldValue],
-                                updateFn, me, [me, value, oldValue, internalName]);
+                                             updateFn, me, [me, value, oldValue, internalName]);
                     }
                 }
             }

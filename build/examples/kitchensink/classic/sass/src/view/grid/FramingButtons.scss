@@ -16,24 +16,24 @@
     }
 } @else {
     .framing-buttons-add:before {
-        font: 16px/1 FontAwesome;
+        font: 16px/1 'Font Awesome 5 Free';
         color: $green-icon-color;
         content: $fa-var-plus-circle;
     }
 
     .framing-buttons-option:before {
-        font: 16px/1 FontAwesome;
+        font: 16px/1 'Font Awesome 5 Free';
         content: $fa-var-puzzle-piece;
     }
 
     .framing-buttons-remove:before {
-        font: 16px/1 FontAwesome;
+        font: 16px/1 'Font Awesome 5 Free';
         color: $red-icon-color;
         content: $fa-var-minus-circle;
     }
 
     .framing-buttons-grid:before {
-        font: 16px/1 FontAwesome;
+        font: 16px/1 'Font Awesome 5 Free';
         content: $fa-var-table;
     }
 }

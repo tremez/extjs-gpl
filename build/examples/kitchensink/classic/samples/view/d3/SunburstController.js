@@ -6,14 +6,17 @@ Ext.define('KitchenSink.view.d3.SunburstController', {
         'Ext.util.Format'
     ],
 
-    onTooltip: function (component, tooltip, node, element, event) {
-        var size = node.get('size'),
-            n = node.childNodes.length;
+    onTooltip: function(component, tooltip, node, element, event) {
+        var record = node.data,
+            size = record.get('size'),
+            n = record.childNodes.length;
 
-        tooltip.setTitle(node.get('text'));
+        tooltip.setTitle(record.get('text'));
+
         if (size) {
             tooltip.setHtml(Ext.util.Format.fileSize(size));
-        } else {
+        }
+        else {
             tooltip.setHtml(n + ' file' + (n === 1 ? '' : 's') + ' inside.');
         }
     }

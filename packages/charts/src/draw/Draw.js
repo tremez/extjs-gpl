@@ -1,12 +1,19 @@
-(function () {
+/* global Float32Array */
+/* eslint-disable indent */
+(function() {
     if (!Ext.global.Float32Array) {
         // Typed Array polyfill
-        var Float32Array = function (array) {
+        // eslint-disable-next-line vars-on-top
+        var Float32Array = function(array) {
+            var i, len;
+
             if (typeof array === 'number') {
                 this.length = array;
-            } else if ('length' in array) {
+            }
+            else if ('length' in array) {
                 this.length = array.length;
-                for (var i = 0, len = array.length; i < len; i++) {
+
+                for (i = 0, len = array.length; i < len; i++) {
                     this[i] = +array[i];
                 }
             }
@@ -16,6 +23,7 @@
         Ext.global.Float32Array = Float32Array;
     }
 })();
+/* eslint-enable indent */
 
 /**
  * Utility class providing mathematics functionalities through all the draw package.
@@ -27,12 +35,12 @@ Ext.define('Ext.draw.Draw', {
     pi2: Math.PI * 2,
 
     /**
-     * @deprecated Please use the {@link Ext#identityFn} instead.
+     * @deprecated 6.5.0 Please use the {@link Ext#identityFn} instead.
      * Function that returns its first element.
      * @param {Mixed} a
      * @return {Mixed}
      */
-    reflectFn: function (a) {
+    reflectFn: function(a) {
         return a;
     },
 
@@ -41,7 +49,7 @@ Ext.define('Ext.draw.Draw', {
      * @param {Number} degrees
      * @return {Number}
      */
-    rad: function (degrees) {
+    rad: function(degrees) {
         return (degrees % 360) * this.radian;
     },
 
@@ -50,7 +58,7 @@ Ext.define('Ext.draw.Draw', {
      * @param {Number} radian
      * @return {Number}
      */
-    degrees: function (radian) {
+    degrees: function(radian) {
         return (radian / this.radian) % 360;
     },
 
@@ -61,10 +69,13 @@ Ext.define('Ext.draw.Draw', {
      * @param {Number} [padding]
      * @return {Boolean}
      */
-    isBBoxIntersect: function (bbox1, bbox2, padding) {
+    isBBoxIntersect: function(bbox1, bbox2, padding) {
         padding = padding || 0;
-        return (Math.max(bbox1.x, bbox2.x) - padding > Math.min(bbox1.x + bbox1.width, bbox2.x + bbox2.width)) ||
-            (Math.max(bbox1.y, bbox2.y) - padding > Math.min(bbox1.y + bbox1.height, bbox2.y + bbox2.height));
+
+        return (Math.max(bbox1.x, bbox2.x) - padding >
+                    Math.min(bbox1.x + bbox1.width, bbox2.x + bbox2.width)) ||
+               (Math.max(bbox1.y, bbox2.y) - padding >
+                    Math.min(bbox1.y + bbox1.height, bbox2.y + bbox2.height));
     },
 
     /**
@@ -74,8 +85,9 @@ Ext.define('Ext.draw.Draw', {
      * @param bbox
      * @return {Boolean}
      */
-    isPointInBBox: function (x, y, bbox) {
-        return !!bbox && x >= bbox.x && x <= (bbox.x + bbox.width) && y >= bbox.y && y <= (bbox.y + bbox.height);
+    isPointInBBox: function(x, y, bbox) {
+        return !!bbox && x >= bbox.x &&
+               x <= (bbox.x + bbox.width) && y >= bbox.y && y <= (bbox.y + bbox.height);
     },
 
     /**
@@ -84,8 +96,9 @@ Ext.define('Ext.draw.Draw', {
      *
      * @param {Array} points Array of numbers.
      */
-    spline: function (points) {
-        var i, j, ln = points.length,
+    naturalSpline: function(points) {
+        var i, j,
+            ln = points.length,
             nd, d, y, ny,
             r = 0,
             zs = new Float32Array(points.length),
@@ -101,12 +114,14 @@ Ext.define('Ext.draw.Draw', {
         }
 
         for (i = ln - 2; i > 0; i--) {
-            r = 3.732050807568877 + 48.248711305964385 / (-13.928203230275537 + Math.pow(0.07179676972449123, i));
+            r = 3.732050807568877 + 48.248711305964385 /
+                (-13.928203230275537 + Math.pow(0.07179676972449123, i));
             zs[i] -= zs[i + 1] * r;
         }
 
         ny = points[0];
         nd = ny - zs[0];
+
         for (i = 0, j = 0; i < ln - 1; j += 3) {
             y = ny;
             d = nd;
@@ -117,7 +132,66 @@ Ext.define('Ext.draw.Draw', {
             result[j + 1] = (nd + 2 * d) / 3;
             result[j + 2] = (nd * 2 + d) / 3;
         }
+
         result[j] = ny;
+
+        return result;
+    },
+
+    /**
+     * Shorthand for {@link #naturalSpline}
+     */
+    spline: function(points) {
+        return this.naturalSpline(points);
+    },
+
+    /**
+     * @private
+     * Cardinal spline interpolation.
+     * Goes from cardinal control points to cubic Bezier control points.
+     */
+    cardinalToBezier: function(P1, P2, P3, P4, tension) {
+        return [
+            P2,
+            P2 + (P3 - P1) / 6 * tension,
+            P3 - (P4 - P2) / 6 * tension,
+            P3
+        ];
+    },
+
+    /**
+     * @private
+     * @param {Number[]} P An array of n x- or y-coordinates.
+     * @param {Number} tension
+     * @return {Float32Array} An array of 3n - 2 Bezier control points.
+     */
+    cardinalSpline: function(P, tension) {
+        var n = P.length,
+            result = new Float32Array(n * 3 - 2),
+            i, bezier;
+
+        if (tension === undefined) {
+            tension = 0.5;
+        }
+
+        bezier = this.cardinalToBezier(P[0], P[0], P[1], P[2], tension);
+        result[0] = bezier[0];
+        result[1] = bezier[1];
+        result[2] = bezier[2];
+        result[3] = bezier[3];
+
+        for (i = 0; i < n - 3; i++) {
+            bezier = this.cardinalToBezier(P[i], P[i + 1], P[i + 2], P[i + 3], tension);
+            result[4 + i * 3] = bezier[1];
+            result[4 + i * 3 + 1] = bezier[2];
+            result[4 + i * 3 + 2] = bezier[3];
+        }
+
+        bezier = this.cardinalToBezier(P[n - 3], P[n - 2], P[n - 1], P[n - 1], tension);
+        result[4 + i * 3] = bezier[1];
+        result[4 + i * 3 + 1] = bezier[2];
+        result[4 + i * 3 + 2] = bezier[3];
+
         return result;
     },
 
@@ -143,8 +217,7 @@ Ext.define('Ext.draw.Draw', {
      *                  are the control point for the curve toward the previous path point, and
      *                  x2 and y2 are the control point for the curve toward the next path point.
      */
-    getAnchors: function (prevX, prevY, curX, curY, nextX, nextY, value) {
-        value = value || 4;
+    getAnchors: function(prevX, prevY, curX, curY, nextX, nextY, value) {
         var PI = Math.PI,
             halfPI = PI / 2,
             abs = Math.abs,
@@ -153,6 +226,8 @@ Ext.define('Ext.draw.Draw', {
             atan = Math.atan,
             control1Length, control2Length, control1Angle, control2Angle,
             control1X, control1Y, control2X, control2Y, alpha;
+
+        value = value || 4;
 
         // Find the length of each control anchor line, by dividing the horizontal distance
         // between points by the value parameter.
@@ -165,12 +240,16 @@ Ext.define('Ext.draw.Draw', {
         // toward the previous/next target point.
         if ((curY >= prevY && curY >= nextY) || (curY <= prevY && curY <= nextY)) {
             control1Angle = control2Angle = halfPI;
-        } else {
+        }
+        else {
             control1Angle = atan((curX - prevX) / abs(curY - prevY));
+
             if (prevY < curY) {
                 control1Angle = PI - control1Angle;
             }
+
             control2Angle = atan((nextX - curX) / abs(curY - nextY));
+
             if (nextY < curY) {
                 control2Angle = PI - control2Angle;
             }
@@ -178,9 +257,11 @@ Ext.define('Ext.draw.Draw', {
 
         // Adjust the calculated angles so they point away from each other on the same line
         alpha = halfPI - ((control1Angle + control2Angle) % (PI * 2)) / 2;
+
         if (alpha > halfPI) {
             alpha -= PI;
         }
+
         control1Angle += alpha;
         control2Angle += alpha;
 
@@ -198,6 +279,7 @@ Ext.define('Ext.draw.Draw', {
             control1X += abs(prevY - control1Y) * (control1X - curX) / (control1Y - curY);
             control1Y = prevY;
         }
+
         if ((curY > nextY && control2Y < nextY) || (curY < nextY && control2Y > nextY)) {
             control2X -= abs(nextY - control2Y) * (control2X - curX) / (control2Y - curY);
             control2Y = nextY;
@@ -212,52 +294,61 @@ Ext.define('Ext.draw.Draw', {
     },
 
     /**
-     * Given coordinates of the points, calculates coordinates of a Bezier curve that goes through them.
+     * Given coordinates of the points, calculates coordinates of a Bezier curve
+     * that goes through them.
      * @param dataX x-coordinates of the points.
      * @param dataY y-coordinates of the points.
      * @param value A value to control the smoothness of the curve.
      * @return {Object} Object holding two arrays, for x and y coordinates of the curve.
      */
-    smooth: function (dataX, dataY, value) {
+    smooth: function(dataX, dataY, value) {
         var ln = dataX.length,
             prevX, prevY,
             curX, curY,
             nextX, nextY,
             x, y,
-            smoothX = [], smoothY = [],
+            smoothX = [],
+            smoothY = [],
             i, anchors;
 
         for (i = 0; i < ln - 1; i++) {
             prevX = dataX[i];
             prevY = dataY[i];
+
             if (i === 0) {
                 x = prevX;
                 y = prevY;
                 smoothX.push(x);
                 smoothY.push(y);
+
                 if (ln === 1) {
                     break;
                 }
             }
-            curX = dataX[i+1];
-            curY = dataY[i+1];
-            nextX = dataX[i+2];
-            nextY = dataY[i+2];
-            if ( !(Ext.isNumber(nextX) && Ext.isNumber(nextY)) ) {
+
+            curX = dataX[i + 1];
+            curY = dataY[i + 1];
+            nextX = dataX[i + 2];
+            nextY = dataY[i + 2];
+
+            if (!(Ext.isNumber(nextX) && Ext.isNumber(nextY))) {
                 smoothX.push(x, curX, curX);
                 smoothY.push(y, curY, curY);
+
                 break;
             }
+
             anchors = this.getAnchors(prevX, prevY, curX, curY, nextX, nextY, value);
             smoothX.push(x, anchors.x1, curX);
             smoothY.push(y, anchors.y1, curY);
             x = anchors.x2;
             y = anchors.y2;
         }
+
         return {
             smoothX: smoothX,
             smoothY: smoothY
-        }
+        };
     },
 
     /**
@@ -266,14 +357,17 @@ Ext.define('Ext.draw.Draw', {
      * Work around for iOS.
      * Nested 3d-transforms seems to prevent the redraw inside it until some event is fired.
      */
-    beginUpdateIOS: Ext.os.is.iOS ? function () {
-        this.iosUpdateEl = Ext.getBody().createChild({
-            //<debug>
-            'data-sticky': true,
-            //</debug>
-            style: 'position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; background: rgba(0,0,0,0.001); z-index: 100000'
-        });
-    } : Ext.emptyFn,
+    beginUpdateIOS: Ext.os.is.iOS
+        ? function() {
+            this.iosUpdateEl = Ext.getBody().createChild({
+                //<debug>
+                'data-sticky': true,
+                //</debug>
+                style: 'position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; ' +
+                       'background: rgba(0,0,0,0.001); z-index: 100000'
+            });
+        }
+        : Ext.emptyFn,
 
     endUpdateIOS: function() {
         this.iosUpdateEl = Ext.destroy(this.iosUpdateEl);

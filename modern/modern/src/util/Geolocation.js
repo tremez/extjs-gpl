@@ -4,13 +4,14 @@
  * Based on the [Geolocation API Specification](http://dev.w3.org/geo/api/spec-source.html)
  *
  * When instantiated, by default this class immediately begins tracking location information,
- * firing a {@link #locationupdate} event when new location information is available.  To disable this
- * location tracking (which may be battery intensive on mobile devices), set {@link #autoUpdate} to `false`.
+ * firing a {@link #locationupdate} event when new location information is available.  
+ * To disable this location tracking (which may be battery intensive on mobile devices),
+ * set {@link #autoUpdate} to `false`.
  *
  * When this is done, only calls to {@link #updateLocation} will trigger a location retrieval.
  *
- * A {@link #locationerror} event is raised when an error occurs retrieving the location, either due to a user
- * denying the application access to it, or the browser not supporting it.
+ * A {@link #locationerror} event is raised when an error occurs retrieving the location, either 
+ * due to a user denying the application access to it, or the browser not supporting it.
  *
  * The below code shows a GeoLocation making a single retrieval of location information.
  *
@@ -20,7 +21,12 @@
  *             locationupdate: function(geo) {
  *                 alert('New latitude: ' + geo.getLatitude());
  *             },
- *             locationerror: function(geo, bTimeout, bPermissionDenied, bLocationUnavailable, message) {
+ *             locationerror: function(geo, 
+ *                                     bTimeout, 
+ *                                     bPermissionDenied,
+ *                                     bLocationUnavailable,
+ *                                     message
+ *             ) {
  *                 if(bTimeout){
  *                     alert('Timeout occurred.');
  *                 } else {
@@ -44,8 +50,9 @@ Ext.define('Ext.util.Geolocation', {
          *
          * If {@link #autoUpdate} is set to `true`, this event could be raised repeatedly.
          * The first error is relative to the moment {@link #autoUpdate} was set to `true`
-         * (or this {@link Ext.util.Geolocation} was initialized with the {@link #autoUpdate} config option set to `true`).
-         * Subsequent errors are relative to the moment when the device determines that it's position has changed.
+         * (or this {@link Ext.util.Geolocation} was initialized with the {@link #autoUpdate} 
+         * config option set to `true`). Subsequent errors are relative to the moment when the 
+         * device determines that it's position has changed.
          * @param {Ext.util.Geolocation} this
          * @param {Boolean} timeout
          * Boolean indicating a timeout occurred
@@ -65,13 +72,14 @@ Ext.define('Ext.util.Geolocation', {
          * @event locationupdate
          * Raised when a location retrieval operation has been completed successfully.
          * @param {Ext.util.Geolocation} this
-         * Retrieve the current location information from the GeoLocation object by using the read-only
-         * properties: {@link #latitude}, {@link #longitude}, {@link #accuracy}, {@link #altitude}, {@link #altitudeAccuracy}, {@link #heading}, and {@link #speed}.
+         * Retrieve the current location information from the GeoLocation object by using 
+         * the read-only properties: {@link #latitude}, {@link #longitude}, {@link #accuracy}, 
+         * {@link #altitude}, {@link #altitudeAccuracy}, {@link #heading}, and {@link #speed}.
          */
 
         /**
          * @cfg {Boolean} autoUpdate
-         * When set to `true`, continually monitor the location of the device (beginning immediately)
+         * When set to `true`, continually monitor the location of the device from the beginning
          * and fire {@link #locationupdate} and {@link #locationerror} events.
          */
         autoUpdate: true,
@@ -166,54 +174,60 @@ Ext.define('Ext.util.Geolocation', {
          */
         timestamp: null,
 
-        //PositionOptions interface
+        // PositionOptions interface
         /**
          * @cfg {Boolean} allowHighAccuracy
          * When set to `true`, provide a hint that the application would like to receive
-         * the best possible results. This may result in slower response times or increased power consumption.
-         * The user might also deny this capability, or the device might not be able to provide more accurate
-         * results than if this option was set to `false`.
+         * the best possible results. This may result in slower response times or increased 
+         * power consumption. The user might also deny this capability, or the device might not 
+         * be able to provide more accurate results than if this option was set to `false`.
          */
         allowHighAccuracy: false,
 
         /**
          * @cfg {Number} timeout
          * The maximum number of milliseconds allowed to elapse between a location update operation
-         * and the corresponding {@link #locationupdate} event being raised.  If a location was not successfully
-         * acquired before the given timeout elapses (and no other internal errors have occurred in this interval),
-         * then a {@link #locationerror} event will be raised indicating a timeout as the cause.
+         * and the corresponding {@link #locationupdate} event being raised.  If a location was not 
+         * successfully acquired before the given timeout elapses (and no other internal errors have
+         * occurred in this interval), then a {@link #locationerror} event will be raised indicating
+         * a timeout as the cause.
          *
-         * Note that the time that is spent obtaining the user permission is **not** included in the period
-         * covered by the timeout.  The `timeout` attribute only applies to the location acquisition operation.
+         * Note that the time that is spent obtaining the user permission is **not** included in the
+         * period covered by the timeout.  The `timeout` attribute only applies to the location 
+         * acquisition operation.
          *
-         * In the case of calling `updateLocation`, the {@link #locationerror} event will be raised only once.
+         * In the case of calling `updateLocation`, the {@link #locationerror} event will be raised 
+         * only once.
          *
-         * If {@link #autoUpdate} is set to `true`, the {@link #locationerror} event could be raised repeatedly.
-         * The first timeout is relative to the moment {@link #autoUpdate} was set to `true`
-         * (or this {@link Ext.util.Geolocation} was initialized with the {@link #autoUpdate} config option set to `true`).
-         * Subsequent timeouts are relative to the moment when the device determines that it's position has changed.
+         * If {@link #autoUpdate} is set to `true`, the {@link #locationerror} event could be raised
+         * repeatedly. The first timeout is relative to the moment {@link #autoUpdate} was set to 
+         * `true` (or this {@link Ext.util.Geolocation} was initialized with the {@link #autoUpdate}
+         * config option set to `true`). Subsequent timeouts are relative to the moment when the 
+         * device determines that it's position has changed.
          */
         timeout: Infinity,
 
         /**
          * @cfg {Number} maximumAge
-         * This option indicates that the application is willing to accept cached location information whose age
-         * is no greater than the specified time in milliseconds. If `maximumAge` is set to 0, an attempt to retrieve
-         * new location information is made immediately.
+         * This option indicates that the application is willing to accept cached location 
+         * information whose age is no greater than the specified time in milliseconds. If 
+         * `maximumAge` is set to 0, an attempt to retrieve new location information is made 
+         * immediately.
          *
          * Setting the `maximumAge` to Infinity returns a cached position regardless of its age.
          *
          * If the device does not have cached location information available whose age is no
          * greater than the specified `maximumAge`, then it must acquire new location information.
          *
-         * For example, if location information no older than 10 minutes is required, set this property to 600000.
+         * For example, if location information no older than 10 minutes is required, set this 
+         * property to 600000.
          */
         maximumAge: 0,
 
         /**
          * @private
          */
-        provider : undefined
+        provider: undefined
     },
 
     updateMaximumAge: function() {
@@ -241,13 +255,22 @@ Ext.define('Ext.util.Geolocation', {
                     config = navigator.geolocation;
                 }
                 else if (window.google) {
+                    // eslint-disable-next-line no-undef 
                     config = google.gears.factory.create('beta.geolocation');
                 }
             }
         }
         else {
-            this.fireEvent('locationerror', this, false, false, true, 'This device does not support Geolocation.');
+            this.fireEvent(
+                'locationerror',
+                this,
+                false,
+                false,
+                true,
+                'This device does not support Geolocation.'
+            );
         }
+
         return config;
     },
 
@@ -256,20 +279,21 @@ Ext.define('Ext.util.Geolocation', {
             provider = me.getProvider();
 
         if (oldAutoUpdate && provider) {
-            clearInterval(me.watchOperationId);
+            Ext.uninterval(me.watchOperationId);
             me.watchOperationId = null;
         }
 
         if (newAutoUpdate) {
             if (!provider) {
                 me.fireEvent('locationerror', me, false, false, true, null);
+
                 return;
             }
 
             try {
                 me.updateWatchOperation();
             }
-            catch(e) {
+            catch (e) {
                 me.fireEvent('locationerror', me, false, false, true, e.message);
             }
         }
@@ -285,7 +309,7 @@ Ext.define('Ext.util.Geolocation', {
         // The native watchPosition method is currently broken in iOS5...
 
         if (me.watchOperationId) {
-            clearInterval(me.watchOperationId);
+            Ext.uninterval(me.watchOperationId);
         }
 
         function pollPosition() {
@@ -322,46 +346,49 @@ Ext.define('Ext.util.Geolocation', {
      *
      * **If omitted, defaults to the object which fired the event.**
      *
-     * <!--positonOptions undocumented param, see W3C spec-->
+     * @param {Object} [positionOptions] (private) See W3C spec
      */
     updateLocation: function(callback, scope, positionOptions) {
         var me = this,
-            provider = me.getProvider();
+            provider = me.getProvider(),
 
-        var failFunction = function(message, error) {
-            if (error) {
-                me.fireError(error);
-            }
-            else {
-                me.fireEvent('locationerror', me, false, false, true, message);
-            }
-            if (callback) {
-                callback.call(scope || me, null, me); //last parameter for legacy purposes
-            }
-        };
+            failFunction = function(message, error) {
+                if (error) {
+                    me.fireError(error);
+                }
+                else {
+                    me.fireEvent('locationerror', me, false, false, true, message);
+                }
+
+                if (callback) {
+                    callback.call(scope || me, null, me); // last parameter for legacy purposes
+                }
+            };
 
         if (!provider) {
             failFunction(null);
+
             return;
         }
 
         try {
             provider.getCurrentPosition(
-                //success callback
+                // success callback
                 function(position) {
                     me.fireUpdate(position);
+
                     if (callback) {
-                        callback.call(scope || me, me, me); //last parameter for legacy purposes
+                        callback.call(scope || me, me, me); // last parameter for legacy purposes
                     }
                 },
-                //error callback
+                // error callback
                 function(error) {
                     failFunction(null, error);
                 },
                 positionOptions || me.parseOptions()
             );
         }
-        catch(e) {
+        catch (e) {
             failFunction(e.message);
         }
     },
@@ -394,11 +421,12 @@ Ext.define('Ext.util.Geolocation', {
      */
     fireError: function(error) {
         var errorCode = error.code;
+
         this.fireEvent('locationerror', this,
-            errorCode == error.TIMEOUT,
-            errorCode == error.PERMISSION_DENIED,
-            errorCode == error.POSITION_UNAVAILABLE,
-            error.message == undefined ? null : error.message
+                       errorCode === error.TIMEOUT,
+                       errorCode === error.PERMISSION_DENIED,
+                       errorCode === error.POSITION_UNAVAILABLE,
+                       error.message === undefined ? null : error.message
         );
     },
 
@@ -412,10 +440,11 @@ Ext.define('Ext.util.Geolocation', {
                 enableHighAccuracy: this.getAllowHighAccuracy()
             };
 
-        //Google doesn't like Infinity
+        // Google doesn't like Infinity
         if (timeout !== Infinity) {
             ret.timeout = timeout;
         }
+
         return ret;
     },
 

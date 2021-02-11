@@ -19,7 +19,7 @@ Ext.define('KitchenSink.view.charts.financial.OHLC', {
         'Ext.chart.interactions.ItemHighlight'
     ],
 
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     otherContent: [{
         type: 'Controller',
@@ -28,10 +28,27 @@ Ext.define('KitchenSink.view.charts.financial.OHLC', {
         type: 'Store',
         path: 'classic/samples/store/StockPrice.js'
     }],
-    // </example>
+    //</example>
+    profiles: {
+        classic: {
+            width: 650,
+            itemWidth: 270
+        },
+        neptune: {
+            width: 650,
+            itemWidth: 270
+        },
+        graphite: {
+            width: 800,
+            itemWidth: 400
+        },
+        'classic-material': {
+            width: 800,
+            itemWidth: 400
+        }
+    },
     layout: 'fit',
-    width: 650,
-
+    width: '${width}',
     tbar: [
         '->',
         {
@@ -40,7 +57,7 @@ Ext.define('KitchenSink.view.charts.financial.OHLC', {
         },
         {
             xtype: 'segmentedbutton',
-            width: 270,
+            width: '${itemWidth}',
             defaults: {
                 ui: 'default-toolbar'
             },
@@ -65,7 +82,6 @@ Ext.define('KitchenSink.view.charts.financial.OHLC', {
             handler: 'onPanZoomReset'
         }
     ],
-
     items: [{
         xtype: 'cartesian',
         reference: 'chart',
@@ -105,41 +121,37 @@ Ext.define('KitchenSink.view.charts.financial.OHLC', {
                 }
             }
         ],
-        series: [
-            {
-                type: 'candlestick',
-                xField: 'time',
-                openField: 'open',
-                highField: 'high',
-                lowField: 'low',
-                closeField: 'close',
-                style: {
-                    ohlcType: 'ohlc',
-                    barWidth: 10,
-                    opacity: 0.9,
-                    dropStyle: {
-                        fill: 'rgb(237,123,43)',
-                        stroke: 'rgb(237,123,43)'
-                    },
-                    raiseStyle: {
-                        fill: 'rgb(55,153,19)',
-                        stroke: 'rgb(55,153,19)'
-                    }
+        series: {
+            type: 'candlestick',
+            xField: 'time',
+            openField: 'open',
+            highField: 'high',
+            lowField: 'low',
+            closeField: 'close',
+            style: {
+                ohlcType: 'ohlc',
+                barWidth: 10,
+                opacity: 0.9,
+                dropStyle: {
+                    fill: 'rgb(237,123,43)',
+                    stroke: 'rgb(237,123,43)'
+                },
+                raiseStyle: {
+                    fill: 'rgb(55,153,19)',
+                    stroke: 'rgb(55,153,19)'
                 }
             }
-        ],
+        },
         axes: [
             {
                 type: 'numeric',
-                fields: ['open', 'high', 'low', 'close'],
                 position: 'left',
-                maximum: 1000,
-                minimum: 0
+                fields: ['open', 'high', 'low', 'close']
             },
             {
                 type: 'time',
-                fields: ['time'],
                 position: 'bottom',
+                fields: ['time'],
                 visibleRange: [0, 0.3]
             }
         ]

@@ -7,25 +7,39 @@
 Ext.define('KitchenSink.view.form.HBoxLayoutForm', {
     extend: 'Ext.form.Panel',
     xtype: 'form-hboxlayout',
-    
+
     //<example>
     requires: [
         'Ext.layout.container.Anchor',
         'Ext.layout.container.HBox'
     ],
-    
+
     exampleTitle: 'HBox Layout Form',
+    profiles: {
+        classic: {
+            bodyPadding: '5 5 0'
+        },
+        neptune: {
+            bodyPadding: '5 5 0'
+        },
+        graphite: {
+            bodyPadding: '5 5 0'
+        },
+        'classic-material': {
+            bodyPadding: '5 17'
+        }
+    },
     //</example>
 
     title: 'HBox Form Panel',
-    bodyPadding: '5 5 0',
+    bodyPadding: '${bodyPadding}',
     width: 600,
-    
+
     fieldDefaults: {
         labelAlign: 'top',
         msgTarget: 'side'
     },
-    
+
     defaults: {
         border: false,
         xtype: 'panel',
@@ -34,7 +48,7 @@ Ext.define('KitchenSink.view.form.HBoxLayoutForm', {
     },
 
     layout: 'hbox',
-    
+
     items: [{
         items: [{
             xtype: 'textfield',
@@ -42,7 +56,7 @@ Ext.define('KitchenSink.view.form.HBoxLayoutForm', {
             anchor: '-5',
             name: 'first'
         }, {
-            xtype:'textfield',
+            xtype: 'textfield',
             fieldLabel: 'Company',
             anchor: '-5',
             name: 'company'
@@ -53,7 +67,7 @@ Ext.define('KitchenSink.view.form.HBoxLayoutForm', {
             fieldLabel: 'Last Name',
             anchor: '100%',
             name: 'last'
-        },{
+        }, {
             xtype: 'textfield',
             fieldLabel: 'Email',
             anchor: '100%',
@@ -61,7 +75,7 @@ Ext.define('KitchenSink.view.form.HBoxLayoutForm', {
             vtype: 'email'
         }]
     }],
-    
+
     buttons: ['->', {
         text: 'Save'
     }, {

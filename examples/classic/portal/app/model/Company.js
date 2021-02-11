@@ -1,40 +1,46 @@
 Ext.define('Portal.model.Company', {
     extend: 'Ext.data.Model',
     fields: [
-       { name: 'name' },
-       { name: 'price', type: 'float' },
-       { name: 'change', type: 'float' },
-       { name: 'pctChange', type: 'float' },
-       { name: 'lastChange', type: 'date',  dateFormat: 'n/j h:ia' },
-       { name: 'trend' },
-       // Rating dependent upon performance 0 = best, 2 = worst
-       {
-           name: 'rating',
-           type: 'int',
-           calculate: function(data) {
-               var pct = data.pctChange;
-               return (pct < 0) ? 2 : ((pct < 1) ? 1 : 0);
-           }
+        { name: 'name' },
+        { name: 'price', type: 'float' },
+        { name: 'change', type: 'float' },
+        { name: 'pctChange', type: 'float' },
+        { name: 'lastChange', type: 'date', dateFormat: 'n/j h:ia' },
+        { name: 'trend' },
+        // Rating dependent upon performance 0 = best, 2 = worst
+        {
+            name: 'rating',
+            type: 'int',
+            calculate: function(data) {
+                var pct = data.pctChange;
+
+                return (pct < 0) ? 2 : ((pct < 1) ? 1 : 0);
+            },
+            isEqual: function() {
+                return false;
+            }
         }
     ],
 
-    constructor: function () {
+    constructor: function() {
+        var data, price, length;
+
         this.callParent(arguments);
 
-        var data = this.data,
-            price = data.price,
-            length;
+        data = this.data;
+        price = data.price;
 
         data.trend = [price];
+
         do {
             length = data.trend.length;
-            data.trend = this.addToTrend(this.generatePriceTick(data.trend[length-1]));
+            this.addToTrend(this.generatePriceTick(data.trend[length - 1]));
         } while (data.trend.length !== length);
 
         this.addToTrend(price);
     },
 
-    addPriceTick: function () {
+    addPriceTick: function() {
         var me = this,
             oldPrice = me.get('price'),
             newPrice = me.generatePriceTick(oldPrice),
@@ -51,7 +57,7 @@ Ext.define('Portal.model.Company', {
         });
     },
 
-    generatePriceTick: function (oldPrice) {
+    generatePriceTick: function(oldPrice) {
         var change = Ext.Number.randomInt(-2345, 2345) / 100,
             newPrice = oldPrice + change;
 
@@ -66,26 +72,25 @@ Ext.define('Portal.model.Company', {
     // Override to keep the last 10 prices in the trend field
     set: function(fieldName, value) {
         if (fieldName === 'price') {
-            return this.callParent([{
-                price: value,
-                trend: this.addToTrend(fieldName.price)
-            }]);
+            this.addToTrend(value);
         }
         else {
             if (typeof fieldName !== 'string' && 'price' in fieldName) {
-                fieldName.trend = this.addToTrend(fieldName.price);
+                this.addToTrend(fieldName.price);
             }
-            return this.callParent(arguments);
         }
+
+        return this.callParent(arguments);
     },
 
     // Override to keep the last 10 prices in the trend field
     addToTrend: function(value) {
-        var trend = this.data.trend.concat(value);
+        var trend = this.data.trend;
+
+        trend.push(value);
 
         if (trend.length > 10) {
-            Ext.Array.splice(trend, 0, trend.length - 10);
+            trend.shift();
         }
-        return trend;
     }
 });

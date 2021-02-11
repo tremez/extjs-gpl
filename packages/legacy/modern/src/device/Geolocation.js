@@ -45,6 +45,7 @@ Ext.define('Ext.device.Geolocation', {
 
     constructor: function() {
         var browserEnv = Ext.browser.is;
+
         if (browserEnv.WebView) {
             if (browserEnv.Cordova) {
                 return Ext.create('Ext.device.geolocation.Cordova');

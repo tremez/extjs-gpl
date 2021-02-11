@@ -12,8 +12,11 @@
  *     Ext.application({
  *         name: 'MyApp',
  *
- *         // An instance of this view is created and set as the Viewport:
- *         autoCreateViewport: 'MyApp.view.Main'
+ *         // The name of the initial view to create. With the classic toolkit this class
+ *         // will gain a "viewport" plugin if it does not extend Ext.Viewport. With the
+ *         // modern toolkit, the main view will be added to the Viewport.
+ *         //
+ *         //mainView: 'Main.view.main.Main'
  *     });
  *
  * This does several things. First it creates a global variable called 'MyApp' - all of
@@ -28,9 +31,10 @@
  * # Telling Application about the rest of the app
  *
  * Because an Ext.app.Application represents an entire app, we should tell it about the other
- * parts of the app - namely the Models, Views and Controllers that are bundled with the application. Let's say we have a blog management app; we
- * might have Models and Controllers for Posts and Comments, and Views for listing, adding and editing Posts and Comments.
- * Here's how we'd tell our Application about all these things:
+ * parts of the app - namely the Models, Views and Controllers that are bundled with the
+ * application. Let's say we have a blog management app; we might have Models and Controllers for
+ * Posts and Comments, and Views for listing, adding and editing Posts and Comments. Here's how
+ * we'd tell our Application about all these things:
  *
  *     Ext.application({
  *         name: 'Blog',
@@ -44,24 +48,25 @@
  *         }
  *     });
  *
- * Note that we didn't actually list the Views directly in the Application itself. This is because Views are managed by
- * Controllers, so it makes sense to keep those dependencies there. The Application will load each of the specified
- * Controllers using the pathing conventions laid out in the [application architecture guide](../application_architecture/application_architecture.html) - in this case
- * expecting the controllers to reside in app/controller/Posts.js and app/controller/Comments.js. In turn, each
- * Controller simply needs to list the Views it uses and they will be automatically loaded. Here's how our Posts
- * controller like be defined:
+ * Note that we didn't actually list the Views directly in the Application itself. This is because
+ * Views are managed by Controllers, so it makes sense to keep those dependencies there.
+ * The Application will load each of the specified Controllers using the pathing conventions
+ * laid out in the [application architecture guide][1]
+ * - in this case expecting the controllers to reside in app/controller/Posts.js and
+ * app/controller/Comments.js. In turn, each Controller simply needs to list the Views it uses
+ * and they will be automatically loaded. Here's how our Posts controller like be defined:
  *
  *     Ext.define('MyApp.controller.Posts', {
  *         extend: 'Ext.app.Controller',
  *         views: ['posts.List', 'posts.Edit'],
  *
- *         //the rest of the Controller here
+ *         // the rest of the Controller here
  *     });
  *
- * Because we told our Application about our Models and Controllers, and our Controllers about their Views, Ext JS will
- * automatically load all of our app files for us. This means we don't have to manually add script tags into our html
- * files whenever we add a new class, but more importantly it enables us to create a minimized build of our entire
- * application using Sencha Cmd.
+ * Because we told our Application about our Models and Controllers, and our Controllers about
+ * their Views, Ext JS will automatically load all of our app files for us. This means we don't
+ * have to manually add script tags into our html files whenever we add a new class, but more
+ * importantly it enables us to create a minimized build of our entire application using Sencha Cmd.
  *
  * # Deriving from Ext.app.Application
  *
@@ -81,7 +86,9 @@
  *
  *     Ext.application('MyApp.Application');
  *
- * For more information about writing Ext JS applications, please see the [application architecture guide](../../../application_architecture/application_architecture.html).
+ * For more information about writing Ext JS applications, please see
+ * the [application architecture guide][1].
+ * [1]: ../guides/application_architecture/application_architecture.html
  */
 Ext.define('Ext.app.Application', {
     extend: 'Ext.app.Controller',
@@ -90,11 +97,12 @@ Ext.define('Ext.app.Application', {
         'Ext.util.History',
         'Ext.util.MixedCollection'
     ],
-    
+
     isApplication: true,
 
     /**
-     * @cfg {String} extend A class name to use with the `Ext.application` call. The class must also extend {@link Ext.app.Application}.
+     * @cfg {String} extend A class name to use with the `Ext.application` call. The class must
+     * also extend {@link Ext.app.Application}.
      *
      *     Ext.define('MyApp.Application', {
      *         extend: 'Ext.app.Application',
@@ -111,23 +119,23 @@ Ext.define('Ext.app.Application', {
 
     /**
      * @cfg {String/String[]} controllers
-     * Names of {@link Ext.app.Controller controllers} that the app uses.  By default, 
-     * the framework will look for the controllers in the "controller" folder within the 
+     * Names of {@link Ext.app.Controller controllers} that the app uses.  By default,
+     * the framework will look for the controllers in the "controller" folder within the
      * {@link #appFolder}.  Controller classes should be named using the syntax of
-     * "{appName}.controller.{ClassName}" with additional sub-folders under the 
+     * "{appName}.controller.{ClassName}" with additional sub-folders under the
      * "controller" folder specified within the class name following "controller.".
-     * 
+     *
      *     // by default, the following controller class would be located at:
      *     // app/controller/Main.js
      *     controllers: '.Main' // or 'MyApp.controller.Main'
-     * 
+     *
      *     // while the following would be located at:
      *     // app/controller/customer/Main.js
      *     controllers: 'customer.Main' // or 'MyApp.controller.customer.Main'
-     * 
-     * **Note:** If the controller has a different namespace than that of the 
-     * application you will need to specify the full class name as well as define a path 
-     * in the {@link Ext.Loader#cfg-paths Loader's paths} config or 
+     *
+     * **Note:** If the controller has a different namespace than that of the
+     * application you will need to specify the full class name as well as define a path
+     * in the {@link Ext.Loader#cfg-paths Loader's paths} config or
      * {@link Ext.Loader#method-setPath setPath} method.
      */
 
@@ -136,7 +144,7 @@ Ext.define('Ext.app.Application', {
      * The scope to execute the {@link #launch} function in. Defaults to the Application instance.
      */
     scope: undefined,
-    
+
     /**
      * @cfg {String/String[]} [namespaces]
      *
@@ -169,14 +177,14 @@ Ext.define('Ext.app.Application', {
      * automatically.
      */
     namespaces: [],
-    
+
     /**
      * @cfg {Object} paths
      * Additional load paths to add to Ext.Loader.
      * See {@link Ext.Loader#paths} config for more details.
      */
     paths: null,
-    
+
     /**
      * @cfg {String} [appFolder="app"]
      * The path to the directory which contains all application's classes.
@@ -184,7 +192,6 @@ Ext.define('Ext.app.Application', {
      * in the {@link #name name} config.
      */
     // NOTE - this config has to be processed by Ext.application
-
 
     config: {
         /**
@@ -194,7 +201,7 @@ Ext.define('Ext.app.Application', {
          * is mandatory**.
          */
         name: '',
-       
+
         /**
          * @cfg {String} appProperty
          * The name of a property to be assigned to the main namespace to gain a reference to
@@ -236,7 +243,8 @@ Ext.define('Ext.app.Application', {
          * not a class from the framework.
          *
          * The main view value may be:
-         *  - string representing the full class name of the main view or the partial class name following "AppName.view." (provided your main view class follows that convention).
+         *  - string representing the full class name of the main view or the partial class name
+         * following "AppName.view." (provided your main view class follows that convention).
          *  - config object for the main view
          *  - main view class instance
          *
@@ -255,7 +263,7 @@ Ext.define('Ext.app.Application', {
          *         // mainView: { xtype: 'mainview' }
          *     });
          *
-         * **Note:** You may also call {@link #setMainView} at runtime if you require
+         * **Note:** You may also call {@link #method-setMainView} at runtime if you require
          * logic within the application's {@link #launch} method to be processed prior to
          * the creation of the main view.
          */
@@ -275,18 +283,25 @@ Ext.define('Ext.app.Application', {
          * The glyphFontFamily to use for this application.  Used as the default font-family
          * for all components that support a `glyph` config.
          */
-        glyphFontFamily:  null,
+        glyphFontFamily: null,
 
         // Docs will go in subclasses
-        quickTips: true
+        quickTips: true,
+
+        /**
+         * @cfg {Object} router
+         * A configuration object to apply onto the {@link Ext.route.Router Router}.
+         * @since 6.5.0
+         */
+        router: null
     },
-    
+
     onClassExtended: function(cls, data, hooks) {
         var Controller = Ext.app.Controller,
             proto = cls.prototype,
             requires = [],
-            onBeforeClassCreated, paths, namespace, ns;
-        
+            onBeforeClassCreated, namespace;
+
         // Ordinary inheritance does not work here so we collect
         // necessary data from current class data and its superclass
         namespace = data.name || cls.superclass.name;
@@ -302,10 +317,13 @@ Ext.define('Ext.app.Application', {
 
         if (data['paths processed']) {
             delete data['paths processed'];
-        } else {
-            Ext.app.setupPaths(namespace,
+        }
+        else {
+            Ext.app.setupPaths(
+                namespace,
                 ('appFolder' in data) ? data.appFolder : cls.superclass.appFolder,
-                data.paths);
+                data.paths
+            );
         }
 
         // Require all profiles
@@ -330,11 +348,12 @@ Ext.define('Ext.app.Application', {
                     data.__handleRequires.call(this, requires, Ext.bind(function() {
                         return onBeforeClassCreated.apply(this, args);
                     }, this));
+
                     return;
                 }
                 //</debug>
-                
-                Ext.require(requires, function () {
+
+                Ext.require(requires, function() {
                     return onBeforeClassCreated.apply(this, args);
                 });
             };
@@ -350,7 +369,7 @@ Ext.define('Ext.app.Application', {
     constructor: function(config) {
         var me = this;
 
-        Ext.app.route.Router.application = me;
+        Ext.route.Router.application = me;
 
         me.callParent([config]);
 
@@ -362,10 +381,8 @@ Ext.define('Ext.app.Application', {
 
         me.doInit(me);
 
-        me.initNamespace();
+        Ext.on('appupdate', me.onAppUpdate, me, { single: true });
 
-        Ext.on('appupdate', me.onAppUpdate, me, {single:true});
-        
         //<debug>
         Ext.Loader.setConfig({ enabled: true });
         //</debug>
@@ -377,12 +394,20 @@ Ext.define('Ext.app.Application', {
         return id || this.$className;
     },
 
+    updateRouter: function(cfg) {
+        if (cfg) {
+            Ext.route.Router.setConfig(cfg);
+        }
+    },
+
     /**
      * @method
      * @template
-     * Called automatically when an update to either the Application Cache or the Local Storage Cache is detected.
+     * Called automatically when an update to either the Application Cache or the Local Storage
+     * Cache is detected.
      * This is mainly used during production builds.
-     * @param {Object} [updateInfo] updateInfo Update information object contains properties for checking which cache triggered the update
+     * @param {Object} [updateInfo] updateInfo Update information object contains properties for
+     * checking which cache triggered the update
      */
     onAppUpdate: Ext.emptyFn,
 
@@ -412,12 +437,15 @@ Ext.define('Ext.app.Application', {
         me.finishInitControllers();
     },
 
-    initNamespace: function() {
-        var me = this,
-            appProperty = me.getAppProperty(),
-            ns;
+    doInit: function(app) {
+        this.initNamespace(app);
 
-        ns = Ext.namespace(me.getName());
+        this.callParent([app]);
+    },
+
+    initNamespace: function(me) {
+        var appProperty = me.getAppProperty(),
+            ns = Ext.namespace(me.getName());
 
         if (ns) {
             ns.getApplication = function() {
@@ -430,8 +458,8 @@ Ext.define('Ext.app.Application', {
                 }
                 //<debug>
                 else if (ns[appProperty] !== me) {
-                    Ext.log.warn('An existing reference is being overwritten for ' + name + '.' + appProperty +
-                        '. See the appProperty config.'
+                    Ext.log.warn('An existing reference is being overwritten for ' + name + '.' +
+                                 appProperty + '. See the appProperty config.'
                     );
                 }
                 //</debug>
@@ -461,13 +489,13 @@ Ext.define('Ext.app.Application', {
             }
         }
     },
-    
+
     finishInitControllers: function() {
         var me = this,
             controllers, i, l;
 
         controllers = me.controllers.getRange();
-        
+
         for (i = 0, l = controllers.length; i < l; i++) {
             controllers[i].finishInit(me);
         }
@@ -476,11 +504,12 @@ Ext.define('Ext.app.Application', {
     /**
      * @method
      * @template
-     * Called automatically when the page has completely loaded. This is an empty function that should be
-     * overridden by each application that needs to take action on page load.
+     * Called automatically when the page has completely loaded. This is an empty function that
+     * should be overridden by each application that needs to take action on page load.
      * @param {String} profile The detected application profile
-     * @return {Boolean} By default, the Application will dispatch to the configured startup controller and
-     * action immediately after running the launch function. Return false to prevent this behavior.
+     * @return {Boolean} By default, the Application will dispatch to the configured startup
+     * controller and action immediately after running the launch function. Return false
+     * to prevent this behavior.
      */
     launch: Ext.emptyFn,
 
@@ -505,7 +534,7 @@ Ext.define('Ext.app.Application', {
         me.fireEvent('launch', me);
 
         controllers = me.controllers.items;
-        cLen        = controllers.length;
+        cLen = controllers.length;
 
         for (c = 0; c < cLen; c++) {
             controller = controllers[c];
@@ -515,21 +544,26 @@ Ext.define('Ext.app.Application', {
         if (!History.ready) {
             History.init();
         }
+
         token = History.getToken();
+
         if (token || token === defaultToken) {
-            Ext.app.route.Router.onStateChange(token);
-        } else if (defaultToken) {
-            History.add(defaultToken);
+            Ext.route.Router.onStateChange(token);
+        }
+        else if (defaultToken) {
+            History.replace(defaultToken);
         }
 
-        // Microloader has detected an Application Cache or LocalStorage Cache update, inform everyone
-        // that may have added listeners late.
+        // Microloader has detected an Application Cache or LocalStorage Cache update, inform
+        // everyone that may have added listeners late.
         if (Ext.Microloader && Ext.Microloader.appUpdate && Ext.Microloader.appUpdate.updated) {
             Ext.Microloader.fireAppUpdate();
         }
 
         // After launch we may as well cleanup the namespace cache
-        Ext.defer(Ext.ClassManager.clearNamespaceCache, 2000, Ext.ClassManager);
+        if (!me.cnsTimer) {
+            me.cnsTimer = Ext.defer(Ext.ClassManager.clearNamespaceCache, 2000, Ext.ClassManager);
+        }
     },
 
     getModuleClassName: function(name, kind) {
@@ -547,7 +581,8 @@ Ext.define('Ext.app.Application', {
 
         if (mainView) {
             me.setMainView(mainView);
-        } else {
+        }
+        else {
             // since mainView is a lazy config we have to call the getter to initialize it
             me.getMainView();
         }
@@ -567,13 +602,13 @@ Ext.define('Ext.app.Application', {
      * @param {String} name The name of the controller. For a controller with the
      * full class name `MyApp.controller.Foo`, the name parameter should be `Foo`.
      * If the controller already exists, it will be returned.
-     * 
+     *
      * @return {Ext.app.Controller} controller
      */
     createController: function(name) {
         return this.getController(name);
     },
-    
+
     /**
      * Destroys a controller, any listeners are unbound.
      * @param {String/Ext.app.Controller} controller The controller
@@ -582,42 +617,46 @@ Ext.define('Ext.app.Application', {
         if (typeof controller === 'string') {
             controller = this.getController(controller, true);
         }
+
         Ext.destroy(controller);
     },
 
     /**
-     * Get an application's controller based on name or id.  Generally, the controller id will be the same as the name
-     * unless otherwise specified.
+     * Get an application's controller based on name or id.  Generally, the controller id will be
+     * the same as the name unless otherwise specified.
      * @param {String} name The name or id of the controller you are trying to retrieve
-     * @param {Boolean} preventCreate (private)
+     * @param {Boolean} [preventCreate] (private)
      */
-    getController: function(name, /* private */ preventCreate) {
+    getController: function(name, preventCreate) {
         var me = this,
             controllers = me.controllers,
             className, controller, len, i, c, all;
 
         // First check with the passed value if we have an explicit id
         controller = controllers.get(name);
-        
+
         // In a majority of cases, the controller id will be the same as the name.
         // However, when a controller is manually given an id, it will be keyed
         // in the collection that way. So if we don't find it, we attempt to loop
         // over the existing controllers and find it by classname
         if (!controller) {
             all = controllers.items;
+
             for (i = 0, len = all.length; i < len; ++i) {
                 c = all[i];
                 className = c.getModuleClassName();
+
                 if (className && className === name) {
                     controller = c;
+
                     break;
                 }
             }
         }
 
         if (!controller && !preventCreate) {
-            className  = me.getModuleClassName(name, 'controller');
-            
+            className = me.getModuleClassName(name, 'controller');
+
             controller = Ext.create(className, {
                 application: me,
                 moduleClassName: className
@@ -632,48 +671,49 @@ Ext.define('Ext.app.Application', {
 
         return controller;
     },
-    
+
     /**
      * Unregister a controller from the application.
-     * @private 
+     * @private
      * @param {Ext.app.Controller} controller The controller to unregister
      */
     unregister: function(controller) {
-        this.controllers.remove(controller);    
+        this.controllers.remove(controller);
     },
 
     getApplication: function() {
         return this;
     },
-    
+
     destroy: function(destroyRefs) {
         var me = this,
             controllers = me.controllers,
             ns = Ext.namespace(me.getName()),
             appProp = me.getAppProperty();
-        
+
+        Ext.undefer(me.cnsTimer);
         Ext.un('appupdate', me.onAppUpdate, me);
-         
+
         Ext.destroy(me.viewport);
-           
+
         if (controllers) {
             controllers.each(function(controller) {
                 controller.destroy(destroyRefs, true);
             });
         }
-        
+
         me.controllers = null;
         me.callParent([destroyRefs, true]);
-        
+
         // Clean up any app reference
         if (ns && ns[appProp] === me) {
             delete ns[appProp];
         }
 
-        if (Ext.app.route.Router.application === me) {
-            Ext.app.route.Router.application = null;
+        if (Ext.route.Router.application === me) {
+            Ext.route.Router.application = null;
         }
-        
+
         if (Ext.app.Application.instance === me) {
             Ext.app.Application.instance = null;
         }
@@ -695,4 +735,13 @@ Ext.define('Ext.app.Application', {
             return me.getModuleClassName(profile, "profile");
         });
     }
+}, function() {
+    /**
+     * @member Ext
+     * @method getApplication
+     * @return {Ext.app.Application}
+     */
+    Ext.getApplication = function() {
+        return Ext.app.Application.instance;
+    };
 });

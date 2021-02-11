@@ -23,15 +23,15 @@ Ext.define('Ext.menu.Manager', {
         var me = this;
 
         // Lazily create the mousedown listener on first menu show
-        me.onShow = function () {
+        me.onShow = function() {
             // This is a separate method to allow calling eagerly in unit tests
             me.registerGlobalListeners();
-            
+
             return me.onShow.apply(me, arguments); // do the real thing
         };
     },
-    
-    onGlobalScroll: function (scroller) {
+
+    onGlobalScroll: function(scroller) {
         var allMenus = this.visible,
             len = allMenus.length,
             i, menu,
@@ -42,36 +42,41 @@ Ext.define('Ext.menu.Manager', {
         if (len && scroller !== Ext.scroll.Scroller.viewport) {
             // Clone here, we may modify this collection while the loop is active
             allMenus = allMenus.slice();
+
             for (i = 0; i < len; ++i) {
                 menu = allMenus[i];
+
                 // Hide the menu if:
                 //      The menu does not own scrolling element
                 if (!menu.alignOnScroll && menu.hideOnScroll !== false && !menu.owns(scrollerEl)) {
                     menu.hide();
                 }
-             }
-         }
+            }
+        }
     },
 
     checkActiveMenus: function(e) {
         var allMenus = this.visible,
             len = allMenus.length,
             i, menu,
-            mousedownCmp = Ext.Component.fromElement(e.target);
+            mousedownCmp = Ext.Component.from(e);
 
         if (len) {
             // Clone here, we may modify this collection while the loop is active
             allMenus = allMenus.slice();
+
             for (i = 0; i < len; ++i) {
                 menu = allMenus[i];
+
                 // Hide the menu if:
                 //      The menu does not own the clicked upon element AND
                 //      The menu is not the child menu of a clicked upon MenuItem
-                if (!(menu.owns(e) || (mousedownCmp && mousedownCmp.isMenuItem && mousedownCmp.menu === menu))) {
+                // eslint-disable-next-line max-len
+                if (!(menu.owns(e) || (mousedownCmp && mousedownCmp.isMenuItem && mousedownCmp.getMenu() === menu))) {
                     menu.hide();
                 }
-             }
-         }
+            }
+        }
     },
 
     /**
@@ -107,36 +112,42 @@ Ext.define('Ext.menu.Manager', {
         if (len) {
             // Clone here, we may modify this collection while the loop is active
             allMenus = allMenus.slice();
+
             for (i = 0; i < len; i++) {
                 allMenus[i].hide();
                 result = true;
             }
         }
+
         return result;
     },
 
     /**
      * Returns a {@link Ext.menu.Menu} object
-     * @param {String/Object} menu The string menu id, an existing menu object reference, or a Menu config that will
-     * be used to generate and return a new Menu this.
+     * @param {String/Object} menu The string menu id, an existing menu object reference,
+     * or a Menu config that will be used to generate and return a new Menu this.
      * @param {Object} [config] A configuration to use when creating the menu.
      * @return {Ext.menu.Menu} The specified menu, or null if none are found
      */
     get: function(menu, config) {
         var result;
-        
+
         if (typeof menu === 'string') { // menu id
             result = Ext.getCmp(menu);
+
             if (result instanceof Ext.menu.Menu) {
                 menu = result;
             }
-        } else if (Ext.isArray(menu)) { // array of menu items
-            config = Ext.apply({items:menu}, config);
+        }
+        else if (Ext.isArray(menu)) { // array of menu items
+            config = Ext.apply({ items: menu }, config);
             menu = new Ext.menu.Menu(config);
-        } else if (!menu.isComponent) { // otherwise, must be a config
+        }
+        else if (!menu.isComponent) { // otherwise, must be a config
             config = Ext.apply({}, menu, config);
             menu = Ext.ComponentManager.create(config, 'menu');
         }
+
         return menu;
     },
 
@@ -144,7 +155,7 @@ Ext.define('Ext.menu.Manager', {
      * @private
      */
     registerCheckable: function(menuItem) {
-        var groups  = this.groups,
+        var groups = this.groups,
             groupId = menuItem.group;
 
         if (groupId) {
@@ -160,7 +171,7 @@ Ext.define('Ext.menu.Manager', {
      * @private
      */
     unregisterCheckable: function(menuItem) {
-        var groups  = this.groups,
+        var groups = this.groups,
             groupId = menuItem.group;
 
         if (groupId) {
@@ -169,23 +180,25 @@ Ext.define('Ext.menu.Manager', {
     },
 
     onCheckChange: function(menuItem, state) {
-        var groups  = this.groups,
+        var groups = this.groups,
             groupId = menuItem.group,
-            i       = 0,
+            i = 0,
             group, ln, curr;
 
         if (groupId && state) {
             group = groups[groupId];
             ln = group.length;
+
             for (; i < ln; i++) {
                 curr = group[i];
+
                 if (curr !== menuItem) {
                     curr.setChecked(false);
                 }
             }
         }
     },
-    
+
     /**
      * @private
      */

@@ -1,0 +1,12 @@
+@if $theme-name == 'theme-graphite' {
+    .ajax-cls {
+        padding: 10px;
+        background: #1b1b1b;
+    }
+} @else { 
+    .ajax-cls {
+        padding: 10px;
+        background: #f1f1f1;
+    }
+}
+

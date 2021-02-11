@@ -3,7 +3,7 @@
  */
 Ext.define('Ticket.model.Comment', {
     extend: 'Ticket.model.Base',
-    
+
     requires: [
         'Ticket.override.data.field.Date'
     ],

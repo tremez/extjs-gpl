@@ -1,34 +1,32 @@
 .#{$prefix}list {
     overflow: hidden;
 
-    .#{$prefix}list-inner {
+    .#{$prefix}list-body-el {
         width: 100% !important;
+        display: flex;
+        flex-direction: column;  // vbox
     }
 
-    .#{$prefix}empty-text {
-        text-align: center;
-        pointer-events: none;
-        @include st-box();
-        @include st-box-orient(vertical);
-        @include st-box-pack(center);
-    }
-
-    .#{$prefix}scrolldock {
-        position: absolute !important;
-        left: 0;
-        top: 0;
+    .#{$prefix}list-outer-ct {
+        flex: 1 1 auto;
+        position: relative;
         width: 100%;
+
+        // We need to contain the z-index values of inner items so that they do not
+        // overlop positioned items that reside outside the outer-ct (e.g., indexbar).
+        z-index: 0;
     }
 
-    &.#{$prefix}infinite {
-        .#{$prefix}listitem,
-        .#{$prefix}itemheader {
-            width: 100%;
-            position: absolute;
-            left: 0;
-            top: 0;
-        }
+    .#{$prefix}list-inner-ct {
+        // need this so that items w/width:100% size to this el's width
+        position: relative;
+        min-width: 100%;
     }
+}
+
+.#{$prefix}list-inner-ct.#{$prefix}infinite > * {
+    position: absolute;
+    width: 100%;
 }
 
 .#{$prefix}list.#{$prefix}inline .#{$prefix}listitem {

@@ -8,18 +8,18 @@
 Ext.define('Ext.app.domain.Store', {
     extend: 'Ext.app.EventDomain',
     singleton: true,
-    
+
     requires: [
         'Ext.data.AbstractStore'
     ],
-    
+
     type: 'store',
     prefix: 'store.',
-    idMatchRe: /^\#/,
-    
+    idMatchRe: /^#/,
+
     constructor: function() {
         var me = this;
-        
+
         me.callParent();
         me.monitor(Ext.data.AbstractStore);
     },
@@ -27,14 +27,17 @@ Ext.define('Ext.app.domain.Store', {
     match: function(target, selector) {
         var result = false,
             alias = target.alias;
-        
+
         if (selector === '*') {
             result = true;
-        } else if (this.idMatchRe.test(selector)) {
+        }
+        else if (this.idMatchRe.test(selector)) {
             result = target.getStoreId() === selector.substring(1);
-        } else if (alias) {
+        }
+        else if (alias) {
             result = Ext.Array.indexOf(alias, this.prefix + selector) > -1;
         }
+
         return result;
     }
 });

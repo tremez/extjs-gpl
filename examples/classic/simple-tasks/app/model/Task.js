@@ -1,6 +1,6 @@
 Ext.define('SimpleTasks.model.Task', {
     extend: 'Ext.data.Model',
-    requires:[
+    requires: [
         'Ext.data.proxy.LocalStorage',
         'Ext.data.proxy.Ajax'
     ],
@@ -14,22 +14,24 @@ Ext.define('SimpleTasks.model.Task', {
         { name: 'note' }
     ],
 
-    proxy: SimpleTasks.Settings.useLocalStorage ? {
-        type: 'localstorage',
-        id: 'SimpleTasks-Task'
-    } : {
-        type: 'ajax',
-        api: {
-            create: 'php/task/create.php',
-            read: 'php/task/read.php',
-            update: 'php/task/update.php',
-            destroy: 'php/task/delete.php'
-        },
-        reader: {
-            type: 'json',
-            rootProperty: 'tasks',
-            messageProperty: 'message'
+    proxy: SimpleTasks.Settings.useLocalStorage
+        ? {
+            type: 'localstorage',
+            id: 'SimpleTasks-Task'
         }
-    }
+        : {
+            type: 'ajax',
+            api: {
+                create: 'php/task/create.php',
+                read: 'php/task/read.php',
+                update: 'php/task/update.php',
+                destroy: 'php/task/delete.php'
+            },
+            reader: {
+                type: 'json',
+                rootProperty: 'tasks',
+                messageProperty: 'message'
+            }
+        }
 
 });

@@ -140,10 +140,10 @@ Ext.define("Ext.locale.gr.window.MessageBox", {
         cancel: "Áêýñùóç",
         yes: "Íáé",
         no: "¼÷é"
-    }    
+    }
 });
 
 // This is needed until we can refactor all of the locales into individual files
-Ext.define("Ext.locale.gr.Component", {	
+Ext.define("Ext.locale.gr.Component", {
     override: "Ext.Component"
 });

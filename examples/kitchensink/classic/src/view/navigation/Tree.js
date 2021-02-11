@@ -19,7 +19,7 @@ Ext.define('KitchenSink.view.navigation.Tree', {
     collapsible: true,
     enableColumnResize: false,
     enableColumnMove: false,
-    
+
     bufferedRenderer: !Ext.platformTags.test,
 
     tools: [{

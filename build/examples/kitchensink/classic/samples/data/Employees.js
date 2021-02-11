@@ -34,8 +34,8 @@ Ext.define('KitchenSink.data.Employees', {
 
     Ext.ux.ajax.SimManager.register({
         '/KitchenSink/Employees': {
-			type: 'json',
-			data: data
+            type: 'json',
+            data: data
         }
     });
 });

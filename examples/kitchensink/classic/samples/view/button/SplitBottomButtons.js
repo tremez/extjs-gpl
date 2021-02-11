@@ -27,6 +27,12 @@ Ext.define('KitchenSink.view.button.SplitBottomButtons', {
         },
         'neptune-touch': {
             width: 585
+        },
+        graphite: {
+            width: 680
+        },
+        'classic-material': {
+            width: 680
         }
     },
     //</example>
@@ -48,11 +54,11 @@ Ext.define('KitchenSink.view.button.SplitBottomButtons', {
         defaults: {
             arrowAlign: 'bottom',
             menu: [{
-                text:'Menu Item 1'
-            },{
-                text:'Menu Item 2'
-            },{
-                text:'Menu Item 3'
+                text: 'Menu Item 1'
+            }, {
+                text: 'Menu Item 2'
+            }, {
+                text: 'Menu Item 3'
             }]
         },
 
@@ -72,18 +78,21 @@ Ext.define('KitchenSink.view.button.SplitBottomButtons', {
             scale: 'large'
         }, {
             xtype: 'component',
-            html: 'Icon Only'
+            html: 'Icon Only (toggle)'
         }, {
             iconCls: 'button-home-small',
-            xtype: 'splitbutton'
+            xtype: 'splitbutton',
+            enableToggle: true
         }, {
             xtype: 'splitbutton',
             iconCls: 'button-home-medium',
-            scale: 'medium'
+            scale: 'medium',
+            enableToggle: true
         }, {
             xtype: 'splitbutton',
             iconCls: 'button-home-large',
-            scale: 'large'
+            scale: 'large',
+            enableToggle: true
         }, {
             xtype: 'component',
             html: 'Icon and Text (left)'

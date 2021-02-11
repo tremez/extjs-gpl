@@ -13,6 +13,21 @@ Ext.define('KitchenSink.view.binding.SliderWidget', {
     width: 400,
     bodyPadding: 10,
 
+    profiles: {
+        classic: {
+            numberfieldWidth: 100
+        },
+        neptune: {
+            numberfieldWidth: 100
+        },
+        graphite: {
+            numberfieldWidth: 100
+        },
+        'classic-material': {
+            numberfieldWidth: 150
+        }
+    },
+
     viewModel: {
         data: {
             red: 64,
@@ -39,27 +54,27 @@ Ext.define('KitchenSink.view.binding.SliderWidget', {
             minValue: 0
         },
         items: [
-            { xtype: 'numberfield', width: 100, bind: '{red}', margin: '0 10 0 0' },
+            { xtype: 'numberfield', width: '${numberfieldWidth}', bind: '{red}', margin: '0 10 0 0' },
             { xtype: 'sliderwidget', flex: 1, bind: '{red}', publishOnComplete: false }
         ]
-    },{
+    }, {
         fieldLabel: 'Green',
         defaults: {
             maxValue: 255,
             minValue: 0
         },
         items: [
-            { xtype: 'numberfield', width: 100, bind: '{green}', margin: '0 10 0 0' },
+            { xtype: 'numberfield', width: '${numberfieldWidth}', bind: '{green}', margin: '0 10 0 0' },
             { xtype: 'sliderwidget', flex: 1, bind: '{green}', publishOnComplete: false }
         ]
-    },{
+    }, {
         fieldLabel: 'Blue',
         defaults: {
             maxValue: 255,
             minValue: 0
         },
         items: [
-            { xtype: 'numberfield', width: 100, bind: '{blue}', margin: '0 10 0 0' },
+            { xtype: 'numberfield', width: '${numberfieldWidth}', bind: '{blue}', margin: '0 10 0 0' },
             { xtype: 'sliderwidget', flex: 1, bind: '{blue}', publishOnComplete: false }
         ]
     }, {

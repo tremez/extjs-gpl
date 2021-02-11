@@ -13,14 +13,14 @@
  * created and inserted into the Toolbar. Use this for any logic that needs to be run after
  * the item has been created.
  */
- Ext.define('Ext.ux.ToolbarDroppable', {
+Ext.define('Ext.ux.ToolbarDroppable', {
 
     /**
      * Creates new ToolbarDroppable.
      * @param {Object} config Config options.
      */
     constructor: function(config) {
-      Ext.apply(this, config);
+        Ext.apply(this, config);
     },
 
     /**
@@ -28,17 +28,17 @@
      * @param {Ext.toolbar.Toolbar} toolbar The toolbar instance
      */
     init: function(toolbar) {
-      /**
+        /**
        * @property toolbar
        * @type Ext.toolbar.Toolbar
        * The toolbar instance that this plugin is tied to
        */
-      this.toolbar = toolbar;
+        this.toolbar = toolbar;
 
-      this.toolbar.on({
-          scope : this,
-          render: this.createDropTarget
-      });
+        this.toolbar.on({
+            scope: this,
+            render: this.createDropTarget
+        });
     },
 
     /**
@@ -51,8 +51,8 @@
          * The drop target attached to the toolbar instance
          */
         this.dropTarget = Ext.create('Ext.dd.DropTarget', this.toolbar.getEl(), {
-            notifyOver: Ext.Function.bind(this.notifyOver, this),
-            notifyDrop: Ext.Function.bind(this.notifyDrop, this)
+            notifyOver: this.notifyOver.bind(this),
+            notifyDrop: this.notifyDrop.bind(this)
         });
     },
 
@@ -78,21 +78,23 @@
             xHover = e.getXY()[0],
             index = 0,
             el, xTotal, width, midpoint;
- 
+
         for (; index < count; index++) {
             el = items[index].getEl();
             xTotal = el.getXY()[0];
             width = el.getWidth();
             midpoint = xTotal + width / 2;
- 
+
             if (xHover < midpoint) {
-                entryIndex = index; 
+                entryIndex = index;
                 break;
-            } else {
+            }
+            else {
                 entryIndex = index + 1;
             }
-       }
-       return entryIndex;
+        }
+
+        return entryIndex;
     },
 
     /**
@@ -110,19 +112,22 @@
      * @return {String} The CSS class to add
      */
     notifyOver: function(dragSource, event, data) {
-        return this.canDrop.apply(this, arguments) ? this.dropTarget.dropAllowed : this.dropTarget.dropNotAllowed;
+        return this.canDrop.apply(this, arguments)
+            ? this.dropTarget.dropAllowed
+            : this.dropTarget.dropNotAllowed;
     },
 
     /**
-     * Called when the drop has been made. Creates the new toolbar item, places it at the correct location
-     * and calls the afterLayout callback.
+     * Called when the drop has been made. Creates the new toolbar item, places it
+     * at the correct location and calls the afterLayout callback.
      */
     notifyDrop: function(dragSource, event, data) {
         var canAdd = this.canDrop(dragSource, event, data),
-            tbar   = this.toolbar;
+            tbar = this.toolbar,
+            entryIndex;
 
         if (canAdd) {
-            var entryIndex = this.calculateEntryIndex(event);
+            entryIndex = this.calculateEntryIndex(event);
 
             tbar.insert(entryIndex, this.createItem(data));
 
@@ -133,7 +138,8 @@
     },
 
     /**
-     * Creates the new toolbar item based on drop data. This method must be implemented by the plugin instance
+     * Creates the new toolbar item based on drop data. This method must be implemented
+     * by the plugin instance
      * @param {Object} data Arbitrary data from the drop
      * @return {Mixed} An item that can be added to a toolbar
      */
@@ -145,7 +151,8 @@
 
     /**
      * @method
-     * Called after a new button has been created and added to the toolbar. Add any required cleanup logic here
+     * Called after a new button has been created and added to the toolbar. Add any required
+     * cleanup logic here
      */
     afterLayout: Ext.emptyFn
 });

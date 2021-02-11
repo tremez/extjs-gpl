@@ -259,10 +259,10 @@ Ext.define("Ext.locale.el_GR.window.MessageBox", {
         cancel: "Άκυρο",
         yes: "Ναι",
         no: "Όχι"
-    }    
+    }
 });
 
 // This is needed until we can refactor all of the locales into individual files
-Ext.define("Ext.locale.el_GR.Component", {	
+Ext.define("Ext.locale.el_GR.Component", {
     override: "Ext.Component"
 });

@@ -19,7 +19,7 @@ $support-for-original-webkit-gradients: false;
  * @param {Color} $bg-color
  * The base color of the gradient.
  *
- * @param {String/List} [$type=matte]
+ * @param {String/List} [$type=$default-gradient]
  * The style of the gradient, one of five pre-defined options: matte, bevel, glossy, recessed, or linear:
  *
  *     @include background-gradient(red, 'glossy');
@@ -31,9 +31,15 @@ $support-for-original-webkit-gradients: false;
  * Values 'flat' and 'none' will result in no gradient, just flat background-color
  *
  * @param {String} $direction
+ * @param {Number} [$contrast=1]
  * The direction of the gradient.
  */
-@mixin background-gradient($bg-color, $type: $default-gradient, $direction: top, $contrast: 1) {
+@mixin background-gradient(
+    $bg-color,
+    $type: $default-gradient,
+    $direction: top,
+    $contrast: 1
+) {
     $flat: $type == null or $type == none or $type == flat;
 
     @if $flat or ($bg-color == transparent) {

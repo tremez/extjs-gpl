@@ -1,8 +1,8 @@
 /**
  * @class Ext.sparkline.TriState
  *
- * Plots bars based upon "win"/"draw" or "lose" status of the input {@link #values} array. Positive values mean
- * a win, zero a draw, and negative a lose. 
+ * Plots bars based upon "win"/"draw" or "lose" status of the input {@link #values} array.
+ * Positive values mean a win, zero a draw, and negative a lose. 
  *
  * See {@link Ext.sparkline.Base the base class} for a simple example.
  */
@@ -17,32 +17,38 @@ Ext.define('Ext.sparkline.TriState', {
     config: {
 
         /**
-         * @cfg {Number} [barWidth=4] The pixel width of each bar.
+         * @cfg {Number} barWidth
+         * The pixel width of each bar.
          */
         barWidth: 4,
-        
+
         /**
-         * @cfg {Number} [barSpacing=1] The pixel spacing between each bar.
+         * @cfg {Number} barSpacing
+         * The pixel spacing between each bar.
          */
         barSpacing: 1,
-        
+
         /**
-         * @cfg {String} [posBarColor=#6f6] The color for positive value bars.
+         * @cfg {String} posBarColor
+         * The color for positive value bars.
          */
         posBarColor: '#6f6',
-        
+
         /**
-         * @cfg {String} [negBarColor=#f44] The color for negative value bars.
+         * @cfg {String} negBarColor
+         * The color for negative value bars.
          */
         negBarColor: '#f44',
-        
+
         /**
-         * @cfg {String} [zeroBarColor=#999] The color for zero value bars.
+         * @cfg {String} zeroBarColor
+         * The color for zero value bars.
          */
         zeroBarColor: '#999',
-        
+
         /**
-         * @cfg {Object} [colorMap] An object that uses range specifiers as keys to
+         * @cfg {Object} colorMap
+         * An object that uses range specifiers as keys to
          * indicate bar color values for a range of values. A range specifier is
          * specified in the form `[number]:[number]`, which indicates start and end range.
          * Omitting either means an open ended range.
@@ -64,15 +70,19 @@ Ext.define('Ext.sparkline.TriState', {
     tipTpl: ['&#9679; {value:this.states}', {
         states: function(v) {
             var value = Number(v);
+
             if (value === -1) {
                 return 'Loss';
             }
+
             if (value === 0) {
                 return 'Draw';
             }
+
             if (value === 1) {
                 return 'Win';
             }
+
             return v;
         }
     }],
@@ -83,14 +93,18 @@ Ext.define('Ext.sparkline.TriState', {
         if (Ext.isArray(colorMap)) {
             me.colorMapByIndex = colorMap;
             me.colorMapByValue = null;
-        } else {
+        }
+        else {
             me.colorMapByIndex = null;
             me.colorMapByValue = colorMap;
+
             if (me.colorMapByValue && me.colorMapByValue.get == null) {
                 me.colorMapByValue = new Ext.sparkline.RangeMap(colorMap);
             }
         }
-        me.applyConfigChange();
+
+        me.updateConfigChange();
+
         return colorMap;
     },
 
@@ -98,7 +112,8 @@ Ext.define('Ext.sparkline.TriState', {
     applyValues: function(newValues) {
         newValues = Ext.Array.map(Ext.Array.from(newValues), Number);
         this.disabled = !(newValues && newValues.length);
-        this.applyConfigChange();
+        this.updateConfigChange();
+
         return newValues;
     },
 
@@ -109,14 +124,15 @@ Ext.define('Ext.sparkline.TriState', {
     getBarWidth: function() {
         var values = this.values;
 
-        return this._barWidth || (this.getWidth() - (values.length - 1) * this.getBarSpacing()) / values.length;
+        return this._barWidth ||
+               (this.getWidth() - (values.length - 1) * this.getBarSpacing()) / values.length;
     },
 
-    getRegion: function (x, y) {
+    getRegion: function(x, y) {
         return Math.floor(x / this.totalBarWidth);
     },
 
-    getRegionFields: function (region) {
+    getRegionFields: function(region) {
         return {
             isNull: this.values[region] == null,
             value: this.values[region],
@@ -125,7 +141,7 @@ Ext.define('Ext.sparkline.TriState', {
         };
     },
 
-    calcColor: function (value, valuenum) {
+    calcColor: function(value, valuenum) {
         var me = this,
             values = me.values,
             colorMapByIndex = me.colorMapByIndex,
@@ -134,19 +150,24 @@ Ext.define('Ext.sparkline.TriState', {
 
         if (colorMapByValue && (newColor = colorMapByValue.get(value))) {
             color = newColor;
-        } else if (colorMapByIndex && colorMapByIndex.length > valuenum) {
+        }
+        else if (colorMapByIndex && colorMapByIndex.length > valuenum) {
             color = colorMapByIndex[valuenum];
-        } else if (values[valuenum] < 0) {
+        }
+        else if (values[valuenum] < 0) {
             color = me.getNegBarColor();
-        } else if (values[valuenum] > 0) {
+        }
+        else if (values[valuenum] > 0) {
             color = me.getPosBarColor();
-        } else {
+        }
+        else {
             color = me.getZeroBarColor();
         }
+
         return color;
     },
 
-    renderRegion: function (valuenum, highlight) {
+    renderRegion: function(valuenum, highlight) {
         var me = this,
             values = me.values,
             canvas = me.canvas,
@@ -156,23 +177,30 @@ Ext.define('Ext.sparkline.TriState', {
         halfHeight = Math.round(canvasHeight / 2);
 
         x = valuenum * me.totalBarWidth;
+
         if (values[valuenum] < 0) {
             y = halfHeight;
             height = halfHeight - 1;
-        } else if (values[valuenum] > 0) {
+        }
+        else if (values[valuenum] > 0) {
             y = 0;
             height = halfHeight - 1;
-        } else {
+        }
+        else {
             y = halfHeight - 1;
             height = 2;
         }
+
         color = me.calcColor(values[valuenum], valuenum);
+
         if (color == null) {
             return;
         }
+
         if (highlight) {
             color = me.calcHighlightColor(color);
         }
+
         canvas.drawRect(x, y, me.getBarWidth() - 1, height - 1, color, color).append();
     }
 });

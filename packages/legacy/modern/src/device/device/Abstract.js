@@ -41,7 +41,7 @@ Ext.define('Ext.device.device.Abstract', {
      * @param {String} scheme.url The URL that was opened, if this application was opened via another application. Example: `sencha:`
      * @param {String} scheme.sourceApplication The source application that opened this application. Example: `com.apple.safari`.
      */
-    
+
     /**
      * @property {String} name
      * Returns the name of the current device. If the current device does not have a name (for example, in a browser), it will
@@ -73,7 +73,7 @@ Ext.define('Ext.device.device.Abstract', {
      * 
      */
     scheme: false,
-    
+
     /**
      * Opens a specified URL. The URL can contain a custom URL Scheme for another app or service:
      *

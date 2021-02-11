@@ -11,10 +11,10 @@ Ext.define('Ext.app.bind.Parser', {
 
     infix: {
         ':': {
-            priority: 70,  // bind tighter than multiplication
+            priority: 70, // bind tighter than multiplication
 
             //<debug>
-            dump: function () {
+            dump: function() {
                 var me = this,
                     ret = {
                         at: me.at,
@@ -34,7 +34,7 @@ Ext.define('Ext.app.bind.Parser', {
             },
             //</debug>
 
-            led: function (left) {
+            led: function(left) {
                 // We parse a sequence of ":" separated formatter expressions (like a
                 // traditional "," operator) and gather the sequence in our "fmt" array
                 var me = this;
@@ -46,10 +46,11 @@ Ext.define('Ext.app.bind.Parser', {
                 return me;
             }
         },
+
         '?': {
             priority: 20,
 
-            led: function(left){
+            led: function(left) {
                 var me = this,
                     parser = me.parser,
                     symbol = parser.symbols[':'],
@@ -72,26 +73,19 @@ Ext.define('Ext.app.bind.Parser', {
 
                 return me;
             }
-        },
-        '===':  40,
-        '!==':  40,
-        '==':   40,
-        '!=':   40,
-        '<':    40,
-        '<=':   40,
-        '>':    40,
-        '>=':   40
+        }
     },
 
     symbols: {
         '(': {
-            nud: function () {
+            nud: function() {
                 // Handles parenthesized expressions
                 var parser = this.parser,
                     symbol = parser.symbols[':'],
                     ret, temp;
 
-                // temporarily set priority of `:` symbol to 70 to correctly extract formatters inside parans
+                // temporarily set priority of `:` symbol to 70 to correctly extract formatters 
+                // inside parens
                 temp = symbol.priority;
                 symbol.priority = 70;
                 ret = parser.parseExpression();
@@ -99,6 +93,7 @@ Ext.define('Ext.app.bind.Parser', {
                 parser.advance(")");
                 // restore priority of `:`
                 symbol.priority = temp;
+
                 return ret;
             }
 
@@ -111,24 +106,24 @@ Ext.define('Ext.app.bind.Parser', {
 
     tokenizer: {
         operators: {
-            '@':    'at',
-            '?':    'qmark',
-            '===':  'feq',
-            '!==':  'fneq',
-            '==':   'eq',
-            '!=':   'neq',
-            '<':    'lt',
-            '<=':   'lte',
-            '>':    'gt',
-            '>=':   'gte',
-            '&&':   'and',
-            '||':   'or'
+            '@': 'at',
+            '?': 'qmark',
+            '===': 'feq',
+            '!==': 'fneq',
+            '==': 'eq',
+            '!=': 'neq',
+            '<': 'lt',
+            '<=': 'lte',
+            '>': 'gt',
+            '>=': 'gte',
+            '&&': 'and',
+            '||': 'or'
         }
     },
 
     /**
-     * Parses the expression from the current position and compiles it as a function. The expression tokens are
-     * stored in the provided arguments.
+     * Parses the expression from the current position and compiles it as a function.
+     * The expression tokens are stored in the provided arguments.
      *
      * Called by Ext.app.bind.Template.
      *
@@ -136,7 +131,7 @@ Ext.define('Ext.app.bind.Parser', {
      * @param {Object} tokensMaps
      * @return {Function}
      */
-    compileExpression: function (tokens, tokensMaps) {
+    compileExpression: function(tokens, tokensMaps) {
         var me = this,
             debug, fn;
 
@@ -145,8 +140,10 @@ Ext.define('Ext.app.bind.Parser', {
 
         //<debug>
         debug = me.token.value === '@' && me.tokenizer.peek();
+
         if (debug) {
             debug = debug.value === 'debugger';
+
             if (debug) {
                 me.advance();
                 me.advance();
@@ -168,24 +165,26 @@ Ext.define('Ext.app.bind.Parser', {
      *
      * @return {Function}
      */
-    compileFormat: function(){
-        var fn;
+    compileFormat: function() {
+        var me = this,
+            fn;
 
         //<debug>
         try {
         //</debug>
-            fn = this.parseSlot({
+            fn = me.parseSlot({
                 arity: 'formatter',
-                fmt: this.parseFmt(),
+                fmt: me.parseFmt(),
                 operand: {
                     arity: 'ident',
                     value: 'dummy'
                 }
             });
-            this.expect('(end)');
+            me.expect('(end)');
         //<debug>
-        } catch (e) {
-            Ext.raise('Invalid format expression: "' + this.tokenizer.text + '"');
+        }
+        catch (e) {
+            Ext.raise('Invalid format expression: "' + me.tokenizer.text + '"');
         }
         //</debug>
 
@@ -197,14 +196,14 @@ Ext.define('Ext.app.bind.Parser', {
         // 2x-3x faster to call it than using eval), but Firefox chokes on it badly.
         // IE and Opera are also fine with the "new Function" technique.
         useEval: Ext.isGecko,
-        escapeRe: /("|'|\\)/g,
+        escapeRe: /(["'\\])/g,
 
         /**
          * Parses a series of ":" delimited format expressions.
          * @return {Ext.parse.Symbol[]}
          * @private
          */
-        parseFmt: function () {
+        parseFmt: function() {
             // We parse a sequence of ":" separated formatter expressions (like a
             // traditional "," operator)
             var me = this,
@@ -221,7 +220,8 @@ Ext.define('Ext.app.bind.Parser', {
 
                 if (expr.isIdent || expr.isInvoke) {
                     fmt.push(expr);
-                } else {
+                }
+                else {
                     me.syntaxError(expr.at, 'Expected formatter name');
                 }
             } while (me.token.id === ':');
@@ -237,7 +237,7 @@ Ext.define('Ext.app.bind.Parser', {
          * @return {Function}
          * @private
          */
-        parseSlot: function (expr, debug) {
+        parseSlot: function(expr, debug) {
             var me = this,
                 defs = [],
                 body = [],
@@ -256,10 +256,11 @@ Ext.define('Ext.app.bind.Parser', {
 
             if (tokens.length) {
                 for (i = 0; i < length; i++) {
-                    code += 'v' + i + ((i == length - 1) ? ';' : ',');
+                    code += 'v' + i + ((i === length - 1) ? ';' : ',');
                     temp += 'v' + i + ' = a[' + i + ']; ';
                 }
-            } else {
+            }
+            else {
                 code += 'v0;';
                 temp += 'v0 = a[0];';
             }
@@ -267,6 +268,7 @@ Ext.define('Ext.app.bind.Parser', {
             defs = Ext.Array.insert(defs, 0, [code]);
             body = Ext.Array.insert(body, 0, [temp]);
             body = body.join('\n');
+
             //<debug>
             if (debug) {
                 body = 'debugger;\n' + body;
@@ -295,7 +297,7 @@ Ext.define('Ext.app.bind.Parser', {
          * @return {String}
          * @private
          */
-        compile: function (expr) {
+        compile: function(expr) {
             var me = this,
                 v;
 
@@ -308,7 +310,9 @@ Ext.define('Ext.app.bind.Parser', {
                     v = expr.value;
 
                     // strings need to be escaped before adding them to formula
-                    return (typeof v === 'string') ? '"' + String(v).replace(me.escapeRe, '\\$1') + '"' : v;
+                    return (typeof v === 'string')
+                        ? '"' + String(v).replace(me.escapeRe, '\\$1') + '"'
+                        : v;
 
                 case 'unary':
                     return me.compileUnary(expr);
@@ -334,19 +338,22 @@ Ext.define('Ext.app.bind.Parser', {
          * @return {String}
          * @private
          */
-        compileUnary: function (expr) {
+        compileUnary: function(expr) {
             var v = expr.value,
                 op = expr.operand;
 
             if (v === '!' || v === '-' || v === '+') {
                 return v + '(' + this.compile(op) + ')';
-            } else if (v === '@') {
+            }
+            else if (v === '@') {
                 // @ should be used to prefix global identifiers and nothing else
-                if(!op.isIdent){
+                if (!op.isIdent) {
                     return this.syntaxError(expr.at, 'Compile error! Unexpected symbol');
                 }
+
                 return op.value;
             }
+
             return '';
         },
 
@@ -357,8 +364,9 @@ Ext.define('Ext.app.bind.Parser', {
          * @return {String}
          * @private
          */
-        compileBinary: function (expr) {
-            return '(' + this.compile(expr.lhs) + ' ' + expr.value + ' ' + this.compile(expr.rhs) + ')';
+        compileBinary: function(expr) {
+            return '(' + this.compile(expr.lhs) + ' ' + expr.value + ' ' + this.compile(expr.rhs) +
+                   ')';
         },
 
         /**
@@ -368,8 +376,9 @@ Ext.define('Ext.app.bind.Parser', {
          * @return {String}
          * @private
          */
-        compileTernary: function (expr) {
-            return '(' + this.compile(expr.condition) + ' ? ' + this.compile(expr.tv) + ' : ' + this.compile(expr.fv) + ')';
+        compileTernary: function(expr) {
+            return '(' + this.compile(expr.condition) + ' ? ' + this.compile(expr.tv) + ' : ' +
+                   this.compile(expr.fv) + ')';
         },
 
         /**
@@ -379,16 +388,18 @@ Ext.define('Ext.app.bind.Parser', {
          * @return {String}
          * @private
          */
-        compileFormatter: function (expr) {
+        compileFormatter: function(expr) {
             var me = this,
                 fmt = expr.fmt,
                 length = fmt.length,
                 body = [
                     'var ret;'
-                ], i;
+                ],
+                i;
 
             if (fmt.length) {
                 body.push('ret = ' + me.compileFormatFn(fmt[0], me.compile(expr.operand)) + ';');
+
                 for (i = 1; i < length; i++) {
                     body.push('ret = ' + me.compileFormatFn(fmt[i], 'ret') + ';');
                 }
@@ -407,7 +418,7 @@ Ext.define('Ext.app.bind.Parser', {
          * @return {String}
          * @private
          */
-        compileFormatFn: function (expr, value) {
+        compileFormatFn: function(expr, value) {
             var fmt,
                 args = [],
                 code = '',
@@ -416,22 +427,27 @@ Ext.define('Ext.app.bind.Parser', {
             if (expr.isIdent) {
                 // the function has no arguments
                 fmt = expr.value;
-            } else if (expr.isInvoke) {
+            }
+            else if (expr.isInvoke) {
                 fmt = expr.operand.value;
                 args = expr.args;
             }
 
             if (fmt.substring(0, 5) === 'this.') {
                 fmt = 'me.' + fmt.substring(5);
-            } else {
+            }
+            else {
                 if (!(fmt in Ext.util.Format)) {
-                    return this.syntaxError(expr.at, 'Compile error! Invalid format specified "' + fmt + '"');
+                    return this.syntaxError(expr.at, 'Compile error! Invalid format specified "' +
+                                            fmt + '"');
                 }
+
                 fmt = 'fm.' + fmt;
             }
 
             code += value;
             length = args.length;
+
             for (i = 0; i < length; i++) {
                 code += ', ' + this.compile(args[i]);
             }
@@ -445,7 +461,7 @@ Ext.define('Ext.app.bind.Parser', {
          * @return {string} Name of the function
          * @private
          */
-        addFn: function (body) {
+        addFn: function(body) {
             var defs = this.definitions,
                 name = 'f' + defs.length;
 
@@ -454,6 +470,7 @@ Ext.define('Ext.app.bind.Parser', {
                 body,
                 '}'
             );
+
             return name + '()';
         },
 
@@ -463,8 +480,9 @@ Ext.define('Ext.app.bind.Parser', {
          * @return {Function}
          * @private
          */
-        evalFn: function ($) {
+        evalFn: function($) {
             eval($);
+
             return $;
         },
 
@@ -474,7 +492,7 @@ Ext.define('Ext.app.bind.Parser', {
          * @return {string} Name of the variable assigned for this token in the compiled function
          * @private
          */
-        addToken: function (token) {
+        addToken: function(token) {
             var tokensMap = this.tokensMap,
                 tokens = this.tokens,
                 pos = 0;
@@ -483,7 +501,8 @@ Ext.define('Ext.app.bind.Parser', {
             if (tokensMap && tokens) {
                 if (token in tokensMap) {
                     pos = tokensMap[token];
-                } else {
+                }
+                else {
                     tokensMap[token] = pos = tokens.length;
                     tokens.push(token);
                 }
@@ -492,5 +511,4 @@ Ext.define('Ext.app.bind.Parser', {
             return 'v' + pos;
         }
     }
-
 });

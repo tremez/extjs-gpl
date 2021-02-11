@@ -1,7 +1,8 @@
 /**
- * A specialized {@link Ext.util.KeyNav} implementation for navigating a {@link Ext.view.BoundList} using
- * the keyboard. The up, down, pageup, pagedown, home, and end keys move the active highlight
- * through the list. The enter key invokes the selection model's select action using the highlighted item.
+ * A specialized {@link Ext.util.KeyNav} implementation for navigating a {@link Ext.view.BoundList}
+ * using the keyboard. The up, down, pageup, pagedown, home, and end keys move the active highlight
+ * through the list. The enter key invokes the selection model's select action using the highlighted
+ * item.
  */
 Ext.define('Ext.view.BoundListKeyNav', {
     extend: 'Ext.view.NavigationModel',
@@ -12,7 +13,7 @@ Ext.define('Ext.view.BoundListKeyNav', {
      * @cfg {Ext.view.BoundList} boundList (required)
      * The {@link Ext.view.BoundList} instance for which key navigation will be managed.
      */
-    
+
     navigateOnSpace: true,
 
     initKeyNav: function(view) {
@@ -38,7 +39,10 @@ Ext.define('Ext.view.BoundListKeyNav', {
         }
 
         if (!field.rendered) {
-            field.on('render', Ext.Function.bind(me.initKeyNav, me, [view], 0), me, {single: true});
+            field.on(
+                'render', Ext.Function.bind(me.initKeyNav, me, [view], 0), me, { single: true }
+            );
+
             return;
         }
 
@@ -84,6 +88,7 @@ Ext.define('Ext.view.BoundListKeyNav', {
             if (Ext.fly(event.target).isInputField()) {
                 event.target = event.target.parentNode;
             }
+
             return event;
         }
         // Falsy return stops the KeyMap processing the event
@@ -101,7 +106,7 @@ Ext.define('Ext.view.BoundListKeyNav', {
 
     onItemMouseDown: function(view, record, item, index, event) {
         this.callParent([view, record, item, index, event]);
-        
+
         if (event.pointerType === 'mouse') {
             // Stop the mousedown from blurring the input field
             // We can't do this for touch events otherwise scrolling
@@ -116,7 +121,7 @@ Ext.define('Ext.view.BoundListKeyNav', {
             allItems = boundList.all,
             oldItem = boundList.highlightedItem,
             oldItemIdx = oldItem ? boundList.indexOf(oldItem) : -1,
-            newItemIdx = oldItemIdx > 0 ? oldItemIdx - 1 : allItems.getCount() - 1; //wraps around
+            newItemIdx = oldItemIdx > 0 ? oldItemIdx - 1 : allItems.getCount() - 1; // wraps around
 
         me.setPosition(newItemIdx);
 
@@ -130,7 +135,7 @@ Ext.define('Ext.view.BoundListKeyNav', {
             allItems = boundList.all,
             oldItem = boundList.highlightedItem,
             oldItemIdx = oldItem ? boundList.indexOf(oldItem) : -1,
-            newItemIdx = oldItemIdx < allItems.getCount() - 1 ? oldItemIdx + 1 : 0; //wraps around
+            newItemIdx = oldItemIdx < allItems.getCount() - 1 ? oldItemIdx + 1 : 0; // wraps around
 
         me.setPosition(newItemIdx);
 
@@ -150,7 +155,7 @@ Ext.define('Ext.view.BoundListKeyNav', {
             if (field.selectOnTab) {
                 this.selectHighlighted(e);
             }
-            
+
             if (field.collapse) {
                 field.collapse();
             }
@@ -180,9 +185,8 @@ Ext.define('Ext.view.BoundListKeyNav', {
         // Stop propagation of the ENTER keydown event so that any Editor which owns the field
         // does not completeEdit, but we also need to still fire the specialkey event for ENTER, 
         // so lets add fromBoundList to eOpts, and this will be handled by CellEditor#onSpecialKey.
-        field.fireEvent('specialkey', field, e, {
-            fromBoundList: true
-        });
+        field.fireEvent('specialkey', field, e, { fromBoundList: true });
+
         return false;
     },
 
@@ -190,6 +194,7 @@ Ext.define('Ext.view.BoundListKeyNav', {
         if (this.navigateOnSpace) {
             this.callParent(arguments);
         }
+
         // Allow to propagate to field
         return true;
     },
@@ -202,7 +207,7 @@ Ext.define('Ext.view.BoundListKeyNav', {
 
     /**
      * Highlights the item at the given index.
-     * @param {Number} index
+     * @param {Number} item
      */
     focusItem: function(item) {
         var me = this,
@@ -211,10 +216,11 @@ Ext.define('Ext.view.BoundListKeyNav', {
         if (typeof item === 'number') {
             item = boundList.all.item(item);
         }
+
         if (item) {
             item = item.dom;
             boundList.highlightItem(item);
-            boundList.getScrollable().scrollIntoView(item, false);
+            boundList.getScrollable().ensureVisible(item, { x: false });
         }
     },
 
@@ -232,17 +238,19 @@ Ext.define('Ext.view.BoundListKeyNav', {
         // If all options have been filtered out, then do NOT add most recently highlighted.
         if (boundList.all.getCount()) {
             highlightedRec = me.getRecord();
-            if (highlightedRec) {
 
+            if (highlightedRec) {
                 // Select if not already selected.
                 // If already selected, selecting with no CTRL flag will deselect the record.
                 if (e.getKey() === e.ENTER || !selModel.isSelected(highlightedRec)) {
                     selModel.selectWithEvent(highlightedRec, e);
 
-                    // If the result of that selection is that the record is removed or filtered out,
-                    // jump to the next one.
+                    // If the result of that selection is that the record is removed
+                    // or filtered out, jump to the next one.
                     if (!boundList.store.data.contains(highlightedRec)) {
-                        me.setPosition(Math.min(highlightedPosition, boundList.store.getCount() - 1));
+                        me.setPosition(
+                            Math.min(highlightedPosition, boundList.store.getCount() - 1)
+                        );
                     }
                 }
             }

@@ -1,13 +1,14 @@
-describe("Ext.util.LocalStorage", function() {
+topSuite("Ext.util.LocalStorage", function() {
     var store;
 
-    function createStore () {
+    function createStore() {
         return new Ext.util.LocalStorage({ id: 'one', flushDelay: 0 });
     }
 
-    beforeEach(function () {
+    beforeEach(function() {
         store = createStore();
     });
+
     afterEach(function() {
         store.clear();
         store.destroy();
@@ -17,6 +18,7 @@ describe("Ext.util.LocalStorage", function() {
     describe("initialization", function() {
         it("should start empty", function() {
             var keys = store.getKeys();
+
             expect(keys.length).toBe(0);
         });
 
@@ -28,6 +30,7 @@ describe("Ext.util.LocalStorage", function() {
             store = createStore();
 
             var keys = store.getKeys();
+
             expect(keys.length).toBe(1);
             expect(keys[0]).toBe('foo');
         });
@@ -36,13 +39,14 @@ describe("Ext.util.LocalStorage", function() {
     describe("isolation", function() {
         var store2;
 
-        function createStore2 () {
+        function createStore2() {
             return new Ext.util.LocalStorage({ id: 'two', flushDelay: 0 });
         }
 
-        beforeEach(function () {
+        beforeEach(function() {
             store2 = createStore2();
         });
+
         afterEach(function() {
             store2.clear();
             store2.destroy();
@@ -54,10 +58,12 @@ describe("Ext.util.LocalStorage", function() {
             store2.setItem('foo', '42');
 
             var keys = store.getKeys();
+
             expect(keys.length).toBe(1);
             expect(keys[0]).toBe('foo');
 
             var keys2 = store2.getKeys();
+
             expect(keys2.length).toBe(1);
             expect(keys2[0]).toBe('foo');
 
@@ -65,6 +71,7 @@ describe("Ext.util.LocalStorage", function() {
             expect(keys).not.toBe(keys2);
 
             var value = store.getItem('foo');
+
             var value2 = store2.getItem('foo');
 
             expect(value).toBe('bar');
@@ -81,12 +88,14 @@ describe("Ext.util.LocalStorage", function() {
             store2.setItem('zap', 'xyz');
 
             var keys = [ store.key(0), store.key(1) ];
+
             keys.sort();
             expect(keys[1]).toBe('foo');
             expect(keys[0]).toBe('bar');
             expect(store.key(2)).toBe(null);
 
             var keys2 = [ store2.key(0), store2.key(1), store2.key(2) ];
+
             keys2.sort();
             expect(keys2[0]).toBe('foo');
             expect(keys2[1]).toBe('zap');
@@ -94,15 +103,20 @@ describe("Ext.util.LocalStorage", function() {
             expect(store2.key(3)).toBe(null);
 
             var value0 = store.getItem('foo');
+
             expect(value0).toBe('bar');
             var value1 = store.getItem('bar');
+
             expect(value1).toBe('foobar');
 
             var value2_0 = store2.getItem('foo');
+
             expect(value2_0).toBe('42');
             var value2_1 = store2.getItem('zip');
+
             expect(value2_1).toBe('abc');
             var value2_2 = store2.getItem('zap');
+
             expect(value2_2).toBe('xyz');
         });
 
@@ -113,10 +127,13 @@ describe("Ext.util.LocalStorage", function() {
             store.clear();
 
             var keys = store.getKeys();
+
             expect(keys.length).toBe(0);
 
             var value2 = store2.getItem('foo');
+
             var keys2 = store2.getKeys();
+
             expect(keys2.length).toBe(1);
             expect(value2).toBe('42');
         });
@@ -128,18 +145,22 @@ describe("Ext.util.LocalStorage", function() {
             store.removeItem('foo');
 
             var keys = store.getKeys();
+
             expect(keys.length).toBe(0);
 
             var value2 = store2.getItem('foo');
+
             var keys2 = store2.getKeys();
+
             expect(keys2.length).toBe(1);
             expect(value2).toBe('42');
         });
     });
 
-    describe("cache", function () {
-        it ("should not share instances with the different id", function () {
+    describe("cache", function() {
+        it("should not share instances with the different id", function() {
             var store1 = Ext.util.LocalStorage.get('foo');
+
             var store2 = Ext.util.LocalStorage.get('bar');
 
             expect(store1).not.toBe(store2);
@@ -147,8 +168,9 @@ describe("Ext.util.LocalStorage", function() {
             store2.release();
         });
 
-        it ("should share instances with the same id", function () {
+        it("should share instances with the same id", function() {
             var store1 = Ext.util.LocalStorage.get('foo');
+
             var store2 = Ext.util.LocalStorage.get('foo');
 
             expect(store1).toBe(store2);
@@ -156,7 +178,7 @@ describe("Ext.util.LocalStorage", function() {
             store2.release();
         });
 
-        it ("should destroy the instance on final release", function () {
+        it("should destroy the instance on final release", function() {
             var store = Ext.util.LocalStorage.get('foo');
 
             expect(store._users).toBe(1);
@@ -181,11 +203,11 @@ describe("Ext.util.LocalStorage", function() {
     describe("delayed operation", function() {
         var store2;
 
-        function createStore2 () {
+        function createStore2() {
             return new Ext.util.LocalStorage({ id: 'three', flushDelay: 1 });
         }
 
-        beforeEach(function () {
+        beforeEach(function() {
             store2 = createStore2();
         });
         afterEach(function() {
@@ -196,20 +218,22 @@ describe("Ext.util.LocalStorage", function() {
 
         it("should delay writes", function() {
             if (store2.el) { // if (legacy IE)
-                runs(function () {
+                runs(function() {
                     store2.setItem('foo', '42');
 
                     // if we've *ever* cleared the data it will be '{}' otherwise null:
                     var s = store2.el.getAttribute('xdata') || '{}';
+
                     expect(s).toBe('{}');
                 });
 
-                waitsFor(function () {
+                waitsFor(function() {
                     return !store2._timer;
                 });
 
-                runs(function () {
+                runs(function() {
                     var s = store2.el.getAttribute('xdata');
+
                     expect(s).toBe('{\"foo\":\"42\"}');
                 });
             }
@@ -221,6 +245,7 @@ describe("Ext.util.LocalStorage", function() {
 
                 // if we've *ever* cleared the data it will be '{}' otherwise null:
                 var s = store2.el.getAttribute('xdata') || '{}';
+
                 expect(s).toBe('{}');
 
                 expect(store2._timer).not.toBe(null);
@@ -228,6 +253,7 @@ describe("Ext.util.LocalStorage", function() {
                 expect(store2._timer).toBe(null);
 
                 var s2 = store2.el.getAttribute('xdata');
+
                 expect(s2).toBe('{\"foo\":\"42\"}');
             }
         });

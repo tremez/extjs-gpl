@@ -1,6 +1,18 @@
+/*
+ * The DOM looks like this:
+ *
+ *     ext-legend
+ *         x-legend-body-el x-legend-horizontal/vertical
+ *             x-legend-item
+ *             x-legend-item
+ *
+ * The `x-legend-body-el` is what is being scrolled.
+ */
+
 .#{$prefix}legend {
-    .#{$prefix}dataview-container {
+    .#{$prefix}legend-body-el {
         display: inline-block;
+        margin: auto;
         white-space: nowrap !important;
         line-height: 0;
         background: $chart-legend-background-color;
@@ -13,30 +25,32 @@
     }
 }
 
+.#{$prefix}legend-horizontal {
+    .#{$prefix}legend-body-el {
+        display: table;
+        margin: 0 auto;
+    }
+}
+
 .#{$prefix}legend-item {
-    font-size: $font-size * 1.5;
-    line-height: $font-size * 1.5;
+    font-size: $font-size;
+    line-height: $font-size;
 }
 
 .#{$prefix}legend-item-marker {
     top: .95em;
 }
 
-.#{$prefix}legend-inner {
-    display: flex !important; // override "display: table" in DataView.scss
+.#{$prefix}legend-body-el {
     white-space: nowrap;
-    align-items: center !important;
-    justify-content: center;
+    padding: $chart-legend-padding;
 }
 
-.#{$prefix}legend-vertical {
-    .#{$prefix}legend-inner {
-        display: -webkit-box;
-        -webkit-box-align: center;
-        -webkit-box-pack: center;
+.#{$prefix}legend-horizontal {
+    overflow-x: auto;
+}
 
-        display: flex;
-        align-items: center;     // center vertically
-        justify-content: center; // center horizontally
-    }
+.#{$prefix}legend-vertical .#{$prefix}legend-body-el {
+    overflow-y: auto;
+    flex: none;
 }

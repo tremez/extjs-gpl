@@ -4,7 +4,7 @@ Ext.define('Ext.ux.dd.PanelFieldDragZone', {
 
     scroll: false,
 
-    constructor: function (cfg) {
+    constructor: function(cfg) {
         if (cfg) {
             if (cfg.ddGroup) {
                 this.ddGroup = cfg.ddGroup;
@@ -12,7 +12,7 @@ Ext.define('Ext.ux.dd.PanelFieldDragZone', {
         }
     },
 
-    init: function (panel) {
+    init: function(panel) {
         var el;
 
         // Call the DragZone's constructor. The Panel must have been rendered.
@@ -28,13 +28,14 @@ Ext.define('Ext.ux.dd.PanelFieldDragZone', {
                 el = panel.getEl();
                 el.unselectable();
                 Ext.ux.dd.PanelFieldDragZone.superclass.constructor.call(this, el);
-            } else {
-                panel.on('afterrender', this.init, this, {single: true});
+            }
+            else {
+                panel.on('afterrender', this.init, this, { single: true });
             }
         }
     },
 
-    getDragData: function (e) {
+    getDragData: function(e) {
         // On mousedown, we ascertain whether it is on one of our draggable Fields.
         // If so, we collect data about the draggable object, and return a drag data
         // object which contains our own data, plus a "ddel" property which is a DOM

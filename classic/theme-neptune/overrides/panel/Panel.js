@@ -1,6 +1,6 @@
 Ext.define('Ext.theme.neptune.panel.Panel', {
     override: 'Ext.panel.Panel',
-    
+
     border: false,
     bodyBorder: false,
 

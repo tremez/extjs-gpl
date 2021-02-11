@@ -25,10 +25,11 @@ Ext.define('Ext.grid.selection.Columns', {
         if (columns) {
             result.selectedColumns = Ext.Array.slice(columns);
         }
+
         return result;
     },
 
-    eachRow: function (fn, scope) {
+    eachRow: function(fn, scope) {
         var columns = this.selectedColumns;
 
         if (columns && columns.length) {
@@ -36,7 +37,7 @@ Ext.define('Ext.grid.selection.Columns', {
         }
     },
 
-    eachColumn: function (fn, scope) {
+    eachColumn: function(fn, scope) {
         var me = this,
             view = me.view,
             columns = me.selectedColumns,
@@ -46,8 +47,10 @@ Ext.define('Ext.grid.selection.Columns', {
 
         if (columns) {
             len = columns.length;
+
             for (i = 0; i < len; i++) {
                 context.setColumn(columns[i]);
+
                 if (fn.call(scope || me, context.column, context.colIdx) === false) {
                     return false;
                 }
@@ -55,7 +58,7 @@ Ext.define('Ext.grid.selection.Columns', {
         }
     },
 
-    eachCell: function (fn, scope) {
+    eachCell: function(fn, scope) {
         var me = this,
             view = me.view,
             columns = me.selectedColumns,
@@ -66,11 +69,14 @@ Ext.define('Ext.grid.selection.Columns', {
         if (columns) {
             len = columns.length;
 
-            // Use Store#each instead of copying the entire dataset into an array and iterating that.
+            // Use Store#each instead of copying the entire dataset into an array
+            // and iterating that.
             view.dataSource.each(function(record) {
                 context.setRow(record);
+
                 for (i = 0; i < len; i++) {
                     context.setColumn(columns[i]);
+
                     if (fn.call(scope || me, context, context.colIdx, context.rowIdx) === false) {
                         return false;
                     }
@@ -103,6 +109,7 @@ Ext.define('Ext.grid.selection.Columns', {
      */
     getCount: function() {
         var selectedColumns = this.selectedColumns;
+
         return selectedColumns ? selectedColumns.length : 0;
     },
 
@@ -144,6 +151,8 @@ Ext.define('Ext.grid.selection.Columns', {
                 me.selectedColumns = [];
                 me.refreshColumns.apply(me, prevSelection);
             }
+
+            me.setRangeStart(null);
         },
 
         setRangeStart: function(startColumn) {
@@ -151,9 +160,12 @@ Ext.define('Ext.grid.selection.Columns', {
                 prevSelection = me.getColumns();
 
             me.startColumn = startColumn;
-            me.selectedColumns = [startColumn];
-            prevSelection.push(startColumn);
-            me.refreshColumns.apply(me, prevSelection);
+
+            if (startColumn != null) {
+                me.selectedColumns = [startColumn];
+                prevSelection.push(startColumn);
+                me.refreshColumns.apply(me, prevSelection);
+            }
         },
 
         setRangeEnd: function(endColumn) {
@@ -173,10 +185,12 @@ Ext.define('Ext.grid.selection.Columns', {
             }
 
             me.selectedColumns = [];
+
             for (i = start; i <= end; i++) {
                 me.selectedColumns.push(columns[i]);
                 prevSelection.push(columns[i]);
             }
+
             me.refreshColumns.apply(me, prevSelection);
         },
 
@@ -188,6 +202,7 @@ Ext.define('Ext.grid.selection.Columns', {
             var selectedColumns = this.selectedColumns;
 
             // All selected means all columns, across both views if we are in a locking assembly.
+            // eslint-disable-next-line max-len
             return selectedColumns && selectedColumns.length === this.view.ownerGrid.getVisibleColumnManager().getColumns().length;
         },
 
@@ -212,12 +227,16 @@ Ext.define('Ext.grid.selection.Columns', {
 
                 for (rowIdx = rows.startIndex; rowIdx <= rows.endIndex; rowIdx++) {
                     cellContext.setRow(rowIdx);
+
                     for (colIdx = 0; colIdx < len; colIdx++) {
-                        // Note colIdx is not the column's visible index. setColumn must be passed the column object
+                        // Note colIdx is not the column's visible index.
+                        // setColumn must be passed the column object
                         cellContext.setColumn(columns[colIdx]);
+
                         if (selected[colIdx]) {
                             view.onCellSelect(cellContext);
-                        } else {
+                        }
+                        else {
                             view.onCellDeselect(cellContext);
                         }
                     }
@@ -251,7 +270,7 @@ Ext.define('Ext.grid.selection.Columns', {
         /**
          * @private
          */
-        selectAll: function () {
+        selectAll: function() {
             var me = this;
 
             me.clear();
@@ -265,8 +284,22 @@ Ext.define('Ext.grid.selection.Columns', {
                 columns = me.view.getVisibleColumnManager().getColumns(),
                 i;
 
-            for (i = extensionVector.start.colIdx; i <=  extensionVector.end.colIdx; i++) {
+            for (i = extensionVector.start.colIdx; i <= extensionVector.end.colIdx; i++) {
                 me.add(columns[i]);
+            }
+        },
+
+        reduceRange: function(extensionVector) {
+            var me = this,
+                columns = me.view.getVisibleColumnManager().getColumns(),
+                startIdx = extensionVector.start.colIdx,
+                endIdx = extensionVector.end.colIdx,
+                reduceTo = Math.abs(startIdx - endIdx) + 1,
+                diff = me.selectedColumns.length - reduceTo,
+                i;
+
+            for (i = diff; i > 0; i--) {
+                me.remove(columns[endIdx + i]);
             }
         },
 
@@ -275,23 +308,31 @@ Ext.define('Ext.grid.selection.Columns', {
                 range = me.getContiguousSelection();
 
             if (range) {
-                me.view.getSelectionModel().onSelectionFinish(me,
+                me.view.getSelectionModel().onSelectionFinish(
+                    me,
                     new Ext.grid.CellContext(me.view).setPosition(0, range[0]),
-                    new Ext.grid.CellContext(me.view).setPosition(me.view.dataSource.getCount() - 1, range[1]));
-            } else {
+                    new Ext.grid.CellContext(me.view).setPosition(
+                        me.view.dataSource.getCount() - 1, range[1]
+                    )
+                );
+            }
+            else {
                 me.view.getSelectionModel().onSelectionFinish(me);
             }
         },
 
         /**
-         * @return {Array} `[startColumn, endColumn]` if the selection represents a visually contiguous set of columns.
+         * @return {Array} `[startColumn, endColumn]` if the selection represents
+         * a visually contiguous set of columns.
          * The SelectionReplicator is only enabled if there is a contiguous block.
          * @private
          */
         getContiguousSelection: function() {
             var selection = Ext.Array.sort(this.getColumns(), function(c1, c2) {
-                    // Use index *in ownerGrid* so that a locking assembly can order columns correctly
-                    return c1.getView().ownerGrid.getVisibleColumnManager().indexOf(c1) - c2.getView().ownerGrid.getVisibleColumnManager().indexOf(c2);
+                    // Use index *in ownerGrid* so that a locking assembly
+                    // can order columns correctly
+                    return c1.getView().ownerGrid.getVisibleColumnManager().indexOf(c1) -
+                           c2.getView().ownerGrid.getVisibleColumnManager().indexOf(c2);
                 }),
                 len = selection.length,
                 i;
@@ -302,6 +343,7 @@ Ext.define('Ext.grid.selection.Columns', {
                         return false;
                     }
                 }
+
                 return [selection[0], selection[len - 1]];
             }
         }

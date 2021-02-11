@@ -10,7 +10,26 @@ Ext.define('KitchenSink.view.button.RightTextButtons', {
     controller: 'buttons',
 
     layout: 'vbox',
-    width: 680,
+    width: '${width}',
+    cls: 'icons-button-padding',
+    profiles: {
+        classic: {
+            width: 680,
+            buttonWidth: 150
+        },
+        neptune: {
+            width: 680,
+            buttonWidth: 150
+        },
+        graphite: {
+            width: 880,
+            buttonWidth: 200
+        },
+        'classic-material': {
+            width: 680,
+            buttonWidth: 150
+        }
+    },
 
     //<example>
     otherContent: [{
@@ -34,7 +53,7 @@ Ext.define('KitchenSink.view.button.RightTextButtons', {
             tdAttrs: { style: 'padding: 5px 10px;' }
         },
         defaults: {
-            width: 150,
+            width: '${buttonWidth}',
             textAlign: 'right'
         },
 
@@ -71,16 +90,16 @@ Ext.define('KitchenSink.view.button.RightTextButtons', {
             html: 'Icon and Text (left)'
         }, {
             xtype: 'button',
-            iconCls: 'button-home-small',
+            iconCls: 'button-home-small padding-text-btn-left',
             text: 'Small'
         }, {
             xtype: 'button',
-            iconCls: 'button-home-medium',
+            iconCls: 'button-home-medium padding-text-btn-left',
             text: 'Medium',
             scale: 'medium'
         }, {
             xtype: 'button',
-            iconCls: 'button-home-large',
+            iconCls: 'button-home-large padding-text-btn-left',
             text: 'Large',
             scale: 'large'
         }, {
@@ -108,18 +127,18 @@ Ext.define('KitchenSink.view.button.RightTextButtons', {
             html: 'Icon and Text (right)'
         }, {
             xtype: 'button',
-            iconCls: 'button-home-small',
+            iconCls: 'button-home-small padding-text-btn-right',
             text: 'Small',
             iconAlign: 'right'
         }, {
             xtype: 'button',
-            iconCls: 'button-home-medium',
+            iconCls: 'button-home-medium padding-text-btn-right',
             text: 'Medium',
             scale: 'medium',
             iconAlign: 'right'
         }, {
             xtype: 'button',
-            iconCls: 'button-home-large',
+            iconCls: 'button-home-large padding-text-btn-right',
             text: 'Large',
             scale: 'large',
             iconAlign: 'right'

@@ -39,8 +39,8 @@ Ext.define('AM.controller.Users', {
     },
 
     updateUser: function(button) {
-        var win    = button.up('window'),
-            form   = win.down('form'),
+        var win = button.up('window'),
+            form = win.down('form'),
             record = form.getRecord(),
             values = form.getValues();
 

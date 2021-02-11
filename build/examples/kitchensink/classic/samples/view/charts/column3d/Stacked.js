@@ -13,7 +13,7 @@ Ext.define('KitchenSink.view.charts.column3d.Stacked', {
         path: 'classic/samples/view/charts/column3d/StackedController.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/EconomySectors.js'
+        path: 'app/store/EconomySectors.js'
     }],
     //</example>
 
@@ -27,7 +27,22 @@ Ext.define('KitchenSink.view.charts.column3d.Stacked', {
     ],
 
     layout: 'vbox',
-    width: 650,
+    width: '${width}',
+
+    profiles: {
+        classic: {
+            width: 650
+        },
+        neptune: {
+            width: 650
+        },
+        graphite: {
+            width: 900
+        },
+        'classic-material': {
+            width: 900
+        }
+    },
 
     tbar: [
         '->',
@@ -53,9 +68,11 @@ Ext.define('KitchenSink.view.charts.column3d.Stacked', {
     items: [{
         xtype: 'cartesian',
         reference: 'chart',
-        store: {type: 'economy-sectors'},
+        captions: {
+            title: 'Major economies by GDP sector composition (2011)'
+        },
+        store: { type: 'economy-sectors' },
         theme: 'Muted',
-        insetPadding: '40 20 10 20',
         width: '100%',
         height: 500,
         interactions: ['itemhighlight'],
@@ -96,16 +113,7 @@ Ext.define('KitchenSink.view.charts.column3d.Stacked', {
             type: 'category3d',
             position: 'bottom',
             grid: true
-        }],
-        sprites: {
-            type: 'text',
-            text: 'Major economies by GDP sector composition (2011)',
-            fontSize: 22,
-            width: 100,
-            height: 30,
-            x: 40,
-            y: 20
-        }
+        }]
     }, {
         xtype: 'container',
         width: '100%',

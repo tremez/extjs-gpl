@@ -27,19 +27,31 @@ Ext.define('KitchenSink.view.grid.LockingGrid', {
         path: 'classic/samples/view/grid/BasicGridController.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/Companies.js'
-    },{
+        path: 'app/store/Companies.js'
+    }, {
         type: 'Model',
-        path: 'classic/samples/model/Company.js'
+        path: 'app/model/Company.js'
     }],
     profiles: {
         classic: {
-            green: 'green',
-            red: 'red'
+            gainColor: 'green',
+            lossColor: 'red',
+            percentageChangeWidth: 105
         },
         neptune: {
-            green: '#73b51e',
-            red: '#cf4c35'
+            gainColor: '#73b51e',
+            lossColor: '#cf4c35',
+            percentageChangeWidth: 105
+        },
+        graphite: {
+            gainColor: 'unset',
+            lossColor: 'unset',
+            percentageChangeWidth: 135
+        },
+        'classic-material': {
+            gainColor: 'unset',
+            lossColor: 'unset',
+            percentageChangeWidth: 150
         }
     },
     //</example>
@@ -53,7 +65,7 @@ Ext.define('KitchenSink.view.grid.LockingGrid', {
     // There is no asymmetric data, we do not need to go to the expense of synching row heights
     syncRowHeight: false,
     signTpl: '<span style="' +
-            'color:{value:sign(\'${red}\',\'${green}\')}"' +
+            'color:{value:sign(\'${lossColor}\',\'${gainColor}\')}"' +
         '>{text}</span>',
 
     columns: [{
@@ -85,21 +97,21 @@ Ext.define('KitchenSink.view.grid.LockingGrid', {
         formatter: 'pick("Ⓐ","Ⓑ","Ⓒ")'
     }, {
         text: 'Change',
-        dataIndex: 'change',
+        dataIndex: 'priceChange',
 
         width: 90,
         sortable: true,
         renderer: 'renderChange'
     }, {
         text: '% Change',
-        dataIndex: 'pctChange',
+        dataIndex: 'priceChangePct',
 
-        width: 105,
+        width: '${percentageChangeWidth}',
         sortable: true,
         renderer: 'renderChange'
     }, {
         text: 'Last Updated',
-        dataIndex: 'lastChange',
+        dataIndex: 'priceLastChange',
 
         width: 135,
         sortable: true,

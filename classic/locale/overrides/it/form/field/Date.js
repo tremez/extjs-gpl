@@ -1,12 +1,12 @@
 Ext.define("Ext.locale.it.form.field.Date", {
     override: "Ext.form.field.Date",
 
-    format: "d/m/Y", 
+    format: "d/m/Y",
     ariaFormat: 'M j Y',
     altFormats: "d-m-y|d-m-Y|d/m|d-m|dm|dmy|dmY|d|Y-m-d",
-    disabledDaysText: "Disabilitato", 
+    disabledDaysText: "Disabilitato",
     ariaDisabledDaysText: "Questo giorno \u00E8 disabilitato",
-    disabledDatesText: "Disabilitato", 
+    disabledDatesText: "Disabilitato",
     ariaDisabledDatesText: "Questa data non pu\u00F2 essere selezionata",
     minText: "La data deve essere maggiore o uguale a {0}",
     ariaMinText: "La data deve essere maggiore o uguale a {0}",

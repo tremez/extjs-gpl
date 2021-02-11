@@ -6,7 +6,7 @@
  * {@link Ext.dom.Element#enableShim enableShim}
  */
 Ext.define('Ext.dom.Layer', {
-    extend: 'Ext.Element',
+    extend: 'Ext.dom.Element',
     alternateClassName: 'Ext.Layer',
 
     /**
@@ -64,9 +64,9 @@ Ext.define('Ext.dom.Layer', {
      *
      * - `'display'` : The Component will be hidden using the `display: none` style.
      * - `'visibility'` : The Component will be hidden using the `visibility: hidden` style.
-     * - `'offsets'` : The Component will be hidden by absolutely positioning it out of the visible area
-     *   of the document. This is useful when a hidden Component must maintain measurable dimensions.
-     *   Hiding using `display` results in a Component having zero dimensions.
+     * - `'offsets'` : The Component will be hidden by absolutely positioning it out of the
+     * visible area of the document. This is useful when a hidden Component must maintain
+     * measurable dimensions. Hiding using `display` results in a Component having zero dimensions.
      */
 
     isLayer: true,
@@ -79,6 +79,8 @@ Ext.define('Ext.dom.Layer', {
      */
     constructor: function(config, existingEl) {
         config = config || {};
+
+        // eslint-disable-next-line vars-on-top
         var me = this,
             dh = Ext.DomHelper,
             cp = config.parentEl,
@@ -89,6 +91,7 @@ Ext.define('Ext.dom.Layer', {
 
         if (existingEl) {
             dom = Ext.getDom(existingEl);
+
             if (!dom.parentNode) {
                 pel.appendChild(dom);
             }
@@ -104,10 +107,12 @@ Ext.define('Ext.dom.Layer', {
         if (config.id) {
             dom.id = config.id;
         }
+
         id = dom.id;
 
         if (id) {
             element = Ext.cache[id];
+
             if (element) {
                 // if we have an existing Ext.Element in the cache for this same dom
                 // element, delete it, so that it can be replaced by this layer instance
@@ -116,6 +121,7 @@ Ext.define('Ext.dom.Layer', {
                 element.dom = null;
             }
         }
+
         this.callParent([dom]);
 
         if (existingEl) {
@@ -129,6 +135,7 @@ Ext.define('Ext.dom.Layer', {
         if (config.cls) {
             me.addCls(config.cls);
         }
+
         me.constrain = config.constrain !== false;
 
         // Allow Components to pass their hide mode down to the Layer if they are floating.
@@ -136,9 +143,11 @@ Ext.define('Ext.dom.Layer', {
         // TODO: Have ExtJS's Element implement visibilityMode by using classes as in Mobile.
         if (hm) {
             me.setVisibilityMode(Ext.Element[hm.toUpperCase()]);
-        } else if (config.useDisplay) {
+        }
+        else if (config.useDisplay) {
             me.setVisibilityMode(Ext.Element.DISPLAY);
-        } else {
+        }
+        else {
             me.setVisibilityMode(Ext.Element.VISIBILITY);
         }
 
@@ -154,7 +163,8 @@ Ext.define('Ext.dom.Layer', {
             }
 
             me.enableShadow(shadowConfig);
-        } else {
+        }
+        else {
             me.shadowOffset = 0;
         }
 
@@ -169,7 +179,8 @@ Ext.define('Ext.dom.Layer', {
         // since this is handled by the Component lifecycle.
         if (config.hidden === true) {
             me.hide();
-        } else if (config.hidden === false) {
+        }
+        else if (config.hidden === false) {
             me.show();
         }
     }

@@ -20,23 +20,25 @@ Ext.define('Ext.app.domain.Component', {
 
         this.monitor(Ext.Widget);
     },
-    
+
     dispatch: function(target, ev, args) {
         var controller = target.lookupController(false), // don't skip target
             domain, view;
-           
-         
+
         while (controller) {
             domain = controller.compDomain;
+
             if (domain) {
                 if (domain.dispatch(target, ev, args) === false) {
                     return false;
                 }
             }
+
             view = controller.getView();
             controller = view ? view.lookupController(true) : null;
         }
-        return this.callParent(arguments);    
+
+        return this.callParent([target, ev, args]);
     },
 
     match: function(target, selector) {

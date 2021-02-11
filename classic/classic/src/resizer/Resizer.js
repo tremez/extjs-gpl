@@ -1,9 +1,10 @@
 /**
- * Applies drag handles to an element or component to make it resizable. The drag handles are inserted into the element
- * (or component's element) and positioned absolute.
+ * Applies drag handles to an element or component to make it resizable. The drag handles
+ * are inserted into the element (or component's element) and positioned absolute.
  *
- * Textarea and img elements will be wrapped with an additional div because these elements do not support child nodes.
- * The original element can be accessed through the originalTarget property.
+ * Textarea and img elements will be wrapped with an additional div because these elements
+ * do not support child nodes. The original element can be accessed through the originalTarget
+ * property.
  *
  * Here is the list of valid resize handles:
  *
@@ -34,36 +35,41 @@
  *     });
  */
 Ext.define('Ext.resizer.Resizer', {
+    alternateClassName: 'Ext.Resizable',
+
     mixins: {
         observable: 'Ext.util.Observable'
     },
-    uses: ['Ext.resizer.ResizeTracker', 'Ext.Component'],
 
-    alternateClassName: 'Ext.Resizable',
+    uses: [
+        'Ext.resizer.ResizeTracker',
+        'Ext.Component'
+    ],
 
-    handleCls:  Ext.baseCSSPrefix + 'resizable-handle',
-    overCls:  Ext.baseCSSPrefix + 'resizable-handle-over',
-    pinnedCls:  Ext.baseCSSPrefix + 'resizable-pinned',
-    wrapCls:    Ext.baseCSSPrefix + 'resizable-wrap',
+    handleCls: Ext.baseCSSPrefix + 'resizable-handle',
+    overCls: Ext.baseCSSPrefix + 'resizable-handle-over',
+    pinnedCls: Ext.baseCSSPrefix + 'resizable-pinned',
+    wrapCls: Ext.baseCSSPrefix + 'resizable-wrap',
     wrappedCls: Ext.baseCSSPrefix + 'resizable-wrapped',
     delimiterRe: /(?:\s*[,;]\s*)|\s+/,
 
     /**
      * @cfg {Boolean} dynamic
-     * Specify as true to update the {@link #target} (Element or {@link Ext.Component Component}) dynamically during
-     * dragging. This is `true` by default, but the {@link Ext.Component Component} class passes `false` when it is
-     * configured as {@link Ext.Component#resizable}.
+     * Specify as true to update the {@link #target} (Element or {@link Ext.Component Component})
+     * dynamically during dragging. This is `true` by default, but the
+     * {@link Ext.Component Component} class passes `false` when it is configured as
+     * {@link Ext.Component#resizable}.
      *
-     * If specified as `false`, a proxy element is displayed during the resize operation, and the {@link #target} is
-     * updated on mouseup.
+     * If specified as `false`, a proxy element is displayed during the resize operation,
+     * and the {@link #target} is updated on mouseup.
      */
     dynamic: true,
 
     /**
      * @cfg {String} handles
-     * String consisting of the resize handles to display. Defaults to 's e se' for Elements and fixed position
-     * Components. Defaults to 8 point resizing for floating Components (such as Windows). Specify either `'all'` or any
-     * of `'n s e w ne nw se sw'`.
+     * String consisting of the resize handles to display. Defaults to 's e se' for Elements
+     * and fixed position Components. Defaults to 8 point resizing for floating Components
+     * (such as Windows). Specify either `'all'` or any of `'n s e w ne nw se sw'`.
      */
     handles: 's e se',
 
@@ -71,53 +77,54 @@ Ext.define('Ext.resizer.Resizer', {
      * @cfg {Number} height
      * Optional. The height to set target to in pixels
      */
-    height : null,
+    height: null,
 
     /**
      * @cfg {Number} width
      * Optional. The width to set the target to in pixels
      */
-    width : null,
+    width: null,
 
     /**
      * @cfg {Number} heightIncrement
      * The increment to snap the height resize in pixels.
      */
-    heightIncrement : 0,
+    heightIncrement: 0,
 
     /**
      * @cfg {Number} widthIncrement
      * The increment to snap the width resize in pixels.
      */
-    widthIncrement : 0,
+    widthIncrement: 0,
 
     /**
      * @cfg {Number} minHeight
      * The minimum height for the element
      */
-    minHeight : 20,
+    minHeight: 20,
 
     /**
      * @cfg {Number} minWidth
      * The minimum width for the element
      */
-    minWidth : 20,
+    minWidth: 20,
 
     /**
      * @cfg {Number} maxHeight
      * The maximum height for the element
      */
-    maxHeight : 10000,
+    maxHeight: 10000,
 
     /**
      * @cfg {Number} maxWidth
      * The maximum width for the element
      */
-    maxWidth : 10000,
+    maxWidth: 10000,
 
     /**
      * @cfg {Boolean} pinned
-     * True to ensure that the resize handles are always visible, false indicates resizing by cursor changes only
+     * True to ensure that the resize handles are always visible, false indicates resizing
+     * by cursor changes only
      */
     pinned: false,
 
@@ -135,14 +142,15 @@ Ext.define('Ext.resizer.Resizer', {
 
     /**
      * @cfg {Ext.dom.Element/Ext.util.Region} constrainTo
-     * An element, or a {@link Ext.util.Region Region} into which the resize operation must be constrained.
+     * An element, or a {@link Ext.util.Region Region} into which the resize operation
+     * must be constrained.
      */
 
     possiblePositions: {
-        n:  'north',
-        s:  'south',
-        e:  'east',
-        w:  'west',
+        n: 'north',
+        s: 'south',
+        e: 'east',
+        w: 'west',
         se: 'southeast',
         sw: 'southwest',
         nw: 'northwest',
@@ -209,19 +217,20 @@ Ext.define('Ext.resizer.Resizer', {
             resizeTarget, handleCls, possibles, tag,
             len, i, pos, box, handle, handles, handleEl,
             wrapTarget, positioning, targetBaseCls;
-            
 
         if (Ext.isString(config) || Ext.isElement(config) || config.dom) {
             resizeTarget = config;
             config = arguments[1] || {};
             config.target = resizeTarget;
         }
+
         // will apply config to this
         me.mixins.observable.constructor.call(me, config);
 
         // If target is a Component, ensure that we pull the element out.
         // Resizer must examine the underlying Element.
         resizeTarget = me.target;
+
         if (resizeTarget) {
             if (resizeTarget.isComponent) {
 
@@ -233,22 +242,28 @@ Ext.define('Ext.resizer.Resizer', {
                 if (resizeTarget.minWidth) {
                     me.minWidth = resizeTarget.minWidth;
                 }
+
                 if (resizeTarget.minHeight) {
                     me.minHeight = resizeTarget.minHeight;
                 }
+
                 if (resizeTarget.maxWidth) {
                     me.maxWidth = resizeTarget.maxWidth;
                 }
+
                 if (resizeTarget.maxHeight) {
                     me.maxHeight = resizeTarget.maxHeight;
                 }
+
                 if (resizeTarget.floating) {
                     if (!me.hasOwnProperty('handles')) {
                         me.handles = 'n ne e se s sw w nw';
                     }
                 }
+
                 me.el = resizeTarget.getEl();
-            } else {
+            }
+            else {
                 resizeTarget = me.el = me.target = Ext.get(resizeTarget);
             }
         }
@@ -265,6 +280,7 @@ Ext.define('Ext.resizer.Resizer', {
         if (Ext.isNumber(me.width)) {
             me.width = Ext.Number.constrain(me.width, me.minWidth, me.maxWidth);
         }
+
         if (Ext.isNumber(me.height)) {
             me.height = Ext.Number.constrain(me.height, me.minHeight, me.maxHeight);
         }
@@ -278,17 +294,20 @@ Ext.define('Ext.resizer.Resizer', {
         // have children and therefore must
         // be wrapped
         tag = me.el.dom.tagName.toUpperCase();
+
         if (tag === 'TEXTAREA' || tag === 'IMG' || tag === 'TABLE') {
             /**
              * @property {Ext.dom.Element/Ext.Component} originalTarget
-             * Reference to the original resize target if the element of the original resize target was a
-             * {@link Ext.form.field.Field Field}, or an IMG or a TEXTAREA which must be wrapped in a DIV.
+             * Reference to the original resize target if the element of the original
+             * resize target was a {@link Ext.form.field.Field Field}, or an IMG or a TEXTAREA
+             * which must be wrapped in a DIV.
              */
             me.originalTarget = me.target;
 
             wrapTarget = resizeTarget.isComponent ? resizeTarget.getEl() : resizeTarget;
 
-            // Tag the wrapped element with a class so thaht we can force it to use border box sizing model
+            // Tag the wrapped element with a class so thaht we can force it
+            // to use border box sizing model
             me.el.addCls(me.wrappedCls);
 
             me.target = me.el = me.el.wrap({
@@ -307,8 +326,8 @@ Ext.define('Ext.resizer.Resizer', {
 
             box = wrapTarget.getBox();
 
-            if (positioning.position !== 'absolute'){
-                //reset coordinates
+            if (positioning.position !== 'absolute') {
+                // reset coordinates
                 box.x = 0;
                 box.y = 0;
             }
@@ -324,6 +343,7 @@ Ext.define('Ext.resizer.Resizer', {
         // Position the element, this enables us to absolute position
         // the handles within this.el
         me.el.position();
+
         if (me.pinned) {
             me.el.addCls(me.pinnedCls);
         }
@@ -340,8 +360,8 @@ Ext.define('Ext.resizer.Resizer', {
             overCls: me.overCls,
             throttle: me.throttle,
 
-            // If we have wrapped something, instruct the ResizerTracker to use that wrapper as a proxy
-            // and we should resize the wrapped target dynamically.
+            // If we have wrapped something, instruct the ResizerTracker to use that wrapper
+            // as a proxy and we should resize the wrapped target dynamically.
             proxy: me.originalTarget ? me.el : null,
             dynamic: me.originalTarget ? true : me.dynamic,
 
@@ -373,17 +393,20 @@ Ext.define('Ext.resizer.Resizer', {
         len = handles.length;
 
         handleCls = me.handleCls + ' ' + me.handleCls + '-{0}';
+
         if (me.target.isComponent) {
             targetBaseCls = me.target.baseCls;
             handleCls += ' ' + targetBaseCls + '-handle ' + targetBaseCls + '-handle-{0}';
+
             if (Ext.supports.CSS3BorderRadius) {
                 handleCls += ' ' + targetBaseCls + '-handle-{0}-br';
             }
         }
 
-        for (i = 0; i < len; i++){
+        for (i = 0; i < len; i++) {
             // if specified and possible, create
             handle = handles[i];
+
             if (handle && possibles[handle]) {
                 pos = possibles[handle];
 
@@ -462,6 +485,7 @@ Ext.define('Ext.resizer.Resizer', {
 
         if (me.hasListeners[name]) {
             box = me.el.getBox();
+
             return me.fireEvent(name, me, box.width, box.height, e);
         }
     },
@@ -471,29 +495,33 @@ Ext.define('Ext.resizer.Resizer', {
      * @param {Number} width
      * @param {Number} height
      */
-    resizeTo : function(width, height) {
+    resizeTo: function(width, height) {
         var me = this;
+
         me.target.setSize(width, height);
         me.fireEvent('resize', me, width, height, null);
     },
 
     /**
-     * Returns the element that was configured with the el or target config property. If a component was configured with
-     * the target property then this will return the element of this component.
+     * Returns the element that was configured with the el or target config property.
+     * If a component was configured with the target property then this will return the element
+     * of this component.
      *
-     * Textarea and img elements will be wrapped with an additional div because these elements do not support child
-     * nodes. The original element can be accessed through the originalTarget property.
+     * Textarea and img elements will be wrapped with an additional div because these elements
+     * do not support child nodes. The original element can be accessed through the originalTarget
+     * property.
      * @return {Ext.dom.Element} element
      */
-    getEl : function() {
+    getEl: function() {
         return this.el;
     },
 
     /**
      * Returns the element or component that was configured with the target config property.
      *
-     * Textarea and img elements will be wrapped with an additional div because these elements do not support child
-     * nodes. The original element can be accessed through the originalTarget property.
+     * Textarea and img elements will be wrapped with an additional div because these elements
+     * do not support child nodes. The original element can be accessed through the originalTarget
+     * property.
      * @return {Ext.dom.Element/Ext.Component}
      */
     getTarget: function() {
@@ -516,13 +544,13 @@ Ext.define('Ext.resizer.Resizer', {
 
         for (i = 0; i < len; i++) {
             pos = positions[handles[i]];
-            
+
             if ((handle = me[pos])) {
                 handle.destroy();
                 me[pos] = null;
             }
         }
-        
+
         me.callParent();
     }
 });

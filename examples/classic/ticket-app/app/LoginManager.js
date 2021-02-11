@@ -15,7 +15,7 @@ Ext.define('Ticket.LoginManager', {
         session: null
     },
 
-    constructor: function (config) {
+    constructor: function(config) {
         this.initConfig(config);
     },
 
@@ -33,19 +33,21 @@ Ext.define('Ticket.LoginManager', {
             original: options
         });
     },
-    
+
     onLoginReturn: function(options, success, response) {
-        options = options.original;
         var session = this.getSession(),
             resultSet;
-        
+
+        options = options.original;
+
         if (success) {
             resultSet = this.getModel().getProxy().getReader().read(response, {
                 recordCreator: session ? session.recordCreator : null
             });
-                
+
             if (resultSet.getSuccess()) {
                 Ext.callback(options.success, options.scope, [resultSet.getRecords()[0]]);
+
                 return;
             }
         }

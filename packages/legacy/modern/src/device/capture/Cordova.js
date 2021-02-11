@@ -3,11 +3,11 @@
  */
 Ext.define('Ext.device.capture.Cordova', {
     captureAudio: function(config) {
-        // <debug>
+        //<debug>
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #captureAudio');
         }
-        // </debug>
+        //</debug>
 
         var options = {
             limit: config.limit,
@@ -18,11 +18,11 @@ Ext.define('Ext.device.capture.Cordova', {
     },
 
     captureVideo: function(config) {
-        // <debug>
+        //<debug>
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #captureVideo');
         }
-        // </debug>
+        //</debug>
 
         var options = {
             limit: config.limit,

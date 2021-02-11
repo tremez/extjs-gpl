@@ -2,52 +2,60 @@ Ext.define('KitchenSink.view.animations.AnimationsController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.animations',
 
-    refs: {
-        animationCards: 'animationCards'
+    init: function(view) {
+        var me = this,
+            anims = view.anims,
+            items = [];
+
+        anims.forEach(function(button) {
+            if (Ext.isObject(button)) {
+                items.push(
+                    me.createButton(button.group + ' Left'),
+                    me.createButton(button.group + ' Right'),
+                    me.createButton(button.group + ' Top'),
+                    me.createButton(button.group + ' Bottom', {
+                        margin: '0 0 10 0'
+                    })
+                );
+            }
+            else {
+                items.push(me.createButton(button));
+            }
+        });
+
+        view.add([{
+            items: items
+        }, {
+            items: items
+        }]);
     },
-    control: {
-        'animationCards button': {
-            tap: 'onButtonTap'
-        }
+
+    createButton: function(name, cfg) {
+        return Ext.apply({
+            text: name,
+            handler: 'onButtonTap'
+        }, cfg);
     },
 
     getAnimation: function(type) {
-        var parts;
-        if (type === 'Fade') {
-            return {
-                type: 'fade',
-                duration: 500
-            };
-        }
-        else if (type === 'Pop') {
-            return {
-                type: 'pop',
-                duration: 500
-            };
-        }
-        else if (type === 'Flip') {
-            return {
-                type: 'flip',
-                duration: 500
-            };
-        }
-        parts = type.split(/\s+/);
+        var parts = type.toLowerCase().split(/\s+/);
+
         return {
-            type: parts[0].toLowerCase(),
-            direction: parts[1].toLowerCase(),
+            type: parts[0],
+            direction: parts.length > 1 ? parts[1] : undefined,
             duration: 500
         };
     },
 
     onButtonTap: function(button) {
-        var me = this,
-            animationCards = Ext.ComponentQuery.query('animationCards')[0],
-            activeItem = animationCards.getActiveItem(),
-            layout = animationCards.getLayout(),
-            animation = me.getAnimation(button.action),
-            cards = animationCards.items.items;
-        
+        var view = this.getView(),
+            activeItem = view.getActiveItem(),
+            layout = view.getLayout(),
+            animation = this.getAnimation(button.getText()),
+            currentIdx = view.indexOf(activeItem);
+
         layout.setAnimation(animation);
-        animationCards.setActiveItem(activeItem === cards[0] ? cards[1] : cards[0]);
+
+        view.setActiveItem(currentIdx === 0 ? 1 : 0);
     }
 });

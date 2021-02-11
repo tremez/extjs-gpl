@@ -1,0 +1,63 @@
+.#{$prefix}scrollbar {
+    display: none;
+    overflow: hidden;
+    z-index: 2;
+
+    .#{$prefix}spacer-el {
+        position: absolute;
+        height: 1px;
+        width: 1px;
+    }
+
+    &.#{$prefix}enabled,
+    &.#{$prefix}overflow-scroll {
+        display: block;
+    }
+
+    &.#{$prefix}vertical {
+        bottom: 0;
+        overflow-y: auto;
+
+        &.#{$prefix}overflow-scroll {
+            overflow-y: scroll;
+        }
+
+        :not(.#{$prefix}has-horizontal-scrollbar) > & {
+            margin-bottom: 0 !important;
+        }
+    }
+
+    &.#{$prefix}horizontal {
+        right: 0;
+        overflow-x: auto;
+
+        &.#{$prefix}overflow-scroll {
+            overflow-x: scroll;
+        }
+
+        :not(.#{$prefix}has-vertical-scrollbar) > & {
+            margin-right: 0 !important;
+        }
+    }
+}
+
+.#{$prefix}scroller-inner {
+    :not(.#{$prefix}has-horizontal-scrollbar) > & {
+        min-height: 100% !important;
+    }
+
+    :not(.#{$prefix}has-vertical-scrollbar) > & {
+        min-width: 100% !important;
+    }
+}
+
+.#{$prefix}scrollbar-corner {
+    overflow: scroll;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+
+    .#{$prefix}windows & {
+        overflow: hidden;
+    }
+}

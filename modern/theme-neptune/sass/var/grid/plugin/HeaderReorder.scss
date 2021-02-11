@@ -1,0 +1,85 @@
+/**
+ * @var {string/list}
+ * Drop Indicator down icon
+ */
+$header-drop-indicator-down-icon: dynamic($gridcolumn-sort-desc-icon);
+
+/**
+ * @var {string/list}
+ * Drop Indicator up icon
+ */
+$header-drop-indicator-up-icon: dynamic($gridcolumn-sort-asc-icon);
+
+/**
+ * @var {number/list}
+ * Drop Indicator vertical spacing
+ */
+$header-drop-indicator-vertical-space: dynamic(-4px);
+
+/**
+ * @var {number/list}
+ * Drop Indicator horizontal spacing right position
+ */
+$header-drop-indicator-horizontal-space-right: dynamic(-3px);
+
+/**
+ * @var {number/list}
+ * Drop Indicator horizontal spacing left position
+ */
+$header-drop-indicator-horizontal-space-left: dynamic(-3.5px);
+
+/**
+ * @var {number/list}
+ * Drop Indicator font size
+ */
+$header-drop-indicator-font-size: dynamic($font-size);
+
+/**
+ * @var {string/number}
+ * Drop Indicator icon font weight
+ */
+$header-drop-indicator-font-weight: dynamic(bold);
+
+@mixin header-drop-indicator(
+     $header-drop-down-icon: null,
+     $header-drop-up-icon: null,
+     $header-drop-icon-font-family: null,
+     $header-drop-vertical-space: null,
+     $header-drop-horizontal-space-left: null,
+     $header-drop-horizontal-space-right: null,
+     $header-drop-icon-color: null,
+     $header-drop-icon-font-weight: null,
+     $header-drop-icon-font-size: null
+){  
+    .#{$prefix}header-drop-indicator-before,
+    .#{$prefix}header-drop-indicator-after {
+        &:before {
+            content: $header-drop-down-icon;
+            top: $header-drop-vertical-space;
+        }
+
+        &:after {
+            content: $header-drop-up-icon;
+            bottom: $header-drop-vertical-space;
+        }
+
+        &:before, &:after {
+            font-family: $header-drop-icon-font-family;
+            color: $header-drop-icon-color;
+            font-weight: $header-drop-icon-font-weight;
+            font-size: $header-drop-icon-font-size;
+        }
+    }
+
+    .#{$prefix}header-drop-indicator-before {
+        &:before, &:after {
+            left: $header-drop-horizontal-space-left;
+        }
+    }
+
+    .#{$prefix}header-drop-indicator-after {
+        &:before, &:after {
+            right: $header-drop-horizontal-space-right;
+        }
+    }
+}

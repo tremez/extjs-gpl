@@ -5,7 +5,7 @@ Ext.define('KitchenSink.view.drag.ProxyController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.drag-proxy',
 
-    afterRender: function (view) {
+    afterRender: function(view) {
         // No proxy, just track the mouse cursor
         this.noneSource = new Ext.drag.Source({
             element: view.el.down('.proxy-none'),
@@ -50,7 +50,7 @@ Ext.define('KitchenSink.view.drag.ProxyController', {
         });
     },
 
-    destroy: function () {
+    destroy: function() {
         this.noneSource = Ext.destroy(this.noneSource);
         this.originalSource = Ext.destroy(this.originalSource);
         this.customSource = Ext.destroy(this.customSource);

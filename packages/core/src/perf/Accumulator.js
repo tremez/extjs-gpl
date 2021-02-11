@@ -1,66 +1,75 @@
 /**
  * @private
  */
-Ext.define('Ext.perf.Accumulator', function () {
+Ext.define('Ext.perf.Accumulator', function() {
     var currentFrame = null,
-        khrome = Ext.global['chrome'], // jshint ignore:line
+        khrome = Ext.global['chrome'], // eslint-disable-line dot-notation
         formatTpl,
         // lazy init on first request for timestamp (avoids infobar in IE until needed)
         // Also avoids kicking off Chrome's microsecond timer until first needed
-        getTimestamp = function () {
-            getTimestamp = Ext.now;
-            
+        getTimestamp = function() {
             var interval, toolbox;
+
+            getTimestamp = Ext.now;
 
             // If Chrome is started with the --enable-benchmarking switch
             if (Ext.isChrome && khrome && khrome.Interval) {
                 interval = new khrome.Interval();
                 interval.start();
-                getTimestamp = function () {
+
+                getTimestamp = function() {
                     return interval.microseconds() / 1000;
                 };
-            } else if (window.ActiveXObject) {
+            }
+            else if (window.ActiveXObject) {
                 try {
                     // the above technique is not very accurate for small intervals...
-                    toolbox = new ActiveXObject('SenchaToolbox.Toolbox'); // jshint ignore:line
+                    /* eslint-disable-next-line no-undef */
+                    toolbox = new ActiveXObject('SenchaToolbox.Toolbox');
                     Ext.senchaToolbox = toolbox; // export for other uses
-                    getTimestamp = function () {
+
+                    getTimestamp = function() {
                         return toolbox.milliseconds;
                     };
-                } catch (e) {
+                }
+                catch (e) {
                     // ignore
                 }
             }
 
             Ext.perf.getTimestamp = Ext.perf.Accumulator.getTimestamp = getTimestamp;
+
             return getTimestamp();
         };
 
-    function adjustSet (set, time) {
+    function adjustSet(set, time) {
         set.sum += time;
         set.min = Math.min(set.min, time);
         set.max = Math.max(set.max, time);
     }
 
-    function leaveFrame (time) {
+    function leaveFrame(time) {
         var totalTime = time ? time : (getTimestamp() - this.time), // do this first
             me = this, // me = frame
             accum = me.accum;
 
         ++accum.count;
+
         if (! --accum.depth) {
             adjustSet(accum.total, totalTime);
         }
+
         adjustSet(accum.pure, totalTime - me.childTime);
 
         currentFrame = me.parent;
+
         if (currentFrame) {
             ++currentFrame.accum.childCount;
             currentFrame.childTime += totalTime;
         }
     }
 
-    function makeSet () {
+    function makeSet() {
         return {
             min: Number.MAX_VALUE,
             max: 0,
@@ -68,17 +77,18 @@ Ext.define('Ext.perf.Accumulator', function () {
         };
     }
 
-    function makeTap (me, fn) {
-        return function () {
+    function makeTap(me, fn) {
+        return function() {
             var frame = me.enter(),
                 ret = fn.apply(this, arguments);
 
             frame.leave();
+
             return ret;
         };
     }
 
-    function setToJSON (count, childCount, calibration, set) {
+    function setToJSON(count, childCount, calibration, set) {
         var data = {
             avg: 0,
             min: set.min,
@@ -103,7 +113,7 @@ Ext.define('Ext.perf.Accumulator', function () {
             'Ext.ClassManager'
         ],
 
-        constructor: function (name) {
+        constructor: function(name) {
             var me = this;
 
             me.count = me.childCount = me.depth = me.maxDepth = 0;
@@ -116,41 +126,47 @@ Ext.define('Ext.perf.Accumulator', function () {
             getTimestamp: getTimestamp
         },
 
-        format: function (calibration) {
+        format: function(calibration) {
+            var data;
+
             if (!formatTpl) {
+                /* eslint-disable indent */
                 formatTpl = new Ext.XTemplate([
-                        '{name} - {count} call(s)',
-                        '<tpl if="count">',
-                            '<tpl if="childCount">',
-                                ' ({childCount} children)',
-                            '</tpl>',
-                            '<tpl if="depth - 1">',
-                                ' ({depth} deep)',
-                            '</tpl>',
-                            '<tpl for="times">',
-                                ', {type}: {[this.time(values.sum)]} msec (',
-                                     //'min={[this.time(values.min)]}, ',
-                                     'avg={[this.time(values.sum / parent.count)]}',
-                                     //', max={[this.time(values.max)]}',
-                                     ')',
-                            '</tpl>',
-                        '</tpl>'
-                    ].join(''), {
-                        time: function (t) {
-                            return Math.round(t * 100) / 100;
-                        }
-                    });
+                    '{name} - {count} call(s)',
+                    '<tpl if="count">',
+                        '<tpl if="childCount">',
+                            ' ({childCount} children)',
+                        '</tpl>',
+                        '<tpl if="depth - 1">',
+                            ' ({depth} deep)',
+                        '</tpl>',
+                        '<tpl for="times">',
+                            ', {type}: {[this.time(values.sum)]} msec (',
+                                 // 'min={[this.time(values.min)]}, ',
+                                 'avg={[this.time(values.sum / parent.count)]}',
+                                 // ', max={[this.time(values.max)]}',
+                                 ')',
+                        '</tpl>',
+                    '</tpl>'
+                ].join(''), {
+                    time: function(t) {
+                        return Math.round(t * 100) / 100;
+                    }
+                });
+                /* eslint-enable indent */
             }
 
-            var data = this.getData(calibration);
+            data = this.getData(calibration);
+
             data.name = this.name;
             data.pure.type = 'Pure';
             data.total.type = 'Total';
             data.times = [data.pure, data.total];
+
             return formatTpl.apply(data);
         },
 
-        getData: function (calibration) {
+        getData: function(calibration) {
             var me = this;
 
             return {
@@ -162,7 +178,7 @@ Ext.define('Ext.perf.Accumulator', function () {
             };
         },
 
-        enter: function () {
+        enter: function() {
             var me = this,
                 frame = {
                     accum: me,
@@ -172,43 +188,50 @@ Ext.define('Ext.perf.Accumulator', function () {
                 };
 
             ++me.depth;
+
             if (me.maxDepth < me.depth) {
                 me.maxDepth = me.depth;
             }
 
             currentFrame = frame;
             frame.time = getTimestamp(); // do this last
+
             return frame;
         },
 
-        monitor: function (fn, scope, args) {
+        monitor: function(fn, scope, args) {
             var frame = this.enter();
+
             if (args) {
                 fn.apply(scope, args);
-            } else {
+            }
+            else {
                 fn.call(scope);
             }
+
             frame.leave();
         },
 
-        report: function () {
+        report: function() {
             Ext.log(this.format());
         },
 
-        tap: function (className, methodName) {
+        tap: function(className, methodName) {
             var me = this,
                 methods = typeof methodName === 'string' ? [methodName] : methodName,
                 klass, statik, i, parts, length, name, src,
                 tapFunc;
 
-            tapFunc = function(){
+            tapFunc = function() {
                 if (typeof className === 'string') {
                     klass = Ext.global;
                     parts = className.split('.');
+
                     for (i = 0, length = parts.length; i < length; ++i) {
                         klass = klass[parts[i]];
                     }
-                } else {
+                }
+                else {
                     klass = className;
                 }
 
@@ -218,7 +241,8 @@ Ext.define('Ext.perf.Accumulator', function () {
 
                     if (statik) {
                         name = name.substring(1);
-                    } else {
+                    }
+                    else {
                         statik = !(name in klass.prototype);
                     }
 
@@ -233,6 +257,7 @@ Ext.define('Ext.perf.Accumulator', function () {
         }
     };
 },
-function () {
+/* eslint-disable indent */
+function() {
     Ext.perf.getTimestamp = this.getTimestamp;
 });

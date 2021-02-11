@@ -1,0 +1,13 @@
+$grid-header-background-color: dynamic(#6d6d6d);
+$grid-header-background-gradient: dynamic($base-gradient);
+$grid-header-border-color: dynamic($base-color);
+$grid-header-over-background-gradient: dynamic($base-gradient);
+$grid-header-padding: dynamic(6px 10px 6px 10px);
+$grid-header-sort-glyph-color: dynamic($base-color);
+$grid-header-sorted-background-gradient: dynamic($base-gradient);
+$grid-header-trigger-background-color-open: dynamic(#aeadad);
+$grid-header-trigger-glyph-color: dynamic($font-color);
+$grid-header-trigger-glyph-font-size: dynamic(18px);
+$grid-header-trigger-height: dynamic(48px);
+$grid-header-trigger-spacing: dynamic(8px);
+$grid-header-trigger-width: dynamic(48px);

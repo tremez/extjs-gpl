@@ -1,8 +1,4 @@
-.stretch-html .x-innerhtml {
-    height: 100%;
-}
-
-.stretch-html .drag-file-ct .x-innerhtml {
+.drag-file-ct .x-innerhtml {
     pointer-events: none;
 }
 
@@ -20,7 +16,7 @@
 }
 
 .drag-file-icon {
-    font-family: FontAwesome;
+    font-family: 'Font Awesome 5 Free';
     display: block;
     font-size: 64px;
     margin-top: 50px;
@@ -30,6 +26,7 @@
 
     .active & {
         display: block;
+
         &:after {
             content: $fa-var-check-circle;
             color: #8BC34A;
@@ -47,6 +44,7 @@
 
     .nosupport & {
         display: block;
+
         &:after {
             content: $fa-var-frown-o;
             color: #9E9E9E;

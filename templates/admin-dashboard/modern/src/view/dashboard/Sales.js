@@ -1,7 +1,6 @@
 Ext.define('Admin.view.dashboard.Sales', {
     extend: 'Ext.Panel',
     xtype: 'sales',
-    ui: 'light',
 
     requires: [
         'Ext.chart.CartesianChart',
@@ -10,72 +9,48 @@ Ext.define('Admin.view.dashboard.Sales', {
         'Ext.chart.series.Bar'
     ],
 
+    cls: 'quick-graph-panel',
     height: 130,
     layout: 'fit',
-
     title: 'Sales',
-    cls: 'quick-graph-panel',
+    ui: 'light',
+
     header: {
         docked: 'bottom'
     },
+
     platformConfig: {
         '!phone': {
             iconCls: 'x-fa fa-briefcase'
         }
     },
 
-    items: [
-        {
-            xtype: 'cartesian',
-            animation : !Ext.isIE9m && Ext.os.is.Desktop,
-            background: '#8561c5',
-            height: '100%',
-            width: '100%',
-            colors: [
-                '#ffffff'
-            ],
-
-            bind: '{quarterlyGrowth}',
-
-            axes: [
-                {
-                    type: 'category',
-                    fields: [
-                        'xvalue'
-                    ],
-                    hidden: true,
-                    position: 'bottom'
-                },
-                {
-                    type: 'numeric',
-                    fields: [
-                        'yvalue'
-                    ],
-                    grid: {
-                        odd: {
-                            fill: '#e8e8e8'
-                        }
-                    },
-                    hidden: true,
-                    position: 'left'
-                }
-            ],
-
-            series: [
-                {
-                    type: 'bar',
-                    xField: 'xvalue',
-                    yField: [
-                        'yvalue'
-                    ]
-                }
-            ],
-
-            interactions: [
-                {
-                    type: 'panzoom'
-                }
-            ]
-        }
-    ]
+    items: [{
+        xtype: 'cartesian',
+        animation : Ext.os.is.Desktop,
+        background: '#8561c5',
+        bind: '{quarterlyGrowth}',
+        colors: [
+            '#ffffff'
+        ],
+        axes: [{
+            type: 'category',
+            fields: 'xvalue',
+            hidden: true,
+            position: 'bottom'
+        }, {
+            type: 'numeric',
+            fields: 'yvalue',
+            hidden: true,
+            position: 'left'
+        }],
+        series: [{
+            type: 'bar',
+            xField: 'xvalue',
+            yField: 'yvalue'
+        }],
+        interactions: Ext.supports.Touch ? [{
+            type: 'panzoom'
+        }] : null
+    }]
 });

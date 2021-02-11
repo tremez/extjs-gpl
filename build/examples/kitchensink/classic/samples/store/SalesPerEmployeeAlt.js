@@ -3,9 +3,9 @@ Ext.define('KitchenSink.store.SalesPerEmployeeAlt', {
     alias: 'store.salesperemployee-alt',
 
     fields: [
-        {name: 'employee', type: 'number'},
-        {name: 'day', type: 'number'},
-        {name: 'sales', type: 'number'}
+        { name: 'employee', type: 'number' },
+        { name: 'day', type: 'number' },
+        { name: 'sales', type: 'number' }
     ],
 
     proxy: {

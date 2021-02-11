@@ -14,6 +14,7 @@ $rowbody-padding: dynamic($gridcell-padding);
  * @param {string} $ui
  * The name of the UI being created. Can not included spaces or special punctuation
  * (used in CSS class names).
+ * @param $padding
  */
 @mixin rowbody-ui(
     $ui: null,

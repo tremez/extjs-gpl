@@ -2,10 +2,12 @@
  * @class Ext.chart.series.Line
  * @extends Ext.chart.series.Cartesian
  *
- * Creates a Line Chart. A Line Chart is a useful visualization technique to display quantitative information for different
- * categories or other real values (as opposed to the bar chart), that can show some progression (or regression) in the dataset.
- * As with all other series, the Line Series must be appended in the *series* Chart array configuration. See the Chart
- * documentation for more information. A typical configuration object for the line series could be:
+ * Creates a Line Chart. A Line Chart is a useful visualization technique to display quantitative
+ * information for different categories or other real values (as opposed to the bar chart),
+ * that can show some progression (or regression) in the dataset.
+ * As with all other series, the Line Series must be appended in the *series* Chart array
+ * configuration. See the Chart documentation for more information. A typical configuration object
+ * for the line series could be:
  *
  *     @example
  *     Ext.create({
@@ -110,6 +112,8 @@ Ext.define('Ext.chart.series.Line', {
     type: 'line',
     seriesType: 'lineSeries',
 
+    isLine: true,
+
     requires: [
         'Ext.chart.series.sprite.Line'
     ],
@@ -117,13 +121,25 @@ Ext.define('Ext.chart.series.Line', {
     config: {
         /**
          * @cfg {Number} selectionTolerance
-         * The offset distance from the cursor position to the line series to trigger events (then used for highlighting series, etc).
+         * The offset distance from the cursor position to the line series to trigger events
+         * (then used for highlighting series, etc).
          */
         selectionTolerance: 20,
 
         /**
+         * @cfg {Object} curve
+         * The type of curve that connects the data points.
+         * Please see {@link Ext.chart.series.sprite.Line#curve line sprite documentation}
+         * for the full description.
+         */
+        curve: {
+            type: 'linear'
+        },
+
+        /**
          * @cfg {Object} style
-         * An object containing styles for the visualization lines. These styles will override the theme styles.
+         * An object containing styles for the visualization lines. These styles will override
+         * the theme styles.
          * Some options contained within the style object will are described next.
          */
 
@@ -131,15 +147,17 @@ Ext.define('Ext.chart.series.Line', {
          * @cfg {Boolean} smooth
          * `true` if the series' line should be smoothed.
          * Line smoothing only works with gapless data.
+         * @deprecated 6.5.0 Use the {@link #curve} config instead.
          */
-        smooth: false,
+        smooth: null,
 
         /**
          * @cfg {Boolean} step
          * If set to `true`, the line uses steps instead of straight lines to connect the dots.
          * It is ignored if `smooth` is true.
+         * @deprecated 6.5.0 Use the {@link #curve} config instead.
          */
-        step: false,
+        step: null,
 
         /**
          * @cfg {"gap"/"connect"/"origin"} [nullStyle="gap"]
@@ -158,35 +176,24 @@ Ext.define('Ext.chart.series.Line', {
 
         /**
          * @cfg {Boolean} fill
-         * If set to `true`, the area underneath the line is filled with the color defined as follows, listed by priority:
+         * If set to `true`, the area underneath the line is filled with the color defined
+         * as follows, listed by priority:
          * - The color that is configured for this series ({@link Ext.chart.series.Series#colors}).
          * - The color that is configured for this chart ({@link Ext.chart.AbstractChart#colors}).
          * - The fill color that is set in the {@link #style} config.
-         * - The stroke color that is set in the {@link #style} config, or the same color as the line.
+         * - The stroke color that is set in the {@link #style} config, or the same color
+         * as the line.
          *
-         * Note: Do not confuse `series.config.fill` (which is a boolean) with `series.style.fill' (which is an alias
-         * for the `fillStyle` property and contains a color). For compatibility with previous versions of the API,
-         * if `config.fill` is undefined but a `style.fill' color is provided, `config.fill` is considered true.
-         * So the default value below must be undefined, not false.
+         * Note: Do not confuse `series.config.fill` (which is a boolean) with `series.style.fill'
+         * (which is an alias for the `fillStyle` property and contains a color). For compatibility
+         * with previous versions of the API, if `config.fill` is undefined but a `style.fill' color
+         * is provided, `config.fill` is considered true. So the default value below must be
+         * undefined, not false.
          */
         fill: undefined,
 
         aggregator: { strategy: 'double' }
     },
-
-    /**
-     * @private
-     * Default numeric smoothing value to be used when `{@link #smooth} = true`.
-     */
-    defaultSmoothness: 3,
-
-    /**
-     * @private
-     * Size of the buffer area on either side of the viewport to provide seamless zoom/pan
-     * transforms. Expressed as a multiple of the viewport length, e.g. 1 will make the buffer on
-     * each side equal to the length of the visible axis viewport.
-     */
-    overflowBuffer: 1,
 
     themeMarkerCount: function() {
         return 1;
@@ -196,29 +203,32 @@ Ext.define('Ext.chart.series.Line', {
      * @private
      * Override {@link Ext.chart.series.Series#getDefaultSpriteConfig}
      */
-    getDefaultSpriteConfig: function () {
+    getDefaultSpriteConfig: function() {
         var me = this,
             parentConfig = me.callParent(arguments),
             style = Ext.apply({}, me.getStyle()),
             styleWithTheme,
             fillArea = false;
 
-        if (typeof me.config.fill != 'undefined') {
+        if (me.config.fill !== undefined) {
             // If config.fill is present but there is no fillStyle, then use the
             // strokeStyle to fill (and paint the area the same color as the line).
             if (me.config.fill) {
                 fillArea = true;
-                if (typeof style.fillStyle == 'undefined') {
-                    if (typeof style.strokeStyle == 'undefined') {
+
+                if (style.fillStyle === undefined) {
+                    if (style.strokeStyle === undefined) {
                         styleWithTheme = me.getStyleWithTheme();
                         style.fillStyle = styleWithTheme.fillStyle;
                         style.strokeStyle = styleWithTheme.strokeStyle;
-                    } else {
+                    }
+                    else {
                         style.fillStyle = style.strokeStyle;
                     }
                 }
             }
-        } else {
+        }
+        else {
             // For compatibility with previous versions of the API, if config.fill
             // is undefined but style.fillStyle is provided, we fill the area.
             if (style.fillStyle) {
@@ -236,38 +246,44 @@ Ext.define('Ext.chart.series.Line', {
 
         return Ext.apply(style, {
             fillArea: fillArea,
-            step: me.config.step,
-            smooth: me.config.smooth,
             selectionTolerance: me.config.selectionTolerance
         });
     },
 
-    updateStep: function (step) {
-        var sprite = this.getSprites()[0];
-        if (sprite && sprite.attr.step !== step) {
-            sprite.setAttributes({step: step});
-        }
+    updateFill: function(fill) {
+        this.withSprite(function(sprite) {
+            return sprite.setAttributes({ fillArea: fill });
+        });
     },
 
-    updateFill: function (fill) {
-        var sprite = this.getSprites()[0];
-        if (sprite && sprite.attr.fillArea !== fill) {
-            sprite.setAttributes({fillArea: fill});
-        }
+    updateCurve: function(curve) {
+        this.withSprite(function(sprite) {
+            return sprite.setAttributes({ curve: curve });
+        });
     },
 
-    updateSmooth: function (smooth) {
-        var sprite = this.getSprites()[0];
-        if (sprite && sprite.attr.smooth !== smooth) {
-            sprite.setAttributes({smooth: smooth});
-        }
+    getCurve: function() {
+        return this.withSprite(function(sprite) {
+            return sprite.attr.curve;
+        });
     },
 
-    updateNullStyle: function (nullStyle) {
-        var sprite = this.getSprites()[0];
-        if (sprite && sprite.attr.nullStyle !== nullStyle) {
-            sprite.setAttributes({nullStyle: nullStyle});
-        }
+    updateNullStyle: function(nullStyle) {
+        this.withSprite(function(sprite) {
+            return sprite.setAttributes({ nullStyle: nullStyle });
+        });
+    },
+
+    updateSmooth: function(smooth) {
+        this.setCurve({
+            type: smooth ? 'natural' : 'linear'
+        });
+    },
+
+    updateStep: function(step) {
+        this.setCurve({
+            type: step ? 'step-after' : 'linear'
+        });
     }
 
 });

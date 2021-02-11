@@ -260,10 +260,10 @@ Ext.define("Ext.locale.tr.window.MessageBox", {
         cancel: "İptal",
         yes: "Evet",
         no: "Hayır"
-    }    
+    }
 });
 
 // This is needed until we can refactor all of the locales into individual files
-Ext.define("Ext.locale.tr.Component", {	
+Ext.define("Ext.locale.tr.Component", {
     override: "Ext.Component"
 });

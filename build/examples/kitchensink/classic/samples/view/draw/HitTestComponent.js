@@ -13,7 +13,7 @@ Ext.define('KitchenSink.view.HitTestComponent', {
         mouseMove: 'onMouseEvent'
     },
 
-    onMouseEvent: function (e) {
+    onMouseEvent: function(e) {
         var me = this,
             surface = me.getSurface(),
             hitResult = surface.hitTestEvent(e),
@@ -25,6 +25,7 @@ Ext.define('KitchenSink.view.HitTestComponent', {
                 debug: null
             });
         }
+
         if (hitResult && hitResult.sprite) {
             hitResult.sprite.setAttributes({
                 strokeStyle: 'red',

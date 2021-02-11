@@ -82,13 +82,13 @@ $progress-text-text-align: dynamic(center);
  * @var {number}
  * The font-size of the ProgressBar's text
  */
-$progress-text-font-size: dynamic(px-to-rem(13px, 13px));
+$progress-text-font-size: dynamic(13px);
 
 /**
  * @var {number}
  * The font-size-big of the ProgressBar's text in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$progress-text-font-size-big: dynamic(px-to-rem(15px, 15px));
+$progress-text-font-size-big: dynamic(15px);
 
 /**
  * @var {string}
@@ -106,13 +106,13 @@ $progress-text-font-family: dynamic($font-family);
  * @var {number}
  * The line-height of the ProgressBar's text
  */
-$progress-text-line-height: dynamic(px-to-em(20px, 13px));
+$progress-text-line-height: dynamic($progress-min-height);
 
 /**
  * @var {number}
  * The line-height-big of the ProgressBar's text in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$progress-text-line-height-big: dynamic(px-to-em(32px, 15px));
+$progress-text-line-height-big: dynamic(32px);
 
 /**
  * Creates a visual theme for an Ext.ProgressBar
@@ -132,7 +132,7 @@ $progress-text-line-height-big: dynamic(px-to-em(32px, 15px));
  * a predefined gradient or a list of color stops. Used as the `$type` parameter for
  * {@link Global_CSS#background-gradient}.
  *
- * @param {color} [$font-color=$progress-text-front-color]
+ * @param {color} [$front-color=$progress-text-front-color]
  * The color of the ProgressBar's text when in front of the ProgressBar's moving element
  *
  * @param {color} [$back-color=$progress-text-back-color]
@@ -150,11 +150,11 @@ $progress-text-line-height-big: dynamic(px-to-em(32px, 15px));
  * @param {color} [$border-color=$progress-border-color]
  * The border-color of the ProgressBar
  *
- * @param {number} [$border-radius=$progress-border-radius]
- * The border-radius of the ProgressBar
- *
  * @param {number} [$border-style=$progress-border-style]
  * The border-style of the ProgressBar
+ *
+ * @param {number} [$border-radius=$progress-border-radius]
+ * The border-radius of the ProgressBar
  *
  * @param {string} [$text-text-align=$progress-text-text-align]
  * The text-align of the ProgressBar's text
@@ -168,13 +168,16 @@ $progress-text-line-height-big: dynamic(px-to-em(32px, 15px));
  * @param {string} [$text-font-weight=$progress-text-font-weight]
  * The font-weight of the ProgressBar's text
  *
+ * @param {string} [$text-font-family=$progress-font-family]
+ * The font-family of the ProgressBar's text
+ *
  * @param {number} [$text-line-height=$progress-text-line-height]
  * The line-height of the ProgressBar's text
  *
  * @param {number} [$text-line-height-big=$progress-text-line-height-big]
  * The line-height of the ProgressBar's text in the {@link Global_CSS#$enable-big big} sizing scheme
  *
- * @member Ext.ProgressBar
+ * @member Ext.Progress
  */
 @mixin progress-ui(
     $ui: null,

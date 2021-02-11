@@ -5,7 +5,7 @@
 Ext.define('Ticket.view.ticket.Search', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.ticketsearch',
-    
+
     requires: [
         'Ticket.view.ticket.SearchController',
         'Ticket.view.ticket.SearchModel',
@@ -24,7 +24,7 @@ Ext.define('Ticket.view.ticket.Search', {
         title: 'Search - {theProject.name}',
         store: '{tickets}'
     },
-    
+
     tbar: [{
         xtype: 'combobox',
         fieldLabel: 'User',
@@ -66,7 +66,7 @@ Ext.define('Ticket.view.ticket.Search', {
         text: 'Refresh',
         handler: 'onRefreshClick'
     }],
-    
+
     columns: [{
         text: 'ID',
         dataIndex: 'id'

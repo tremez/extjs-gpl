@@ -2,23 +2,22 @@
  * A control that allows selection of multiple items in a list.
  */
 Ext.define('Ext.ux.form.MultiSelect', {
-    
     extend: 'Ext.form.FieldContainer',
-    
+
     mixins: [
         'Ext.util.StoreHolder',
         'Ext.form.field.Field'
     ],
-    
+
     alternateClassName: 'Ext.ux.Multiselect',
     alias: ['widget.multiselectfield', 'widget.multiselect'],
-    
+
     requires: ['Ext.panel.Panel', 'Ext.view.BoundList', 'Ext.layout.container.Fit'],
-    
+
     uses: ['Ext.view.DragZone', 'Ext.view.DropZone'],
-    
+
     layout: 'anchor',
-    
+
     /**
      * @cfg {String} [dragGroup=""] The ddgroup name for the MultiSelect DragZone.
      */
@@ -26,25 +25,27 @@ Ext.define('Ext.ux.form.MultiSelect', {
     /**
      * @cfg {String} [dropGroup=""] The ddgroup name for the MultiSelect DropZone.
      */
-    
+
     /**
      * @cfg {String} [title=""] A title for the underlying panel.
      */
-    
+
     /**
-     * @cfg {Boolean} [ddReorder=false] Whether the items in the MultiSelect list are drag/drop reorderable.
+     * @cfg {Boolean} [ddReorder=false] Whether the items in the MultiSelect list are drag/drop
+     * reorderable.
      */
     ddReorder: false,
 
     /**
-     * @cfg {Object/Array} tbar An optional toolbar to be inserted at the top of the control's selection list.
-     * This can be a {@link Ext.toolbar.Toolbar} object, a toolbar config, or an array of buttons/button configs
-     * to be added to the toolbar. See {@link Ext.panel.Panel#tbar}.
+     * @cfg {Object/Array} tbar An optional toolbar to be inserted at the top of the control's
+     * selection list. This can be a {@link Ext.toolbar.Toolbar} object, a toolbar config,
+     * or an array of buttons/button configs to be added to the toolbar.
+     * See {@link Ext.panel.Panel#tbar}.
      */
 
     /**
-     * @cfg {String} [appendOnly=false] `true` if the list should only allow append drops when drag/drop is enabled.
-     * This is useful for lists which are sorted.
+     * @cfg {String} [appendOnly=false] `true` if the list should only allow append drops
+     * when drag/drop is enabled. This is useful for lists which are sorted.
      */
     appendOnly: false,
 
@@ -58,8 +59,8 @@ Ext.define('Ext.ux.form.MultiSelect', {
      */
 
     /**
-     * @cfg {Boolean} [allowBlank=true] `false` to require at least one item in the list to be selected, `true` to allow no
-     * selection.
+     * @cfg {Boolean} [allowBlank=true] `false` to require at least one item in the list
+     * to be selected, `true` to allow no selection.
      */
     allowBlank: true,
 
@@ -74,7 +75,8 @@ Ext.define('Ext.ux.form.MultiSelect', {
     maxSelections: Number.MAX_VALUE,
 
     /**
-     * @cfg {String} [blankText="This field is required"] Default text displayed when the control contains no items.
+     * @cfg {String} [blankText="This field is required"] Default text displayed when the control
+     * contains no items.
      */
     blankText: 'This field is required',
 
@@ -84,7 +86,7 @@ Ext.define('Ext.ux.form.MultiSelect', {
      * The {0} token will be replaced by the value of {@link #minSelections}.
      */
     minSelectionsText: 'Minimum {0} item(s) required',
-    
+
     /**
      * @cfg {String} [maxSelectionsText="Maximum {0}item(s) allowed"] 
      * Validation message displayed when {@link #maxSelections} is not met
@@ -93,12 +95,13 @@ Ext.define('Ext.ux.form.MultiSelect', {
     maxSelectionsText: 'Maximum {0} item(s) required',
 
     /**
-     * @cfg {String} [delimiter=","] The string used to delimit the selected values when {@link #getSubmitValue submitting}
-     * the field as part of a form. If you wish to have the selected values submitted as separate
-     * parameters rather than a single delimited parameter, set this to `null`.
+     * @cfg {String} [delimiter=","] The string used to delimit the selected values when
+     * {@link #getSubmitValue submitting} the field as part of a form. If you wish to have
+     * the selected values submitted as separate parameters rather than a single
+     * delimited parameter, set this to `null`.
      */
     delimiter: ',',
-    
+
     /**
      * @cfg {String} [dragText="{0} Item{1}"] The text to show while dragging items.
      * {0} will be replaced by the number of items. {1} will be replaced by the plural
@@ -107,7 +110,8 @@ Ext.define('Ext.ux.form.MultiSelect', {
     dragText: '{0} Item{1}',
 
     /**
-     * @cfg {Ext.data.Store/Array} store The data source to which this MultiSelect is bound (defaults to `undefined`).
+     * @cfg {Ext.data.Store/Array} store The data source to which this MultiSelect is bound
+     * (defaults to `undefined`).
      * Acceptable values for this property are:
      * <div class="mdetail-params"><ul>
      * <li><b>any {@link Ext.data.Store Store} subclass</b></li>
@@ -116,26 +120,28 @@ Ext.define('Ext.ux.form.MultiSelect', {
      * <li><b>1-dimensional array</b> : (e.g., <tt>['Foo','Bar']</tt>)<div class="sub-desc">
      * A 1-dimensional array will automatically be expanded (each array item will be the combo
      * {@link #valueField value} and {@link #displayField text})</div></li>
-     * <li><b>2-dimensional array</b> : (e.g., <tt>[['f','Foo'],['b','Bar']]</tt>)<div class="sub-desc">
-     * For a multi-dimensional array, the value in index 0 of each item will be assumed to be the combo
-     * {@link #valueField value}, while the value at index 1 is assumed to be the combo {@link #displayField text}.
+     * <li><b>2-dimensional array</b> : (e.g., `[['f','Foo'],['b','Bar']]`)<div class="sub-desc">
+     * For a multi-dimensional array, the value in index 0 of each item will be assumed to be
+     * the combo {@link #valueField value}, while the value at index 1 is assumed to be the combo
+     * {@link #displayField text}.
      * </div></li></ul></div></li></ul></div>
      */
-    
+
     ignoreSelectChange: 0,
 
     /**
      * @cfg {Object} listConfig
-     * An optional set of configuration properties that will be passed to the {@link Ext.view.BoundList}'s constructor.
-     * Any configuration that is valid for BoundList can be included.
+     * An optional set of configuration properties that will be passed to the
+     * {@link Ext.view.BoundList}'s constructor. Any configuration that is valid for BoundList
+     * can be included.
      */
 
     /**
      * @cfg {Number} [pageSize=10] The number of items to advance on pageUp and pageDown
      */
     pageSize: 10,
-    
-    initComponent: function(){
+
+    initComponent: function() {
         var me = this;
 
         me.items = me.setupItems();
@@ -148,7 +154,7 @@ Ext.define('Ext.ux.form.MultiSelect', {
 
     setupItems: function() {
         var me = this;
-        
+
         me.boundList = new Ext.view.BoundList(Ext.apply({
             anchor: 'none 100%',
             border: 1,
@@ -161,7 +167,7 @@ Ext.define('Ext.ux.form.MultiSelect', {
                 type: 'default'
             }
         }, me.listConfig));
-        
+
         me.boundList.getNavigationModel().addKeyBindings({
             pageUp: me.onKeyPageUp,
             pageDown: me.onKeyPageDown,
@@ -170,7 +176,8 @@ Ext.define('Ext.ux.form.MultiSelect', {
 
         me.boundList.getSelectionModel().on('selectionchange', me.onSelectChange, me);
 
-        // Boundlist expects a reference to its pickerField for when an item is selected (see Boundlist#onItemClick).
+        // Boundlist expects a reference to its pickerField for when an item is selected
+        // (see Boundlist#onItemClick).
         me.boundList.pickerField = me;
 
         // Only need to wrap the BoundList in a Panel if we have a title.
@@ -180,7 +187,7 @@ Ext.define('Ext.ux.form.MultiSelect', {
 
         // Wrap to add a title
         me.boundList.border = false;
-        
+
         return {
             xtype: 'panel',
             isAriaRegion: false,
@@ -193,20 +200,20 @@ Ext.define('Ext.ux.form.MultiSelect', {
         };
     },
 
-    onSelectChange: function(selModel, selections){
+    onSelectChange: function(selModel, selections) {
         if (!this.ignoreSelectChange) {
             this.setValue(selections);
-        }    
+        }
     },
-    
-    getSelected: function(){
+
+    getSelected: function() {
         return this.boundList.getSelectionModel().getSelection();
     },
-    
+
     // compare array values
     isEqual: function(v1, v2) {
         var fromArray = Ext.Array.from,
-            i = 0, 
+            i = 0,
             len;
 
         v1 = fromArray(v1);
@@ -217,7 +224,7 @@ Ext.define('Ext.ux.form.MultiSelect', {
             return false;
         }
 
-        for(; i < len; i++) {
+        for (; i < len; i++) {
             if (v2[i] !== v1[i]) {
                 return false;
             }
@@ -225,37 +232,45 @@ Ext.define('Ext.ux.form.MultiSelect', {
 
         return true;
     },
-    
-    afterRender: function(){
+
+    afterRender: function() {
         var me = this,
-            boundList = me.boundList,
-            records, panel;
-        
+            boundList, scrollable, records, panel;
+
         me.callParent();
+
+        boundList = me.boundList;
+        scrollable = boundList && boundList.getScrollable();
+
         if (me.selectOnRender) {
             records = me.getRecordsForValue(me.value);
+
             if (records.length) {
                 ++me.ignoreSelectChange;
-                me.boundList.getSelectionModel().select(records);
+                boundList.getSelectionModel().select(records);
                 --me.ignoreSelectChange;
             }
+
             delete me.toSelect;
-        }    
-        
-        if (me.ddReorder && !me.dragGroup && !me.dropGroup){
+        }
+
+        if (me.ddReorder && !me.dragGroup && !me.dropGroup) {
             me.dragGroup = me.dropGroup = 'MultiselectDD-' + Ext.id();
         }
 
-        if (me.draggable || me.dragGroup){
+        if (me.draggable || me.dragGroup) {
             me.dragZone = Ext.create('Ext.view.DragZone', {
-                view: me.boundList,
+                view: boundList,
                 ddGroup: me.dragGroup,
-                dragText: me.dragText
+                dragText: me.dragText,
+                containerScroll: !!scrollable,
+                scrollEl: scrollable && scrollable.getElement()
             });
         }
-        if (me.droppable || me.dropGroup){
+
+        if (me.droppable || me.dropGroup) {
             me.dropZone = Ext.create('Ext.view.DropZone', {
-                view: me.boundList,
+                view: boundList,
                 ddGroup: me.dropGroup,
                 handleNodeDrop: function(data, dropRecord, position) {
                     var view = this.view,
@@ -267,84 +282,88 @@ Ext.define('Ext.ux.form.MultiSelect', {
                     data.view.store.remove(records);
 
                     index = store.indexOf(dropRecord);
+
                     if (position === 'after') {
                         index++;
                     }
+
                     store.insert(index, records);
                     view.getSelectionModel().select(records);
                     me.fireEvent('drop', me, records);
                 }
             });
         }
-        
+
         panel = me.down('panel');
-        
+
         if (panel && boundList) {
             boundList.ariaEl.dom.setAttribute('aria-labelledby', panel.header.id + '-title-textEl');
         }
     },
-    
+
     onKeyPageUp: function(e) {
         var me = this,
             pageSize = me.pageSize,
             boundList = me.boundList,
             nm = boundList.getNavigationModel(),
             oldIdx, newIdx;
-        
+
         oldIdx = nm.recordIndex;
-        
+
         // Unlike up arrow, pgUp does not wrap but goes to the first item
         newIdx = oldIdx > pageSize ? oldIdx - pageSize : 0;
-        
+
         nm.setPosition(newIdx, e);
     },
-    
+
     onKeyPageDown: function(e) {
         var me = this,
             pageSize = me.pageSize,
             boundList = me.boundList,
             nm = boundList.getNavigationModel(),
             count, oldIdx, newIdx;
-        
+
         count = boundList.getStore().getCount();
         oldIdx = nm.recordIndex;
-        
+
         // Unlike down arrow, pgDown does not wrap but goes to the last item
         newIdx = oldIdx < (count - pageSize) ? oldIdx + pageSize : count - 1;
-        
+
         nm.setPosition(newIdx, e);
     },
-    
-    isValid : function() {
+
+    isValid: function() {
         var me = this,
             disabled = me.disabled,
             validate = me.forceValidation || !disabled;
-            
-        
+
         return validate ? me.validateValue(me.value) : disabled;
     },
-    
+
     validateValue: function(value) {
         var me = this,
             errors = me.getErrors(value),
             isValid = Ext.isEmpty(errors);
-            
+
         if (!me.preventMark) {
             if (isValid) {
                 me.clearInvalid();
-            } else {
+            }
+            else {
                 me.markInvalid(errors);
             }
         }
 
         return isValid;
     },
-    
-    markInvalid : function(errors) {
+
+    markInvalid: function(errors) {
         // Save the message and fire the 'invalid' event
         var me = this,
             oldMsg = me.getActiveError();
+
         me.setActiveErrors(Ext.Array.from(errors));
+
         if (oldMsg !== me.getActiveError()) {
             me.updateLayout();
         }
@@ -353,31 +372,37 @@ Ext.define('Ext.ux.form.MultiSelect', {
     /**
      * Clear any invalid styles/messages for this field.
      *
-     * __Note:__ this method does not cause the Field's {@link #validate} or {@link #isValid} methods to return `true`
-     * if the value does not _pass_ validation. So simply clearing a field's errors will not necessarily allow
-     * submission of forms submitted with the {@link Ext.form.action.Submit#clientValidation} option set.
+     * __Note:__ this method does not cause the Field's {@link #validate} or {@link #isValid}
+     * methods to return `true` if the value does not _pass_ validation. So simply clearing
+     * a field's errors will not necessarily allow submission of forms submitted with the
+     * {@link Ext.form.action.Submit#clientValidation} option set.
      */
-    clearInvalid : function() {
+    clearInvalid: function() {
         // Clear the message and fire the 'valid' event
         var me = this,
             hadError = me.hasActiveError();
+
         me.unsetActiveError();
+
         if (hadError) {
             me.updateLayout();
         }
     },
-    
+
     getSubmitData: function() {
         var me = this,
             data = null,
             val;
+
         if (!me.disabled && me.submitValue && !me.isFileUpload()) {
             val = me.getSubmitValue();
+
             if (val !== null) {
                 data = {};
                 data[me.getName()] = val;
             }
         }
+
         return data;
     },
 
@@ -390,15 +415,15 @@ Ext.define('Ext.ux.form.MultiSelect', {
         var me = this,
             delimiter = me.delimiter,
             val = me.getValue();
-        
+
         return Ext.isString(delimiter) ? val.join(delimiter) : val;
     },
-    
-    getValue: function(){
+
+    getValue: function() {
         return this.value || [];
     },
-    
-    getRecordsForValue: function(value){
+
+    getRecordsForValue: function(value) {
         var me = this,
             records = [],
             all = me.store.getRange(),
@@ -408,48 +433,54 @@ Ext.define('Ext.ux.form.MultiSelect', {
             rec,
             j,
             valueLen;
-            
+
         for (valueLen = value.length; i < valueLen; ++i) {
             for (j = 0; j < allLen; ++j) {
-                rec = all[j];   
-                if (rec.get(valueField) == value[i]) {
+                rec = all[j];
+
+                if (rec.get(valueField) === value[i]) {
                     records.push(rec);
                 }
-            }    
+            }
         }
-            
+
         return records;
     },
-    
-    setupValue: function(value){
+
+    setupValue: function(value) {
         var delimiter = this.delimiter,
             valueField = this.valueField,
             i = 0,
             out,
             len,
             item;
-            
+
         if (Ext.isDefined(value)) {
             if (delimiter && Ext.isString(value)) {
                 value = value.split(delimiter);
-            } else if (!Ext.isArray(value)) {
+            }
+            else if (!Ext.isArray(value)) {
                 value = [value];
             }
-        
+
             for (len = value.length; i < len; ++i) {
                 item = value[i];
+
                 if (item && item.isModel) {
                     value[i] = item.get(valueField);
                 }
             }
+
             out = Ext.Array.unique(value);
-        } else {
+        }
+        else {
             out = [];
         }
+
         return out;
     },
-    
-    setValue: function(value){
+
+    setValue: function(value) {
         var me = this,
             selModel = me.boundList.getSelectionModel(),
             store = me.store;
@@ -460,45 +491,53 @@ Ext.define('Ext.ux.form.MultiSelect', {
                 load: Ext.Function.bind(me.setValue, me, [value]),
                 single: true
             });
+
             return;
         }
 
         value = me.setupValue(value);
         me.mixins.field.setValue.call(me, value);
-        
+
         if (me.rendered) {
             ++me.ignoreSelectChange;
             selModel.deselectAll();
+
             if (value.length) {
                 selModel.select(me.getRecordsForValue(value));
             }
+
             --me.ignoreSelectChange;
-        } else {
+        }
+        else {
             me.selectOnRender = true;
         }
     },
-    
-    clearValue: function(){
-        this.setValue([]);    
+
+    clearValue: function() {
+        this.setValue([]);
     },
-    
-    onEnable: function(){
+
+    onEnable: function() {
         var list = this.boundList;
+
         this.callParent();
+
         if (list) {
             list.enable();
         }
     },
-    
-    onDisable: function(){
+
+    onDisable: function() {
         var list = this.boundList;
+
         this.callParent();
+
         if (list) {
             list.disable();
         }
     },
-    
-    getErrors : function(value) {
+
+    getErrors: function(value) {
         var me = this,
             format = Ext.String.format,
             errors = [],
@@ -510,24 +549,27 @@ Ext.define('Ext.ux.form.MultiSelect', {
         if (!me.allowBlank && numSelected < 1) {
             errors.push(me.blankText);
         }
+
         if (numSelected < me.minSelections) {
             errors.push(format(me.minSelectionsText, me.minSelections));
         }
+
         if (numSelected > me.maxSelections) {
             errors.push(format(me.maxSelectionsText, me.maxSelections));
         }
+
         return errors;
     },
-    
-    doDestroy: function(){
+
+    doDestroy: function() {
         var me = this;
-        
+
         me.bindStore(null);
         Ext.destroy(me.dragZone, me.dropZone, me.keyNav);
         me.callParent();
     },
-    
-    onBindStore: function(store){
+
+    onBindStore: function(store) {
         var me = this,
             boundList = this.boundList;
 
@@ -562,5 +604,5 @@ Ext.define('Ext.ux.form.MultiSelect', {
         if (boundList) {
             boundList.setDisplayField(me.displayField);
         }
-    }    
+    }
 });

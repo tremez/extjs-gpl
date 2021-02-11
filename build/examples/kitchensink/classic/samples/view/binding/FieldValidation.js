@@ -10,18 +10,37 @@ Ext.define('KitchenSink.view.binding.FieldValidation', {
     //<example>
     otherContent: [{
         type: 'Model',
-        path: 'classic/samples/model/Company.js'
-    },{
+        path: 'app/model/Company.js'
+    }, {
         type: 'Field',
-        path: 'classic/samples/model/field/PhoneNumber.js'
+        path: 'app/model/field/PhoneNumber.js'
     }],
 
     defaults: {
-        labelWidth: 50
+        labelWidth: 60
     },
     width: 300,
-    bodyPadding: 10,
+    bodyPadding: 20,
     //</example>
+
+    profiles: {
+        classic: {
+            width: 'auto',
+            bodyPadding: 10
+        },
+        neptune: {
+            width: 'auto',
+            bodyPadding: 10
+        },
+        graphite: {
+            width: 'auto',
+            bodyPadding: 10
+        },
+        'classic-material': {
+            width: 260,
+            bodyPadding: 20
+        }
+    },
 
     title: 'Customer Details',
 
@@ -42,6 +61,7 @@ Ext.define('KitchenSink.view.binding.FieldValidation', {
         xtype: 'textfield',
         fieldLabel: 'Phone',
         msgTarget: 'side',
+        width: '${width}',
         bind: '{theCustomer.phone}'  // validation is from custom model field
     }]
 });

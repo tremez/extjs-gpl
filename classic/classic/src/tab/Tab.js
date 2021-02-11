@@ -1,7 +1,8 @@
 /**
- * Represents a single Tab in a {@link Ext.tab.Panel TabPanel}. A Tab is simply a slightly customized {@link Ext.button.Button Button},
- * styled to look like a tab. Tabs are optionally closable, and can also be disabled. 99% of the time you will not
- * need to create Tabs manually as the framework does so automatically when you use a {@link Ext.tab.Panel TabPanel}
+ * Represents a single Tab in a {@link Ext.tab.Panel TabPanel}. A Tab is simply a slightly
+ * customized {@link Ext.button.Button Button}, styled to look like a tab. Tabs are optionally
+ * closable, and can also be disabled. 99% of the time you will not need to create Tabs manually
+ * as the framework does so automatically when you use a {@link Ext.tab.Panel TabPanel}
  */
 Ext.define('Ext.tab.Tab', {
     extend: 'Ext.button.Button',
@@ -49,16 +50,15 @@ Ext.define('Ext.tab.Tab', {
      */
     closable: true,
 
-    //<locale>
+    // The wording is chosen to be less confusing to blind users.
     /**
      * @cfg {String} [closeText="removable"]
      * The accessible text label for the close button link to be announced by screen readers
      * when the tab is focused. This text does not appear visually and is only used when
      * {@link #cfg-closable} is `true`.
+     * @locale
      */
-    // The wording is chosen to be less confusing to blind users.
     closeText: 'removable',
-    //</locale>
 
     /**
      * @property {Boolean} active
@@ -92,20 +92,21 @@ Ext.define('Ext.tab.Tab', {
 
     /**
      * @event beforeclose
-     * Fires if the user clicks on the Tab's close button, but before the {@link #close} event is fired. Return
-     * false from any listener to stop the close event being fired
+     * Fires if the user clicks on the Tab's close button, but before the {@link #close}
+     * event is fired. Return false from any listener to stop the close event being fired
      * @param {Ext.tab.Tab} tab The Tab object
      */
 
     /**
      * @event close
-     * Fires to indicate that the tab is to be closed, usually because the user has clicked the close button.
+     * Fires to indicate that the tab is to be closed, usually because the user has clicked
+     * the close button.
      * @param {Ext.tab.Tab} tab The Tab object
      */
 
     ariaRole: 'tab',
     tabIndex: -1,
-    
+
     keyMap: {
         scope: 'this',
         DELETE: 'onDeleteKey'
@@ -169,7 +170,7 @@ Ext.define('Ext.tab.Tab', {
 
     initComponent: function() {
         var me = this;
-        
+
         // Although WAI-ARIA spec has a provision for deleting tab panels,
         // according to accessibility experts at University of Washington
         // closable tab panels can be very confusing to vision impaired users.
@@ -178,14 +179,15 @@ Ext.define('Ext.tab.Tab', {
         // to avoid closable tabs in accessible applications.
         //<debug>
         if (me.closable) {
-            Ext.ariaWarn(me,
+            Ext.ariaWarn(
+                me,
                 "Closable tabs can be confusing to users relying on Assistive Technologies " +
                 "such as Screen Readers, and are not recommended in accessible applications. " +
                 "Please consider setting " + me.title + " tab (" + me.id + ") to closable: false."
             );
         }
         //</debug>
-        
+
         if (me.card) {
             me.setCard(me.card);
         }
@@ -196,8 +198,7 @@ Ext.define('Ext.tab.Tab', {
     getActualRotation: function() {
         var rotation = this.getRotation();
 
-        return (rotation !== 'default') ? rotation :
-            this._defaultRotations[this.getTabPosition()];
+        return (rotation !== 'default') ? rotation : this._defaultRotations[this.getTabPosition()];
     },
 
     updateRotation: function() {
@@ -222,17 +223,21 @@ Ext.define('Ext.tab.Tab', {
             if (oldRotateCls) {
                 me.removeCls(oldRotateCls);
             }
+
             if (rotateCls) {
                 me.addCls(rotateCls);
             }
         }
+
         if (oldPositionCls !== positionCls) {
             if (oldPositionCls) {
                 me.removeClsWithUI(oldPositionCls);
             }
+
             if (positionCls) {
                 me.addClsWithUI(positionCls);
             }
+
             if (me.rendered) {
                 me.updateFrame();
             }
@@ -243,7 +248,7 @@ Ext.define('Ext.tab.Tab', {
         }
     },
 
-    onAdded: function (container, pos, instanced) {
+    onAdded: function(container, pos, instanced) {
         this.callParent([container, pos, instanced]);
         this.syncRotationAndPosition();
     },
@@ -264,7 +269,7 @@ Ext.define('Ext.tab.Tab', {
             tabPanel = me.up('tabpanel');
 
         me.callParent();
-        
+
         me.ariaRenderAttributes = me.ariaRenderAttributes || {};
 
         if (me.active) {
@@ -280,15 +285,19 @@ Ext.define('Ext.tab.Tab', {
         // Propagate minTabWidth and maxTabWidth settings from the owning TabBar then TabPanel
         if (!me.minWidth) {
             me.minWidth = (tabBar) ? tabBar.minTabWidth : me.minWidth;
+
             if (!me.minWidth && tabPanel) {
                 me.minWidth = tabPanel.minTabWidth;
             }
+
             if (me.minWidth && me.iconCls) {
                 me.minWidth += 25;
             }
         }
+
         if (!me.maxWidth) {
             me.maxWidth = (tabBar) ? tabBar.maxTabWidth : me.maxWidth;
+
             if (!me.maxWidth && tabPanel) {
                 me.maxWidth = tabPanel.maxTabWidth;
             }
@@ -315,7 +324,8 @@ Ext.define('Ext.tab.Tab', {
 
         if (rotation) {
             el.setVertical(rotation === 1 ? 90 : 270);
-        } else {
+        }
+        else {
             el.setHorizontal();
         }
     },
@@ -342,8 +352,8 @@ Ext.define('Ext.tab.Tab', {
 
     /**
      * Sets the tab as either closable or not.
-     * @param {Boolean} closable Pass false to make the tab not closable. Otherwise the tab will be made closable (eg a
-     * close button will appear on the tab)
+     * @param {Boolean} closable Pass false to make the tab not closable. Otherwise the tab
+     * will be made closable (eg a close button will appear on the tab)
      */
     setClosable: function(closable) {
         var me = this;
@@ -374,7 +384,7 @@ Ext.define('Ext.tab.Tab', {
      * This method ensures that the closeBtn element exists or not based on 'closable'.
      * @private
      */
-    syncClosableElements: function () {
+    syncClosableElements: function() {
         var me = this,
             closeEl = me.closeEl;
 
@@ -387,9 +397,11 @@ Ext.define('Ext.tab.Tab', {
                     html: me.closeText
                 }, 'after');
             }
+
             closeEl.addClsOnOver(me.closeElOverCls);
             closeEl.addClsOnClick(me.closeElPressedCls);
-        } else if (closeEl) {
+        }
+        else if (closeEl) {
             closeEl.destroy();
             delete me.closeEl;
         }
@@ -399,32 +411,36 @@ Ext.define('Ext.tab.Tab', {
      * This method ensures that the closable cls are added or removed based on 'closable'.
      * @private
      */
-    syncClosableCls: function () {
+    syncClosableCls: function() {
         var me = this,
             closableCls = me._closableCls;
 
         if (me.closable) {
             me.addCls(closableCls);
-        } else {
+        }
+        else {
             me.removeCls(closableCls);
         }
     },
 
     /**
-     * Sets this tab's attached card. Usually this is handled automatically by the {@link Ext.tab.Panel} that this Tab
-     * belongs to and would not need to be done by the developer
+     * Sets this tab's attached card. Usually this is handled automatically by the
+     * {@link Ext.tab.Panel} that this Tab belongs to and would not need to be done by the developer
      * @param {Ext.Component} card The card to set
      */
     setCard: function(card) {
         var me = this;
 
         me.card = card;
+
         if (card.iconAlign) {
             me.setIconAlign(card.iconAlign);
         }
+
         if (card.textAlign) {
             me.setTextAlign(card.textAlign);
         }
+
         me.setText(me.title || card.title);
         me.setIconCls(me.iconCls || card.iconCls);
         me.setIcon(me.icon || card.icon);
@@ -444,7 +460,8 @@ Ext.define('Ext.tab.Tab', {
                     // beforeclose on the panel vetoed the event, stop here
                     return;
                 }
-            } else {
+            }
+            else {
                 // if there's no tabbar, fire the close event
                 me.fireClose();
             }
@@ -455,7 +472,7 @@ Ext.define('Ext.tab.Tab', {
      * Fires the close event on the tab.
      * @private
      */
-    fireClose: function(){
+    fireClose: function() {
         this.fireEvent('close', this);
     },
 
@@ -468,6 +485,7 @@ Ext.define('Ext.tab.Tab', {
         if (me.tabBar) {
             me.tabBar.onClick(e, me.el);
             e.stopEvent();
+
             return false;
         }
     },
@@ -479,6 +497,7 @@ Ext.define('Ext.tab.Tab', {
         if (this.closable) {
             this.onCloseClick();
             e.stopEvent();
+
             return false;
         }
     },
@@ -502,7 +521,7 @@ Ext.define('Ext.tab.Tab', {
 
         me.active = true;
         me.addCls(me._activeCls);
-        
+
         if (ariaDom) {
             ariaDom.setAttribute('aria-selected', true);
         }
@@ -510,7 +529,7 @@ Ext.define('Ext.tab.Tab', {
             me.ariaRenderAttributes = me.ariaRenderAttributes || {};
             me.ariaRenderAttributes['aria-selected'] = true;
         }
-        
+
         if (card) {
             if (card.ariaEl.dom) {
                 card.ariaEl.dom.setAttribute('aria-expanded', true);
@@ -536,7 +555,7 @@ Ext.define('Ext.tab.Tab', {
 
         me.active = false;
         me.removeCls(me._activeCls);
-        
+
         if (ariaDom) {
             ariaDom.setAttribute('aria-selected', false);
         }
@@ -544,7 +563,7 @@ Ext.define('Ext.tab.Tab', {
             me.ariaRenderAttributes = me.ariaRenderAttributes || {};
             me.ariaRenderAttributes['aria-selected'] = false;
         }
-        
+
         if (card) {
             if (card.ariaEl.dom) {
                 card.ariaEl.dom.setAttribute('aria-expanded', false);
@@ -561,7 +580,7 @@ Ext.define('Ext.tab.Tab', {
     },
 
     privates: {
-        getFramingInfoCls: function(){
+        getFramingInfoCls: function() {
             return this.baseCls + '-' + this.ui + '-' + this._positionCls;
         },
 

@@ -4,12 +4,13 @@ Ext.define('KitchenSink.view.drag.FileController', {
 
     requires: ['Ext.drag.Target'],
 
-    defaultText: 'Drag your files here',
+    // defaultText: 'Drag your files here',
 
     init: function(view) {
-        view.addBodyCls('drag-file-ct');
+        view.addCls('drag-file-ct');
+
         this.target = new Ext.drag.Target({
-            element: view.innerElement,
+            element: view.element,
             listeners: {
                 scope: this,
                 dragenter: this.onDragEnter,
@@ -20,48 +21,55 @@ Ext.define('KitchenSink.view.drag.FileController', {
     },
 
     onDragEnter: function() {
-        var body = this.getView().innerElement;
-        body.down('.drag-file-icon').removeCls('drag-file-fadeout');
-        body.addCls('active');
+        var el = this.getView().element;
+
+        el.down('.drag-file-icon').removeCls('drag-file-fadeout');
+        el.addCls('active');
     },
 
     onDragLeave: function() {
-        this.getView().innerElement.removeCls('active');
+        this.getView().element.removeCls('active');
     },
 
     onDrop: function(target, info) {
-        var view = this.getView(),
-            body = view.innerElement,
-            icon = body.down('.drag-file-icon');
-
-        body.removeCls('active').addCls('dropped');
-        icon.addCls('fa-spin');
-
         var me = this,
+            view = this.getView(),
+            el = view.element,
+            icon = el.down('.drag-file-icon'),
+            label = el.down('.drag-file-label'),
             files = info.files,
             len = files.length,
             s;
 
+        if (!me.defaultText) {
+            me.defaultText = label.getHtml();
+        }
+
+        el.replaceCls('active', 'dropped');
+        icon.addCls('fa-spin');
+
         if (len > 1) {
             s = 'Dropped ' + len + ' files.';
-        } else {
+        }
+        else {
             s = 'Dropped ' + files[0].name;
         }
 
-        body.down('.drag-file-label').setHtml(s);
+        label.setHtml(s);
 
-        me.timer = setTimeout(function() {
+        me.timer = Ext.defer(function() {
             if (!view.destroyed) {
-                icon.removeCls('fa-spin');
-                icon.addCls('drag-file-fadeout');
-                body.down('.drag-file-label').setHtml(me.defaultText);
+                icon.replaceCls('fa-spin', 'drag-file-fadeout');
+                label.setHtml(me.defaultText);
             }
+
             me.timer = null;
         }, 2000);
     },
 
     destroy: function() {
-        clearInterval(this.timer);
+        Ext.undefer(this.timer);
+
         this.target = Ext.destroy(this.target);
         this.callParent();
     }

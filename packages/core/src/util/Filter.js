@@ -1,21 +1,14 @@
 /**
- * Represents a filter that can be applied to a {@link Ext.util.MixedCollection MixedCollection}. Can either simply
- * filter on a property/value pair or pass in a filter function with custom logic. Filters are always used in the
- * context of MixedCollections, though {@link Ext.data.Store Store}s frequently create them when filtering and searching
- * on their records. Example usage:
+ * A filter that can be applied to an `Ext.util.Collection` or other data container such
+ * an `Ext.data.Store`. A `Filter` can be simply a filter on a `property` and `value` pair
+ * or a filter function with custom logic.
  *
- *     // Set up a fictional MixedCollection containing a few people to filter on
- *     var allNames = new Ext.util.MixedCollection();
- *     allNames.addAll([
- *         { id: 1, name: 'Peter',  age: 25 },
- *         { id: 2, name: 'Egon',   age: 37 },
- *         { id: 3, name: 'Ray',    age: 32 },
- *         { id: 4, name: 'Winston',age: 26 }
- *     ]);
+ * Normally filters are added to stores or collections but they can be created directly:
  *
  *     var ageFilter = new Ext.util.Filter({
  *         property: 'age',
- *         value   : 32
+ *         value: 42,
+ *         operator: '<'
  *     });
  *
  *     var longNameFilter = new Ext.util.Filter({
@@ -23,25 +16,26 @@
  *             return item.name.length > 4;
  *         }
  *     });
- *
- *     // a new MixedCollection with the 3 names longer than 4 characters
- *     var longNames = allNames.filter(longNameFilter);
- *
- *     // a new MixedCollection with the 2 people of age 32:
- *     var youngFolk = allNames.filter(ageFilter);
  */
 Ext.define('Ext.util.Filter', {
-    isFilter: true,
+    extend: 'Ext.util.BasicFilter',
 
     config: {
         /**
-         * @cfg {String} [property=null]
+         * @cfg {String} property
          * The property to filter on. Required unless a {@link #filterFn} is passed.
          */
         property: null,
 
         /**
-         * @cfg {RegExp/Mixed} [value=null]
+         * @cfg {String} root
+         * This property is used to descend items to check for meaningful properties on
+         * which to filter. For a `Ext.data.Model` for example this would be `'data'`.
+         */
+        root: null,
+
+        /**
+         * @cfg {RegExp/Mixed} value
          * The value you want to match against. Required unless a {@link #filterFn} is passed.
          * 
          * Can be a regular expression which will be used as a matcher or any other value
@@ -52,20 +46,10 @@ Ext.define('Ext.util.Filter', {
 
         /**
          * @cfg {Function} filterFn
-         * A custom filter function which is passed each item in the {@link Ext.util.MixedCollection} in turn. Should return
-         * `true` to accept each item or `false` to reject it.
+         * A custom filter function which is passed each item. This function must return
+         * `true` to accept an item or `false` to reject it.
          */
         filterFn: null,
-
-        /**
-         * @cfg {String} [id]
-         * An identifier by which this Filter is indexed in a {@link Ext.data.Store#cfg-filters Store's filters collection}
-         *
-         * Identified Filters may be individually removed from a Store's filter set by using {@link Ext.data.Store#removeFilter}.
-         *
-         * Anonymous Filters may be removed en masse by passing `null` to {@link Ext.data.Store#removeFilter}.
-         */
-        id: null,
 
         /**
          * @cfg {Boolean} anyMatch
@@ -74,38 +58,31 @@ Ext.define('Ext.util.Filter', {
         anyMatch: false,
 
         /**
-         * @cfg {Boolean} [exactMatch=false]
-         * True to force exact match (^ and $ characters added to the regex). Ignored if anyMatch is true.
+         * @cfg {Boolean} exactMatch
+         * True to force exact match (^ and $ characters added to the regex). Ignored if
+         * `anyMatch` is `true`.
          */
         exactMatch: false,
 
         /**
-         * @cfg {Boolean} [caseSensitive=false]
+         * @cfg {Boolean} caseSensitive
          * True to make the regex case sensitive (adds 'i' switch to regex).
          */
         caseSensitive: false,
 
         /**
-         * @cfg {Boolean} disabled
-         * Setting this property to `true` disables this individual Filter so that it no longer contributes to a {@link Ext.data.Store#cfg-filters Store's filter set}
-         *
-         * When disabled, the next time the store is filtered, the Filter plays no part in filtering and records eliminated by it may rejoin the dataset.
-         *
-         */
-        disabled: false,
-
-        /**
          * @cfg {Boolean} disableOnEmpty
-         * `true` to not have this filter participate in the filtering process when the {@link #value} of
-         * this the filter is empty according to {@link Ext#isEmpty}.
+         * `true` to not have this filter participate in the filtering process when the
+         * {@link #value} of this the filter is empty according to {@link Ext#isEmpty}.
          *
          * @since 5.1.0
          */
         disableOnEmpty: false,
 
         /**
-         * @cfg {String} [operator]
-         * The operator to use to compare the {@link #cfg-property} to this Filter's {@link #cfg-value}
+         * @cfg {String} operator
+         * The operator to use to compare the {@link #cfg!property} to this Filter's
+         * {@link #cfg!value}.
          *
          * Possible values are:
          *
@@ -118,35 +95,18 @@ Ext.define('Ext.util.Filter', {
          *    * `in`
          *    * `notin`
          *    * `like`
-         *    * /=
+         *    * `/=`
          *
-         * The `in` and `notin` operator expects this filter's {@link #cfg-value} to be an array and matches
-         * values that are present in that array.
+         * The `in` and `notin` operator expects this filter's {@link #cfg-value} to be
+         * an array and matches values that are present in that array.
          * 
-         * The `like` operator matches values that contain this filter's {@link #cfg-value} as a
-         * substring.
+         * The `like` operator matches values that contain this filter's {@link #cfg-value}
+         * as a substring.
          *
-         * The `'*='` operator uses the {@link #cfg-value} as the source for a `RegExp` and tests whether the
-         * candidate value matches the regular expression.
+         * The `/=` operator uses the {@link #cfg-value} as the source for a `RegExp` and
+         * tests whether the candidate value matches the regular expression.
          */
         operator: null,
-
-        /**
-         * @cfg {String} [root=null]
-         * Optional root property. This is mostly useful when filtering a Store, in which case we set the root to 'data' to
-         * make the filter pull the {@link #property} out of the data object of each item
-         */
-        root: null,
-
-        /**
-         * @cfg {Function} [serializer]
-         * A function to post-process any serialization. Accepts a filter state object
-         * containing `property`, `value` and `operator` properties, and may either
-         * mutate it, or return a completely new representation. Returning a falsey
-         * value does not modify the representation.
-         * @since 6.2.0
-         */
-        serializer: null,
 
         /**
          * @cfg {Function} [convert]
@@ -179,12 +139,12 @@ Ext.define('Ext.util.Filter', {
          * @return {Function} A function, which when passed a candidate object returns `true`
          * if the candidate passes all the specified Filters.
          */
-        createFilterFn: function (filters) {
+        createFilterFn: function(filters) {
             if (!filters) {
                 return Ext.returnTrue;
             }
 
-            return function (candidate) {
+            return function(candidate) {
                 var items = filters.isCollection ? filters.items : filters,
                     length = items.length,
                     match = true,
@@ -202,11 +162,12 @@ Ext.define('Ext.util.Filter', {
                 return match;
             };
         },
+
         /**
          * Checks if two filters have the same properties (Property, Operator and Value).
          *
-         * @param {Ext.util.Filter} filter The first filter to be compared
-         * @param {Ext.util.Filter} filter The second filter to be compared
+         * @param {Ext.util.Filter} filter1 The first filter to be compared
+         * @param {Ext.util.Filter} filter2 The second filter to be compared
          * @return {Boolean} `true` if they have the same properties.
          * @since 6.2.0
          */
@@ -221,20 +182,22 @@ Ext.define('Ext.util.Filter', {
 
             if (filter1.getValue() === filter2.getValue()) {
                 return true;
-            } else if (Ext.isArray(filter1) && Ext.isArray(filter2) && Ext.Array.equals(filter1, filter2)) {
-                return true;
+            }
+
+            if (Ext.isArray(filter1) && Ext.isArray(filter2)) {
+                return Ext.Array.equals(filter1, filter2);
             }
 
             return false;
         },
-        
+
         /**
          * Checks whether the filter will produce a meaningful value. Since filters
          * may be used in conjunction with data binding, this is a sanity check to
          * check whether the resulting filter will be able to match.
          * 
          * @param {Object} cfg The filter config object
-         * @return {Boolean} `true` if the filter will produce a valid value
+         * @return {Boolean/String} `true` if the filter will produce a valid value
          * 
          * @private
          */
@@ -244,36 +207,35 @@ Ext.define('Ext.util.Filter', {
                 if (!cfg.property) {
                     return 'A Filter requires either a property or a filterFn to be set';
                 }
-                
+
                 if (!cfg.hasOwnProperty('value') && !cfg.operator) {
                     return 'A Filter requires either a property and value, or a filterFn to be set';
                 }
-                
+
             }
+
             return false;
         }
     },
 
-    /**
-     * Creates new Filter.
-     * @param {Object} config Config object
-     */
+    //<debug>
     constructor: function(config) {
-        //<debug>
         var warn = Ext.util.Filter.isInvalid(config);
+
         if (warn) {
             Ext.log.warn(warn);
         }
-        //</debug>
-        this.initConfig(config);
+
+        this.callParent([ config ]);
     },
+    //</debug>
 
     preventConvert: {
         'in': 1,
         notin: 1
     },
 
-    filter: function (item) {
+    filter: function(item) {
         var me = this,
             filterFn = me._filterFn || me.getFilterFn(),
             convert = me.getConvert(),
@@ -281,9 +243,11 @@ Ext.define('Ext.util.Filter', {
 
         me._filterValue = value;
         me.isDateValue = Ext.isDate(value);
+
         if (me.isDateValue) {
             me.dateValue = value.getTime();
         }
+
         if (convert && !me.preventConvert[me.getOperator()]) {
             me._filterValue = convert.call(me.scope || me, value);
         }
@@ -291,21 +255,24 @@ Ext.define('Ext.util.Filter', {
         return filterFn.call(me.scope || me, item);
     },
 
-    getId: function () {
-        var id = this._id;
+    getId: function() {
+        var me = this,
+            id = me._id;
 
         if (!id) {
-            id = this.getProperty();
+            id = me.getProperty();
+
             if (!id) {
                 id = Ext.id(null, 'ext-filter-');
             }
-            this._id = id;
+
+            me._id = id;
         }
 
         return id;
     },
 
-    getFilterFn: function () {
+    getFilterFn: function() {
         var me = this,
             filterFn = me._filterFn,
             operator;
@@ -315,7 +282,8 @@ Ext.define('Ext.util.Filter', {
 
             if (operator) {
                 filterFn = me.operatorFns[operator];
-            } else {
+            }
+            else {
                 // This part is broken our into its own method so the function expression
                 // contained there does not get hoisted and created on each call this
                 // method.
@@ -337,18 +305,19 @@ Ext.define('Ext.util.Filter', {
      * Creates a filter function for the configured value/anyMatch/caseSensitive options
      * for this Filter.
      */
-    createRegexFilter: function () {
-        var me       = this,
+    createRegexFilter: function() {
+        var me = this,
             anyMatch = !!me.getAnyMatch(),
-            exact    = !!me.getExactMatch(),
-            value    = me.getValue(),
-            matcher  = Ext.String.createRegex(value,
-                                              !anyMatch,  // startsWith
-                                              !anyMatch && exact, // endsWith
-                                              !me.getCaseSensitive());
+            exact = !!me.getExactMatch(),
+            value = me.getValue(),
+            matcher = Ext.String.createRegex(value,
+                                             !anyMatch,  // startsWith
+                                             !anyMatch && exact, // endsWith
+                                             !me.getCaseSensitive());
 
         return function(item) {
             var val = me.getPropertyValue(item);
+
             return matcher ? matcher.test(val) : (val == null);
         };
     },
@@ -360,7 +329,7 @@ Ext.define('Ext.util.Filter', {
      * @return {Object} The property of the object.
      * @private
      */
-    getPropertyValue: function (item) {
+    getPropertyValue: function(item) {
         var root = this._root,
             value = (root == null) ? item : item[root];
 
@@ -371,10 +340,10 @@ Ext.define('Ext.util.Filter', {
      * Returns this filter's state.
      * @return {Object}
      */
-    getState: function () {
-         var config = this.getInitialConfig(),
-             result = {},
-             name;
+    getState: function() {
+        var config = this.getInitialConfig(),
+            result = {},
+            name;
 
         for (name in config) {
             // We only want the instance properties in this case, not inherited ones,
@@ -386,6 +355,7 @@ Ext.define('Ext.util.Filter', {
 
         delete result.root;
         result.value = this.getValue();
+
         return result;
     },
 
@@ -398,7 +368,7 @@ Ext.define('Ext.util.Filter', {
      * to a server.
      * @return {Object}
      */
-    serialize: function () {
+    serialize: function() {
         var result = this.getState(),
             serializer = this.getSerializer(),
             serialized;
@@ -408,6 +378,7 @@ Ext.define('Ext.util.Filter', {
 
         if (serializer) {
             serialized = serializer.call(this, result);
+
             if (serialized) {
                 result = serialized;
             }
@@ -416,24 +387,75 @@ Ext.define('Ext.util.Filter', {
         return result;
     },
 
-    updateOperator: function() {
-        if (this.generatedFilterFn) {
-            this._filterFn = null;
+    serializeTo: function(out) {
+        var me = this,
+            primitive, serialized;
+
+        // Filters with a custom filterFn cannot be serialized.  But since #getFilterFn()
+        // always returns a filterFn, we need to check if it's been generated by default.
+        // If so, we know that the filter cannot have a custom filterFn defined, and it
+        // is therefore okay to serialize.
+        me.getFilterFn();
+
+        if (me.generatedFilterFn) {
+            out.push(serialized = me.serialize());
+            primitive = me.primitiveRe.test(typeof serialized);
         }
+
+        return !primitive;
+    },
+
+    updateOperator: function() {
+        // Need to clear any generated local filter fn and increment generation
+        this.onConfigMutation();
+    },
+
+    updateConvert: function() {
+        // Need to clear any generated local filter fn and increment generation
+        this.onConfigMutation();
+    },
+
+    updateProperty: function() {
+        // Need to clear any generated local filter fn and increment generation
+        this.onConfigMutation();
+    },
+
+    updateAnyMatch: function() {
+        // Need to clear any generated local filter fn and increment generation
+        this.onConfigMutation();
+    },
+
+    updateExactMatch: function() {
+        // Need to clear any generated local filter fn and increment generation
+        this.onConfigMutation();
+    },
+
+    updateCaseSensitive: function() {
+        // Need to clear any generated local filter fn and increment generation
+        this.onConfigMutation();
     },
 
     updateValue: function(value) {
-        if (this.generatedFilterFn) {
-            this._filterFn = null;
-        }
-        
+        // Need to clear any generated local filter fn and increment generation
+        this.onConfigMutation();
+
         if (this.getDisableOnEmpty()) {
             this.setDisabled(Ext.isEmpty(value));
         }
     },
 
-    updateFilterFn: function (filterFn) {
+    updateFilterFn: function(filterFn) {
         delete this.generatedFilterFn;
+    },
+
+    onConfigMutation: function() {
+        // Developers may use this to see if a filter has changed in ways that must cause
+        // a reevaluation of filtering
+        this.generation++;
+
+        if (this.generatedFilterFn) {
+            this._filterFn = null;
+        }
     },
 
     updateDisableOnEmpty: function(disableOnEmpty) {
@@ -445,6 +467,8 @@ Ext.define('Ext.util.Filter', {
     },
 
     privates: {
+        primitiveRe: /string|number|boolean/,
+
         getCandidateValue: function(candidate, v, preventCoerce) {
             var me = this,
                 convert = me._convert,
@@ -452,24 +476,28 @@ Ext.define('Ext.util.Filter', {
 
             if (convert) {
                 result = convert.call(me.scope || me, result);
-            } else if (!preventCoerce) {
+            }
+            else if (!preventCoerce) {
                 result = Ext.coerce(result, v);
             }
+
             return result;
         }
     }
-}, function() {
-    var prototype = this.prototype,
+}, function(Filter) {
+    var prototype = Filter.prototype,
         operatorFns = (prototype.operatorFns = {
-            "<": function (candidate) {
+            "<": function(candidate) {
                 var v = this._filterValue;
+
                 return this.getCandidateValue(candidate, v) < v;
             },
-            "<=": function (candidate) {
+            "<=": function(candidate) {
                 var v = this._filterValue;
+
                 return this.getCandidateValue(candidate, v) <= v;
             },
-            "=": function (candidate) {
+            "=": function(candidate) {
                 var me = this,
                     v = me._filterValue;
 
@@ -479,7 +507,8 @@ Ext.define('Ext.util.Filter', {
                     candidate = candidate.getTime();
                     v = me.dateValue;
                 }
-                return candidate == v;
+
+                return candidate == v; // eslint-disable-line eqeqeq
             },
             "===": function(candidate) {
                 var me = this,
@@ -491,17 +520,20 @@ Ext.define('Ext.util.Filter', {
                     candidate = candidate.getTime();
                     v = me.dateValue;
                 }
+
                 return candidate === v;
             },
-            ">=": function (candidate) {
+            ">=": function(candidate) {
                 var v = this._filterValue;
+
                 return this.getCandidateValue(candidate, v) >= v;
             },
-            ">": function (candidate) {
+            ">": function(candidate) {
                 var v = this._filterValue;
+
                 return this.getCandidateValue(candidate, v) > v;
             },
-            "!=": function (candidate) {
+            "!=": function(candidate) {
                 var me = this,
                     v = me._filterValue;
 
@@ -511,7 +543,8 @@ Ext.define('Ext.util.Filter', {
                     candidate = candidate.getTime();
                     v = me.dateValue;
                 }
-                return candidate != v;
+
+                return candidate != v; // eslint-disable-line eqeqeq
             },
             "!==": function(candidate) {
                 var me = this,
@@ -523,21 +556,26 @@ Ext.define('Ext.util.Filter', {
                     candidate = candidate.getTime();
                     v = me.dateValue;
                 }
+
                 return candidate !== v;
             },
-            "in": function (candidate) {
+            "in": function(candidate) {
                 var v = this._filterValue;
+
                 return Ext.Array.contains(v, this.getCandidateValue(candidate, v));
             },
             notin: function(candidate) {
                 var v = this._filterValue;
+
                 return !Ext.Array.contains(v, this.getCandidateValue(candidate, v));
             },
-            like: function (candidate) {
+            like: function(candidate) {
                 var v = this._filterValue;
+
+                // eslint-disable-next-line max-len
                 return v && this.getCandidateValue(candidate, v).toLowerCase().indexOf(v.toLowerCase()) > -1;
             },
-            "/=": function (candidate) {
+            "/=": function(candidate) {
                 var me = this,
                     v = me._filterValue;
 
@@ -546,12 +584,15 @@ Ext.define('Ext.util.Filter', {
                 // Only compile a RegExp when the source string changes
                 if (v !== me.lastRegExpSource) {
                     me.lastRegExpSource = v;
+
                     try {
                         me.regex = new RegExp(v, 'i');
-                    } catch (e) {
+                    }
+                    catch (e) {
                         me.regex = null;
                     }
                 }
+
                 return me.regex ? me.regex.test(candidate) : false;
             }
         });
@@ -568,4 +609,3 @@ Ext.define('Ext.util.Filter', {
     operatorFns.eq = operatorFns['='];
     operatorFns.ne = operatorFns['!='];
 });
-

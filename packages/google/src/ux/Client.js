@@ -16,14 +16,15 @@ Ext.define('Ext.google.ux.Client', {
     statics: {
         getApiVersion: function(api) {
             var library = this.libraries[api];
-            return library && library.state == 2?
-                library.version :
-                null;
+
+            return library && library.state == 2
+                ? library.version
+                : null;
         }
     },
 
     mixinConfig: {
-        extended: function (baseClass, derivedClass, classBody) {
+        extended: function(baseClass, derivedClass, classBody) {
             this.load(classBody.googleApis);
         }
     },
@@ -32,7 +33,7 @@ Ext.define('Ext.google.ux.Client', {
         this.load(cls.prototype.googleApis);
     },
 
-     privates: {
+    privates: {
         statics: {
             /**
              * @property {Boolean} initialized
@@ -76,12 +77,14 @@ Ext.define('Ext.google.ux.Client', {
                 Ext.Object.each(apis, function(api, cfg) {
                     version = cfg.version || 'v1';
                     library = libraries[api];
+
                     if (!Ext.isDefined(library)) {
                         libraries[api] = { version: version, state: 0 };
-                    } else if (library.version !== version) {
+                    }
+                    else if (library.version !== version) {
                         Ext.log.error(
                             'Google API: failed to load version "' + version + '" of the',
-                            '"' + api + '" API: "' + library.version + '" already loaded.')
+                            '"' + api + '" API: "' + library.version + '" already loaded.');
                     }
                 });
 
@@ -91,13 +94,13 @@ Ext.define('Ext.google.ux.Client', {
             refresh: function() {
                 var me = this;
 
+                if (!me.initialized) {
+                    return;
+                }
+
                 if (!me.blocked) {
                     Ext.env.Ready.block();
                     me.blocked = true;
-                }
-
-                if (!me.initialized) {
-                    return;
                 }
 
                 Ext.Object.each(me.libraries, function(api, library) {
@@ -105,11 +108,13 @@ Ext.define('Ext.google.ux.Client', {
                         library.state = 1; // loading
                         gapi.client.load(api, library.version, function() {
                             library.state = 2; // loaded
+
                             if (!--me.loading) {
                                 me.refresh();
                             }
                         });
                     }
+
                     if (library.state == 1) {
                         me.loading++;
                     }
@@ -134,4 +139,4 @@ _ext_google_ux_client_initialize_ = function() {
     gapi.auth.init(function() {
         Ext.google.ux.Client.initialize();
     });
-}
+};

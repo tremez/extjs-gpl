@@ -1,9 +1,9 @@
-/*
- Ext.promise.Consequence adapted from:
- [DeftJS](https://github.com/deftjs/deftjs5)
- Copyright (c) 2012-2013 [DeftJS Framework Contributors](http://deftjs.org)
- Open source under the [MIT License](http://en.wikipedia.org/wiki/MIT_License).
- */
+//
+// Ext.promise.Consequence adapted from:
+// [DeftJS](https://github.com/deftjs/deftjs5)
+// Copyright (c) 2012-2013 [DeftJS Framework Contributors](http://deftjs.org)
+// Open source under the [MIT License](http://en.wikipedia.org/wiki/MIT_License).
+//
 
 /**
  * Consequences are used internally by a Deferred to capture and notify callbacks, and
@@ -28,7 +28,7 @@
  * @since 6.0.0
  * @private
  */
-Ext.define('Ext.promise.Consequence', function(Consequence) { return {
+Ext.define('Ext.promise.Consequence', function(Consequence) { return { // eslint-disable-line brace-style, max-len
     /**
      * @property {Ext.promise.Promise}
      * Promise of the future value of this Consequence.
@@ -69,6 +69,7 @@ Ext.define('Ext.promise.Consequence', function(Consequence) { return {
     /**
      * @param {Function} onFulfilled Callback to execute to transform a fulfillment value.
      * @param {Function} onRejected Callback to execute to transform a rejection reason.
+     * @param {Function} onProgress Callback to execute to transform a progress value.
      */
     constructor: function(onFulfilled, onRejected, onProgress) {
         var me = this;
@@ -104,13 +105,13 @@ Ext.define('Ext.promise.Consequence', function(Consequence) { return {
     /**
      * Update this Consequence with the specified progress value.
      *
-     * @param {Mixed} value Progress value.
+     * @param {Mixed} progress Progress value.
      */
     update: function(progress) {
         if (Ext.isFunction(this.onProgress)) {
             progress = this.onProgress(progress);
         }
-        
+
         this.deferred.update(progress);
     },
 
@@ -196,4 +197,11 @@ Ext.define('Ext.promise.Consequence', function(Consequence) { return {
             Consequence.queueSize = 0;
         }
     }
-}});
+};
+}
+//<debug>
+, function(Consequence) { // eslint-disable-line comma-style
+    Consequence.dispatch.$skipTimerCheck = true;
+}
+//</debug>
+);

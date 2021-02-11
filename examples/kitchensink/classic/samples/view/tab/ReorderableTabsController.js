@@ -7,8 +7,9 @@ Ext.define('KitchenSink.view.tab.ReorderableTabsController', {
     onAddTabClick: function() {
         var tabPanel = this.getView(),
             counter = ++this.counter,
-            html = counter % 2 ? KitchenSink.DummyText.longText :
-                KitchenSink.DummyText.extraLongText,
+            html = counter % 2
+                ? KitchenSink.DummyText.longText
+                : KitchenSink.DummyText.extraLongText,
             tab = tabPanel.add({
                 title: 'Tab ' + counter,
                 html: html

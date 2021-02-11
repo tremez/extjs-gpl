@@ -3,52 +3,91 @@
  * on its top toolbar that activates this
  */
 Ext.define('KitchenSink.view.SourceOverlay', {
-    extend: 'Ext.Container',
+    extend: 'Ext.Panel',
     xtype: 'sourceoverlay',
+    title: 'Details',
+
+    requires: [
+        'Ext.panel.Collapsible',
+        'Ext.panel.Resizable'
+    ],
 
     config: {
-        fixed: null,
-        out: null
+        tier: null
     },
 
-    referenceHolder: true,
     layout: 'fit',
+    referenceHolder: true,
+
+    platformConfig: {
+        '!phone': {
+            collapsible: 'right',
+            resizable: {
+                split: true,
+                edges: 'west'
+            },
+            // collapsed: true,
+            stateId: 'sourceOverlay',
+            stateful: [
+                'collapsed',
+                'width'
+            ]
+        }
+    },
+
+    header: {
+        items: [{
+            xtype: 'component',
+            align: 'right',
+            hidden: true,
+            cls: 'tier',
+            reference: 'premiumComp',
+            html: 'Premium',
+            tooltip: {
+                align: 'tr-br?',
+                html: 'Uses features that require Ext JS Premium'
+            }
+        }, {
+            xtype: 'component',
+            align: 'right',
+            hidden: true,
+            cls: 'tier',
+            reference: 'proComp',
+            html: 'Pro',
+            tooltip: {
+                align: 'tr-br?',
+                html: 'Uses features that require Ext JS Professional'
+            }
+        }].concat(Ext.os.is.Phone
+            ? [{
+                xtype: 'button',
+                ui: 'action',
+                iconCls: 'x-fa fa-times',
+                align: 'right',
+                action: 'closeSource'
+            }]
+            : [])
+    },
 
     items: [{
         xtype: 'tabpanel',
         defaultType: 'sourceitem',
         reference: 'tabs',
-
-        items: [{
-            xtype: 'titlebar',
-            title: 'Details',
-            docked: 'top',
-            ui: 'neutral',
-            align: 'right',
-
-            style: 'z-index: 2',
-            shadow: Ext.theme.name !== 'Triton',
-            minHeight: Ext.theme.name === 'Triton' ? 44 : undefined,
-            items: Ext.os.is.Phone ? {
-                type: 'button',
-                ui: 'action',
-                iconCls: 'x-fa fa-close',
-                align: 'right',
-                action: 'closeSource'
-            } : []
-        }]
+        tabBar: {
+            platformConfig: {
+                desktop: {
+                    layout: {
+                        pack: 'left'
+                    }
+                }
+            },
+            layout: {
+                overflow: 'scroller'
+            }
+        }
     }],
 
-    captureSize: function () {
-        var el = this.el;
-
-        return (this.oldSize = {
-            width: el.getWidth(),
-            height: el.getHeight()
-        });
-    },
-
-    setContent: function (content) {
+    setContent: function(content) {
         var tabs = this.lookup('tabs');
 
         tabs.removeAll();
@@ -56,65 +95,22 @@ Ext.define('KitchenSink.view.SourceOverlay', {
         tabs.getTabBar().setHidden(content.length === 1);
     },
 
-    updateOut: function (out) {
-        var me = this,
-            el = me.el,
-            dom = el.dom,
-            right;
+    updateTier: function(tier) {
+        var premium = this.lookup('premiumComp'),
+            pro = this.lookup('proComp');
 
-        if (me.getHidden()) {
-            if (out) {
-                return;
-            }
-            me.show();
+        if (tier === 'premium') {
+            premium.show();
+        }
+        else if (tier === 'pro') {
+            pro.show();
         }
 
-        if (out) {
-            me.setFixed(true);
-            right = -me.oldSize.width;
-        } 
-        else {
-            el.removeCls('sourceoverlay-transition');
-            me.setFixed(true);
-
-            me.setRight(-me.oldSize.width);
-            right = 0;
+        if (tier !== 'premium') {
+            premium.hide();
         }
-
-        el.addCls('sourceoverlay-transition');
-        Ext.defer(function () {
-            dom.style.right = right + 'px';
-        }, 10);
-
-        el.on({
-            transitionend: function () {
-                if (!out) {
-                    me.setFixed(false);
-                }
-            },
-            single: true,
-            translate: false,
-            delegate: false
-        });
-    },
-
-    updateFixed: function (fixed) {
-        var me = this,
-            tabs = me.lookup('tabs'),
-            size;
-
-        if (fixed) {
-            size = me.captureSize();
-
-            me.setRight(0);
-            me.setTop(0);
-            me.setWidth(size.width);
-            me.setHeight(size.height);
-        } else {
-            me.setWidth(null);
-            me.setHeight(null);
-            me.setRight(null);
-            me.setTop(null);
+        else if (tier !== 'pro') {
+            pro.hide();
         }
     }
 });

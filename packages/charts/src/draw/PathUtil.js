@@ -3,7 +3,7 @@
  * Singleton that provides methods used by the Ext.draw.Path
  * for hit testing and finding path intersection points.
  */
-Ext.define('Ext.draw.PathUtil', function () {
+Ext.define('Ext.draw.PathUtil', function() {
     var abs = Math.abs,
         pow = Math.pow,
         cos = Math.cos,
@@ -30,7 +30,7 @@ Ext.define('Ext.draw.PathUtil', function () {
          *                  with -1 indicating an out-of-bounds intersection
          *                  (before or after the end point or in the imaginary plane).
          */
-        cubicRoots: function (P) {
+        cubicRoots: function(P) {
             var a = P[0],
                 b = P[1],
                 c = P[2],
@@ -40,12 +40,13 @@ Ext.define('Ext.draw.PathUtil', function () {
                 return this.quadraticRoots(b, c, d);
             }
 
+            // eslint-disable-next-line vars-on-top, one-var
             var A = b / a,
                 B = c / a,
                 C = d / a,
 
-                Q = (3*B - pow(A, 2)) / 9,
-                R = (9*A*B - 27*C - 2*pow(A, 3)) / 54,
+                Q = (3 * B - pow(A, 2)) / 9,
+                R = (9 * A * B - 27 * C - 2 * pow(A, 3)) / 54,
                 D = pow(Q, 3) + pow(R, 2), // Polynomial discriminant.
                 t = [],
                 S, T, Im, th, i,
@@ -53,26 +54,27 @@ Ext.define('Ext.draw.PathUtil', function () {
                 sign = Ext.Number.sign;
 
             if (D >= 0) { // Complex or duplicate roots.
-                S = sign(R + sqrt(D)) * pow(abs(R + sqrt(D)), 1/3);
-                T = sign(R - sqrt(D)) * pow(abs(R - sqrt(D)), 1/3);
+                S = sign(R + sqrt(D)) * pow(abs(R + sqrt(D)), 1 / 3);
+                T = sign(R - sqrt(D)) * pow(abs(R - sqrt(D)), 1 / 3);
 
-                t[0] = -A/3 + (S + T);          // Real root.
-                t[1] = -A/3 - (S + T)/2;        // Real part of complex root.
+                t[0] = -A / 3 + (S + T);          // Real root.
+                t[1] = -A / 3 - (S + T) / 2;        // Real part of complex root.
                 t[2] = t[1];                    // Real part of complex root.
-                Im = abs(sqrt(3) * (S - T)/2);  // Complex part of root pair.
+                Im = abs(sqrt(3) * (S - T) / 2);  // Complex part of root pair.
 
                 // Discard complex roots.
                 if (Im !== 0) {
-                    t[1] =- 1;
-                    t[2] =- 1;
+                    t[1] = - 1;
+                    t[2] = - 1;
                 }
 
-            } else { // Distinct real roots.
+            }
+            else { // Distinct real roots.
                 th = acos(R / sqrt(-pow(Q, 3)));
 
-                t[0] = 2*sqrt(-Q)*cos(th/3) - A/3;
-                t[1] = 2*sqrt(-Q)*cos((th + 2*PI)/3) - A/3;
-                t[2] = 2*sqrt(-Q)*cos((th + 4*PI)/3) - A/3;
+                t[0] = 2 * sqrt(-Q) * cos(th / 3) - A / 3;
+                t[1] = 2 * sqrt(-Q) * cos((th + 2 * PI) / 3) - A / 3;
+                t[2] = 2 * sqrt(-Q) * cos((th + 4 * PI) / 3) - A / 3;
             }
 
             // Discard out of spec roots.
@@ -94,25 +96,32 @@ Ext.define('Ext.draw.PathUtil', function () {
          * @param c {Number}
          * @return {Array}
          */
-        quadraticRoots: function (a, b, c) {
+        quadraticRoots: function(a, b, c) {
             var D, rD, t, i;
+
             if (a === 0) {
                 return this.linearRoot(b, c);
             }
-            D = b*b - 4*a*c;
+
+            D = b * b - 4 * a * c;
+
             if (D === 0) { // One real root.
-                t = [-b/(2*a)];
-            } else if (D > 0) { // Distinct real roots.
+                t = [-b / (2 * a)];
+            }
+            else if (D > 0) { // Distinct real roots.
                 rD = sqrt(D);
-                t = [(-b - rD) / (2*a), (-b + rD) / (2*a)];
-            } else { // Complex roots.
+                t = [(-b - rD) / (2 * a), (-b + rD) / (2 * a)];
+            }
+            else { // Complex roots.
                 return [];
             }
+
             for (i = 0; i < t.length; i++) {
                 if (t[i] < 0 || t[i] > 1) {
                     t[i] = -1;
                 }
             }
+
             return t;
         },
 
@@ -124,11 +133,13 @@ Ext.define('Ext.draw.PathUtil', function () {
          * @param b {Number}
          * @return {Array}
          */
-        linearRoot: function (a, b) {
-            var t = -b/a;
+        linearRoot: function(a, b) {
+            var t = -b / a;
+
             if (a === 0 || t < 0 || t > 1) {
                 return [];
             }
+
             return [t];
         },
 
@@ -141,12 +152,14 @@ Ext.define('Ext.draw.PathUtil', function () {
          * @param P3 {Number}
          * @return {Array}
          */
-        bezierCoeffs: function (P0, P1, P2, P3) {
+        bezierCoeffs: function(P0, P1, P2, P3) {
             var Z = [];
-            Z[0] = -P0 + 3*P1 - 3*P2 + P3;
-            Z[1] = 3*P0 - 6*P1 + 3*P2;
-            Z[2] = -3*P0 + 3*P1;
+
+            Z[0] = -P0 + 3 * P1 - 3 * P2 + P3;
+            Z[1] = 3 * P0 - 6 * P1 + 3 * P2;
+            Z[2] = -3 * P0 + 3 * P1;
             Z[3] = P0;
+
             return Z;
         },
 
@@ -170,8 +183,8 @@ Ext.define('Ext.draw.PathUtil', function () {
          * @return {Array} Array of intersection points, where each intersection point
          *                  is itself a two-item array [x,y].
          */
-        cubicLineIntersections: function (px1, px2, px3, px4, py1, py2, py3, py4,
-                                          x1, y1, x2, y2) {
+        cubicLineIntersections: function(px1, px2, px3, px4, py1, py2, py3, py4,
+            x1, y1, x2, y2) {
             var P = [],
                 intersections = [],
 
@@ -188,10 +201,10 @@ Ext.define('Ext.draw.PathUtil', function () {
                 t, tt, ttt,
                 cx, cy;
 
-            P[0] = A*bx[0] + B*by[0];		// t^3
-            P[1] = A*bx[1] + B*by[1];		// t^2
-            P[2] = A*bx[2] + B*by[2];		// t
-            P[3] = A*bx[3] + B*by[3] + C;	// 1
+            P[0] = A * bx[0] + B * by[0];		// t^3
+            P[1] = A * bx[1] + B * by[1];		// t^2
+            P[2] = A * bx[2] + B * by[2];		// t
+            P[3] = A * bx[3] + B * by[3] + C;	// 1
 
             r = this.cubicRoots(P);
 
@@ -203,24 +216,27 @@ Ext.define('Ext.draw.PathUtil', function () {
                     continue;
                 }
 
-                tt = t*t;
-                ttt = tt*t;
+                tt = t * t;
+                ttt = tt * t;
 
-                cx = bx[0]*ttt + bx[1]*tt + bx[2]*t + bx[3];
-                cy = by[0]*ttt + by[1]*tt + by[2]*t + by[3];
+                cx = bx[0] * ttt + bx[1] * tt + bx[2] * t + bx[3];
+                cy = by[0] * ttt + by[1] * tt + by[2] * t + by[3];
 
                 // Above is intersection point assuming infinitely long line segment,
                 // make sure we are also in bounds of the line.
                 if ((x2 - x1) !== 0) { // If not vertical line
                     s = (cx - x1) / (x2 - x1);
-                } else {
+                }
+                else {
                     s = (cy - y1) / (y2 - y1);
                 }
+
                 // In bounds?
                 if (!(s < 0 || s > 1)) {
                     intersections.push([cx, cy]);
                 }
             }
+
             return intersections;
         },
 
@@ -237,7 +253,7 @@ Ext.define('Ext.draw.PathUtil', function () {
          * @return {Array} Two-item array, where each item is itself an array
          *                  of cubic coefficients.
          */
-        splitCubic: function (P1, P2, P3, P4, z) {
+        splitCubic: function(P1, P2, P3, P4, z) {
             var zz = z * z,
                 zzz = z * zz,
                 iz = z - 1,
@@ -259,7 +275,7 @@ Ext.define('Ext.draw.PathUtil', function () {
                     z * P4 - iz * P3,
                     P4
                 ]
-            ]
+            ];
         },
 
         /**
@@ -271,36 +287,45 @@ Ext.define('Ext.draw.PathUtil', function () {
          * @param d {Number}
          * @return {Array} Two-item array representing cubic's range in the given direction.
          */
-        cubicDimension: function (a, b, c, d) {
+        cubicDimension: function(a, b, c, d) {
             var qa = 3 * (-a + 3 * (b - c) + d),
                 qb = 6 * (a - 2 * b + c),
-                qc = -3 * (a - b), x, y,
+                qc = -3 * (a - b),
+                x, y,
                 min = Math.min(a, d),
-                max = Math.max(a, d), delta;
+                max = Math.max(a, d),
+                delta;
 
             if (qa === 0) {
                 if (qb === 0) {
                     return [min, max];
-                } else {
+                }
+                else {
                     x = -qc / qb;
+
                     if (0 < x && x < 1) {
                         y = this.interpolateCubic(a, b, c, d, x);
                         min = Math.min(min, y);
                         max = Math.max(max, y);
                     }
                 }
-            } else {
+            }
+            else {
                 delta = qb * qb - 4 * qa * qc;
+
                 if (delta >= 0) {
                     delta = sqrt(delta);
                     x = (delta - qb) / 2 / qa;
+
                     if (0 < x && x < 1) {
                         y = this.interpolateCubic(a, b, c, d, x);
                         min = Math.min(min, y);
                         max = Math.max(max, y);
                     }
+
                     if (delta > 0) {
                         x -= delta / qa;
+
                         if (0 < x && x < 1) {
                             y = this.interpolateCubic(a, b, c, d, x);
                             min = Math.min(min, y);
@@ -309,6 +334,7 @@ Ext.define('Ext.draw.PathUtil', function () {
                     }
                 }
             }
+
             return [min, max];
         },
 
@@ -324,14 +350,19 @@ Ext.define('Ext.draw.PathUtil', function () {
          * @param t {Number}
          * @return {Number}
          */
-        interpolateCubic: function (a, b, c, d, t) {
+        interpolateCubic: function(a, b, c, d, t) {
+            var rate;
+
             if (t === 0) {
                 return a;
             }
+
             if (t === 1) {
                 return d;
             }
-            var rate = (1 - t) / t;
+
+            rate = (1 - t) / t;
+
             return t * t * t * (d + rate * (3 * c + rate * (3 * b + rate * a)));
         },
 
@@ -358,8 +389,9 @@ Ext.define('Ext.draw.PathUtil', function () {
          * @return {Array} Array of intersection points, where each intersection point
          *                  is itself a two-item array [x,y].
          */
-        cubicsIntersections: function (ax1, ax2, ax3, ax4, ay1, ay2, ay3, ay4,
-                                       bx1, bx2, bx3, bx4, by1, by2, by3, by4) {
+        cubicsIntersections: function(ax1, ax2, ax3, ax4, ay1, ay2, ay3, ay4,
+            bx1, bx2, bx3, bx4, by1, by2, by3, by4) {
+            /* eslint-disable max-len */
             var me = this,
                 axDim = me.cubicDimension(ax1, ax2, ax3, ax4),
                 ayDim = me.cubicDimension(ay1, ay2, ay3, ay4),
@@ -372,6 +404,7 @@ Ext.define('Ext.draw.PathUtil', function () {
             if (axDim[0] > bxDim[1] || axDim[1] < bxDim[0] || ayDim[0] > byDim[1] || ayDim[1] < byDim[0]) {
                 return [];
             }
+
             // Both curves occupy sub-pixel areas which is effectively their intersection point.
             if (abs(ay1 - ay2) < 1 && abs(ay3 - ay4) < 1 && abs(ax1 - ax4) < 1 && abs(ax2 - ax3) < 1 &&
                 abs(by1 - by2) < 1 && abs(by3 - by4) < 1 && abs(bx1 - bx4) < 1 && abs(bx2 - bx3) < 1) {
@@ -390,6 +423,7 @@ Ext.define('Ext.draw.PathUtil', function () {
 
             return points;
         },
+        /* eslint-enable max-len */
 
         /**
          * @private
@@ -407,20 +441,24 @@ Ext.define('Ext.draw.PathUtil', function () {
          * @param y4 {Number}
          * @return {Number[]|null}
          */
-        linesIntersection: function (x1, y1, x2, y2, x3, y3, x4, y4) {
+        linesIntersection: function(x1, y1, x2, y2, x3, y3, x4, y4) {
             var d = (x2 - x1) * (y4 - y3) - (y2 - y1) * (x4 - x3),
                 ua, ub;
+
             if (d === 0) { // Lines are parallel.
                 return null;
             }
-            ua = ( (x4 - x3) * (y1 - y3) - (x1 - x3) * (y4 - y3) ) / d;
-            ub = ( (x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3) ) / d;
+
+            ua = ((x4 - x3) * (y1 - y3) - (x1 - x3) * (y4 - y3)) / d;
+            ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / d;
+
             if (ua >= 0 && ua <= 1 && ub >= 0 && ub <= 1) {
                 return [
                     x1 + ua * (x2 - x1), // x
                     y1 + ua * (y2 - y1)  // y
                 ];
             }
+
             return null; // The intersection point is outside one or both segments.
         },
 
@@ -437,8 +475,9 @@ Ext.define('Ext.draw.PathUtil', function () {
          * @param y {Number}
          * @return {Boolean}
          */
-        pointOnLine: function (x1, y1, x2, y2, x, y) {
+        pointOnLine: function(x1, y1, x2, y2, x, y) {
             var t, _;
+
             if (abs(x2 - x1) < abs(y2 - y1)) {
                 _ = x1;
                 x1 = y1;
@@ -450,10 +489,13 @@ Ext.define('Ext.draw.PathUtil', function () {
                 x = y;
                 y = _;
             }
+
             t = (x - x1) / (x2 - x1);
+
             if (t < 0 || t > 1) {
                 return false;
             }
+
             return abs(y1 + t * (y2 - y1) - y) < 4;
         },
 
@@ -474,7 +516,7 @@ Ext.define('Ext.draw.PathUtil', function () {
          * @param y {Number}
          * @return {Boolean}
          */
-        pointOnCubic: function (px1, px2, px3, px4, py1, py2, py3, py4, x, y) {
+        pointOnCubic: function(px1, px2, px3, px4, py1, py2, py3, py4, x, y) {
             // Finding cubic Bezier curve equation coefficients.
             var me = this,
                 bx = me.bezierCoeffs(px1, px2, px3, px4),
@@ -489,6 +531,7 @@ Ext.define('Ext.draw.PathUtil', function () {
 
             for (i = 0; i < rx.length; i++) {
                 t = rx[i];
+
                 for (j = 0; j < ry.length; j++) {
                     // TODO: for more accurate results tolerance should be dynamic
                     // TODO: based on the length and shape of the segment.

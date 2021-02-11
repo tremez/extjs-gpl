@@ -1,0 +1,15 @@
+$red-icon-color: dynamic(#dd6550);
+$green-icon-color: dynamic(#81cb31);
+$yellow-icon-color: dynamic(#ffc839);
+
+.red {
+    color: $red-icon-color !important;
+}
+
+.green {
+    color: $green-icon-color !important;
+}
+
+.yellow {
+    color: $yellow-icon-color !important;
+}

@@ -1,33 +1,63 @@
-describe('Ext.picker.Picker', function() {
-    var selectField, datePicker;
-    
-    afterEach(function() {
-        selectField = datePicker = Ext.destroy(selectField, datePicker);
+topSuite("Ext.picker.Picker", ['Ext.picker.Date', 'Ext.field.Select', 'Ext.viewport.Default'], function() {
+    var vp, picker, selectField, datePicker;
+
+    function createPicker(cfg) {
+        return picker = Ext.factory(cfg, Ext.picker.Picker, picker);
+    }
+
+    beforeEach(function() {
+        Ext.Viewport = new Ext.viewport.Default();
     });
 
-    describe("mask", function() {
-        it("should be inserted as the first child of the innerElement", function() {
-            var picker, firstChild,
-                maskCls = Ext.baseCSSPrefix + 'picker-mask';
+    afterEach(function() {
+        Ext.Viewport = picker = selectField = datePicker =
+            Ext.destroy(picker, selectField, datePicker, Ext.Viewport);
+    });
 
-            datePicker = Ext.create('Ext.picker.Date');
-
-            selectField = Ext.create('Ext.field.Select', {
-                usePicker: true,
-                options: [
-                    {text: 'First Option',  value: 'first'},
-                    {text: 'Second Option', value: 'second'},
-                    {text: 'Third Option',  value: 'third'}
-                ]
+    describe('value', function() {
+        it('should set value on construction', function() {
+            createPicker({
+                value: {
+                    limit_speed: 100
+                },
+                slots: [{
+                    name: 'limit_speed',
+                    title: 'Speed',
+                    data: [
+                        { text: '50 KB/s', value: 50 },
+                        { text: '100 KB/s', value: 100 },
+                        { text: '200 KB/s', value: 200 },
+                        { text: '300 KB/s', value: 300 }
+                    ]
+                }]
             });
 
-            picker = selectField.getPhonePicker();
-            firstChild = picker.innerElement.first();
+            var slot = picker.down('[name=limit_speed]');
 
-            expect(firstChild).toHaveCls(maskCls);
+            expect(slot.getValue()).toBe(100);
+        });
 
-            firstChild = datePicker.innerElement.first();
-            expect(firstChild).toHaveCls(maskCls);
+        it('should set value using setValue', function() {
+            createPicker({
+                slots: [{
+                    name: 'limit_speed',
+                    title: 'Speed',
+                    data: [
+                        { text: '50 KB/s', value: 50 },
+                        { text: '100 KB/s', value: 100 },
+                        { text: '200 KB/s', value: 200 },
+                        { text: '300 KB/s', value: 300 }
+                    ]
+                }]
+            });
+
+            picker.setValue({
+                limit_speed: 200
+            });
+
+            var slot = picker.down('[name=limit_speed]');
+
+            expect(slot.getValue()).toBe(200);
         });
     });
 });

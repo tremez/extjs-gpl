@@ -16,6 +16,8 @@
     line-height: 0;
 
     :focus {
-        outline: $grid-row-cell-focus-border-width $grid-row-cell-focus-border-style $grid-row-cell-focus-border-color;
+        .#{$prefix}keyboard-mode & {
+            outline: $grid-row-cell-focus-border-width $grid-row-cell-focus-border-style $grid-row-cell-focus-border-color;
+        }
     }
 }

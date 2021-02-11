@@ -1,0 +1,244 @@
+/**
+ * @var {color}
+ * Proxy border color
+ */
+$proxy-placeholder-border-color: $neutral-color;
+
+/**
+ * @var {String}
+ * Proxy border
+ */
+$proxy-placeholder-border: dynamic(1px solid $proxy-placeholder-border-color);
+
+/**
+ * @var {String}
+ * Proxy placeholder-padding
+ */
+$proxy-placeholder-padding: dynamic(5px);
+
+/**
+ * @var {Color}
+ * Drag indicator border color
+ */
+$border-indicator-color: $confirm-color;
+
+/**
+ * @var {string}
+ * Drag indicator border style
+ */
+$border-indicator-style: dynamic(solid);
+
+/**
+ * @var {String}
+ * Drag indicator before border
+ */
+$indicator-before-border: dynamic(1px 0 0 0);
+
+/**
+ * @var {String}
+ * Drag indicator after border
+ */
+$indicator-after-border: dynamic(0 0 1px 0);
+
+/**
+ * @var {String}
+ * Drag indicator-before in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$indicator-before-border-size-big: dynamic(5px 0 0 0);
+
+/**
+ * @var {String}
+ * Drag indicator-after in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$indicator-after-border-size-big: dynamic(0 0 5px 0);
+
+/**
+ * @var {String}
+ * Proxy invalid-icon
+ */
+$proxy-invalid-icon: $fa-var-times-circle;
+
+/**
+ * @var {String}
+ * Proxy valid-icon
+ */
+$proxy-valid-icon: $fa-var-check-circle;
+
+/**
+ * @var {String}
+ * Drag icon-content
+ */
+$drag-icon-content: dynamic('');
+
+/**
+ * @var {color}
+ * Dragging row background-color
+ */
+$drag-indicator-background-color: dynamic(rgba($base-highlight-color, .2));
+
+/**
+ * @var {string}
+ * Drag indicator width
+ */
+$drag-indicator-width: dynamic(100%);
+
+/**
+ * @var {string}
+ * Drag indicator width
+ */
+$drag-indicator-bottom: dynamic(0);
+
+/**
+ * Creates a visual theme for a drag icon.
+ *
+ * @param {string} $after-suffix
+ * The class for drag icon to add after drag element
+ *
+ * @param {string} $before-suffix
+ * The class for drag icon to add before drag element
+ *
+ * @param {string}  $content
+ * drag icon content
+ *
+ * @param {number} $width
+ * drag icon width
+ *
+ * @param {color} $border-color
+ * drag content border color
+ *
+ * @param {number} $border-style
+ * drag content border style
+ *
+ * @param {number} $border-before-width
+ * drag content border width
+ *
+ * @param {number} $border-after-width,
+ * drag content border width
+ *
+ * @param {number} $bottom,
+ * spacing for drag content
+ */
+ 
+@mixin dragIcon(
+    $after-suffix: null,
+    $before-suffix: null,
+    $content: null,
+    $width: null,
+    $border-color: null,
+    $border-style: null,
+    $border-before-width: null,
+    $border-after-width: null,
+    $bottom: null,
+    $border-before-width-size-big: null,
+    $border-after-width-size-big: null
+) {
+    .#{$prefix}#{$before-suffix} {
+        &:before {
+            font-family: $font-family;
+            content: $content;
+            position: absolute;
+            width: $width;
+            @include border($border-before-width, $border-style, $border-color);
+        }
+    }
+    .#{$prefix}#{$after-suffix} {
+        &:after {
+            font-family: $font-family;
+            position: absolute;
+            width: $width;
+            content: $content;
+            @include border($border-after-width, $border-style, $border-color);
+            bottom: $bottom;
+        }
+    }
+
+    @if $enable-big {
+        .#{$prefix}big {
+            .#{$prefix}#{$before-suffix} {
+                &:before {
+                    @include border($border-before-width-size-big, $border-style, $border-color);
+                }
+            }
+            .#{$prefix}#{$after-suffix} {
+                &:after {
+                    @include border($border-after-width-size-big, $border-style, $border-color);
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Creates a visual theme for a drag drop.
+ *
+ * @param {number/list} $dd-proxy-placeholder-border
+ * boder for drag drop place holder
+ *
+ * @param {number/list} $dd-proxy-placeholder-padding
+ * spacing for drag drop place holder
+ *
+ * @param {color} $dd-proxy-color
+ * drag drop grid column color
+ *
+ * @param {color} $dd-proxy-background-color
+ * drag drop grid background color
+ *
+ * @param {string} $dd-proxy-valid-icon
+ * drag drop proxy valid icon
+ *
+ * @param {color} $dd-confirm-color
+ * drag drop confirm color
+ */
+@mixin dd-ui(
+    $dd-proxy-placeholder-border: null,
+    $dd-proxy-placeholder-padding: null,
+    $dd-proxy-color: null,
+    $dd-proxy-background-color: null,
+    $dd-proxy-valid-icon: null,
+    $dd-proxy-invalid-icon: null,
+    $dd-confirm-color: null
+) {
+    .#{$prefix}proxy-drag-el {
+        border: $dd-proxy-placeholder-border;
+        padding: $dd-proxy-placeholder-padding;
+        color: $dd-proxy-color;
+        background-color: $dd-proxy-background-color;
+
+        &:before {
+            padding-right: $proxy-placeholder-padding;
+            font-family: $font-icon-font-family; 
+        }
+
+        @include icon(
+            $icon: $dd-proxy-invalid-icon,
+            $color: $alert-color,
+            $style-pseudo: true
+        );
+
+        &.#{$prefix}valid-drop {
+            @include icon(
+                $icon: $dd-proxy-valid-icon,
+                $color: $dd-confirm-color,
+                $style-pseudo: true
+            );
+        }
+    }
+}
+
+/**
+ * Creates a visual theme for a drag Indicator.
+ *
+ * @param {color} $background-color
+ * Dragging rows background Color
+ */
+@mixin drag-indicator(
+    $background-color: null
+) {
+    .#{$prefix}listitem,
+    .#{$prefix}show-selection > .#{$prefix}listitem {
+        &.#{$prefix}drag-indicator {
+            background: $background-color;
+            border-color: $background-color;
+        }
+    }
+}

@@ -1,9 +1,7 @@
-/* global Ext, jasmine, expect */
-
-describe('Ext.Action', function() {
+topSuite('Ext.Action', ['Ext.Panel', 'Ext.Button', 'Ext.app.ViewController'], function() {
     var panel, action, cmp1, cmp2;
 
-    function makeAction (cfg) {
+    function makeAction(cfg) {
         cfg = Ext.apply({
             xtype: 'button',
             text: 'Foo'
@@ -12,7 +10,7 @@ describe('Ext.Action', function() {
         action = new Ext.Action(cfg);
     }
 
-    afterEach(function () {
+    afterEach(function() {
         panel = action = cmp1 = cmp2 = Ext.destroy(panel, cmp1, cmp2, action);
     });
 
@@ -227,46 +225,47 @@ describe('Ext.Action', function() {
         });
     });
 
-    describe("helpers", function () {
-        beforeEach(function () {
+    describe("helpers", function() {
+        beforeEach(function() {
             makeAction();
             cmp1 = new Ext.button.Button(action);
         });
 
-        describe("disable", function () {
-            it("should disable instances", function () {
+        describe("disable", function() {
+            it("should disable instances", function() {
                 action.disable();
                 expect(cmp1.isDisabled()).toBe(true);
             });
         });
 
-        describe("enable", function () {
-            it("should enable instances", function () {
+        describe("enable", function() {
+            it("should enable instances", function() {
                 cmp1.setDisabled(true);
                 action.enable();
                 expect(cmp1.isDisabled()).toBe(false);
             });
         });
 
-        describe("hide", function () {
-            it("should hide instances", function () {
+        describe("hide", function() {
+            it("should hide instances", function() {
                 cmp1.setHidden(false);
                 action.hide();
                 expect(cmp1.isHidden()).toBe(true);
             });
         });
 
-        describe("show", function () {
-            it("should show instances", function () {
+        describe("show", function() {
+            it("should show instances", function() {
                 cmp1.setHidden(true);
                 action.show();
                 expect(cmp1.isHidden()).toBe(false);
             });
         });
 
-        describe("each", function () {
-            it("should execute the specified function on each instance", function () {
+        describe("each", function() {
+            it("should execute the specified function on each instance", function() {
                 var spy = jasmine.createSpy();
+
                 cmp2 = new Ext.button.Button(action);
                 action.each(spy);
 
@@ -274,9 +273,10 @@ describe('Ext.Action', function() {
             });
         });
 
-        describe("execute", function () {
-            it("should execute the handler on each instance with the passed argments", function () {
+        describe("execute", function() {
+            it("should execute the handler on each instance with the passed argments", function() {
                 var spy = jasmine.createSpy();
+
                 action.setHandler(spy);
                 action.execute('foo', 'bar', 'baz');
 
@@ -285,21 +285,21 @@ describe('Ext.Action', function() {
         });
     });
 
-    describe("setters", function () {
-        beforeEach(function () {
+    describe("setters", function() {
+        beforeEach(function() {
             makeAction();
             cmp1 = new Ext.button.Button(action);
             cmp2 = new Ext.button.Button(action);
         });
 
-        describe("setText", function () {
-            it("should update initialConfig text value", function () {
+        describe("setText", function() {
+            it("should update initialConfig text value", function() {
                 action.setText('Bar');
 
                 expect(action.initialConfig.text).toBe('Bar');
             });
 
-            it("should update text of all instances", function () {
+            it("should update text of all instances", function() {
                 action.setText('Bar');
 
                 expect(cmp1.getText()).toBe('Bar');
@@ -307,14 +307,14 @@ describe('Ext.Action', function() {
             });
         });
 
-        describe("setDisabled", function () {
-            it("should update initialConfig disabled value", function () {
+        describe("setDisabled", function() {
+            it("should update initialConfig disabled value", function() {
                 action.setDisabled(true);
 
                 expect(action.initialConfig.disabled).toBe(true);
             });
 
-            it("should update disabled state of all instances", function () {
+            it("should update disabled state of all instances", function() {
                 action.setDisabled(true);
 
                 expect(cmp1.isDisabled()).toBe(true);
@@ -322,14 +322,14 @@ describe('Ext.Action', function() {
             });
         });
 
-        describe("setHidden", function () {
-            it("should update initialConfig hidden value", function () {
+        describe("setHidden", function() {
+            it("should update initialConfig hidden value", function() {
                 action.setHidden(true);
 
                 expect(action.initialConfig.hidden).toBe(true);
             });
 
-            it("should update hidden state of all instances", function () {
+            it("should update hidden state of all instances", function() {
                 action.setHidden(true);
 
                 expect(cmp1.isVisible()).toBe(false);
@@ -337,23 +337,23 @@ describe('Ext.Action', function() {
             });
         });
 
-        describe("setIconCls", function () {
-            it("should update initialConfig iconCls value", function () {
+        describe("setIconCls", function() {
+            it("should update initialConfig iconCls value", function() {
                 action.setIconCls('fa fa-truck');
 
                 expect(action.initialConfig.iconCls).toBe('fa fa-truck');
             });
 
-            it("should update iconCls of all instances", function () {
+            it("should update iconCls of all instances", function() {
                 action.setIconCls('fa fa-truck');
 
                 expect(cmp1.iconCls).toBe('fa fa-truck');
                 expect(cmp2.iconCls).toBe('fa fa-truck');
             });
         });
-        
-        describe("setHandler", function () {
-            it("should update initialConfig handler value", function () {
+
+        describe("setHandler", function() {
+            it("should update initialConfig handler value", function() {
                 var fn  = Ext.emptyFn,
                     fn2 = Ext.emptyFn,
                     scope = new Ext.container.Container();
@@ -368,28 +368,29 @@ describe('Ext.Action', function() {
                 Ext.destroy(scope);
             });
 
-            it("should update the handler of all instances", function () {
+            it("should update the handler of all instances", function() {
                 var fn = Ext.emptyFn,
                     scope = new Ext.container.Container();
-                
+
                 // just update handler
                 action.setHandler(fn);
                 expect(cmp1.handler).toBe(fn);
+
                 // update handler and scope
                 action.setHandler(fn, scope);
-                expect(cmp1.scope).toBe(scope);    
+                expect(cmp1.scope).toBe(scope);
 
-                Ext.destroy(scope);            
+                Ext.destroy(scope);
             });
         });
     });
 
-    describe("component management", function () {
-        beforeEach(function () {
+    describe("component management", function() {
+        beforeEach(function() {
             makeAction();
         });
 
-        it("addComponent should add passed instance to items", function () {
+        it("addComponent should add passed instance to items", function() {
             cmp1 = new Ext.button.Button();
             cmp2 = new Ext.button.Button();
 
@@ -399,7 +400,7 @@ describe('Ext.Action', function() {
             expect(action.items.length).toBe(2);
         });
 
-        it("removeComponent should removed passed instance from items", function () {
+        it("removeComponent should removed passed instance from items", function() {
             cmp1 = new Ext.button.Button(action);
             cmp2 = new Ext.button.Button(action);
 
@@ -408,7 +409,7 @@ describe('Ext.Action', function() {
             expect(action.items.length).toBe(1);
         });
 
-        it("should remove component when component is destroyed", function () {
+        it("should remove component when component is destroyed", function() {
             cmp1 = new Ext.button.Button(action);
             cmp2 = new Ext.button.Button(action);
 
@@ -418,8 +419,8 @@ describe('Ext.Action', function() {
         });
     });
 
-    describe("references", function () {
-        it("should be registered if it has a reference", function () {
+    describe("references", function() {
+        it("should be registered if it has a reference", function() {
             var item, ct, vc;
 
             Ext.define('spec.TestController1', {

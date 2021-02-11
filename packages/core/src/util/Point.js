@@ -10,12 +10,13 @@ Ext.define('Ext.util.Point', {
     isPoint: true,
 
     radianToDegreeConstant: 180 / Math.PI,
-    
+
     origin: { x: 0, y: 0 },
 
     statics: {
         /**
-         * Returns a new instance of {@link Ext.util.Point} based on the `pageX` / `pageY` values of the given event.
+         * Returns a new instance of {@link Ext.util.Point} based on the `pageX` / `pageY` values
+         * of the given event.
          * @static
          * @param {Event} e The event.
          * @return {Ext.util.Point}
@@ -28,7 +29,8 @@ Ext.define('Ext.util.Point', {
         },
 
         /**
-         * Returns a new instance of {@link Ext.util.Point} based on the `pageX` / `pageY` values of the given touch.
+         * Returns a new instance of {@link Ext.util.Point} based on the `pageX` / `pageY` values
+         * of the given touch.
          * @static
          * @param {Event} touch
          * @return {Ext.util.Point}
@@ -38,8 +40,8 @@ Ext.define('Ext.util.Point', {
         },
 
         /**
-         * Returns a new point from an object that has `x` and `y` properties, if that object is not an instance
-         * of {@link Ext.util.Point}. Otherwise, returns the given point itself.
+         * Returns a new point from an object that has `x` and `y` properties, if that object
+         * is not an instance of {@link Ext.util.Point}. Otherwise, returns the given point itself.
          * @param {Object} object
          * @return {Ext.util.Point}
          */
@@ -125,14 +127,16 @@ Ext.define('Ext.util.Point', {
      * Returns `true` if the passed point is within a certain distance of this point.
      * @param {Ext.util.Point/Object} point The point to check with, either an instance
      * of {@link Ext.util.Point} or an object with `x` and `y` properties.
-     * @param {Object/Number} threshold Can be either an object with `x` and `y` properties or a number.
+     * @param {Object/Number} threshold Can be either an object with `x` and `y` properties
+     * or a number.
      * @return {Boolean}
      */
     isCloseTo: function(point, threshold) {
-        if (typeof threshold == 'number') {
+        if (typeof threshold === 'number') {
             return this.getDistanceTo(point) <= threshold;
         }
 
+        // eslint-disable-next-line vars-on-top
         var x = point.x,
             y = point.y,
             thresholdX = threshold.x,
@@ -161,12 +165,13 @@ Ext.define('Ext.util.Point', {
         if (!(region instanceof Ext.util.Region)) {
             region = Ext.get(region.el || region).getRegion();
         }
+
         return region.contains(this);
     },
 
     /**
-     * Compare this point with another point when the `x` and `y` values of both points are rounded. For example:
-     * [100.3,199.8] will equals to [100, 200].
+     * Compare this point with another point when the `x` and `y` values of both points are rounded.
+     * For example: [100.3,199.8] will equals to [100, 200].
      * @param {Ext.util.Point/Object} point The point to compare with, either an instance
      * of Ext.util.Point or an object with `x` and `y` properties.
      * @return {Boolean}
@@ -185,6 +190,7 @@ Ext.define('Ext.util.Point', {
             point = this.origin;
         }
 
+        // eslint-disable-next-line vars-on-top
         var deltaX = this.x - point.x,
             deltaY = this.y - point.y;
 
@@ -196,6 +202,7 @@ Ext.define('Ext.util.Point', {
             point = this.origin;
         }
 
+        // eslint-disable-next-line vars-on-top
         var deltaX = this.x - point.x,
             deltaY = this.y - point.y;
 
@@ -203,9 +210,10 @@ Ext.define('Ext.util.Point', {
     }
 }, function() {
     /**
-     * @method
+     * @method translate
+     * @member Ext.util.Point
      * Alias for {@link #translateBy}
-     * @inheritdoc Ext.util.Region#translateBy
+     * @inheritdoc Ext.util.Region#method-translateBy
      */
     this.prototype.translate = this.prototype.translateBy;
 });

@@ -1,24 +1,24 @@
-describe("Ext.fx.Anim", function() {
+topSuite("Ext.fx.Anim", function() {
     var anim, target, animEndSpy;
 
     beforeEach(function() {
-        target = Ext.getBody().createChild({cls: 'fxtarget'});
+        target = Ext.getBody().createChild({ cls: 'fxtarget' });
         spyOn(Ext.fx.Anim.prototype, "end").andCallThrough();
     });
-    
+
     afterEach(function() {
         target.destroy();
     });
-    
-    describe("instantiation", function(){
+
+    describe("instantiation", function() {
         beforeEach(function() {
-            spyOn(Ext.fx.Manager, "addAnim"); //avoid animation start
+            spyOn(Ext.fx.Manager, "addAnim"); // avoid animation start
             anim = new Ext.fx.Anim({
                 target: target
             });
         });
 
-        it("should mix in Ext.util.Observable", function(){
+        it("should mix in Ext.util.Observable", function() {
             expect(anim.mixins.observable).toEqual(Ext.util.Observable.prototype);
         });
 
@@ -26,41 +26,41 @@ describe("Ext.fx.Anim", function() {
             expect(anim.duration).toEqual(250);
         });
 
-        it("should have a default delay configuration option equal to 0", function(){
+        it("should have a default delay configuration option equal to 0", function() {
             expect(anim.delay).toEqual(0);
         });
 
-        it("should have a default easing configuration option equal to ease", function(){
+        it("should have a default easing configuration option equal to ease", function() {
             expect(anim.easing).toEqual('ease');
         });
 
-        it("should have a default reverse configuration option equal to false", function(){
+        it("should have a default reverse configuration option equal to false", function() {
             expect(anim.reverse).toBe(false);
         });
 
-        it("should have a default running configuration option equal to false", function(){
+        it("should have a default running configuration option equal to false", function() {
             expect(anim.running).toBe(false);
         });
 
-        it("should have a default paused configuration option equal to false", function(){
+        it("should have a default paused configuration option equal to false", function() {
             expect(anim.paused).toBe(false);
         });
 
-        it("should have a default iterations configuration option equal to 1", function(){
+        it("should have a default iterations configuration option equal to 1", function() {
             expect(anim.iterations).toEqual(1);
         });
 
-        it("should have a default currentIteration configuration option equal to 0", function(){
+        it("should have a default currentIteration configuration option equal to 0", function() {
             expect(anim.currentIteration).toEqual(0);
         });
 
-        it("should have a default startTime configuration option equal to 0", function(){
+        it("should have a default startTime configuration option equal to 0", function() {
             expect(anim.startTime).toEqual(0);
         });
     });
 
-    describe("events", function(){
-        beforeEach(function(){
+    describe("events", function() {
+        beforeEach(function() {
             spyOn(Ext.fx.Anim.prototype, "fireEvent").andCallThrough();
 
             anim = new Ext.fx.Anim({
@@ -75,12 +75,12 @@ describe("Ext.fx.Anim", function() {
             });
         });
 
-        it("should fire beforeanimate and afteranimate", function(){
+        it("should fire beforeanimate and afteranimate", function() {
             waitsFor(function() {
                 return Ext.fx.Anim.prototype.end.calls.length === 1;
             }, "event firing was never completed");
 
-            runs(function(){
+            runs(function() {
                 expect(Ext.fx.Anim.prototype.fireEvent).toHaveBeenCalledWith("beforeanimate", anim);
                 expect(Ext.fx.Anim.prototype.fireEvent.calls[1].args[0]).toEqual("afteranimate");
                 expect(Ext.fx.Anim.prototype.fireEvent.calls[1].args[1]).toEqual(anim);
@@ -88,8 +88,8 @@ describe("Ext.fx.Anim", function() {
         });
     });
 
-    describe("opacity", function(){
-        beforeEach(function(){
+    describe("opacity", function() {
+        beforeEach(function() {
             anim = new Ext.fx.Anim({
                 target: target,
                 duration: 1,
@@ -106,18 +106,19 @@ describe("Ext.fx.Anim", function() {
             }, "event firing was never completed");
         });
 
-        it("should change opacity", function(){
-            if(Ext.isIE || Ext.isOpera){
+        it("should change opacity", function() {
+            if (Ext.isIE || Ext.isOpera) {
                 expect(target.dom.style.filter).toEqual("");
-            } else {
+            }
+            else {
                 expect(target.dom.style.opacity).toEqual("1");
             }
         });
     });
 
-    describe("color", function(){
-        describe("hexadecimal colors", function(){
-            beforeEach(function(){
+    describe("color", function() {
+        describe("hexadecimal colors", function() {
+            beforeEach(function() {
                 anim = new Ext.fx.Anim({
                     target: target,
                     duration: 1,
@@ -134,7 +135,7 @@ describe("Ext.fx.Anim", function() {
                 }, "event firing was never completed");
             });
 
-            it("should change color", function(){
+            it("should change color", function() {
                 // IE8 there aren't spaces after the commas, for other browsers there are
                 var color = target.dom.style.color.replace(/ /g, '');
 
@@ -148,8 +149,8 @@ describe("Ext.fx.Anim", function() {
             });
         });
 
-       xdescribe("shorthand hexadecimal colors", function(){
-            beforeEach(function(){
+       xdescribe("shorthand hexadecimal colors", function() {
+            beforeEach(function() {
                 anim = new Ext.fx.Anim({
                     target: target,
                     duration: 1,
@@ -162,9 +163,10 @@ describe("Ext.fx.Anim", function() {
                 });
             });
 
-            it("should change color", function(){
-                waitsFor(function(){
+            it("should change color", function() {
+                waitsFor(function() {
                     var style = target.dom.style;
+
                     return style.color === 'rgb(255, 204, 0)';
                 }, "color wasn't changed");
             });

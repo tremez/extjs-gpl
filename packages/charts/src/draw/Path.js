@@ -17,8 +17,9 @@ Ext.define('Ext.draw.Path', {
      * @constructor
      * @param {String} pathString
      */
-    constructor: function (pathString) {
+    constructor: function(pathString) {
         var me = this;
+
         me.commands = []; // Stores command letters from the SVG path data ('d' attribute).
         me.params = [];   // Stores command parameters from the SVG path data.
         // All command parameters are actually point coordinates as the only commands used
@@ -28,6 +29,7 @@ Ext.define('Ext.draw.Path', {
         me.cursor = null;
         me.startX = 0;
         me.startY = 0;
+
         if (pathString) {
             me.fromSvgString(pathString);
         }
@@ -36,8 +38,9 @@ Ext.define('Ext.draw.Path', {
     /**
      * Clear the path.
      */
-    clear: function () {
+    clear: function() {
         var me = this;
+
         me.params.length = 0;
         me.commands.length = 0;
         me.cursor = null;
@@ -49,7 +52,7 @@ Ext.define('Ext.draw.Path', {
     /**
      * @private
      */
-    dirt: function () {
+    dirt: function() {
         this.svgString = '';
     },
 
@@ -58,11 +61,13 @@ Ext.define('Ext.draw.Path', {
      * @param {Number} x
      * @param {Number} y
      */
-    moveTo: function (x, y) {
+    moveTo: function(x, y) {
         var me = this;
+
         if (!me.cursor) {
             me.cursor = [x, y];
         }
+
         me.params.push(x, y);
         me.commands.push('M');
         me.startX = x;
@@ -77,16 +82,19 @@ Ext.define('Ext.draw.Path', {
      * @param {Number} x
      * @param {Number} y
      */
-    lineTo: function (x, y) {
+    lineTo: function(x, y) {
         var me = this;
+
         if (!me.cursor) {
             me.cursor = [x, y];
             me.params.push(x, y);
             me.commands.push('M');
-        } else {
+        }
+        else {
             me.params.push(x, y);
             me.commands.push('L');
         }
+
         me.cursor[0] = x;
         me.cursor[1] = y;
         me.dirt();
@@ -101,11 +109,13 @@ Ext.define('Ext.draw.Path', {
      * @param {Number} x
      * @param {Number} y
      */
-    bezierCurveTo: function (cx1, cy1, cx2, cy2, x, y) {
+    bezierCurveTo: function(cx1, cy1, cx2, cy2, x, y) {
         var me = this;
+
         if (!me.cursor) {
             me.moveTo(cx1, cy1);
         }
+
         me.params.push(cx1, cy1, cx2, cy2, x, y);
         me.commands.push('C');
         me.cursor[0] = x;
@@ -120,11 +130,13 @@ Ext.define('Ext.draw.Path', {
      * @param {Number} x
      * @param {Number} y
      */
-    quadraticCurveTo: function (cx, cy, x, y) {
+    quadraticCurveTo: function(cx, cy, x, y) {
         var me = this;
+
         if (!me.cursor) {
             me.moveTo(cx, cy);
         }
+
         me.bezierCurveTo(
             (2 * cx + me.cursor[0]) / 3, (2 * cy + me.cursor[1]) / 3,
             (2 * cx + x) / 3, (2 * cy + y) / 3,
@@ -135,8 +147,9 @@ Ext.define('Ext.draw.Path', {
     /**
      * Close this path with a straight line.
      */
-    closePath: function () {
+    closePath: function() {
         var me = this;
+
         if (me.cursor) {
             me.cursor = null;
             me.commands.push('Z');
@@ -157,8 +170,9 @@ Ext.define('Ext.draw.Path', {
      * @param {Number} [ry]
      * @param {Number} [rotation]
      */
-    arcTo: function (x1, y1, x2, y2, rx, ry, rotation) {
+    arcTo: function(x1, y1, x2, y2, rx, ry, rotation) {
         var me = this;
+
         if (ry === undefined) {
             ry = rx;
         }
@@ -169,28 +183,34 @@ Ext.define('Ext.draw.Path', {
 
         if (!me.cursor) {
             me.moveTo(x1, y1);
+
             return;
         }
 
         if (rx === 0 || ry === 0) {
             me.lineTo(x1, y1);
+
             return;
         }
 
         x2 -= x1;
         y2 -= y1;
 
+        // eslint-disable-next-line vars-on-top, one-var
         var x0 = me.cursor[0] - x1,
             y0 = me.cursor[1] - y1,
             area = x2 * y0 - y2 * x0,
             cos, sin, xx, yx, xy, yy,
             l0 = Math.sqrt(x0 * x0 + y0 * y0),
             l2 = Math.sqrt(x2 * x2 + y2 * y2),
-            dist, cx, cy;
+            dist, cx, cy,
+            temp;
+
         // cos rx, -sin ry , x1 - cos rx x1 + ry sin y1
         // sin rx, cos ry, -rx sin x1 + y1 - cos ry y1
         if (area === 0) {
             me.lineTo(x1, y1);
+
             return;
         }
 
@@ -201,13 +221,16 @@ Ext.define('Ext.draw.Path', {
             yx = sin / ry;
             xy = -sin / rx;
             yy = cos / ry;
-            var temp = xx * x0 + yx * y0;
+
+            temp = xx * x0 + yx * y0;
+
             y0 = xy * x0 + yy * y0;
             x0 = temp;
             temp = xx * x2 + yx * y2;
             y2 = xy * x2 + yy * y2;
             x2 = temp;
-        } else {
+        }
+        else {
             x0 /= rx;
             y0 /= ry;
             x2 /= rx;
@@ -216,34 +239,40 @@ Ext.define('Ext.draw.Path', {
 
         cx = x0 * l2 + x2 * l0;
         cy = y0 * l2 + y2 * l0;
-        dist = 1 / (Math.sin(Math.asin(Math.abs(area) / (l0 * l2)) * 0.5) * Math.sqrt(cx * cx + cy * cy));
+        dist = 1 / (Math.sin(Math.asin(Math.abs(area) / (l0 * l2)) * 0.5) *
+                    Math.sqrt(cx * cx + cy * cy));
         cx *= dist;
         cy *= dist;
 
+        // eslint-disable-next-line vars-on-top, one-var
         var k0 = (cx * x0 + cy * y0) / (x0 * x0 + y0 * y0),
-            k2 = (cx * x2 + cy * y2) / (x2 * x2 + y2 * y2);
-        var cosStart = x0 * k0 - cx,
+            k2 = (cx * x2 + cy * y2) / (x2 * x2 + y2 * y2),
+            cosStart = x0 * k0 - cx,
             sinStart = y0 * k0 - cy,
             cosEnd = x2 * k2 - cx,
             sinEnd = y2 * k2 - cy,
             startAngle = Math.atan2(sinStart, cosStart),
             endAngle = Math.atan2(sinEnd, cosEnd);
+
         if (area > 0) {
             if (endAngle < startAngle) {
                 endAngle += Math.PI * 2;
             }
-        } else {
+        }
+        else {
             if (startAngle < endAngle) {
                 startAngle += Math.PI * 2;
             }
         }
+
         if (ry !== rx) {
             cx = cos * cx * rx - sin * cy * ry + x1;
             cy = sin * cy * ry + cos * cy * ry + y1;
             me.lineTo(cos * rx * cosStart - sin * ry * sinStart + cx,
-                sin * rx * cosStart + cos * ry * sinStart + cy);
+                      sin * rx * cosStart + cos * ry * sinStart + cy);
             me.ellipse(cx, cy, rx, ry, rotation, startAngle, endAngle, area < 0);
-        } else {
+        }
+        else {
             cx = cx * rx + x1;
             cy = cy * ry + y1;
             me.lineTo(rx * cosStart + cx, ry * sinStart + cy);
@@ -265,28 +294,40 @@ Ext.define('Ext.draw.Path', {
      * @param {Number} endAngle
      * @param {Number} anticlockwise
      */
-    ellipse: function (cx, cy, radiusX, radiusY, rotation, startAngle, endAngle, anticlockwise) {
+    ellipse: function(cx, cy, radiusX, radiusY, rotation, startAngle, endAngle, anticlockwise) {
         var me = this,
             params = me.params,
-            start = params.length, count,
-            i, j;
+            start = params.length,
+            count, temp, i, j;
+
         if (endAngle - startAngle >= Math.PI * 2) {
-            me.ellipse(cx, cy, radiusX, radiusY, rotation, startAngle, startAngle + Math.PI, anticlockwise);
-            me.ellipse(cx, cy, radiusX, radiusY, rotation, startAngle + Math.PI, endAngle, anticlockwise);
+            me.ellipse(cx, cy, radiusX, radiusY, rotation, startAngle, startAngle + Math.PI,
+                       anticlockwise);
+            me.ellipse(cx, cy, radiusX, radiusY, rotation, startAngle + Math.PI, endAngle,
+                       anticlockwise);
+
             return;
         }
+
         if (!anticlockwise) {
             if (endAngle < startAngle) {
                 endAngle += Math.PI * 2;
             }
-            count = me.approximateArc(params, cx, cy, radiusX, radiusY, rotation, startAngle, endAngle);
-        } else {
+
+            count = me.approximateArc(params, cx, cy, radiusX, radiusY, rotation, startAngle,
+                                      endAngle);
+        }
+        else {
             if (startAngle < endAngle) {
                 startAngle += Math.PI * 2;
             }
-            count = me.approximateArc(params, cx, cy, radiusX, radiusY, rotation, endAngle, startAngle);
+
+            count = me.approximateArc(params, cx, cy, radiusX, radiusY, rotation, endAngle,
+                                      startAngle);
+
             for (i = start, j = params.length - 2; i < j; i += 2, j -= 2) {
-                var temp = params[i];
+                temp = params[i];
+
                 params[i] = params[j];
                 params[j] = temp;
                 temp = params[i + 1];
@@ -298,7 +339,8 @@ Ext.define('Ext.draw.Path', {
         if (!me.cursor) {
             me.cursor = [params[params.length - 2], params[params.length - 1]];
             me.commands.push('M');
-        } else {
+        }
+        else {
             me.cursor[0] = params[params.length - 2];
             me.cursor[1] = params[params.length - 1];
             me.commands.push('L');
@@ -307,6 +349,7 @@ Ext.define('Ext.draw.Path', {
         for (i = 2; i < count; i += 6) {
             me.commands.push('C');
         }
+
         me.dirt();
     },
 
@@ -320,7 +363,7 @@ Ext.define('Ext.draw.Path', {
      * @param {Number} endAngle
      * @param {Number} anticlockwise
      */
-    arc: function (x, y, radius, startAngle, endAngle, anticlockwise) {
+    arc: function(x, y, radius, startAngle, endAngle, anticlockwise) {
         this.ellipse(x, y, radius, radius, 0, startAngle, endAngle, anticlockwise);
     },
 
@@ -332,11 +375,13 @@ Ext.define('Ext.draw.Path', {
      * @param {Number} width
      * @param {Number} height
      */
-    rect: function (x, y, width, height) {
-        if (width == 0 || height == 0) {
+    rect: function(x, y, width, height) {
+        var me = this;
+
+        if (width === 0 || height === 0) {
             return;
         }
-        var me = this;
+
         me.moveTo(x, y);
         me.lineTo(x + width, y);
         me.lineTo(x + width, y + height);
@@ -356,7 +401,7 @@ Ext.define('Ext.draw.Path', {
      * @param {Number} theta2
      * @return {Number}
      */
-    approximateArc: function (result, cx, cy, rx, ry, phi, theta1, theta2) {
+    approximateArc: function(result, cx, cy, rx, ry, phi, theta1, theta2) {
         var cosPhi = Math.cos(phi),
             sinPhi = Math.sin(phi),
             cosTheta1 = Math.cos(theta1),
@@ -375,10 +420,13 @@ Ext.define('Ext.draw.Path', {
             temp, y1, x3, y3, x2, y2;
 
         theta2 -= theta1;
+
         if (theta2 < 0) {
             theta2 += Math.PI * 2;
         }
+
         result.push(xx + cx, xy + cy);
+
         while (theta2 >= rightAngle) {
             result.push(
                 exx + eyx * rho + cx, exy + eyy * rho + cy,
@@ -394,6 +442,7 @@ Ext.define('Ext.draw.Path', {
             exy = eyy;
             eyy = -temp;
         }
+
         if (theta2) {
             y1 = (0.3294738052815987 + 0.012120855841304373 * theta2) * theta2;
             x3 = Math.cos(theta2);
@@ -407,6 +456,7 @@ Ext.define('Ext.draw.Path', {
             );
             count += 6;
         }
+
         return count;
     },
 
@@ -420,13 +470,16 @@ Ext.define('Ext.draw.Path', {
      * @param {Number} x2
      * @param {Number} y2
      */
-    arcSvg: function (rx, ry, rotation, fA, fS, x2, y2) {
+    arcSvg: function(rx, ry, rotation, fA, fS, x2, y2) {
         if (rx < 0) {
             rx = -rx;
         }
+
         if (ry < 0) {
             ry = -ry;
         }
+
+        // eslint-disable-next-line vars-on-top
         var me = this,
             x1 = me.cursor[0],
             y1 = me.cursor[1],
@@ -439,36 +492,45 @@ Ext.define('Ext.draw.Path', {
             ratX = xp / rx,
             ratY = yp / ry,
             lambda = ratX * ratX + ratY * ratY,
-            cx = (x1 + x2) * 0.5, cy = (y1 + y2) * 0.5,
-            cpx = 0, cpy = 0;
+            cx = (x1 + x2) * 0.5,
+            cy = (y1 + y2) * 0.5,
+            cpx = 0,
+            cpy = 0,
+            theta1, deltaTheta;
+
         if (lambda >= 1) {
             lambda = Math.sqrt(lambda);
             rx *= lambda;
             ry *= lambda;
             // me gives lambda == cpx == cpy == 0;
-        } else {
+        }
+        else {
             lambda = Math.sqrt(1 / lambda - 1);
+
             if (fA === fS) {
                 lambda = -lambda;
             }
+
             cpx = lambda * rx * ratY;
             cpy = -lambda * ry * ratX;
             cx += cosPhi * cpx - sinPhi * cpy;
             cy += sinPhi * cpx + cosPhi * cpy;
         }
 
-        var theta1 = Math.atan2((yp - cpy) / ry, (xp - cpx) / rx),
-            deltaTheta = Math.atan2((-yp - cpy) / ry, (-xp - cpx) / rx) - theta1;
+        theta1 = Math.atan2((yp - cpy) / ry, (xp - cpx) / rx);
+        deltaTheta = Math.atan2((-yp - cpy) / ry, (-xp - cpx) / rx) - theta1;
 
         if (fS) {
             if (deltaTheta <= 0) {
                 deltaTheta += Math.PI * 2;
             }
-        } else {
+        }
+        else {
             if (deltaTheta >= 0) {
                 deltaTheta -= Math.PI * 2;
             }
         }
+
         me.ellipse(cx, cy, rx, ry, rotation, theta1, theta1 + deltaTheta, 1 - fS);
     },
 
@@ -476,10 +538,12 @@ Ext.define('Ext.draw.Path', {
      * Feed the path from svg path string.
      * @param {String} pathString
      */
-    fromSvgString: function (pathString) {
+    fromSvgString: function(pathString) {
         if (!pathString) {
             return;
         }
+
+        // eslint-disable-next-line vars-on-top
         var me = this,
             parts,
             paramCounts = {
@@ -488,13 +552,18 @@ Ext.define('Ext.draw.Path', {
             },
             lastCommand = '',
             lastControlX, lastControlY,
-            lastX = 0, lastY = 0,
-            part = false, i, partLength, relative;
+            lastX = 0,
+            lastY = 0,
+            part = false,
+            i, partLength;
 
         // Split the string to items.
         if (Ext.isString(pathString)) {
-            parts = pathString.replace(Ext.draw.Path.pathRe, " $1 ").replace(Ext.draw.Path.pathRe2, " -").split(Ext.draw.Path.pathSplitRe);
-        } else if (Ext.isArray(pathString)) {
+            parts = pathString.replace(Ext.draw.Path.pathRe, " $1 ")
+                              .replace(Ext.draw.Path.pathRe2, " -")
+                              .split(Ext.draw.Path.pathSplitRe);
+        }
+        else if (Ext.isArray(pathString)) {
             parts = pathString.join(',').split(Ext.draw.Path.pathSplitRe);
         }
 
@@ -504,31 +573,39 @@ Ext.define('Ext.draw.Path', {
                 parts[partLength++] = parts[i];
             }
         }
+
         parts.length = partLength;
 
         me.clear();
+
         for (i = 0; i < parts.length;) {
             lastCommand = part;
             part = parts[i];
-            relative = (part.toUpperCase() !== part);
             i++;
+
             switch (part) {
                 case 'M':
                     me.moveTo(lastX = +parts[i], lastY = +parts[i + 1]);
                     i += 2;
+
                     while (i < partLength && !paramCounts.hasOwnProperty(parts[i])) {
                         me.lineTo(lastX = +parts[i], lastY = +parts[i + 1]);
                         i += 2;
                     }
+
                     break;
+
                 case 'L':
                     me.lineTo(lastX = +parts[i], lastY = +parts[i + 1]);
                     i += 2;
+
                     while (i < partLength && !paramCounts.hasOwnProperty(parts[i])) {
                         me.lineTo(lastX = +parts[i], lastY = +parts[i + 1]);
                         i += 2;
                     }
+
                     break;
+
                 case 'A':
                     while (i < partLength && !paramCounts.hasOwnProperty(parts[i])) {
                         me.arcSvg(
@@ -538,35 +615,46 @@ Ext.define('Ext.draw.Path', {
                             lastX = +parts[i + 5], lastY = +parts[i + 6]);
                         i += 7;
                     }
+
                     break;
+
                 case 'C':
                     while (i < partLength && !paramCounts.hasOwnProperty(parts[i])) {
                         me.bezierCurveTo(
-                            +parts[i ], +parts[i + 1],
+                            +parts[i], +parts[i + 1],
                             lastControlX = +parts[i + 2], lastControlY = +parts[i + 3],
                             lastX = +parts[i + 4], lastY = +parts[i + 5]);
                         i += 6;
                     }
+
                     break;
+
                 case 'Z':
                     me.closePath();
                     break;
+
                 case 'm':
                     me.moveTo(lastX += +parts[i], lastY += +parts[i + 1]);
                     i += 2;
+
                     while (i < partLength && !paramCounts.hasOwnProperty(parts[i])) {
                         me.lineTo(lastX += +parts[i], lastY += +parts[i + 1]);
                         i += 2;
                     }
+
                     break;
+
                 case 'l':
                     me.lineTo(lastX += +parts[i], lastY += +parts[i + 1]);
                     i += 2;
+
                     while (i < partLength && !paramCounts.hasOwnProperty(parts[i])) {
                         me.lineTo(lastX += +parts[i], lastY += +parts[i + 1]);
                         i += 2;
                     }
+
                     break;
+
                 case 'a':
                     while (i < partLength && !paramCounts.hasOwnProperty(parts[i])) {
                         me.arcSvg(
@@ -576,20 +664,27 @@ Ext.define('Ext.draw.Path', {
                             lastX += +parts[i + 5], lastY += +parts[i + 6]);
                         i += 7;
                     }
+
                     break;
+
                 case 'c':
                     while (i < partLength && !paramCounts.hasOwnProperty(parts[i])) {
                         me.bezierCurveTo(lastX + (+parts[i]), lastY + (+parts[i + 1]),
-                            lastControlX = lastX + (+parts[i + 2]), lastControlY = lastY + (+parts[i + 3]),
-                            lastX += +parts[i + 4], lastY += +parts[i + 5]);
+                                         lastControlX = lastX + (+parts[i + 2]),
+                                         lastControlY = lastY + (+parts[i + 3]),
+                                         lastX += +parts[i + 4], lastY += +parts[i + 5]);
                         i += 6;
                     }
+
                     break;
+
                 case 'z':
                     me.closePath();
                     break;
+
                 case 's':
-                    if (!(lastCommand === 'c' || lastCommand === 'C' || lastCommand === 's' || lastCommand === 'S')) {
+                    if (!(lastCommand === 'c' || lastCommand === 'C' || lastCommand === 's' ||
+                        lastCommand === 'S')) {
                         lastControlX = lastX;
                         lastControlY = lastY;
                     }
@@ -597,16 +692,21 @@ Ext.define('Ext.draw.Path', {
                     while (i < partLength && !paramCounts.hasOwnProperty(parts[i])) {
                         me.bezierCurveTo(
                             lastX + lastX - lastControlX, lastY + lastY - lastControlY,
-                            lastControlX = lastX + (+parts[i]), lastControlY = lastY + (+parts[i + 1]),
+                            lastControlX = lastX + (+parts[i]), lastControlY = lastY +
+                                           (+parts[i + 1]),
                             lastX += +parts[i + 2], lastY += +parts[i + 3]);
                         i += 4;
                     }
+
                     break;
+
                 case 'S':
-                    if (!(lastCommand === 'c' || lastCommand === 'C' || lastCommand === 's' || lastCommand === 'S')) {
+                    if (!(lastCommand === 'c' || lastCommand === 'C' || lastCommand === 's' ||
+                        lastCommand === 'S')) {
                         lastControlX = lastX;
                         lastControlY = lastY;
                     }
+
                     while (i < partLength && !paramCounts.hasOwnProperty(parts[i])) {
                         me.bezierCurveTo(
                             lastX + lastX - lastControlX, lastY + lastY - lastControlY,
@@ -614,15 +714,20 @@ Ext.define('Ext.draw.Path', {
                             lastX = (+parts[i + 2]), lastY = (+parts[i + 3]));
                         i += 4;
                     }
+
                     break;
+
                 case 'q':
                     while (i < partLength && !paramCounts.hasOwnProperty(parts[i])) {
                         me.quadraticCurveTo(
-                            lastControlX = lastX + (+parts[i]), lastControlY = lastY + (+parts[i + 1]),
+                            lastControlX = lastX + (+parts[i]),
+                            lastControlY = lastY + (+parts[i + 1]),
                             lastX += +parts[i + 2], lastY += +parts[i + 3]);
                         i += 4;
                     }
+
                     break;
+
                 case 'Q':
                     while (i < partLength && !paramCounts.hasOwnProperty(parts[i])) {
                         me.quadraticCurveTo(
@@ -630,54 +735,73 @@ Ext.define('Ext.draw.Path', {
                             lastX = +parts[i + 2], lastY = +parts[i + 3]);
                         i += 4;
                     }
+
                     break;
+
                 case 't':
-                    if (!(lastCommand === 'q' || lastCommand === 'Q' || lastCommand === 't' || lastCommand === 'T')) {
+                    if (!(lastCommand === 'q' || lastCommand === 'Q' || lastCommand === 't' ||
+                        lastCommand === 'T')) {
                         lastControlX = lastX;
                         lastControlY = lastY;
                     }
+
                     while (i < partLength && !paramCounts.hasOwnProperty(parts[i])) {
                         me.quadraticCurveTo(
-                            lastControlX = lastX + lastX - lastControlX, lastControlY = lastY + lastY - lastControlY,
+                            lastControlX = lastX + lastX - lastControlX,
+                            lastControlY = lastY + lastY - lastControlY,
                             lastX += +parts[i + 1], lastY += +parts[i + 2]);
                         i += 2;
                     }
+
                     break;
+
                 case 'T':
-                    if (!(lastCommand === 'q' || lastCommand === 'Q' || lastCommand === 't' || lastCommand === 'T')) {
+                    if (!(lastCommand === 'q' || lastCommand === 'Q' || lastCommand === 't' ||
+                        lastCommand === 'T')) {
                         lastControlX = lastX;
                         lastControlY = lastY;
                     }
+
                     while (i < partLength && !paramCounts.hasOwnProperty(parts[i])) {
                         me.quadraticCurveTo(
-                            lastControlX = lastX + lastX - lastControlX, lastControlY = lastY + lastY - lastControlY,
+                            lastControlX = lastX + lastX - lastControlX,
+                            lastControlY = lastY + lastY - lastControlY,
                             lastX = (+parts[i + 1]), lastY = (+parts[i + 2]));
                         i += 2;
                     }
+
                     break;
+
                 case 'h':
                     while (i < partLength && !paramCounts.hasOwnProperty(parts[i])) {
                         me.lineTo(lastX += +parts[i], lastY);
                         i++;
                     }
+
                     break;
+
                 case 'H':
                     while (i < partLength && !paramCounts.hasOwnProperty(parts[i])) {
                         me.lineTo(lastX = +parts[i], lastY);
                         i++;
                     }
+
                     break;
+
                 case 'v':
                     while (i < partLength && !paramCounts.hasOwnProperty(parts[i])) {
                         me.lineTo(lastX, lastY += +parts[i]);
                         i++;
                     }
+
                     break;
+
                 case 'V':
                     while (i < partLength && !paramCounts.hasOwnProperty(parts[i])) {
                         me.lineTo(lastX, lastY = +parts[i]);
                         i++;
                     }
+
                     break;
             }
         }
@@ -687,15 +811,17 @@ Ext.define('Ext.draw.Path', {
      * Clone this path.
      * @return {Ext.draw.Path}
      */
-    clone: function () {
+    clone: function() {
         var me = this,
             path = new Ext.draw.Path();
+
         path.params = me.params.slice(0);
         path.commands = me.commands.slice(0);
         path.cursor = me.cursor ? me.cursor.slice(0) : null;
         path.startX = me.startX;
         path.startY = me.startY;
         path.svgString = me.svgString;
+
         return path;
     },
 
@@ -703,14 +829,21 @@ Ext.define('Ext.draw.Path', {
      * Transform the current path by a matrix.
      * @param {Ext.draw.Matrix} matrix
      */
-    transform: function (matrix) {
+    transform: function(matrix) {
         if (matrix.isIdentity()) {
             return;
         }
-        var xx = matrix.getXX(), yx = matrix.getYX(), dx = matrix.getDX(),
-            xy = matrix.getXY(), yy = matrix.getYY(), dy = matrix.getDY(),
+
+        // eslint-disable-next-line vars-on-top
+        var xx = matrix.getXX(),
+            yx = matrix.getYX(),
+            dx = matrix.getDX(),
+            xy = matrix.getXY(),
+            yy = matrix.getYY(),
+            dy = matrix.getDY(),
             params = this.params,
-            i = 0, ln = params.length,
+            i = 0,
+            ln = params.length,
             x, y;
 
         for (; i < ln; i += 2) {
@@ -719,6 +852,7 @@ Ext.define('Ext.draw.Path', {
             params[i] = x * xx + y * yx + dx;
             params[i + 1] = x * xy + y * yy + dy;
         }
+
         this.dirt();
     },
 
@@ -728,7 +862,7 @@ Ext.define('Ext.draw.Path', {
      *
      * @return {Object} Object with x, y, width and height
      */
-    getDimension: function (target) {
+    getDimension: function(target) {
         if (!target) {
             target = {};
         }
@@ -738,6 +872,7 @@ Ext.define('Ext.draw.Path', {
             target.y = 0;
             target.width = 0;
             target.height = 0;
+
             return target;
         }
 
@@ -745,10 +880,15 @@ Ext.define('Ext.draw.Path', {
         target.top = Infinity;
         target.right = -Infinity;
         target.bottom = -Infinity;
-        var i = 0, j = 0,
+
+        // eslint-disable-next-line vars-on-top
+        var i = 0,
+            j = 0,
             commands = this.commands,
             params = this.params,
-            ln = commands.length, x, y;
+            ln = commands.length,
+            x, y;
+
         for (; i < ln; i++) {
             switch (commands[i]) {
                 case 'M':
@@ -761,11 +901,12 @@ Ext.define('Ext.draw.Path', {
                     target.bottom = Math.max(y, target.bottom);
                     j += 2;
                     break;
+
                 case 'C':
                     this.expandDimension(target, x, y,
-                        params[j], params[j + 1],
-                        params[j + 2], params[j + 3],
-                        x = params[j + 4], y = params[j + 5]);
+                                         params[j], params[j + 1],
+                                         params[j + 2], params[j + 3],
+                                         x = params[j + 4], y = params[j + 5]);
                     j += 6;
                     break;
             }
@@ -775,6 +916,7 @@ Ext.define('Ext.draw.Path', {
         target.y = target.top;
         target.width = target.right - target.left;
         target.height = target.bottom - target.top;
+
         return target;
     },
 
@@ -786,15 +928,17 @@ Ext.define('Ext.draw.Path', {
      *
      * @return {Object} An object with x, y, width and height.
      */
-    getDimensionWithTransform: function (matrix, target) {
+    getDimensionWithTransform: function(matrix, target) {
         if (!this.commands || !this.commands.length) {
             if (!target) {
                 target = {};
             }
+
             target.x = 0;
             target.y = 0;
             target.width = 0;
             target.height = 0;
+
             return target;
         }
 
@@ -803,12 +947,20 @@ Ext.define('Ext.draw.Path', {
         target.right = -Infinity;
         target.bottom = -Infinity;
 
-        var xx = matrix.getXX(), yx = matrix.getYX(), dx = matrix.getDX(),
-            xy = matrix.getXY(), yy = matrix.getYY(), dy = matrix.getDY(),
-            i = 0, j = 0,
+        // eslint-disable-next-line vars-on-top
+        var xx = matrix.getXX(),
+            yx = matrix.getYX(),
+            dx = matrix.getDX(),
+            xy = matrix.getXY(),
+            yy = matrix.getYY(),
+            dy = matrix.getDY(),
+            i = 0,
+            j = 0,
             commands = this.commands,
             params = this.params,
-            ln = commands.length, x, y;
+            ln = commands.length,
+            x, y;
+
         for (; i < ln; i++) {
             switch (commands[i]) {
                 case 'M':
@@ -821,26 +973,30 @@ Ext.define('Ext.draw.Path', {
                     target.bottom = Math.max(y, target.bottom);
                     j += 2;
                     break;
+
                 case 'C':
                     this.expandDimension(target,
-                        x, y,
-                        params[j] * xx + params[j + 1] * yx + dx,
-                        params[j] * xy + params[j + 1] * yy + dy,
-                        params[j + 2] * xx + params[j + 3] * yx + dx,
-                        params[j + 2] * xy + params[j + 3] * yy + dy,
-                        x = params[j + 4] * xx + params[j + 5] * yx + dx,
-                        y = params[j + 4] * xy + params[j + 5] * yy + dy);
+                                         x, y,
+                                         params[j] * xx + params[j + 1] * yx + dx,
+                                         params[j] * xy + params[j + 1] * yy + dy,
+                                         params[j + 2] * xx + params[j + 3] * yx + dx,
+                                         params[j + 2] * xy + params[j + 3] * yy + dy,
+                                         x = params[j + 4] * xx + params[j + 5] * yx + dx,
+                                         y = params[j + 4] * xy + params[j + 5] * yy + dy);
                     j += 6;
                     break;
             }
         }
+
         if (!target) {
             target = {};
         }
+
         target.x = target.left;
         target.y = target.top;
         target.width = target.right - target.left;
         target.height = target.bottom - target.top;
+
         return target;
     },
 
@@ -858,9 +1014,12 @@ Ext.define('Ext.draw.Path', {
      * @param {Number} x2
      * @param {Number} y2
      */
-    expandDimension: function (target, x1, y1, cx1, cy1, cx2, cy2, x2, y2) {
+    expandDimension: function(target, x1, y1, cx1, cy1, cx2, cy2, x2, y2) {
         var me = this,
-            l = target.left, r = target.right, t = target.top, b = target.bottom,
+            l = target.left,
+            r = target.right,
+            t = target.top,
+            b = target.bottom,
             dim = me.dim || (me.dim = []);
 
         me.curveDimension(x1, cx1, cx2, x2, dim);
@@ -886,38 +1045,48 @@ Ext.define('Ext.draw.Path', {
      * @param {Number} d
      * @param {Number} dim
      */
-    curveDimension: function (a, b, c, d, dim) {
+    curveDimension: function(a, b, c, d, dim) {
         var qa = 3 * (-a + 3 * (b - c) + d),
             qb = 6 * (a - 2 * b + c),
-            qc = -3 * (a - b), x, y,
+            qc = -3 * (a - b),
+            x, y,
             min = Math.min(a, d),
-            max = Math.max(a, d), delta;
+            max = Math.max(a, d),
+            delta;
 
         if (qa === 0) {
             if (qb === 0) {
                 dim[0] = min;
                 dim[1] = max;
+
                 return;
-            } else {
+            }
+            else {
                 x = -qc / qb;
+
                 if (0 < x && x < 1) {
                     y = this.interpolate(a, b, c, d, x);
                     min = Math.min(min, y);
                     max = Math.max(max, y);
                 }
             }
-        } else {
+        }
+        else {
             delta = qb * qb - 4 * qa * qc;
+
             if (delta >= 0) {
                 delta = Math.sqrt(delta);
                 x = (delta - qb) / 2 / qa;
+
                 if (0 < x && x < 1) {
                     y = this.interpolate(a, b, c, d, x);
                     min = Math.min(min, y);
                     max = Math.max(max, y);
                 }
+
                 if (delta > 0) {
                     x -= delta / qa;
+
                     if (0 < x && x < 1) {
                         y = this.interpolate(a, b, c, d, x);
                         min = Math.min(min, y);
@@ -926,6 +1095,7 @@ Ext.define('Ext.draw.Path', {
                 }
             }
         }
+
         dim[0] = min;
         dim[1] = max;
     },
@@ -942,14 +1112,19 @@ Ext.define('Ext.draw.Path', {
      * @param {Number} t
      * @return {Number}
      */
-    interpolate: function (a, b, c, d, t) {
+    interpolate: function(a, b, c, d, t) {
+        var rate;
+
         if (t === 0) {
             return a;
         }
+
         if (t === 1) {
             return d;
         }
-        var rate = (1 - t) / t;
+
+        rate = (1 - t) / t;
+
         return t * t * t * (d + rate * (3 * c + rate * (3 * b + rate * a)));
     },
 
@@ -957,22 +1132,28 @@ Ext.define('Ext.draw.Path', {
      * Reconstruct path from cubic bezier curve stripes.
      * @param {Array} stripes
      */
-    fromStripes: function (stripes) {
+    fromStripes: function(stripes) {
         var me = this,
-            i = 0, ln = stripes.length,
+            i = 0,
+            ln = stripes.length,
             j, ln2, stripe;
+
         me.clear();
+
         for (; i < ln; i++) {
             stripe = stripes[i];
             me.params.push.apply(me.params, stripe);
             me.commands.push('M');
+
             for (j = 2, ln2 = stripe.length; j < ln2; j += 6) {
                 me.commands.push('C');
             }
         }
+
         if (!me.cursor) {
             me.cursor = [];
         }
+
         me.cursor[0] = me.params[me.params.length - 2];
         me.cursor[1] = me.params[me.params.length - 1];
         me.dirt();
@@ -983,34 +1164,43 @@ Ext.define('Ext.draw.Path', {
      * @param {Array} [target] The optional array to receive the result.
      * @return {Array}
      */
-    toStripes: function (target) {
-        var stripes = target || [], curr,
+    toStripes: function(target) {
+        var stripes = target || [],
+            curr,
             x, y, lastX, lastY, startX, startY,
             i, j,
             commands = this.commands,
             params = this.params,
             ln = commands.length;
+
         for (i = 0, j = 0; i < ln; i++) {
             switch (commands[i]) {
                 case 'M':
                     curr = [startX = lastX = params[j++], startY = lastY = params[j++]];
                     stripes.push(curr);
                     break;
+
                 case 'L':
                     x = params[j++];
                     y = params[j++];
-                    curr.push((lastX + lastX + x) / 3, (lastY + lastY + y) / 3, (lastX + x + x) / 3, (lastY + y + y) / 3, lastX = x, lastY = y);
+                    curr.push((lastX + lastX + x) / 3, (lastY + lastY + y) / 3,
+                              (lastX + x + x) / 3, (lastY + y + y) / 3, lastX = x, lastY = y);
                     break;
+
                 case 'C':
-                    curr.push(params[j++], params[j++], params[j++], params[j++], lastX = params[j++], lastY = params[j++]);
+                    curr.push(params[j++], params[j++], params[j++], params[j++],
+                              lastX = params[j++], lastY = params[j++]);
                     break;
+
                 case 'Z':
                     x = startX;
                     y = startY;
-                    curr.push((lastX + lastX + x) / 3, (lastY + lastY + y) / 3, (lastX + x + x) / 3, (lastY + y + y) / 3, lastX = x, lastY = y);
+                    curr.push((lastX + lastX + x) / 3, (lastY + lastY + y) / 3,
+                              (lastX + x + x) / 3, (lastY + y + y) / 3, lastX = x, lastY = y);
                     break;
             }
         }
+
         return stripes;
     },
 
@@ -1018,33 +1208,39 @@ Ext.define('Ext.draw.Path', {
      * @private
      * Update cache for svg string of this path.
      */
-    updateSvgString: function () {
+    updateSvgString: function() {
         var result = [],
             commands = this.commands,
             params = this.params,
             ln = commands.length,
-            i = 0, j = 0;
+            i = 0,
+            j = 0;
+
         for (; i < ln; i++) {
             switch (commands[i]) {
                 case 'M':
                     result.push('M' + params[j] + ',' + params[j + 1]);
                     j += 2;
                     break;
+
                 case 'L':
                     result.push('L' + params[j] + ',' + params[j + 1]);
                     j += 2;
                     break;
+
                 case 'C':
                     result.push('C' + params[j] + ',' + params[j + 1] + ' ' +
                         params[j + 2] + ',' + params[j + 3] + ' ' +
                         params[j + 4] + ',' + params[j + 5]);
                     j += 6;
                     break;
+
                 case 'Z':
                     result.push('Z');
                     break;
             }
         }
+
         this.svgString = result.join('');
     },
 
@@ -1052,10 +1248,11 @@ Ext.define('Ext.draw.Path', {
      * Return an svg path string for this path.
      * @return {String}
      */
-    toString: function () {
+    toString: function() {
         if (!this.svgString) {
             this.updateSvgString();
         }
+
         return this.svgString;
     }
 });

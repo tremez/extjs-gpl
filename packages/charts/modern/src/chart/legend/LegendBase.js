@@ -4,54 +4,58 @@
 Ext.define('Ext.chart.legend.LegendBase', {
     extend: 'Ext.dataview.DataView',
     config: {
+        /* eslint-disable max-len, no-useless-escape */
         itemTpl: [
             '<span class=\"', Ext.baseCSSPrefix, 'legend-item-marker {[ values.disabled ? Ext.baseCSSPrefix + \'legend-item-inactive\' : \'\' ]}\" style=\"background:{mark};\"></span>{name}'
         ],
-        inline: true,
+        /* eslint-enable max-len, no-useless-escape */
 
-        horizontalHeight: 64,
-        verticalWidth: 150,
+        inline: true,
 
         scrollable: false // for IE11 vertical align
     },
 
-    constructor: function (config) {
+    constructor: function(config) {
+        var scroller, onDrag;
+
         this.callParent([config]);
 
-        var scroller = this.getScrollable(),
-            onDrag = scroller.onDrag;
+        scroller = this.getScrollable();
+        onDrag = scroller.onDrag;
 
-        scroller.onDrag = function (e) {
+        scroller.onDrag = function(e) {
             e.stopPropagation();
             onDrag.call(this, e);
         };
     },
 
-    updateDocked: function (docked, oldDocked) {
-        var me = this;
+    updateDocked: function(docked, oldDocked) {
+        var me = this,
+            el = me.el;
 
         me.callParent([docked, oldDocked]);
 
         switch (docked) {
             case 'top':
+
+            // eslint-disable-next-line no-fallthrough
             case 'bottom':
-                me.addCls(me.horizontalCls);
-                me.removeCls(me.verticalCls);
-                me.setWidth(null);
-                me.setHeight(me.getHorizontalHeight());
+                el.addCls(me.horizontalCls);
+                el.removeCls(me.verticalCls);
                 break;
+
             case 'left':
+
+            // eslint-disable-next-line no-fallthrough
             case 'right':
-                me.addCls(me.verticalCls);
-                me.removeCls(me.horizontalCls);
-                me.setWidth(me.getVerticalWidth());
-                me.setHeight(null);
+                el.addCls(me.verticalCls);
+                el.removeCls(me.horizontalCls);
                 break;
         }
     },
 
-    onItemTap: function (container, target, index, e) {
-        this.callParent(arguments);
-        this.toggleItem(index);
+    onChildTap: function(view, context) {
+        this.callParent([view, context]);
+        this.toggleItem(context.viewIndex);
     }
 });

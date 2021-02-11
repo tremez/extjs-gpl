@@ -6,24 +6,21 @@
     padding: 0;
 }
 
-.x-sheet.x-picker .x-sheet-inner {
-    background-color: #fff;
-    overflow: hidden;
-
+.x-sheet.x-picker .x-sheet-body-el {
     .x-picker-slot {
-        .x-body {
+        .x-body-el {
             border-left: 1px solid #999999;
             border-right: 1px solid #ACACAC;
         }
 
         &.x-first {
-            .x-body {
+            .x-body-el {
                 border-left: 0;
             }
         }
 
         &.x-last {
-            .x-body {
+            .x-body-el {
                 border-left: 0;
                 border-right: 0;
             }
@@ -38,10 +35,10 @@
     right: 0;
     bottom: 0;
     z-index: 3;
-    @include st-box;
-    @include st-box-align(stretch);
-    @include st-box-orient(vertical);
-    @include st-box-pack(center);
+    display: flex;
+    align-items: stretch;
+    flex-direction: column;
+    justify-content: center;
     pointer-events: none;
 }
 
@@ -56,7 +53,7 @@
 }
 
 .x-picker-slot {
-    .x-dataview-inner {
+    .x-dataview-body-el {
         width: 100% !important;
     }
 

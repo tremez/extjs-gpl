@@ -1,6 +1,5 @@
 Ext.define('Admin.view.search.ResultsModel', {
     extend: 'Ext.app.ViewModel',
-
     alias: 'viewmodel.searchresults',
 
     stores: {

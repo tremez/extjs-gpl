@@ -1,5 +1,5 @@
 .#{$prefix}form-no-input-borders > .#{$prefix}field {
-    .#{$prefix}input {
+    .#{$prefix}input-wrap-el {
         border: 0 !important;
     }
 }

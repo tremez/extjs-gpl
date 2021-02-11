@@ -79,7 +79,7 @@
  */
 Ext.define('Ext.data.schema.ManyToMany', {
     extend: 'Ext.data.schema.Association',
-    
+
     isManyToMany: true,
 
     isToMany: true,
@@ -96,21 +96,24 @@ Ext.define('Ext.data.schema.ManyToMany', {
         findRecords: function(session, rightRecord, leftRecords) {
             var slice = session.getMatrixSlice(this.inverse, rightRecord.id),
                 members = slice.members,
-                ret = [], 
+                ret = [],
                 cls = this.cls,
                 seen, i, len, id, member, leftRecord;
 
             if (leftRecords) {
                 seen = {};
+
                 // Loop over the records returned by the server and
                 // check they all still belong
                 for (i = 0, len = leftRecords.length; i < len; ++i) {
                     leftRecord = leftRecords[i];
                     id = leftRecord.id;
                     member = members[id];
+
                     if (!(member && member[2] === -1)) {
                         ret.push(leftRecord);
                     }
+
                     seen[id] = true;
                 }
             }
@@ -118,13 +121,16 @@ Ext.define('Ext.data.schema.ManyToMany', {
             // Loop over the expected set and include any missing records.
             for (id in members) {
                 member = members[id];
+
                 if (!seen || !seen[id] && (member && member[2] !== -1)) {
                     leftRecord = session.peekRecord(cls, id);
+
                     if (leftRecord) {
                         ret.push(leftRecord);
                     }
                 }
             }
+
             return ret;
         },
 
@@ -138,10 +144,12 @@ Ext.define('Ext.data.schema.ManyToMany', {
 
         processLoad: function(store, rightRecord, leftRecords, session) {
             var ret = leftRecords;
+
             if (session) {
                 ret = this.findRecords(session, rightRecord, leftRecords);
                 this.onAddToMany(store, ret, true);
             }
+
             return ret;
         },
 
@@ -154,21 +162,26 @@ Ext.define('Ext.data.schema.ManyToMany', {
             if (items) {
                 for (id in items) {
                     rightRecord = session.peekRecord(entityType, id);
+
                     if (rightRecord) {
                         leftRecords = session.getEntityList(me.cls, items[id]);
                         store = me.getAssociatedItem(rightRecord);
+
                         if (store) {
                             store.loadData(leftRecords);
                             store.complete = true;
-                        } else {
+                        }
+                        else {
                             // We don't have a store. Create it and add the records.
                             rightRecord[me.getterName](null, null, leftRecords);
                         }
-                    } else {
+                    }
+                    else {
                         session.onInvalidAssociationEntity(entityType, id);
                     }
                 }
             }
+
             me.processMatrixBlock(session, associationData.C, 1);
             me.processMatrixBlock(session, associationData.D, -1);
         },
@@ -186,19 +199,24 @@ Ext.define('Ext.data.schema.ManyToMany', {
             entityType = side.inverse.role.cls;
             inverse = this.inverse;
             slices = side.slices;
-                
 
             if (slices) {
                 slice = slices[rightRecord.id];
+
                 if (slice) {
                     members = slice.members;
+
                     for (id in members) {
                         member = members[id];
+
                         if (member[2] !== -1) {
-                            // Do we have the record in the session? If so, do we also have the store?
+                            // Do we have the record in the session?
+                            // If so, do we also have the store?
                             leftRecord = session.peekRecord(entityType, id);
+
                             if (leftRecord) {
                                 store = inverse.getAssociatedItem(leftRecord);
+
                                 if (store) {
                                     store.matrixUpdate = 1;
                                     store.add(rightRecord);
@@ -224,8 +242,6 @@ Ext.define('Ext.data.schema.ManyToMany', {
                 matrix.attach(store);
                 matrix.notify = me.onMatrixUpdate;
                 matrix.scope = me;
-
-
             }
         },
 
@@ -241,6 +257,7 @@ Ext.define('Ext.data.schema.ManyToMany', {
                     if (digitRe.test(id)) {
                         id = parseInt(id, 10);
                     }
+
                     slice = session.getMatrixSlice(inverse, id);
                     slice.update(leftKeys[id], state);
                 }
@@ -250,7 +267,7 @@ Ext.define('Ext.data.schema.ManyToMany', {
         createGetter: function() {
             var me = this;
 
-            return function (options, scope, leftRecords) {
+            return function(options, scope, leftRecords) {
                 // 'this' refers to the Model instance inside this function
                 return me.getAssociatedStore(this, options, scope, leftRecords, false);
             };
@@ -262,11 +279,11 @@ Ext.define('Ext.data.schema.ManyToMany', {
          * the matrix what it already knows. Otherwise we need to tell the matrix of the
          * changes on this side so that they can be reflected on the other side.
          */
-        onAddToMany: function (store, leftRecords, load) {
+        onAddToMany: function(store, leftRecords, load) {
             if (!store.matrixUpdate) {
                 store.matrixUpdate = 1;
-                // By default the "load" param is really the index, but we call this manually in a few
-                // spots to indicate it's a default load
+                // By default the "load" param is really the index, but we call this manually
+                // in a few spots to indicate it's a default load
                 store.matrix.update(leftRecords, load === true ? 0 : 1);
                 store.matrixUpdate = 0;
             }
@@ -277,7 +294,7 @@ Ext.define('Ext.data.schema.ManyToMany', {
          * same logic applies here as in onAddToMany with respect to the update that may
          * or may not be taking place on the underlying matrix.
          */
-        onRemoveFromMany: function (store, records) {
+        onRemoveFromMany: function(store, records) {
             if (!store.matrixUpdate) {
                 store.matrixUpdate = 1;
                 store.matrix.update(records, -1);
@@ -288,17 +305,17 @@ Ext.define('Ext.data.schema.ManyToMany', {
         read: function(rightRecord, node, fromReader, readOptions) {
             var me = this,
                 leftRecords = me.callParent([rightRecord, node, fromReader, readOptions]);
-            
+
             if (leftRecords) {
                 // Create the store and dump the data
                 rightRecord[me.getterName](null, null, leftRecords);
                 // Inline associations should *not* arrive on the "data" object:
                 delete rightRecord.data[me.role];
             }
-            
+
         },
 
-        onMatrixUpdate: function (matrixSlice, id, state) {
+        onMatrixUpdate: function(matrixSlice, id, state) {
             var store = matrixSlice.store,
                 index, leftRecord, entry;
 
@@ -306,11 +323,13 @@ Ext.define('Ext.data.schema.ManyToMany', {
                 store.matrixUpdate = 1;
 
                 index = store.indexOfId(id);
+
                 if (state < 0) {
                     if (index >= 0) {
                         store.remove([ index ]);
                     }
-                } else if (index < 0) {
+                }
+                else if (index < 0) {
                     entry = store.getSession().getEntry(this.type, id);
                     leftRecord = entry && entry.record;
 
@@ -331,16 +350,16 @@ Ext.define('Ext.data.schema.ManyToMany', {
                 store.setSession(session);
                 this.onStoreCreate(store, session, record.getId());
                 records = store.getData().items;
+
                 for (i = 0, len = records.length; i < len; ++i) {
                     session.adopt(records[i]);
                 }
             }
         }
-    },
-    function () {
+    }, function() {
         var Left = this; // Left is created but ManyToMany may not yet be created
 
-        Ext.ClassManager.onCreated(function () {
+        Ext.ClassManager.onCreated(function() {
             Ext.data.schema.ManyToMany.prototype.Right = Ext.define(null, {
                 extend: Left,
                 left: false,

@@ -13,13 +13,27 @@ Ext.define('KitchenSink.view.draw.Easings', {
         'Ext.draw.Component'
     ],
 
-    // <example>
+    //<example>
     otherContent: [{
         type: 'Controller',
         path: 'classic/samples/view/draw/EasingsController.js'
     }],
-    // </example>
+    //</example>
 
+    profiles: {
+        classic: {
+            strokeStyle: 'black'
+        },
+        neptune: {
+            strokeStyle: 'black'
+        },
+        graphite: {
+            strokeStyle: '#fff'
+        },
+        'classic-material': {
+            strokeStyle: '#2196f3'
+        }
+    },
     layout: 'fit',
     width: 650,
 
@@ -52,22 +66,19 @@ Ext.define('KitchenSink.view.draw.Easings', {
                 cy: 100
             }, {
                 type: 'line',
+                strokeStyle: '${strokeStyle}',
                 fromX: 250,
                 fromY: 100,
                 toX: 400,
                 toY: 100
             }, {
                 type: 'line',
+                strokeStyle: '${strokeStyle}',
                 fromX: 250,
                 fromY: 400,
                 toX: 400,
                 toY: 400
             }]
         }
-    ],
-
-    listeners: {
-        afterrender: 'onAfterRender'
-    }
-
+    ]
 });

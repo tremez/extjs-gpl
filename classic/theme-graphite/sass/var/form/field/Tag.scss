@@ -1,0 +1,38 @@
+$tag-field-color: dynamic($form-text-field-color);
+$tag-field-selection-color: dynamic($form-text-selection-color);
+$tag-field-placeholder-color: dynamic($form-field-placeholder-color);
+
+$tag-field-item-height: dynamic(27px);
+$tag-field-item-border-width: dynamic(0);
+$tag-field-padding: dynamic($form-field-padding);
+
+$tag-field-item-background-color: dynamic($base-color);
+$tag-field-item-color: dynamic(#f0f0f0);
+$tag-field-item-close-icon-glyph-color: dynamic($tag-field-item-color);
+
+$tag-field-item-over-background-color: dynamic(#969595);
+$tag-field-item-over-color: dynamic(#fff);
+$tag-field-item-over-close-icon-glyph-color: dynamic($tag-field-item-close-icon-glyph-color);
+
+$tag-field-item-selected-background-color: dynamic(#e6e6e6);
+$tag-field-item-selected-color: dynamic($base-color);
+$tag-field-item-selected-close-icon-glyph-color: dynamic($tag-field-item-selected-color);
+
+$tag-field-item-selected-over-background-color: dynamic(#cecece);
+$tag-field-item-selected-over-color: dynamic($tag-field-item-selected-color);
+$tag-field-item-selected-over-close-icon-glyph-color: dynamic($tag-field-item-selected-over-color);
+
+$tag-field-item-focus-background-color: dynamic($tag-field-item-background-color);
+$tag-field-item-focus-color: dynamic($tag-field-item-color);
+$tag-field-item-focus-close-icon-glyph-color: dynamic($tag-field-item-focus-color);
+
+$tag-field-item-focus-over-background-color: dynamic(#0072b2);
+$tag-field-item-focus-over-color: dynamic($tag-field-item-over-color);
+$tag-field-item-focus-over-close-icon-glyph-color: dynamic($tag-field-item-focus-over-color);
+
+$tag-field-item-selected-focus-background-color: dynamic($tag-field-item-focus-over-background-color);
+$tag-field-item-selected-focus-color: dynamic(#fff);
+
+$tag-field-item-selected-focus-over-background-color: dynamic(#0072b2);
+$tag-field-item-selected-focus-over-color: dynamic(#f0f0f0);
+$tag-field-item-selected-focus-over-close-icon-glyph-color: dynamic($tag-field-item-selected-focus-over-color);

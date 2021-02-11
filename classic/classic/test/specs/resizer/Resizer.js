@@ -1,6 +1,6 @@
-describe('Ext.resizer.Resizer', function () {
+topSuite("Ext.resizer.Resizer", ['Ext.window.Window'], function() {
     var resizer, target,
-    testIt = Ext.isWebKit ? it : xit;
+        testIt = Ext.isWebKit ? it : xit;
 
     function makeResizer(cfg) {
         target = new Ext.Component(Ext.apply({
@@ -13,14 +13,14 @@ describe('Ext.resizer.Resizer', function () {
         });
     }
 
-    afterEach(function () {
+    afterEach(function() {
         Ext.destroy(resizer, target);
         resizer = target = null;
     });
 
-    describe('init', function () {
-        describe('when target el needs to be wrapped', function () {
-            beforeEach(function () {
+    describe('init', function() {
+        describe('when target el needs to be wrapped', function() {
+            beforeEach(function() {
                 makeResizer({
                     autoEl: {
                         tag: 'textarea',
@@ -29,20 +29,20 @@ describe('Ext.resizer.Resizer', function () {
                 });
             });
 
-            it('should be given an `originalTarget` property', function () {
+            it('should be given an `originalTarget` property', function() {
                 expect(resizer.originalTarget).toBeDefined();
             });
 
-            it('should redefine the target to be an element', function () {
+            it('should redefine the target to be an element', function() {
                 expect(resizer.target.isElement).toBe(true);
             });
 
-            it('should not set originalTarget equalTo target', function () {
+            it('should not set originalTarget equalTo target', function() {
                 expect(resizer.originalTarget).not.toBe(resizer.target);
             });
         });
     });
-    
+
     describe('constraining', function() {
         // Synthetic event resizing only works on good browsers.
         // Code tested is not browser dependent however.
@@ -58,12 +58,12 @@ describe('Ext.resizer.Resizer', function () {
                     title: 'Child Window'
                 })]
             });
-            
+
             window.show();
             jasmine.fireMouseEvent(window.resizer.east, 'mousedown');
-            jasmine.fireMouseEvent(document.body, 'mousemove', 200, 150);
+            jasmine.fireMouseEvent(document.body, 'mousemove', '+200', 150);
             jasmine.fireMouseEvent(document.body, 'mouseup');
-            
+
             // Window must be allowed to resize outside its owning Panel's bounds
             expect(window.getWidth()).toBe(300);
             Ext.destroy(panel, window);
@@ -81,10 +81,10 @@ describe('Ext.resizer.Resizer', function () {
                     title: 'Child Window'
                 })]
             });
-            
+
             window.show();
             jasmine.fireMouseEvent(window.resizer.east, 'mousedown');
-            jasmine.fireMouseEvent(document.body, 'mousemove', 200, 150);
+            jasmine.fireMouseEvent(document.body, 'mousemove', '+200', 150);
             jasmine.fireMouseEvent(document.body, 'mouseup');
 
             // Window must NOT be allowed to resize outside its owning Panel's bounds
@@ -126,13 +126,13 @@ describe('Ext.resizer.Resizer', function () {
                 items: panels,
                 renderTo: document.body
             });
-            
+
             var panel1Top = panels[1].getY();
-            
+
             jasmine.fireMouseEvent(panels[1].resizer.north, 'mousedown');
-            jasmine.fireMouseEvent(document.body, 'mousemove', 0, -50);
+            jasmine.fireMouseEvent(document.body, 'mousemove', 0, '-50');
             jasmine.fireMouseEvent(document.body, 'mouseup');
-            
+
             // Layout should have correctred the top
             expect(panels[1].getY()).toBe(panel1Top);
             outerPanel.destroy();

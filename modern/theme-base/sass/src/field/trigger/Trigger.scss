@@ -1,7 +1,7 @@
 .#{$prefix}trigger {
-    @include st-box;
-    @include st-box-align(center);
-    @include st-box-pack(center);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &.#{$prefix}interactive {
         cursor: pointer;

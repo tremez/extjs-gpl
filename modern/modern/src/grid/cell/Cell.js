@@ -23,11 +23,31 @@ Ext.define('Ext.grid.cell.Cell', {
          *         fields:['firstname', 'lastname', 'seniority', 'department'],
          *         groupField: 'department',
          *         data:[
-         *             { firstname: "Michael", lastname: "Scott",   seniority: 7, department: "Management" },
-         *             { firstname: "Dwight",  lastname: "Schrute", seniority: 2, department: "Sales" },
-         *             { firstname: "Jim",     lastname: "Halpert", seniority: 3, department: "Sales" },
-         *             { firstname: "Kevin",   lastname: "Malone",  seniority: 4, department: "Accounting" },
-         *             { firstname: "Angela",  lastname: "Martin",  seniority: 5, department: "Accounting" }
+         *             { firstname: "Michael", 
+         *               lastname: "Scott",   
+         *               seniority: 7, 
+         *               department: "Management" 
+         *             },
+         *             { firstname: "Dwight",
+         *               lastname: "Schrute",
+         *               seniority: 2,
+         *               department: "Sales"
+         *             },
+         *             { firstname: "Jim",
+         *               lastname: "Halpert",
+         *               seniority: 3,
+         *               department: "Sales" 
+         *             },
+         *             { firstname: "Kevin",
+         *               lastname: "Malone",
+         *               seniority: 4,
+         *               department: "Accounting"
+         *             },
+         *             { firstname: "Angela",
+         *               lastname: "Martin",
+         *               seniority: 5,
+         *               department: "Accounting" 
+         *             }
          *         ]
          *     });
          *
@@ -53,6 +73,7 @@ Ext.define('Ext.grid.cell.Cell', {
          * to rendering cell content.
          */
         tpl: null,
+
         /**
          * @cfg {Function/String} renderer
          * A renderer is a method which can be used to transform data (value, appearance, etc.)
@@ -89,6 +110,7 @@ Ext.define('Ext.grid.cell.Cell', {
          * @cfg {String} renderer.return The HTML string to be rendered.
          */
         renderer: null,
+
         /**
          * @cfg {String} formatter
          * This config accepts a format specification as would be used in a `Ext.Template`
@@ -108,6 +130,7 @@ Ext.define('Ext.grid.cell.Cell', {
          * @since 6.2.0
          */
         formatter: null,
+
         /**
          * @cfg {Object} scope
          * The scope to use when calling the {@link #renderer} or {@link #formatter} function.
@@ -115,61 +138,65 @@ Ext.define('Ext.grid.cell.Cell', {
         scope: null
     },
 
-    updateColumn: function (column, oldColumn) {
+    friendly: null,
+
+    updateColumn: function(column, oldColumn) {
         var me = this,
+            friendly = true,
             tpl, renderer, formatter;
 
-        me.callParent([column, oldColumn]);
+        me.callParent([ column, oldColumn ]);
 
         /*
             The `tpl`, `renderer` and `formatter` configs are on the Cell level
             so that a ViewModel can be used for cells to change these configs dynamically.
             If `formatter` is changed dynamically then performance will decrease since
             expressions need to be parsed for each cell.
-         */
+        */
 
         if (column) {
-            me.columnInitializing = true;
             tpl = column.getTpl();
             renderer = column.getRenderer();
             formatter = column.getFormatter();
 
-            if (tpl !== null) {
-                me.setTpl(tpl);
-            }
             if (renderer !== null) {
                 me.setRenderer(renderer);
+                friendly = (typeof renderer === 'function') && renderer.length === 1;
             }
+
+            if (tpl !== null) {
+                me.setTpl(tpl);
+                friendly = false;
+            }
+
             if (formatter !== null) {
                 me.setFormatter(formatter);
             }
-            me.columnInitializing = false;
+
+            me.friendly = friendly;
         }
     },
 
-    applyTpl: function (tpl) {
-        if (!tpl || !tpl.isXTemplate) {
-            tpl = new Ext.XTemplate(tpl);
-        }
-
-        return tpl;
+    applyTpl: function(tpl) {
+        return Ext.XTemplate.get(tpl);
     },
 
-    applyFormatter: function(format){
+    applyFormatter: function(format) {
         var me = this,
             fmt = format,
             parser;
 
-        if(typeof fmt === 'string'){
+        if (typeof fmt === 'string') {
             parser = Ext.app.bind.Parser.fly(fmt);
             fmt = parser.compileFormat();
             parser.release();
-            return function(v){
+
+            return function(v) {
                 return fmt(v, me.getScope() || me.resolveListenerScope());
             };
         }
         //<debug>
-        else if(typeof fmt !== 'function'){
+        else if (typeof fmt !== 'function') {
             Ext.raise('Invalid formatter');
         }
         //</debug>
@@ -177,61 +204,129 @@ Ext.define('Ext.grid.cell.Cell', {
         return fmt;
     },
 
-    updateTpl: function(){
-        if(!this.columnInitializing) {
-            this.writeValue();
+    updateTpl: function() {
+        if (!this.isConfiguring) {
+            this.refresh();
         }
     },
 
-    updateRenderer: function(){
-        if(!this.columnInitializing) {
-            this.writeValue();
+    updateRenderer: function() {
+        if (!this.isConfiguring) {
+            this.refresh();
         }
     },
 
-    updateFormatter: function(){
-        if(!this.columnInitializing) {
-            this.writeValue();
+    updateFormatter: function() {
+        if (!this.isConfiguring) {
+            this.refresh();
         }
     },
 
-    /**
-     * This function is called when the cell value is updated.
-     *
-     * @private
-     */
-    writeValue: function(){
+    formatValue: function(v) {
         var me = this,
-            column = me.getColumn(),
-            record = me.getRecord(),
-            v = me.getValue(),
+            context = me.refreshContext,
+            dataIndex = context.dataIndex,
+            column = context.column,
+            record = context.record,
             zeroValue = me.getZeroValue(),
             raw = v, // raw value takes as default the cell value
-            dataIndex, tpl, renderer, scope, format;
+            summary = context.summary,
+            args, data, format, renderer, scope, tpl;
 
-        if(v === 0 && zeroValue !== null) {
+        if (!context.summary && v === 0 && zeroValue !== null) {
             raw = zeroValue;
-        }else if (record && column) {
-            tpl = me.getTpl();
-            renderer = me.getRenderer();
+        }
+        else if (!(tpl = me.getTpl(context))) {
             format = me.getFormatter();
 
-            if (tpl) {
-                raw = tpl.apply(record.getData(true));
-            } else if (typeof format === 'function'){
-                raw = format(v);
-            } else if (renderer) {
-                dataIndex = me.dataIndex;
-                scope = me.getScope() || column.getScope();
+            if (summary) {
+                renderer = column.getSummaryRenderer();
 
-                if (typeof renderer === 'function') {
-                    raw = renderer.call(scope || column, v, record, dataIndex, me, column);
-                } else {
-                    raw = Ext.callback(renderer, scope,
-                        [v, record, dataIndex, me, column], 0, me);
+                if (renderer) {
+                    format = null; // ignore the non-summary formatter
+                    scope = context.scope;
+
+                    if (typeof renderer === 'string') {
+                        raw = Ext.callback(renderer, scope, [ v, context ], 0, column);
+                        me.friendly = false;
+                    }
+                    else {
+                        raw = renderer.call(scope || me, v, context);
+
+                        if (renderer.length > 1) {
+                            me.friendly = false;
+                        }
+                    }
+                }
+
+                format = column.getSummaryFormatter() || format;
+            }
+            else {
+                renderer = me.getRenderer();
+
+                if (renderer) {
+                    args = [v, record, dataIndex, me, column];
+                    scope = me.getScope() || context.scope;
+
+                    if (typeof renderer === 'function') {
+                        raw = renderer.apply(scope || column, args);
+                    }
+                    else {
+                        raw = Ext.callback(renderer, scope, args, 0, me);
+                    }
                 }
             }
+
+            if (format) {
+                raw = format(raw);
+            }
         }
-        me.setRawValue(raw);
+        else {
+            // We have either:
+            //      cell: { tpl: '...' }
+            // or:
+            //      summaryCell: { tpl: '...' }
+
+            if (!(data = context.data)) {
+                context.data = data = context.summary
+                    ? context.record.getData()
+                    : context.grid.gatherData(context.record);
+            }
+
+            raw = tpl.apply(data);
+        }
+
+        if (raw != null) {
+            raw = String(raw);
+        }
+        else {
+            raw = '';
+        }
+
+        return raw;
+    },
+
+    privates: {
+        bound: function(fields) {
+            var me = this,
+                bound = !!fields[me.dataIndex],
+                column, depends, i;
+
+            if (!bound) {
+                column = me.getColumn();
+                depends = column && column.getDepends();
+
+                if (depends) {
+                    for (i = depends.length; !bound && i-- > 0;) {
+                        bound = !!fields[depends[i]];
+                    }
+                }
+                else if (!me.friendly) {
+                    bound = true;
+                }
+            }
+
+            return bound;
+        }
     }
 });

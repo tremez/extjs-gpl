@@ -8,13 +8,10 @@
  * Indonesian Translations
  */
 Ext.onReady(function() {
-    var cm = Ext.ClassManager,
-        exists = Ext.Function.bind(cm.get, cm);
-
     if (Ext.Updater) {
         Ext.Updater.defaults.indicatorText = '<div class="loading-indicator">Pemuatan...</div>';
     }
-    
+
     if (Ext.Date) {
         Ext.Date.monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
@@ -47,6 +44,7 @@ Ext.onReady(function() {
             return Ext.Date.dayNames[day].substring(0, 3);
         };
     }
+
     if (Ext.MessageBox) {
         Ext.MessageBox.buttonText = {
             ok: "OK",
@@ -65,7 +63,7 @@ Ext.onReady(function() {
             dateFormat: 'd/m/Y'
         });
     }
-    
+
 });
 
 Ext.define("Ext.locale.id.view.View", {
@@ -152,7 +150,7 @@ Ext.define("Ext.locale.id.form.field.Date", {
     maxText: "Tanggal dalam field ini harus sebelum {0}",
     invalidText: "{0} tanggal salah - Harus dalam format {1}",
     format: "d/m/y",
-    //altFormats        : "m/d/Y|m-d-y|m-d-Y|m/d|m-d|md|mdy|mdY|d|Y-m-d"
+    // altFormats        : "m/d/Y|m-d-y|m-d-Y|m/d|m-d|md|mdy|mdY|d|Y-m-d"
     altFormats: "d/m/Y|d-m-y|d-m-Y|m/d|m-d|md|mdy|mdY|d|Y-m-d"
 });
 
@@ -283,10 +281,10 @@ Ext.define("Ext.locale.id.window.MessageBox", {
         cancel: "Batal",
         yes: "Ya",
         no: "Tidak"
-    }    
+    }
 });
 
 // This is needed until we can refactor all of the locales into individual files
-Ext.define("Ext.locale.id.Component", {	
+Ext.define("Ext.locale.id.Component", {
     override: "Ext.Component"
 });

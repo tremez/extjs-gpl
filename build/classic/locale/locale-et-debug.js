@@ -3,12 +3,14 @@
  * By Rene Saarsoo (2012-05-28)
  */
 Ext.onReady(function() {
+    var shortMonthNames;
 
     if (Ext.Date) {
         Ext.Date.monthNames = ["Jaanuar", "Veebruar", "Märts", "Aprill", "Mai", "Juuni", "Juuli", "August", "September", "Oktoober", "November", "Detsember"];
 
         // Month names aren't shortened to strictly three letters
-        var shortMonthNames = ["Jaan", "Veeb", "Märts", "Apr", "Mai", "Juuni", "Juuli", "Aug", "Sept", "Okt", "Nov", "Dets"];
+        shortMonthNames = ["Jaan", "Veeb", "Märts", "Apr", "Mai", "Juuni", "Juuli", "Aug", "Sept", "Okt", "Nov", "Dets"];
+
         Ext.Date.getShortMonthName = function(month) {
             return shortMonthNames[month];
         };
@@ -148,7 +150,7 @@ Ext.define("Ext.locale.et.form.field.ComboBox", {
 Ext.define("Ext.locale.et.form.field.VTypes", {
     override: "Ext.form.field.VTypes",
     emailText: 'Selle välja sisuks peab olema e-posti aadress kujul "kasutaja@domeen.com"',
-    urlText: 'Selle välja sisuks peab olema veebiaadress kujul "http:/'+'/www.domeen.com"',
+    urlText: 'Selle välja sisuks peab olema veebiaadress kujul "http:/' + '/www.domeen.com"',
     alphaText: 'See väli võib sisaldada vaid tähemärke ja alakriipsu',
     alphanumText: 'See väli võib sisaldada vaid tähemärke, numbreid ja alakriipsu'
 });
@@ -284,10 +286,10 @@ Ext.define("Ext.locale.et.window.MessageBox", {
         cancel: "Katkesta",
         yes: "Jah",
         no: "Ei"
-    }    
+    }
 });
 
 // This is needed until we can refactor all of the locales into individual files
-Ext.define("Ext.locale.et.Component", {	
+Ext.define("Ext.locale.et.Component", {
     override: "Ext.Component"
 });

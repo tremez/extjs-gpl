@@ -20,8 +20,8 @@
  *        }]
  *     });
  */
-Ext.define('Ext.draw.sprite.Text', function () {
-
+/* eslint-disable indent */
+Ext.define('Ext.draw.sprite.Text', function() {
     // Absolute font sizes.
     var fontSizes = {
         'xx-small': true,
@@ -31,8 +31,8 @@ Ext.define('Ext.draw.sprite.Text', function () {
         'large': true,
         'x-large': true,
         'xx-large': true
-    };
-    var fontWeights = {
+    },
+    fontWeights = {
         normal: true,
         bold: true,
         bolder: true,
@@ -46,16 +46,16 @@ Ext.define('Ext.draw.sprite.Text', function () {
         700: true,
         800: true,
         900: true
-    };
-    var textAlignments = {
+    },
+    textAlignments = {
         start: 'start',
         left: 'start',
         center: 'center',
         middle: 'center',
         end: 'end',
         right: 'end'
-    };
-    var textBaselines = {
+    },
+    textBaselines = {
         top: 'top',
         hanging: 'hanging',
         middle: 'middle',
@@ -121,14 +121,16 @@ return {
                  * @cfg {String/Number} [fontSize='10px']
                  * The size of the font displayed.
                  */
-                fontSize: function (n) {
+                fontSize: function(n) {
                     // Numbers as strings will be converted to numbers,
                     // null will be converted to 0.
                     if (Ext.isNumber(+n)) {
                         return n + 'px';
-                    } else if (n.match(Ext.dom.Element.unitRe)) {
+                    }
+                    else if (n.match(Ext.dom.Element.unitRe)) {
                         return n;
-                    } else if (n in fontSizes) {
+                    }
+                    else if (n in fontSizes) {
                         return n;
                     }
                 },
@@ -149,10 +151,11 @@ return {
                  * @cfg {String} [fontWeight='']
                  * The weight of the font displayed. {normal, bold, bolder, lighter}
                  */
-                fontWeight: function (n) {
+                fontWeight: function(n) {
                     if (n in fontWeights) {
                         return String(n);
-                    } else {
+                    }
+                    else {
                         return '';
                     }
                 },
@@ -164,11 +167,10 @@ return {
                 fontFamily: 'string',
 
                 /**
-                 * @cfg {String} [textAlign='start']
+                 * @cfg {"left"/"right"/"center"/"start"/"end"} [textAlign='start']
                  * The alignment of the text displayed.
-                 * {left, right, center, start, end}
                  */
-                textAlign: function (n) {
+                textAlign: function(n) {
                     return textAlignments[n] || 'center';
                 },
 
@@ -177,25 +179,27 @@ return {
                  * The baseline of the text displayed.
                  * {top, hanging, middle, alphabetic, ideographic, bottom}
                  */
-                textBaseline: function (n) {
+                textBaseline: function(n) {
                     return textBaselines[n] || 'alphabetic';
                 },
+
+                //<debug>
+                debug: 'default',
+                //</debug>
 
                 /**
                  * @cfg {String} [font='10px sans-serif']
                  * The font displayed.
                  */
                 font: 'string'
-                //<debug>
-                ,debug: 'default'
-                //</debug>
             },
             aliases: {
                 'font-size': 'fontSize',
                 'font-family': 'fontFamily',
                 'font-weight': 'fontWeight',
                 'font-variant': 'fontVariant',
-                'text-anchor': 'textAlign'
+                'text-anchor': 'textAlign',
+                'dominant-baseline': 'textBaseline'
             },
             defaults: {
                 fontStyle: '',
@@ -241,15 +245,19 @@ return {
         preciseMeasurement: undefined
     },
 
-    constructor: function (config) {
+    constructor: function(config) {
+        var key;
+
         if (config && config.font) {
             config = Ext.clone(config);
-            for (var key in config) {
+
+            for (key in config) {
                 if (key !== 'font' && key.indexOf('font') === 0) {
                     delete config[key];
                 }
             }
         }
+
         Ext.draw.sprite.Sprite.prototype.constructor.call(this, config);
     },
 
@@ -287,24 +295,29 @@ return {
         // have no meaning, and are not included.
     },
 
-    makeFontShorthand: function (attr) {
+    makeFontShorthand: function(attr) {
         var parts = [];
 
         if (attr.fontStyle) {
             parts.push(attr.fontStyle);
         }
+
         if (attr.fontVariant) {
             parts.push(attr.fontVariant);
         }
+
         if (attr.fontWeight) {
             parts.push(attr.fontWeight);
         }
+
         if (attr.fontSize) {
             parts.push(attr.fontSize);
         }
+
         if (attr.fontFamily) {
             parts.push(attr.fontFamily);
         }
+
         this.setAttributes({
             font: parts.join(' ')
         }, true);
@@ -312,21 +325,24 @@ return {
 
     // For more info see:
     // http://www.w3.org/TR/CSS21/fonts.html#font-shorthand
-    parseFontShorthand: function (attr) {
+    parseFontShorthand: function(attr) {
         var value = attr.font,
             ln = value.length,
             changes = {},
             dispatcher = this.fontValuesMap,
-            start = 0, end, slashIndex,
-            part, fontProperty;
+            start = 0,
+            end, slashIndex, part, fontProperty;
 
         while (start < ln && end !== -1) {
             end = value.indexOf(' ', start);
+
             if (end < 0) {
                 part = value.substr(start);
-            } else if (end > start) {
+            }
+            else if (end > start) {
                 part = value.substr(start, end - start);
-            } else {
+            }
+            else {
                 continue;
             }
 
@@ -336,23 +352,29 @@ return {
             // 12px/14px sans-serif
             // x-large/110% "New Century Schoolbook", serif
             slashIndex = part.indexOf('/');
+
             if (slashIndex > 0) {
                 part = part.substr(0, slashIndex);
-            } else if (slashIndex === 0) {
+            }
+            else if (slashIndex === 0) {
                 continue;
             }
 
             // All optional font properties (fontStyle, fontVariant or fontWeight) can be 'normal'.
             // They can go in any order. Which ones are 'normal' is determined by elimination.
-            // E.g. if only fontVariant is specified, then 'normal' applies to fontStyle and fontWeight.
+            // E.g. if only fontVariant is specified, then 'normal' applies to fontStyle
+            // and fontWeight.
             // If none are explicitly mentioned, then all are 'normal'.
             if (part !== 'normal' && part !== 'inherit') {
                 fontProperty = dispatcher[part];
+
                 if (fontProperty) {
                     changes[fontProperty] = part;
-                } else if (part.match(Ext.dom.Element.unitRe)) {
+                }
+                 else if (part.match(Ext.dom.Element.unitRe)) {
                     changes.fontSize = part;
-                } else { // Assuming that font family always goes last in the font shorthand.
+                }
+                else { // Assuming that font family always goes last in the font shorthand.
                     changes.fontFamily = value.substr(start);
                     break;
                 }
@@ -364,9 +386,11 @@ return {
         if (!changes.fontStyle) {
             changes.fontStyle = '';   // same as 'normal'
         }
+
         if (!changes.fontVariant) {
             changes.fontVariant = ''; // same as 'normal'
         }
+
         if (!changes.fontWeight) {
             changes.fontWeight = '';  // same as 'normal'
         }
@@ -382,7 +406,7 @@ return {
         fontFamily: true
     },
 
-    setAttributes: function (changes, bypassNormalization, avoidCopy) {
+    setAttributes: function(changes, bypassNormalization, avoidCopy) {
         var key, obj;
 
         // Discard individual font properties if 'font' shorthand was also provided.
@@ -406,13 +430,16 @@ return {
 
         if (changes && changes.font) {
             obj = {};
+
             for (key in changes) {
                 if (!(key in this.fontProperties)) {
                     obj[key] = changes[key];
                 }
             }
+
             changes = obj;
         }
+
         this.callParent([changes, bypassNormalization, avoidCopy]);
     },
 
@@ -421,21 +448,24 @@ return {
     // because in that case the position of the sprite depends not just on
     // the value of its 'x' attribute, but also on the width of the surface
     // the sprite belongs to.
-    getBBox: function (isWithoutTransform) {
+    getBBox: function(isWithoutTransform) {
         var me = this,
             plain = me.attr.bbox.plain,
             surface = me.getSurface();
+
         //<debug>
         // The sprite's bounding box won't account for RTL if it doesn't
         // belong to a surface.
-        //if (!surface) {
+        // if (!surface) {
         //    Ext.raise("The sprite does not belong to a surface.");
-        //}
+        // }
         //</debug>
         if (plain.dirty) {
             me.updatePlainBBox(plain);
             plain.dirty = false;
-        } if (surface && surface.getInherited().rtl && surface.getFlipRtlText()) {
+        }
+
+        if (surface && surface.getInherited().rtl && surface.getFlipRtlText()) {
             // Since sprite's attributes haven't actually changed at this point,
             // and we just want to update the position of its bbox
             // based on surface's width, there's no reason to perform
@@ -443,6 +473,7 @@ return {
             // so we can use the result of the last measurement instead.
             me.updatePlainBBox(plain, true);
         }
+
         return me.callParent([isWithoutTransform]);
     },
 
@@ -452,7 +483,7 @@ return {
         end: 'start'
     },
 
-    updatePlainBBox: function (plain, useOldSize) {
+    updatePlainBBox: function(plain, useOldSize) {
         var me = this,
             attr = me.attr,
             x = attr.x,
@@ -467,15 +498,19 @@ return {
 
         if (useOldSize && me.oldSize) {
             size = me.oldSize;
-        } else {
+        }
+        else {
             textMeasurerPrecision = Ext.draw.TextMeasurer.precise;
+
             if (Ext.isBoolean(precise)) {
                 Ext.draw.TextMeasurer.precise = precise;
             }
+
             size = me.oldSize = Ext.draw.TextMeasurer.measureText(text, font);
             Ext.draw.TextMeasurer.precise = textMeasurerPrecision;
         }
 
+        // eslint-disable-next-line vars-on-top, one-var
         var surface = me.getSurface(),
             isRtl = (surface && surface.getInherited().rtl) || false,
             flipRtlText = isRtl && surface.getFlipRtlText(),
@@ -512,6 +547,7 @@ return {
                 y -= blockHeight * 0.5;
                 break;
         }
+
         if (flipRtlText) {
             rect = surface.getRect();
             x = rect[2] - rect[0] - x;
@@ -526,23 +562,29 @@ return {
                         dx.push(-(blockWidth - lineWidth));
                     }
                 }
+
                 break;
             case 'end' :
                 x -= blockWidth;
+
                 if (isRtl) {
                     break;
                 }
+
                 for (; i < ln; i++) {
                     lineWidth = sizes[i].width;
                     dx.push(blockWidth - lineWidth);
                 }
+
                 break;
             case 'center' :
                 x -= blockWidth * 0.5;
+
                 for (; i < ln; i++) {
                     lineWidth = sizes[i].width;
                     dx.push((isRtl ? -1 : 1) * (blockWidth - lineWidth) * 0.5);
                 }
+
                 break;
         }
 
@@ -554,11 +596,11 @@ return {
         plain.height = blockHeight;
     },
 
-    setText: function (text) {
-        this.setAttributes({text: text}, true);
+    setText: function(text) {
+        this.setAttributes({ text: text }, true);
     },
 
-    render: function (surface, ctx, rect) {
+    render: function(surface, ctx, rect) {
         var me = this,
             attr = me.attr,
             mat = Ext.draw.Matrix.fly(attr.matrix.elements.slice(0)),
@@ -575,9 +617,11 @@ return {
         lineHeight = bbox.height / lines.length;
         // Simulate textBaseline and textAlign.
         x = attr.bbox.plain.x;
-        // lineHeight * 0.78 is the approximate distance between the top and the alphabetic baselines
+        // lineHeight * 0.78 is the approximate distance between the top
+        // and the alphabetic baselines
         y = attr.bbox.plain.y + lineHeight * 0.78;
         mat.toContext(ctx);
+
         if (surface.getInherited().rtl) {
             // Canvas element in RTL mode automatically flips text alignment.
             // Here we compensate for that change.
@@ -590,18 +634,25 @@ return {
             if (ctx.fillStyle !== none) {
                 ctx.fillText(lines[i], x + (dx[i] || 0), y + lineHeight * i);
             }
+
             if (ctx.strokeStyle !== none) {
                 ctx.strokeText(lines[i], x + (dx[i] || 0), y + lineHeight * i);
             }
         }
+
         //<debug>
+        // eslint-disable-next-line vars-on-top
         var debug = attr.debug || this.statics().debug || Ext.draw.sprite.Sprite.debug;
+
         if (debug) {
             // This assumes no part of the sprite is rendered after this call.
             // If it is, we need to re-apply transformations.
             // But the bounding box is already transformed, so we remove the transformation.
             this.attr.inverseMatrix.toContext(ctx);
-            debug.bbox && me.renderBBox(surface, ctx);
+
+            if (debug.bbox) {
+                me.renderBBox(surface, ctx);
+            }
         }
         //</debug>
     }

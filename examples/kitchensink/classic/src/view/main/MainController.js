@@ -15,7 +15,8 @@ Ext.define('KitchenSink.view.main.MainController', {
             refs['navigation-toolbar'].hide();
             refs.contentPanel.header.hidden = false;
             this._hasTreeNav = true;
-        } else {
+        }
+        else {
             this._hasTreeNav = false;
         }
     },
@@ -39,7 +40,8 @@ Ext.define('KitchenSink.view.main.MainController', {
 
         if (navToolbar) {
             navToolbar.show();
-        } else {
+        }
+        else {
             refs.contentPanel.addDocked({
                 xtype: 'navigation-toolbar'
             });
@@ -70,14 +72,14 @@ Ext.define('KitchenSink.view.main.MainController', {
 
         if (treeNav) {
             treeNav.show();
-        } else {
+        }
+        else {
             treeNav = this.getView().moveBefore({
                 region: 'west',
                 reference: 'tree',
                 xtype: 'navigation-tree'
             }, refs.contentPanel);
         }
-
 
         navToolbar.hide();
         refs.contentPanel.getHeader().show();
@@ -107,10 +109,11 @@ Ext.define('KitchenSink.view.main.MainController', {
 
         if (value) {
             me.preFilterSelection = me.getViewModel().get('selectedView');
-            me.rendererRegExp = new RegExp( '(' + value + ')', "gi");
+            me.rendererRegExp = new RegExp('(' + value + ')', "gi");
             field.getTrigger('clear').show();
             me.filterStore(value);
-        } else {
+        }
+        else {
             me.rendererRegExp = null;
             store.clearFilter();
             field.getTrigger('clear').hide();
@@ -118,7 +121,7 @@ Ext.define('KitchenSink.view.main.MainController', {
             // Ensure selection is still selected.
             // It may have been evicted by the filter
             if (selection && selection !== store.getRoot() && store.contains(selection)) {
-                    tree.ensureVisible(selection, {
+                tree.ensureVisible(selection, {
                     select: true
                 });
             }
@@ -142,11 +145,46 @@ Ext.define('KitchenSink.view.main.MainController', {
 
         if (value.length < 1) {
             store.clearFilter();
-        } else {
+        }
+        else {
             store.getFilters().replaceAll({
                 property: 'text',
                 value: new RegExp(Ext.String.escapeRegex(value), 'i')
             });
+        }
+    },
+
+    colorchange: function(menu, item) {
+        var darkMode = this.lookup('darkMode').getValue();
+
+        if (item && item.xtype === 'menuitem') {
+            this.updateMaterialTheme(darkMode, item.baseColor, item.accentColor);
+        }
+    },
+
+    changeDarkMode: function(checkbox, newValue, oldValue, eOpts) {
+        this.updateMaterialTheme(newValue);
+        Ext.getBody().toggleCls('dark-mode', newValue);
+        checkbox.ownerCt.hide();
+    },
+
+    updateMaterialTheme: function(darkMode, base, accent) {
+        var me = this;
+
+        if (Ext.theme.Material) {
+            Ext.theme.Material.setColors({
+                'darkMode': darkMode,
+                'base': base || me._materialBaseColor,
+                'accent': accent || me._materialAccentColor
+            });
+        }
+
+        if (base) {
+            me._materialBaseColor = base;
+        }
+
+        if (accent) {
+            me._materialAccentColor = accent;
         }
     }
 });

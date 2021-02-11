@@ -32,22 +32,22 @@ $fieldset-border-style: dynamic(solid);
  */
 $fieldset-title-color: dynamic($highlight-color);
 
-$fieldset-padding: dynamic(.6rem);
-$fieldset-margin: dynamic(1rem);
+$fieldset-padding: dynamic(8px);
+$fieldset-margin: dynamic(13px);
 
 $fieldset-title-font-weight: dynamic(null);
 $fieldset-title-line-height: dynamic(null);
 $fieldset-title-line-height-big: dynamic(null);
 $fieldset-title-font-family: dynamic($font-family);
-$fieldset-title-font-size: dynamic(.8em);
-$fieldset-title-font-size-big: dynamic(.8em);
-$fieldset-title-margin: dynamic(1em .7em .3em);
+$fieldset-title-font-size: dynamic(round($font-size * .75));
+$fieldset-title-font-size-big: dynamic(round($font-size-big * .8));
+$fieldset-title-margin: dynamic(13px 9px 4px);
 
 $fieldset-instructions-color: dynamic(lighten($fieldset-title-color, 20%));
-$fieldset-instructions-margin: dynamic(1em .7em .3em);
+$fieldset-instructions-margin: dynamic(13px 9px 4px);
 $fieldset-instructions-font-weight: dynamic(null);
-$fieldset-instructions-font-size: dynamic(null);
-$fieldset-instructions-font-size-big: dynamic(null);
+$fieldset-instructions-font-size: dynamic($font-size);
+$fieldset-instructions-font-size-big: dynamic($font-size-big);
 $fieldset-instructions-line-height: dynamic(null);
 $fieldset-instructions-line-height-big: dynamic(null);
 $fieldset-instructions-font-family: dynamic(null);

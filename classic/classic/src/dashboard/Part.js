@@ -17,13 +17,13 @@
  *          extend: 'Ext.dashboard.Part',
  *          alias: 'part.rss',
  *
- *          displayForm: function (instance, currentConfig, callback, scope) {
+ *          displayForm: function(instance, currentConfig, callback, scope) {
  *              var me = this,
  *                  title = instance ? 'Edit RSS Feed' : 'Add RSS Feed';
  *
  *              // Display a prompt using current URL as default text.
  *              //
- *              Ext.Msg.prompt(title, 'RSS Feed URL', function (btn, text) {
+ *              Ext.Msg.prompt(title, 'RSS Feed URL', function(btn, text) {
  *                  if (btn === 'ok') {
  *                      var config = {
  *                          feedUrl: text
@@ -126,11 +126,11 @@ Ext.define('Ext.dashboard.Part', {
 
     valueRe: /^[{][a-z]*[}]$/i,
 
-    constructor: function (config) {
+    constructor: function(config) {
         this.initConfig(config);
     },
 
-    applyViewTemplate: function (template) {
+    applyViewTemplate: function(template) {
         //<debug>
         if (!Ext.isObject(template)) {
             Ext.raise('The viewTemplate for ' + this.$className + ' is not an Object');
@@ -162,7 +162,7 @@ Ext.define('Ext.dashboard.Part', {
      * @abstract
      * @since 5.0.0
      */
-    displayForm: function (instance, currentConfig, callback, scope) {
+    displayForm: function(instance, currentConfig, callback, scope) {
         callback.call(scope || this, {});
     },
 
@@ -174,7 +174,7 @@ Ext.define('Ext.dashboard.Part', {
      * produced and then edit that result. This is because there are several private
      * properties placed on the returned configuration object.
      *
-     *      createView: function (config) {
+     *      createView: function(config) {
      *          var view = this.callParent([config]);
      *
      *          // edit view
@@ -187,7 +187,7 @@ Ext.define('Ext.dashboard.Part', {
      * @protected
      * @since 5.0.0
      */
-    createView: function (config) {
+    createView: function(config) {
         var me = this,
             template = me.getViewTemplate(),
             ret = template.apply(config);

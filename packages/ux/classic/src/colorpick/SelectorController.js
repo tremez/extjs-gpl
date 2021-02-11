@@ -2,14 +2,14 @@
  * @private
  */
 Ext.define('Ext.ux.colorpick.SelectorController', {
-    extend : 'Ext.app.ViewController',
-    alias  : 'controller.colorpick-selectorcontroller',
+    extend: 'Ext.app.ViewController',
+    alias: 'controller.colorpick-selectorcontroller',
 
     requires: [
         'Ext.ux.colorpick.ColorUtils'
     ],
 
-    destroy: function () {
+    destroy: function() {
         var me = this,
             view = me.getView(),
             childViewModel = view.childViewModel;
@@ -22,7 +22,7 @@ Ext.define('Ext.ux.colorpick.SelectorController', {
         me.callParent();
     },
 
-    changeHSV: function (hsv) {
+    changeHSV: function(hsv) {
         var view = this.getView(),
             color = view.getColor(),
             rgb;
@@ -68,7 +68,7 @@ Ext.define('Ext.ux.colorpick.SelectorController', {
         });
     },
 
-    onAlphaSliderHandleDrag: function (yPercent) {
+    onAlphaSliderHandleDrag: function(yPercent) {
         var view = this.getView(),
             color = view.getColor(),
             newColor = Ext.applyIf({
@@ -79,33 +79,34 @@ Ext.define('Ext.ux.colorpick.SelectorController', {
         view.el.repaint();
     },
 
-    onPreviousColorSelected: function (comp, color) {
+    onPreviousColorSelected: function(comp, color) {
         var view = this.getView();
 
         view.setColor(color);
     },
 
-    onOK: function () {
-        var me   = this,
+    onOK: function() {
+        var me = this,
             view = me.getView();
 
         view.fireEvent('ok', view, view.getValue());
     },
 
-    onCancel: function () {
+    onCancel: function() {
         this.fireViewEvent('cancel', this.getView());
     },
 
     onResize: function() {
-        var me   = this,
+        var me = this,
             view = me.getView(),
-            vm   = view.childViewModel,
+            vm = view.childViewModel,
             refs = me.getReferences(),
             h, s, v, a;
 
         // Skip initial rendering resize
         if (!me.hasResizedOnce) {
             me.hasResizedOnce = true;
+
             return;
         }
 

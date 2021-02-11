@@ -41,7 +41,7 @@ Ext.define('Neptune.view.combination.ToolbarsInPanels', {
         {
             title: 'All Toolbars',
             height: 300,
-            tbar: [ {xtype: 'complexButtonGroup' } ],
+            tbar: [ { xtype: 'complexButtonGroup' } ],
             bbar: { xtype: 'basicToolbar' },
             lbar: { xtype: 'basicToolbar' },
             rbar: { xtype: 'basicToolbar' }
@@ -50,7 +50,7 @@ Ext.define('Neptune.view.combination.ToolbarsInPanels', {
             title: 'All Toolbars Framed',
             height: 300,
             frame: true,
-            tbar: [ {xtype: 'complexButtonGroup' } ],
+            tbar: [ { xtype: 'complexButtonGroup' } ],
             bbar: { xtype: 'basicToolbar' },
             lbar: { xtype: 'basicToolbar' },
             rbar: { xtype: 'basicToolbar' }

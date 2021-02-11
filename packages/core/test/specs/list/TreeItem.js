@@ -1,6 +1,5 @@
 // Tests only the behaviours specific to our default implementation of the list item
-describe("Ext.list.TreeItem", function() {
-
+topSuite("Ext.list.TreeItem", ['Ext.data.TreeStore', 'Ext.list.Tree'], function() {
     var root, list, store, sampleData;
 
     var Model = Ext.define(null, {
@@ -124,11 +123,13 @@ describe("Ext.list.TreeItem", function() {
                 it("should have the leafCls if an item is a leaf", function() {
                     Ext.Array.forEach(['i11', 'i12'], function(id) {
                         var item = getItem(id);
+
                         expect(item.element).toHaveCls(item.leafCls);
                     });
 
                     Ext.Array.forEach(['i1', 'i2', 'i3', 'i4', 'i41', 'i42', 'i43'], function(id) {
                         var item = getItem(id);
+
                         expect(item.element).not.toHaveCls(item.leafCls);
                     });
                 });
@@ -152,18 +153,21 @@ describe("Ext.list.TreeItem", function() {
                 it("should not have the withIconCls if there is no iconCls", function() {
                     Ext.Array.forEach(['i11', 'i12', 'i2', 'i4', 'i42', 'i43'], function(id) {
                         var item = getItem(id);
+
                         expect(item.element).not.toHaveCls(item.withIconCls);
                     });
                 });
 
                 it("should have the hideIconCls if the iconCls is null", function() {
                     var item = getItem('i42');
+
                     expect(item.element).toHaveCls(item.hideIconCls);
                 });
 
                 it("should not have the hideIconCls if the iconCls is not null", function() {
                     Ext.Array.forEach(['i1', 'i11', 'i12', 'i2', 'i3', 'i4', 'i41', 'i43'], function(id) {
                         var item = getItem(id);
+
                         expect(item.element).not.toHaveCls(item.hideIconCls);
                     });
                 });
@@ -173,11 +177,13 @@ describe("Ext.list.TreeItem", function() {
                 it("should add the collapsedCls if the item is collapsed and expandable", function() {
                     Ext.Array.forEach(['i1', 'i41', 'i42', 'i43'], function(id) {
                         var item = getItem(id);
+
                         expect(item.element).toHaveCls(item.collapsedCls);
                     });
 
                     Ext.Array.forEach(['i11', 'i12', 'i2', 'i3', 'i4'], function(id) {
                         var item = getItem(id);
+
                         expect(item.element).not.toHaveCls(item.collapsedCls);
                     });
                 });
@@ -185,11 +191,13 @@ describe("Ext.list.TreeItem", function() {
                 it("should add the expandedCls if the item is expanded and expandable", function() {
                     Ext.Array.forEach(['i4'], function(id) {
                         var item = getItem(id);
+
                         expect(item.element).toHaveCls(item.expandedCls);
                     });
 
                     Ext.Array.forEach(['i1', 'i11', 'i12', 'i2', 'i3', 'i41', 'i42', 'i43'], function(id) {
                         var item = getItem(id);
+
                         expect(item.element).not.toHaveCls(item.expandedCls);
                     });
                 });
@@ -199,11 +207,13 @@ describe("Ext.list.TreeItem", function() {
                 it("should add the expandableCls if the item is expandable", function() {
                     Ext.Array.forEach(['i1', 'i4', 'i41', 'i42', 'i43'], function(id) {
                         var item = getItem(id);
+
                         expect(item.element).toHaveCls(item.expandableCls);
                     });
 
                     Ext.Array.forEach(['i11', 'i12', 'i2', 'i3'], function(id) {
                         var item = getItem(id);
+
                         expect(item.element).not.toHaveCls(item.expandableCls);
                     });
                 });
@@ -218,6 +228,7 @@ describe("Ext.list.TreeItem", function() {
                     }, byId('i12'));
 
                     var childNodes = getItem('i1').itemContainer.dom.childNodes;
+
                     expect(childNodes[0]).toBe(getItem('i11').el.dom);
                     expect(childNodes[1]).toBe(getItem('i9').el.dom);
                     expect(childNodes[2]).toBe(getItem('i12').el.dom);
@@ -229,6 +240,7 @@ describe("Ext.list.TreeItem", function() {
                     });
 
                     var childNodes = getItem('i1').itemContainer.dom.childNodes;
+
                     expect(childNodes[0]).toBe(getItem('i11').el.dom);
                     expect(childNodes[1]).toBe(getItem('i12').el.dom);
                     expect(childNodes[2]).toBe(getItem('i9').el.dom);
@@ -243,6 +255,32 @@ describe("Ext.list.TreeItem", function() {
                         id: 'i9'
                     });
                     expect(el).toHaveCls(item.expandableCls);
+                });
+
+                it("should update the expandableCls when removing and adding childs", function() {
+                    var item = getItem('i1'),
+                        el = item.element;
+
+                    // item is expandable initially
+                    expect(el).toHaveCls(item.expandableCls);
+                    expect(item.getExpandable()).toBe(true);
+
+                    // Remove all child
+                    byId('i1').removeChild(byId('i11'));
+                    byId('i1').removeChild(byId('i12'));
+
+                    // Now items should not be expandable
+                    expect(el).not.toHaveCls(item.expandableCls);
+                    expect(item.getExpandable()).toBe(false);
+
+                    // Append one child
+                    byId('i1').appendChild({
+                        id: 'i11'
+                    });
+
+                    // Items should be expandable again
+                    expect(el).toHaveCls(item.expandableCls);
+                    expect(item.getExpandable()).toBe(true);
                 });
             });
 
@@ -273,18 +311,21 @@ describe("Ext.list.TreeItem", function() {
                 describe("when expanded", function() {
                     it("should have the collapsedCls", function() {
                         var item = getItem('i4');
+
                         byId('i4').collapse();
                         expect(item.element).toHaveCls(item.collapsedCls);
                     });
 
                     it("should not have the expandedCls", function() {
                         var item = getItem('i4');
+
                         byId('i4').collapse();
                         expect(item.element).not.toHaveCls(item.expandedCls);
                     });
 
                     it("should hide the itemContainer", function() {
                         var item = getItem('i4');
+
                         byId('i4').collapse();
                         expect(item.itemContainer.isVisible()).toBe(false);
                     });
@@ -293,18 +334,21 @@ describe("Ext.list.TreeItem", function() {
                 describe("when collapsed", function() {
                     it("should have the collapsedCls", function() {
                         var item = getItem('i1');
+
                         byId('i1').collapse();
                         expect(item.element).toHaveCls(item.collapsedCls);
                     });
 
                     it("should not have the expandedCls", function() {
                         var item = getItem('i1');
+
                         byId('i1').collapse();
                         expect(item.element).not.toHaveCls(item.expandedCls);
                     });
 
                     it("should hide the itemContainer", function() {
                         var item = getItem('i1');
+
                         byId('i1').collapse();
                         expect(item.itemContainer.isVisible()).toBe(false);
                     });
@@ -315,18 +359,21 @@ describe("Ext.list.TreeItem", function() {
                 describe("when collapsed", function() {
                     it("should have the expandedCls", function() {
                         var item = getItem('i1');
+
                         byId('i1').expand();
                         expect(item.element).toHaveCls(item.expandedCls);
                     });
 
                     it("should not have the collapsedCls", function() {
                         var item = getItem('i1');
+
                         byId('i1').expand();
                         expect(item.element).not.toHaveCls(item.collapsedCls);
                     });
 
                     it("should show the itemContainer", function() {
                         var item = getItem('i1');
+
                         byId('i1').expand();
                         expect(item.itemContainer.isVisible()).toBe(true);
                     });
@@ -335,6 +382,7 @@ describe("Ext.list.TreeItem", function() {
                         it("should have the loadingCls while loading", function() {
                             MockAjaxManager.addMethods();
                             var item = getItem('i41');
+
                             expect(item.element).not.toHaveCls(item.loadingCls);
                             item.expand();
                             expect(item.element).toHaveCls(item.loadingCls);
@@ -351,18 +399,21 @@ describe("Ext.list.TreeItem", function() {
                 describe("when expanded", function() {
                     it("should have the expandedCls", function() {
                         var item = getItem('i4');
+
                         byId('i4').expand();
                         expect(item.element).toHaveCls(item.expandedCls);
                     });
 
                     it("should not have the collapsedCls", function() {
                         var item = getItem('i4');
+
                         byId('i4').expand();
                         expect(item.element).not.toHaveCls(item.collapsedCls);
                     });
 
                     it("should hide the itemContainer", function() {
                         var item = getItem('i4');
+
                         byId('i4').expand();
                         expect(item.itemContainer.isVisible()).toBe(true);
                     });
@@ -378,6 +429,7 @@ describe("Ext.list.TreeItem", function() {
                 describe("with iconCls: null", function() {
                     it("should remove hideIconCls when setting to empty", function() {
                         var item = getItem('i42');
+
                         expect(item.element).toHaveCls(item.hideIconCls);
                         expect(item.element).not.toHaveCls(item.withIconCls);
 
@@ -388,6 +440,7 @@ describe("Ext.list.TreeItem", function() {
 
                     it("should remove hideIconCls, add iconCls and add withIconCls when setting a class", function() {
                         var item = getItem('i42');
+
                         expect(item.element).toHaveCls(item.hideIconCls);
                         expect(item.element).not.toHaveCls(item.withIconCls);
 
@@ -401,6 +454,7 @@ describe("Ext.list.TreeItem", function() {
                 describe("with an empty iconCls", function() {
                     it("should add hideIconCls when setting to null", function() {
                         var item = getItem('i43');
+
                         expect(item.element).not.toHaveCls(item.hideIconCls);
                         expect(item.element).not.toHaveCls(item.withIconCls);
 
@@ -411,6 +465,7 @@ describe("Ext.list.TreeItem", function() {
 
                     it("should add withIconCls and set the icon when setting a class", function() {
                         var item = getItem('i43');
+
                         expect(item.element).not.toHaveCls(item.hideIconCls);
                         expect(item.element).not.toHaveCls(item.withIconCls);
 
@@ -424,6 +479,7 @@ describe("Ext.list.TreeItem", function() {
                 describe("with an iconCls specified", function() {
                     it("should remove withIconCls, clear iconCls and add hideIconCls when setting to null", function() {
                         var item = getItem('i41');
+
                         expect(item.element).not.toHaveCls(item.hideIconCls);
                         expect(item.element).toHaveCls(item.withIconCls);
                         expect(item.iconElement).toHaveCls('iconC');
@@ -436,6 +492,7 @@ describe("Ext.list.TreeItem", function() {
 
                     it("should remove withIconCls and clear iconCls when setting to empty", function() {
                         var item = getItem('i41');
+
                         expect(item.element).not.toHaveCls(item.hideIconCls);
                         expect(item.element).toHaveCls(item.withIconCls);
                         expect(item.iconElement).toHaveCls('iconC');
@@ -503,6 +560,7 @@ describe("Ext.list.TreeItem", function() {
 
             it("should expand when clicking the expander of a collapsed item", function() {
                 var item = getItem('i1');
+
                 expect(item.isExpanded()).toBe(false);
                 jasmine.fireMouseEvent(item.expanderElement.dom, 'click');
                 expect(item.isExpanded()).toBe(true);
@@ -510,6 +568,7 @@ describe("Ext.list.TreeItem", function() {
 
             it("should collapse when clicking the expander of a expanded item", function() {
                 var item = getItem('i4');
+
                 expect(item.isExpanded()).toBe(true);
                 jasmine.fireMouseEvent(item.expanderElement.dom, 'click');
                 expect(item.isExpanded()).toBe(false);
@@ -517,6 +576,7 @@ describe("Ext.list.TreeItem", function() {
 
             it("should expand when clicking on the element of a collapsed item", function() {
                 var item = getItem('i1');
+
                 expect(item.isExpanded()).toBe(false);
                 jasmine.fireMouseEvent(item.textElement.dom, 'click');
                 expect(item.isExpanded()).toBe(true);
@@ -524,6 +584,7 @@ describe("Ext.list.TreeItem", function() {
 
             it("should collapse when clicking on the element of an expanded item", function() {
                 var item = getItem('i4');
+
                 expect(item.isExpanded()).toBe(true);
                 jasmine.fireMouseEvent(item.textElement.dom, 'click');
                 expect(item.isExpanded()).toBe(false);
@@ -531,6 +592,7 @@ describe("Ext.list.TreeItem", function() {
 
             it("should not collapse when clicking inside the itemContainer", function() {
                 var item = getItem('i4');
+
                 expect(item.isExpanded()).toBe(true);
                 jasmine.fireMouseEvent(getItem('i41').textElement.dom, 'click');
                 expect(item.isExpanded()).toBe(true);
@@ -546,6 +608,7 @@ describe("Ext.list.TreeItem", function() {
 
             it("should expand when clicking the expander of a collapsed item", function() {
                 var item = getItem('i1');
+
                 expect(item.isExpanded()).toBe(false);
                 jasmine.fireMouseEvent(item.expanderElement.dom, 'click');
                 expect(item.isExpanded()).toBe(true);
@@ -553,6 +616,7 @@ describe("Ext.list.TreeItem", function() {
 
             it("should collapse when clicking the expander of an expanded item", function() {
                 var item = getItem('i4');
+
                 expect(item.isExpanded()).toBe(true);
                 jasmine.fireMouseEvent(item.expanderElement.dom, 'click');
                 expect(item.isExpanded()).toBe(false);
@@ -560,6 +624,7 @@ describe("Ext.list.TreeItem", function() {
 
             it("should not expand when clicking on the element of a collapsed item", function() {
                 var item = getItem('i1');
+
                 expect(item.isExpanded()).toBe(false);
                 jasmine.fireMouseEvent(item.iconElement.dom, 'click');
                 jasmine.fireMouseEvent(item.textElement.dom, 'click');
@@ -569,6 +634,7 @@ describe("Ext.list.TreeItem", function() {
 
             it("should not collapse when clicking on the element of an expanded item", function() {
                 var item = getItem('i4');
+
                 expect(item.isExpanded()).toBe(true);
                 jasmine.fireMouseEvent(item.iconElement.dom, 'click');
                 jasmine.fireMouseEvent(item.textElement.dom, 'click');

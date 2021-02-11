@@ -10,9 +10,11 @@ Ext.define('Ext.rtl.resizer.BorderSplitterTracker', {
 
     getCollapseDirection: function() {
         var direction = this.splitter.getCollapseDirection();
-        if (!this.splitter.getInherited().rtl !== !Ext.rootInheritedState.rtl) { // jshint ignore:line
+
+        if (!this.splitter.getInherited().rtl !== !Ext.rootInheritedState.rtl) {
             direction = this.rtlDirections[direction];
         }
+
         return direction;
     }
 });

@@ -40,15 +40,17 @@ Ext.define('Ext.device.filesystem.Chrome', {
      */
     requestFileSystem: function(config) {
         var me = this;
+
         config = Ext.device.filesystem.Abstract.prototype.requestFileSystem(config);
 
         var successCallback = function(fs) {
             var fileSystem = Ext.create('Ext.device.filesystem.FileSystem', fs);
+
             config.success.call(config.scope || me, fileSystem);
         };
 
         if (config.type == window.PERSISTENT) {
-            if(navigator.webkitPersistentStorage) {
+            if (navigator.webkitPersistentStorage) {
                 navigator.webkitPersistentStorage.requestQuota(config.size, function(grantedBytes) {
                     window.webkitRequestFileSystem(
                         config.type,
@@ -56,8 +58,9 @@ Ext.define('Ext.device.filesystem.Chrome', {
                         successCallback,
                         config.failure
                     );
-                })
-            }else {
+                });
+            }
+            else {
                 window.webkitStorageInfo.requestQuota(window.PERSISTENT, config.size, function(grantedBytes) {
                     window.webkitRequestFileSystem(
                         config.type,
@@ -65,9 +68,10 @@ Ext.define('Ext.device.filesystem.Chrome', {
                         successCallback,
                         config.failure
                     );
-                })
+                });
             }
-        } else {
+        }
+        else {
             window.webkitRequestFileSystem(
                 config.type,
                 config.size,

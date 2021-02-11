@@ -1,8 +1,8 @@
 /**
- *
  * This example shows how to create a pivot grid and display the results in
  * an outline layout.
  *
+ * The outline layout is similar to the "Outline Form" layout in Excel.
  */
 Ext.define('KitchenSink.view.pivot.LayoutOutline', {
     extend: 'Ext.pivot.Grid',
@@ -18,28 +18,51 @@ Ext.define('KitchenSink.view.pivot.LayoutOutline', {
     otherContent: [{
         type: 'Controller',
         path: 'classic/samples/view/pivot/LayoutController.js'
-    },{
+    }, {
         type: 'Model',
         path: 'classic/samples/model/pivot/Sale.js'
-    },{
+    }, {
         type: 'Store',
         path: 'classic/samples/store/pivot/Sales.js'
     }],
     profiles: {
         classic: {
-            width: 600
+            width: 600,
+            height: 350,
+            sumWidth: 90,
+            companyColWidth: 80,
+            columnLines: true
         },
         neptune: {
-            width: 750
+            width: 750,
+            height: 350,
+            sumWidth: 90,
+            companyColWidth: 80,
+            columnLines: true
+        },
+        graphite: {
+            width: 900,
+            height: 600,
+            sumWidth: 160,
+            companyColWidth: 110,
+            columnLines: true
+        },
+        'classic-material': {
+            width: 900,
+            height: 600,
+            sumWidth: 160,
+            companyColWidth: 110,
+            columnLines: false
         }
     },
     //</example>
 
     title: 'Outline layout',
     width: '${width}',
-    height: 350,
+    height: '${height}',
     collapsible: true,
     multiSelect: true,
+    columnLines: '${columnLines}',
 
     selModel: {
         type: 'rowmodel'
@@ -55,7 +78,8 @@ Ext.define('KitchenSink.view.pivot.LayoutOutline', {
             type: 'sales'
         },
 
-        // Set layout type to "outline". If this config is missing then the default layout is "outline"
+        // Set layout type to "outline". If this config is missing then the default
+        // layout is "outline"
         viewLayoutType: 'outline',
 
         // Configure the aggregate dimensions. Multiple dimensions are supported.
@@ -63,10 +87,11 @@ Ext.define('KitchenSink.view.pivot.LayoutOutline', {
             dataIndex: 'value',
             header: 'Total',
             aggregator: 'sum',
-            width: 90
+            width: '${sumWidth}'
         }],
 
-        // Configure the left axis dimensions that will be used to generate the grid rows
+        // Configure the left axis dimensions that will be used to generate
+        // the grid rows
         leftAxis: [{
             dataIndex: 'person',
             header: 'Person',
@@ -75,14 +100,17 @@ Ext.define('KitchenSink.view.pivot.LayoutOutline', {
             dataIndex: 'company',
             header: 'Company',
             sortable: false,
-            width: 80
+            width: '${companyColWidth}'
         }],
 
         /**
-         * Configure the top axis dimensions that will be used to generate the columns.
-         * When columns are generated the aggregate dimensions are also used. If multiple aggregation dimensions
-         * are defined then each top axis result will have in the end a column header with children
-         * columns for each aggregate dimension defined.
+         * Configure the top axis dimensions that will be used to generate
+         * the columns.
+         *
+         * When columns are generated the aggregate dimensions are also used.
+         * If multiple aggregation dimensions are defined then each top axis
+         * result will have in the end a column header with children columns
+         * for each aggregate dimension defined.
          */
         topAxis: [{
             dataIndex: 'country',
@@ -100,11 +128,11 @@ Ext.define('KitchenSink.view.pivot.LayoutOutline', {
         menu: [{
             text: 'Collapse all',
             handler: 'collapseAll'
-        },{
+        }, {
             text: 'Expand all',
             handler: 'expandAll'
         }]
-    },{
+    }, {
         text: 'Subtotals position',
         menu: {
             defaults: {
@@ -115,13 +143,13 @@ Ext.define('KitchenSink.view.pivot.LayoutOutline', {
             items: [{
                 text: 'First',
                 checked: true
-            },{
+            }, {
                 text: 'Last'
-            },{
+            }, {
                 text: 'None'
             }]
         }
-    },{
+    }, {
         text: 'Totals position',
         menu: {
             defaults: {
@@ -131,10 +159,10 @@ Ext.define('KitchenSink.view.pivot.LayoutOutline', {
             },
             items: [{
                 text: 'First'
-            },{
+            }, {
                 text: 'Last',
                 checked: true
-            },{
+            }, {
                 text: 'None'
             }]
         }

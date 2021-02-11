@@ -47,6 +47,7 @@ Ext.define('Ext.dom.Shadow', {
         offset = me.offset;
         rad = Math.floor(offset / 2);
         me.opacity = 50;
+
         switch (me.mode.toLowerCase()) {
             case "drop":
                 outerOffsets = {
@@ -55,6 +56,7 @@ Ext.define('Ext.dom.Shadow', {
                     w: offset,
                     h: offset
                 };
+
                 if (Ext.supports.CSS3BoxShadow) {
                     offsets = {
                         x: offset,
@@ -71,7 +73,9 @@ Ext.define('Ext.dom.Shadow', {
                         w: -rad
                     };
                 }
+
                 break;
+
             case "sides":
                 outerOffsets = {
                     x: -offset,
@@ -79,6 +83,7 @@ Ext.define('Ext.dom.Shadow', {
                     w: offset * 2,
                     h: offset
                 };
+
                 if (Ext.supports.CSS3BoxShadow) {
                     offsets = {
                         x: 0,
@@ -95,7 +100,9 @@ Ext.define('Ext.dom.Shadow', {
                         w: rad - 1
                     };
                 }
+
                 break;
+
             case "frame":
                 outerOffsets = {
                     x: -offset,
@@ -103,6 +110,7 @@ Ext.define('Ext.dom.Shadow', {
                     w: offset * 2,
                     h: offset * 2
                 };
+
                 if (Ext.supports.CSS3BoxShadow) {
                     offsets = {
                         x: 0,
@@ -119,7 +127,9 @@ Ext.define('Ext.dom.Shadow', {
                         w: offset - rad - 1
                     };
                 }
+
                 break;
+
             case "bottom":
                 outerOffsets = {
                     x: -offset,
@@ -127,6 +137,7 @@ Ext.define('Ext.dom.Shadow', {
                     w: offset * 2,
                     h: offset
                 };
+
                 if (Ext.supports.CSS3BoxShadow) {
                     offsets = {
                         x: 0,
@@ -143,6 +154,7 @@ Ext.define('Ext.dom.Shadow', {
                         w: 0
                     };
                 }
+
                 break;
         }
 
@@ -162,7 +174,8 @@ Ext.define('Ext.dom.Shadow', {
 
     /**
      * @private
-     * Returns the shadow size on each side of the element in standard CSS order: top, right, bottom, left;
+     * Returns the shadow size on each side of the element in standard CSS order: top, right,
+     * bottom, left;
      * @return {Number[]} Top, right, bottom and left shadow size.
      */
     getShadowSize: function() {
@@ -174,13 +187,14 @@ Ext.define('Ext.dom.Shadow', {
         // There are only offsets if the shadow element is present.
         if (me.el && mode !== 'frame') {
             result[0] = 0;
-            if (mode == 'drop') {
+
+            if (mode === 'drop') {
                 result[3] = 0;
             }
         }
+
         return result;
     },
-
 
     /**
      * @private
@@ -211,8 +225,11 @@ Ext.define('Ext.dom.Shadow', {
 
         if (Ext.supports.CSS3BoxShadow) {
             style[me.boxShadowProperty] = '0 0 ' + (me.offset + 2) + 'px #888';
-        } else {
-            style.filter = "progid:DXImageTransform.Microsoft.alpha(opacity=" + me.opacity + ") progid:DXImageTransform.Microsoft.Blur(pixelradius=" + (me.offset) + ")";
+        }
+        else {
+            style.filter = "progid:DXImageTransform.Microsoft.alpha(opacity=" + me.opacity +
+                            ") progid:DXImageTransform.Microsoft.Blur(pixelradius=" +
+                            (me.offset) + ")";
         }
 
         // if we are showing a shadow, and we already have a visible shim, we need to
@@ -226,14 +243,16 @@ Ext.define('Ext.dom.Shadow', {
      * Sets the opacity of the shadow
      * @param {Number} opacity The opacity
      */
-    setOpacity: function(opacity){
+    setOpacity: function(opacity) {
         var el = this.el;
 
         if (el) {
             if (Ext.isIE && !Ext.supports.CSS3BoxShadow) {
                 opacity = Math.floor(opacity * 100 / 2) / 100;
             }
+
             this.opacity = opacity;
+
             el.setOpacity(opacity);
         }
     }

@@ -140,7 +140,7 @@ Ext.define('Admin.view.authentication.Register', {
                     ui: 'facebook',
                     margin: '5 0',
                     iconAlign: 'right',
-                    iconCls: 'x-fa fa-facebook',
+                    iconCls: 'x-fab fa-facebook',
                     text: 'Login with Facebook',
                     listeners: {
                         click: 'onFaceBookLogin'

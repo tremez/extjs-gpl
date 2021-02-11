@@ -1,17 +1,24 @@
 /**
  * @private
  *
- * The abstract class. Sub-classes are expected, at the very least, to implement translation logics inside
- * the 'translate' method
+ * The abstract class. Sub-classes are expected, at the very least, to implement translation logics
+ * inside the 'translate' method
  */
 Ext.define('Ext.util.translatable.Abstract', {
     extend: 'Ext.Evented',
 
+    mixins: [
+        'Ext.mixin.Factoryable'
+    ],
+
+    factoryConfig: {
+        type: 'translatable',
+        defaultType: 'csstransform'
+    },
+
     requires: ['Ext.fx.easing.Linear'],
 
     config: {
-        useWrapper: null,
-
         easing: null,
 
         easingX: {
@@ -20,7 +27,11 @@ Ext.define('Ext.util.translatable.Abstract', {
 
         easingY: {
             duration: 300
-        }
+        },
+
+        offsetX: 0,
+
+        offsetY: 0
     },
 
     /**
@@ -70,11 +81,12 @@ Ext.define('Ext.util.translatable.Abstract', {
     isTranslatable: true,
 
     constructor: function(config) {
-        this.mixins.observable.constructor.call(this, config);
+        this.callParent([config]);
+
         // this.position is simply an internal reusable object for GC purposes and should
         // not be accessed directly as it's values are not kept in sync.  always use
         // getPosition() to get the position
-        this.position = { x: 0, y: 0};
+        this.position = { x: 0, y: 0 };
     },
 
     factoryEasing: function(easing) {
@@ -99,35 +111,66 @@ Ext.define('Ext.util.translatable.Abstract', {
         return this.factoryEasing(easing);
     },
 
-    doTranslate: function(x, y) {
-        if (this.hasListeners.translate) {
-            this.fireEvent('translate', this, x, y);
+    updateOffsetX: function() {
+        var me = this;
+
+        if (!me.isConfiguring && !me.isAnimating) {
+            me.translateXY(me.x, me.y);
+        }
+    },
+
+    updateOffsetY: function() {
+        var me = this;
+
+        if (!me.isConfiguring && !me.isAnimating) {
+            me.translateXY(me.x, me.y);
         }
     },
 
     translate: function(x, y, animation) {
+        var me = this;
+
         if (animation) {
-            return this.translateAnimated(x, y, animation);
+            return me.translateAnimated(x, y, animation);
         }
 
-        if (this.isAnimating) {
-            this.stopAnimation();
+        if (me.isAnimating) {
+            me.stopAnimation();
         }
 
-        if (!isNaN(x) && typeof x == 'number') {
-            this.x = x;
+        if (!isNaN(x) && typeof x === 'number') {
+            me.x = x;
+        }
+        else {
+            x = me.x;
         }
 
-        if (!isNaN(y) && typeof y == 'number') {
-            this.y = y;
+        if (!isNaN(y) && typeof y === 'number') {
+            me.y = y;
         }
-        this.doTranslate(x, y);
+        else {
+            y = me.y;
+        }
+
+        me.translateXY(x, y);
+    },
+
+    translateXY: function(x, y) {
+        var me = this;
+
+        if (!me.destroyed) {
+            me.doTranslate(x + me.getOffsetX(), y + me.getOffsetY());
+
+            if (me.hasListeners.translate) {
+                me.fireEvent('translate', me, x, y);
+            }
+        }
     },
 
     translateAxis: function(axis, value, animation) {
         var x, y;
 
-        if (axis == 'x') {
+        if (axis === 'x') {
             x = value;
         }
         else {
@@ -152,21 +195,30 @@ Ext.define('Ext.util.translatable.Abstract', {
     },
 
     animate: function(easingX, easingY) {
-        this.activeEasingX = easingX;
-        this.activeEasingY = easingY;
+        var me = this;
 
-        this.isAnimating = true;
-        this.lastX = null;
-        this.lastY = null;
+        me.activeEasingX = easingX;
+        me.activeEasingY = easingY;
 
-        Ext.AnimationQueue.start(this.doAnimationFrame, this);
+        me.isAnimating = true;
 
-        this.fireEvent('animationstart', this, this.x, this.y);
-        return this;
+        if (me.ownerCmp) {
+            me.ownerCmp.isTranslating = true;
+        }
+
+        me.lastX = null;
+        me.lastY = null;
+
+        Ext.AnimationQueue.start(me.doAnimationFrame, me);
+
+        me.fireEvent('animationstart', me, me.x, me.y);
+
+        return me;
     },
 
     translateAnimated: function(x, y, animation) {
-        var me = this;
+        var me = this,
+            now, easing, easingX, easingY;
 
         if (!Ext.isObject(animation)) {
             animation = {};
@@ -180,10 +232,16 @@ Ext.define('Ext.util.translatable.Abstract', {
         me.callback = animation.callback;
         me.callbackScope = animation.scope;
 
-        var now = Ext.Date.now(),
-            easing = animation.easing,
-            easingX = (typeof x == 'number') ? (animation.easingX || easing || me.getEasingX() || true) : null,
-            easingY = (typeof y == 'number') ? (animation.easingY || easing || me.getEasingY() || true) : null;
+        now = Ext.Date.now();
+        easing = animation.easing;
+
+        easingX = (typeof x === 'number')
+            ? (animation.easingX || easing || me.getEasingX() || true)
+            : null;
+
+        easingY = (typeof y === 'number')
+            ? (animation.easingY || easing || me.getEasingY() || true)
+            : null;
 
         if (easingX) {
             easingX = me.factoryEasing(easingX);
@@ -225,6 +283,7 @@ Ext.define('Ext.util.translatable.Abstract', {
 
         if (easingX === null && easingY === null) {
             me.stopAnimation();
+
             return;
         }
 
@@ -253,7 +312,7 @@ Ext.define('Ext.util.translatable.Abstract', {
         }
 
         if (me.lastX !== x || me.lastY !== y) {
-            me.doTranslate(x, y);
+            me.translateXY(x, y);
 
             me.lastX = x;
             me.lastY = y;
@@ -274,15 +333,17 @@ Ext.define('Ext.util.translatable.Abstract', {
 
         me.isAnimating = false;
 
+        if (me.ownerCmp) {
+            me.ownerCmp.isTranslating = false;
+        }
+
         Ext.AnimationQueue.stop(me.doAnimationFrame, me);
-        
-        if (!me.destroying) {
-            me.fireEvent('animationend', me, me.x, me.y);
-            
-            if (me.callback) {
-                me.callback.call(me.callbackScope);
-                me.callback = null;
-            }
+
+        me.fireEvent('animationend', me, me.x, me.y);
+
+        if (me.callback) {
+            me.callback.call(me.callbackScope);
+            me.callback = null;
         }
     },
 
@@ -290,18 +351,30 @@ Ext.define('Ext.util.translatable.Abstract', {
         this.translate(this.x, this.y);
     },
 
+    resolveListenerScope: function() {
+        var ownerCmp = this.ownerCmp,
+            a = arguments;
+
+        if (ownerCmp) {
+            return ownerCmp.resolveListenerScope.apply(ownerCmp, a);
+        }
+
+        return this.callParent(a);
+    },
+
     destroy: function() {
         var me = this;
-        
+
         me.destroying = true;
-        
+
         if (me.isAnimating) {
             me.stopAnimation();
         }
 
         me.callParent();
-        
-        me.destroying = false;
+
+        // This just makes it hard to ask "was destroy() called?":
+        // me.destroying = false; // removed in 7.0
         me.destroyed = true;
     }
 });

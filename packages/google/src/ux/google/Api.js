@@ -28,10 +28,11 @@ Ext.define('Ext.ux.google.Api', {
                 requiresGoogle = Ext.Array.from(data.requiresGoogle),
                 loadedModules = Api.loadedModules,
                 remaining = 0,
-                callback = function () {
+                callback = function() {
                     if (! --remaining) {
                         onBeforeClassCreated.call(me, cls, data, hooks);
                     }
+
                     Ext.env.Ready.unblock();
                 },
                 api, i, length;
@@ -48,12 +49,13 @@ Ext.define('Ext.ux.google.Api', {
             for (i = 0; i < length; ++i) {
                 if (Ext.isString(api = requiresGoogle[i])) {
                     apis.push({ api: api });
-                } else if(Ext.isObject(api)) {
+                }
+                else if (Ext.isObject(api)) {
                     apis.push(Ext.apply({}, api));
                 }
             }
 
-            Ext.each(apis, function (api) {
+            Ext.each(apis, function(api) {
                 var name = api.api,
                     version = String(api.version || '1.x'),
                     module = loadedModules[name];
@@ -68,6 +70,7 @@ Ext.define('Ext.ux.google.Api', {
 
                     if (!window.google) {
                         Ext.raise("'google' is not defined.");
+
                         return false;
                     }
 
@@ -75,17 +78,18 @@ Ext.define('Ext.ux.google.Api', {
                         name,
                         version,
                         Ext.applyIf({
-                            callback    : function () {
+                            callback: function() {
                                 loadedModules[name] = true;
 
-                                for (var n = module.length; n-- > 0; ) {
-                                    module[n]();    //iterate callbacks in reverse
+                                for (var n = module.length; n-- > 0;) {
+                                    module[n]();    // iterate callbacks in reverse
                                 }
                             }
                         }, api)
                     );
 
-                } else if (module !== true) {
+                }
+                else if (module !== true) {
                     module.push(callback);
                 }
             });

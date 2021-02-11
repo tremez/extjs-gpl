@@ -5,7 +5,7 @@
 .x-form-fieldset {
     margin: $fieldset-margin;
 
-    .x-form-fieldset-inner {
+    .x-form-fieldset-body-el {
         @include border($fieldset-border-width, $fieldset-border-style, $fieldset-border-color);
         background: $field-background-color;
         padding: $fieldset-padding;

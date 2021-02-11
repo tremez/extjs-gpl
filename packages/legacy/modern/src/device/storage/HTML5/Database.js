@@ -13,9 +13,10 @@ Ext.define('Ext.device.storage.HTML5.Database', {
         if (this.db) {
             return this.db.version;
         }
-        // <debug>
+
+        //<debug>
         Ext.Logger.warn('Database has not been opened before calling function #getVersion');
-        // </debug>
+        //</debug>
 
         return null;
     },
@@ -27,9 +28,10 @@ Ext.define('Ext.device.storage.HTML5.Database', {
      */
     transaction: function(sql, success, failure) {
         if (!this.db) {
-            // <debug>
+            //<debug>
             Ext.Logger.warn('Database has not been opened before calling function #transaction');
-            // </debug>
+
+            //</debug>
             return;
         }
 
@@ -37,16 +39,17 @@ Ext.define('Ext.device.storage.HTML5.Database', {
             sql = [sql];
         }
 
-
         var txFn = function(tx) {
             Ext.each(sql, function(sqlStatement) {
                 if (Ext.isString(sqlStatement)) {
                     tx.executeSql(sqlStatement);
-                }else if(Ext.isObject(sqlStatement)) {
+                }
+                else if (Ext.isObject(sqlStatement)) {
                     tx.executeSql(sqlStatement.sql, sqlStatement.arguments, sqlStatement.success, sqlStatement.failure);
                 }
             });
         };
+
         this.db.transaction(txFn, failure, success);
     }
 });

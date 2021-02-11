@@ -14,7 +14,7 @@ Ext.define('Ext.device.connection.Abstract', {
      * @event online
      * Fires when the device goes online
      */
-    
+
     /**
      * @event offline
      * Fires when the device goes offline

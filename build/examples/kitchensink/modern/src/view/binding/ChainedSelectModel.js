@@ -4,13 +4,18 @@ Ext.define('KitchenSink.view.binding.ChainedSelectModel', {
 
     stores: {
         countries: {
-            type: 'countries'
+            type: 'countries',
+            autoLoad: true
         },
         states: {
-            type: 'states',
+            type: 'country-states',
+            autoLoad: true,
             filters: [{
-                property: 'countryId',
-                value: '{countryField.selection.id}'
+                property: 'country',
+                value: '{countryField.selection.name}'
+            }],
+            sorters: [{
+                property: 'state'
             }]
         }
     }

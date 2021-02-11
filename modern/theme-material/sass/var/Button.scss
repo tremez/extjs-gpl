@@ -1,6 +1,20 @@
+$derive-colors: false;
+$derive-border-colors: false;
+$derive-outline-colors: false;
+$derive-background-colors: false;
+$derive-background-gradients: false;
+$derive-icon-colors: false;
+$derive-arrow-colors: false;
+$enable-inverted-alt-button: dynamic(true);
+
+
+
+
 $button-background-color: dynamic(transparent);
 $button-pressed-background-color: dynamic($base-pressed-color);
 $button-color: dynamic($base-color);
+$button-hovered-color: dynamic(null);
+$button-hovered-background-color: dynamic(rgba($color, 0.075));
 $button-pressed-color: dynamic($background-color);
 $button-border-color: dynamic(null);
 $button-pressed-border-color: dynamic(null);
@@ -10,99 +24,93 @@ $button-border-width: dynamic(null);
 $button-border-style: dynamic(null);
 $button-border-radius: dynamic(2px);
 $button-border-radius-big: dynamic($button-border-radius);
-$button-font-size: dynamic(px-to-rem(13px, 12px));
-$button-font-size-big: dynamic(px-to-rem(16px, 14px));
+
+$button-focused-background-color: dynamic($base-focused-color);
+$button-focused-color: dynamic($background-color);
+$button-focused-icon-color: dynamic($background-color);
+$button-focused-outline-color: dynamic(null);
+$button-focused-outline-style: dynamic(null);
+$button-focused-outline-width: dynamic(null);
+$button-focused-outline-offset: dynamic(null);
+
+$button-font-size: dynamic(14px);
+$button-font-size-big: dynamic(14px);
 $button-font-weight: dynamic(600);
-$button-line-height: dynamic(px-to-em(16px, 13px));
-$button-line-height-big: dynamic(px-to-em(24px, 16px));
-$button-padding: dynamic(px-to-em(4px, 13px) px-to-em(($content-padding / 2), 13px));
-$button-padding-big: dynamic(px-to-em(6px, 16px) px-to-em(($content-padding / 2), 16px));
+$button-line-height: dynamic(16px);
+$button-line-height-big: dynamic(24px);
+$button-padding: dynamic(8px 16px);
+$button-padding-big: dynamic(6px 16px);
 $button-pressed-icon-color: dynamic($button-pressed-color);
 $button-disabled-opacity: dynamic(null);
+$button-disabled-color: dynamic(rgba(0,0,0,0.26));
+$button-disabled-background-color: dynamic(null);
+$button-arrow-icon: dynamic('arrow_drop_down');
+$button-arrow-icon-font-size: dynamic(22px);
 $button-badge-background-color: dynamic($accent-color);
 $button-badge-background-gradient: dynamic(null);
 $button-badge-color: dynamic($accent-foreground-color);
 $button-badge-border-color: dynamic(transparent);
 $button-badge-border-radius: dynamic(32px);
-$button-badge-min-width: dynamic(32px);
-$button-badge-max-width: dynamic(55%);
-$button-badge-top: dynamic(-1px);
-$button-badge-right: dynamic(null);
-$button-badge-left: dynamic(-1px);
+$button-badge-font-size: dynamic(12px);
+$button-badge-font-size-big: dynamic(13px);
+$button-badge-top: dynamic(-10px);
+$button-badge-right: dynamic(-10px);
+$button-badge-left: dynamic(null);
 $button-badge-padding: dynamic(4px);
+$button-badge-line-height: dynamic(16px);
+$button-badge-line-height-big: dynamic(16px);
+$button-text-transform: dynamic(uppercase);
+$button-text-transform-big: dynamic(null);
+$button-badge-min-width: dynamic($button-badge-line-height + horizontal($button-badge-padding));
+$button-badge-min-width-big: dynamic($button-badge-line-height-big + horizontal($button-badge-padding-big));
+$button-badge-max-width: dynamic(55%);
 
-$button-raised-ui: dynamic($enable-default-uis);
-$button-raised-confirm-ui: dynamic($enable-default-uis);
-$button-raised-decline-ui: dynamic($enable-default-uis);
+$button-raised-ui: dynamic((
+    box-shadow-transition: (opacity 0.15s),
+    box-shadow: (1px 2px 5px 0 rgba(0, 0, 0, 0.2)),
+    pressed-box-shadow: (0 5px 10px 0 rgba(0, 0, 0, 0.3)),
+    disabled-box-shadow: none,
+    disabled-background-color: rgba(0,0,0,0.12)
+));
 
-@mixin button-action-ui {
-    @include button-ui(
-        $ui: 'action',
-        $color: $base-foreground-color,
-        $background-color: $base-color
-    );
-}
+$button-action-ui: dynamic((
+    color: $base-foreground-color,
+    background-color: $base-color,
+    pressed-background-color: $base-pressed-color,
+    hovered-background-color: $base-dark-color,
+    disabled-background-color: rgba(0,0,0,0.12)
+));
 
-@mixin button-alt-ui {
-    @include button-ui(
-        $ui: 'alt',
-        $color: $base-foreground-color,
-        $background-color: $base-color,
-        $pressed-background-color: $base-color
-    );
-}
+$button-alt-ui: dynamic((
+    color: $base-foreground-color,
+    hovered-background-color: rgba($base-foreground-color, 0.075),
+    background-color: transparent,
+    pressed-background-color: transparent,
+    disabled-background-color: rgba(0,0,0,0.12)
+));
 
-@mixin button-confirm-ui {
-    @include button-ui(
-    $ui: 'confirm',
-    $color: $confirm-color,
-    $pressed-color: $base-foreground-color,
-    $pressed-background-color: $confirm-color
-    );
-}
+$button-confirm-ui: dynamic((
+    color: $confirm-color,
+    pressed-color: $base-foreground-color,
+    pressed-background-color: $confirm-color,
+    hovered-background-color: $confirm-pressed-color,
+    focused-background-color: $confirm-color
+));
 
-@mixin button-decline-ui {
-    @include button-ui(
-    $ui: 'decline',
-    $color: $alert-color,
-    $pressed-color: $base-foreground-color,
-    $pressed-background-color: $alert-color
-    );
-}
+$button-decline-ui: dynamic((
+    color: $alert-color,
+    pressed-color: $base-foreground-color,
+    pressed-background-color: $alert-color,
+    hovered-background-color: $alert-pressed-color,
+    focused-background-color: $alert-color
+));
 
-
-@mixin button-raised-ui {
-    @include button-ui(
-    $ui: 'raised',
-    $color: $background-color,
-    $shadow: $material-shadow-1,
-    $pressed-shadow: $material-shadow-2,
-    $background-color: $base-color,
-    $pressed-background-color: $base-pressed-color
-    );
-}
-
-@mixin button-raised-confirm-ui {
-    @include button-ui(
-        $ui: 'raised-confirm',
-        $color: $background-color,
-        $background-color: $confirm-color
-    );
-}
-
-@mixin button-raised-decline-ui {
-    @include button-ui(
-        $ui: 'raised-decline',
-        $color: $background-color,
-        $background-color: $alert-color
-    );
-}
-
-@mixin button-segmented-ui {
-    @include button-ui(
-        $ui: 'segmented',
-        $color: $base-foreground-color,
-        $background-color: $base-color,
-        $pressed-background-color: $base-pressed-color
-    );
-}
+$button-segmented-ui: dynamic((
+    color: $base-foreground-color,
+    background-color: $base-color,
+    pressed-color: $base-foreground-color,
+    pressed-background-color: $base-pressed-color,
+    hovered-background-color: $base-dark-color,
+    pressed-hovered-background-color: $base-dark-color,
+    focused-hovered-background-color: $base-dark-color
+));

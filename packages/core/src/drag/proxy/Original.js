@@ -7,5 +7,11 @@ Ext.define('Ext.drag.proxy.Original', {
 
     getElement: function(info) {
         return info.source.getElement();
+    },
+
+    getPositionable: function(info) {
+        var source = info.source;
+
+        return source.getComponent() || source.getElement();
     }
 });

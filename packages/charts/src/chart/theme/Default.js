@@ -6,6 +6,7 @@ Ext.define('Ext.chart.theme.Default', {
     singleton: true,
     alias: [
         'chart.theme.default',
+        'chart.theme.Default',
         'chart.theme.Base'
     ]
 });

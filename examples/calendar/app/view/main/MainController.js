@@ -27,6 +27,7 @@ Ext.define('Calendar.view.main.MainController', {
 
     onSignIn: function() {
         var me = this;
+
         Calendar.util.Google.signIn()
             .then(function() {
                 me.loadAuth('google');
@@ -35,6 +36,7 @@ Ext.define('Calendar.view.main.MainController', {
 
     onSignOut: function() {
         var me = this;
+
         Calendar.util.Google.signOut()
             .then(function() {
                 me.loadAuth('guest');
@@ -48,16 +50,16 @@ Ext.define('Calendar.view.main.MainController', {
             // Interesting reading about Google OAuth workflow
             // http://stackoverflow.com/a/12909563
             switch (me.settings.getItem('auth')) {
-            case 'google':
-                Calendar.util.Google.checkAuth()
+                case 'google':
+                    Calendar.util.Google.checkAuth()
                     .then(function(signedIn) {
-                        me.loadAuth(signedIn? 'google' : 'guest');
+                        me.loadAuth(signedIn ? 'google' : 'guest');
                     });
-                break;
-            case 'guest':
-            default:
-                this.loadAuth('guest');
-                break;
+                    break;
+                case 'guest':
+                default:
+                    this.loadAuth('guest');
+                    break;
             }
         },
 
@@ -72,6 +74,7 @@ Ext.define('Calendar.view.main.MainController', {
             Ext.Deferred.resolved(me[getter + 'User']())
                 .then(function(user) {
                     vm.set('user', user);
+
                     return me[getter + 'Store']();
                 })
                 .then(function(store) {

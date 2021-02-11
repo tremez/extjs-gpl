@@ -283,10 +283,10 @@ Ext.define("Ext.locale.cs.window.MessageBox", {
         cancel: "Storno",
         yes: "Ano",
         no: "Ne"
-    }    
+    }
 });
 
 // This is needed until we can refactor all of the locales into individual files
-Ext.define("Ext.locale.cs.Component", {	
+Ext.define("Ext.locale.cs.Component", {
     override: "Ext.Component"
 });

@@ -1,0 +1,8 @@
+$listitem-border-color: dynamic($divider-color);
+$listitem-padding: dynamic(12px);
+$listitem-padding-big: dynamic(14px 12px);
+$listitem-pinned-box-shadow: dynamic($material-shadow-below-1);
+$listitem-pinned-bottom-box-shadow: dynamic($material-shadow-above-1);
+$listitem-hovered-border-color: dynamic(null);
+$listitem-selected-border-color: dynamic(null);
+$listitem-pressed-border-color: dynamic(null);

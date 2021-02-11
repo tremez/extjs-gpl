@@ -1,7 +1,7 @@
 /*
-This file is part of Ext JS 6.2.0.981
+This file is part of Ext JS 7.0.0.168
 
-Copyright (c) 2011-2016 Sencha Inc
+Copyright (c) 2011-2020 Sencha Inc
 
 Contact:  http://www.sencha.com/contact
 
@@ -16,6 +16,6 @@ requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 If you are unsure which license is appropriate for your use, please contact the sales department
 at http://www.sencha.com/contact.
 
-Version: 6.2.0.981 Build date: 2016-08-31 14:49:44 (08dbbd0ec0b8bc0e014d725fdb7d9650d510b343)
+Version: 7.0.0.168 Build date: 2020-01-14 07:07:49 (513838d69a96c96beec9d0851e67aa660b7f288d)
 
 */

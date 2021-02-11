@@ -10,7 +10,7 @@ Ext.define('KitchenSink.view.charts.bar3d.Stacked100', {
     controller: 'bar-stacked-100-3d',
     requires: ['Ext.chart.theme.Muted'],
 
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     bodyStyle: 'background: transparent !important',
     layout: {
@@ -22,26 +22,34 @@ Ext.define('KitchenSink.view.charts.bar3d.Stacked100', {
         path: 'classic/samples/view/charts/bar3d/Stacked100Controller.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/Browsers.js'
+        path: 'app/store/Browsers.js'
     }],
-    // </example>
+    //</example>
     width: 650,
 
     items: [{
         xtype: 'cartesian',
         reference: 'chart',
+        captions: {
+            title: 'Bar Charts - 100% Stacked Bars',
+            credits: {
+                text: 'Data: Browser Stats 2012\nSource: http://www.w3schools.com/',
+                align: 'left'
+            }
+        },
         theme: 'Muted',
         width: '100%',
         height: 500,
         legend: {
             docked: 'right'
         },
-        animation: Ext.isIE8 ? false : {
-            easing: 'backOut',
-            duration: 500
-        },
-        store: {type: 'browsers'},
-        insetPadding: 40,
+        animation: Ext.isIE8
+            ? false
+            : {
+                easing: 'backOut',
+                duration: 500
+            },
+        store: { type: 'browsers' },
         flipXY: true,
         axes: [{
             type: 'numeric3d',
@@ -69,27 +77,6 @@ Ext.define('KitchenSink.view.charts.bar3d.Stacked100', {
                 trackMouse: true,
                 renderer: 'onSeriesTooltipRender'
             }
-        }],
-        sprites: [{
-            type: 'text',
-            text: 'Bar Charts - 100% Stacked Bars',
-            fontSize: 22,
-            width: 100,
-            height: 30,
-            x: 40, // the sprite x position
-            y: 20  // the sprite y position
-        }, {
-            type: 'text',
-            text: 'Data: Browser Stats 2012',
-            fontSize: 10,
-            x: 12,
-            y: 480
-        }, {
-            type: 'text',
-            text: 'Source: http://www.w3schools.com/',
-            fontSize: 10,
-            x: 12,
-            y: 495
         }]
         //<example>
     }, {
@@ -110,7 +97,7 @@ Ext.define('KitchenSink.view.charts.bar3d.Stacked100', {
                 { text: 'Other', dataIndex: 'other' }
             ]
         },
-        store: {type: 'browsers'},
+        store: { type: 'browsers' },
         width: '100%'
         //</example>
     }],

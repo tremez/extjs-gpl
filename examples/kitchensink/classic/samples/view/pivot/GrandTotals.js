@@ -17,27 +17,50 @@ Ext.define('KitchenSink.view.pivot.GrandTotals', {
     otherContent: [{
         type: 'Controller',
         path: 'classic/samples/view/pivot/GrandTotalsController.js'
-    },{
+    }, {
         type: 'Model',
         path: 'classic/samples/model/pivot/Sale.js'
-    },{
+    }, {
         type: 'Store',
         path: 'classic/samples/store/pivot/Sales.js'
     }],
     profiles: {
         classic: {
-            width: 600
+            width: 600,
+            height: 350,
+            totalColumnWidth: 85,
+            companyColumnWidth: 100,
+            columnLines: true
         },
         neptune: {
-            width: 750
+            width: 750,
+            height: 400,
+            totalColumnWidth: 85,
+            companyColumnWidth: 100,
+            columnLines: true
+        },
+        graphite: {
+            width: 750,
+            height: 600,
+            totalColumnWidth: 120,
+            companyColumnWidth: 120,
+            columnLines: true
+        },
+        'classic-material': {
+            width: 750,
+            height: 600,
+            totalColumnWidth: 120,
+            companyColumnWidth: 120,
+            columnLines: false
         }
     },
     //</example>
 
     title: 'Pivot Grid with custom grand totals',
     width: '${width}',
-    height: 350,
+    height: '${height}',
     collapsible: true,
+    columnLines: '${columnLines}',
 
     matrix: {
         type: 'local',
@@ -50,13 +73,15 @@ Ext.define('KitchenSink.view.pivot.GrandTotals', {
             dataIndex: 'value',
             header: 'Total',
             aggregator: 'sum',
-            width: 85
+            width: '${totalColumnWidth}'
         }],
 
-        // Configure the left axis dimensions that will be used to generate the grid rows
+        // Configure the left axis dimensions that will be used to generate
+        // the grid rows
         leftAxis: [{
             dataIndex: 'company',
-            header: 'Company'
+            header: 'Company',
+            width: '${companyColumnWidth}'
         }, {
             dataIndex: 'country',
             header: 'Country',
@@ -64,10 +89,13 @@ Ext.define('KitchenSink.view.pivot.GrandTotals', {
         }],
 
         /**
-         * Configure the top axis dimensions that will be used to generate the columns.
-         * When columns are generated the aggregate dimensions are also used. If multiple aggregation dimensions
-         * are defined then each top axis result will have in the end a column header with children
-         * columns for each aggregate dimension defined.
+         * Configure the top axis dimensions that will be used to generate
+         * the columns.
+         *
+         * When columns are generated the aggregate dimensions are also used.
+         * If multiple aggregation dimensions are defined then each top axis
+         * result will have in the end a column header with children columns
+         * for each aggregate dimension defined.
          */
         topAxis: [{
             dataIndex: 'year',

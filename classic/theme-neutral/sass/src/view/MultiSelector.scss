@@ -11,3 +11,8 @@
 .#{$prefix}grid-item-over .#{$prefix}multiselector-remove {
     color: $multiselector-remove-text-color-over;
 }
+
+// MultiSelector search widget implements custom clear trigger
+.#{$prefix}multiselector-search-input .#{$prefix}form-text::-ms-clear {
+    display: none;
+}

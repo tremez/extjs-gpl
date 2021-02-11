@@ -178,10 +178,12 @@ Ext.define('Ext.util.Positionable', {
      */
     adjustForConstraints: function(xy, parent) {
         var vector = this.getConstrainVector(parent, xy);
+
         if (vector) {
             xy[0] += vector[0];
             xy[1] += vector[1];
         }
+
         return xy;
     },
 
@@ -192,10 +194,6 @@ Ext.define('Ext.util.Positionable', {
      *
      * - **Blank**: Defaults to aligning the element's top-left corner to the target's
      *   bottom-left corner ("tl-bl").
-     * - **One anchor (deprecated)**: The passed anchor position is used as the target
-     *   element's anchor point.  The element being aligned will position its top-left
-     *   corner (tl) to that point. *This method has been deprecated in favor of the newer
-     *   two anchor syntax below*.
      * - **Two anchors**: If two values from the table below are passed separated by a dash,
      *   the first value is used as the element's anchor point, and the second value is
      *   used as the target's anchor point.
@@ -204,14 +202,9 @@ Ext.define('Ext.util.Positionable', {
      *   point to align with a similar point in the target. So `'t0-b0'` would be
      *   the same as `'tl-bl'`, `'l0-r50'` would place the top left corner of this item
      *   halfway down the right edge of the target item. This allows more flexibility
-     *   and also describes which two edges are considered adjacent when positioning an anchor. 
+     *   and also describes which two edges are considered adjacent when positioning a tip pointer. 
      *
-     * In addition to the anchor points, the position parameter also supports the "?"
-     * character. If "?" is passed at the end of the position string, the element will
-     * attempt to align as specified, but the position will be adjusted to constrain to
-     * the viewport if necessary. Note that the element being aligned might be swapped to
-     * align to a different position than that specified in order to enforce the viewport
-     * constraints. Following are all of the supported anchor positions:
+     * Following are all of the supported predefined anchor positions:
      *
      *      Value  Description
      *      -----  -----------------------------
@@ -225,6 +218,12 @@ Ext.define('Ext.util.Positionable', {
      *      b      The center of the bottom edge
      *      br     The bottom right corner
      *
+     * You can put a '?' at the end of the alignment string to constrain the positioned element
+     * to the {@link Ext.Viewport Viewport}. The element will attempt to align as specified, but
+     * the position will be adjusted to constrain to the viewport if necessary. Note that
+     * the element being aligned might be swapped to align to a different position than that
+     * specified in order to enforce the viewport constraints.
+     *
      * Example Usage:
      *
      *     // align el to other-el using the default positioning
@@ -233,7 +232,7 @@ Ext.define('Ext.util.Positionable', {
      *
      *     // align the top left corner of el with the top right corner of other-el
      *     // (constrained to viewport)
-     *     el.alignTo("other-el", "tr?");
+     *     el.alignTo("other-el", "tl-tr?");
      *
      *     // align the bottom right corner of el with the center left edge of other-el
      *     el.alignTo("other-el", "br-l?");
@@ -242,19 +241,24 @@ Ext.define('Ext.util.Positionable', {
      *     // adjust the x position by -6 pixels (and the y position by 0)
      *     el.alignTo("other-el", "c-bl", [-6, 0]);
      *
+     *     // align the 25% point on the bottom edge of this el
+     *     // with the 75% point on the top edge of other-el.
+     *     el.alignTo("other-el", 'b25-t75');
+     *
      * @param {Ext.util.Positionable/HTMLElement/String} element The Positionable,
      * HTMLElement, or id of the element to align to.
      * @param {String} [position="tl-bl?"] The position to align to
      * @param {Number[]} [offsets] Offset the positioning by [x, y]
      * Element animation config object
+     * @param {Boolean} animate (private)
      * @return {Ext.util.Positionable} this
      */
-    alignTo: function(element, position, offsets, /* private (documented in ext) */ animate) {
+    alignTo: function(element, position, offsets, animate) {
         var me = this,
             el = me.el;
 
         return me.setXY(me.getAlignToXY(element, position, offsets),
-                el.anim && !!animate ? el.anim(animate) : false);
+                        el.anim && !!animate ? el.anim(animate) : false);
     },
 
     /**
@@ -270,14 +274,15 @@ Ext.define('Ext.util.Positionable', {
      * @return {Number[]} [x, y] An array containing the element's x and y coordinates
      * @private
      */
-    calculateAnchorXY: function(anchor, extraX, extraY, mySize) {
+    calculateAnchorXY: function(anchor, extraX, extraY, size) {
         var region = this.getRegion();
 
         region.setPosition(0, 0);
         region.translateBy(extraX || 0, extraY || 0);
-        if (mySize) {
-            region.setWidth(mySize.width);
-            region.setHeight(mySize.height);
+
+        if (size) {
+            region.setWidth(size.width);
+            region.setHeight(size.height);
         }
 
         return region.getAnchorPoint(anchor);
@@ -302,23 +307,23 @@ Ext.define('Ext.util.Positionable', {
     /**
      * Gets the x,y coordinates to align this element with another element. See
      * {@link #alignTo} for more info on the supported position values.
-     * @param {Ext.util.Positionable/HTMLElement/String} element The Positionable,
+     * @param {Ext.util.Positionable/HTMLElement/String} alignToEl The Positionable,
      * HTMLElement, or id of the element to align to.
      * @param {String} [position="tl-bl?"] The position to align to
      * @param {Number[]} [offsets] Offset the positioning by [x, y]
      * @return {Number[]} [x, y]
      */
-    getAlignToXY: function(alignToEl, posSpec, offset) {
-        var newRegion = this.getAlignToRegion(alignToEl, posSpec, offset);
+    getAlignToXY: function(alignToEl, position, offsets) {
+        var newRegion = this.getAlignToRegion(alignToEl, position, offsets);
+
         return [newRegion.x, newRegion.y];
     },
-    
+
     getAlignToRegion: function(alignToEl, posSpec, offset, minHeight) {
         var me = this,
-            inside,
-            newRegion;
+            inside, newRegion, bodyScroll;
 
-        alignToEl = Ext.get(alignToEl.el || alignToEl);
+        alignToEl = Ext.fly(alignToEl.el || alignToEl);
 
         if (!alignToEl || !alignToEl.dom) {
             //<debug>
@@ -345,8 +350,16 @@ Ext.define('Ext.util.Positionable', {
                 // Otherwise, use this Positionable's element's parent node.
                 inside = me.constrainTo || me.container || me.el.parent();
             }
-            inside = Ext.get(inside.el || inside).getConstrainRegion();
+
+            inside = Ext.fly(inside.el || inside).getConstrainRegion();
         }
+
+        if (alignToEl === Ext.getBody()) {
+            bodyScroll = alignToEl.getScroll();
+
+            offset = [bodyScroll.left, bodyScroll.top];
+        }
+
         newRegion = me.getRegion().alignTo({
             target: alignToEl.getRegion(),
             inside: inside,
@@ -355,6 +368,7 @@ Ext.define('Ext.util.Positionable', {
             align: posSpec,
             axisLock: true
         });
+
         return newRegion;
     },
 
@@ -369,7 +383,7 @@ Ext.define('Ext.util.Positionable', {
      * element's current size)
      * @return {Number[]} [x, y] An array containing the element's x and y coordinates
      */
-    getAnchorXY: function(anchor, local, mySize) {
+    getAnchorXY: function(anchor, local, size) {
         var me = this,
             region = me.getRegion(),
             el = me.el,
@@ -378,12 +392,14 @@ Ext.define('Ext.util.Positionable', {
 
         if (local) {
             region.setPosition(0, 0);
-        } else if (isViewport) {
+        }
+        else if (isViewport) {
             region.setPosition(scroll.left, scroll.top);
         }
-        if (mySize) {
-            region.setWidth(mySize.width);
-            region.setHeight(mySize.height);
+
+        if (size) {
+            region.setWidth(size.width);
+            region.setHeight(size.height);
         }
 
         return region.getAnchorPoint(anchor);
@@ -456,23 +472,25 @@ Ext.define('Ext.util.Positionable', {
     /**
      * Calculates the new [x,y] position to move this Positionable into a constrain region.
      *
-     * By default, this Positionable is constrained to be within the container it was added to, or the element it was
-     * rendered to.
+     * By default, this Positionable is constrained to be within the container it was added to,
+     * or the element it was rendered to.
      *
      * Priority is given to constraining the top and left within the constraint.
      *
      * An alternative constraint may be passed.
-     * @param {String/HTMLElement/Ext.dom.Element/Ext.util.Region} [constrainTo] The Element or {@link Ext.util.Region Region}
-     * into which this Component is to be constrained. Defaults to the element into which this Positionable
-     * was rendered, or this Component's {@link Ext.Component#constrainTo.
+     * @param {String/HTMLElement/Ext.dom.Element/Ext.util.Region} [constrainTo] The Element
+     * or {@link Ext.util.Region Region} into which this Component is to be constrained.
+     * Defaults to the element into which this Positionable was rendered, or this Component's
+     * {@link Ext.Component#constrainTo}.
      * @param {Number[]} [proposedPosition] A proposed `[X, Y]` position to test for validity
      * and to coerce into constraints instead of using this Positionable's current position.
-     * @param {Boolean} [local] The proposedPosition is local *(relative to floatParent if a floating Component)*
+     * @param {Boolean} [local] The proposedPosition is local *(relative to floatParent
+     * if a floating Component)*
      * @param {Number[]} [proposedSize] A proposed `[width, height]` size to use when calculating
      * constraints instead of using this Positionable's current size.
-     * @return {Number[]} **If** the element *needs* to be translated, the new `[X, Y]` position within
-     * constraints if possible, giving priority to keeping the top and left edge in the constrain region.
-     * Otherwise, `false`.
+     * @return {Number[]} **If** the element *needs* to be translated, the new `[X, Y]` position
+     * within constraints if possible, giving priority to keeping the top and left edge
+     * in the constrain region. Otherwise, `false`.
      * @private
      */
     calculateConstrainedPosition: function(constrainTo, proposedPosition, local, proposedSize) {
@@ -490,15 +508,20 @@ Ext.define('Ext.util.Positionable', {
             borderPadding = parentNode.getBorderPadding();
             parentOffset[0] += borderPadding.beforeX;
             parentOffset[1] += borderPadding.beforeY;
+
             if (proposedPosition) {
-                proposedConstrainPosition = [proposedPosition[0] + parentOffset[0], proposedPosition[1] + parentOffset[1]];
+                proposedConstrainPosition = [proposedPosition[0] + parentOffset[0],
+                                             proposedPosition[1] + parentOffset[1]];
             }
-        } else {
+        }
+        else {
             proposedConstrainPosition = proposedPosition;
         }
+
         // Calculate the constrain vector to coerce our position to within our
         // constrainTo setting. getConstrainVector will provide a default constraint
-        // region if there is no explicit constrainTo, *and* there is no floatParent owner Component.
+        // region if there is no explicit constrainTo, *and* there is no floatParent
+        // owner Component.
         constrainTo = constrainTo || me.constrainTo || parentNode || me.container || me.el.parent();
 
         if (local && proposedConstrainPosition) {
@@ -517,12 +540,15 @@ Ext.define('Ext.util.Positionable', {
             xy[0] += vector[0];
             xy[1] += vector[1];
         }
+
         return xy;
     },
 
     /**
      * Returns the content region of this element for purposes of constraining or clipping floating
      * children.  That is the region within the borders and scrollbars, but not within the padding.
+     *
+     * @return {Ext.util.Region} A Region containing "top, left, bottom, right" properties.
      */
     getConstrainRegion: function() {
         var me = this,
@@ -542,7 +568,8 @@ Ext.define('Ext.util.Positionable', {
             top = scroll.top;
             width = Ext.Element.getViewportWidth();
             height = Ext.Element.getViewportHeight();
-        } else {
+        }
+        else {
             width = dom.clientWidth;
             height = dom.clientHeight;
         }
@@ -551,8 +578,8 @@ Ext.define('Ext.util.Positionable', {
     },
 
     /**
-     * Returns the `[X, Y]` vector by which this Positionable's element must be translated to make a best
-     * attempt to constrain within the passed constraint. Returns `false` if the element
+     * Returns the `[X, Y]` vector by which this Positionable's element must be translated to make
+     * a best attempt to constrain within the passed constraint. Returns `false` if the element
      * does not need to be moved.
      *
      * Priority is given to constraining the top and left within the constraint.
@@ -561,9 +588,10 @@ Ext.define('Ext.util.Positionable', {
      * constrained, or a {@link Ext.util.Region Region} into which this element is to be
      * constrained.
      *
-     * By default, any extra shadow around the element is **not** included in the constrain calculations - the edges
-     * of the element are used as the element bounds. To constrain the shadow within the constrain region, set the
-     * `constrainShadow` property on this element to `true`.
+     * By default, any extra shadow around the element is **not** included in the constrain
+     * calculations - the edges of the element are used as the element bounds. To constrain
+     * the shadow within the constrain region, set the `constrainShadow` property on this element
+     * to `true`.
      *
      * @param {Ext.util.Positionable/HTMLElement/String/Ext.util.Region} [constrainTo] The
      * Positionable, HTMLElement, element id, or Region into which the element is to be
@@ -579,7 +607,9 @@ Ext.define('Ext.util.Positionable', {
         var me = this,
             thisRegion = me.getRegion(),
             vector = [0, 0],
-            shadowSize = (me.shadow && me.constrainShadow && !me.shadowDisabled) ? me.el.shadow.getShadowSize() : undefined,
+            shadowSize = (me.shadow && me.constrainShadow && !me.shadowDisabled)
+                ? me.el.shadow.getShadowSize()
+                : undefined,
             overflowed = false,
             constraintInsets = me.constraintInsets;
 
@@ -593,14 +623,20 @@ Ext.define('Ext.util.Positionable', {
 
         // Apply constraintInsets
         if (constraintInsets) {
-            constraintInsets = Ext.isObject(constraintInsets) ? constraintInsets : Ext.Element.parseBox(constraintInsets);
-            constrainTo.adjust(constraintInsets.top, constraintInsets.right, constraintInsets.bottom, constraintInsets.left);
+            constraintInsets = Ext.isObject(constraintInsets)
+                ? constraintInsets
+                : Ext.Element.parseBox(constraintInsets);
+
+            constrainTo.adjust(constraintInsets.top, constraintInsets.right,
+                               constraintInsets.bottom, constraintInsets.left);
         }
 
         // Shift this region to occupy the proposed position
         if (proposedPosition) {
-            thisRegion.translateBy(proposedPosition[0] - thisRegion.x, proposedPosition[1] - thisRegion.y);
+            thisRegion.translateBy(proposedPosition[0] - thisRegion.x,
+                                   proposedPosition[1] - thisRegion.y);
         }
+
         // Set the size of this region to the proposed size
         if (proposedSize) {
             thisRegion.right = thisRegion.left + proposedSize[0];
@@ -617,6 +653,7 @@ Ext.define('Ext.util.Positionable', {
             overflowed = true;
             vector[0] = (constrainTo.right - thisRegion.right);    // overflowed the right
         }
+
         if (thisRegion.left + vector[0] < constrainTo.left) {
             overflowed = true;
             vector[0] = (constrainTo.left - thisRegion.left);      // overflowed the left
@@ -627,10 +664,12 @@ Ext.define('Ext.util.Positionable', {
             overflowed = true;
             vector[1] = (constrainTo.bottom - thisRegion.bottom);  // overflowed the bottom
         }
+
         if (thisRegion.top + vector[1] < constrainTo.top) {
             overflowed = true;
             vector[1] = (constrainTo.top - thisRegion.top);        // overflowed the top
         }
+
         return overflowed ? vector : false;
     },
 
@@ -643,18 +682,24 @@ Ext.define('Ext.util.Positionable', {
       */
     getOffsetsTo: function(offsetsTo) {
         var o = this.getXY(),
-                e = Ext.fly(offsetsTo.el || offsetsTo).getXY();
-        return [o[0] - e[0],o[1] - e[1]];
+            e = offsetsTo.isRegion
+                ? [offsetsTo.x, offsetsTo.y]
+                : Ext.fly(offsetsTo.el || offsetsTo).getXY();
+
+        return [o[0] - e[0], o[1] - e[1]];
     },
 
     /**
      * Returns a region object that defines the area of this element.
      * @param {Boolean} [contentBox] If true a box for the content of the element is
      * returned.
+     * @param {Boolean} [local] If true the element's left and top relative to its
+     * `offsetParent` are returned instead of page x/y.
      * @return {Ext.util.Region} A Region containing "top, left, bottom, right" properties.
      */
-    getRegion: function(contentBox) {
-        var box = this.getBox(contentBox);
+    getRegion: function(contentBox, local) {
+        var box = this.getBox(contentBox, local);
+
         return new Ext.util.Region(box.top, box.right, box.bottom, box.left);
     },
 
@@ -666,30 +711,44 @@ Ext.define('Ext.util.Positionable', {
      */
     getClientRegion: function() {
         var me = this,
-            scrollbarSize,
-            viewContentBox = me.getBox(),
-            myDom = me.dom;
+            el = me.el,
+            dom = el.dom,
+            viewContentBox = me.getBox(true),
+            scrollbarHeight = dom.offsetHeight > dom.clientHeight,
+            scrollbarWidth = dom.offsetWidth > dom.clientWidth,
+            padding, scrollSize, isRTL;
 
-        // Capture width taken by any vertical scrollbar.
-        // If there is a vertical scrollbar, shrink the box.
-        scrollbarSize = myDom.offsetWidth - myDom.clientWidth;
-        if (scrollbarSize) {
-            if (me.getStyle('direction') === 'rtl') {
-                viewContentBox.left += scrollbarSize;
-            } else {
-                viewContentBox.right -= scrollbarSize;
+        if (scrollbarHeight || scrollbarWidth) {
+            scrollSize = Ext.getScrollbarSize();
+
+            // Capture width taken by any vertical scrollbar.
+            // If there is a vertical scrollbar, shrink the box.
+            if (scrollbarWidth) {
+                scrollbarWidth = scrollSize.width;
+                isRTL = el.getStyle('direction') === 'rtl' && !Ext.supports.rtlVertScrollbarOnRight;
+
+                if (isRTL) {
+                    padding = el.getPadding('l');
+                    viewContentBox.left -= padding + Math.max(padding, scrollbarWidth);
+                }
+                else {
+                    padding = el.getPadding('r');
+                    viewContentBox.right += padding - Math.max(padding, scrollbarWidth);
+                }
+            }
+
+            // Capture height taken by any horizontal scrollbar.
+            // If there is a horizontal scrollbar, shrink the box.
+            if (scrollbarHeight) {
+                scrollbarHeight = scrollSize.height;
+                padding = el.getPadding('b');
+                viewContentBox.bottom += padding - Math.max(padding, scrollbarHeight);
             }
         }
 
-        // Capture width taken by any horizontal scrollbar.
-        // If there is a vertical scrollbar, shrink the box.
-        scrollbarSize = myDom.offsetHeight - myDom.clientHeight;
-        if (scrollbarSize) {
-            viewContentBox.bottom -= scrollbarSize;
-        }
-
         // The client region excluding any scrollbars.
-        return new Ext.util.Region(viewContentBox.top, viewContentBox.right, viewContentBox.bottom, viewContentBox.left);
+        return new Ext.util.Region(viewContentBox.top, viewContentBox.right,
+                                   viewContentBox.bottom, viewContentBox.left);
     },
 
     /**
@@ -722,28 +781,6 @@ Ext.define('Ext.util.Positionable', {
 
         return new Ext.util.Region(top, left + width, top + height, left);
     },
-    
-    /**
-     * @private
-     * Returns the **client** region of this element, i.e. the content region excluding
-     * horizontal and/or vertical scrollbars.
-     *
-     * @return {Ext.util.Region} Region containing "top, left, bottom, right" member data.
-     */
-    getClientRegion: function() {
-        var el = this.el,
-            borderPadding, pos, left, top, width, height;
-        
-        borderPadding = this.getBorderPadding();
-        pos = this.getXY();
-        
-        left = pos[0] + borderPadding.beforeX;
-        top = pos[1] + borderPadding.beforeY;
-        width = el.dom.clientWidth;
-        height = el.dom.clientHeight;
-        
-        return new Ext.util.Region(top, left + width, top + height, left);
-    },
 
     /**
      * Move the element relative to its current position.
@@ -755,8 +792,9 @@ Ext.define('Ext.util.Positionable', {
      * - `"b"` (or `"bottom"`, or `"down"`)
      *
      * @param {Number} distance How far to move the element in pixels
+     * @param {Boolean} animate (private)
      */
-    move: function(direction, distance, /* private (documented in ext) */ animate) {
+    move: function(direction, distance, animate) {
         var me = this,
             xy = me.getXY(),
             x = xy[0],
@@ -803,12 +841,13 @@ Ext.define('Ext.util.Positionable', {
         me.constrainBox(box);
         x = box.x;
         y = box.y;
-     
+
         // Position to the contrained position
         // Call setSize *last* so that any possible layout has the last word on position.
         me.setXY([x, y]);
         me.setSize(box.width, box.height);
         me.afterSetPosition(x, y);
+
         return me;
     },
 
@@ -873,17 +912,21 @@ Ext.define('Ext.util.Positionable', {
             xy = me.getXY();
 
         if (Ext.isArray(x)) {
-             y = x[1];
-             x = x[0];
+            y = x[1];
+            x = x[0];
         }
+
         if (isNaN(left)) {
             left = relative ? 0 : el.dom.offsetLeft;
         }
+
         if (isNaN(top)) {
             top = relative ? 0 : el.dom.offsetTop;
         }
+
         left = (typeof x === 'number') ? x - xy[0] + left : undefined;
         top = (typeof y === 'number') ? y - xy[1] + top : undefined;
+
         return {
             x: left,
             y: top
@@ -906,8 +949,8 @@ Ext.define('Ext.util.Positionable', {
             x, y;
 
         if (offsetParent) {
-            relative = el.isStyle('position', 'relative'),
-            offsetParentXY = Ext.fly(offsetParent).getXY(),
+            relative = el.isStyle('position', 'relative');
+            offsetParentXY = Ext.fly(offsetParent).getXY();
 
             x = xy[0] + offsetParentXY[0] + offsetParent.clientLeft;
             y = xy[1] + offsetParentXY[1] + offsetParent.clientTop;
@@ -928,12 +971,14 @@ Ext.define('Ext.util.Positionable', {
     privates: {
         /**
          * Clips this Component/Element to fit within the passed element's or component's view area
-         * @param {Ext.Component/Ext.Element/Ext.util.Region} clippingEl The Component or element or Region which should
-         * clip this element even if this element is outside the bounds of that region.
+         * @param {Ext.Component/Ext.Element/Ext.util.Region} clippingEl The Component or element
+         * or Region which should clip this element even if this element is outside the bounds
+         * of that region.
          * @param {Number} sides The sides to clip 1=top, 2=right, 4=bottom, 8=left.
          *
-         * This is to support components being clipped to their logical owner, such as a grid row editor when the
-         * row being edited scrolls out of sight. The editor should be clipped at the edge of the scrolling element.
+         * This is to support components being clipped to their logical owner, such as a grid row
+         * editor when the row being edited scrolls out of sight. The editor should be clipped
+         * at the edge of the scrolling element.
          * @private
          */
         clipTo: function(clippingEl, sides) {
@@ -951,7 +996,9 @@ Ext.define('Ext.util.Positionable', {
             // Allow a Region to be passed
             if (clippingEl.isRegion) {
                 clippingRegion = clippingEl;
-            } else {
+            }
+            else {
+                // eslint-disable-next-line max-len
                 clippingRegion = (clippingEl.isComponent ? clippingEl.el : Ext.fly(clippingEl)).getConstrainRegion();
             }
 
@@ -964,35 +1011,44 @@ Ext.define('Ext.util.Positionable', {
             if (sides & 1 && (overflow = clippingRegion.top - floaterRegion.top) > 0) {
                 clipValues[0] = overflow;
                 clipped = true;
-            } else {
+            }
+            else {
                 clipValues[0] = -10000;
             }
+
             if (sides & 2 && (overflow = floaterRegion.right - clippingRegion.right) > 0) {
                 clipValues[1] = Math.max(0, el.getWidth() - overflow);
                 clipped = true;
-            } else {
+            }
+            else {
                 clipValues[1] = 10000;
             }
+
             if (sides & 4 && (overflow = floaterRegion.bottom - clippingRegion.bottom) > 0) {
                 clipValues[2] = Math.max(0, el.getHeight() - overflow);
                 clipped = true;
-            } else {
+            }
+            else {
                 clipValues[2] = 10000;
             }
+
             if (sides & 8 && (overflow = clippingRegion.left - floaterRegion.left) > 0) {
                 clipValues[3] = overflow;
                 clipped = true;
-            } else {
+            }
+            else {
                 clipValues[3] = -10000;
             }
 
             clipStyle = 'rect(';
+
             for (i = 0; i < 4; ++i) {
                 // Use the clipValue if there is one calculated.
                 // If not, top and left must be 0px, right and bottom must be 'auto'.
                 clipStyle += Ext.Element.addUnits(clipValues[i], 'px');
                 clipStyle += (i === 3) ? ')' : ',';
             }
+
             el.dom.style.clip = clipStyle;
 
             // hardware acceleration causes flickering problems on clipped elements.
@@ -1000,26 +1056,31 @@ Ext.define('Ext.util.Positionable', {
             el.addCls(clippedCls);
 
             // Clip/unclip shadow too.
-            // TODO: As SOON as IE8 retires, refactor Ext.dom.Shadow to use CSS3BoxShadow directly on its el
-            // Then we won't have to bother clipping the shadow as well. We'll just have to adjust the clipping on the
-            // element outwards in the unclipped dimensions to keep the shadow visible.
+            // TODO: As SOON as IE8 retires, refactor Ext.dom.Shadow to use CSS3BoxShadow directly
+            // on its el Then we won't have to bother clipping the shadow as well. We'll just
+            // have to adjust the clipping on the element outwards in the unclipped dimensions
+            // to keep the shadow visible.
             if ((shadow = el.shadow) && (el = shadow.el) && el.dom) {
                 clipValues[2] -= shadow.offsets.y;
                 clipValues[3] -= shadow.offsets.x;
                 clipStyle = 'rect(';
+
                 for (i = 0; i < 4; ++i) {
                     // Use the clipValue if there is one calculated.
                     // If not, clear the edges by 10px to allow the shadow's spread to be visible.
                     clipStyle += Ext.Element.addUnits(clipValues[i], 'px');
                     clipStyle += (i === 3) ? ')' : ',';
                 }
+
                 el.dom.style.clip = clipStyle;
 
                 // Clip does not work on IE8 shadows
-                // TODO: As SOON as IE8 retires, refactor Ext.dom.Shadow to use CSS3BoxShadow directly on its el
+                // TODO: As SOON as IE8 retires, refactor Ext.dom.Shadow to use CSS3BoxShadow
+                // directly on its el
                 if (clipped && !Ext.supports.CSS3BoxShadow) {
                     el.dom.style.display = 'none';
-                } else {
+                }
+                else {
                     el.dom.style.display = '';
 
                     // hardware acceleration causes flickering problems on clipped elements.
@@ -1048,7 +1109,8 @@ Ext.define('Ext.util.Positionable', {
                 el.shadow.el.dom.style.clip = Ext.isIE8 ? 'auto' : '';
 
                 // Clip does not work on IE8 shadows
-                // TODO: As SOON as IE8 retires, refactor Ext.dom.Shadow to use CSS3BoxShadow directly on its el
+                // TODO: As SOON as IE8 retires, refactor Ext.dom.Shadow to use CSS3BoxShadow
+                // directly on its el
                 if (!Ext.supports.CSS3BoxShadow) {
                     el.dom.style.display = '';
 

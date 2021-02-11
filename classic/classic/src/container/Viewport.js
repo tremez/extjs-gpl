@@ -5,11 +5,11 @@
  * the browser viewport and manages window resizing. There may only be one Viewport created
  * in a page.
  *
- * Like any {@link Ext.container.Container Container}, a Viewport will only perform sizing and positioning
- * on its child Components if you configure it with a {@link #layout}.
+ * Like any {@link Ext.container.Container Container}, a Viewport will only perform sizing
+ * and positioning on its child Components if you configure it with a {@link #layout}.
  *
- * A Common layout used with Viewports is {@link Ext.layout.container.Border border layout}, but if the
- * required layout is simpler, a different layout should be chosen.
+ * A Common layout used with Viewports is {@link Ext.layout.container.Border border layout},
+ * but if the required layout is simpler, a different layout should be chosen.
  *
  * For example, to simply make a single child item occupy all available space, use
  * {@link Ext.layout.container.Fit fit layout}.
@@ -72,11 +72,8 @@ Ext.define('Ext.container.Viewport', {
     extend: 'Ext.container.Container',
 
     requires: [
-        'Ext.plugin.Viewport'
-    ],
-
-    mixins: [
-        'Ext.mixin.Responsive'
+        'Ext.plugin.Viewport',
+        'Ext.Responsive'
     ],
 
     alias: 'widget.viewport',
@@ -120,11 +117,18 @@ Ext.define('Ext.container.Viewport', {
      * Sets itself to viewport height.
      * @private
      */
-    
+
+    /**
+     * @cfg scrollable
+     * @hide
+     */
+
     ariaRole: 'application',
-    
+
+    responsiveConfig: true,
+
     privates: {
-        updateResponsiveState: function () {
+        updateResponsiveState: function() {
             // By providing this method we are in sync with the layout suspend/resume as
             // well as other changes to configs that need to happen during this pulse of
             // size change.
@@ -136,7 +140,6 @@ Ext.define('Ext.container.Viewport', {
             this.mixins.responsive.updateResponsiveState.call(this);
         }
     }
-},
-function () {
+}, function() {
     Ext.plugin.Viewport.decorate(this);
 });

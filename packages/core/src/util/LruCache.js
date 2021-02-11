@@ -3,21 +3,23 @@
  * @class Ext.util.LruCache
  * @extend Ext.util.HashMap
  * A linked {@link Ext.util.HashMap HashMap} implementation which maintains most recently accessed
- * items at the end of the list, and purges the cache down to the most recently accessed {@link #maxSize} items
- * upon add.
+ * items at the end of the list, and purges the cache down to the most recently accessed
+ * {@link #maxSize} items upon add.
  */
 Ext.define('Ext.util.LruCache', {
     extend: 'Ext.util.HashMap',
 
     config: {
         /** 
-        * @cfg {Number} maxSize The maximum size the cache is allowed to grow to before further additions cause
-        * removal of the least recently used entry.
-        */
-       maxSize: null
-   },
+         * @cfg {Number} maxSize
+         * The maximum size the cache is allowed to grow to before further additions
+         * cause removal of the least recently used entry.
+         */
+        maxSize: null
+    },
 
     /**
+     * @method add
      * @inheritdoc
      */
     add: function(key, newValue) {
@@ -33,17 +35,19 @@ Ext.define('Ext.util.LruCache', {
             value: newValue
         };
 
-        
         if (last) {
             // If the list is not empty, update the last entry
             last.next = entry;
-        } else {
+        }
+        else {
             // List is empty
             me.first = entry;
         }
+
         me.last = entry;
         me.callParent([key, entry]);
         me.prune();
+
         return newValue;
     },
 
@@ -52,11 +56,11 @@ Ext.define('Ext.util.LruCache', {
      */
     insertBefore: function(key, newValue, sibling) {
         var me = this,
-            existingKey,
-            entry;
+            existingKey, entry;
 
         // NOT an assignment.
         // If there is a following sibling
+        // eslint-disable-next-line no-cond-assign
         if (sibling = this.map[this.findKey(sibling)]) {
             existingKey = me.findKey(newValue);
 
@@ -76,12 +80,15 @@ Ext.define('Ext.util.LruCache', {
 
             if (sibling.prev) {
                 entry.prev.next = entry;
-            } else {
+            }
+            else {
                 me.first = entry;
             }
+
             entry.next = sibling;
             sibling.prev = entry;
             me.prune();
+
             return newValue;
         }
         // No following sibling, it's just an add.
@@ -91,16 +98,19 @@ Ext.define('Ext.util.LruCache', {
     },
 
     /**
+     * @method get
      * @inheritdoc
      */
     get: function(key) {
         var entry = this.map[key];
+
         if (entry) {
 
             // If it's not the end, move to end of list on get
             if (entry.next) {
                 this.moveToEnd(entry);
             }
+
             return entry.value;
         }
     },
@@ -110,14 +120,18 @@ Ext.define('Ext.util.LruCache', {
      */
     removeAtKey: function(key) {
         this.unlinkEntry(this.map[key]);
+
         return this.callParent(arguments);
     },
 
     /**
+     * @method clear
      * @inheritdoc
+     * @param initial (private)
      */
-    clear: function(/* private */ initial) {
+    clear: function(initial) {
         this.first = this.last = null;
+
         return this.callParent([initial]);
     },
 
@@ -129,14 +143,18 @@ Ext.define('Ext.util.LruCache', {
         if (entry) {
             if (entry.next) {
                 entry.next.prev = entry.prev;
-            } else {
+            }
+            else {
                 this.last = entry.prev;
             }
+
             if (entry.prev) {
                 entry.prev.next = entry.next;
-            } else {
+            }
+            else {
                 this.first = entry.next;
             }
+
             entry.prev = entry.next = null;
         }
     },
@@ -149,6 +167,7 @@ Ext.define('Ext.util.LruCache', {
 
         // NOT an assignment.
         // If the list is not empty, update the last entry
+        // eslint-disable-next-line no-cond-assign
         if (entry.prev = this.last) {
             this.last.next = entry;
         }
@@ -156,6 +175,7 @@ Ext.define('Ext.util.LruCache', {
         else {
             this.first = entry;
         }
+
         this.last = entry;
     },
 
@@ -167,9 +187,10 @@ Ext.define('Ext.util.LruCache', {
             entry = this.first;
 
         while (entry) {
-            arr.push(isKey ? entry.key: entry.value);
+            arr.push(isKey ? entry.key : entry.value);
             entry = entry.next;
         }
+
         return arr;
     },
 
@@ -186,8 +207,10 @@ Ext.define('Ext.util.LruCache', {
      * <li><b>length</b> : Number<p class="sub-desc">The total number of items in the hash</p></li>
      * </ul></div>
      * @param {Function} fn The function to execute.
-     * @param {Object} scope The scope (<code>this</code> reference) to execute in. Defaults to this LruCache.
-     * @param {Boolean} [reverse=false] Pass <code>true</code> to iterate the list in reverse (most recent first) order.
+     * @param {Object} scope The scope (<code>this</code> reference) to execute in. Defaults
+     * to this LruCache.
+     * @param {Boolean} [reverse=false] Pass <code>true</code> to iterate the list in reverse
+     * (most recent first) order.
      * @return {Ext.util.LruCache} this
      */
     each: function(fn, scope, reverse) {
@@ -196,12 +219,15 @@ Ext.define('Ext.util.LruCache', {
             length = me.length;
 
         scope = scope || me;
+
         while (entry) {
             if (fn.call(scope, entry.key, entry.value, length) === false) {
                 break;
             }
+
             entry = reverse ? entry.prev : entry.next;
         }
+
         return me;
     },
 
@@ -219,6 +245,7 @@ Ext.define('Ext.util.LruCache', {
                 return key;
             }
         }
+
         return undefined;
     },
 
@@ -232,12 +259,15 @@ Ext.define('Ext.util.LruCache', {
             key;
 
         newCache.suspendEvents();
+
         for (key in map) {
             if (map.hasOwnProperty(key)) {
                 newCache.add(key, map[key].value);
             }
         }
+
         newCache.resumeEvents();
+
         return newCache;
     },
 
@@ -256,20 +286,23 @@ Ext.define('Ext.util.LruCache', {
         }
     }
 
-  /**
-   * @method containsKey
-   * @private
-   */
-  /**
-   * @method contains
-   * @private
-   */
-  /**
-   * @method getKeys
-   * @private
-   */
-  /**
-   * @method getValues
-   * @private
-   */
+    /**
+     * @method containsKey
+     * @private
+     */
+
+    /**
+     * @method contains
+     * @private
+     */
+
+    /**
+     * @method getKeys
+     * @private
+     */
+
+    /**
+     * @method getValues
+     * @private
+     */
 });

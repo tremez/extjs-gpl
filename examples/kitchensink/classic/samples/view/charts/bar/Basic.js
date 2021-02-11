@@ -9,7 +9,7 @@ Ext.define('KitchenSink.view.charts.bar.Basic', {
     xtype: 'bar-basic',
     controller: 'bar-basic',
 
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     bodyStyle: 'background: transparent !important',
     layout: {
@@ -21,19 +21,38 @@ Ext.define('KitchenSink.view.charts.bar.Basic', {
         path: 'classic/samples/view/charts/bar/BasicController.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/EconomySectors.js'
+        path: 'app/store/EconomySectors.js'
     }],
-    // </example>
+    //</example>
 
-    width: 650,
+    width: '${width}',
+
+    profiles: {
+        classic: {
+            width: 650
+        },
+        neptune: {
+            width: 650
+        },
+        graphite: {
+            width: 800
+        },
+        'classic-material': {
+            width: 800
+        }
+    },
 
     items: [{
         xtype: 'cartesian',
         reference: 'chart',
         width: '100%',
         height: 500,
-        insetPadding: 40,
+        insetPadding: '10 30 10 10',
         flipXY: true,
+        captions: {
+            title: 'Industry size in major economies (2011)',
+            credits: 'Source: http://en.wikipedia.org/wiki/List_of_countries_by_GDP_sector_composition'
+        },
         interactions: {
             type: 'itemedit',
             style: {
@@ -86,41 +105,8 @@ Ext.define('KitchenSink.view.charts.bar.Basic', {
                 trackMouse: true,
                 renderer: 'onSeriesTooltipRender'
             }
-        }],
-        sprites: [{
-            type: 'text',
-            text: 'Industry size in major economies (2011)',
-            fontSize: 22,
-            width: 100,
-            height: 30,
-            x: 40, // the sprite x position
-            y: 20  // the sprite y position
-        }, {
-            type: 'text',
-            text: 'Source: http://en.wikipedia.org/wiki/List_of_countries_by_GDP_sector_composition',
-            fontSize: 10,
-            x: 12,
-            y: 490
         }]
         //<example>
-    }, {
-        style: 'padding-top: 10px;',
-        xtype: 'gridpanel',
-        columns : {
-            defaults: {
-                sortable: false,
-                menuDisabled: true
-            },
-            items: [
-                { text: 'Country', dataIndex: 'country' },
-                { text: 'Industry size', dataIndex: 'ind', renderer: 'onColumnRender', width: 200 }
-            ]
-        },
-        store: {
-            type: 'economy-sectors'
-        },
-        width: '100%'
-        //</example>
     }],
 
     tbar: [

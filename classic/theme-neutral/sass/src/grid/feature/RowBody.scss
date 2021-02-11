@@ -4,8 +4,10 @@
 
     @if $grid-no-row-lines-show-focus-border {
         .#{$prefix}grid-no-row-lines .#{$prefix}grid-row-focused & {
-            padding-top: top($grid-row-body-padding) + $grid-row-cell-border-width;
-            padding-bottom: bottom($grid-row-body-padding) - $grid-row-cell-border-width;
+            .#{$prefix}keyboard-mode & {
+                padding-top: top($grid-row-body-padding) + $grid-row-cell-border-width;
+                padding-bottom: bottom($grid-row-body-padding) - $grid-row-cell-border-width;
+            }
         }
     }
 }

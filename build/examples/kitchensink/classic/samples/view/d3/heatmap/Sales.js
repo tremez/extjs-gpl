@@ -15,7 +15,7 @@ Ext.define('KitchenSink.view.d3.heatmap.Sales', {
         'Ext.d3.HeatMap'
     ],
 
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     otherContent: [
         {
@@ -24,10 +24,10 @@ Ext.define('KitchenSink.view.d3.heatmap.Sales', {
         },
         {
             type: 'Store',
-            path: 'classic/samples/store/SalesPerEmployee.js'
+            path: 'app/store/SalesPerEmployee.js'
         }
     ],
-    // </example>
+    //</example>
 
     width: 960,
     height: 600,
@@ -57,7 +57,7 @@ Ext.define('KitchenSink.view.d3.heatmap.Sales', {
             top: 20,
             right: 30,
             bottom: 70,
-            left: 120
+            left: 135
         },
 
         xAxis: {
@@ -65,7 +65,7 @@ Ext.define('KitchenSink.view.d3.heatmap.Sales', {
                 orient: 'bottom'
             },
             scale: {
-                type: 'ordinal'
+                type: 'band'
             },
             title: {
                 text: 'Employee',
@@ -81,7 +81,7 @@ Ext.define('KitchenSink.view.d3.heatmap.Sales', {
                 orient: 'left'
             },
             scale: {
-                type: 'ordinal'
+                type: 'band'
             },
             title: {
                 text: 'Day',
@@ -105,7 +105,6 @@ Ext.define('KitchenSink.view.d3.heatmap.Sales', {
             padding: 50,
             items: {
                 count: 10,
-                slice: [1],
                 reverse: true,
                 size: {
                     x: 60,

@@ -21,5 +21,7 @@ $panel-frame-background-color: dynamic($panel-frame-base-color);
 $panel-frame-body-border-width: dynamic(0);
 $panel-tool-spacing: dynamic(2px);
 $panel-header-icon-spacing: dynamic(2px);
+$panel-header-focus-outline-style: dynamic(dotted);
+$panel-header-focus-outline-color: dynamic(adjust-color($neutral-color, $hue: 0deg, $saturation: 0%, $lightness: -66%));
 $panel-tool-focus-outline-color: dynamic(adjust-color($neutral-color, $hue: 0deg, $saturation: 0%, $lightness: -66%));
 $panel-tool-focus-outline-style: dynamic(dotted);

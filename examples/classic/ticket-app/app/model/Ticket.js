@@ -3,11 +3,11 @@
  */
 Ext.define('Ticket.model.Ticket', {
     extend: 'Ticket.model.Base',
-    
+
     requires: [
         'Ticket.override.data.field.Date'
     ],
-    
+
     statics: {
         getStatusName: function(status) {
             return this.prototype.statusNames[status];
@@ -31,7 +31,7 @@ Ext.define('Ticket.model.Ticket', {
             }
         }
     ],
-    
+
     statusNames: {
         1: 'Pending',
         2: 'Open',

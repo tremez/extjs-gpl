@@ -12,7 +12,7 @@ Ext.define('Portal.store.Markets', {
         'djia'
     ],
 
-    constructor: function (config) {
+    constructor: function(config) {
         var data = [{
                 name: 0,
                 djia: 10000,

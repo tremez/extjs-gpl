@@ -5,6 +5,7 @@
 
 .#{$prefix}legend-horizontal {
 
+
     overflow-x: auto;
     overflow-y: hidden;
 
@@ -68,7 +69,7 @@
 }
 
 .#{$prefix}legend-item {
-    padding: .8em 1em .8em $chart-legend-marker-size + 1em;
+    padding: .8em .6em .8em $chart-legend-marker-size + 1em;
     color: $chart-legend-item-color;
     background: $chart-legend-item-background;
     max-width: 16em;

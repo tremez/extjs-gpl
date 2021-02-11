@@ -62,13 +62,14 @@ Ext.define('Ext.chart.series.sprite.PieSlice', {
         series: null
     },
 
-    setGradientBBox: function (ctx, rect) {
+    setGradientBBox: function(ctx, rect) {
         var me = this,
             attr = me.attr,
             hasGradients = (attr.fillStyle && attr.fillStyle.isGradient) ||
                            (attr.strokeStyle && attr.strokeStyle.isGradient);
 
         if (hasGradients && !attr.constrainGradients) {
+            // eslint-disable-next-line vars-on-top, one-var
             var midAngle = me.getMidAngle(),
                 margin = attr.margin,
                 cx = attr.centerX,
@@ -83,19 +84,22 @@ Ext.define('Ext.chart.series.sprite.PieSlice', {
                     width: w + w,
                     height: h + h
                 };
+
             if (margin) {
                 cx += margin * Math.cos(midAngle);
                 cy += margin * Math.sin(midAngle);
             }
+
             bbox.x = matrix.x(cx, cy) - w;
             bbox.y = matrix.y(cx, cy) - h;
             ctx.setGradientBBox(bbox);
-        } else {
+        }
+        else {
             me.callParent([ctx, rect]);
         }
     },
 
-    render: function (surface, ctx, rect) {
+    render: function(surface, ctx, rect) {
         var me = this,
             attr = me.attr,
             itemCfg = {},
@@ -104,7 +108,6 @@ Ext.define('Ext.chart.series.sprite.PieSlice', {
         if (attr.renderer) {
             itemCfg = {
                 type: 'sector',
-                text: attr.text,
                 centerX: attr.centerX,
                 centerY: attr.centerY,
                 margin: attr.margin,
@@ -113,8 +116,11 @@ Ext.define('Ext.chart.series.sprite.PieSlice', {
                 startRho: Math.min(attr.startRho, attr.endRho),
                 endRho: Math.max(attr.startRho, attr.endRho)
             };
+
             changes = Ext.callback(attr.renderer, null,
-                [me, itemCfg, me.getRendererData(), me.getRendererIndex()], 0, me.getSeries());
+                                   [me, itemCfg, me.getRendererData(), me.getRendererIndex()],
+                                   0, me.getSeries());
+
             me.setAttributes(changes);
             me.useAttributes(ctx, rect);
         }
@@ -128,7 +134,7 @@ Ext.define('Ext.chart.series.sprite.PieSlice', {
         }
     },
 
-    placeLabel: function () {
+    placeLabel: function() {
         var me = this,
             attr = me.attr,
             attributeId = attr.attributeId,
@@ -147,12 +153,14 @@ Ext.define('Ext.chart.series.sprite.PieSlice', {
             labelCfg = me.labelCfg || (me.labelCfg = {}),
             label = me.getMarker('labels'),
             labelTpl = label.getTemplate(),
+            hideLessThan = labelTpl.getHideLessThan(),
             calloutLine = labelTpl.getCalloutLine(),
             labelBox, x, y, changes, params, calloutLineLength;
 
         if (calloutLine) {
             calloutLineLength = calloutLine.length || 40;
-        } else {
+        }
+        else {
             calloutLineLength = 0;
         }
 
@@ -179,16 +187,18 @@ Ext.define('Ext.chart.series.sprite.PieSlice', {
             labelCfg.rotationRads = 0;
             //<debug>
             Ext.log.warn("'series.style.rotateLabels' config is deprecated. " +
-                "Use 'series.label.orientation' config instead.");
+                         "Use 'series.label.orientation' config instead.");
             //</debug>
-        } else {
+        }
+        else {
             switch (labelTpl.attr.orientation) {
                 case 'horizontal':
                     labelCfg.rotationRads = midAngle + Math.atan2(
                         surfaceMatrix.y(1, 0) - surfaceMatrix.y(0, 0),
                         surfaceMatrix.x(1, 0) - surfaceMatrix.x(0, 0)
-                    ) + Math.PI/2;
+                    ) + Math.PI / 2;
                     break;
+
                 case 'vertical':
                     labelCfg.rotationRads = midAngle + Math.atan2(
                         surfaceMatrix.y(1, 0) - surfaceMatrix.y(0, 0),
@@ -197,50 +207,67 @@ Ext.define('Ext.chart.series.sprite.PieSlice', {
                     break;
             }
         }
+
         labelCfg.calloutColor = (calloutLine && calloutLine.color) || me.attr.fillStyle;
+
         if (calloutLine) {
             if (calloutLine.width) {
                 labelCfg.calloutWidth = calloutLine.width;
             }
-        } else {
+        }
+        else {
             labelCfg.calloutColor = 'none';
         }
+
         labelCfg.globalAlpha = attr.globalAlpha * attr.fillOpacity;
 
         // If a slice is empty, don't display the label.
         // This behavior can be overridden by a renderer.
         if (labelTpl.display !== 'none') {
+            // eslint-disable-next-line eqeqeq
             labelCfg.hidden = (attr.startAngle == attr.endAngle);
         }
 
         if (labelTpl.attr.renderer) {
+            // Note: the labels are 'put' by the Ext.chart.series.Pie.updateLabelData, so we can
+            // be sure the label sprite instances will exist and can be accessed from the label
+            // renderer on first render. For example, with 'bar' series this isn't the case,
+            // so we make a check and create a label instance if necessary.
             params = [me.attr.label, label, labelCfg, me.getRendererData(), me.getRendererIndex()];
             changes = Ext.callback(labelTpl.attr.renderer, null, params, 0, me.getSeries());
+
             if (typeof changes === 'string') {
                 labelCfg.text = changes;
-            } else {
+            }
+            else {
                 Ext.apply(labelCfg, changes);
             }
         }
+
         me.putMarker('labels', labelCfg, attributeId);
 
         labelBox = me.getMarkerBBox('labels', attributeId, true);
+
         if (labelBox) {
-            if (attr.doCallout) {
+            if (attr.doCallout &&
+                ((endAngle - startAngle) * endRho > hideLessThan || attr.highlighted)) {
                 if (labelTpl.attr.display === 'outside') {
                     me.putMarker('labels', {
                         callout: 1
                     }, attributeId);
-                } else if (labelTpl.attr.display === 'inside') {
+                }
+                else if (labelTpl.attr.display === 'inside') {
                     me.putMarker('labels', {
                         callout: 0
                     }, attributeId);
-                } else {
+                }
+                else {
                     me.putMarker('labels', {
                         callout: 1 - me.sliceContainsLabel(attr, labelBox)
                     }, attributeId);
                 }
-            } else {
+            }
+            else {
                 me.putMarker('labels', {
                     globalAlpha: me.sliceContainsLabel(attr, labelBox)
                 }, attributeId);
@@ -248,7 +275,7 @@ Ext.define('Ext.chart.series.sprite.PieSlice', {
         }
     },
 
-    sliceContainsLabel: function (attr, bbox) {
+    sliceContainsLabel: function(attr, bbox) {
         var padding = attr.labelOverflowPadding,
             middle = (attr.endRho + attr.startRho) / 2,
             outer = middle + (bbox.width + padding) / 2,
@@ -258,16 +285,20 @@ Ext.define('Ext.chart.series.sprite.PieSlice', {
         if (padding < 0) {
             return 1;
         }
+
         if (bbox.width + padding * 2 > (attr.endRho - attr.startRho)) {
             return 0;
         }
+
         l1 = Math.sqrt(attr.endRho * attr.endRho - outer * outer);
         l2 = Math.sqrt(attr.endRho * attr.endRho - inner * inner);
         sliceAngle = Math.abs(attr.endAngle - attr.startAngle);
-        l3 = (sliceAngle > Math.PI/2 ? inner : Math.abs(Math.tan(sliceAngle / 2)) * inner);
+        l3 = (sliceAngle > Math.PI / 2 ? inner : Math.abs(Math.tan(sliceAngle / 2)) * inner);
+
         if (bbox.height + padding * 2 > Math.min(l1, l2, l3) * 2) {
             return 0;
         }
+
         return 1;
     }
 });

@@ -29,7 +29,7 @@ Ext.define('Ext.device.camera.Abstract', {
 
     direction: {
         back: 0,
-        front:1
+        front: 1
     },
 
     /**

@@ -1,7 +1,8 @@
 // BelongsTo is not a real class, but is an alternate way of declaring ManyToOne.
 // The purpose of these tests is to check that they set everything up correctly,
 // functionality tested in ManyToOne.
-describe("Ext.data.schema.BelongsTo", function() {
+// false in dependencies means don't attempt to load "Ext.data.schema.BelongsTo"
+topSuite("Ext.data.schema.BelongsTo", [false, 'Ext.data.ArrayStore'], function() {
 
     var Thread, Post, User;
 
@@ -48,7 +49,7 @@ describe("Ext.data.schema.BelongsTo", function() {
         MockAjaxManager.addMethods();
         Ext.data.Model.schema.setNamespace('spec');
     });
-    
+
     afterEach(function() {
         if (Post) {
             Ext.undefine('spec.Post');
@@ -63,6 +64,7 @@ describe("Ext.data.schema.BelongsTo", function() {
             Ext.undefine('spec.Thread');
             Thread = null;
         }
+
         Ext.data.Model.schema.clear(true);
         MockAjaxManager.removeMethods();
     });
@@ -257,6 +259,7 @@ describe("Ext.data.schema.BelongsTo", function() {
                 });
 
                 var post = Post.load(1);
+
                 Ext.Ajax.mockCompleteWithData({
                     id: 1,
                     thread: {
@@ -286,13 +289,13 @@ describe("Ext.data.schema.BelongsTo", function() {
                     }
                 });
 
-                var thread = new Thread({id: 1}),
-                    post = new Post({id: 101});
+                var thread = new Thread({ id: 1 }),
+                    post = new Post({ id: 101 });
 
                 thread.posts().add(post);
                 thread.drop();
                 expect(post.dropped).toBe(true);
-            }); 
+            });
         });
     });
 
@@ -305,8 +308,8 @@ describe("Ext.data.schema.BelongsTo", function() {
                     belongsTo: 'Thread'
                 });
 
-                var thread = new Thread({id: 1}),
-                    post = new Post({id: 101});
+                var thread = new Thread({ id: 1 }),
+                    post = new Post({ id: 101 });
 
                 thread.posts().add(post);
                 expect(post.get('thread_id')).toBe(1);
@@ -322,8 +325,8 @@ describe("Ext.data.schema.BelongsTo", function() {
                     }
                 });
 
-                var thread = new Thread({id: 1}),
-                    post = new Post({id: 101});
+                var thread = new Thread({ id: 1 }),
+                    post = new Post({ id: 101 });
 
                 thread.posts().add(post);
                 expect(post.get('customField')).toBe(1);

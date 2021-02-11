@@ -15,11 +15,13 @@ Ext.define('Ext.device.FileSystem', {
 
     constructor: function() {
         var browserEnv = Ext.browser.is;
+
         if (browserEnv.WebView) {
             if (browserEnv.Cordova) {
                 return Ext.create('Ext.device.filesystem.Cordova');
             }
-        } else if (browserEnv.Chrome) {
+        }
+        else if (browserEnv.Chrome) {
             return Ext.create('Ext.device.filesystem.Chrome');
         }
 

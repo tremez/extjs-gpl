@@ -1,10 +1,12 @@
 function toggleExpandedState(el) {
     var cls = el.className || 'collapsed';
-    el.className = cls.indexOf('collapsed') !== -1?
-        cls.replace('collapsed', 'expanded') :
-        cls.replace('expanded', 'collapsed');
+
+    el.className = cls.indexOf('collapsed') !== -1
+        ? cls.replace('collapsed', 'expanded')
+        : cls.replace('expanded', 'collapsed');
 }
 
+// eslint-disable-next-line no-unused-vars
 function toggleMenu() {
     toggleExpandedState(document.getElementById('title-menu'));
 }
@@ -21,7 +23,8 @@ window.onload = function() {
     function addListener(element, eventName, handler) {
         if (element.addEventListener) {
             element.addEventListener(eventName, handler, false);
-        } else {
+        }
+        else {
             element.attachEvent('on' + eventName, handler);
         }
     }
@@ -37,22 +40,22 @@ window.onload = function() {
             '</div>' +
             '<div class="group">' +
                 '<div class="wrap">';
-                    examples = group.items;
-                    exampleLn = examples.length;
+        examples = group.items;
+        exampleLn = examples.length;
 
-                    for (j = 0; j < exampleLn; j++) {
-                        example = examples[j];
-                        html +=
-                            '<a class="example" target="_blank" href="' + example.url + '">' +
-                                '<div class="example-icon icon-' + example.icon + '"></div>' +
-                                '<div class="example-text-wrap">' +
-                                    '<div class="example-text-wrap-inner">' +
-                                        '<div class="example-title">' + example.text + '</div>' +
-                                        '<div class="example-description">' + example.desc + '</div>' +
-                                    '</div>' +
-                                '</div>' +
-                            '</a>';
-                    }
+        for (j = 0; j < exampleLn; j++) {
+            example = examples[j];
+            html +=
+                '<a class="example" target="_blank" href="' + example.url + '">' +
+                    '<div class="example-icon icon-' + example.icon + '"></div>' +
+                    '<div class="example-text-wrap">' +
+                        '<div class="example-text-wrap-inner">' +
+                            '<div class="example-title">' + example.text + '</div>' +
+                            '<div class="example-description">' + example.desc + '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</a>';
+        }
 
         html +=
                 '</div>' + // end wrap
@@ -65,14 +68,14 @@ window.onload = function() {
 
     addListener(document.body, 'click', function(e) {
         var target = e.target || e.srcElement,
-            groupHeaderClicked = false,
-            className;
+            groupHeaderClicked = false;
 
         while (target) {
             if (target.className && target.className.indexOf('group-header') !== -1) {
                 groupHeaderClicked = true;
                 break;
             }
+
             target = target.parentNode;
         }
 
@@ -86,6 +89,7 @@ window.onload = function() {
 
             // IE8 needs a repaint of the body el to trigger the stylesheet rules that hide
             // and show the group
+            // eslint-disable-next-line no-self-assign
             bodyEl.className = bodyEl.className;
 
             return false;

@@ -1,9 +1,9 @@
 /**
  * The Editor class is used to provide inline editing for elements on the page. The editor
- * is backed by a {@link Ext.form.field.Field} that will be displayed to edit the underlying content.
- * The editor is a floating Component, when the editor is shown it is automatically aligned to
- * display over the top of the bound element it is editing. The Editor contains several options
- * for how to handle key presses:
+ * is backed by a {@link Ext.form.field.Field} that will be displayed to edit the underlying
+ * content. The editor is a floating Component, when the editor is shown it is automatically
+ * aligned to display over the top of the bound element it is editing. The Editor contains several
+ * options for how to handle key presses:
  *
  * - {@link #completeOnEnter}
  * - {@link #cancelOnEsc}
@@ -75,23 +75,25 @@ Ext.define('Ext.Editor', {
 
     /**
      * @cfg {Boolean} allowBlur
-     * True to {@link #completeEdit complete the editing process} if in edit mode when focus exits from this Editor's hierarchy.
+     * True to {@link #completeEdit complete the editing process} if in edit mode when focus exits
+     * from this Editor's hierarchy.
      */
     allowBlur: true,
 
     /**
      * @cfg {Boolean/Object} autoSize
-     * True for the editor to automatically adopt the size of the underlying field. Otherwise, an object
-     * can be passed to indicate where to get each dimension. The available properties are 'boundEl' and
-     * 'field'. If a dimension is not specified, it will use the underlying height/width specified on
-     * the editor object.
+     * True for the editor to automatically adopt the size of the underlying field. Otherwise,
+     * an object can be passed to indicate where to get each dimension. The available properties
+     * are 'boundEl' and 'field'. If a dimension is not specified, it will use the underlying
+     * height/width specified on the editor object.
      * Examples:
      *
      *     autoSize: true // The editor will be sized to the height/width of the field
      *
      *     height: 21,
      *     autoSize: {
-     *         width: 'boundEl' // The width will be determined by the width of the boundEl, the height from the editor (21)
+     *         width: 'boundEl' // The width will be determined by the width of the boundEl,
+     *                          // the height from the editor (21)
      *     }
      *
      *     autoSize: {
@@ -102,16 +104,16 @@ Ext.define('Ext.Editor', {
 
     /**
      * @cfg {Boolean} revertInvalid
-     * True to automatically revert the field value and cancel the edit when the user completes an edit and the field
-     * validation fails
+     * True to automatically revert the field value and cancel the edit when the user completes
+     * an edit and the field validation fails
      */
     revertInvalid: true,
 
     /**
      * @cfg {Boolean} [ignoreNoChange=false]
-     * True to skip the edit completion process (no save, no events fired) if the user completes an edit and
-     * the value has not changed.  Applies only to string values - edits for other data types
-     * will never be ignored.
+     * True to skip the edit completion process (no save, no events fired) if the user completes
+     * an edit and the value has not changed. Applies only to string values - edits for other
+     * data types will never be ignored.
      */
 
     /**
@@ -123,7 +125,7 @@ Ext.define('Ext.Editor', {
      * @cfg {Object} value
      * The data value of the underlying field
      */
-    value : '',
+    value: '',
 
     /**
      * @cfg {String} alignment
@@ -141,37 +143,37 @@ Ext.define('Ext.Editor', {
      * @cfg {Boolean/String} shadow
      * "sides" for sides/bottom only, "frame" for 4-way shadow, and "drop" for bottom-right shadow.
      */
-    shadow : 'frame',
+    shadow: 'frame',
 
     /**
      * @cfg {Boolean} constrain
      * True to constrain the editor to the viewport
      */
-    constrain : false,
+    constrain: false,
 
     /**
      * @cfg {Boolean} swallowKeys
      * Handle the keydown/keypress events so they don't propagate
      */
-    swallowKeys : true,
+    swallowKeys: true,
 
     /**
      * @cfg {Boolean} completeOnEnter
      * True to complete the edit when the enter key is pressed.
      */
-    completeOnEnter : true,
+    completeOnEnter: true,
 
     /**
      * @cfg {Boolean} cancelOnEsc
      * True to cancel the edit when the escape key is pressed.
      */
-    cancelOnEsc : true,
+    cancelOnEsc: true,
 
     /**
      * @cfg {Boolean} updateEl
      * True to update the innerHTML of the bound element when the update completes
      */
-    updateEl : false,
+    updateEl: false,
 
     // Do not participate in the ZIndexManager's focus switching operations.
     // When an editor is hidden, the ZIndexManager will not automatically activate
@@ -194,8 +196,8 @@ Ext.define('Ext.Editor', {
 
     /**
      * @event beforestartedit
-     * Fires when editing is initiated, but before the value changes.  Editing can be canceled by returning
-     * false from the handler of this event.
+     * Fires when editing is initiated, but before the value changes.  Editing can be canceled
+     * by returning `false` from the handler of this event.
      * @param {Ext.Editor} this
      * @param {Ext.dom.Element} boundEl The underlying element bound to this editor
      * @param {Object} value The field value being set
@@ -211,10 +213,11 @@ Ext.define('Ext.Editor', {
 
     /**
      * @event beforecomplete
-     * Fires after a change has been made to the field, but before the change is reflected in the underlying
-     * field.  Saving the change to the field can be canceled by returning false from the handler of this event.
-     * Note that if the value has not changed and ignoreNoChange = true, the editing will still end but this
-     * event will not fire since no edit actually occurred.
+     * Fires after a change has been made to the field, but before the change is reflected in the
+     * underlying field. Saving the change to the field can be canceled by returning `false`
+     * from the handler of this event. Note that if the value has not changed and
+     * ignoreNoChange = true, the editing will still end but this event will not fire since no edit
+     * actually occurred.
      * @param {Ext.Editor} this
      * @param {Object} value The current field value
      * @param {Object} startValue The original field value
@@ -222,7 +225,8 @@ Ext.define('Ext.Editor', {
 
     /**
      * @event complete
-     * Fires after editing is complete and any changed value has been written to the underlying field.
+     * Fires after editing is complete and any changed value has been written to the underlying
+     * field.
      * @param {Ext.Editor} this
      * @param {Object} value The current field value
      * @param {Object} startValue The original field value
@@ -233,18 +237,19 @@ Ext.define('Ext.Editor', {
      * Fires after editing has been canceled and the editor's value has been reset.
      * @param {Ext.Editor} this
      * @param {Object} value The user-entered field value that was discarded
-     * @param {Object} startValue The original field value that was set back into the editor after cancel
+     * @param {Object} startValue The original field value that was set back into the editor after
+     * cancel
      */
 
     /**
      * @event specialkey
-     * Fires when any key related to navigation (arrows, tab, enter, esc, etc.) is pressed.  You can check
-     * {@link Ext.event.Event#getKey} to determine which key was pressed.
+     * Fires when any key related to navigation (arrows, tab, enter, esc, etc.) is pressed.
+     * You can check {@link Ext.event.Event#getKey} to determine which key was pressed.
      * @param {Ext.Editor} this
      * @param {Ext.form.field.Field} field The field attached to this editor
      * @param {Ext.event.Event} event The event object
      */
-    
+
     preventDefaultAlign: true,
     useBoundValue: true,
     specialKeyDelay: 1,
@@ -254,23 +259,26 @@ Ext.define('Ext.Editor', {
             field = me.field = Ext.ComponentManager.create(me.field || {}, 'textfield');
 
         field.msgTarget = field.msgTarget || 'qtip';
+
         me.mon(field, {
             scope: me,
             specialkey: me.onSpecialKey
         });
 
         if (field.grow) {
-            me.mon(field, 'autosize', me.onFieldAutosize,  me, {delay: 1});
+            me.mon(field, 'autosize', me.onFieldAutosize, me, { delay: 1 });
         }
+
         me.floating = {
             constrain: me.constrain
         };
+
         me.items = field;
 
         me.callParent();
     },
 
-    onAdded: function (container) {
+    onAdded: function(container) {
         // Editors are floaters and shouldn't have an ownerCt, so use ownerCmp as
         // the upward link.
         this.ownerCmp = container;
@@ -279,7 +287,7 @@ Ext.define('Ext.Editor', {
     /**
      * @private
      */
-    onFieldAutosize: function(){
+    onFieldAutosize: function() {
         this.updateLayout();
     },
 
@@ -293,6 +301,7 @@ Ext.define('Ext.Editor', {
         // Ensure the field doesn't get submitted as part of any form
         if (inputEl) {
             inputEl.dom.name = '';
+
             if (me.swallowKeys) {
                 inputEl.swallowEvent([
                     'keypress', // *** Opera
@@ -314,19 +323,24 @@ Ext.define('Ext.Editor', {
 
         if (complete || cancel) {
             event.stopEvent();
+
             if (!task) {
                 me.specialKeyTask = task = new Ext.util.DelayedTask();
             }
+
             // Must defer this slightly to prevent exiting edit mode before the field's own
             // key nav can handle the enter key, e.g. selecting an item in a combobox list
             task.delay(me.specialKeyDelay, complete ? me.completeEdit : me.cancelEdit, me);
+
             //<debug>
             // Makes unit testing easier
             if (me.specialKeyDelay === 0) {
                 task.cancel();
+
                 if (complete) {
                     me.completeEdit();
-                } else {
+                }
+                else {
                     me.cancelEdit();
                 }
             }
@@ -339,15 +353,20 @@ Ext.define('Ext.Editor', {
     /**
      * Starts the editing process and shows the editor.
      * @param {String/HTMLElement/Ext.dom.Element} el The element to edit
-     * @param {String} value (optional) A value to initialize the editor with. If a value is not provided, it defaults
-      * to the innerHTML of el.
+     * @param {String} value (optional) A value to initialize the editor with. If a value
+     * is not provided, it defaults to the innerHTML of el.
+     * @param doFocus (private)
+     * @param isResuming (private)
      */
-    startEdit: function(el, value, /* private: false means don't focus*/ doFocus) {
+    startEdit: function(el, value, doFocus, isResuming) {
         var me = this,
             field = me.field,
             dom, ownerCt, renderTo;
 
-        me.completeEdit(true);
+        if (!isResuming) {
+            me.completeEdit(true);
+        }
+
         me.boundEl = Ext.get(el);
         dom = me.boundEl.dom;
 
@@ -363,8 +382,10 @@ Ext.define('Ext.Editor', {
 
             // If NOT configured with a renderTo, render to the ownerCt's element
             // Being floating, we do not need to use the actual layout's target.
-            // Indeed, it's better if we do not so that we do not interfere with layout's child management.
+            // Indeed, it's better if we do not so that we do not interfere with layout's
+            // child management.
             Ext.suspendLayouts();
+
             if (!me.rendered) {
                 ownerCt = me.ownerCt;
                 renderTo = me.renderTo || (ownerCt && ownerCt.getEl()) || Ext.getBody();
@@ -376,17 +397,21 @@ Ext.define('Ext.Editor', {
             me.show();
             me.realign(true);
 
-            // temporarily suspend events on field to prevent the "change" event from firing when resetOriginalValue() and setValue() are called
+            // temporarily suspend events on field to prevent the "change" event from firing
+            // when resetOriginalValue() and setValue() are called
             field.suspendEvents();
             field.setValue(value);
             field.resetOriginalValue();
             field.resumeEvents();
+
             if (doFocus !== false) {
-                field.focus(field.selectOnFocus ? true : [Number.MAX_VALUE]);
+                field.focus(field.selectOnFocus ? true : [Ext.Number.MAX_SAFE_INTEGER]);
             }
+
             if (field.autoSize) {
                 field.autoSize();
             }
+
             Ext.resumeLayouts(true);
             me.toggleBoundEl(false);
             me.editing = true;
@@ -395,19 +420,24 @@ Ext.define('Ext.Editor', {
 
     /**
      * Realigns the editor to the bound field based on the current alignment config value.
-     * @param {Boolean} autoSize (optional) True to size the field to the dimensions of the bound element.
+     * @param {Boolean} autoSize (optional) True to size the field to the dimensions of the bound
+     * element.
      */
     realign: function(autoSize) {
         var me = this;
+
         if (autoSize === true) {
             me.updateLayout();
         }
+
         me.alignTo(me.boundEl, me.alignment, me.offsets);
     },
 
     /**
-     * Ends the editing process, persists the changed value to the underlying field, and hides the editor.
-     * @param {Boolean} [remainVisible=false] Override the default behavior and keep the editor visible after edit
+     * Ends the editing process, persists the changed value to the underlying field, and hides
+     * the editor.
+     * @param {Boolean} [remainVisible=false] Override the default behavior and keep the editor
+     * visible after edit
      */
     completeEdit: function(remainVisible) {
         var me = this,
@@ -426,24 +456,29 @@ Ext.define('Ext.Editor', {
         }
 
         value = me.getValue();
+
         if (!field.isValid()) {
             if (me.revertInvalid !== false) {
                 me.cancelEdit(remainVisible);
             }
+
             return;
         }
 
         if (me.ignoreNoChange && !field.didValueChange(value, startValue)) {
             me.onEditComplete(remainVisible);
+
             return;
         }
 
         if (me.fireEvent('beforecomplete', me, value, startValue) !== false) {
             // Grab the value again, may have changed in beforecomplete
             value = me.getValue();
+
             if (me.updateEl && me.boundEl) {
                 me.boundEl.setHtml(value);
             }
+
             me.onEditComplete(remainVisible, cancel);
             me.fireEvent('complete', me, value, startValue);
         }
@@ -457,9 +492,10 @@ Ext.define('Ext.Editor', {
     },
 
     /**
-     * Cancels the editing process and hides the editor without persisting any changes.  The field value will be
-     * reverted to the original starting value.
-     * @param {Boolean} [remainVisible=false] Override the default behavior and keep the editor visible after cancel
+     * Cancels the editing process and hides the editor without persisting any changes. The field
+     * value will be reverted to the original starting value.
+     * @param {Boolean} [remainVisible=false] Override the default behavior and keep the editor
+     * visible after cancel
      */
     cancelEdit: function(remainVisible) {
         var me = this,
@@ -470,13 +506,17 @@ Ext.define('Ext.Editor', {
         if (me.editing) {
             if (field) {
                 value = me.editedValue = me.getValue();
-                // temporarily suspend events on field to prevent the "change" event from firing when setValue() is called
+
+                // temporarily suspend events on field to prevent the "change" event from firing
+                // when setValue() is called
                 field.suspendEvents();
                 me.setValue(startValue);
                 field.resumeEvents();
             }
+
             me.onEditComplete(remainVisible, true);
             me.fireEvent('canceledit', me, value, startValue);
+
             delete me.editedValue;
         }
     },
@@ -486,6 +526,7 @@ Ext.define('Ext.Editor', {
      */
     onEditComplete: function(remainVisible, canceling) {
         this.editing = false;
+
         if (remainVisible !== true) {
             this.hide();
             this.toggleBoundEl(true);
@@ -498,6 +539,7 @@ Ext.define('Ext.Editor', {
         if (me.allowBlur === true && me.editing) {
             me.completeEdit();
         }
+
         me.callParent([e]);
     },
 
@@ -511,6 +553,7 @@ Ext.define('Ext.Editor', {
         else if (field.collapse) {
             field.collapse();
         }
+
         me.callParent(arguments);
     },
 
@@ -545,7 +588,7 @@ Ext.define('Ext.Editor', {
         }
 
         Ext.destroy(me.field);
-        
+
         me.callParent();
     }
 });

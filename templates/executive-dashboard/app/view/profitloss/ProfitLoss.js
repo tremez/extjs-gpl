@@ -3,7 +3,8 @@ Ext.define('ExecDashboard.view.profitloss.ProfitLoss', {
     alias: 'widget.profitloss',
     requires: [
         'Ext.grid.feature.Grouping',
-        'ExecDashboard.store.ProfitLoss'
+        'ExecDashboard.store.ProfitLoss',
+        'Ext.Responsive'
     ],
 
     itemId: 'profitloss',
@@ -65,7 +66,6 @@ Ext.define('ExecDashboard.view.profitloss.ProfitLoss', {
         groupable: false,
         locked: true,
 
-        plugins: 'responsive',
         responsiveConfig: {
             'width < 600': {
                 width: 150

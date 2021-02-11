@@ -1,0 +1,12 @@
+@if $theme-name == 'theme-material'  {
+    .simple-combo {
+        .#{$prefix}fieldset {
+            border: none !important;
+            padding: 0;
+        }
+        .#{$prefix}form-layout-wrap {
+            border-spacing: inherit;
+            padding: 10px;
+        }
+    }
+}

@@ -12,9 +12,11 @@ Ext.define('User', {
 });
 
 Ext.onReady(function() {
+    var windows;
+
     Ext.QuickTips.init();
-    
-    var windows = [{
+
+    windows = [{
         id: 'simple-expression',
         description: 'Simple expression binding with a value',
         viewModel: {
@@ -163,16 +165,17 @@ Ext.onReady(function() {
         },
         bind: '{theUser.name}'
     }];
-    
+
     Ext.Array.forEach(windows, function(win) {
         var instance = new Ext.window.Window(Ext.apply({
             autoShow: true
         }, win));
+
         windows.push(instance);
         instance.getViewModel().getScheduler().notify();
         instance.hide();
     });
-    
+
     new Ext.button.Button({
         renderTo: document.body,
         text: 'Go!',
@@ -182,7 +185,5 @@ Ext.onReady(function() {
             new Ext.app.bindinspector.Inspector();
         }
     });
-    
-    
-    
+
 });

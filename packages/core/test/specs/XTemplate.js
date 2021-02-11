@@ -1,8 +1,5 @@
-describe("Ext.XTemplate", function() {
-    var tpl,
-        data,
-        arrayData,
-        objectData;
+topSuite("Ext.XTemplate", ['Ext.dom.Element'], function() {
+    var tpl, data, arrayData, objectData;
 
         beforeEach(function() {
             data = {
@@ -17,24 +14,24 @@ describe("Ext.XTemplate", function() {
                 drinks: ["Wine", "Coffee", "Corona"],
                 something: {
                     name: "root",
-                    child : {
+                    child: {
                         name: "child"
                     }
                 },
                 kids: [{
                     name: "Joshua",
-                    age:3
-                },{
+                    age: 3
+                }, {
                     name: "Nina",
-                    age:2
-                },{
+                    age: 2
+                }, {
                     name: "Solomon",
-                    age:0
+                    age: 0
                 }],
                 computers: [{
                     cpu: "2Ghz",
                     hdd: "1To"
-                },{
+                }, {
                     cpu: "100Mhz",
                     hdd: "500Mo"
                 }]
@@ -78,12 +75,14 @@ describe("Ext.XTemplate", function() {
             expect(tpl.fn).toBe(null);
 
             var s = tpl.apply({ foo: 42 });
+
             expect(s).toBe('Hello 42');
             expect(typeof tpl.fn).toBe('function');
         });
 
+        // eslint-disable-next-line spaced-comment
         /*  begin this line with "//* to include this test or "/*" to remove it
-        it('should perform better', function () {
+        it('should perform better', function() {
             function run (name) {
                 var T = Ext[name],
                     t0 = new Date().getTime(),
@@ -143,7 +142,7 @@ describe("Ext.XTemplate", function() {
                 tpl = new Ext.XTemplate(
                     '<tpl>{name}</tpl>'
                 );
-                expect(tpl.apply({name: 'Phil'})).toEqual('Phil');
+                expect(tpl.apply({ name: 'Phil' })).toEqual('Phil');
             });
             it('should handle <tpl if=""> like <tpl>', function() {
                 tpl = new Ext.XTemplate(
@@ -173,11 +172,12 @@ describe("Ext.XTemplate", function() {
                 );
 
                 var s = tpl.apply(data);
+
                 expect(s).toEqual('<p>Joshua</p><p>Pops: Nicolas Ferrero</p>' +
                     '<p>Nina</p><p>Dad: Nicolas Ferrero</p>' +
                     '<p>Solomon</p><p>Daddy: Nicolas Ferrero</p><p>!</p>');
             });
-            
+
             it('should handle verbatim block', function() {
                 tpl = new Ext.XTemplate(
                     '<tpl for=\'kids\'>',
@@ -196,6 +196,7 @@ describe("Ext.XTemplate", function() {
                 );
 
                 var s = tpl.apply(data);
+
                 expect(s).toEqual('Nina is less than 3 and Solomon is less than 3!!!');
             });
 
@@ -217,6 +218,7 @@ describe("Ext.XTemplate", function() {
                 );
 
                 var s = tpl.apply(data);
+
                 expect(s).toEqual('Nina is less than 3 and Solomon is less than 3!!!');
             });
 
@@ -232,11 +234,12 @@ describe("Ext.XTemplate", function() {
                 );
 
                 var s = tpl.apply(data);
+
                 expect(s).toEqual('Josh Nina Solomon!!!');
             });
 
             // From http://www.sencha.com/forum/showthread.php?142918
-            it('should handle single quotes', function () {
+            it('should handle single quotes', function() {
                 tpl = new Ext.XTemplate(
                         '<tpl for=".">',
                             '<div class="dv-grup-body">',
@@ -261,20 +264,21 @@ describe("Ext.XTemplate", function() {
                         { id: 'foo', test: 0, sample: 3, cmpName: 'cname', name: 'Name', icon: 'ico' }
                     ]
                 });
-                expect(s).toEqual('<div class="dv-grup-body">'+
-                        '<div class="dv-element small" id="foo" test="0" sample="3" cmpName="cname">'+
-                        '<span>'+
-                            '<img src="img/icons/ico.png" title="Name" align="left">'+
-                            '<img src="img/icons/warning.png" align="right" title="Sample Text 2">'+
-                            '<span class="boldText" style="float:left;">'+
-                                'Name'+
-                            '</span>'+
-                        '</span>'+
+
+                expect(s).toEqual('<div class="dv-grup-body">' +
+                        '<div class="dv-element small" id="foo" test="0" sample="3" cmpName="cname">' +
+                        '<span>' +
+                            '<img src="img/icons/ico.png" title="Name" align="left">' +
+                            '<img src="img/icons/warning.png" align="right" title="Sample Text 2">' +
+                            '<span class="boldText" style="float:left;">' +
+                                'Name' +
+                            '</span>' +
+                        '</span>' +
                     '</div></div>'
                     );
             });
         });
-        
+
         describe("switch", function() {
             it('should handle switch, case and default with numbers', function() {
                 tpl = new Ext.XTemplate(
@@ -291,6 +295,7 @@ describe("Ext.XTemplate", function() {
                 );
 
                 var s = tpl.apply(data);
+
                 expect(s).toEqual('<p>Joshua is 3...</p><p>Nina is 2...</p><p>Solomon is 0!</p><p>!</p>');
             });
 
@@ -307,9 +312,10 @@ describe("Ext.XTemplate", function() {
                 );
 
                 var s = tpl.apply(data);
+
                 expect(s).toEqual('<p>Joshua is a boy</p><p>Nina is a girl!</p><p>Solomon is a boy</p><p>!</p>');
             });
-            
+
             it("should be able to switch on xindex", function() {
                 tpl = new Ext.XTemplate([
                     '<tpl for=".">',
@@ -321,7 +327,7 @@ describe("Ext.XTemplate", function() {
                             '<tpl default>Bigger',
                         '</tpl>',
                     '</tpl>']);
-      
+
                 expect(tpl.apply([1, 2, 3, 4, 5, 6])).toBe('OneTwoThreeFourBiggerBigger');
             });
 
@@ -333,7 +339,7 @@ describe("Ext.XTemplate", function() {
             });
         });
 
-        describe("for", function () {
+        describe("for", function() {
             it('should examine the data object provided if for="." is specified (include array index test)', function() {
                 tpl = new Ext.XTemplate(
                     '<p>Kids: ',
@@ -342,9 +348,10 @@ describe("Ext.XTemplate", function() {
                     '</tpl></p>'
                 );
                 var s = tpl.apply(data.kids);
+
                 expect(s).toEqual('<p>Kids: <p>1. Joshua</p><p>2. Nina</p><p>3. Solomon</p></p>');
             });
-            
+
             it('should insert "between" values', function() {
                 tpl = new Ext.XTemplate(
                     '<p>Kids: ',
@@ -353,10 +360,11 @@ describe("Ext.XTemplate", function() {
                     '</tpl></p>'
                 );
                 var s = tpl.apply(data.kids);
+
                 expect(s).toEqual('<p>Kids: 1. Joshua,2. Nina,3. Solomon</p>');
             });
 
-            it('should handle "." and "parent" in loop', function () {
+            it('should handle "." and "parent" in loop', function() {
                 var tpl = new Ext.XTemplate(
                     '<div id="{id}-body" class="{baseCls}-body',
                     '<tpl if="bodyCls"> {bodyCls}</tpl>',
@@ -366,6 +374,7 @@ describe("Ext.XTemplate", function() {
                     '<tpl if="bodyStyle"> style="{bodyStyle}"</tpl>>',
                     '</div>'
                 );
+
                 var s = tpl.apply({
                     baseCls: 'x-panel-header',
                     componentCls: 'x-panel-header',
@@ -374,6 +383,7 @@ describe("Ext.XTemplate", function() {
                     ui: 'default',
                     uiCls: ['horizontal', 'top']
                 });
+
                 expect(s).toEqual('<div id="header-1026-body" class="x-panel-header-body x-panel-header-body-default-horizontal x-panel-header-body-default-top"></div>');
             });
 
@@ -399,6 +409,7 @@ describe("Ext.XTemplate", function() {
                     '</tpl></p>'
                 );
                 var s = tpl.apply(data);
+
                 expect(s).toEqual('<p>Computer: <p>Cpu: 2Ghz Hdd: 1To User: Nicolas Ferrero</p><p>Cpu: 100Mhz Hdd: 500Mo User: Nicolas Ferrero</p></p>');
             });
 
@@ -415,7 +426,7 @@ describe("Ext.XTemplate", function() {
                 expect(tpl.apply(data)).toEqual('<p>Name: Nicolas Ferrero</p><p>Title: Developer</p><p>Company: Sencha</p><p>Kids: <p>1. Joshua</p><p>2. Nina</p><p>3. Solomon</p></p>');
             });
 
-            describe("{.}", function(){
+            describe("{.}", function() {
                 it("should be able to auto-render flat array content with special variable {.} (include array index test)", function() {
                     tpl = new Ext.XTemplate(
                         '<p>{name}\'s favorite beverages:</p>',
@@ -426,10 +437,11 @@ describe("Ext.XTemplate", function() {
                     expect(tpl.apply(data)).toEqual("<p>Nicolas Ferrero's favorite beverages:</p><div>1 - Wine</div><div>2 - Coffee</div><div>3 - Corona</div>");
                 });
 
-                it("should render numbers, strings, booleans, and dates, but not objects or arrays", function(){
+                it("should render numbers, strings, booleans, and dates, but not objects or arrays", function() {
                     tpl = new Ext.XTemplate('<tpl for=".">{.}</tpl>');
                     var date = new Date();
-                    expect(tpl.apply([1, true, 2.3, false, 'test', [1, 2, 3], {a:1, b:2}, 'ing', date, undefined, null])).toEqual('1true2.3falsetesting' + date);
+
+                    expect(tpl.apply([1, true, 2.3, false, 'test', [1, 2, 3], { a: 1, b: 2 }, 'ing', date, undefined, null])).toEqual('1true2.3falsetesting' + date);
                 });
             });
 
@@ -441,9 +453,10 @@ describe("Ext.XTemplate", function() {
                     '</tpl>{badness}<p>Foo</p>'
                 );
                 var s = tpl.apply(data);
+
                 expect(s).toEqual("<p>Nicolas Ferrero's:</p><p>Foo</p>");
             });
-            
+
             describe("parent", function() {
 
                 it("should be able to access parent object member via the parent object", function() {
@@ -458,10 +471,11 @@ describe("Ext.XTemplate", function() {
                         '</tpl></p>'
                     );
                     var s = tpl.apply(data);
+
                     expect(s).toEqual("<p>Name: Nicolas Ferrero</p><p>Kids: <p>Joshua</p><p>Dad: Nicolas Ferrero</p><p>Nina</p><p>Dad: Nicolas Ferrero</p></p>");
                 });
-            
-                it("should set the parent to the parent array if the action is '.'", function(){
+
+                it("should set the parent to the parent array if the action is '.'", function() {
                     var tpl = new Ext.XTemplate(
                         '<tpl for=".">',
                             '{parent.specialProp}',
@@ -470,18 +484,20 @@ describe("Ext.XTemplate", function() {
                             '</tpl>',
                         '</tpl>'
                     );
-                
+
                     var data = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
+
                     data.specialProp = 'test';
                     data[0].specialProp = 'foo';
                     data[1].specialProp = 'bar';
                     data[2].specialProp = 'baz';
-                
+
                     var s = tpl.apply(data);
+
                     expect(s).toBe('testfoo1foo2foo3testbar4bar5bar6testbaz7baz8baz9');
                 });
-            
-                it("should work with nested parents", function(){
+
+                it("should work with nested parents", function() {
                     var tpl = new Ext.XTemplate(
                         '{name}',
                         '<tpl for="children">',
@@ -491,29 +507,30 @@ describe("Ext.XTemplate", function() {
                                 '</tpl>',
                         '</tpl>'
                     );
-    
-                    var s = tpl.apply({ 
-                        name : 'A1', 
-                        children : [{ 
-                            name : 'B1', 
-                            children : [{ 
-                                name : 'C1' 
+
+                    var s = tpl.apply({
+                        name: 'A1',
+                        children: [{
+                            name: 'B1',
+                            children: [{
+                                name: 'C1'
                             }, {
                                 name: 'C2'
-                            }] 
+                            }]
                         }, {
                             name: 'B2',
-                            children : [{ 
-                                name : 'C3' 
+                            children: [{
+                                name: 'C3'
                             }, {
                                 name: 'C4'
                             }]
-                        }] 
+                        }]
                     });
+
                     expect(s).toBe('A1B1A1C1B1C2B1B2A1C3B2C4B2');
                 });
 
-                it("should reset the parent correctly during looping", function(){
+                it("should reset the parent correctly during looping", function() {
                     var data = [{
                         id: 1,
                         level2: [{
@@ -566,7 +583,7 @@ describe("Ext.XTemplate", function() {
                             '</tpl>',
                         '</tpl>'
                     );
-                    
+
                     expect(tpl.apply(data)).toBe([
                         'level 1: id: 1',
                         'level 2: id: 11, parent.id: 1',
@@ -593,7 +610,7 @@ describe("Ext.XTemplate", function() {
                 expect(tpl.apply(data)).toEqual("child");
             });
 
-            it('should handle sequential for loops nested in for loop using arrays', function () {
+            it('should handle sequential for loops nested in for loop using arrays', function() {
                 // this bug one was found by Brian's calendar templates
                 tpl = new Ext.XTemplate(
                         '<tpl for="arrays">',
@@ -608,7 +625,8 @@ describe("Ext.XTemplate", function() {
                     );
 
                 var s = tpl.apply(arrayData);
-                expect(s).toEqual('_Item A1__Item A2_-Item A1--Item A2-/'+
+
+                expect(s).toEqual('_Item A1__Item A2_-Item A1--Item A2-/' +
                                   '_Item B1__Item B2_-Item B1--Item B2-/');
             });
 
@@ -622,12 +640,13 @@ describe("Ext.XTemplate", function() {
                         '{% } %}',
                         '{#}',
                     '</tpl>'
-                ).apply([1,1,1,[1,1],1]);
+                ).apply([1, 1, 1, [1, 1], 1]);
+
                 expect(result).toBe('1231245');
             });
         }); // for
-        
-        describe("foreach", function () {
+
+        describe("foreach", function() {
 
             it('should examine the data object provided if foreach="." is specified', function() {
                 var tpl = new Ext.XTemplate(
@@ -639,7 +658,7 @@ describe("Ext.XTemplate", function() {
                             '{% } %}',
                             '{$} {.}.',
                         '</tpl>'
-                    ), 
+                    ),
                     result = Ext.Array.sort(tpl.apply(objectData).split('.'));
 
                 expect(result[1]).toBe('a aValue');
@@ -649,7 +668,7 @@ describe("Ext.XTemplate", function() {
                 expect(result[5]).toBe('y yValue');
             });
 
-            it('should handle "." and "parent" in loop', function () {
+            it('should handle "." and "parent" in loop', function() {
                 var tpl = new Ext.XTemplate(
                         '<div id="{id}-body" class="{baseCls}-body',
                         '<tpl if="bodyCls"> {bodyCls}</tpl>',
@@ -666,10 +685,11 @@ describe("Ext.XTemplate", function() {
                         id: 'header-1026',
                         ui: 'default',
                         uiCls: {
-                            h: 'horizontal', 
+                            h: 'horizontal',
                             t: 'top'
                         }
                     });
+
                 expect(result).toEqual('<div id="header-1026-body" class="x-panel-header-body x-panel-header-body-default-horizontal x-panel-header-body-default-top"></div>');
             });
 
@@ -680,6 +700,7 @@ describe("Ext.XTemplate", function() {
                     '<p>{name}</p>',
                     '</tpl></p>'
                 );
+
                 expect(tpl.apply(data.kids)).toEqual('<p>Kids: <p></p></p>');
             });
 
@@ -693,15 +714,17 @@ describe("Ext.XTemplate", function() {
                         '</p>',
                     '</tpl></p>'
                 );
+
                 expect(tpl.apply(objectData)).toEqual('<p>x xValue</p>a: aValue</p><p>y yValue</p>a: aValue</p></p>');
             });
-            
+
             it('should insert "between" values', function() {
                 var tpl = new Ext.XTemplate(
                     '<tpl foreach="b" between=",">',
                         '{$}: {.}',
                     '</tpl>'
                 );
+
                 expect(tpl.apply(objectData)).toEqual('x: xValue,y: yValue');
             });
 
@@ -711,6 +734,7 @@ describe("Ext.XTemplate", function() {
                         '{#}',
                     '</tpl>'
                 );
+
                 expect(tpl.apply(data)).toEqual('123');
             });
 
@@ -721,9 +745,10 @@ describe("Ext.XTemplate", function() {
                         '<div>{#}{$}{.}{nothing1}</div>',
                     '</tpl>{badness}<p>Foo</p>'
                 );
+
                 expect(tpl.apply(data)).toEqual("<p>Nicolas Ferrero's:</p><p>Foo</p>");
             });
-            
+
             describe("parent", function() {
 
                 it("should be able to access parent object member via the parent object", function() {
@@ -732,21 +757,23 @@ describe("Ext.XTemplate", function() {
                             '<p>{parent.c}</p>',
                         '</tpl>'
                     );
+
                     expect(tpl.apply(objectData)).toEqual("<p>cValue</p><p>cValue</p>");
                 });
-            
-                it("should set the parent to the parent object if the action is '.'", function(){
+
+                it("should set the parent to the parent object if the action is '.'", function() {
                     var tpl = new Ext.XTemplate(
                             '<tpl foreach=".">',
                                 '{parent.x}',
                             '</tpl>'
-                        ), data = {
+                        ),
+                        data = {
                             x: 1,
                             y: 2,
                             z: 3
                         };
-                
-                    expect(tpl.apply(data)).toBe('111'); 
+
+                    expect(tpl.apply(data)).toBe('111');
                 });
             });
 
@@ -760,41 +787,45 @@ describe("Ext.XTemplate", function() {
                         '{% } %}',
                         '{#}',
                     '</tpl>'
-                ).apply({a:1,b:1,c:1,d:{e:1,f:1},g:1});
+                ).apply({ a: 1, b: 1, c: 1, d: { e: 1, f: 1 }, g: 1 });
+
                 expect(result).toBe('1231245');
             });
         }); // foreach
 
-        describe("insane overnesting of for and foreach loops", function () {
+        describe("insane overnesting of for and foreach loops", function() {
             it("should apply the template", function() {
                 var id = 0,
                 data = (function assignIds(data) {
                     if (data instanceof Object) {
                         data.id = id++;
+
                         if (data instanceof Array) {
                             Ext.Array.each(data, function(item) {
                                 assignIds(item);
                             });
-                        } else  {
+                        }
+                        else  {
                             Ext.Object.each(data, function(key, value) {
                                 assignIds(value);
                             });
                         }
                     }
+
                     return data;
                 })({
                     a: [{
                         b: [1, 2],
-                        c: {d: 3, e: 4}
+                        c: { d: 3, e: 4 }
                     }, {
-                        f: {g: 5, h: 6},
+                        f: { g: 5, h: 6 },
                         i: [7, 8]
                     }, [
-                        {j: 9, k: 10},
+                        { j: 9, k: 10 },
                         [11, 12]
                     ]],
                     l: {
-                        m: [{n: 13, o: 14}],
+                        m: [{ n: 13, o: 14 }],
                         p: [[15, 16], [17, 18]]
                     }
                 }),
@@ -916,6 +947,7 @@ describe("Ext.XTemplate", function() {
                     '</tpl></p>'
                 );
                 var s = tpl.apply(data);
+
                 expect(s).toEqual('<p>Name: Nicolas Ferrero</p><p>Company: SENCHA, Developer</p><p>Kids: <div class="odd">Jo.../3</div><div class="even">Nina/3</div><div class="odd">So.../3</div></p>');
             });
         });
@@ -931,6 +963,7 @@ describe("Ext.XTemplate", function() {
                 }
             );
             var s = tpl.apply(data.kids);
+
             expect(tpl.foo).toEqual(2);
             expect(s).toEqual('<p>Kids: <p></p></p>');
         });
@@ -977,7 +1010,7 @@ describe("Ext.XTemplate", function() {
                             '<p>{[this.spy.calls.length]}. {name}</p>',
                         '</tpl>',
                         {
-                            spy : jasmine.createSpy("tplMemberSpy")
+                            spy: jasmine.createSpy("tplMemberSpy")
                         });
 
                 });
@@ -986,7 +1019,6 @@ describe("Ext.XTemplate", function() {
                     tpl.apply(data);
                     expect(tpl.spy.calls.length).toEqual(3);
                 });
-
 
                 it("should be run for each item in the array with index of the loop you are in, values of the current scope, and scope of ancestor template", function() {
                     tpl.apply(data);
@@ -1009,7 +1041,7 @@ describe("Ext.XTemplate", function() {
                             '</tpl>',
                         '</tpl>',
                         {
-                            inc : 0
+                            inc: 0
                         });
 
                 });
@@ -1028,6 +1060,7 @@ describe("Ext.XTemplate", function() {
 
     describe("template member functions", function() {
         var spy;
+
         beforeEach(function() {
             spy = jasmine.createSpy("membersArguments").andCallFake(function(value, suffix, limit) {
                 return Ext.String.ellipsis(value + ' ' + suffix, 13);
@@ -1055,7 +1088,7 @@ describe("Ext.XTemplate", function() {
                         return "Js " + title;
                     },
                     isGirl: function(name) {
-                        return name == 'Nina';
+                        return name === 'Nina';
                     },
                     isBaby: function(age) {
                         return age < 1;
@@ -1067,6 +1100,7 @@ describe("Ext.XTemplate", function() {
 
         it("should call members functions using various methods", function() {
             var s = tpl.apply(data);
+
             expect(s).toEqual("<p>Mr. Nicolas Ferrero</p><p>Company: Sencha Inc...</p><p>Title: Js Developer</p><p>Kids: <p>Boy: Joshua - 3</p><p>Girl: Nina - 2</p><p>Boy: Solomon - 0</p><p>Solomon is a baby!</p></p>");
         });
 
@@ -1087,17 +1121,18 @@ describe("Ext.XTemplate", function() {
             expect(tpl.apply(data)).toEqual("<p>8 -4 9 1.5</p><p>13</p><p>7 -5 6 1</p><p>12</p><p>5 -7 0 0</p><p>10</p>");
         });
     });
-    
-    describe("special characters", function(){
-        it("should handle newlines", function(){
+
+    describe("special characters", function() {
+        it("should handle newlines", function() {
             tpl = new Ext.XTemplate('<div>\n</div>');
             expect(tpl.apply()).toBe('<div>\n</div>');
         });
-        
-        it("should handle empty braces", function(){
+
+        it("should handle empty braces", function() {
             var s = 'cfg = cfg || {};';
+
             tpl = new Ext.XTemplate(s);
-            expect(tpl.apply()).toBe(s);    
+            expect(tpl.apply()).toBe(s);
         });
 
         it("should handle curly braces literally if there is no tag match", function() {
@@ -1110,38 +1145,38 @@ describe("Ext.XTemplate", function() {
         });
     });
 
-    describe("Undefined and non-string properties", function(){
-        it("should ignore undefined", function () {
+    describe("Undefined and non-string properties", function() {
+        it("should ignore undefined", function() {
             tpl = new Ext.XTemplate('-{foo}-');
             expect(tpl.apply({})).toBe('--');
         });
-        it("should ignore null", function () {
+        it("should ignore null", function() {
             tpl = new Ext.XTemplate('-{foo}-');
-            expect(tpl.apply({foo:null})).toBe('--');
+            expect(tpl.apply({ foo: null })).toBe('--');
         });
-        it("should ignore an empty string", function(){
+        it("should ignore an empty string", function() {
             tpl = new Ext.XTemplate('-{foo}-');
-            expect(tpl.apply({foo:''})).toBe('--');
+            expect(tpl.apply({ foo: '' })).toBe('--');
         });
-        it("should stringify false", function(){
+        it("should stringify false", function() {
             tpl = new Ext.XTemplate('-{foo}-');
-            expect(tpl.apply({foo:false})).toBe('-false-');
+            expect(tpl.apply({ foo: false })).toBe('-false-');
         });
-        it("should stringify zero", function(){
+        it("should stringify zero", function() {
             tpl = new Ext.XTemplate('-{foo}-');
-            expect(tpl.apply({foo:0})).toBe('-0-');
+            expect(tpl.apply({ foo: 0 })).toBe('-0-');
         });
-        it("should evaluate undefined as false", function(){
+        it("should evaluate undefined as false", function() {
             tpl = new Ext.XTemplate('<tpl if="foo">foo<tpl else>not foo</tpl>');
             expect(tpl.apply({})).toBe('not foo');
         });
-        it("should evaluate null as false", function(){
+        it("should evaluate null as false", function() {
             tpl = new Ext.XTemplate('<tpl if="foo">foo<tpl else>not foo</tpl>');
-            expect(tpl.apply({foo:null})).toBe('not foo');
+            expect(tpl.apply({ foo: null })).toBe('not foo');
         });
-        it("should evaluate zero as false", function(){
+        it("should evaluate zero as false", function() {
             tpl = new Ext.XTemplate('<tpl if="foo">foo<tpl else>not foo</tpl>');
-            expect(tpl.apply({foo:0})).toBe('not foo');
+            expect(tpl.apply({ foo: 0 })).toBe('not foo');
         });
     });
 
@@ -1149,7 +1184,7 @@ describe("Ext.XTemplate", function() {
         var appliedObject;
 
         beforeEach(function() {
-            appliedObject = {a: "123", b: "456789"};
+            appliedObject = { a: "123", b: "456789" };
         });
 
         describe("enabled", function() {
@@ -1169,7 +1204,7 @@ describe("Ext.XTemplate", function() {
             beforeEach(function() {
                 tpl = new Ext.XTemplate(
                     '{a:ellipsis(2)}',
-                    {disableFormats: true}
+                    { disableFormats: true }
                 );
             });
 
@@ -1178,8 +1213,8 @@ describe("Ext.XTemplate", function() {
             });
         });
 
-        describe('method', function () {
-            it('should call a basic method', function () {
+        describe('method', function() {
+            it('should call a basic method', function() {
                 tpl = new Ext.XTemplate(
                     'Linkify: {text:this.linkify}',
                     {
@@ -1192,6 +1227,7 @@ describe("Ext.XTemplate", function() {
                     }
                 );
                 var s = tpl.apply({ text: 'This page http://foo.bar.com/foobar.html is cool' });
+
                 expect(s).toEqual('Linkify: This page <a target="_blank" href="http://foo.bar.com/foobar.html">http://foo.bar.com/foobar.html</a> is cool');
             });
         });
@@ -1201,8 +1237,8 @@ describe("Ext.XTemplate", function() {
         var elWithHtml, elWithValue;
 
         beforeEach(function() {
-            elWithHtml =  Ext.getBody().createChild({tag: "div", html:"FOO {0}."});
-            elWithValue =  Ext.getBody().createChild({tag: "input"});
+            elWithHtml =  Ext.getBody().createChild({ tag: "div", html: "FOO {0}." });
+            elWithValue =  Ext.getBody().createChild({ tag: "input" });
             elWithValue.dom.value = "BAR {0}.";
         });
 
@@ -1224,35 +1260,41 @@ describe("Ext.XTemplate", function() {
         });
     });
 
-    describe('strict mode', function () {
-        it('should throw when substitution token is invalid', function () {
+    describe('strict mode', function() {
+        it('should throw when substitution token is invalid', function() {
             var tpl = new Ext.XTemplate('{foo.bar.baz}', {
                 strict: true
             });
 
-            expect(function () {
+            expect(function() {
                 tpl.apply({});
             }).toThrow();
         });
 
-        it('should throw when for expression is invalid', function () {
+        it('should throw when for expression is invalid', function() {
             var tpl = new Ext.XTemplate('<tpl for="foo.bar.baz">{.}</tpl>', {
                 strict: true
             });
 
-            expect(function () {
+            expect(function() {
                 tpl.apply({});
             }).toThrow();
         });
 
-        it('should throw when if expression is invalid', function () {
+        it('should throw when if expression is invalid', function() {
             var tpl = new Ext.XTemplate('<tpl if="foo.bar.baz">{.}</tpl>', {
                 strict: true
             });
 
-            expect(function () {
+            expect(function() {
                 tpl.apply({});
             }).toThrow();
+        });
+    });
+
+    describe('single token', function() {
+        it('should not coerce a single token to be a string', function() {
+            expect(new Ext.XTemplate('{foo}').apply({ foo: 1 })).toBe(1);
         });
     });
 });

@@ -17,7 +17,7 @@ Ext.define('Ext.layout.container.SegmentedButton', {
             i, ln;
 
         if (me.owner.getVertical()) {
-            for (i = 0, ln = result.length; i< ln; i++) {
+            for (i = 0, ln = result.length; i < ln; i++) {
                 result[i] = {
                     cls: me._btnRowCls,
                     cn: result[i]
@@ -35,15 +35,16 @@ Ext.define('Ext.layout.container.SegmentedButton', {
     },
 
     onDestroy: function() {
+        var targetEl, row;
+
         // The items of a Segmented Button create an Ext.dom.Element reference
         // to their "container" element (see Ext.util.Renderable#finishRender)
         // for vertical Segmented Buttons this container ends up being the
         // 'segmented-button-row' element, which is not a childEl of either the container
         // or the layout and so it does not get automatically cleaned up upon destruction,
         // leaving the element orphaned, unless we destroy it now.
-        if (this.rendered) {
-            var targetEl = this.getRenderTarget(),
-                row;
+        if (this.owner.rendered) {
+            targetEl = this.getRenderTarget();
 
             while ((row = targetEl.last())) {
                 row.destroy();

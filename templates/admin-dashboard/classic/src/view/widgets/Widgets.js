@@ -93,7 +93,7 @@ Ext.define('Admin.view.widgets.Widgets', {
             data: {
                 amount: 244,
                 type: 'Files',
-                icon: 'file-text'
+                icon: 'file-alt'
             }
         },
         {
@@ -133,7 +133,7 @@ Ext.define('Admin.view.widgets.Widgets', {
             data: {
                 amount: 244,
                 type: 'Files',
-                icon: 'file-text'
+                icon: 'file-alt'
             }
         }
     ]

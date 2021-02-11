@@ -17,7 +17,7 @@ Ext.define('Admin.view.forms.SpecialOffer', {
                     'Members get <span class="specialoffer-discount">50%</span> more points, ' +
                     'so register today and start earning points for savings on great rewards!' +
                 '</div>' +
-                '<a class="specialoffer-link fa fa-arrow-right" href="#faq">' +
+                '<a class="specialoffer-link x-fa fa-arrow-right" href="#faq">' +
                     'Learn More...</a>' +
             '</div>' +
         '</div>'

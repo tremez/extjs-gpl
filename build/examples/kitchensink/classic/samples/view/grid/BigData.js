@@ -23,38 +23,78 @@ Ext.define('KitchenSink.view.grid.BigData', {
 
     requires: [
         'Ext.grid.filters.Filters',
-        'Ext.grid.plugin.Exporter'
+        'Ext.grid.plugin.Exporter',
+        'Ext.sparkline.Line',
+        'Ext.ux.rating.Picker'
     ],
 
     //<example>
     otherContent: [{
         type: 'Controller',
         path: 'classic/samples/view/grid/BigDataController.js'
-    },{
+    }, {
         type: 'Store',
         path: 'classic/samples/store/BigData.js'
-    },{
+    }, {
         type: 'Model',
         path: 'classic/samples/model/grid/Employee.js'
     }],
     //</example>
 
     title: 'Editable Big Data Grid',
-    width: 910,
-    height: 400,
-
+    width: '${width}',
+    height: '${height}',
+    profiles: {
+        classic: {
+            width: 910,
+            height: 400,
+            employeeGridWidth: 325,
+            idColumnWidth: 80,
+            nameColumnWidth: 140,
+            dobColumnWidth: 115,
+            emailColumnWidth: 200,
+            fieldStyle: ''
+        },
+        neptune: {
+            width: 910,
+            height: 400,
+            employeeGridWidth: 325,
+            idColumnWidth: 80,
+            nameColumnWidth: 140,
+            dobColumnWidth: 115,
+            emailColumnWidth: 200,
+            fieldStyle: ''
+        },
+        graphite: {
+            width: 1000,
+            height: 500,
+            employeeGridWidth: 395,
+            idColumnWidth: 100,
+            nameColumnWidth: 190,
+            dobColumnWidth: 145,
+            emailColumnWidth: 290,
+            fieldStyle: 'background-color: #aeaeae;'
+        },
+        'classic-material': {
+            width: 1000,
+            height: 500,
+            employeeGridWidth: 395,
+            idColumnWidth: 100,
+            nameColumnWidth: 190,
+            dobColumnWidth: 150,
+            emailColumnWidth: 290,
+            fieldStyle: ''
+        }
+    },
     store: 'BigData',
     columnLines: true,
     multiColumnSort: true,
 
-    // We do not need automatic height synching.
-    syncRowHeight: false,
-
     features: [{
-        ftype : 'groupingsummary',
-        groupHeaderTpl : '{name}',
-        hideGroupedHeader : false,
-        enableGroupingMenu : false
+        ftype: 'groupingsummary',
+        groupHeaderTpl: '{name}',
+        hideGroupedHeader: false,
+        enableGroupingMenu: false
     }, {
         ftype: 'summary',
         dock: 'bottom'
@@ -62,12 +102,12 @@ Ext.define('KitchenSink.view.grid.BigData', {
 
     layout: 'border',
     split: true,
-    
+
     lockedGridConfig: {
         title: 'Employees',
         header: false,
         collapsible: true,
-        width: 325,
+        width: '${employeeGridWidth}',
         minWidth: 290,
         forceFit: true
     },
@@ -76,7 +116,7 @@ Ext.define('KitchenSink.view.grid.BigData', {
         type: 'checkboxmodel',
         checkOnly: true
     },
-    
+
     listeners: {
         headermenucreate: 'onHeaderMenuCreate',
         // this event notifies us when the document was saved
@@ -84,7 +124,7 @@ Ext.define('KitchenSink.view.grid.BigData', {
         beforedocumentsave: 'onBeforeDocumentSave'
     },
 
-    columns:[{
+    columns: [{
         xtype: 'rownumberer',
         width: 40,
         sortable: false,
@@ -94,7 +134,7 @@ Ext.define('KitchenSink.view.grid.BigData', {
         sortable: true,
         dataIndex: 'employeeNo',
         groupable: false,
-        width: 80,
+        width: '${idColumnWidth}',
         locked: true,
         editRenderer: 'bold'
     }, {
@@ -105,7 +145,7 @@ Ext.define('KitchenSink.view.grid.BigData', {
             sorterFn: 'nameSorter' // set controller
         },
 
-        width: 140,
+        width: '${nameColumnWidth}',
         groupable: false,
 
         layout: 'hbox',
@@ -116,8 +156,9 @@ Ext.define('KitchenSink.view.grid.BigData', {
         },
         items: {
             xtype: 'textfield',
+            fieldStyle: '${fieldStyle}',
             reference: 'nameFilterField',
-            flex : 1,
+            flex: 1,
             margin: 2,
             enableKeyEvents: true,
             listeners: {
@@ -140,7 +181,7 @@ Ext.define('KitchenSink.view.grid.BigData', {
         dataIndex: 'dob',
         xtype: 'datecolumn',
         groupable: false,
-        width: 115,
+        width: '${dobColumnWidth}',
         filter: {
 
         },
@@ -189,7 +230,7 @@ Ext.define('KitchenSink.view.grid.BigData', {
         text: 'Email address',
         dataIndex: 'email',
 
-        width: 200,
+        width: '${emailColumnWidth}',
         groupable: false,
         renderer: 'renderMailto',
         editor: {
@@ -251,6 +292,15 @@ Ext.define('KitchenSink.view.grid.BigData', {
             }
         }]
     }, {
+        text: 'Rating<br>This Year',
+        dataIndex: 'ratingThisYear',
+        groupable: false,
+        xtype: 'widgetcolumn',
+        widget: {
+            xtype: 'rating',
+            tip: 'Set to {tracking:plural("Star")}'
+        }
+    }, {
         text: 'Salary',
         width: 155,
         sortable: true,
@@ -278,43 +328,65 @@ Ext.define('KitchenSink.view.grid.BigData', {
     viewConfig: {
         stripeRows: true
     },
-    
+
     header: {
         itemPosition: 1, // after title before collapse tool
         items: [{
             ui: 'default-toolbar',
             xtype: 'button',
+            cls: 'dock-tab-btn',
             text: 'Export to ...',
             menu: {
+                defaults: {
+                    handler: 'exportTo'
+                },
                 items: [{
-                    text:   'Excel xlsx',
-                    handler: 'exportToXlsx'
-                },{
+                    text: 'Excel xlsx',
+                    cfg: {
+                        type: 'excel07',
+                        ext: 'xlsx',
+                        includeGroups: true,
+                        includeSummary: true
+                    }
+                }, {
                     text: 'Excel xml',
-                    handler: 'exportToXml'
-                },{
-                    text:   'CSV',
-                    handler: 'exportToCSV'
-                },{
-                    text:   'TSV',
-                    handler: 'exportToTSV'
-                },{
-                    text:   'HTML',
-                    handler: 'exportToHtml'
+                    cfg: {
+                        type: 'excel03',
+                        ext: 'xml',
+                        includeGroups: true,
+                        includeSummary: true
+                    }
+                }, {
+                    text: 'CSV',
+                    cfg: {
+                        type: 'csv'
+                    }
+                }, {
+                    text: 'TSV',
+                    cfg: {
+                        type: 'tsv',
+                        ext: 'csv'
+                    }
+                }, {
+                    text: 'HTML',
+                    cfg: {
+                        type: 'html',
+                        includeGroups: true,
+                        includeSummary: true
+                    }
                 }]
             }
         }]
     },
 
-    plugins: [{
-        ptype: 'gridfilters'
-    }, {
-        ptype: 'rowexpander',
-
-        // dblclick invokes the row editor
-        expandOnDblClick: false,
-        rowBodyTpl: '<img src="{avatar}" height="100px" style="float:left;margin:0 10px 5px 0"><b>{name}<br></b>{dob:date}'
-    }, {
-        ptype: 'gridexporter'
-    }]
+    plugins: {
+        gridfilters: true,
+        gridexporter: true,
+        rowexpander: {
+            // dblclick invokes the row editor
+            expandOnDblClick: false,
+            rowBodyTpl: '<img src="{avatar}" height="100px" ' +
+                'style="float:left;margin:0 10px 5px 0"><b>{name}<br></b>{dob:date}'
+        }
+    }
 });

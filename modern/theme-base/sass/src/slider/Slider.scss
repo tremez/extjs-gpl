@@ -3,14 +3,15 @@
  */
 
 .#{$prefix}slider {
-    @include st-box();
-    @include st-box-align(center);
+    position: relative;
+    display: flex;
+    align-items: center;
 
     .#{$prefix}track-el {
         width: 100%;
         position: relative;
-        @include st-box();
-        @include st-box-align(center);
+        display: flex;
+        align-items: center;
     }
 
     .#{$prefix}thumb-wrap-el {

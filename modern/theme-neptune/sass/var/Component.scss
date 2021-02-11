@@ -5,7 +5,7 @@ $touch-theme-neptune: true;
  */
 
 /**
- * @var {boolean} $enable-default-uis
+ * @var {boolean} $include-default-uis
  * Decides whether or not to include the default UIs for all components.
  */
 $include-default-uis: dynamic(true); //legacy fallback < 6.1
@@ -20,7 +20,7 @@ $include-highlights: dynamic(true);
 $enable-highlights: dynamic($include-highlights); // Can disable all theme-generated gradients, text-shadows, and box-shadows.
 
 /**
- * @var {boolean} $enable-border-radius
+ * @var {boolean} $include-border-radius
  * Optionally disable all border-radius. Useful for CSS debugging, non-performant browsers, or minimalist designs.
  */
 $include-border-radius: dynamic(true); //legacy fallback < 6.1
@@ -123,14 +123,14 @@ $font-family: dynamic(helvetica, arial, sans-serif);
  * @var {number} $font-size
  * The base font-size to be used throughout the theme.
  */
-$font-size: dynamic(pxToRootPct(13px));
+$font-size: dynamic(13px);
 
 /**
  * @var {number}
  * The base font-size to be used throughout the theme in the
  * {@link Global_CSS#$enable-big big} sizing scheme
  */
-$font-size-big: dynamic(pxToRootPct(15px));
+$font-size-big: dynamic(15px);
 
 /**
  * @var {number} $line-height
@@ -161,7 +161,7 @@ $active-color: dynamic(darken(saturate($base-color, 55%), 10%));
  * The minimum row height for items like toolbars.
  * @private
  */
-$global-row-height: dynamic(2.6em);
+$global-row-height: dynamic(34px);
 
 /**
  * @var {measurement} $global-list-height
@@ -174,7 +174,7 @@ $global-list-height: dynamic(46px);
  * @var {color} $loading-spinner-color
  * Background-color for the bars in the loading spinner.
  */
-$loading-spinner-color: dynamic(#aaa);
+$loading-spinner-color: dynamic(#333);
 
 /**
  * @var {boolean}
@@ -196,25 +196,42 @@ $font-weight-normal: dynamic(normal);
  */
 $font-weight-bold: dynamic(bold);
 
+//# fashion replaces $include-css-variables
 /**
- * @var {boolean} enable-css-variables
+ * @var {boolean} $enable-css-variables
  * When true will reference CSS variables for all exported variables
  * used in the theme. Otherwise normal sass conversion will apply.
  */
-$include-css-variables: dynamic(true); //legacy fallback < 6.1
-$enable-css-variables: dynamic($include-css-variables);
+$enable-css-variables: dynamic(true);
 
 /**
- @var {string} $css-variable-selector
- Selector to determine where CSS variables are inserted
+ * @var {string} $css-variable-selector
+ * Selector to determine where CSS variables are inserted
  */
 $css-variable-selector: dynamic(':root');
 
 /**
- * @var {number} default-calc-value
+ * @var {number} $default-calc-value
  * Number that is used to replace null values in calc formulas
  * @private
  */
 $default-calc-value: dynamic(0%);
 
 $background-color: dynamic(#fff);
+
+$color-by-background-dark-color: dynamic($highlight-color);
+$color-by-background-light-color: dynamic($light-color);
+
+/**
+ * @var {string}
+ * Cursor for draggable components
+ */
+$draggable-cursor: dynamic(move);
+
+//----------------------------------------------------------------------------------
+// Font Icons
+
+$fi-class-name: dynamic(#{$prefix}fa);
+$fi-icon-angle-left: dynamic(fa-angle-left);
+$fi-icon-angle-right: dynamic(fa-angle-right);
+$fi-icon-arrow-left: dynamic(fa-arrow-left);

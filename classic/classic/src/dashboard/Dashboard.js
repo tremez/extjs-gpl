@@ -25,7 +25,9 @@ Ext.define('Ext.dashboard.Dashboard', {
 
     scrollable: true,
 
-    layout: null,
+    layout: {
+        type: 'dashboard'
+    },
 
     stateful: false,
 
@@ -53,11 +55,11 @@ Ext.define('Ext.dashboard.Dashboard', {
      * An array designating the width of columns in your dashboard's default state as described
      * by the {@link #cfg-defaultContent} property. For example:
      *
-     *    columnWidths: [
-     *       0.35,
-     *       0.40,
-     *       0.25
-     *    ]
+     *     columnWidths: [
+     *        0.35,
+     *        0.40,
+     *        0.25
+     *     ]
      *    
      * As you can see, this array contains the default widths for the 3 columns in the dashboard's 
      * initial view. The column widths should total to an integer value, typically 1 as shown
@@ -72,13 +74,14 @@ Ext.define('Ext.dashboard.Dashboard', {
 
     /**
      * @cfg {Object[]} defaultContent
-     * An array of {@link Ext.dashboard.Part part} configuration objects that define your dashboard's
-     * default state. These should not be confused with component configurations.
+     * An array of {@link Ext.dashboard.Part part} configuration objects that define your
+     * dashboard's default state. These should not be confused with component configurations.
      *
      * Each config object should also include:
      *
      * + `type` - The type of {@link Ext.dashboard.Part part} that you want to be generated.
-     * + `columnIndex` - The column position in which the {@link Ext.dashboard.Part part} should reside.
+     * + `columnIndex` - The column position in which the {@link Ext.dashboard.Part part} should
+     * reside.
      * + `height` - The desired height of the {@link Ext.dashboard.Part part} to be generated.
      *
      * The remaining properties are specific to your part's config object. For example:      
@@ -130,29 +133,25 @@ Ext.define('Ext.dashboard.Dashboard', {
      * @event drop
      */
 
-    initComponent: function () {
+    initComponent: function() {
         var me = this;
 
-        if (!me.layout) {
-            me.layout = {
-                type: 'dashboard'
-            };
-        }
-
         me.callParent();
+        me.addStateEvents('remove');
     },
 
-    applyParts: function (parts, collection) {
+    applyParts: function(parts, collection) {
+        var id, part;
+
         if (!collection) {
             collection = new Ext.util.Collection({
                 decoder: Ext.Factory.part
             });
         }
 
-        var id, part;
-
         for (id in parts) {
             part = parts[id];
+
             if (Ext.isString(part)) {
                 part = {
                     type: part
@@ -167,23 +166,26 @@ Ext.define('Ext.dashboard.Dashboard', {
         return collection;
     },
 
-    /** @private */
-    getPart: function (type) {
+    /**
+     * @private
+     */
+    getPart: function(type) {
         var parts = this.getParts();
+
         return parts.getByKey(type);
     },
 
-    addNew: function (type, columnIndex, beforeAfter) {
+    addNew: function(type, columnIndex, beforeAfter) {
         var me = this,
             part = me.getPart(type);
 
-        part.displayForm(null, null, function (config) {
+        part.displayForm(null, null, function(config) {
             config.type = type;
             me.addView(config, columnIndex, beforeAfter);
         });
     },
 
-    addView: function (instance, columnIndex, beforeAfter) {
+    addView: function(instance, columnIndex, beforeAfter) {
         var me = this,
             // We are only concerned with columns (ignore splitters).
             items = me.query('dashboard-column'),
@@ -222,6 +224,7 @@ Ext.define('Ext.dashboard.Dashboard', {
         }
 
         column = me.createColumn();
+
         if (columnWidths) {
             column.columnWidth = columnWidths[index] || (columnWidths[index] = 1);
         }
@@ -236,21 +239,21 @@ Ext.define('Ext.dashboard.Dashboard', {
         return column.items.first();
     },
 
-    createColumn: function (config) {
+    createColumn: function(config) {
         var cycle = this.cycleLayout;
+
         return Ext.apply({
-            items : [],
-            bubbleEvents : ['add', 'remove', 'childmove', 'resize'],
+            items: [],
+            bubbleEvents: ['add', 'childmove', 'resize'],
             listeners: {
-                remove: this.onRemoveItem,
-                expand  : cycle,
-                collapse : cycle,
+                expand: cycle,
+                collapse: cycle,
                 scope: this
             }
         }, config);
     },
 
-    createView: function (config) {
+    createView: function(config) {
         var me = this,
             type = config.type,
             part = me.getPart(type),
@@ -262,11 +265,18 @@ Ext.define('Ext.dashboard.Dashboard', {
 
         view.bubbleEvents = Ext.Array.from(view.bubbleEvents).concat(['expand', 'collapse']);
         view.stateful = me.stateful;
+
+        view.listeners = {
+            removed: this.onItemRemoved,
+            scope: this
+        };
+
         return view;
     },
 
-    initEvents : function(){
+    initEvents: function() {
         this.callParent();
+
         this.dd = new Ext.dashboard.DropZone(this, this.dropConfig);
     },
 
@@ -274,45 +284,47 @@ Ext.define('Ext.dashboard.Dashboard', {
      * Readjust column/splitter heights for collapsing child panels
      * @private
      */
-    cycleLayout : function() {
-         this.updateLayout();
+    cycleLayout: function() {
+        this.updateLayout();
     },
 
     doDestroy: function() {
         if (this.dd) {
             Ext.destroy(this.dd);
         }
-        
+
         this.callParent();
     },
 
     //-------------------------------------------------
     // State and Item Persistence
 
-    applyState: function (state) {
+    applyState: function(state) {
         delete state.items;
-        var me = this;
-        me.callParent([state]);
 
-        var columnWidths = state.columnWidths,
+        this.callParent([state]);
+
+        // eslint-disable-next-line vars-on-top
+        var me = this,
+            columnWidths = state.columnWidths,
             items = me.items.items,
             length = items.length,
-            i, n;
+            columnLength = columnWidths ? columnWidths.length : 0,
+            i;
 
         // Splitters have not been inserted so the length is sans-splitter
-        if (columnWidths) {
-            n = columnWidths.length;
+        if (columnLength) {
             me.columnWidths = [];
 
             for (i = 0; i < length; ++i) {
                 me.columnWidths.push(
-                    items[i].columnWidth = (i < n) ? columnWidths[i] : (1 / length)
+                    items[i].columnWidth = (i < columnLength) ? columnWidths[i] : (1 / length)
                 );
             }
         }
     },
 
-    getState : function() {
+    getState: function() {
         var me = this,
             columnWidths = [],
             items = me.items.items,
@@ -326,15 +338,23 @@ Ext.define('Ext.dashboard.Dashboard', {
             }
         }
 
-        state.columnWidths = columnWidths;
         state.idSeed = me.idSeed;
         state.items = me.serializeItems();
-        me.columnWidths = columnWidths;
+
+        // only overwrite column widths if they are defined in the state
+        if (columnWidths.length) {
+            state.columnWidths = me.columnWidths = columnWidths;
+        }
+        // no column widths are defined from the state, let's remove it so any defaults
+        // can be used instead
+        else {
+            delete state.columnWidths;
+        }
 
         return state;
     },
 
-    initItems: function () {
+    initItems: function() {
         var me = this,
             defaultContent = me.defaultContent,
             state;
@@ -351,7 +371,7 @@ Ext.define('Ext.dashboard.Dashboard', {
         me.callParent();
     },
 
-    deserializeItems: function (serialized) {
+    deserializeItems: function(serialized) {
         var me = this,
             length = serialized.length,
             columns = [],
@@ -368,6 +388,7 @@ Ext.define('Ext.dashboard.Dashboard', {
                 columns[columnIndex] = column = me.createColumn();
 
                 columnWidth = columnWidths && columnWidths[columnIndex];
+
                 if (columnWidth) {
                     column.columnWidth = columnWidth;
                 }
@@ -388,7 +409,7 @@ Ext.define('Ext.dashboard.Dashboard', {
         return columns;
     },
 
-    serializeItem: function (item) {
+    serializeItem: function(item) {
         return Ext.apply({
             type: item.part.id,
             id: item.id,
@@ -396,7 +417,7 @@ Ext.define('Ext.dashboard.Dashboard', {
         }, item._partConfig);
     },
 
-    serializeItems: function () {
+    serializeItems: function() {
         var me = this,
             items = me.items.items,
             length = items.length,
@@ -423,7 +444,7 @@ Ext.define('Ext.dashboard.Dashboard', {
         return ret;
     },
 
-    onRemoveItem: function (column, item) {
+    onItemRemoved: function(item, column) {
         // Removing items from a Dashboard is a persistent action, so we must remove the
         // state data for it or leak it.
         if (item.stateful && !item.isMoving) {

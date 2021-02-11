@@ -2,7 +2,7 @@ Ext.define('KitchenSink.view.charts.gauge.BasicController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.gauge-basic',
 
-    onRefresh: function () {
+    onRefresh: function() {
         var r = Math.random;
 
         if (this.store) {
@@ -15,7 +15,7 @@ Ext.define('KitchenSink.view.charts.gauge.BasicController', {
         }
     },
 
-    onAfterRender: function () {
+    onAfterRender: function() {
         var me = this,
             gauges = me.getView().query('polar'),
             i, gauge;
@@ -33,23 +33,47 @@ Ext.define('KitchenSink.view.charts.gauge.BasicController', {
         }
     },
 
-    onFuelAxisLabelRender: function (axis, label, layoutContext) {
-        if (label === 0) return 'E';
-        if (label === 25) return '1/4';
-        if (label === 50) return '1/2';
-        if (label === 75) return '3/4';
-        if (label === 100) return 'F';
+    onFuelAxisLabelRender: function(axis, label, layoutContext) {
+        if (label === 0) {
+            return 'E';
+        }
+
+        if (label === 25) {
+            return '1/4';
+        }
+
+        if (label === 50) {
+            return '1/2';
+        }
+
+        if (label === 75) {
+            return '3/4';
+        }
+
+        if (label === 100) {
+            return 'F';
+        }
+
         return ' ';
     },
 
-    onTempAxisLabelRender: function (axis, label, layoutContext) {
-        if (label === 0) return 'Cold';
-        if (label === 125) return 'Comfortable';
-        if (label === 250) return 'Hot';
+    onTempAxisLabelRender: function(axis, label, layoutContext) {
+        if (label === 0) {
+            return 'Cold';
+        }
+
+        if (label === 125) {
+            return 'Comfortable';
+        }
+
+        if (label === 250) {
+            return 'Hot';
+        }
+
         return ' ';
     },
 
-    onRPMAxisLabelRender: function (axis, label, layoutContext) {
+    onRPMAxisLabelRender: function(axis, label, layoutContext) {
         return (label / 1000) + 'k';
     }
 

@@ -8,7 +8,8 @@ Ext.define('Ext.theme.neptune.panel.Table', {
 
         me.callParent();
 
-        if (!me.hasOwnProperty('bodyBorder') && !me.hideHeaders && (me.lockableBodyBorder || !me.lockable)) {
+        if (!me.hasOwnProperty('bodyBorder') && !me.hideHeaders &&
+            (me.lockableBodyBorder || !me.lockable)) {
             me.bodyBorder = true;
         }
     }

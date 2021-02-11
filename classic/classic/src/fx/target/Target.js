@@ -17,22 +17,22 @@ The following types of objects can be animated:
  * @abstract
  */
 Ext.define('Ext.fx.target.Target', {
-
     isAnimTarget: true,
 
     /**
      * Creates new Target.
-     * @param {Ext.Component/Ext.dom.Element/Ext.draw.sprite.Sprite} target The object to be animated
+     * @param {Ext.Component/Ext.dom.Element/Ext.draw.sprite.Sprite} target The object
+     * to be animated
      */
     constructor: function(target) {
         this.target = target;
         this.id = this.getId();
     },
-    
+
     getId: function() {
         return this.target.id;
     },
-    
+
     remove: function() {
         Ext.destroy(this.target);
     }

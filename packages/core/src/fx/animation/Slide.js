@@ -11,25 +11,28 @@ Ext.define('Ext.fx.animation.Slide', {
 
     config: {
         /**
-         * @cfg {String} direction The direction of which the slide animates
+         * @cfg {String} direction
+         * The direction of which the slide animates
          * @accessor
          */
         direction: 'left',
 
         /**
-         * @cfg {Boolean} out True if you want to make this animation slide out, instead of slide in.
+         * @cfg {Boolean} out
+         * True if you want to make this animation slide out, instead of slide in.
          * @accessor
          */
         out: false,
 
         /**
-         * @cfg {Number} offset The offset that the animation should go offscreen before entering (or when exiting)
+         * @cfg {Number} offset
+         * The offset that the animation should go offscreen before entering (or when exiting)
          * @accessor
          */
         offset: 0,
 
         /**
-         * @cfg
+         * @cfg easing
          * @inheritdoc
          */
         easing: 'auto',
@@ -45,7 +48,9 @@ Ext.define('Ext.fx.animation.Slide', {
 
     reverseDirectionMap: {
         up: 'down',
+        top: 'down',
         down: 'up',
+        bottom: 'up',
         left: 'right',
         right: 'left'
     },
@@ -95,7 +100,12 @@ Ext.define('Ext.fx.animation.Slide', {
             reverse = this.getReverse(),
             translateX = 0,
             translateY = 0,
-            fromX, fromY, toX, toY;
+            offsetPct, fromX, fromY, toX, toY;
+
+        if (typeof offset === 'string') {
+            offsetPct = true;
+            offset = parseFloat(offset);
+        }
 
         if (reverse) {
             direction = this.reverseDirectionMap[direction];
@@ -103,6 +113,11 @@ Ext.define('Ext.fx.animation.Slide', {
 
         switch (direction) {
             case this.DIRECTION_UP:
+            case this.DIRECTION_TOP:
+                if (offsetPct) {
+                    offset = box.height * offset / 100;
+                }
+
                 if (out) {
                     translateY = containerBox.top - box.top - box.height - offset;
                 }
@@ -113,6 +128,11 @@ Ext.define('Ext.fx.animation.Slide', {
                 break;
 
             case this.DIRECTION_DOWN:
+            case this.DIRECTION_BOTTOM:
+                if (offsetPct) {
+                    offset = box.height * offset / 100;
+                }
+
                 if (out) {
                     translateY = containerBox.bottom - box.bottom + box.height + offset;
                 }
@@ -123,6 +143,10 @@ Ext.define('Ext.fx.animation.Slide', {
                 break;
 
             case this.DIRECTION_RIGHT:
+                if (offsetPct) {
+                    offset = box.width * offset / 100;
+                }
+
                 if (out) {
                     translateX = containerBox.right - box.right + box.width + offset;
                 }
@@ -133,6 +157,10 @@ Ext.define('Ext.fx.animation.Slide', {
                 break;
 
             case this.DIRECTION_LEFT:
+                if (offsetPct) {
+                    offset = box.width * offset / 100;
+                }
+
                 if (out) {
                     translateX = containerBox.left - box.left - box.width - offset;
                 }

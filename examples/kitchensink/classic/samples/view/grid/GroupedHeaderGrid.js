@@ -17,33 +17,54 @@ Ext.define('KitchenSink.view.grid.GroupedHeaderGrid', {
         path: 'classic/samples/view/grid/BasicGridController.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/Companies.js'
-    },{
+        path: 'app/store/Companies.js'
+    }, {
         type: 'Model',
-        path: 'classic/samples/model/Company.js'
+        path: 'app/model/Company.js'
     }],
     profiles: {
         classic: {
             width: 600,
+            priceWidth: 75,
             changeColumnWidth: 80,
             lastUpdatedColumnWidth: 85,
             percentChangeColumnWidth: 75,
-            green: 'green',
-            red: 'red'
+            gainColor: 'green',
+            lossColor: 'red'
         },
         neptune: {
             width: 675,
+            priceWidth: 75,
             changeColumnWidth: 80,
             lastUpdatedColumnWidth: 115,
             percentChangeColumnWidth: 100,
-            green: '#73b51e',
-            red: '#cf4c35'
+            gainColor: '#73b51e',
+            lossColor: '#cf4c35'
         },
         'neptune-touch': {
             width: 720,
+            priceWidth: 75,
             changeColumnWidth: 90,
             lastUpdatedColumnWidth: 125,
             percentChangeColumnWidth: 115
+        },
+        graphite: {
+            width: 750,
+            priceWidth: 85,
+            changeColumnWidth: 110,
+            lastUpdatedColumnWidth: 155,
+            percentChangeColumnWidth: 135,
+            gainColor: 'unset',
+            lossColor: 'unset'
+        },
+        'classic-material': {
+            width: 750,
+            priceWidth: 85,
+            changeColumnWidth: 110,
+            lastUpdatedColumnWidth: 155,
+            percentChangeColumnWidth: 135,
+            gainColor: 'unset',
+            lossColor: 'unset'
         }
     },
     //</example>
@@ -54,13 +75,13 @@ Ext.define('KitchenSink.view.grid.GroupedHeaderGrid', {
 
     columnLines: true,
     signTpl: '<span style="' +
-            'color:{value:sign(\'${red}\',\'${green}\')}"' +
+            'color:{value:sign(\'${lossColor}\',\'${gainColor}\')}"' +
         '>{text}</span>',
 
     store: {
         type: 'companies',
         sorters: {
-            property:'name',
+            property: 'name',
             direction: 'DESC'
         }
     },
@@ -78,19 +99,19 @@ Ext.define('KitchenSink.view.grid.GroupedHeaderGrid', {
             text: 'Price',
             dataIndex: 'price',
 
-            width: 75,
+            width: '${priceWidth}',
             sortable: true,
             formatter: 'usMoney'
         }, {
             text: 'Change',
-            dataIndex: 'change',
+            dataIndex: 'priceChange',
 
             width: '${changeColumnWidth}',
             sortable: true,
             renderer: 'renderChange'
         }, {
             text: '% Change',
-            dataIndex: 'pctChange',
+            dataIndex: 'priceChangePct',
 
             width: '${percentChangeColumnWidth}',
             sortable: true,
@@ -98,7 +119,7 @@ Ext.define('KitchenSink.view.grid.GroupedHeaderGrid', {
         }]
     }, {
         text: 'Last Updated',
-        dataIndex: 'lastChange',
+        dataIndex: 'priceLastChange',
 
         width: '${lastUpdatedColumnWidth}',
         sortable: true,

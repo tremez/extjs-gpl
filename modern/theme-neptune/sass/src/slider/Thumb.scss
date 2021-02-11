@@ -21,3 +21,13 @@
     $box-shadow: $thumb-box-shadow,
     $box-shadow-big: $thumb-box-shadow-big
 );
+
+@if $enable-default-uis {
+    @if $thumb-toggle-on-ui {
+        @include thumb-ui(map-merge((ui: toggle-on), $thumb-toggle-on-ui)...);
+    }
+
+    @if $thumb-toggle-off-ui {
+        @include thumb-ui(map-merge((ui: toggle-off), $thumb-toggle-off-ui)...);
+    }
+}

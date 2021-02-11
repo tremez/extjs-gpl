@@ -10,15 +10,17 @@ Ext.define('Ext.dd.StatusProxy', {
         'ghost'
     ],
 
+    /* eslint-disable indent, max-len */
     renderTpl: [
         '<div class="' + Ext.baseCSSPrefix + 'dd-drop-icon" role="presentation"></div>' +
         '<div id="{id}-ghost" data-ref="ghost" class="' + Ext.baseCSSPrefix + 'dd-drag-ghost" role="presentation"></div>'
     ],
-    
+    /* eslint-enable indent, max-len */
+
     repairCls: Ext.baseCSSPrefix + 'dd-drag-repair',
-    
+
     ariaRole: 'presentation',
-    
+
     skipLayout: true,
     alignOnScroll: false,
 
@@ -40,7 +42,9 @@ Ext.define('Ext.dd.StatusProxy', {
             shadow: config.shadow || false,
             renderTo: Ext.getDetachedBody()
         });
+
         me.callParent(arguments);
+
         this.dropStatus = this.dropNotAllowed;
     },
 
@@ -48,21 +52,22 @@ Ext.define('Ext.dd.StatusProxy', {
      * @cfg {String} dropAllowed
      * The CSS class to apply to the status element when drop is allowed.
      */
-    dropAllowed : Ext.baseCSSPrefix + 'dd-drop-ok',
+    dropAllowed: Ext.baseCSSPrefix + 'dd-drop-ok',
 
     /**
      * @cfg {String} dropNotAllowed
      * The CSS class to apply to the status element when drop is not allowed.
      */
-    dropNotAllowed : Ext.baseCSSPrefix + 'dd-drop-nodrop',
+    dropNotAllowed: Ext.baseCSSPrefix + 'dd-drop-nodrop',
 
     /**
      * Updates the proxy's visual element to indicate the status of whether or not drop is allowed
      * over the current target element.
      * @param {String} cssClass The css class for the new drop status indicator image
      */
-    setStatus : function(cssClass){
+    setStatus: function(cssClass) {
         cssClass = cssClass || this.dropNotAllowed;
+
         if (this.dropStatus !== cssClass) {
             this.el.replaceCls(this.dropStatus, cssClass);
             this.dropStatus = cssClass;
@@ -71,14 +76,16 @@ Ext.define('Ext.dd.StatusProxy', {
 
     /**
      * Resets the status indicator to the default dropNotAllowed value
-     * @param {Boolean} clearGhost True to also remove all content from the ghost, false to preserve it
+     * @param {Boolean} clearGhost True to also remove all content from the ghost,
+     * false to preserve it
      */
-    reset : function(clearGhost){
+    reset: function(clearGhost) {
         var me = this,
             clsPrefix = Ext.baseCSSPrefix + 'dd-drag-proxy ';
 
         me.el.replaceCls(clsPrefix + me.dropAllowed, clsPrefix + me.dropNotAllowed);
         me.dropStatus = me.dropNotAllowed;
+
         if (clearGhost) {
             me.ghost.setHtml('');
         }
@@ -86,18 +93,24 @@ Ext.define('Ext.dd.StatusProxy', {
 
     /**
      * Updates the contents of the ghost element
-     * @param {String/HTMLElement} html The html that will replace the current innerHTML of the ghost element, or a
-     * DOM node to append as the child of the ghost element (in which case the innerHTML will be cleared first).
+     * @param {String/HTMLElement} html The html that will replace the current innerHTML
+     * of the ghost element, or a DOM node to append as the child of the ghost element
+     * (in which case the innerHTML will be cleared first).
      */
-    update : function(html){
+    update: function(html) {
+        var el;
+
         if (typeof html === "string") {
             this.ghost.setHtml(html);
-        } else {
+        }
+        else {
             this.ghost.setHtml('');
             html.style.margin = "0";
             this.ghost.dom.appendChild(html);
         }
-        var el = this.ghost.dom.firstChild;
+
+        el = this.ghost.dom.firstChild;
+
         if (el) {
             Ext.fly(el).setStyle('float', 'none');
         }
@@ -107,7 +120,7 @@ Ext.define('Ext.dd.StatusProxy', {
      * Returns the ghost element
      * @return {Ext.dom.Element} el
      */
-    getGhost : function(){
+    getGhost: function() {
         return this.ghost;
     },
 
@@ -116,8 +129,9 @@ Ext.define('Ext.dd.StatusProxy', {
      * @param {Boolean} clear True to reset the status and clear the ghost contents,
      * false to preserve them
      */
-    hide : function(clear) {
+    hide: function(clear) {
         this.callParent();
+
         if (clear) {
             this.reset(true);
         }
@@ -126,7 +140,7 @@ Ext.define('Ext.dd.StatusProxy', {
     /**
      * Stops the repair animation if it's currently running
      */
-    stop : function(){
+    stop: function() {
         if (this.anim && this.anim.isAnimated && this.anim.isAnimated()) {
             this.anim.stop();
         }
@@ -135,7 +149,7 @@ Ext.define('Ext.dd.StatusProxy', {
     /**
      * Force the Element to sync its shadow and shim positions
      */
-    sync : function(){
+    sync: function() {
         this.el.syncUnderlays();
     },
 
@@ -144,14 +158,15 @@ Ext.define('Ext.dd.StatusProxy', {
      * Should be called after an invalid drop operation by the item being dragged.
      * @param {Number[]} xy The XY position of the element ([x, y])
      * @param {Function} callback The function to call after the repair is complete.
-     * @param {Object} scope The scope (`this` reference) in which the callback function is executed.
-     * Defaults to the browser window.
+     * @param {Object} scope The scope (`this` reference) in which the callback function
+     * is executed. Defaults to the browser window.
      */
-    repair : function(xy, callback, scope) {
+    repair: function(xy, callback, scope) {
         var me = this;
 
         me.callback = callback;
         me.scope = scope;
+
         if (xy && me.animRepair !== false) {
             me.el.addCls(me.repairCls);
             me.el.setUnderlaysVisible(false);
@@ -166,7 +181,8 @@ Ext.define('Ext.dd.StatusProxy', {
                 callback: me.afterRepair,
                 scope: me
             });
-        } else {
+        }
+        else {
             me.afterRepair();
         }
     },
@@ -174,14 +190,16 @@ Ext.define('Ext.dd.StatusProxy', {
     /**
      * @private
      */
-    afterRepair : function() {
+    afterRepair: function() {
         var me = this;
-    
+
         me.hide(true);
         me.el.removeCls(me.repairCls);
+
         if (typeof me.callback === "function") {
             me.callback.call(me.scope || me);
         }
+
         delete me.callback;
         delete me.scope;
     }

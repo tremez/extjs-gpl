@@ -9,9 +9,10 @@ Ext.define('Ext.rtl.panel.Panel', {
     },
 
     convertCollapseDir: function(collapseDir) {
-        if (!!Ext.rootInheritedState.rtl !== this.isLocalRtl()) { // jshint ignore:line
+        if (!!Ext.rootInheritedState.rtl !== this.isLocalRtl()) {
             collapseDir = this.rtlCollapseDirs[collapseDir];
         }
+
         return this.callParent(arguments);
     }
 });

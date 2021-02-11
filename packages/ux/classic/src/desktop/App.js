@@ -20,26 +20,29 @@ Ext.define('Ext.ux.desktop.App', {
     modules: null,
     useQuickTips: true,
 
-    constructor: function (config) {
+    constructor: function(config) {
         var me = this;
 
         me.mixins.observable.constructor.call(this, config);
 
         if (Ext.isReady) {
-            Ext.Function.defer(me.init, 10, me);
-        } else {
+            Ext.defer(me.init, 10, me);
+        }
+        else {
             Ext.onReady(me.init, me);
         }
     },
 
     init: function() {
-        var me = this, desktopCfg;
+        var me = this,
+            desktopCfg;
 
         if (me.useQuickTips) {
             Ext.QuickTips.init();
         }
 
         me.modules = me.getModules();
+
         if (me.modules) {
             me.initModules(me.modules);
         }
@@ -63,13 +66,15 @@ Ext.define('Ext.ux.desktop.App', {
      * class can override this method, call the base version to build the config and
      * then modify the returned object before returning it.
      */
-    getDesktopConfig: function () {
-        var me = this, cfg = {
-            app: me,
-            taskbarConfig: me.getTaskbarConfig()
-        };
+    getDesktopConfig: function() {
+        var me = this,
+            cfg = {
+                app: me,
+                taskbarConfig: me.getTaskbarConfig()
+            };
 
         Ext.apply(cfg, me.desktopConfig);
+
         return cfg;
     },
 
@@ -80,7 +85,7 @@ Ext.define('Ext.ux.desktop.App', {
      * class can override this method, call the base version to build the config and
      * then modify the returned object before returning it.
      */
-    getStartConfig: function () {
+    getStartConfig: function() {
         var me = this,
             cfg = {
                 app: me,
@@ -90,8 +95,9 @@ Ext.define('Ext.ux.desktop.App', {
 
         Ext.apply(cfg, me.startConfig);
 
-        Ext.each(me.modules, function (module) {
+        Ext.each(me.modules, function(module) {
             launcher = module.launcher;
+
             if (launcher) {
                 launcher.handler = launcher.handler || Ext.bind(me.createWindow, me, [module]);
                 cfg.menu.push(module.launcher);
@@ -103,6 +109,7 @@ Ext.define('Ext.ux.desktop.App', {
 
     createWindow: function(module) {
         var window = module.createWindow();
+
         window.show();
     },
 
@@ -111,38 +118,47 @@ Ext.define('Ext.ux.desktop.App', {
      * can override this method, call the base version to build the config and then
      * modify the returned object before returning it.
      */
-    getTaskbarConfig: function () {
-        var me = this, cfg = {
-            app: me,
-            startConfig: me.getStartConfig()
-        };
+    getTaskbarConfig: function() {
+        var me = this,
+            cfg = {
+                app: me,
+                startConfig: me.getStartConfig()
+            };
 
         Ext.apply(cfg, me.taskbarConfig);
+
         return cfg;
     },
 
-    initModules : function(modules) {
+    initModules: function(modules) {
         var me = this;
-        Ext.each(modules, function (module) {
+
+        Ext.each(modules, function(module) {
             module.app = me;
         });
     },
 
-    getModule : function(name) {
-    	var ms = this.modules;
-        for (var i = 0, len = ms.length; i < len; i++) {
-            var m = ms[i];
+    getModule: function(name) {
+        var ms = this.modules,
+            i, len, m;
+
+        for (i = 0, len = ms.length; i < len; i++) {
+            m = ms[i];
+
+            // eslint-disable-next-line eqeqeq
             if (m.id == name || m.appType == name) {
                 return m;
             }
         }
+
         return null;
     },
 
-    onReady : function(fn, scope) {
+    onReady: function(fn, scope) {
         if (this.isReady) {
             fn.call(scope, this);
-        } else {
+        }
+        else {
             this.on({
                 ready: fn,
                 scope: scope,
@@ -151,11 +167,11 @@ Ext.define('Ext.ux.desktop.App', {
         }
     },
 
-    getDesktop : function() {
+    getDesktop: function() {
         return this.desktop;
     },
 
-    onUnload : function(e) {
+    onUnload: function(e) {
         if (this.fireEvent('beforeunload', this) === false) {
             e.stopEvent();
         }

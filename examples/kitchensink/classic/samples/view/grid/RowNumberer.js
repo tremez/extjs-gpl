@@ -5,17 +5,35 @@ Ext.define('KitchenSink.view.grid.RowNumberer', {
     //<example>
     otherContent: [{
         type: 'Store',
-        path: 'classic/samples/store/Companies.js'
+        path: 'app/store/Companies.js'
     }, {
         type: 'Model',
-        path: 'classic/samples/model/Company.js'
+        path: 'app/model/Company.js'
     }],
     profiles: {
         classic: {
-            width: 700
+            width: 700,
+            priceWidth: 120,
+            pricechangeWidth: 120,
+            lastUpdatedColumnWidth: 120
         },
         neptune: {
-            width: 750
+            width: 750,
+            priceWidth: 120,
+            pricechangeWidth: 120,
+            lastUpdatedColumnWidth: 120
+        },
+        graphite: {
+            width: 750,
+            priceWidth: 100,
+            pricechangeWidth: 110,
+            lastUpdatedColumnWidth: 150
+        },
+        'classic-material': {
+            width: 750,
+            priceWidth: 150,
+            pricechangeWidth: 150,
+            lastUpdatedColumnWidth: 150
         }
     },
     //</example>
@@ -36,25 +54,25 @@ Ext.define('KitchenSink.view.grid.RowNumberer', {
         dataIndex: 'name'
     }, {
         text: "Price",
-        width: 120,
+        width: '${priceWidth}',
         sortable: true,
         formatter: 'usMoney',
         dataIndex: 'price'
     }, {
         text: "Change",
-        width: 120,
+        width: '${pricechangeWidth}',
         sortable: true,
-        dataIndex: 'change'
+        dataIndex: 'priceChange'
     }, {
         text: "% Change",
         width: 120,
         sortable: true,
-        dataIndex: 'pctChange'
+        dataIndex: 'priceChangePct'
     }, {
         text: "Last Updated",
-        width: 120,
+        width: '${lastUpdatedColumnWidth}',
         sortable: true,
         formatter: 'date("m/d/Y")',
-        dataIndex: 'lastChange'
+        dataIndex: 'priceLastChange'
     }]
 });

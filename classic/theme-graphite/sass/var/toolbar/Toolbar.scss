@@ -1,0 +1,8 @@
+$toolbar-background-color: dynamic($body-background-color);
+$toolbar-background-gradient: dynamic($base-gradient);
+$toolbar-docked-bottom-background-color: dynamic($base-color);
+$toolbar-scroller-glyph-color: dynamic($font-color);
+$toolbar-scroller-glyph-font-size: dynamic(18px);
+$toolbar-separator-highlight-color: dynamic($body-background-color);
+$toolbar-text-color: dynamic($font-color);
+$toolbar-text-line-height: dynamic(18px);

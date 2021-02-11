@@ -18,28 +18,51 @@ Ext.define('KitchenSink.view.pivot.Locked', {
     otherContent: [{
         type: 'Controller',
         path: 'classic/samples/view/pivot/LayoutController.js'
-    },{
+    }, {
         type: 'Model',
         path: 'classic/samples/model/pivot/Sale.js'
-    },{
+    }, {
         type: 'Store',
         path: 'classic/samples/store/pivot/Sales.js'
     }],
     profiles: {
         classic: {
-            width: 600
+            width: 600,
+            height: 350,
+            totalColumnWidth: 90,
+            companyColumnWidth: 80,
+            columnLines: true
         },
         neptune: {
-            width: 750
+            width: 750,
+            height: 350,
+            totalColumnWidth: 90,
+            companyColumnWidth: 80,
+            columnLines: true
+        },
+        graphite: {
+            width: 750,
+            height: 600,
+            totalColumnWidth: 130,
+            companyColumnWidth: 110,
+            columnLines: true
+        },
+        'classic-material': {
+            width: 750,
+            height: 600,
+            totalColumnWidth: 130,
+            companyColumnWidth: 110,
+            columnLines: false
         }
     },
     //</example>
 
     title: 'Locked pivot',
     width: '${width}',
-    height: 350,
+    height: '${height}',
     collapsible: true,
     multiSelect: true,
+    columnLines: '${columnLines}',
 
     selModel: {
         type: 'rowmodel'
@@ -57,7 +80,8 @@ Ext.define('KitchenSink.view.pivot.Locked', {
             type: 'sales'
         },
 
-        // Set layout type to "outline". If this config is missing then the default layout is "outline"
+        // Set layout type to "outline". If this config is missing then
+        // the default layout is "outline"
         viewLayoutType: 'outline',
 
         // Configure the aggregate dimensions. Multiple dimensions are supported.
@@ -65,10 +89,11 @@ Ext.define('KitchenSink.view.pivot.Locked', {
             dataIndex: 'value',
             header: 'Total',
             aggregator: 'sum',
-            width: 90
+            width: '${totalColumnWidth}'
         }],
 
-        // Configure the left axis dimensions that will be used to generate the grid rows
+        // Configure the left axis dimensions that will be used to generate
+        // the grid rows
         leftAxis: [{
             dataIndex: 'person',
             header: 'Person',
@@ -77,14 +102,17 @@ Ext.define('KitchenSink.view.pivot.Locked', {
             dataIndex: 'company',
             header: 'Company',
             sortable: false,
-            width: 80
+            width: '${companyColumnWidth}'
         }],
 
         /**
-         * Configure the top axis dimensions that will be used to generate the columns.
-         * When columns are generated the aggregate dimensions are also used. If multiple aggregation dimensions
-         * are defined then each top axis result will have in the end a column header with children
-         * columns for each aggregate dimension defined.
+         * Configure the top axis dimensions that will be used to generate
+         * the columns.
+         *
+         * When columns are generated the aggregate dimensions are also used.
+         * If multiple aggregation dimensions are defined then each top axis
+         * result will have in the end a column header with children columns
+         * for each aggregate dimension defined.
          */
         topAxis: [{
             dataIndex: 'year',
@@ -100,11 +128,11 @@ Ext.define('KitchenSink.view.pivot.Locked', {
         menu: [{
             text: 'Collapse all',
             handler: 'collapseAll'
-        },{
+        }, {
             text: 'Expand all',
             handler: 'expandAll'
         }]
-    },{
+    }, {
         text: 'Subtotals position',
         menu: {
             defaults: {
@@ -115,13 +143,13 @@ Ext.define('KitchenSink.view.pivot.Locked', {
             items: [{
                 text: 'First',
                 checked: true
-            },{
+            }, {
                 text: 'Last'
-            },{
+            }, {
                 text: 'None'
             }]
         }
-    },{
+    }, {
         text: 'Totals position',
         menu: {
             defaults: {
@@ -131,10 +159,10 @@ Ext.define('KitchenSink.view.pivot.Locked', {
             },
             items: [{
                 text: 'First'
-            },{
+            }, {
                 text: 'Last',
                 checked: true
-            },{
+            }, {
                 text: 'None'
             }]
         }

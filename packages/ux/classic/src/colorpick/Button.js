@@ -69,10 +69,12 @@ Ext.define('Ext.ux.colorpick.Button', {
     defaultBindProperty: 'value',
     twoWayBindable: 'value',
 
+    /* eslint-disable max-len */
     // Solve issue with IE, when applying a filter the click listener is not being fired.
     renderTpl:
-        '<div id="{id}-filterEl" data-ref="filterEl" style="height:100%; width:100%; position: absolute;"></div>'+
+        '<div id="{id}-filterEl" data-ref="filterEl" style="height:100%; width:100%; position: absolute;"></div>' +
         '<a id="{id}-btnEl" data-ref="btnEl" style="height:100%; width:100%; position: absolute;"></a>',
+    /* eslint-enable max-len */
 
     listeners: {
         click: 'onClick',
@@ -87,7 +89,7 @@ Ext.define('Ext.ux.colorpick.Button', {
      * @param {String} previousColor The previous color value.
      */
 
-    updateColor: function (color) {
+    updateColor: function(color) {
         var me = this,
             cp = me.colorPicker;
 

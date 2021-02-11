@@ -20,15 +20,20 @@ Ext.define('Ext.panel.Bar', {
 
         me.dock = me.dock || (vertical ? 'left' : 'top');
 
-        me.layout = Ext.apply(vertical ? {
-            type: 'vbox',
-            align: 'middle',
-            alignRoundingMethod: 'ceil'
-        } : {
-            type: 'hbox',
-            align: 'middle',
-            alignRoundingMethod: 'floor'
-        }, me.layout);
+        me.layout = Ext.apply(
+            vertical
+                ? {
+                    type: 'vbox',
+                    align: 'middle',
+                    alignRoundingMethod: 'ceil'
+                }
+                : {
+                    type: 'hbox',
+                    align: 'middle',
+                    alignRoundingMethod: 'floor'
+                },
+            me.layout
+        );
 
         this.callParent();
     },
@@ -50,6 +55,7 @@ Ext.define('Ext.panel.Bar', {
             // allows bars to be rendered directly to body with no owner container
             me.initOrientation();
         }
+
         me.callParent();
     },
 
@@ -65,7 +71,7 @@ Ext.define('Ext.panel.Bar', {
             me.callParent([dock]);
 
             me.initOrientation();
-            
+
             vertical = me.vertical;
             layout = me.layout;
             layout.setVertical(vertical);

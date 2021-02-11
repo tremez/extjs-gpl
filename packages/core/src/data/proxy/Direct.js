@@ -36,8 +36,8 @@
  *      }
  *
  * This method of configuring API is not recommended because this way the Direct functions
- * need to be created very early in the application lifecycle, long before {@link Ext.app.Application}
- * instance is initialized.
+ * need to be created very early in the application lifecycle, long before
+ * {@link Ext.app.Application} instance is initialized.
  *
  * You can also use the {@link #directFn} configuration instead of {@link #api}. This will use
  * the same Direct function for all types of requests.
@@ -53,7 +53,7 @@
  * or an object with format recognizable by the configured {@link Ext.data.reader.Reader}
  * instance.
  *
- * Example {@link Ext.directRemotingProvider#actions Direct API declaration}:
+ * Example {@link Ext.direct.RemotingProvider#cfg-actions Direct API declaration}:
  *
  *      actions: {
  *          MyApp: [{
@@ -83,7 +83,7 @@
  * or an array of objects for multiple records. Return an array of identifiers for actually
  * created records. See {@link Ext.data.Model#clientIdProperty} for more information.
  *
- * Example {@link Ext.directRemotingProvider#actions Direct API declaration}:
+ * Example {@link Ext.direct.RemotingProvider#cfg-actions Direct API declaration}:
  *
  *      actions: [
  *          MyApp: [{
@@ -112,7 +112,7 @@
  * record identifier, or an array of objects for multiple records. Return an array of
  * objects with updated record data.
  *
- * Example {@link Ext.directRemotingProvider#actions Direct API declaration}:
+ * Example {@link Ext.direct.RemotingProvider#cfg-actions Direct API declaration}:
  *
  *      actions: [
  *          MyApp: [{
@@ -142,7 +142,7 @@
  * property set to `true` or `false`, with more optional properties recognizable by configured
  * {@link Ext.data.reader.Reader} instance.
  *
- * Example {@link Ext.directRemotingProvider#actions Direct API declaration}:
+ * Example {@link Ext.direct.RemotingProvider#cfg-actions Direct API declaration}:
  *
  *      actions: [
  *          MyApp: [{
@@ -218,62 +218,65 @@ Ext.define('Ext.data.proxy.Direct', {
 
     config: {
         /**
-        * @cfg {String/String[]} paramOrder
-        * A list of params to be passed to server side Read function. Specify the params
-        * in the order in which they must be executed on the server-side as either (1) an Array
-        * of String values, or (2) a String of params delimited by either whitespace, comma,
-        * or pipe. For example, any of the following would be acceptable:
-        *
-        *     paramOrder: ['param1','param2','param3']
-        *     paramOrder: 'param1 param2 param3'
-        *     paramOrder: 'param1,param2,param3'
-        *     paramOrder: 'param1|param2|param'
-        */
+         * @cfg {String/String[]} paramOrder
+         * A list of params to be passed to server side Read function. Specify the params
+         * in the order in which they must be executed on the server-side as either (1)
+         * an Array of String values, or (2) a String of params delimited by either
+         * whitespace, comma, or pipe. For example, any of the following would be
+         * acceptable:
+         *
+         *     paramOrder: ['param1','param2','param3']
+         *     paramOrder: 'param1 param2 param3'
+         *     paramOrder: 'param1,param2,param3'
+         *     paramOrder: 'param1|param2|param'
+         */
         paramOrder: undefined,
 
         /**
-        * @cfg {Boolean} paramsAsHash
-        * Send Read function parameters as a collection of named arguments. Providing a
-        * {@link #paramOrder} nullifies this configuration.
-        */
+         * @cfg {Boolean} paramsAsHash
+         * Send Read function parameters as a collection of named arguments. Providing a
+         * {@link #paramOrder} nullifies this configuration.
+         */
         paramsAsHash: true,
 
         /**
-        * @cfg {Function/String} directFn
-        * Function to call when executing a request. `directFn` is a simple alternative to defining
-        * the api configuration parameter for Stores which will not implement a full CRUD api.
-        * The `directFn` may also be a string reference to the fully qualified name of the function,
-        * for example: `'MyApp.company.GetProfile'`. This can be useful when using dynamic loading.
-        * The string will be resolved before calling the function for the first time.
-        */
+         * @cfg {Function/String} directFn
+         * Function to call when executing a request. `directFn` is a simple alternative
+         * to defining the api configuration parameter for Stores which will not
+         * implement a full CRUD api. The `directFn` may also be a string reference to
+         * the fully qualified name of the function, for example:
+         * `'MyApp.company.GetProfile'`. This can be useful when using dynamic loading.
+         * The string will be resolved before calling the function for the first time.
+         */
         directFn: undefined,
 
         /**
-        * @cfg {Object} api
-        * The same as {@link Ext.data.proxy.Server#api}, however instead of providing urls
-        * you should provide a Direct function name for each CRUD method.
-        *
-        * Instead of providing fully qualified names for each function, you can use `prefix`
-        * property to provide a common prefix for all functions:
-        *
-        *   api: {
-        *       prefix: 'MyApp',
-        *       read: 'readRecords',
-        *       create: 'createRecords',
-        *       update: 'updateRecords',
-        *       destroy: 'destroyRecords'
-        *   }
-        *
-        * This way function names will be resolved to `'MyApp.readRecords'`, `'MyApp.createRecords'`,
-        * etc. Note that using `prefix` and fully qualified function names is **not** supported,
-        * and prefix will be used for every function name when configured.
-        *
-        * See also {@link #directFn}.
-        */
+         * @cfg {Object} api
+         * The same as {@link Ext.data.proxy.Server#api}, however instead of providing
+         * urls you should provide a Direct function name for each CRUD method.
+         *
+         * Instead of providing fully qualified names for each function, you can use
+         * `prefix` property to provide a common prefix for all functions:
+         *
+         *   api: {
+         *       prefix: 'MyApp',
+         *       read: 'readRecords',
+         *       create: 'createRecords',
+         *       update: 'updateRecords',
+         *       destroy: 'destroyRecords'
+         *   }
+         *
+         * This way function names will be resolved to `'MyApp.readRecords'`, 
+         * `'MyApp.createRecords'`, etc. Note that using `prefix` and fully qualified
+         * function names is **not** supported, and prefix will be used for every
+         * function name when configured.
+         *
+         * See also {@link #directFn}.
+         */
         api: undefined,
-        
+
         /**
-         * @cfg {Object/Array} [metadata]
+         * @cfg {Object/Array} metadata
          * Optional set of fixed parameters to send with every Proxy request, similar to
          * {@link #extraParams} but available with all CRUD requests. Also unlike
          * {@link #extraParams}, metadata is not mixed with the ordinary data but sent
@@ -287,16 +290,17 @@ Ext.define('Ext.data.proxy.Direct', {
      * @private
      */
     paramOrderRe: /[\s,|]/,
-    
+
     constructor: function(config) {
         this.callParent([config]);
         this.canceledOperations = {};
     },
-    
+
     applyParamOrder: function(paramOrder) {
         if (Ext.isString(paramOrder)) {
             paramOrder = paramOrder.split(this.paramOrderRe);
         }
+
         return paramOrder;
     },
 
@@ -307,47 +311,47 @@ Ext.define('Ext.data.proxy.Direct', {
     updateDirectFn: function() {
         this.methodsResolved = false;
     },
-    
+
     resolveMethods: function() {
         var me = this,
             fn = me.getDirectFn(),
             api = me.getApi(),
             method;
-        
+
         if (fn) {
             me.setDirectFn(method = Ext.direct.Manager.parseMethod(fn));
-            
+
             if (!Ext.isFunction(method)) {
                 Ext.raise('Cannot resolve directFn ' + fn);
             }
         }
-        
+
         if (api) {
             api = Ext.direct.Manager.resolveApi(api, me);
             me.setApi(api);
         }
-        
+
         me.methodsResolved = true;
     },
 
     doRequest: function(operation) {
         var me = this,
-            writer, request, action, params, args, api, fn, callback;
-        
+            writer, request, action, params, args, api, fn;
+
         if (!me.methodsResolved) {
             me.resolveMethods();
         }
-        
+
         request = me.buildRequest(operation);
-        action  = request.getAction();
-        api     = me.getApi();
+        action = request.getAction();
+        api = me.getApi();
 
         if (api) {
             fn = api[action];
         }
-        
+
         fn = fn || me.getDirectFn();
-        
+
         //<debug>
         if (!fn || !fn.directCfg) {
             Ext.raise({
@@ -355,7 +359,7 @@ Ext.define('Ext.data.proxy.Direct', {
                 proxy: me
             });
         }
-        
+
         // This might lead to exceptions so bail out early
         if (!me.paramOrder && fn.directCfg.method.len > 1) {
             Ext.raise({
@@ -364,13 +368,13 @@ Ext.define('Ext.data.proxy.Direct', {
             });
         }
         //</debug>
-        
+
         writer = me.getWriter();
 
         if (writer && operation.allowWrite()) {
             request = writer.write(request);
         }
-        
+
         // The weird construct below is due to historical way of handling extraParams;
         // they were mixed in with request data in ServerProxy.buildRequest() and were
         // inseparable after that point. This does not work well with CUD operations
@@ -385,7 +389,7 @@ Ext.define('Ext.data.proxy.Direct', {
         else {
             params = request.getJsonData();
         }
-        
+
         args = fn.directCfg.method.getArgs({
             params: params,
             allowSingle: writer.getAllowSingle(),
@@ -396,39 +400,39 @@ Ext.define('Ext.data.proxy.Direct', {
             callback: me.createRequestCallback(request, operation),
             scope: me
         });
-        
+
         request.setConfig({
             args: args,
             directFn: fn
         });
-        
+
         fn.apply(window, args);
-        
+
         // Store expects us to return something to indicate that the request
         // is pending; not doing so will make a buffered Store repeat the
         // requests over and over.
         return request;
     },
-    
+
     /**
      * Aborts a running request by operation.
      *
-     * @param {Ext.data.Operation} operation The operation to abort. This parameter
+     * @param {Ext.data.operation.Operation} operation The operation to abort. This parameter
      * is mandatory.
      */
     abort: function(operation) {
         var id;
-        
+
         // Assume this can be called with request instead of operation, a la Ajax proxy
         if (operation && operation.isDataRequest) {
             operation = operation.getOperation();
         }
-        
+
         // Check definedness again, the above could have returned null
         if (operation && operation.isOperation) {
             id = operation.id;
         }
-        
+
         // We cannot abort a running request but we can ignore the data when it comes back.
         if (id != null) {
             this.canceledOperations[id] = true;
@@ -436,7 +440,7 @@ Ext.define('Ext.data.proxy.Direct', {
     },
 
     /**
-     * @method
+     * @method applyEncoding
      * @inheritdoc
      */
     applyEncoding: Ext.identityFn,
@@ -448,13 +452,13 @@ Ext.define('Ext.data.proxy.Direct', {
             if (!me.canceledOperations[operation.id]) {
                 me.processResponse(event.status, operation, request, event);
             }
-            
+
             delete me.canceledOperations[operation.id];
         };
     },
 
     /**
-     * @method
+     * @method extractResponseData
      * @inheritdoc
      */
     extractResponseData: function(response) {
@@ -462,7 +466,7 @@ Ext.define('Ext.data.proxy.Direct', {
     },
 
     /**
-     * @method
+     * @method setException
      * @inheritdoc
      */
     setException: function(operation, response) {
@@ -470,7 +474,7 @@ Ext.define('Ext.data.proxy.Direct', {
     },
 
     /**
-     * @method
+     * @method buildUrl
      * @inheritdoc
      */
     buildUrl: function() {

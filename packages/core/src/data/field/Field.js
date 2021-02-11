@@ -264,6 +264,10 @@ Ext.define('Ext.data.field.Field', {
 
     type: 'auto',
 
+    /**
+     * @property factoryConfig
+     * @inheritdoc
+     */
     factoryConfig: {
         defaultProperty: 'name'
     },
@@ -282,8 +286,9 @@ Ext.define('Ext.data.field.Field', {
      * @cfg {Boolean} allowBlank
      * @private
      *
-     * Used for validating a {@link Ext.data.Model model}. Defaults to true. An empty value here will cause
-     * {@link Ext.data.Model}.{@link Ext.data.Model#isValid isValid} to evaluate to false.
+     * Used for validating a {@link Ext.data.Model model}. Defaults to true. An empty value here
+     * will cause {@link Ext.data.Model}.{@link Ext.data.Model#isValid isValid} to evaluate to
+     * `false`.
      */
     allowBlank: true,
 
@@ -293,14 +298,15 @@ Ext.define('Ext.data.field.Field', {
      * Use when converting received data into a {@link Ext.data.field.Integer `int`},
      * {@link Ext.data.field.Number `float`}, {@link Ext.data.field.Boolean `bool`}
      * or {@link Ext.data.field.String `string`} type. If the value cannot be
-     * parsed, `null` will be used if allowNull is true, otherwise a default value for that type will be used:
+     * parsed, `null` will be used if allowNull is true, otherwise a default value for
+     * that type will be used:
      *
      * - for `int` and `float` - `0`.
      * - for `string` - `""`.
      * - for `bool` - `false`.
      *
-     * Note that when parsing of {@link Ext.data.field.Date `date`} type fails, the value will
-     * be `null` regardless of this setting.
+     * Note that when parsing of {@link Ext.data.field.Date `date`} type fails, the value
+     * will be `null` regardless of this setting.
      */
     allowNull: false,
 
@@ -356,8 +362,8 @@ Ext.define('Ext.data.field.Field', {
 
     /**
      * @cfg {Function} convert
-     * If specified this config overrides the `{@link #method-convert convert}` method. See
-     * also `{@link #cfg-calculate calculate}` for simple field calculations.
+     * If specified this config overrides the `{@link #method-convert convert}` method.
+     * See also `{@link #cfg-calculate calculate}` for simple field calculations.
      * 
      * **Note:** The use of {@link #calculate} and convert are exclusive.  The calculate 
      * method will override the convert method if both are configured.
@@ -367,8 +373,8 @@ Ext.define('Ext.data.field.Field', {
      * @cfg {Boolean} critical
      * A critical field is a field that must always be sent to the server even if it has
      * not changed. The most common example of such a field is the "id" of a record (see
-     * `{@link Ext.data.Model#idProperty}` but the `{@link Ext.data.Model#versionProperty}`
-     * is similarly a `critical` field.
+     * `{@link Ext.data.Model#idProperty}` but the 
+     * `{@link Ext.data.Model#versionProperty}` is similarly a `critical` field.
      */
     critical: false,
 
@@ -380,7 +386,7 @@ Ext.define('Ext.data.field.Field', {
     defaultInvalidMessage: 'This field is invalid',
 
     /**
-     * @cfg {Object} [defaultValue=undefined]
+     * @cfg {Object} defaultValue
      *
      * The default value used when the creating an instance from a raw data object,
      * and the property referenced by the `{@link Ext.data.field.Field#mapping mapping}`
@@ -435,7 +441,7 @@ Ext.define('Ext.data.field.Field', {
     definedBy: null,
 
     /**
-     * @cfg {String/String[]} [depends]
+     * @cfg {String/String[]} depends
      * The field name or names within the {@link Ext.data.Model Model} on which the value
      * of this field depends, and from which a new value may be calculated. These values
      * are the values used by the `convert` method. If you do not have a `convert` method
@@ -484,19 +490,22 @@ Ext.define('Ext.data.field.Field', {
     /**
      * @cfg {String/Number/Function} mapping
      *
-     * (Optional) A path expression for use by the {@link Ext.data.reader.Reader} implementation that is creating the
-     * {@link Ext.data.Model Model} to extract the Field value from the data object. If the path expression is the same
-     * as the field name, the mapping may be omitted. A function may be passed to do complex data extraction. The examples
-     * below are simple just to demonstrate the capability, typically, a function would not be used to extract such
-     * simple data.
+     * (Optional) A path expression for use by the {@link Ext.data.reader.Reader}
+     * implementation that is creating the {@link Ext.data.Model Model} to extract the
+     * Field value from the data object. If the path expression is the same as the field
+     * name, the mapping may be omitted. A function may be passed to do complex data
+     * extraction. The examples below are simple just to demonstrate the capability,
+     * typically, a function would not be used to extract such simple data.
      *
      * The form of the mapping expression depends on the Reader being used.
      *
      * - {@link Ext.data.reader.Json}
      *
-     *   The mapping is a string containing the javascript expression to reference the data from an element of the data
-     *   item's {@link Ext.data.reader.Json#cfg-rootProperty rootProperty} Array. Defaults to the field name. If a function is passed,
-     *   a single argument is received which contains the raw json object:
+     *   The mapping is a string containing the javascript expression to reference the
+     *   data from an element of the data item's 
+     *   {@link Ext.data.reader.Json#cfg-rootProperty rootProperty} Array. Defaults to
+     *   the field name. If a function is passed, a single argument is received which
+     *   contains the raw json object:
      *
      *       // Server returns [{"name": "Foo", "age": 1}, {"name": "Bar", "age": 2}]
      *       mapping: function(data) {
@@ -505,28 +514,40 @@ Ext.define('Ext.data.field.Field', {
      *
      * - {@link Ext.data.reader.Xml}
      *
-     *   The mapping is an {@link Ext.DomQuery} path to the data item relative to the DOM element that represents the
-     *   {@link Ext.data.reader.Xml#record record}. Defaults to the field name. If a function is passed, a single argument
-     *   is received which contains the record node:
+     *   The mapping is an {@link Ext.DomQuery} path to the data item relative to the DOM
+     *   element that represents the {@link Ext.data.reader.Xml#record record}. Defaults
+     *   to the field name. If a function is passed, a single argument is received which
+     *   contains the record node:
      *
-     *       // Server returns <Root><Person><Name>Foo</Name><Age>1</Age></Person><Person><Name>Bar</Name><Age>2</Age></Person></Root>
+     *       // Server returns:
+     *       // <Root>
+     *       //     <Person>
+     *       //         <Name>Foo</Name>
+     *       //         <Age>1</Age>
+     *       //     </Person>
+     *       //     <Person>
+     *       //         <Name>Bar</Name>
+     *       //         <Age>2</Age>
+     *       //     </Person>
+     *       // </Root>
      *       mapping: function(data) {
      *           return data.firstChild.textContent;
      *       }
      *
      * - {@link Ext.data.reader.Array}
      *
-     *   The mapping is a number indicating the Array index of the field's value. Defaults to the field specification's
-     *   Array position. If a function is passed, a single argument is received which contains the child array.
+     *   The mapping is a number indicating the Array index of the field's value.
+     *   Defaults to the field specification's Array position. If a function is passed, a
+     *   single argument is received which contains the child array.
      *
      *       // Server returns [["Foo", 1], ["Bar", 2]]
      *       mapping: function(data) {
      *           return data[0];
      *       }
      *
-     * If a more complex value extraction strategy is required, then configure the Field with a {@link #cfg-convert}
-     * function. This is passed the whole row object, and may interrogate it in whatever way is necessary in order to
-     * return the desired data.
+     * If a more complex value extraction strategy is required, then configure the Field
+     * with a {@link #cfg-convert} function. This is passed the whole row object, and may
+     * interrogate it in whatever way is necessary in order to return the desired data.
      */
     mapping: null,
 
@@ -550,7 +571,7 @@ Ext.define('Ext.data.field.Field', {
     ordinal: undefined,
 
     /**
-     * @cfg {Boolean} [persist]
+     * @cfg {Boolean} persist
      *
      * False to exclude this field from the {@link Ext.data.Model#modified} fields in a
      * record. This will also exclude the field from being written using a
@@ -562,20 +583,45 @@ Ext.define('Ext.data.field.Field', {
     persist: null,
 
     /**
-     * @cfg {String/Object} [reference]
+     * @cfg {String/Object} reference
      * The {@link Ext.data.Model#entityName name} of the entity referenced by this field.
      * In most databases, this relationship is represented by a "foreign key". That is, a
-     * value for such a field matches the value of the {@link Ext.data.Model#idProperty id}
-     * for an entity of this type.
+     * value for such a field matches the value of the 
+     * {@link Ext.data.Model#idProperty id} for an entity of this type.
      *
      * For further documentation, see {@link Ext.data.schema.Reference}.
      */
     reference: null,
 
     /**
-     * @cfg {Function} serialize
-     * @inheritdoc #method-serialize
+     * @cfg serialize
+     * @inheritdoc Ext.data.field.Field#method-serialize
      */
+
+    /**
+     * @cfg {String/Object/Function} summary
+     * The summary type for this field. This is used to calculate a
+     * summary value by the {@link Ext.data.Model Model}.
+     *
+     * - If a string, it should be an alias for one of the Ext.data.summary types.
+     * - If an object, a config for one of the Ext.data.summary types.
+     * - If a function, it should match the signature for
+     * {@link Ext.data.summary.Base#method-calculate calculate}.
+     * 
+     * @since 6.5.0
+     */
+    summary: null,
+
+    /**
+     * @cfg {String} summaryField
+     * A field to use as the basis for calculating a summary. This is used in
+     * conjunction with the virtual summary fields. See
+     * {@link Ext.data.Model#cfg-summary}.
+     *
+     * @since 6.5.0
+     * @private
+     */
+    summaryField: '',
 
     /**
      * @cfg {Function/String} sortType
@@ -583,7 +629,8 @@ Ext.define('Ext.data.field.Field', {
      * A function which converts a Field's value to a comparable value in order to ensure
      * correct sort ordering.
      *
-     * Predefined functions are provided in {@link Ext.data.SortTypes}. A custom sort example:
+     * Predefined functions are provided in {@link Ext.data.SortTypes}. A custom sort
+     * example:
      *
      *     // current sort     after sort we want
      *     // +-+------+          +-+------+
@@ -608,8 +655,8 @@ Ext.define('Ext.data.field.Field', {
     /**
      * @cfg {Boolean} [unique=false]
      * `true` if the value of this field is unique amongst all instances. When used with a
-     * `reference` this describes a "one-to-one" relationship. It is almost always the case
-     * that a `unique` field cannot also be {@link #allowBlank nullable}.
+     * `reference` this describes a "one-to-one" relationship. It is almost always the
+     * case that a `unique` field cannot also be {@link #allowBlank nullable}.
      */
     unique: false,
 
@@ -622,7 +669,7 @@ Ext.define('Ext.data.field.Field', {
     /**
      * @property {Number} rank
      * This is a 1-based value that describes the dependency order of this field. This is
-     * initialized to `null` (falsey) so we can cheaply topo-sort the fields of a class.
+     * initialized to `null` (falsy) so we can cheaply topo-sort the fields of a class.
      * @private
      * @readonly
      */
@@ -635,7 +682,7 @@ Ext.define('Ext.data.field.Field', {
      * @readonly
      * @protected
      */
-    stripRe: /[\$,%]/g,
+    stripRe: /[$,%]/g,
 
     /**
      * @property {Boolean} calculated
@@ -655,9 +702,9 @@ Ext.define('Ext.data.field.Field', {
      *          return ...
      *      }
      *
-     * **NOTE:** It is recommended for such fields to use `{@link #cfg-calculate calculate}`
-     * or explicitly specify the fields used by `{@link #method-convert convert}` using
-     * `{@link #cfg-depends depends}`.
+     * **NOTE:** It is recommended for such fields to use 
+     * `{@link #cfg-calculate calculate}` or explicitly specify the fields used by 
+     * `{@link #method-convert convert}` using `{@link #cfg-depends depends}`.
      *
      * @readonly
      */
@@ -681,11 +728,22 @@ Ext.define('Ext.data.field.Field', {
      */
     identifier: false,
 
-    onClassExtended: function (cls, data) {
+    onClassExtended: function(cls, data) {
         var sortType = data.sortType,
             proto = cls.prototype,
             superValidators = proto.validators,
-            validators = data.validators;
+            validators = data.validators,
+            alias = data.alias;
+
+        if (alias) {
+            if (typeof alias !== 'string') {
+                alias = alias[0];
+            }
+
+            if (alias) {
+                proto.type = alias.substr(alias.lastIndexOf('.') + 1);
+            }
+        }
 
         if (sortType && Ext.isString(sortType)) {
             proto.sortType = Ext.data.SortTypes[sortType];
@@ -696,20 +754,22 @@ Ext.define('Ext.data.field.Field', {
             if (!Ext.isArray(validators)) {
                 validators = [validators];
             }
+
             delete data.validators;
 
             // Need to join them
             if (superValidators) {
                 validators = superValidators.concat(validators);
             }
+
             proto.validators = validators;
         }
     },
 
-    argumentNamesRe: /^function\s*\(\s*([^,\)\s]+)/,
-    calculateRe: /[^\.a-z0-9_]([a-z_][a-z_0-9]*)\.([a-z_][a-z_0-9]*)/gi,
+    argumentNamesRe: /^function\s*\(\s*([^,\)\s]+)/, // eslint-disable-line no-useless-escape
+    calculateRe: /[^.a-z0-9_]([a-z_][a-z_0-9]*)\.([a-z_][a-z_0-9]*)/gi,
 
-    constructor: function (config) {
+    constructor: function(config) {
         var me = this,
             calculateRe = me.calculateRe,
             calculate, calculated, defaultValue, sortType,
@@ -721,12 +781,15 @@ Ext.define('Ext.data.field.Field', {
         if (config) {
             if (Ext.isString(config)) {
                 me.name = config;
-            } else {
+            }
+            else {
                 validators = config.validators;
+
                 if (validators) {
                     delete config.validators;
                     me.instanceValidators = validators;
                 }
+
                 Ext.apply(me, config);
             }
         }
@@ -744,7 +807,7 @@ Ext.define('Ext.data.field.Field', {
             if (!depends) {
                 if (!(depends = calculate.$depends)) {
                     map = {};
-                    str = calculate.toString();
+                    str = Ext.Function.toCode(calculate); // strips comments in debug
                     calculate.$depends = depends = [];
 
                     match = me.argumentNamesRe.exec(str);
@@ -763,6 +826,7 @@ Ext.define('Ext.data.field.Field', {
         }
 
         defaultValue = me.defaultValue;
+
         if (me.convert) {
             me.calculated = calculated = me.convert.length > 1;
             me.evil = calculated && !depends;
@@ -773,9 +837,11 @@ Ext.define('Ext.data.field.Field', {
         }
 
         sortType = me.sortType;
+
         if (!me.sortType) {
             me.sortType = Ext.data.SortTypes.none;
-        } else if (Ext.isString(sortType)) {
+        }
+        else if (Ext.isString(sortType)) {
             me.sortType = Ext.data.SortTypes[sortType];
         }
 
@@ -785,7 +851,7 @@ Ext.define('Ext.data.field.Field', {
 
         me.cloneDefaultValue = defaultValue !== undefined &&
                                (Ext.isDate(defaultValue) || Ext.isArray(defaultValue) ||
-                                Ext.isObject(defaultValue));
+                               Ext.isObject(defaultValue));
     },
 
     setModelValidators: function(modelValidators) {
@@ -793,30 +859,35 @@ Ext.define('Ext.data.field.Field', {
         this.modelValidators = modelValidators;
     },
 
-    compileValidators: function() {
-        var me = this;
-        me._validators = [];
-        me.constructValidators(me.validators);
-        me.constructValidators(me.modelValidators);
-        me.constructValidators(me.instanceValidators);
-    },
+    constructValidators: function(validators) {
+        var all, length, i, item, validator, presence;
 
-    constructValidators: function (validators) {
         if (validators) {
             if (!(validators instanceof Array)) {
                 validators = [validators];
             }
 
-            var length = validators.length,
-                all = this._validators,
-                i, item;
+            all = this._validators; // we are inside getValidators so this is OK
 
-            for (i = 0; i < length; ++i) {
+            for (i = 0, length = validators.length; i < length; ++i) {
                 item = validators[i];
+
                 if (item.fn) {
                     item = item.fn;
                 }
-                all.push(Ext.Factory.dataValidator(item));
+
+                validator = Ext.Factory.dataValidator(item);
+
+                if (!validator.isPresence) {
+                    all.push(validator);
+                }
+                else {
+                    presence = validator;
+                }
+            }
+
+            if (presence) {
+                this.presence = [presence];
             }
         }
     },
@@ -826,10 +897,10 @@ Ext.define('Ext.data.field.Field', {
      * any {@link #sortType}. Also see {@link #compare}.
      * @param {Object} value1 The first value.
      * @param {Object} value2 The second value.
-     * @return {Number} `-1` if `value1` is less than `value2`. `1` if `value1` is greater than `value2`.
-     * `0` otherwise.
+     * @return {Number} `-1` if `value1` is less than `value2`; `1` if `value1` is greater than
+     * `value2`; `0` otherwise.
      */
-    collate: function (value1, value2) {
+    collate: function(value1, value2) {
         var me = this,
             lhs = value1,
             rhs = value2;
@@ -847,10 +918,10 @@ Ext.define('Ext.data.field.Field', {
      * {@link #collate}.
      * @param {Object} value1 The first value.
      * @param {Object} value2 The second value.
-     * @return {Number} `-1` if `value1` is less than `value2`. `1` if `value1` is greater than `value2`.
-     * `0` otherwise.
+     * @return {Number} `-1` if `value1` is less than `value2`; `1` if `value1` is greater than
+     * `value2`; `0` otherwise.
      */
-    compare: function (value1, value2) {
+    compare: function(value1, value2) {
         return (value1 === value2) ? 0 : ((value1 < value2) ? -1 : 1);
     },
 
@@ -862,7 +933,7 @@ Ext.define('Ext.data.field.Field', {
      * @param {Object} value2 The second value.
      * @return {Boolean} `true` if the values are equal.
      */
-    isEqual: function (value1, value2) {
+    isEqual: function(value1, value2) {
         return this.compare(value1, value2) === 0;
     },
 
@@ -937,8 +1008,8 @@ Ext.define('Ext.data.field.Field', {
     convert: null,
 
     /**
-     * A function which converts the Model's value for this Field into a form which can be used by whatever {@link Ext.data.writer.Writer Writer}
-     * is being used to sync data with the server.
+     * A function which converts the Model's value for this Field into a form which can be used
+     * by whatever {@link Ext.data.writer.Writer Writer} is being used to sync data with the server.
      *
      * @method
      * @param {Mixed} value The Field's value - the value to be serialized.
@@ -951,14 +1022,12 @@ Ext.define('Ext.data.field.Field', {
      * Validates the passed value for this field.
      *
      * @param {Object} value The value to validate.
-     *
      * @param {String} [separator] This string is passed if the caller wants all validation
      * messages concatenated with this string between each. This can be handled as a
      * "falsy" value because concatenating with no separator is seldom desirable.
-     *
-     * @param {Ext.data.ErrorCollection} [errors] This parameter is passed if the caller
-     * wants all validation results individually added to the collection.
-     *
+     * @param {Ext.data.ErrorCollection/Ext.util.Collection/Array} [errors] This parameter is
+     * passed if the caller wants all validation results individually added to the collection.
+     * @param {Ext.data.Model} record The record being validated
      * @return {Boolean/String} `true` if the value is valid. A string may be returned if
      * the value is not valid, to indicate an error message. Any other non `true` value
      * indicates the value is not valid. This method is not implemented by default,
@@ -970,30 +1039,54 @@ Ext.define('Ext.data.field.Field', {
      */
     validate: function(value, separator, errors, record) {
         var me = this,
-            ret = '',
-            result, validator, validators, length, i;
+            validators = me.getValidators(),
+            result, presence;
 
-        if (!me._validators) {
-            me.compileValidators();
+        presence = this.presence;
+
+        if (presence && (value == null || value === '')) {
+            result = me.validateGroup(presence, value, separator, errors, record);
+
+            if (result !== true) {
+                return result;
+            }
         }
 
-        validators = me._validators;
+        return me.validateGroup(validators, value, separator, errors, record);
+    },
+
+    validateGroup: function(validators, value, separator, errors, record) {
+        var ret = '',
+            validator, length, i, result;
 
         for (i = 0, length = validators.length; i < length; ++i) {
             validator = validators[i];
-            result = validator.validate(value, record); 
+            result = validator.validate(value, record);
 
             if (result !== true) {
-                result = result || me.defaultInvalidMessage;
+                result = result || this.defaultInvalidMessage;
+
                 if (errors) {
-                    errors.add(me.name, result);
+                    if (errors.isMixedCollection) {
+                        errors.add(this.name, result);
+                    }
+                    else if (errors.isCollection) {
+                        errors.add(result);
+                    }
+                    else {
+                        errors.push(result);
+                    }
+
                     ret = ret || result;
-                } else if (separator) {
+                }
+                else if (separator) {
                     if (ret) {
                         ret += separator;
                     }
+
                     ret += result;
-                } else {
+                }
+                else {
                     ret = result;
                     break;
                 }
@@ -1003,7 +1096,7 @@ Ext.define('Ext.data.field.Field', {
         return ret || true;
     },
 
-    doCalculate: function (v, rec) {
+    doCalculate: function(v, rec) {
         return rec ? this.calculate(rec.data) : v;
     },
 
@@ -1069,6 +1162,7 @@ Ext.define('Ext.data.field.Field', {
      */
     hasMapping: function() {
         var map = this.mapping;
+
         return !!(map || map === 0);
     },
 
@@ -1089,22 +1183,61 @@ Ext.define('Ext.data.field.Field', {
     },
 
     /**
+     * Gets the summary for this field. See {@link #summary}.
+     * @return {Ext.data.summary.Base} The summary.
+     */
+    getSummary: function() {
+        var me = this,
+            doneSummary = me.doneSummary,
+            summary = me.summary;
+
+        if (!doneSummary) {
+            me.doneSummary = true;
+
+            if (summary) {
+                me.summary = summary = Ext.Factory.dataSummary(summary);
+            }
+        }
+
+        return summary || null;
+    },
+
+    /**
      * Gets a string representation of the type of this field.
      * @return {String} type
      */
     getType: function() {
         return 'auto';
     },
+
+    privates: {
+        getValidators: function() {
+            var me = this,
+                validators = me._validators;
+
+            if (!validators) {
+                me._validators = validators = [];
+
+                me.constructValidators(me.validators);
+                me.constructValidators(me.modelValidators);
+                me.constructValidators(me.instanceValidators);
+            }
+
+            return validators;
+        }
+    },
+
     deprecated: {
         5.1: {
             methods: {
                 /**
+                 * @method getSortDir
                  * Gets the sortDir for this field.
                  * @return {String} sortDir
                  * @deprecated 5.1 Setting sortDir and calling getSortDir were never applied by the
                  * the Sorter.  This functionality does not natively exist on field instances.
                  */
-                getSortDir: function () {
+                getSortDir: function() {
                     return this.sortDir;
                 }
             }

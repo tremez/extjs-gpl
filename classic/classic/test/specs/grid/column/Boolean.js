@@ -1,5 +1,4 @@
-describe("Ext.grid.column.Boolean", function() {
-    
+topSuite("Ext.grid.column.Boolean", ['Ext.grid.Panel'], function() {
     var grid, store, colRef;
 
     var Model = Ext.define(null, {
@@ -9,19 +8,31 @@ describe("Ext.grid.column.Boolean", function() {
             defaultValue: undefined
         }]
     });
-    
+
     function getCell(rowIdx, colIdx) {
         return grid.getView().getCellInclusive({
             row: rowIdx,
             column: colIdx
-        });
+        }, true);
     }
-    
+
+    function getCellInnerHtml(rowIdx, colIdx) {
+        var cell = getCell(rowIdx, colIdx);
+
+        return cell.querySelector(grid.getView().innerSelector).innerHTML;
+    }
+
     function getCellText(rowIdx, colIdx) {
         var cell = getCell(rowIdx, colIdx);
-        return Ext.fly(cell).down(grid.getView().innerSelector).dom.innerHTML;
+
+        // Go down to the first textNode
+        while (cell.nodeType !== 3) {
+            cell = cell.firstChild;
+        }
+
+        return cell.data;
     }
-    
+
     function makeGrid(value, colCfg) {
         store = new Ext.data.Store({
             model: Model,
@@ -29,14 +40,14 @@ describe("Ext.grid.column.Boolean", function() {
                 field: value
             }]
         });
-        
+
         grid = new Ext.grid.Panel({
             store: store,
             columns: [Ext.apply({
                 xtype: 'booleancolumn',
                 text: 'Col',
                 dataIndex: 'field',
-                flex: 1    
+                flex: 1
             }, colCfg)],
             width: 400,
             height: 100,
@@ -45,37 +56,35 @@ describe("Ext.grid.column.Boolean", function() {
         });
         colRef = grid.getColumnManager().getColumns();
     }
-    
-    afterEach(function(){
+
+    afterEach(function() {
         Ext.destroy(grid, store);
         colRef = store = grid = null;
     });
-    
+
     describe("renderer", function() {
         describe("undefinedText", function() {
             it("should render the undefined text", function() {
                 makeGrid(undefined);
+
                 var text = getCellText(0, 0);
-                // Normalize the text for cross browser
-                if (text === '&nbsp;') {
-                    text = '&#160;'
-                }
+
                 expect(text).toBe(colRef[0].undefinedText);
-            });    
+            });
         });
-        
+
         describe("falseText", function() {
             it("should render the falseText if value === false", function() {
                 makeGrid(false);
                 expect(getCellText(0, 0)).toBe(colRef[0].falseText);
             });
-            
+
             it("should render the falseText if value === 'false'", function() {
                 makeGrid('false');
                 expect(getCellText(0, 0)).toBe(colRef[0].falseText);
             });
         });
-        
+
         it("should render the trueText otherwise", function() {
             makeGrid(true);
             expect(getCellText(0, 0)).toBe(colRef[0].trueText);
@@ -88,16 +97,17 @@ describe("Ext.grid.column.Boolean", function() {
                 trueText: '<div class="foo">isTrue</div>',
                 falseText: '<div class="bar">isFalse</div>'
             });
-            
+
             store.first().set('field', true);
-            
-            var text = getCellText(0, 0).replace(/\"/g, '').toLowerCase();
+
+            var text = getCellInnerHtml(0, 0).replace(/\"/g, '').toLowerCase();
+
             expect(text).toBe('<div class=foo>istrue</div>');
-            
+
             store.first().set('field', false);
-            
-            text = getCellText(0, 0).replace(/\"/g, '').toLowerCase();
+
+            text = getCellInnerHtml(0, 0).replace(/\"/g, '').toLowerCase();
             expect(text).toBe('<div class=bar>isfalse</div>');
         });
-    })
+    });
 });

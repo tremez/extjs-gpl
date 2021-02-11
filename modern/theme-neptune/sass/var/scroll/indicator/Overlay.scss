@@ -1,0 +1,123 @@
+/**
+ * @class Ext.scroll.indicator.Overlay
+ */
+
+/**
+ * @var {color}
+ * Overlay Scroll Indicator background color
+ */
+$scrolloverlay-background-color: dynamic(#000);
+
+/**
+ * @var {number}
+ * Overlay Scroll Indicator opacity
+ */
+$scrolloverlay-opacity: dynamic(.5);
+
+/**
+ * @var {number}
+ * Overlay Scroll Indicator border-radius
+ */
+$scrolloverlay-border-radius: dynamic(9px);
+
+/**
+ * @var {number}
+ * Overlay Scroll Indicator size on the scrolling cross-axis
+ */
+$scrolloverlay-width: dynamic(6px);
+
+/**
+ * @var {number}
+ * Overlay Scroll Indicator minimum size on the scrolling main-axis
+ */
+$scrolloverlay-min-length: dynamic(24px);
+
+/**
+ * @var {number}
+ * Overlay Scroll Indicator margin
+ */
+$scrolloverlay-margin: dynamic(2px);
+
+/**
+ * @var {map}
+ * Parameters for the "action" button UI.
+ * Set to `null` to eliminate the UI from the CSS output.
+ * @ui scrolloverlay-ui
+ */
+$scrolloverlay-ios-ui: dynamic((
+    background-color: #606060,
+    width: 3px,
+    min-length: 36px
+));
+
+/**
+ * @var {map}
+ * Parameters for the "action" button UI.
+ * Set to `null` to eliminate the UI from the CSS output.
+ * @ui scrolloverlay-ui
+ */
+$scrolloverlay-android-ui: dynamic((
+    background-color: #808080,
+    width: 4px,
+    border-radius: 0,
+    min-length: 8px,
+    margin: 0
+));
+
+/**
+ * Creates a visual theme for an Overlay Scroll Indicator.
+ *
+ * @param {string} $ui
+ * The name of the UI being created. Can not included spaces or special punctuation
+ * (used in CSS class names).
+ *
+ * @param {String} [$xtype=scrolloverlay] (protected) The {@link Ext.Class#xtype} to use
+ * in CSS selectors.  For use by UI mixins of derived classes.
+ *
+ * @param {color} $background-color
+ * Overlay Scroll Indicator background color
+ *
+ * @param {number} $opacity
+ * Overlay Scroll Indicator opacity
+ *
+ * @param {number} $border-radius
+ * Overlay Scroll Indicator border-radius
+ *
+ * @param {number} $width
+ * Overlay Scroll Indicator size on the scrolling cross-axis
+ *
+ * @param {number} $min-length
+ * Overlay Scroll Indicator minimum size on the scrolling main-axis
+ *
+ * @param {number} $margin
+ * Overlay Scroll Indicator margin
+ */
+@mixin scrolloverlay-ui(
+    $ui: null,
+    $xtype: scrolloverlay,
+    $background-color: null,
+    $opacity: null,
+    $border-radius: null,
+    $width: null,
+    $min-length: null,
+    $margin: null
+) {
+    $ui-suffix: ui-suffix($ui);
+
+    .#{$prefix}#{$xtype}#{$ui-suffix} {
+        background-color: $background-color;
+        opacity: $opacity;
+        border-radius: $border-radius;
+        margin: $margin;
+
+        &.#{$prefix}vertical {
+            width: $width;
+            min-height: $min-length;
+        }
+
+        &.#{$prefix}horizontal {
+            height: $width;
+            min-width: $min-length;
+        }
+    }
+};

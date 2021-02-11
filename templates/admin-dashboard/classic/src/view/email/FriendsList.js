@@ -13,7 +13,7 @@ Ext.define('Admin.view.email.FriendsList', {
 
     cls: 'navigation-email',
 
-    iconCls: 'x-fa fa-group',
+    iconCls: 'x-fa fa-users',
 
     floating: false
 });

@@ -1,0 +1,70 @@
+/**
+ * @class Ext.grid.locked.Grid
+ */
+
+/**
+ * @var {color}
+ * The locked region separator color.
+ */
+$lockedgrid-region-separator-color: dynamic($base-color);
+
+/**
+ * @var {number}
+ * The locked region separator width.
+ */
+$lockedgrid-region-separator-width: dynamic(2px);
+
+/**
+ * @var {string}
+ * The locked region separator style.
+ */
+$lockedgrid-region-separator-style: dynamic(solid);
+
+/**
+ * Creates a visual theme for a locked grid.
+ *
+ * @param {string} $ui
+ * The name of the UI being created. Can not included spaces or special punctuation
+ * (used in CSS class names).
+ *
+ * @param {color} $region-separator-color
+ * Locked region separator color.
+ *
+ * @param {number} $region-separator-width
+ * Locked region separator width.
+ *
+ * @param {string} $region-separator-style
+ * Locked region separator style.
+ */
+@mixin lockedgrid-ui(
+    $ui: null,
+    $region-separator-color: null,
+    $region-separator-width: null,
+    $region-separator-style: null
+) {
+    $ui-suffix: ui-suffix($ui);
+
+    .#{$prefix}lockedgrid#{$ui-suffix} {
+        .#{$prefix}lockedgridregion {
+            &.#{$prefix}lock-start {
+                border-color: $region-separator-color;
+                border-right-width: $region-separator-width;
+                border-style: $region-separator-style;
+
+                border-left-width: 0;
+                border-top-width: 0;
+                border-bottom-width: 0;
+            }
+
+            &.#{$prefix}lock-end {
+                border-color: $region-separator-color;
+                border-left-width: $region-separator-width;
+                border-style: $region-separator-style;
+
+                border-right-width: 0;
+                border-top-width: 0;
+                border-bottom-width: 0;
+            }
+        }
+    }
+}

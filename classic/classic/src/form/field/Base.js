@@ -1,50 +1,66 @@
 /**
- * Base class for form fields that provides default event handling, rendering, and other common functionality
- * needed by all form field types. Utilizes the {@link Ext.form.field.Field} mixin for value handling and validation,
- * and the {@link Ext.form.Labelable} mixin to provide label and error message display.
+ * Base class for form fields that provides default event handling, rendering, and other common
+ * functionality needed by all form field types. Utilizes the {@link Ext.form.field.Field} mixin
+ * for value handling and validation, and the {@link Ext.form.Labelable} mixin to provide label
+ * and error message display.
  *
- * In most cases you will want to use a subclass, such as {@link Ext.form.field.Text} or {@link Ext.form.field.Checkbox},
- * rather than creating instances of this class directly. However if you are implementing a custom form field,
- * using this as the parent class is recommended.
+ * In most cases you will want to use a subclass, such as {@link Ext.form.field.Text} or
+ * {@link Ext.form.field.Checkbox}, rather than creating instances of this class directly. However
+ * if you are implementing a custom form field, using this as the parent class is recommended.
  *
  * # Values and Conversions
  *
  * Because Base implements the Field mixin, it has a main value that can be initialized with the
- * {@link #value} config and manipulated via the {@link #getValue} and {@link #setValue} methods. This main
- * value can be one of many data types appropriate to the current field, for instance a {@link Ext.form.field.Date Date}
- * field would use a JavaScript Date object as its value type. However, because the field is rendered as a HTML
- * input, this value data type can not always be directly used in the rendered field.
+ * {@link #value} config and manipulated via the {@link #getValue} and {@link #setValue} methods.
+ * This main value can be one of many data types appropriate to the current field, for instance a
+ * {@link Ext.form.field.Date Date} field would use a JavaScript Date object as its value type.
+ * However, because the field is rendered as a HTML input, this value data type can not always
+ * be directly used in the rendered field.
  *
- * Therefore Base introduces the concept of a "raw value". This is the value of the rendered HTML input field,
- * and is normally a String. The {@link #getRawValue} and {@link #setRawValue} methods can be used to directly
- * work with the raw value, though it is recommended to use getValue and setValue in most cases.
+ * Therefore Base introduces the concept of a "raw value". This is the value of the rendered HTML
+ * input field, and is normally a String. The {@link #getRawValue} and {@link #setRawValue} methods
+ * can be used to directly work with the raw value, though it is recommended to use getValue
+ * and setValue in most cases.
  *
- * Conversion back and forth between the main value and the raw value is handled by the {@link #valueToRaw} and
- * {@link #rawToValue} methods. If you are implementing a subclass that uses a non-String value data type, you
- * should override these methods to handle the conversion.
+ * Conversion back and forth between the main value and the raw value is handled by the
+ * {@link #valueToRaw} and {@link #rawToValue} methods. If you are implementing a subclass
+ * that uses a non-String value data type, you should override these methods to handle
+ * the conversion.
  *
  * # Rendering
  *
- * The content of the field body is defined by the {@link #fieldSubTpl} XTemplate, with its argument data
- * created by the {@link #getSubTplData} method. Override this template and/or method to create custom
- * field renderings.
+ * The content of the field body is defined by the {@link #fieldSubTpl} XTemplate, with its argument
+ * data created by the {@link #getSubTplData} method. Override this template and/or method to create
+ * custom field renderings.
  */
 Ext.define('Ext.form.field.Base', {
     extend: 'Ext.Component',
-    mixins: [
-        'Ext.form.Labelable',
-        'Ext.form.field.Field'
-    ],
-    xtype: 'field',
     alternateClassName: ['Ext.form.Field', 'Ext.form.BaseField'],
+    xtype: 'field',
+
     requires: [
         'Ext.util.DelayedTask',
         'Ext.XTemplate'
     ],
-    
+
+    mixins: [
+        'Ext.form.Labelable',
+        'Ext.form.field.Field'
+    ],
+
+    /**
+     * @property focusable
+     * @inheritdoc
+     */
     focusable: true,
+
+    /**
+     * @cfg shrinkWrap
+     * @inheritdoc
+     */
     shrinkWrap: true,
 
+    /* eslint-disable indent, max-len */
     /**
      * @cfg {Ext.XTemplate} fieldSubTpl
      * The content of the field body is defined by this config option.
@@ -65,14 +81,23 @@ Ext.define('Ext.form.field.Base', {
                 '<tpl foreach="ariaElAttributes"> {$}="{.}"</tpl>',
             '</tpl>',
             '<tpl foreach="inputElAriaAttributes"> {$}="{.}"</tpl>',
-        ' class="{fieldCls} {typeCls} {typeCls}-{ui} {editableCls} {inputCls}" autocomplete="off"/>',
+        ' class="{fieldCls} {typeCls} {typeCls}-{ui} {editableCls} {inputCls} {fixCls}" autocomplete="off"/>',
         {
             disableFormats: true
         }
     ],
+    /* eslint-enable indent, max-len */
 
+    /**
+     * @property defaultBindProperty
+     * @inheritdoc
+     */
     defaultBindProperty: 'value',
-    
+
+    /**
+     * @cfg autoEl
+     * @inheritdoc
+     */
     autoEl: {
         role: 'presentation'
     },
@@ -87,6 +112,10 @@ Ext.define('Ext.form.field.Base', {
         'inputAttrTpl'
     ],
 
+    /**
+     * @cfg childEls
+     * @inheritdoc
+     */
     childEls: [
         /**
          * @property {Ext.dom.Element} inputEl
@@ -98,19 +127,21 @@ Ext.define('Ext.form.field.Base', {
     /**
      * @cfg {String} name
      * The name of the field. This is used as the parameter name when including the field value
-     * in a {@link Ext.form.Basic#submit form submit()}. If no name is configured, it falls back to the {@link #inputId}.
-     * To prevent the field from being included in the form submit, set {@link #submitValue} to false.
+     * in a {@link Ext.form.Basic#submit form submit()}. If no name is configured, it falls back
+     * to the {@link #inputId}. To prevent the field from being included in the form submit,
+     * set {@link #submitValue} to false.
      */
 
     /**
      * @cfg {String} inputType
      * The type attribute for input fields -- e.g. radio, text, password, file. The extended types
-     * supported by HTML5 inputs (url, email, etc.) may also be used, though using them will cause older browsers to
-     * fall back to 'text'.
+     * supported by HTML5 inputs (url, email, etc.) may also be used, though using them will cause
+     * older browsers to fall back to 'text'.
      *
-     * The type 'password' must be used to render that field type currently -- there is no separate Ext component for
-     * that. You can use {@link Ext.form.field.File} which creates a custom-rendered file upload field, but if you want
-     * a plain unstyled file input you can use a Base with inputType:'file'.
+     * The type 'password' must be used to render that field type currently -- there is no separate
+     * Ext component for that. You can use {@link Ext.form.field.File} which creates
+     * a custom-rendered file upload field, but if you want a plain unstyled file input you can use
+     * a Base with inputType:'file'.
      */
     inputType: 'text',
 
@@ -133,29 +164,33 @@ Ext.define('Ext.form.field.Base', {
      * fields built via applyTo
      */
 
-    //<locale>
     /**
      * @cfg {String} invalidText
      * The error text to use when marking a field invalid and no message is provided
+     * @locale
      */
-    invalidText : 'The value in this field is invalid',
-    //</locale>
+    invalidText: 'The value in this field is invalid',
 
     /**
-     * @cfg {String} [fieldCls='x-form-field']
+     * @cfg {String} fieldCls
      * The default CSS class for the field input
      */
-    fieldCls : Ext.baseCSSPrefix + 'form-field',
+    fieldCls: Ext.baseCSSPrefix + 'form-field',
 
     /**
      * @cfg {String} fieldStyle
-     * Optional CSS style(s) to be applied to the {@link #inputEl field input element}. Should be a valid argument to
-     * {@link Ext.dom.Element#applyStyles}. Defaults to undefined. See also the {@link #setFieldStyle} method for changing
-     * the style after initialization.
+     * Optional CSS style(s) to be applied to the {@link #inputEl field input element}.
+     * Should be a valid argument to {@link Ext.dom.Element#applyStyles}. Defaults to undefined.
+     * See also the {@link #setFieldStyle} method for changing the style after initialization.
      */
 
     /**
-     * @cfg {String} [focusCls='x-form-focus']
+     * @cfg [publishes=['rawValue', 'value', 'dirty']]
+     * @inheritdoc
+     */
+
+    /**
+     * @cfg {String} focusCls
      * The CSS class to use when the field receives focus
      */
     focusCls: 'form-focus',
@@ -164,42 +199,52 @@ Ext.define('Ext.form.field.Base', {
      * @cfg {String} dirtyCls
      * The CSS class to use when the field value {@link #isDirty is dirty}.
      */
-    dirtyCls : Ext.baseCSSPrefix + 'form-dirty',
+    dirtyCls: Ext.baseCSSPrefix + 'form-dirty',
 
     /**
      * @cfg {String[]} checkChangeEvents
-     * A list of event names that will be listened for on the field's {@link #inputEl input element}, which will cause
-     * the field's value to be checked for changes. If a change is detected, the {@link #change change event} will be
-     * fired, followed by validation if the {@link #validateOnChange} option is enabled.
+     * A list of event names that will be listened for on the field's
+     * {@link #inputEl input element}, which will cause the field's value to be checked for changes.
+     * If a change is detected, the {@link #change change event} will be fired, followed by
+     * validation if the {@link #validateOnChange} option is enabled.
      *
-     * Defaults to ['change', 'propertychange', 'keyup'] in Internet Explorer, and ['change', 'input', 'textInput', 'keyup',
-     * 'dragdrop'] in other browsers. This catches all the ways that field values can be changed in most supported
-     * browsers; the only known exceptions at the time of writing are:
+     * Defaults to ['change', 'propertychange', 'keyup'] in Internet Explorer, and
+     * ['change', 'input', 'textInput', 'keyup', 'dragdrop'] in other browsers.
+     * This catches all the ways that field values can be changed in most supported browsers;
+     * the only known exceptions at the time of writing are:
      *
-     *   - Safari 3.2 and older: cut/paste in textareas via the context menu, and dragging text into textareas
-     *   - Opera 10 and 11: dragging text into text fields and textareas, and cut via the context menu in text fields
+     *   - Safari 3.2 and older: cut/paste in textareas via the context menu, and dragging text
+     *     into textareas
+     *   - Opera 10 and 11: dragging text into text fields and textareas, and cut via the context
+     *     menu in text fields and textareas
+     *   - Opera 9: Same as Opera 10 and 11, plus paste from context menu in text fields
      *     and textareas
-     *   - Opera 9: Same as Opera 10 and 11, plus paste from context menu in text fields and textareas
      *
-     * If you need to guarantee on-the-fly change notifications including these edge cases, you can call the
-     * {@link #checkChange} method on a repeating interval, e.g. using {@link Ext.TaskManager}, or if the field is within
-     * a {@link Ext.form.Panel}, you can use the FormPanel's {@link Ext.form.Panel#pollForChanges} configuration to set up
+     * If you need to guarantee on-the-fly change notifications including these edge cases, you can
+     * call the {@link #checkChange} method on a repeating interval, e.g. using
+     * {@link Ext.TaskManager}, or if the field is within a {@link Ext.form.Panel}, you can use
+     * the FormPanel's {@link Ext.form.Panel#pollForChanges} configuration to set up
      * such a task automatically.
      */
-    checkChangeEvents: Ext.isIE && (!document.documentMode || document.documentMode <= 9) ?
-                        ['change', 'propertychange', 'keyup'] :
-                        ['change', 'input', 'textInput', 'keyup', 'dragdrop'],
-     // While input is supported in IE9, we use attachEvent for events, so we need to fall back here
-                        
-    ignoreChangeRe: /data\-errorqtip|style\.|className/,   
+    checkChangeEvents: Ext.isIE && (!document.documentMode || document.documentMode <= 9)
+        ? ['change', 'propertychange', 'keyup']
+        : ['change', 'input', 'textInput', 'keyup', 'dragdrop'],
+    // While input is supported in IE9, we use attachEvent for events, so we need to fall back here
+
+    ignoreChangeRe: /data-errorqtip|style\.|className/,
 
     /**
      * @cfg {Number} checkChangeBuffer
-     * Defines a timeout in milliseconds for buffering {@link #checkChangeEvents} that fire in rapid succession.
+     * Defines a timeout in milliseconds for buffering {@link #cfg!checkChangeEvents} that fire
+     * in rapid succession.
      * Defaults to 50 milliseconds.
      */
     checkChangeBuffer: 50,
 
+    /**
+     * @cfg liquidLayout
+     * @inheritdoc
+     */
     liquidLayout: true,
 
     /**
@@ -216,55 +261,98 @@ Ext.define('Ext.form.field.Base', {
 
     /**
      * @cfg {String} inputId
-     * The id that will be given to the generated input DOM element. Defaults to an automatically generated id. If you
-     * configure this manually, you must make sure it is unique in the document.
+     * The id that will be given to the generated input DOM element. Defaults to an automatically
+     * generated id. If you configure this manually, you must make sure it is unique
+     * in the document.
      */
 
     /**
-     * @cfg {Boolean} validateOnBlur
+     * @cfg {Boolean} [validateOnBlur=true]
      * Whether the field should validate when it loses focus. This will cause fields to be validated
-     * as the user steps through the fields in the form regardless of whether they are making changes to those fields
-     * along the way. See also {@link #validateOnChange}.
+     * as the user steps through the fields in the form regardless of whether they are making
+     * changes to those fields along the way. See also {@link #validateOnChange}.
      */
     validateOnBlur: true,
-    
-    //<locale>
+
     /**
-     * @cfg {String} formatText Helpful text describing acceptable format for field values.
-     * This text will be announced by Assistive Technologies such as screen readers when
-     * the field is focused.
+     * @cfg {Boolean} [validateOnFocusLeave=false] Set to `true` to validate the field
+     * when focus leaves the field's component hierarchy entirely.
+     *
+     * The difference between  {@link #validateOnBlur} and this option is that the former
+     * will happen when field's _input element_ blurs. In complex fields such as ComboBox
+     * or Date focus may leave the input element to the drop-down picker, which will cause
+     * {@link #validateOnBlur} to happen prematurely.
+     *
+     * Using this option is recommended for accessible applications. The default value
+     * is `false` for backwards compatibility; this option and {@link #validateOnBlur}
+     * are mutually exclusive.
+     *
+     * @since 6.5.3
+     */
+    validateOnFocusLeave: false,
+
+    /**
+     * @cfg {String} formatText
+     * Helpful text describing acceptable format for field values. This text will be
+     * announced by Assistive Technologies such as screen readers when the field is
+     * focused.
      *
      * This option is superseded by {@link #ariaHelp}.
      *
-     * @deprecated 6.2.0
+     * @deprecated 6.2.0 This config is deprecated.
+     * @locale
      */
-    //</locale>
 
     /**
      * @private
      */
-    hasFocus : false,
+    hasFocus: false,
 
+    /**
+     * @cfg baseCls
+     * @inheritdoc
+     */
     baseCls: Ext.baseCSSPrefix + 'field',
 
+    /**
+     * @cfg fieldBodyCls
+     * @inheritdoc
+     */
     fieldBodyCls: Ext.baseCSSPrefix + 'field-body',
 
+    webkitBorderBoxBugCls: Ext.baseCSSPrefix + 'webkit-border-box-bug',
+
+    /**
+     * @property maskOnDisable
+     * @inheritdoc
+     */
     maskOnDisable: false,
-    
+
     // Instructs the layout to stretch the inputEl to 100% width when laying
     // out under fixed conditions. Defaults to true for all fields except check/radio
     // Doesn't seem worth it to introduce a whole new layout class just for this flag
     stretchInputElFixed: true,
-    
+
     // Form fields render their ARIA attributes to the inputEl
+    /**
+     * @property ariaEl
+     * @inheritdoc
+     */
     ariaEl: 'inputEl',
+
+    /**
+     * @property focusEl
+     * @inheritdoc
+     */
+    focusEl: 'inputEl',
     renderAriaElements: true,
-    
+
     /**
      * @event specialkey
-     * Fires when any key related to navigation (arrows, tab, enter, esc, etc.) is pressed. To handle other keys
-     * see {@link Ext.util.KeyMap}. You can check {@link Ext.event.Event#getKey} to determine which key was
-     * pressed. For example:
+     * Fires when any key related to navigation (arrows, tab, enter, esc, etc.) is pressed.
+     * To handle other keys see {@link Ext.util.KeyMap}. You can check
+     * {@link Ext.event.Event#getKey} to determine which key was pressed.
+     * For example:
      *
      *     var form = new Ext.form.Panel({
      *         ...
@@ -313,11 +401,17 @@ Ext.define('Ext.form.field.Base', {
         me.initField();
         me.initDefaultName();
 
+        // validateOnBlur and validateOnFocusLeave are mutually exclusive,
+        // with latter taking precedence
+        if (me.validateOnFocusLeave) {
+            me.validateOnBlur = false;
+        }
+
         // Add to protoEl before render
         if (me.readOnly) {
             me.addCls(me.readOnlyCls);
         }
-        
+
         me.addCls(Ext.baseCSSPrefix + 'form-type-' + me.inputType);
 
         // formatText is superseded by ariaHelp but we still apply it for compatibility
@@ -325,13 +419,13 @@ Ext.define('Ext.form.field.Base', {
             me.ariaHelp = Ext.String.format(me.formatText, me.format);
         }
     },
-    
+
     /**
      * @private
      */
     initDefaultName: function() {
         var me = this;
-        
+
         // Default name to inputId
         if (!me.name) {
             me.name = me.getInputId();
@@ -339,8 +433,8 @@ Ext.define('Ext.form.field.Base', {
     },
 
     /**
-     * Returns the input id for this field. If none was specified via the {@link #inputId} config, then an id will be
-     * automatically generated.
+     * Returns the input id for this field. If none was specified via the {@link #inputId} config,
+     * then an id will be automatically generated.
      */
     getInputId: function() {
         return this.inputId || (this.inputId = this.id + '-inputEl');
@@ -356,7 +450,16 @@ Ext.define('Ext.form.field.Base', {
             id = me.id,
             type = me.inputType,
             inputId = me.getInputId(),
+            inputCls = me.inputCls || '',
+            fixCls = '',
             data, ariaAttr, inputElAttr;
+
+        if (Ext.supports.WebKitInputTableBoxModelBug) {
+            // workaround for https://bugs.webkit.org/show_bug.cgi?id=137693
+            // Can't use inputCls or typeCls here since they will be appended
+            // with ui in different subclasses which breaks things.
+            fixCls += me.webkitBorderBoxBugCls;
+        }
 
         data = Ext.apply({
             ui: me.ui,
@@ -371,21 +474,22 @@ Ext.define('Ext.form.field.Base', {
             fieldStyle: me.getFieldStyle(),
             childElCls: fieldData.childElCls,
             tabIdx: me.tabIndex,
-            inputCls: me.inputCls,
+            inputCls: inputCls,
             typeCls: Ext.baseCSSPrefix + 'form-' + (me.isTextInput ? 'text' : type),
+            fixCls: fixCls,
             ariaEl: me.ariaEl
         }, me.subTplData);
-        
+
         if (me.ariaRole) {
             ariaAttr = {};
-            
+
             if (!me.ariaStaticRoles[me.ariaRole]) {
                 // When ARIA attributes are rendered they should always reflect
                 // component's state. This contrasts with the standard HTML attributes
                 // like disabled and readonly, which are only present when enabled.
                 ariaAttr['aria-hidden'] = !!me.hidden;
                 ariaAttr['aria-disabled'] = !!me.disabled;
-                
+
                 // For most of the fields ariaEl === inputEl but certain types like Combo boxes
                 // and their descendants are compound widgets and need to have ARIA attributes
                 // on different elements.
@@ -394,46 +498,47 @@ Ext.define('Ext.form.field.Base', {
                     'aria-invalid': false,
                     'aria-readonly': !!me.readOnly
                 };
-                
+
                 // aria-label is not present by default, and aria-labelledby
                 // generally should not be used for fields' inputEls since usually
                 // they are referenced by their respective <label> elements.
                 if (me.ariaLabel) {
                     ariaAttr['aria-label'] = Ext.String.htmlEncode(me.ariaLabel);
                 }
-                
+
                 ariaAttr = Ext.apply(ariaAttr, me.getAriaAttributes());
-                
+
                 // If aria-describedby was set explicitly, don't override. Note that
                 // describedby applies to inputEl since most often that's the focusable
                 // element.
                 if (!ariaAttr['aria-describedby']) {
                     if (me.ariaHelp) {
-                        inputElAttr['aria-describedby'] = id + '-ariaStatusEl ' + id + '-ariaHelpEl';
+                        inputElAttr['aria-describedby'] =
+                            id + '-ariaStatusEl ' + id + '-ariaHelpEl';
                     }
                     else {
                         inputElAttr['aria-describedby'] = id + '-ariaStatusEl';
                     }
                 }
-                
+
                 data.inputElAriaAttributes = inputElAttr;
             }
-            
+
             if (me.ariaRole !== 'native') {
                 ariaAttr.role = me.ariaRole;
             }
-            
+
             // aria-label is not present by default, and aria-labelledby
             // generally should not be used for fields' inputEls since usually
             // they are referenced by their respective <label> elements.
             if (me.ariaLabel) {
                 ariaAttr['aria-label'] = me.ariaLabel;
             }
-            
+
             if (me.format && me.formatText && !data.title) {
                 ariaAttr.title = Ext.String.formatEncode(me.formatText, me.format);
             }
-            
+
             data.ariaElAttributes = ariaAttr;
         }
 
@@ -443,7 +548,8 @@ Ext.define('Ext.form.field.Base', {
     },
 
     /**
-     * Gets the markup to be inserted into the outer template's bodyEl. For fields this is the actual input element.
+     * Gets the markup to be inserted into the outer template's bodyEl.
+     * For fields this is the actual input element.
      * @protected
      */
     getSubTplMarkup: function(fieldData) {
@@ -472,20 +578,23 @@ Ext.define('Ext.form.field.Base', {
 
     /**
      * Set the {@link #fieldStyle CSS style} of the {@link #inputEl field input element}.
-     * @param {String/Object/Function} style The style(s) to apply. Should be a valid argument to {@link
-     * Ext.dom.Element#applyStyles}.
+     * @param {String/Object/Function} style The style(s) to apply. Should be a valid argument
+     * to {@link Ext.dom.Element#applyStyles}.
      */
     setFieldStyle: function(style) {
         var me = this,
             inputEl = me.inputEl;
+
         if (inputEl) {
             inputEl.applyStyles(style);
         }
+
         me.fieldStyle = style;
     },
 
     getFieldStyle: function() {
         var style = this.fieldStyle;
+
         return Ext.isObject(style) ? Ext.DomHelper.generateStyles(style, null, true) : style || '';
     },
 
@@ -496,7 +605,7 @@ Ext.define('Ext.form.field.Base', {
         this.mixins.labelable.self.initTip();
         this.renderActiveError();
     },
-    
+
     beforeBlur: function(e) {
         if (this.validateOnBlur) {
             this.validate();
@@ -504,6 +613,10 @@ Ext.define('Ext.form.field.Base', {
     },
 
     onFocusLeave: function(e) {
+        if (this.validateOnFocusLeave) {
+            this.validate();
+        }
+
         this.callParent([e]);
         this.completeEdit();
     },
@@ -528,23 +641,27 @@ Ext.define('Ext.form.field.Base', {
         var me = this,
             data = null,
             val;
+
         if (!me.disabled && me.submitValue) {
             val = me.getSubmitValue();
+
             if (val !== null) {
                 data = {};
                 data[me.getName()] = val;
             }
         }
+
         return data;
     },
 
     /**
-     * Returns the value that would be included in a standard form submit for this field. This will be combined with the
-     * field's name to form a name=value pair in the {@link #getSubmitData submitted parameters}. If an empty string is
-     * returned then just the name= will be submitted; if null is returned then nothing will be submitted.
+     * Returns the value that would be included in a standard form submit for this field.
+     * This will be combined with the field's name to form a name=value pair in the
+     * {@link #getSubmitData submitted parameters}. If an empty string is returned then just
+     * the name= will be submitted; if null is returned then nothing will be submitted.
      *
-     * Note that the value returned will have been {@link #processRawValue processed} but may or may not have been
-     * successfully {@link #validate validated}.
+     * Note that the value returned will have been {@link #processRawValue processed}
+     * but may or may not have been successfully {@link #validate validated}.
      *
      * @return {String} The value to be submitted, or null.
      */
@@ -553,8 +670,8 @@ Ext.define('Ext.form.field.Base', {
     },
 
     /**
-     * Returns the raw value of the field, without performing any normalization, conversion, or validation. To get a
-     * normalized and converted value see {@link #getValue}.
+     * Returns the raw value of the field, without performing any normalization, conversion,
+     * or validation. To get a normalized and converted value see {@link #getValue}.
      * @return {String} value The raw String value of the field
      */
     getRawValue: function() {
@@ -562,12 +679,14 @@ Ext.define('Ext.form.field.Base', {
             v = (me.inputEl ? me.inputEl.getValue() : Ext.valueFrom(me.rawValue, ''));
 
         me.rawValue = v;
+
         return v;
     },
 
     /**
-     * Sets the field's raw value directly, bypassing {@link #valueToRaw value conversion}, change detection, and
-     * validation. To set the value with these additional inspections see {@link #setValue}.
+     * Sets the field's raw value directly, bypassing {@link #valueToRaw value conversion},
+     * change detection, and validation. To set the value with these additional inspections
+     * see {@link #setValue}.
      * @param {Object} value The value to set
      * @return {Object} value The field value that is set
      */
@@ -598,7 +717,7 @@ Ext.define('Ext.form.field.Base', {
 
         return value;
     },
-    
+
     /**
      * @method
      * Transform the raw value before it is set
@@ -609,15 +728,16 @@ Ext.define('Ext.form.field.Base', {
     transformRawValue: Ext.identityFn,
 
     /**
-     * Converts a mixed-type value to a raw representation suitable for displaying in the field. This allows controlling
-     * how value objects passed to {@link #setValue} are shown to the user, including localization. For instance, for a
-     * {@link Ext.form.field.Date}, this would control how a Date object passed to {@link #setValue} would be converted
-     * to a String for display in the field.
+     * Converts a mixed-type value to a raw representation suitable for displaying in the field.
+     * This allows controlling how value objects passed to {@link #setValue} are shown to the user,
+     * including localization. For instance, for a {@link Ext.form.field.Date}, this would control
+     * how a Date object passed to {@link #setValue} would be converted to a String for display
+     * in the field.
      *
      * See {@link #rawToValue} for the opposite conversion.
      *
-     * The base implementation simply does a standard toString conversion, and converts {@link Ext#isEmpty empty values}
-     * to an empty string.
+     * The base implementation simply does a standard toString conversion, and converts
+     * {@link Ext#isEmpty empty values} to an empty string.
      *
      * @param {Object} value The mixed-type value to convert to the raw representation.
      * @return {Object} The converted raw value.
@@ -627,12 +747,13 @@ Ext.define('Ext.form.field.Base', {
     },
 
     /**
-     * Converts a raw input field value into a mixed-type value that is suitable for this particular field type. This
-     * allows controlling the normalization and conversion of user-entered values into field-type-appropriate values,
-     * e.g. a Date object for {@link Ext.form.field.Date}, and is invoked by {@link #getValue}.
+     * Converts a raw input field value into a mixed-type value that is suitable for this particular
+     * field type. This allows controlling the normalization and conversion of user-entered values
+     * into field-type-appropriate values, e.g. a Date object for {@link Ext.form.field.Date},
+     * and is invoked by {@link #getValue}.
      *
-     * It is up to individual implementations to decide how to handle raw values that cannot be successfully converted
-     * to the desired object type.
+     * It is up to individual implementations to decide how to handle raw values that cannot be
+     * successfully converted to the desired object type.
      *
      * See {@link #valueToRaw} for the opposite conversion.
      *
@@ -645,9 +766,10 @@ Ext.define('Ext.form.field.Base', {
     rawToValue: Ext.identityFn,
 
     /**
-     * Performs any necessary manipulation of a raw field value to prepare it for {@link #rawToValue conversion} and/or
-     * {@link #validate validation}, for instance stripping out ignored characters. In the base implementation it does
-     * nothing; individual subclasses may override this as needed.
+     * Performs any necessary manipulation of a raw field value to prepare it for
+     * {@link #rawToValue conversion} and/or {@link #validate validation}, for instance
+     * stripping out ignored characters. In the base implementation it does nothing;
+     * individual subclasses may override this as needed.
      *
      * @param {Object} value The unprocessed string value
      * @return {Object} The processed string value
@@ -656,47 +778,56 @@ Ext.define('Ext.form.field.Base', {
     processRawValue: Ext.identityFn,
 
     /**
-     * Returns the current data value of the field. The type of value returned is particular to the type of the
-     * particular field (e.g. a Date object for {@link Ext.form.field.Date}), as the result of calling {@link #rawToValue} on
-     * the field's {@link #processRawValue processed} String value. To return the raw String value, see {@link #getRawValue}.
+     * Returns the current data value of the field. The type of value returned is particular
+     * to the type of the particular field (e.g. a Date object for {@link Ext.form.field.Date}),
+     * as the result of calling {@link #rawToValue} on the field's
+     * {@link #processRawValue processed} String value. To return the raw String value,
+     * see {@link #getRawValue}.
      * @return {Object} value The field value
      */
     getValue: function() {
         var me = this,
             val = me.rawToValue(me.processRawValue(me.getRawValue()));
+
         me.value = val;
+
         return val;
     },
 
     /**
-     * Sets a data value into the field and runs the change detection and validation. To set the value directly
-     * without these inspections see {@link #setRawValue}.
+     * Sets a data value into the field and runs the change detection and validation.
+     * To set the value directly without these inspections see {@link #setRawValue}.
      * @param {Object} value The value to set
      * @return {Ext.form.field.Field} this
      */
     setValue: function(value) {
         var me = this;
+
         me.setRawValue(me.valueToRaw(value));
+
         return me.mixins.field.setValue.call(me, value);
     },
 
     onBoxReady: function() {
         var me = this;
+
         me.callParent(arguments);
-        
+
         if (me.setReadOnlyOnBoxReady) {
             me.setReadOnly(me.readOnly);
         }
-            
+
     },
 
     onDisable: function() {
         var me = this,
             inputEl = me.inputEl;
-            
+
         me.callParent();
+
         if (inputEl) {
             inputEl.dom.disabled = true;
+
             if (me.hasActiveError()) {
                 // clear invalid state since the field is now disabled
                 me.clearInvalid();
@@ -717,8 +848,9 @@ Ext.define('Ext.form.field.Base', {
             inputEl = me.inputEl,
             mark = me.preventMark,
             valid;
-            
+
         me.callParent();
+
         if (inputEl) {
             inputEl.dom.disabled = false;
         }
@@ -731,6 +863,7 @@ Ext.define('Ext.form.field.Base', {
             me.preventMark = mark;
             me.checkValidityChange(valid);
         }
+
         delete me.hadErrorOnDisable;
     },
 
@@ -746,7 +879,7 @@ Ext.define('Ext.form.field.Base', {
         readOnly = !!readOnly;
         me[readOnly ? 'addCls' : 'removeCls'](me.readOnlyCls);
         me.readOnly = readOnly;
-        
+
         if (inputEl) {
             inputEl.dom.readOnly = readOnly;
             inputEl.dom.setAttribute('aria-readonly', readOnly);
@@ -754,6 +887,7 @@ Ext.define('Ext.form.field.Base', {
         else if (me.rendering) {
             me.setReadOnlyOnBoxReady = true;
         }
+
         if (readOnly !== old) {
             me.fireEvent('writeablechange', me, readOnly);
         }
@@ -762,13 +896,13 @@ Ext.define('Ext.form.field.Base', {
     /**
      * @private
      */
-    fireKey: function(e, eOpts){
-        if(e.isSpecialKey()){
+    fireKey: function(e, eOpts) {
+        if (e.isSpecialKey()) {
             this.fireEvent('specialkey', this, e, eOpts);
         }
     },
 
-    initEvents : function(){
+    initEvents: function() {
         var me = this,
             inputEl = me.inputEl,
             onFieldMutation = me.onFieldMutation,
@@ -777,19 +911,25 @@ Ext.define('Ext.form.field.Base', {
             i, event;
 
         if (inputEl) {
-            me.mon(inputEl, Ext.supports.SpecialKeyDownRepeat ? 'keydown' : 'keypress', me.fireKey,  me);
+            me.mon(
+                inputEl, Ext.supports.SpecialKeyDownRepeat ? 'keydown' : 'keypress', me.fireKey, me
+            );
 
             for (i = 0; i < len; ++i) {
                 event = events[i];
+
                 if (event === 'propertychange') {
                     me.usesPropertychange = true;
                 }
+
                 if (event === 'textInput') {
                     me.usesTextInput = true;
                 }
+
                 me.mon(inputEl, event, onFieldMutation, me);
             }
         }
+
         me.callParent();
     },
 
@@ -798,13 +938,14 @@ Ext.define('Ext.form.field.Base', {
      * Called when some event (See the checkChangeEvents property) mutates the input field.
      * We react to changes.
      *
-     * Subclasses may provide an inplementation which may perform other tasks (eg ComboBox value matching)
-     * before calling the checkChange method.
+     * Subclasses may provide an inplementation which may perform other tasks (eg ComboBox value
+     * matching) before calling the checkChange method.
      */
     onFieldMutation: function(e) {
         // When using propertychange, we want to skip out on various values, since they won't cause
         // the underlying value to change.
-        if (!this.readOnly && !(e.type === 'propertychange' && this.ignoreChangeRe.test(e.browserEvent.propertyName))) {
+        if (!this.readOnly && !(e.type === 'propertychange' &&
+             this.ignoreChangeRe.test(e.browserEvent.propertyName))) {
             this.startCheckChangeTask();
         }
     },
@@ -816,12 +957,16 @@ Ext.define('Ext.form.field.Base', {
         if (!task) {
             me.checkChangeTask = task = new Ext.util.DelayedTask(me.doCheckChangeTask, me);
         }
+
         if (!me.bindNotifyListener) {
-            // We continually create/destroy the listener as needed (see doCheckChangeTask) because we're listening
-            // to a global event, so we don't want the event to be triggered unless absolutely necessary. In this case,
+            // We continually create/destroy the listener as needed (see doCheckChangeTask)
+            // because we're listening to a global event, so we don't want the event
+            // to be triggered unless absolutely necessary. In this case,
             // we only need to fix the value when we have a pending change to check.
-            me.bindNotifyListener = Ext.on('beforebindnotify', me.onBeforeNotify, me, {destroyable: true});
+            me.bindNotifyListener =
+                Ext.on('beforebindnotify', me.onBeforeNotify, me, { destroyable: true });
         }
+
         task.delay(me.checkChangeBuffer);
     },
 
@@ -832,10 +977,11 @@ Ext.define('Ext.form.field.Base', {
             bindNotifyListener.destroy();
             this.bindNotifyListener = null;
         }
+
         this.checkChange();
     },
 
-    publishValue: function () {
+    publishValue: function() {
         var me = this;
 
         if (me.rendered && !me.getErrors().length) {
@@ -845,10 +991,11 @@ Ext.define('Ext.form.field.Base', {
 
     /**
      * @private
-     * Called when the field's dirty state changes. Adds/removes the {@link #dirtyCls} on the main element.
+     * Called when the field's dirty state changes. Adds/removes the {@link #dirtyCls}
+     * on the main element.
      * @param {Boolean} isDirty
      */
-    onDirtyChange: function (isDirty) {
+    onDirtyChange: function(isDirty) {
         var me = this;
 
         me[isDirty ? 'addCls' : 'removeCls'](me.dirtyCls);
@@ -859,9 +1006,9 @@ Ext.define('Ext.form.field.Base', {
     },
 
     /**
-     * Returns whether or not the field value is currently valid by {@link #getErrors validating} the
-     * {@link #processRawValue processed raw value} of the field. **Note**: {@link #disabled} fields are
-     * always treated as valid.
+     * Returns whether or not the field value is currently valid by {@link #getErrors validating}
+     * the {@link #processRawValue processed raw value} of the field. **Note**: {@link #disabled}
+     * fields are always treated as valid.
      *
      * @return {Boolean} True if the value is valid, else false
      */
@@ -869,16 +1016,16 @@ Ext.define('Ext.form.field.Base', {
         var me = this,
             disabled = me.disabled,
             validate = me.forceValidation || !disabled;
-            
+
         return validate ? me.validateValue(me.processRawValue(me.getRawValue())) : disabled;
     },
 
     /**
-     * Uses {@link #getErrors} to build an array of validation errors. If any errors are found, they are passed to
-     * {@link #markInvalid} and false is returned, otherwise true is returned.
+     * Uses {@link #getErrors} to build an array of validation errors. If any errors are found,
+     * they are passed to {@link #markInvalid} and false is returned, otherwise true is returned.
      *
-     * Previously, subclasses were invited to provide an implementation of this to process validations - from 3.2
-     * onwards {@link #getErrors} should be overridden instead.
+     * Previously, subclasses were invited to provide an implementation of this to process
+     * validations - from 3.2 onwards {@link #getErrors} should be overridden instead.
      *
      * @param {Object} value The value to validate
      * @return {Boolean} True if all validations passed, false if one or more failed
@@ -891,7 +1038,8 @@ Ext.define('Ext.form.field.Base', {
         if (!me.preventMark) {
             if (isValid) {
                 me.clearInvalid();
-            } else {
+            }
+            else {
                 me.markInvalid(errors);
             }
         }
@@ -900,19 +1048,21 @@ Ext.define('Ext.form.field.Base', {
     },
 
     /**
-     * @inheritdoc Ext.form.field.Field#markInvalid
+     * @method markInvalid
+     * @inheritdoc Ext.form.field.Field#method-markInvalid
      */
     markInvalid: function(errors) {
         // Save the message and fire the 'invalid' event
         var me = this,
             oldMsg = me.getActiveError(),
             active;
-            
+
         me.setActiveErrors(Ext.Array.from(errors));
         active = me.getActiveError();
+
         if (oldMsg !== active) {
             me.setError(active);
-            
+
             if (!me.ariaStaticRoles[me.ariaRole] && me.inputEl) {
                 me.inputEl.dom.setAttribute('aria-invalid', true);
             }
@@ -922,43 +1072,45 @@ Ext.define('Ext.form.field.Base', {
     /**
      * Clear any invalid styles/messages for this field.
      *
-     * **Note**: this method does not cause the Field's {@link #validate} or {@link #isValid} methods to return `true`
-     * if the value does not _pass_ validation. So simply clearing a field's errors will not necessarily allow
-     * submission of forms submitted with the {@link Ext.form.action.Submit#clientValidation} option set.
+     * **Note**: this method does not cause the Field's {@link #validate} or {@link #isValid}
+     * methods to return `true` if the value does not _pass_ validation. So simply clearing
+     * a field's errors will not necessarily allow submission of forms submitted with the
+     * {@link Ext.form.action.Submit#clientValidation} option set.
      */
     clearInvalid: function() {
         // Clear the message and fire the 'valid' event
         var me = this,
             hadError = me.hasActiveError();
-            
+
         delete me.hadErrorOnDisable;
-        
+
         me.unsetActiveError();
-        
+
         if (hadError) {
             me.setError('');
-            
+
             if (!me.ariaStaticRoles[me.ariaRole] && me.inputEl) {
                 me.inputEl.dom.setAttribute('aria-invalid', false);
             }
         }
     },
-    
+
     /**
      * Set the current error state
      * @private
      * @param {String} error The error message to set
      */
-    setError: function(error){
+    setError: function(error) {
         var me = this,
             msgTarget = me.msgTarget,
             prop;
-            
+
         if (me.rendered) {
             if (msgTarget === 'title' || msgTarget === 'qtip') {
                 prop = msgTarget === 'qtip' ? 'data-errorqtip' : 'title';
                 me.getActionEl().dom.setAttribute(prop, error || '');
-            } else {
+            }
+            else {
                 me.updateLayout();
             }
         }
@@ -966,8 +1118,9 @@ Ext.define('Ext.form.field.Base', {
 
     /**
      * @private
-     * Overrides the method from the Ext.form.Labelable mixin to also add the invalidCls to the inputEl,
-     * as that is required for proper styling in IE with nested fields (due to lack of child selector)
+     * Overrides the method from the Ext.form.Labelable mixin to also add the invalidCls
+     * to the inputEl, as that is required for proper styling in IE with nested fields
+     * (due to lack of child selector)
      */
     renderActiveError: function() {
         var me = this,
@@ -980,6 +1133,7 @@ Ext.define('Ext.form.field.Base', {
                 invalidCls, invalidCls + '-' + me.ui
             ]);
         }
+
         me.mixins.labelable.renderActiveError.call(me);
     },
 
@@ -990,15 +1144,15 @@ Ext.define('Ext.form.field.Base', {
         if (task) {
             task.cancel();
         }
-        
+
         Ext.destroy(me.bindNotifyListener);
         me.cleanupField();
-        
+
         me.callParent();
     },
 
     privates: {
-        applyBind: function (bind, currentBindings) {
+        applyBind: function(bind, currentBindings) {
             var me = this,
                 valueBinding = currentBindings && currentBindings.value,
                 bindings, newValueBind;
@@ -1054,9 +1208,11 @@ Ext.define('Ext.form.field.Base', {
 
         initRenderTpl: function() {
             var me = this;
+
             if (!me.hasOwnProperty('renderTpl')) {
                 me.renderTpl = me.lookupTpl('labelableRenderTpl');
             }
+
             return me.callParent();
         },
 
@@ -1070,7 +1226,7 @@ Ext.define('Ext.form.field.Base', {
             this.checkChange();
         },
 
-        updateValueBinding: function (bindings) {
+        updateValueBinding: function(bindings) {
             var me = this,
                 newBinding = bindings.value,
                 fieldBinding = bindings.$fieldBinding;
@@ -1085,7 +1241,7 @@ Ext.define('Ext.form.field.Base', {
             }
         }
     },
-    
+
     deprecated: {
         "5": {
             methods: {

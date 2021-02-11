@@ -20,19 +20,19 @@ $pivot-grid-config-container-body-border-color: dynamic(top($panel-body-border-c
  * @var {string}
  * The icon of DND left indicator
  */
-$pivot-grid-left-indicator-icon: $fa-var-long-arrow-left FontAwesome;
+$pivot-grid-left-indicator-icon: $fa-var-long-arrow-left 'Font Awesome 5 Free';
 /**
  * @var {string}
  * The icon of DND right indicator
  */
-$pivot-grid-right-indicator-icon: $fa-var-long-arrow-right FontAwesome;
+$pivot-grid-right-indicator-icon: $fa-var-long-arrow-right 'Font Awesome 5 Free';
 /**
  * @var {string}
  * The icon of the valid state of the DND proxy placeholder
  */
-$pivot-drag-proxy-placeholder-valid-icon: $fa-var-check FontAwesome;
+$pivot-drag-proxy-placeholder-valid-icon: $fa-var-check 'Font Awesome 5 Free';
 /**
  * @var {string}
  * The icon of the invalid state of the DND proxy placeholder
  */
-$pivot-drag-proxy-placeholder-invalid-icon: $fa-var-close FontAwesome;
+$pivot-drag-proxy-placeholder-invalid-icon: $fa-var-times 'Font Awesome 5 Free';

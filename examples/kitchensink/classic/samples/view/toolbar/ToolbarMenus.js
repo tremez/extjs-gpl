@@ -23,10 +23,24 @@ Ext.define('KitchenSink.view.toolbar.ToolbarMenus', {
         'KitchenSink.store.States'
     ],
     otherContent: [{
-        type: 'ViewController',
-        path: 'classic/samples/view/toolbar/StatusBarController.js'
+        type: 'Controller',
+        path: 'classic/samples/view/toolbar/ToolbarMenusController.js'
     }],
     //</example>
+    profiles: {
+        classic: {
+            width: 135
+        },
+        neptune: {
+            width: 135
+        },
+        graphite: {
+            width: 180
+        },
+        'classic-material': {
+            width: 130
+        }
+    },
 
     title: 'Panel with toolbar with diverse contents',
     frame: true,
@@ -34,10 +48,11 @@ Ext.define('KitchenSink.view.toolbar.ToolbarMenus', {
     tbar: {
         overflowHandler: 'menu',
         items: [{
-            text:'Button w/ Menu',
+            text: 'Button w/ Menu',
             iconCls: 'x-fa fa-th',
             menu: {
                 id: 'mainMenu',
+                showSeparator: true,
                 items: [{
                     xtype: 'combobox',
                     hideLabel: true,
@@ -50,7 +65,7 @@ Ext.define('KitchenSink.view.toolbar.ToolbarMenus', {
                     triggerAction: 'all',
                     emptyText: 'Select a state...',
                     selectOnFocus: true,
-                    width: 135,
+                    width: '${width}',
                     indent: true
                 }, {
                     text: 'I like Ext',
@@ -85,7 +100,7 @@ Ext.define('KitchenSink.view.toolbar.ToolbarMenus', {
                             }
                         ]
                     }
-                },{ 
+                }, {
                     text: 'Choose a Date',
                     iconCls: 'x-fa fa-calendar',
                     menu: {
@@ -148,11 +163,11 @@ Ext.define('KitchenSink.view.toolbar.ToolbarMenus', {
             text: 'Split Button',
             handler: 'onButtonClick',
             tooltip: {
-                text:'This is a an example QuickTip for a toolbar item',
-                title:'Tip Title'
+                text: 'This is a an example QuickTip for a toolbar item',
+                title: 'Tip Title'
             },
             iconCls: 'x-fa fa-th-list',
-            menu : {
+            menu: {
                 items: [{
                     text: '<b>Bold</b>', handler: 'onItemClick'
                 }, {
@@ -196,7 +211,7 @@ Ext.define('KitchenSink.view.toolbar.ToolbarMenus', {
             triggerAction: 'all',
             emptyText: 'Select a state...',
             selectOnFocus: true,
-            width: 135,
+            width: '${width}',
             indent: true
         }]
     }

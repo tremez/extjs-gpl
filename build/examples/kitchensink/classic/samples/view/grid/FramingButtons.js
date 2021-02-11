@@ -5,24 +5,50 @@ Ext.define('KitchenSink.view.grid.FramingButtons', {
     //<example>
     otherContent: [{
         type: 'Store',
-        path: 'classic/samples/store/Companies.js'
+        path: 'app/store/Companies.js'
     }, {
         type: 'Model',
-        path: 'classic/samples/model/Company.js'
+        path: 'app/model/Company.js'
     }],
     profiles: {
         classic: {
-            width: 700
+            width: 700,
+            height: 300,
+            priceWidth: 120,
+            pricechangeWidth: 120,
+            percentChangeColumnWidth: 120,
+            lastUpdatedColumnWidth: 120
         },
         neptune: {
-            width: 750
+            width: 750,
+            height: 300,
+            priceWidth: 120,
+            pricechangeWidth: 120,
+            percentChangeColumnWidth: 120,
+            lastUpdatedColumnWidth: 120
+        },
+        graphite: {
+            width: 950,
+            height: 400,
+            priceWidth: 120,
+            pricechangeWidth: 120,
+            percentChangeColumnWidth: 120,
+            lastUpdatedColumnWidth: 150
+        },
+        'classic-material': {
+            width: 950,
+            height: 400,
+            priceWidth: 120,
+            pricechangeWidth: 120,
+            percentChangeColumnWidth: 120,
+            lastUpdatedColumnWidth: 150
         }
     },
     //</example>
 
     title: 'Support for standard Panel features such as framing, buttons and toolbars',
     width: '${width}',
-    height: 300,
+    height: '${height}',
 
     columnLines: true,
     frame: true,
@@ -49,26 +75,25 @@ Ext.define('KitchenSink.view.grid.FramingButtons', {
         text: "Price",
         dataIndex: 'price',
 
-        width: 120,
+        width: '${priceWidth}',
         sortable: true,
         formatter: 'usMoney'
     }, {
         text: "Change",
-        dataIndex: 'change',
-
-        width: 120,
+        dataIndex: 'priceChange',
+        width: '${pricechangeWidth}',
         sortable: true
     }, {
         text: "% Change",
-        dataIndex: 'pctChange',
+        dataIndex: 'priceChangePct',
 
-        width: 120,
+        width: '${percentChangeColumnWidth}',
         sortable: true
     }, {
         text: "Last Updated",
-        dataIndex: 'lastChange',
+        dataIndex: 'priceLastChange',
 
-        width: 120,
+        width: '${lastUpdatedColumnWidth}',
         sortable: true,
         formatter: 'date("m/d/Y")'
     }],
@@ -81,10 +106,10 @@ Ext.define('KitchenSink.view.grid.FramingButtons', {
         text: 'Options',
         tooltip: 'Set options',
         iconCls: 'framing-buttons-option'
-    },'-',{
+    }, '-', {
         text: 'Remove Something',
         tooltip: 'Remove the selected item',
-        iconCls:'framing-buttons-remove',
+        iconCls: 'framing-buttons-remove',
         disabled: true,
 
         bind: {

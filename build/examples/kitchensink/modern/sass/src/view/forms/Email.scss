@@ -1,0 +1,37 @@
+.ks-email-item {
+
+    .email-picker-avatar {
+        height: 32px;
+        width: 32px;
+        margin-right: 10px;
+    }
+
+    .x-inner-el {
+        padding: 5px;
+
+        .x-innerhtml {
+            display: flex;
+        }
+    }
+
+    .email-picker-item-name, .email-picker-item-address {
+        white-space: nowrap;
+    }
+
+    // When used in the compact form of an edge picker
+    // which means a phone UI.
+    .x-picker-slot & {
+        display: flex;
+
+        // Avatar is more compact in edge picker slot view
+        .email-picker-avatar {
+            height: 1.8em;
+            width: 1.8em;
+        }
+        // Only show contact name in the more compact
+        // edge picker slot view
+        .email-picker-item-address {
+            display: none;
+        }
+    }
+}

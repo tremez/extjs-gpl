@@ -1,0 +1,21 @@
+/*  for material theme examples */
+
+@if $theme-name == 'theme-material' {
+    .#{$prefix}message-box {
+        .#{$prefix}message-box-icon {
+            display: none;
+        }
+    }
+
+    .show-icon-messagebox.#{$prefix}message-box {
+        .#{$prefix}message-box-icon {
+            display: initial;
+            left: 6px !important;
+        }
+        .#{$prefix}window-item {
+            .#{$prefix}box-item.#{$prefix}box-layout-ct {
+                top: 16px !important;
+            }
+        }
+    }
+}

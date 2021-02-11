@@ -18,24 +18,46 @@ Ext.define('KitchenSink.view.binding.ChildSession', {
         type: 'ViewModel',
         path: 'classic/samples/view/binding/ChildSessionModel.js'
     }, {
-        type: 'ViewController',
+        type: 'Controller',
         path: 'classic/samples/view/binding/ChildSessionController.js'
     }, {
         type: 'View',
         path: 'classic/samples/view/binding/ChildSessionForm.js'
     }, {
         type: 'Model',
-        path: 'classic/samples/model/Company.js'
+        path: 'app/model/Company.js'
     }, {
         type: 'Model',
-        path: 'classic/samples/model/Order.js'
+        path: 'app/model/Order.js'
     }],
     //</example>
 
+    profiles: {
+        classic: {
+            width: 420,
+            height: 320,
+            editWidth: 90
+        },
+        neptune: {
+            width: 420,
+            height: 320,
+            editWidth: 90
+        },
+        graphite: {
+            width: 500,
+            height: 450,
+            editWidth: 120
+        },
+        'classic-material': {
+            width: 500,
+            height: 450,
+            editWidth: 120
+        }
+    },
     title: 'All Companies',
     frame: true,
-    width: 420,
-    height: 320,
+    width: '${width}',
+    height: '${height}',
     layout: {
         type: 'vbox',
         align: 'stretch'
@@ -65,7 +87,7 @@ Ext.define('KitchenSink.view.binding.ChildSession', {
             text: 'Phone'
         }, {
             xtype: 'widgetcolumn',
-            width: 90,
+            width: '${editWidth}',
             widget: {
                 xtype: 'button',
                 text: 'Edit',

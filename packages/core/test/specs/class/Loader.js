@@ -1,3 +1,4 @@
+/* global ExtLoaderTestNamespace1, ns, Foo */
 // These specs have been disabled temporarily because Ext.app.getNamespace()/clearNamespaces()
 // are not available in core.
 xdescribe("Ext.Loader", function() {
@@ -80,7 +81,7 @@ xdescribe("Ext.Loader", function() {
         app.clearNamespaces();
     });
 
-    describe('duplicate namespaces', function () {
+    describe('duplicate namespaces', function() {
         // This may seem like a contrived example, but it was adapted from a customer's actual application.
         // Their requirement was to have their own namespace (not Ext), and their base constructor had Ext as
         // its prototype, e.g.:
@@ -100,12 +101,14 @@ xdescribe("Ext.Loader", function() {
         var callFoo = false,
             callExt = false;
 
-        beforeEach(function () {
-            var F = function () {};
+        beforeEach(function() {
+            var F = function() {};
 
             F.prototype = Ext;
+
             // Note Foo needs to be a global variable b/c it's looked up in
             // Loader.onFileLoaded() -> Loader.refreshQueue() -> ClassManager.isCreated().
+            // eslint-disable-next-line no-global-assign
             Foo = new F();
 
             Loader.setPath('Foo.spec', 'resources/spec');
@@ -113,37 +116,39 @@ xdescribe("Ext.Loader", function() {
 
             spyOn(Loader, 'loadScriptFile').andCallThrough();
 
-            Ext.require('Foo.spec.LoaderTest', function () {
+            // @define Foo.spec.LoaderTest
+            Ext.require('Foo.spec.LoaderTest', function() {
                 callFoo = true;
             });
 
-            Ext.require('Ext.spec.LoaderTest', function () {
+            // @define Ext.spec.LoaderTest
+            Ext.require('Ext.spec.LoaderTest', function() {
                 callExt = true;
             });
 
             waits(20);
         });
 
-        afterEach(function () {
+        afterEach(function() {
             callFoo = callExt = false;
-            Foo = null;
+            Foo = null; // eslint-disable-line no-global-assign
         });
 
-        it('should not load the same file twice', function () {
+        it('should not load the same file twice', function() {
             expect(Loader.loadScriptFile.callCount).toBe(1);
         });
 
-        it("should still call each require's callback regardless of duplication", function () {
+        it("should still call each require's callback regardless of duplication", function() {
             expect(callFoo).toBe(true);
             expect(callExt).toBe(true);
         });
 
-        it('should not have a non-zero file counter', function () {
+        it('should not have a non-zero file counter', function() {
             expect(Loader.numPendingFiles).toBe(0);
         });
     });
 
-    describe('creating the loadScript src', function () {
+    describe('creating the loadScript src', function() {
         // In case a user loads a script that already has a querystring, don't blindly append the _dc param by simple
         // string concatenation, i.e., 'url + '?_dc'.  This will lead to querystrings that look like:
         //
@@ -151,10 +156,10 @@ xdescribe("Ext.Loader", function() {
         //
         // The test just does a simple indexOf check to make sure that the _dc param has been appended with an ampersand.
         // See EXTJSIV-11994.
-        it('should append the cache-busting query param to the querystring in case there is already a querystring', function () {
-            var newSrc; 
+        it('should append the cache-busting query param to the querystring in case there is already a querystring', function() {
+            var newSrc;
 
-            Ext.Loader.injectScriptElement = function (src, onScriptLoad, onScriptError) {
+            Ext.Loader.injectScriptElement = function(src, onScriptLoad, onScriptError) {
                 newSrc = src;
             };
 

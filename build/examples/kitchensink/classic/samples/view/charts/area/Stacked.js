@@ -8,7 +8,7 @@ Ext.define('KitchenSink.view.charts.area.Stacked', {
     xtype: 'area-stacked',
     controller: 'area-stacked',
 
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     bodyStyle: 'background: transparent !important',
     layout: {
@@ -20,9 +20,9 @@ Ext.define('KitchenSink.view.charts.area.Stacked', {
         path: 'classic/samples/view/charts/area/StackedController.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/Browsers.js'
+        path: 'app/store/Browsers.js'
     }],
-    // </example>
+    //</example>
     width: 650,
 
     tbar: [
@@ -38,34 +38,22 @@ Ext.define('KitchenSink.view.charts.area.Stacked', {
         reference: 'chart',
         width: '100%',
         height: 500,
-        insetPadding: 40,
+        insetPadding: '10 20 10 10',
         store: {
             type: 'browsers'
         },
         legend: {
+            type: 'dom',
             docked: 'bottom'
         },
-        sprites: [{
-            type: 'text',
-            text: 'Area Charts - Stacked Area',
-            fontSize: 22,
-            width: 100,
-            height: 30,
-            x: 40, // the sprite x position
-            y: 20  // the sprite y position
-        }, {
-            type: 'text',
-            text: 'Data: Browser Stats 2012',
-            fontSize: 10,
-            x: 12,
-            y: 420
-        }, {
-            type: 'text',
-            text: 'Source: http://www.w3schools.com/',
-            fontSize: 10,
-            x: 12,
-            y: 435
-        }],
+        captions: {
+            title: 'Area Charts - Stacked Area',
+            credits: {
+                text: 'Data: Browser Stats 2012\n' +
+                    'Source: http://www.w3schools.com/',
+                align: 'left'
+            }
+        },
         axes: [{
             type: 'numeric',
             fields: 'data1',
@@ -95,7 +83,7 @@ Ext.define('KitchenSink.view.charts.area.Stacked', {
             marker: {
                 opacity: 0,
                 scaling: 0.01,
-                fx: {
+                animation: {
                     duration: 200,
                     easing: 'easeOut'
                 }
@@ -113,7 +101,7 @@ Ext.define('KitchenSink.view.charts.area.Stacked', {
     }, {
         style: 'margin-top: 10px;',
         xtype: 'gridpanel',
-        columns : {
+        columns: {
             defaults: {
                 sortable: false,
                 menuDisabled: true,

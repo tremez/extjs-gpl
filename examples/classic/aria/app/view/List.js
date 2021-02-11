@@ -1,7 +1,7 @@
 Ext.define('Aria.view.List', {
     extend: 'Ext.panel.Panel',
-    alias:  'widget.mysimplelist',
-    
+    alias: 'widget.mysimplelist',
+
     title: 'Data View',
 
     initComponent: function() {
@@ -19,16 +19,16 @@ Ext.define('Aria.view.List', {
                 { label: '#5', content: 'Alternative content #5.' }
             ],
             store;
-        
+
         store = Ext.create('Ext.data.Store', {
-            fields:[
+            fields: [
                 { name: 'label', type: 'string' },
                 { name: 'content', type: 'string' }
             ]
         });
-        
+
         me.curData = data1;
-        
+
         me.items = [{
             xtype: 'panel',
             title: 'My List',
@@ -51,8 +51,8 @@ Ext.define('Aria.view.List', {
                 store: store,
                 tpl: [
                     '<tpl for=".">',
-                        '<div class="myitem">',
-                        '<a href="#">{label}</a>: {content} </div>',
+                    '<div class="myitem">',
+                    '<a href="#">{label}</a>: {content} </div>',
                     '</tpl>'
                 ],
                 selModel: {
@@ -73,20 +73,21 @@ Ext.define('Aria.view.List', {
                 }
             }],
             bbar: [{
-                    xtype: 'button',
-                    text: 'Refresh Data',
-                    margin: '12 0 0 0',
-                    handler: function() {
-                        if (me.curData === data1) {
-                            me.curData = data2;
-                        }
-                        else {
-                            me.curData = data1;
-                        }
-                        store.loadData(me.curData);
+                xtype: 'button',
+                text: 'Refresh Data',
+                margin: '12 0 0 0',
+                handler: function() {
+                    if (me.curData === data1) {
+                        me.curData = data2;
                     }
+                    else {
+                        me.curData = data1;
+                    }
+
+                    store.loadData(me.curData);
                 }
-            ]}
+            }
+            ] }
         ];
 
         me.callParent(arguments);
@@ -94,17 +95,17 @@ Ext.define('Aria.view.List', {
     },
 
     onItemClick: function(item, record) {
-        //depending on whether the mouse is clicked or enter is pressed
-        //item and record could be switched!
+        // depending on whether the mouse is clicked or enter is pressed
+        // item and record could be switched!
         var data;
-        
+
         if (record.get) {
             data = record.get('content');
         }
         else {
             data.item.get('content');
         }
-        
+
         Aria.app.msg('Item Click', 'You clicked "{0}".', data);
     }
 });

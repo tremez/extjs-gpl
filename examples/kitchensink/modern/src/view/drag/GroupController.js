@@ -65,7 +65,7 @@ Ext.define('KitchenSink.view.drag.GroupController', {
         return new Ext.drag.Target(Ext.apply(cfg, {
             listeners: {
                 drop: function(target, info) {
-                    var s = Ext.String.format('Dropped "{0} on "{1}"', info.source.getId(), target.getId());
+                    Ext.String.format('Dropped "{0} on "{1}"', info.source.getId(), target.getId());
                 }
             }
         }));

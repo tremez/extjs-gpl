@@ -3,9 +3,9 @@
  * @extends Ext.Viewport
  */
 Ext.define('Books.view.Viewport', {
-    extend: 'Ext.Viewport',    
+    extend: 'Ext.Viewport',
     layout: 'fit',
-    
+
     requires: [
         'Books.view.Header',
         'Books.view.book.View',
@@ -21,7 +21,7 @@ Ext.define('Books.view.Viewport', {
                 {
                     xtype: 'panel',
                     border: false,
-                    id    : 'viewport',
+                    id: 'viewport',
                     layout: {
                         type: 'vbox',
                         align: 'stretch'

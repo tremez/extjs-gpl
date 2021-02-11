@@ -28,10 +28,10 @@ Ext.define('Order', {
     fields: [{
         name: 'id',
         type: 'int'
-    },{
+    }, {
         name: 'customer_id',
         type: 'int'
-    },{
+    }, {
         name: 'date',
         type: 'date',
         dateFormat: 'Y-m-d'
@@ -55,7 +55,7 @@ Ext.define('OrderItem', {
     }, {
         name: 'order_id',
         type: 'int'
-    },'product', {
+    }, 'product', {
         name: 'quantity',
         type: 'int'
     }, {
@@ -71,7 +71,7 @@ Ext.define('OrderItem', {
 Ext.define('CustomerGrid', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.customergrid',
-    
+
     title: 'Customers',
 
     defaultListenerScope: true,
@@ -88,7 +88,7 @@ Ext.define('CustomerGrid', {
     columns: [{
         text: 'Id',
         dataIndex: 'id'
-    },{
+    }, {
         text: 'Name',
         dataIndex: 'name',
         flex: 1
@@ -110,24 +110,24 @@ Ext.define('CustomerGrid', {
     listeners: {
         selectionchange: 'onSelectChange'
     },
-    
+
     onSelectChange: function(selModel, selections) {
         this.active = selections[0];
         this.down('#load').setDisabled(!this.active);
     },
-    
-    loadOrders: function(){
+
+    loadOrders: function() {
         var rec = this.active,
-            name = rec.get('name'),
             owner = this.ownerCt,
             orders;
-         
-        
+
         orders = rec.orders();
+
         if (orders.isLoading()) {
             Logger.log('Begin loading orders: ' + rec.getId(), true);
         }
-        orders.on('load', function(){
+
+        orders.on('load', function() {
             Logger.log('Order store loaded - ' + rec.getId(), false);
         });
         owner.add({
@@ -137,7 +137,7 @@ Ext.define('CustomerGrid', {
             store: orders
         });
         owner.getLayout().next();
-    }    
+    }
 });
 
 Ext.define('OrderGrid', {
@@ -149,7 +149,7 @@ Ext.define('OrderGrid', {
     columns: [{
         text: 'Id',
         dataIndex: 'id'
-    },{
+    }, {
         xtype: 'datecolumn',
         flex: 1,
         text: 'Date',
@@ -161,7 +161,7 @@ Ext.define('OrderGrid', {
         items: [{
             text: 'Back',
             handler: 'onBackClick'
-        },{
+        }, {
             itemId: 'load',
             text: 'Load Order Items',
             handler: 'loadItems',
@@ -172,27 +172,29 @@ Ext.define('OrderGrid', {
     listeners: {
         selectionchange: 'onSelectChange'
     },
-    
-    onBackClick: function(){
+
+    onBackClick: function() {
         this.ownerCt.getLayout().prev();
-        this.destroy();    
+        this.destroy();
     },
-    
+
     onSelectChange: function(selModel, selections) {
         this.active = selections[0];
         this.down('#load').setDisabled(!this.active);
     },
-    
-    loadItems: function(){
+
+    loadItems: function() {
         var rec = this.active,
             owner = this.ownerCt,
             orderitems;
-        
+
         orderitems = rec.orderItems();
+
         if (orderitems.isLoading()) {
             Logger.log('Begin loading order items - ' + rec.getId(), true);
         }
-        orderitems.on('load', function(){
+
+        orderitems.on('load', function() {
             Logger.log('Order items loaded - ' + rec.getId(), false);
         });
         owner.add({
@@ -201,7 +203,7 @@ Ext.define('OrderGrid', {
             store: orderitems
         });
         owner.getLayout().next();
-    }    
+    }
 });
 
 Ext.define('OrderItemGrid', {
@@ -213,7 +215,7 @@ Ext.define('OrderItemGrid', {
     columns: [{
         text: 'Id',
         dataIndex: 'id'
-    },{
+    }, {
         flex: 1,
         text: 'Product',
         dataIndex: 'product'
@@ -242,21 +244,21 @@ Ext.define('OrderItemGrid', {
     listeners: {
         selectionchange: 'onSelectChange'
     },
-    
+
     onSelectChange: function(selModel, selections) {
         this.active = selections[0];
         this.down('#load').setDisabled(!this.active);
     },
-    
-    onBackClick: function(){
+
+    onBackClick: function() {
         this.ownerCt.getLayout().prev();
-        this.destroy();    
+        this.destroy();
     },
-    
-    onLoadClick: function(){
+
+    onLoadClick: function() {
         var rec = this.active,
             id = rec.getId();
-        
+
         new ItemLoader({
             width: 400,
             height: 400,
@@ -290,27 +292,30 @@ Ext.define('ItemLoader', {
     bodyPadding: 5,
     tpl: '<div>{type} {id} - {value}</div>',
     tplWriteMode: 'append',
-    
-    initComponent: function(){
+
+    initComponent: function() {
         this.callParent();
         this.orderItem = new OrderItem(this.orderItemData);
     },
-    
-    onOrderClick: function(){
+
+    onOrderClick: function() {
         var id = this.orderItem.get('order_id'),
             hasOrder = !!this.order;
-            
+
         if (!hasOrder) {
             Logger.log('Begin loading order - ' + id, true);
         }
+
         this.orderItem.getOrder({
             scope: this,
-            success: function(order){
+            success: function(order) {
                 this.order = order;
                 this.down('#company').enable();
+
                 if (!hasOrder) {
                     Logger.log('Order loaded - ' + id, false);
                 }
+
                 this.update({
                     type: 'Order',
                     id: order.getId(),
@@ -319,21 +324,24 @@ Ext.define('ItemLoader', {
             }
         });
     },
-    
-    onCompanyClick: function(){
+
+    onCompanyClick: function() {
         var id = this.order.get('customer_id'),
             hasCustomer = !!this.customer;
-            
+
         if (!hasCustomer) {
             Logger.log('Begin loading customer - ' + id, true);
         }
+
         this.order.getCustomer({
             scope: this,
-            success: function(customer){
+            success: function(customer) {
                 this.customer = customer;
+
                 if (!hasCustomer) {
                     Logger.log('Customer loaded - ' + id, false);
                 }
+
                 this.update({
                     type: 'Customer',
                     id: customer.getId(),
@@ -341,30 +349,30 @@ Ext.define('ItemLoader', {
                 });
             }
         });
-    }    
+    }
 });
 
-Logger = (function(){
-    var panel;
-    
-    return {
-        init: function(log){
-            panel = log;
-        },
-        
-        log: function(msg, isStart){
-            panel.update({
-                now: new Date(),
-                cls: isStart ? 'beforeload' : 'afterload',
-                msg: msg
-            });
-            panel.body.scroll('b', 100000, true);
-        }    
-    };
+Logger = (function() {
+var panel;
+
+return {
+    init: function(log) {
+        panel = log;
+    },
+
+    log: function(msg, isStart) {
+        panel.update({
+            now: new Date(),
+            cls: isStart ? 'beforeload' : 'afterload',
+            msg: msg
+        });
+        panel.body.scroll('b', 100000, true);
+    }
+};
 })();
 
-Ext.onReady(function(){
-    
+Ext.onReady(function() {
+
     var main = Ext.create('Ext.panel.Panel', {
         renderTo: document.body,
         width: 750,
@@ -391,9 +399,10 @@ Ext.onReady(function(){
             }
         }]
     });
+
     Logger.log('Begin loading customer store', true);
     main.items.first().add({
         xtype: 'customergrid'
     });
-    
+
 });

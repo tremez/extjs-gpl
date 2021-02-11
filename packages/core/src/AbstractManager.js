@@ -1,15 +1,10 @@
 /**
  * Base Manager class
  * @private
- * @deprecated
+ * @deprecated 5.0.0 Will be removed in 7.0.
  */
 Ext.define('Ext.AbstractManager', {
-
-    /* Begin Definitions */
-
     requires: ['Ext.util.HashMap'],
-
-    /* End Definitions */
 
     typeName: 'type',
 
@@ -31,7 +26,7 @@ Ext.define('Ext.AbstractManager', {
      * @param {String} id The id of the item
      * @return {Object} The item, undefined if not found.
      */
-    get : function(id) {
+    get: function(id) {
         return this.all.get(id);
     },
 
@@ -42,9 +37,12 @@ Ext.define('Ext.AbstractManager', {
     register: function(item) {
         //<debug>
         var key = this.all.getKey(item);
+
         if (key === undefined) {
-            Ext.raise('Key is undefined. Please ensure the item has a key before registering the item.');
+            Ext.raise('Key is undefined. Please ensure the item has a key ' +
+                      'before registering the item.');
         }
+
         if (this.all.containsKey(key)) {
             Ext.raise('Registering duplicate id "' + key + '" with ' + this.$className);
         }
@@ -66,7 +64,7 @@ Ext.define('Ext.AbstractManager', {
      * @param {String} type The mnemonic string by which the class may be looked up.
      * @param {Function} cls The new instance class.
      */
-    registerType : function(type, cls) {
+    registerType: function(type, cls) {
         this.types[type] = cls;
         cls[this.typeName] = type;
     },
@@ -76,19 +74,20 @@ Ext.define('Ext.AbstractManager', {
      * @param {String} type The mnemonic string by which the class may be looked up
      * @return {Boolean} Whether the type is registered.
      */
-    isRegistered : function(type){
+    isRegistered: function(type) {
         return this.types[type] !== undefined;
     },
 
     /**
-     * Creates and returns an instance of whatever this manager manages, based on the supplied type and
-     * config object.
+     * Creates and returns an instance of whatever this manager manages, based on
+     * the supplied type and config object.
      * @param {Object} config The config object
-     * @param {String} defaultType If no type is discovered in the config object, we fall back to this type
+     * @param {String} defaultType If no type is discovered in the config object, we
+     * fall back to this type
      * @return {Object} The instance of whatever this manager is managing
      */
     create: function(config, defaultType) {
-        var type        = config[this.typeName] || config.type || defaultType,
+        var type = config[this.typeName] || config.type || defaultType,
             Constructor = this.types[type];
 
         //<debug>
@@ -101,32 +100,34 @@ Ext.define('Ext.AbstractManager', {
     },
 
     /**
-     * Registers a function that will be called when an item with the specified id is added to the manager.
-     * This will happen on instantiation.
+     * Registers a function that will be called when an item with the specified id is added
+     * to the manager. This will happen on instantiation.
      * @param {String} id The item id
      * @param {Function} fn The callback function. Called with a single parameter, the item.
      * @param {Object} scope The scope (this reference) in which the callback is executed.
      * Defaults to the item.
      */
-    onAvailable : function(id, fn, scope){
+    onAvailable: function(id, fn, scope) {
         var all = this.all,
             item,
             callback;
-        
+
         if (all.containsKey(id)) {
             item = all.get(id);
             fn.call(scope || item, item);
-        } else {
-            callback = function(map, key, item){
-                if (key == id) {
+        }
+        else {
+            callback = function(map, key, item) {
+                if (key === id) {
                     fn.call(scope || item, item);
                     all.un('add', callback);
                 }
-            }; 
+            };
+
             all.on('add', callback);
         }
     },
-    
+
     /**
      * Executes the specified function once for each item in the collection.
      * @param {Function} fn The function to execute.
@@ -136,15 +137,15 @@ Ext.define('Ext.AbstractManager', {
      * @param {Boolean} fn.return False to cease iteration.
      * @param {Object} scope The scope to execute in. Defaults to `this`.
      */
-    each: function(fn, scope){
-        this.all.each(fn, scope || this);    
+    each: function(fn, scope) {
+        this.all.each(fn, scope || this);
     },
-    
+
     /**
      * Gets the number of items in the collection.
      * @return {Number} The number of items in the collection.
      */
-    getCount: function(){
+    getCount: function() {
         return this.all.getCount();
     }
 });

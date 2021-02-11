@@ -1,0 +1,72 @@
+.dark-mode .pln {
+    color: #c5c8c6
+}
+
+.dark-mode ol.linenums {
+    margin-top: 0;
+    margin-bottom: 0;
+    color: #969896
+}
+
+.dark-mode li.L0, .dark-mode li.L1, .dark-mode li.L2, .dark-mode li.L3, .dark-mode li.L4, .dark-mode li.L5, .dark-mode li.L6, .dark-mode li.L7, .dark-mode li.L8, .dark-mode li.L9 {
+    padding-left: 1em;
+    list-style-type: decimal
+}
+
+@media screen {
+    .dark-mode .str {
+        color: #b5bd68
+    }
+
+    .dark-mode .kwd {
+        color: #b294bb
+    }
+
+    .dark-mode .com {
+        color: #969896
+    }
+
+    .dark-mode .typ {
+        color: #81a2be
+    }
+
+    .dark-mode .lit {
+        color: #de935f
+    }
+
+    .dark-mode .pun {
+        color: #c5c8c6
+    }
+
+    .dark-mode .opn {
+        color: #c5c8c6
+    }
+
+    .dark-mode .clo {
+        color: #c5c8c6
+    }
+
+    .dark-mode .tag {
+        color: #c66
+    }
+
+    .dark-mode .atn {
+        color: #de935f
+    }
+
+    .dark-mode .atv {
+        color: #8abeb7
+    }
+
+    .dark-mode .dec {
+        color: #de935f
+    }
+
+    .dark-mode .var {
+        color: #c66
+    }
+
+    .dark-mode .fun {
+        color: #81a2be
+    }
+}

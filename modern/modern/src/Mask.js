@@ -1,11 +1,12 @@
 /**
  * A simple class used to mask any {@link Ext.Container}.
  *
- * This should rarely be used directly, instead look at the {@link Ext.Container#masked} configuration.
+ * This should rarely be used directly, instead look at the {@link Ext.Container#masked}
+ * configuration.
  *
  * ## Example
  *
- *     @example miniphone
+ *     @example
  *     // Create our container
  *     var container = Ext.create('Ext.Container', {
  *         html: 'My container!'
@@ -23,12 +24,6 @@ Ext.define('Ext.Mask', {
     requires: ['Ext.util.InputBlocker'],
 
     config: {
-        /**
-         * @cfg
-         * @inheritdoc
-         */
-        baseCls: Ext.baseCSSPrefix + 'mask',
-
         /**
          * @cfg {Boolean} transparent True to make this mask transparent.
          */
@@ -59,6 +54,8 @@ Ext.define('Ext.Mask', {
         bottom: 0
     },
 
+    baseCls: Ext.baseCSSPrefix + 'mask',
+
     /**
      * @event tap
      * A tap event fired when a user taps on this mask
@@ -71,17 +68,35 @@ Ext.define('Ext.Mask', {
         me.callParent();
         me.element.on('tap', 'onTap', me);
         me.on('hide', 'onHide', me);
+        me.on('show', 'onShow', me);
     },
 
-    onHide: function(){
+    onHide: function(me) {
+        var firstChild;
+
+        // Enable Tabbing only if tabbing is disabled
+        if (me.sender && me.tabbingDisabled) {
+            me.sender.enableTabbing();
+            me.tabbingDisabled = false;
+        }
+
         Ext.util.InputBlocker.unblockInputs();
 
         // Oh how I loves the Android
         if (Ext.browser.is.AndroidStock4 && Ext.os.version.getMinor() === 0) {
-            var firstChild = this.element.getFirstChild();
+            firstChild = this.element.getFirstChild();
+
             if (firstChild) {
                 firstChild.redraw();
             }
+        }
+    },
+
+    onShow: function(me) {
+        // Disable Tabbing only if tabbing is enabled
+        if (me.sender && !me.tabbingDisabled) {
+            me.sender.disableTabbing();
+            me.tabbingDisabled = true;
         }
     },
 
@@ -90,6 +105,6 @@ Ext.define('Ext.Mask', {
     },
 
     updateTransparent: function(transparent) {
-        this.toggleCls(this.getBaseCls() + '-transparent', transparent);
+        this.toggleCls(this.baseCls + '-transparent', transparent);
     }
 });

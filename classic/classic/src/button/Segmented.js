@@ -1,11 +1,11 @@
 /**
  * SegmentedButton is a container for a group of {@link Ext.button.Button Button}s.  You 
- * may populate the segmented button's children by adding buttons to the items config.  The segmented 
- * button's children enjoy the same customizations as regular buttons, such as 
+ * may populate the segmented button's children by adding buttons to the items config.
+ * The segmented  button's children enjoy the same customizations as regular buttons, such as 
  * menu, tooltip, etc.  You can see usages of the various configuration
  * possibilities in the example below.
  *
- *     @example @preview 
+ *     @example preview 
  *     Ext.create('Ext.button.Segmented', {            
  *          renderTo: Ext.getBody(),
  *          allowMultiple: true,
@@ -22,7 +22,8 @@
  *          }],
  *          listeners: {
  *               toggle: function(container, button, pressed) {
- *                    console.log("User toggled the '" + button.text + "' button: " + (pressed ? 'on' : 'off'));
+ *                    console.log("User toggled the '" + button.text + "' button: " +
+ *                                (pressed ? 'on' : 'off'));
  *               }
  *          }
  *     });
@@ -31,49 +32,50 @@
 Ext.define('Ext.button.Segmented', {
     extend: 'Ext.container.Container',
     xtype: 'segmentedbutton',
-    requires: [ 
+
+    requires: [
         'Ext.button.Button',
         'Ext.layout.container.SegmentedButton'
     ],
 
     config: {
         /**
-         * @cfg {Boolean}
+         * @cfg {Boolean} allowDepress
          * Allow toggling the pressed state of each button.
          * Only applicable when {@link #allowMultiple} is `false`.
          */
         allowDepress: false,
 
         /**
-         * @cfg {Boolean}
+         * @cfg {Boolean} allowMultiple
          * Allow multiple pressed buttons.
          */
         allowMultiple: false,
 
         /**
-         * @cfg {Boolean}
-         * If {@link #allowMultiple} is `true`, this config may be set to `true` to indicate that at least
-         * one button in the set must remain pressed at all times.
+         * @cfg {Boolean} forceSelection
+         * If {@link #allowMultiple} is `true`, this config may be set to `true` to indicate that
+         * at least one button in the set must remain pressed at all times.
          *
-         * If no {@link #value} is configured, and no child buttons are configured `pressed`, the first child
-         * button is set `pressed: true`
+         * If no {@link #value} is configured, and no child buttons are configured `pressed`,
+         * the first child button is set `pressed: true`
          */
         forceSelection: false,
 
         /**
-         * @cfg {Boolean}
+         * @cfg {Boolean} allowToggle
          * True to enable pressed/not pressed toggling.
          */
         allowToggle: true,
 
         /**
-         * @cfg {Boolean}
+         * @cfg {Boolean} vertical
          * True to align the buttons vertically
          */
         vertical: false,
 
         /**
-         * @cfg {String}
+         * @cfg {String} defaultUI
          * Default {@link Ext.Component#ui ui} to use for buttons in this segmented button.
          * Buttons can override this default by specifying their own UI
          */
@@ -82,10 +84,10 @@ Ext.define('Ext.button.Segmented', {
 
     beforeRenderConfig: {
         /**
-         * @cfg {String/Number/String[]/Number[]}
+         * @cfg {String/Number/String[]/Number[]} value
          * @accessor
          * The value of this button.  When {@link #allowMultiple} is `false`, value is a
-         * String or Number.  When {@link #allowMultiple is `true`, value is an array
+         * String or Number.  When {@link #allowMultiple} is `true`, value is an array
          * of values.  A value corresponds to a child button's {@link Ext.button.Button#value
          * value}, or its index if no child button values match the given value.
          *
@@ -142,19 +144,49 @@ Ext.define('Ext.button.Segmented', {
     },
 
     /**
+     * @property defaultBindProperty
      * @inheritdoc
      */
     defaultBindProperty: 'value',
 
+    /**
+     * @cfg publishes
+     * @inheritdoc
+     */
     publishes: ['value'],
+
+    /**
+     * @cfg twoWayBindable
+     * @inheritdoc
+     */
     twoWayBindable: ['value'],
 
+    /**
+     * @cfg layout
+     * @inheritdoc
+     */
     layout: 'segmentedbutton',
+
+    /**
+     * @cfg defaultType
+     * @inheritdoc
+     */
     defaultType: 'button',
+
+    /**
+     * @property maskOnDisable
+     * @inheritdoc
+     */
     maskOnDisable: false,
+
     isSegmentedButton: true,
 
+    /**
+     * @cfg baseCls
+     * @inheritdoc
+     */
     baseCls: Ext.baseCSSPrefix + 'segmented-button',
+
     itemCls: Ext.baseCSSPrefix + 'segmented-button-item',
 
     /**
@@ -194,8 +226,7 @@ Ext.define('Ext.button.Segmented', {
             buttonValue, button, values, oldValues, items, i, ln, hasPressed;
 
         values = (value instanceof Array) ? value : (value == null) ? [] : [value];
-        oldValues = (oldValue instanceof Array) ? oldValue :
-                (oldValue == null) ? [] : [oldValue];
+        oldValues = (oldValue instanceof Array) ? oldValue : (oldValue == null) ? [] : [oldValue];
 
         // Set a flag to tell our toggle listener not to respond to the buttons' toggle
         // events while we are applying the value.
@@ -204,6 +235,7 @@ Ext.define('Ext.button.Segmented', {
         if (!me.rendered) {
             // first time - add values of buttons with an initial config of pressed:true
             items = me.items.items;
+
             for (i = items.length - 1; i >= 0; i--) {
                 button = items[i];
 
@@ -212,9 +244,11 @@ Ext.define('Ext.button.Segmented', {
                 if (me.forceSelection && !i && !hasPressed) {
                     button.pressed = true;
                 }
+
                 if (button.pressed) {
                     hasPressed = true;
                     buttonValue = button.value;
+
                     if (buttonValue == null) {
                         buttonValue = me.items.indexOf(button);
                     }
@@ -266,6 +300,7 @@ Ext.define('Ext.button.Segmented', {
         // unpress buttons for the old values, if they do not exist in the new values array
         for (i = 0, ln = oldValues.length; i < ln; i++) {
             oldValue = oldValues[i];
+
             if (!Ext.Array.contains(values, oldValue)) {
                 me._lookupButtonByValue(oldValue).setPressed(false);
             }
@@ -276,7 +311,7 @@ Ext.define('Ext.button.Segmented', {
         return value;
     },
 
-    updateValue: function (value, oldValue) {
+    updateValue: function(value, oldValue) {
         var me = this,
             same;
 
@@ -296,6 +331,7 @@ Ext.define('Ext.button.Segmented', {
 
         me.addCls(me.baseCls + me._getClsSuffix());
         me._syncItemClasses(true);
+
         me.callParent();
     },
 
@@ -304,6 +340,7 @@ Ext.define('Ext.button.Segmented', {
             syncItemClasses = '_syncItemClasses';
 
         //<debug>
+        // eslint-disable-next-line vars-on-top, one-var
         var items = me.items.items,
             ln = items.length,
             i = 0,
@@ -311,17 +348,19 @@ Ext.define('Ext.button.Segmented', {
 
         if (item.ui === 'default' && !item.hasOwnProperty('ui')) {
             defaultUI = me.getDefaultUI();
+
             if (defaultUI !== 'default') {
                 item.ui = defaultUI;
             }
         }
 
-        for(; i < ln; i++) {
+        for (; i < ln; i++) {
             if (items[i] !== item) {
                 value = items[i].value;
+
                 if (value != null && value === item.value) {
                     Ext.raise("Segmented button '" + me.id +
-                        "' cannot contain multiple items with value: '" + value + "'");
+                              "' cannot contain multiple items with value: '" + value + "'");
                 }
             }
         }
@@ -337,6 +376,7 @@ Ext.define('Ext.button.Segmented', {
 
         if (me.getAllowToggle()) {
             item.enableToggle = true;
+
             if (!me.getAllowMultiple()) {
                 item.toggleGroup = me.getId();
                 item.allowDepress = me.getAllowDepress();
@@ -344,8 +384,8 @@ Ext.define('Ext.button.Segmented', {
         }
 
         item.addCls(me.itemCls + me._getClsSuffix());
-
         me._syncItemClasses();
+
         me.callParent([item]);
     },
 
@@ -354,6 +394,7 @@ Ext.define('Ext.button.Segmented', {
 
         item.removeCls(me.itemCls + me._getClsSuffix());
         me._syncItemClasses();
+
         me.callParent([item]);
     },
 
@@ -375,8 +416,11 @@ Ext.define('Ext.button.Segmented', {
             //    });
             //
             // reading offsetWidth corrects the issue.
-            this.el.dom.offsetWidth; // jshint ignore:line
+
+            // eslint-disable-next-line no-unused-expressions
+            this.el.dom.offsetWidth;
         }
+
         this.callParent();
     },
 
@@ -385,14 +429,20 @@ Ext.define('Ext.button.Segmented', {
             item, i, ln;
 
         if (this.rendered) {
-            Ext.raise("Changing the ui config of a segmented button after render is not supported.");
-        } else if (items) {
+            Ext.raise(
+                "Changing the ui config of a segmented button after render is not supported."
+            );
+        }
+        else if (items) {
             if (items.items) { // Mixed collection already created
                 items = items.items;
             }
+
             for (i = 0, ln = items.length; i < ln; i++) {
                 item = items[i];
-                if (item.ui === 'default' && defaultUI !== 'default' && !item.hasOwnProperty('ui') ) {
+
+                if (item.ui === 'default' && defaultUI !== 'default' &&
+                    !item.hasOwnProperty('ui')) {
                     items[i].ui = defaultUI;
                 }
             }
@@ -402,25 +452,29 @@ Ext.define('Ext.button.Segmented', {
     //<debug>
     updateAllowDepress: function(newAllowDepress, oldAllowDepress) {
         if (this.rendered && (newAllowDepress !== oldAllowDepress)) {
-            Ext.raise("Changing the allowDepress config of a segmented button after render is not supported.");
+            Ext.raise("Changing the allowDepress config of a segmented button after render " +
+                      "is not supported.");
         }
     },
 
     updateAllowMultiple: function(newAllowMultiple, oldAllowMultiple) {
         if (this.rendered && (newAllowMultiple !== oldAllowMultiple)) {
-            Ext.raise("Changing the allowMultiple config of a segmented button after render is not supported.");
+            Ext.raise("Changing the allowMultiple config of a segmented button after render " +
+                      "is not supported.");
         }
     },
 
     updateAllowToggle: function(newAllowToggle, oldAllowToggle) {
         if (this.rendered && (newAllowToggle !== oldAllowToggle)) {
-            Ext.raise("Changing the allowToggle config of a segmented button after render is not supported.");
+            Ext.raise("Changing the allowToggle config of a segmented button after render " +
+                      "is not supported.");
         }
     },
 
     updateVertical: function(newVertical, oldVertical) {
         if (this.rendered && (newVertical !== oldVertical)) {
-            Ext.raise("Changing the orientation of a segmented button after render is not supported.");
+            Ext.raise("Changing the orientation of a segmented button after render " +
+                      "is not supported.");
         }
     },
     //</debug>
@@ -456,6 +510,7 @@ Ext.define('Ext.button.Segmented', {
             for (; i < ln; i++) {
                 btn = items[i];
                 buttonValue = btn.value;
+
                 if ((buttonValue != null) && buttonValue === value) {
                     button = btn;
                     break;
@@ -469,12 +524,13 @@ Ext.define('Ext.button.Segmented', {
 
             return button;
         },
-        
+
         _onBeforeItemToggle: function(button, pressed) {
-            // If we allow multiple selections, and we are forcing a selection, and we are unpressing
-            // and we only have one value, then veto this. we are not allowing the selection length
-            // to fall to zero.
-            if (this.allowMultiple && this.forceSelection && !pressed && this.getValue().length === 1) {
+            // If we allow multiple selections, and we are forcing a selection, and we are
+            // unpressing and we only have one value, then veto this. we are not allowing
+            // the selection length to fall to zero.
+            if (this.allowMultiple && this.forceSelection && !pressed &&
+                this.getValue().length === 1) {
                 return false;
             }
         },
@@ -489,6 +545,8 @@ Ext.define('Ext.button.Segmented', {
             if (this._isApplyingValue) {
                 return;
             }
+
+            // eslint-disable-next-line vars-on-top
             var me = this,
                 Array = Ext.Array,
                 allowMultiple = me.allowMultiple,
@@ -507,17 +565,20 @@ Ext.define('Ext.button.Segmented', {
                         value = Array.slice(value);
                         value.push(buttonValue);
                     }
-                } else {
+                }
+                else {
                     value = buttonValue;
                 }
-            } else {
+            }
+            else {
                 if (allowMultiple) {
                     if (valueIndex > -1) {
                         // We must not mutate our value property here
                         value = Array.slice(value);
                         value.splice(valueIndex, 1);
                     }
-                } else if (value === buttonValue) {
+                }
+                else if (value === buttonValue) {
                     value = null;
                 }
             }
@@ -550,6 +611,7 @@ Ext.define('Ext.button.Segmented', {
 
             for (i = 0; i < ln; i++) {
                 item = items[i];
+
                 if (!item.hidden) {
                     visibleItems.push(item);
                 }
@@ -557,22 +619,22 @@ Ext.define('Ext.button.Segmented', {
 
             ln = visibleItems.length;
 
-            //remove all existing classes from visible items
+            // remove all existing classes from visible items
             for (i = 0; i < ln; i++) {
                 visibleItems[i].removeCls([ firstCls, middleCls, lastCls ]);
             }
 
             // do not add any classes if there is only one item (no border removal needed)
             if (ln > 1) {
-                //add firstCls to the first visible button
+                // add firstCls to the first visible button
                 visibleItems[0].addCls(firstCls);
 
-                //add middleCls to all visible buttons in between
+                // add middleCls to all visible buttons in between
                 for (i = 1; i < ln - 1; i++) {
                     visibleItems[i].addCls(middleCls);
                 }
 
-                //add lastCls to the first visible button
+                // add lastCls to the first visible button
                 visibleItems[ln - 1].addCls(lastCls);
             }
         }

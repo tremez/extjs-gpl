@@ -9,11 +9,13 @@ Ext.define('Ext.data.session.ChildChangesVisitor', {
 
     constructor: function() {
         this.seen = {};
+
         this.callParent(arguments);
     },
 
     setupOptions: function(options) {
         this.callParent([options]);
+
         options.serialize = false;
     },
 
@@ -40,10 +42,11 @@ Ext.define('Ext.data.session.ChildChangesVisitor', {
         if (seen[seenKey]) {
             return;
         }
+
         seen[seenKey] = true;
 
         result = me.result || (me.result = {});
-        bucket = result[name]  || (result[name] = {});
+        bucket = result[name] || (result[name] = {});
         bucket = bucket[readKey] || (bucket[readKey] = []);
         bucket.push(Ext.apply({}, record.modified, record.data));
     }

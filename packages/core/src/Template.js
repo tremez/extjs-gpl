@@ -1,8 +1,9 @@
 /**
- * Represents an HTML fragment template. Templates may be {@link #compile precompiled} for greater performance.
+ * Represents an HTML fragment template. Templates may be {@link #compile precompiled} for
+ * greater performance.
  *
- * An instance of this class may be created by passing to the constructor either a single argument, or multiple
- * arguments:
+ * An instance of this class may be created by passing to the constructor either a single argument,
+ * or multiple arguments:
  *
  * # Single argument: String/Array
  *
@@ -47,15 +48,15 @@
 Ext.define('Ext.Template', {
 // @define Ext.String.format
 // @define Ext.util.Format.format
-    
+
     requires: [
-        //'Ext.dom.Helper',
         'Ext.util.Format'
     ],
 
     inheritableStatics: {
         /**
-         * Creates a template from the passed element's value (_display:none_ textarea, preferred) or innerHTML.
+         * Creates a template from the passed element's value (_display:none_ textarea, preferred)
+         * or innerHTML.
          * @param {String/HTMLElement} el A DOM element or its id
          * @param {Object} config (optional) Config object
          * @return {Ext.Template} The created template
@@ -64,6 +65,7 @@ Ext.define('Ext.Template', {
          */
         from: function(el, config) {
             el = Ext.getDom(el);
+
             return new this(el.value || el.innerHTML, config || '');
         }
     },
@@ -80,18 +82,17 @@ Ext.define('Ext.Template', {
      * 
      * @param {String...} html List of strings to be concatenated into template.
      * Alternatively an array of strings can be given, but then no config object may be passed.
-     * @param {Object} config (optional) Config object
+     * @param {Object} [config] A config object to apply to this instance.
      */
     constructor: function(html) {
         var me = this,
             args = arguments,
             buffer = [],
-            i,
             length = args.length,
-            value;
+            i, value;
 
         me.initialConfig = {};
-        
+
         // Allow an array to be passed here so we can
         // pass an array of strings and an object
         // at the end
@@ -103,14 +104,17 @@ Ext.define('Ext.Template', {
         if (length > 1) {
             for (i = 0; i < length; i++) {
                 value = args[i];
+
                 if (typeof value === 'object') {
                     Ext.apply(me.initialConfig, value);
                     Ext.apply(me, value);
-                } else {
+                }
+                else {
                     buffer.push(value);
                 }
             }
-        } else {
+        }
+        else {
             buffer.push(html);
         }
 
@@ -136,31 +140,31 @@ Ext.define('Ext.Template', {
     disableFormats: false,
 
     /**
-     * @property {RegExp} re
+     * @property {RegExp} tokenRe
      * Regular expression used to extract tokens.
      *
      * Finds the following expressions within a format string
      *
-     *                     {AND?}
-     *                     /   \
-     *                   /       \
-     *                 /           \
-     *               /               \
-     *            OR                  AND?
-     *           /  \                 / \
-     *          /    \               /   \
-     *         /      \             /     \
-     *    (\d+)  ([a-z_][\w\-]*)   /       \
-     *     index       name       /         \
-     *                           /           \
-     *                          /             \
-     *                   \:([a-z_\.]*)   (?:\((.*?)?\))?
-     *                      formatFn           args
+     *                      {AND?}
+     *                      /   \
+     *                    /       \
+     *                  /           \
+     *                /               \
+     *             OR                  AND?
+     *            /  \                 / \
+     *           /    \               /   \
+     *          /      \             /     \
+     *     (\d+)  ([a-z_][\w\-]*)   /       \
+     *      index       name       /         \
+     *                            /           \
+     *                           /             \
+     *                    \:([a-z_\.]*)   (?:\((.*?)?\))?
+     *                       formatFn           args
      *
      * Numeric index or (name followed by optional formatting function and args)
      * @private
      */
-    tokenRe: /\{(?:(?:(\d+)|([a-z_][\w\-]*))(?::([a-z_\.]+)(?:\(([^\)]*?)?\))?)?)\}/gi,
+    tokenRe: /\{(?:(?:(\d+)|([a-z_$][\w\-$]*))(?::([a-z_.]+)(?:\(([^)]*?)?\))?)?)\}/gi,
 
     /**
      * Returns an HTML fragment of this template with the specified values applied.
@@ -184,6 +188,7 @@ Ext.define('Ext.Template', {
             if (!me.fn) {
                 me.compile();
             }
+
             return me.fn(values).join('');
         }
 
@@ -206,10 +211,12 @@ Ext.define('Ext.Template', {
             if (name == null || name === '') {
                 name = index;
             }
+
             if (formatFn && useFormat) {
                 if (args) {
-                    args = [values[name]].concat(Ext.functionFactory('return ['+ args +'];')());
-                } else {
+                    args = [values[name]].concat(Ext.functionFactory('return [' + args + '];')());
+                }
+                else {
                     args = [values[name]];
                 }
 
@@ -247,8 +254,10 @@ Ext.define('Ext.Template', {
             if (!me.fn) {
                 me.compile();
             }
+
             out.push.apply(out, me.fn(values));
-        } else {
+        }
+        else {
             out.push(me.apply(values));
         }
 
@@ -261,7 +270,7 @@ Ext.define('Ext.Template', {
      * Alias for {@link #apply}.
      * @inheritdoc Ext.Template#apply
      */
-    applyTemplate: function () {
+    applyTemplate: function() {
         return this.apply.apply(this, arguments);
     },
 
@@ -273,9 +282,11 @@ Ext.define('Ext.Template', {
      */
     set: function(html, compile) {
         var me = this;
+
         me.html = html;
         me.compiled = !!compile;
         me.fn = null;
+
         return me;
     },
 
@@ -291,14 +302,18 @@ Ext.define('Ext.Template', {
         var me = this,
             code;
 
-        code = me.html.replace(me.compileARe, '\\\\').replace(me.compileBRe, '\\n').
-                       replace(me.compileCRe, "\\'").replace(me.tokenRe, me.regexReplaceFn.bind(me));
+        code = me.html.replace(me.compileARe, '\\\\')
+                      .replace(me.compileBRe, '\\n')
+                      .replace(me.compileCRe, "\\'")
+                      .replace(me.tokenRe, me.regexReplaceFn.bind(me));
+
         code = (this.disableFormats !== true ? 'var fm=Ext.util.Format;' : '') +
                 (me.useEval ? '$=' : 'return') +
                 " function(v){return ['" + code + "'];};";
 
-        me.fn  = me.useEval ? me.evalCompiled(code) : (new Function('Ext', code))(Ext); // jshint ignore:line
+        me.fn = me.useEval ? me.evalCompiled(code) : (new Function('Ext', code))(Ext);
         me.compiled = true;
+
         return me;
     },
 
@@ -306,29 +321,31 @@ Ext.define('Ext.Template', {
      * @private
      */
     evalCompiled: function($) {
-
         // We have to use eval to realize the code block and capture the inner func we also
         // don't want a deep scope chain. We only do this in Firefox and it is also unhappy
         // with eval containing a return statement, so instead we assign to "$" and return
         // that. Because we use "eval", we are automatically sandboxed properly.
-        eval($); // jshint ignore:line
+        eval($);
+
         return $;
     },
 
-    regexReplaceFn: function (match, index, name, formatFn, args) {
+    regexReplaceFn: function(match, index, name, formatFn, args) {
         // Calculate the correct expression to use to index into the values object/array
         // index may be a numeric string, or a quoted alphanumeric string.
         // Certain browser pass unmatched parameters as undefined, some as an empty string.
         if (index == null || index === '') {
             index = '"' + name + '"';
         }
-        // If we are being used as a formatter for Ext.String.format, we must skip the string itself in the argument list.
+        // If we are being used as a formatter for Ext.String.format, we must skip the string
+        // itself in the argument list.
         // Doing this enables String.format to omit the Array slice call.
         else if (this.stringFormat) {
             index = parseInt(index) + 1;
         }
+
         if (formatFn && this.disableFormats !== true) {
-            args = args ? ',' + args: "";
+            args = args ? ',' + args : "";
 
             // Caller used '{0:this.bold}'. Create a call to member function
             if (formatFn.substr(0, 5) === "this.") {
@@ -342,6 +359,7 @@ Ext.define('Ext.Template', {
             else {
                 return match;
             }
+
             return "'," + formatFn + "v[" + index + "]" + args + "),'";
         }
         else {
@@ -350,7 +368,8 @@ Ext.define('Ext.Template', {
     },
 
     /**
-     * Applies the supplied values to the template and inserts the new node(s) as the first child of el.
+     * Applies the supplied values to the template and inserts the new node(s) as the first child
+     * of el.
      *
      * @param {String/HTMLElement/Ext.dom.Element} el The context element
      * @param {Object/Array} values The template values. See {@link #applyTemplate} for details.
@@ -386,7 +405,8 @@ Ext.define('Ext.Template', {
     },
 
     /**
-     * Applies the supplied `values` to the template and appends the new node(s) to the specified `el`.
+     * Applies the supplied `values` to the template and appends the new node(s) to the specified
+     * `el`.
      *
      * For example usage see {@link Ext.Template Ext.Template class docs}.
      *
@@ -401,11 +421,13 @@ Ext.define('Ext.Template', {
 
     doInsert: function(where, el, values, returnElement) {
         var newNode = Ext.DomHelper.insertHtml(where, Ext.getDom(el), this.apply(values));
+
         return returnElement ? Ext.get(newNode) : newNode;
     },
 
     /**
-     * Applies the supplied values to the template and overwrites the content of el with the new node(s).
+     * Applies the supplied values to the template and overwrites the content of el with the new
+     * node(s).
      *
      * @param {String/HTMLElement/Ext.dom.Element} el The context element
      * @param {Object/Array} values The template values. See {@link #applyTemplate} for details.
@@ -414,15 +436,16 @@ Ext.define('Ext.Template', {
      */
     overwrite: function(el, values, returnElement) {
         var newNode = Ext.DomHelper.overwrite(Ext.getDom(el), this.apply(values));
+
         return returnElement ? Ext.get(newNode) : newNode;
     }
-}, function(Template){
-    
+}, function(Template) {
     var formatRe = /\{\d+\}/,
         generateFormatFn = function(format) {
             // Generate a function which substitutes value tokens
             if (formatRe.test(format)) {
                 format = new Template(format, formatTplConfig);
+
                 return function() {
                     return format.apply(arguments);
                 };
@@ -441,32 +464,34 @@ Ext.define('Ext.Template', {
         formatFns = {};
 
     /**
-     * Alias for {@link Ext.String#format}.
      * @method format
-     * @inheritdoc Ext.String#format
+     * @inheritdoc Ext.String#method-format
      * @member Ext.util.Format
+     * Alias for {@link Ext.String#format}.
      */
 
     /**
-     * Allows you to define a tokenized string and pass an arbitrary number of arguments to replace the tokens.  Each
-     * token must be unique, and must increment in the format {0}, {1}, etc.  Example usage:
+     * Allows you to define a tokenized string and pass an arbitrary number of arguments to replace
+     * the tokens. Each token must be unique, and must increment in the format {0}, {1}, etc.
+     * Example usage:
      *
      *     var cls = 'my-class',
      *         text = 'Some text';
      *     var s = Ext.String.format('<div class="{0}">{1}</div>', cls, text);
      *     // s now contains the string: '<div class="my-class">Some text</div>'
      *
-     * @param {String} string The tokenized string to be formatted.
+     * @param {String} format The tokenized string to be formatted.
      * @param {Mixed...} values The values to replace tokens `{0}`, `{1}`, etc in order.
      * @return {String} The formatted string.
      * @member Ext.String
      */
     Ext.String.format = Ext.util.Format.format = function(format) {
         var formatFn = formatFns[format] || (formatFns[format] = generateFormatFn(format));
+
         return formatFn.apply(this, arguments);
     };
-    
+
     Ext.String.formatEncode = function() {
         return Ext.String.htmlEncode(Ext.String.format.apply(this, arguments));
-    }
+    };
 });

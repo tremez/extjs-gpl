@@ -1,0 +1,13 @@
+.#{$prefix}scrollindicator {
+    position: absolute;
+
+    &.#{$prefix}vertical {
+        top: 0;
+        right: 0;
+    }
+
+    &.#{$prefix}horizontal {
+        bottom: 0;
+        left: 0;
+    }
+}

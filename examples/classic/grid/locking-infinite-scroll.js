@@ -4,17 +4,19 @@ Ext.require([
     'Ext.util.*'
 ]);
 
-Ext.onReady(function(){
+Ext.onReady(function() {
+    var store;
+
     Ext.define('ForumThread', {
         extend: 'Ext.data.Model',
         fields: [
             'title', 'forumtitle', 'forumid', 'username', {
-                name: 'replycount', 
+                name: 'replycount',
                 type: 'int'
             }, {
-                name: 'lastpost', 
-                mapping: 'lastpost', 
-                type: 'date', 
+                name: 'lastpost',
+                mapping: 'lastpost',
+                type: 'date',
                 dateFormat: 'timestamp'
             },
             'lastposter', 'excerpt', 'threadid'
@@ -23,7 +25,7 @@ Ext.onReady(function(){
     });
 
     // create the Data Store
-    var store = Ext.create('Ext.data.BufferedStore', {
+    store = Ext.create('Ext.data.BufferedStore', {
         id: 'store',
         model: 'ForumThread',
         remoteSort: true,
@@ -57,7 +59,7 @@ Ext.onReady(function(){
         );
     }
 
-    var grid = Ext.create('Ext.grid.Panel', {
+    Ext.create('Ext.grid.Panel', {
         width: 700,
         height: 500,
         collapsible: true,
@@ -72,32 +74,32 @@ Ext.onReady(function(){
             trackOver: false
         },
         // grid columns
-        columns:[{
+        columns: [{
             xtype: 'rownumberer',
             width: 50,
             sortable: false,
             locked: true,
             lockable: false
-        },{
+        }, {
             tdCls: 'x-grid-cell-topic',
             text: "Topic",
             dataIndex: 'title',
             flex: 1,
             renderer: renderTopic,
             sortable: false
-        },{
+        }, {
             text: "Author",
             dataIndex: 'username',
             width: 100,
             hidden: true,
             sortable: true
-        },{
+        }, {
             text: "Replies",
             dataIndex: 'replycount',
             align: 'center',
             width: 70,
             sortable: false
-        },{
+        }, {
             id: 'last',
             text: "Last Post",
             dataIndex: 'lastpost',

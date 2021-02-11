@@ -9,7 +9,7 @@ Ext.define('KitchenSink.view.form.ColorPickerController', {
         }
     },
 
-    onShowMoreLess: function (button) {
+    onShowMoreLess: function(button) {
         this.getViewModel().set('full', button.value);
     }
 });

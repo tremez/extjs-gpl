@@ -1,0 +1,37 @@
+$gridfilters-menu-filters-icon: dynamic($fa-var-search);
+$gridfilters-menu-filters-manage-icon: dynamic($fa-var-cog);
+$gridfilters-menu-filters-more-icon: dynamic($fa-var-ellipsis-h);
+$gridfilters-menu-filters-save-icon: dynamic($fa-var-save);
+
+
+.#{$prefix}gridfilters-menu-filters-icon {
+    @include icon($gridfilters-menu-filters-icon);
+}
+
+.#{$prefix}gridfilters-menu-filters-manage-icon {
+    @include icon($gridfilters-menu-filters-manage-icon);
+}
+
+.#{$prefix}gridfilters-menu-filters-more-icon {
+    @include icon($gridfilters-menu-filters-more-icon);
+}
+
+.#{$prefix}gridfilters-menu-filters-save-icon {
+    @include icon($gridfilters-menu-filters-save-icon);
+}
+
+// iOS
+
+$gridfilters-menu-filters-icon: dynamic($ios-search);
+$gridfilters-menu-filters-manage-icon: dynamic($ios-gear);
+$gridfilters-menu-filters-more-icon: dynamic($fa-var-ellipsis-h 'Font Awesome 5 Free');
+//$gridfilters-menu-filters-save-icon: dynamic($ios-save);
+$gridfilters-menu-filters-save-icon: dynamic($fa-var-folder 'Font Awesome 5 Free');
+
+
+// Material
+
+$gridfilters-menu-filters-icon: dynamic('filter_list');
+$gridfilters-menu-filters-manage-icon: dynamic('settings');
+$gridfilters-menu-filters-more-icon: dynamic('more_horiz');
+$gridfilters-menu-filters-save-icon: dynamic('save');

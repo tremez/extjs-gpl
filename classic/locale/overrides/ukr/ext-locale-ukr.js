@@ -232,10 +232,10 @@ Ext.define("Ext.locale.ukr.window.MessageBox", {
         cancel: "Відміна",
         yes: "Так",
         no: "Ні"
-    }    
+    }
 });
 
 // This is needed until we can refactor all of the locales into individual files
-Ext.define("Ext.locale.ukr.Component", {	
+Ext.define("Ext.locale.ukr.Component", {
     override: "Ext.Component"
 });

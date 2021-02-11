@@ -1,7 +1,4 @@
-.x-surface { // surface 'div'
-    position: absolute;
-}
-
-.#{$prefix}surface-canvas { // 'canvas' element
+// surface 'div' and 'canvas element'
+.#{$prefix}surface, .#{$prefix}surface-canvas {
     position: absolute;
 }

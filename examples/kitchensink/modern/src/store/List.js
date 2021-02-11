@@ -2,70 +2,56 @@ Ext.define("KitchenSink.store.List", {
     extend: 'Ext.data.Store',
     alias: 'store.List',
     model: 'KitchenSink.model.Person',
+
     sorters: 'firstName',
+
     grouper: {
         groupFn: function(record) {
             return record.get('firstName')[0];
         }
     },
-    data: [
-        {firstName: 'Julio', lastName: 'Benesh'},
-        {firstName: 'Julio', lastName: 'Minich'},
-        {firstName: 'Tania', lastName: 'Ricco'},
-        {firstName: 'Odessa', lastName: 'Steuck'},
-        {firstName: 'Nelson', lastName: 'Raber'},
-        {firstName: 'Tyrone', lastName: 'Scannell'},
-        {firstName: 'Allan', lastName: 'Disbrow'},
-        {firstName: 'Cody', lastName: 'Herrell'},
-        {firstName: 'Julio', lastName: 'Burgoyne'},
-        {firstName: 'Jessie', lastName: 'Boedeker'},
-        {firstName: 'Allan', lastName: 'Leyendecker'},
-        {firstName: 'Javier', lastName: 'Lockley'},
-        {firstName: 'Guy', lastName: 'Reasor'},
-        {firstName: 'Jamie', lastName: 'Brummer'},
-        {firstName: 'Jessie', lastName: 'Casa'},
-        {firstName: 'Marcie', lastName: 'Ricca'},
-        {firstName: 'Gay', lastName: 'Lamoureaux'},
-        {firstName: 'Althea', lastName: 'Sturtz'},
-        {firstName: 'Kenya', lastName: 'Morocco'},
-        {firstName: 'Rae', lastName: 'Pasquariello'},
-        {firstName: 'Ted', lastName: 'Abundis'},
-        {firstName: 'Jessie', lastName: 'Schacherer'},
-        {firstName: 'Jamie', lastName: 'Gleaves'},
-        {firstName: 'Hillary', lastName: 'Spiva'},
-        {firstName: 'Elinor', lastName: 'Rockefeller'},
-        {firstName: 'Dona', lastName: 'Clauss'},
-        {firstName: 'Ashlee', lastName: 'Kennerly'},
-        {firstName: 'Alana', lastName: 'Wiersma'},
-        {firstName: 'Kelly', lastName: 'Holdman'},
-        {firstName: 'Mathew', lastName: 'Lofthouse'},
-        {firstName: 'Dona', lastName: 'Tatman'},
-        {firstName: 'Clayton', lastName: 'Clear'},
-        {firstName: 'Rosalinda', lastName: 'Urman'},
-        {firstName: 'Cody', lastName: 'Sayler'},
-        {firstName: 'Odessa', lastName: 'Averitt'},
-        {firstName: 'Ted', lastName: 'Poage'},
-        {firstName: 'Penelope', lastName: 'Gayer'},
-        {firstName: 'Katy', lastName: 'Bluford'},
-        {firstName: 'Kelly', lastName: 'Mchargue'},
-        {firstName: 'Kathrine', lastName: 'Gustavson'},
-        {firstName: 'Kelly', lastName: 'Hartson'},
-        {firstName: 'Carlene', lastName: 'Summitt'},
-        {firstName: 'Kathrine', lastName: 'Vrabel'},
-        {firstName: 'Roxie', lastName: 'Mcconn'},
-        {firstName: 'Margery', lastName: 'Pullman'},
-        {firstName: 'Avis', lastName: 'Bueche'},
-        {firstName: 'Esmeralda', lastName: 'Katzer'},
-        {firstName: 'Tania', lastName: 'Belmonte'},
-        {firstName: 'Malinda', lastName: 'Kwak'},
-        {firstName: 'Tanisha', lastName: 'Jobin'},
-        {firstName: 'Kelly', lastName: 'Dziedzic'},
-        {firstName: 'Darren', lastName: 'Devalle'},
-        {firstName: 'Julio', lastName: 'Buchannon'},
-        {firstName: 'Darren', lastName: 'Schreier'},
-        {firstName: 'Jamie', lastName: 'Pollman'},
-        {firstName: 'Karina', lastName: 'Pompey'},
-        {firstName: 'Hugh', lastName: 'Snover'},
-        {firstName: 'Zebra', lastName: 'Evilias'}
-    ]
+
+    data: (function(first, last) {
+        var v = 42,
+            m = 0x7fffFFFF,
+            data = [],
+            i, j, k;
+
+        function random(limit) {
+            v = (v * 48271) % m;
+
+            return Math.floor(v / m * limit);
+        }
+
+        for (k = 0, i = 0; i < first.length; ++i) {
+            for (j = random(5) + 1; j-- > 0; ++k) {  // predictable "random" 1-5
+                data.push({
+                    firstName: first[i],
+                    lastName: last[k % last.length]
+                });
+            }
+        }
+
+        return data;
+    })([
+        'Julio', 'Tania', 'Odessa', 'Nelson', 'Tyrone', 'Allan', 'Cody',
+        'Jessie', 'Javier', 'Guy', 'Jamie', 'Marcie', 'Althea', 'Kenya',
+        'Rae', 'Ted', 'Hillary', 'Elinor', 'Dona', 'Ashlee', 'Alana',
+        'Kelly', 'Mathew', 'Clayton', 'Rosalinda', 'Penelope', 'Katy',
+        'Kathrine', 'Carlene', 'Roxie', 'Margery', 'Avis', 'Esmeralda',
+        'Malinda', 'Tanisha', 'Darren', 'Karina', 'Hugh', 'Zebora'
+    ],
+       [
+           'Benesh', 'Minich', 'Ricco', 'Steuck', 'Raber', 'Scannell',
+           'Disbrow', 'Herrell', 'Burgoyne', 'Boedeker', 'Leyendecker',
+           'Lockley', 'Reasor', 'Brummer', 'Casa', 'Ricca', 'Lamoureaux',
+           'Sturtz', 'Morocco', 'Pasquariello', 'Abundis', 'Schacherer',
+           'Gleaves', 'Spiva', 'Rockefeller', 'Clauss', 'Kennerly',
+           'Wiersma', 'Holdman', 'Lofthouse', 'Tatman', 'Clear', 'Urman',
+           'Sayler', 'Averitt', 'Poage', 'Gayer', 'Bluford', 'Mchargue',
+           'Gustavson', 'Hartson', 'Summitt', 'Vrabel', 'Mcconn', 'Pullman',
+           'Bueche', 'Katzer', 'Belmonte', 'Kwak', 'Jobin', 'Dziedzic',
+           'Devalle', 'Buchannon', 'Schreier', 'Pollman', 'Pompey',
+           'Snover', 'Evilias'
+       ])
 });

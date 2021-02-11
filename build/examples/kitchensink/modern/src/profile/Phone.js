@@ -2,11 +2,15 @@ Ext.define('KitchenSink.profile.Phone', {
     extend: 'KitchenSink.profile.Base',
 
     controllers: ['Main'],
-    views: ['Main', 'TouchEvents'],
 
-    mainView: 'KitchenSink.view.phone.Main',
+    mainView: 'phone.Main',
 
-    isActive: function () {
+    views: {
+        'combination-dashboard': 'KitchenSink.view.phone.chart.combination.Dashboard',
+        'touch-events': 'KitchenSink.view.phone.touchevent.Events'
+    },
+
+    isActive: function() {
         return Ext.os.is.Phone; // || Ext.os.is.Desktop;
     }
 });

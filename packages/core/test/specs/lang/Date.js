@@ -1,5 +1,5 @@
-describe("Ext.Date", function() {
-    describe('Elapsed time between dates', function () {
+topSuite("Ext.Date", function() {
+    describe('Elapsed time between dates', function() {
         var dateValue = 0,
             increment = 3,
             OriginalDate = Date,
@@ -15,29 +15,31 @@ describe("Ext.Date", function() {
             };
 
         function mockDate() {
-            Date = PredictableDate;
+            Date = PredictableDate; // eslint-disable-line no-global-assign
         }
 
-        beforeEach(function () {
-            Ext.Date.now = PredictableDate.now = function () {
+        beforeEach(function() {
+            Ext.Date.now = PredictableDate.now = function() {
                 dateValue = dateValue + increment;
+
                 return dateValue;
             };
         });
 
         afterEach(function() {
             Ext.Date.now = originalNow;
-            Date = OriginalDate;
+            Date = OriginalDate; // eslint-disable-line no-global-assign
             increment += 16;
         });
 
-        it("should get time elapsed in millisecond between date instantiation", function () {
+        it("should get time elapsed in millisecond between date instantiation", function() {
             mockDate();
             var dateA = new PredictableDate();
+
             expect(Ext.Date.getElapsed(dateA)).toEqual(3);
         });
 
-        it("should get time elapsed in millisecond between two dates", function () {
+        it("should get time elapsed in millisecond between two dates", function() {
             mockDate();
             var dateA = new PredictableDate(),
                 dateB = new PredictableDate();
@@ -89,7 +91,7 @@ describe("Ext.Date", function() {
 
     describe("getMonthNumber", function() {
         it("should return the month number [0-11] for the corresponding short month name", function() {
-            var names = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 
+            var names = ['jan', 'feb', 'mar', 'apr', 'may', 'jun',
                          'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 
             Ext.Array.forEach(names, function(name, idx) {
@@ -100,17 +102,17 @@ describe("Ext.Date", function() {
         });
 
         it("should return the month number [0-11] for the corresponding full month name", function() {
-            var names = ['january', 
-                         'february', 
-                         'march', 
-                         'april', 
-                         'may', 
-                         'june', 
-                         'july', 
-                         'august', 
-                         'september', 
-                         'october', 
-                         'november', 
+            var names = ['january',
+                         'february',
+                         'march',
+                         'april',
+                         'may',
+                         'june',
+                         'july',
+                         'august',
+                         'september',
+                         'october',
+                         'november',
                          'december'];
 
             Ext.Array.forEach(names, function(name, idx) {
@@ -197,6 +199,7 @@ describe("Ext.Date", function() {
         it("should parse year-only", function() {
             var date = Ext.Date.parse("2011", "Y"),
                 expectedDate = new Date();
+
             expectedDate.setFullYear(2011);
             expectedDate.setHours(0);
             expectedDate.setMinutes(0);
@@ -208,6 +211,7 @@ describe("Ext.Date", function() {
         it("should parse year-month-date", function() {
             var date = Ext.Date.parse("2011-01-20", "Y-m-d"),
                 expectedDate = new Date();
+
             expectedDate.setFullYear(2011);
             expectedDate.setMonth(0);
             expectedDate.setDate(20);
@@ -218,28 +222,28 @@ describe("Ext.Date", function() {
             expect(date).toEqual(expectedDate);
         });
 
-        describe('y (year parse code)', function () {
+        describe('y (year parse code)', function() {
             var d;
 
-            afterEach(function () {
+            afterEach(function() {
                 d = null;
             });
 
-            it('should parse a 2-digit year', function () {
+            it('should parse a 2-digit year', function() {
                 d = Ext.Date.parse('09', 'y');
                 expect(d.getFullYear()).toBe(2009);
             });
 
-            it('should parse a 2-digit year as part of a larger format string', function () {
+            it('should parse a 2-digit year as part of a larger format string', function() {
                 d = Ext.Date.parse('720122', 'ymd');
                 expect(d.getFullYear()).toBe(1972);
             });
 
-            it('should not parse a 1-digit year', function () {
+            it('should not parse a 1-digit year', function() {
                 expect(Ext.Date.parse('1', 'y')).toBe(null);
             });
 
-            it('should not parse a 1-digit year as part of a larger format string', function () {
+            it('should not parse a 1-digit year as part of a larger format string', function() {
                 expect(Ext.Date.parse('10122', 'ymd')).toBe(null);
             });
         });
@@ -247,6 +251,7 @@ describe("Ext.Date", function() {
         it("should parse year-month-date hour:minute:second am/pm", function() {
             var date = Ext.Date.parse("2011-01-20 6:28:33 PM", "Y-m-d g:i:s A"),
                 expectedDate = new Date();
+
             expectedDate.setFullYear(2011);
             expectedDate.setMonth(0);
             expectedDate.setDate(20);
@@ -259,6 +264,18 @@ describe("Ext.Date", function() {
 
         it("should return null when parsing an invalid date like Feb 31st in strict mode", function() {
            expect(Ext.Date.parse("2011-02-31", "Y-m-d", true)).toBeNull();
+        });
+
+        it("should return null when parsing an invalid date like 0 hours in 'g' format", function() {
+            var date = Ext.Date.parse('1970-01-01 0:12 am', 'Y-m-d g:i a');
+
+            expect(date).toBe(null);
+        });
+
+        it("should return null when parsing an invalid date like 0 hours in 'h' format", function() {
+            var date = Ext.Date.parse('1970-01-01 00:32 pm', 'Y-m-d h:i a');
+
+            expect(date).toBe(null);
         });
 
         it("should read am/pm", function() {
@@ -289,7 +306,7 @@ describe("Ext.Date", function() {
             expect(date).toEqual(expectedDate);
         });
 
-        it("should parse time format", function(){
+        it("should parse time format", function() {
             // Can't use a static date because the timezone of the
             // local machine will change the result
             var expectedDate = new Date(2010, 0, 1, 13, 45, 32, 4),
@@ -298,7 +315,7 @@ describe("Ext.Date", function() {
             expect(date).toEqual(expectedDate);
         });
 
-        it("should parse timestamp format", function(){
+        it("should parse timestamp format", function() {
             // Can't use a static date because the timezone of the
             // local machine will change the result
             // Drop the ms since we don't go to that resolution
@@ -309,7 +326,7 @@ describe("Ext.Date", function() {
             expect(date).toEqual(expectedDate);
         });
 
-        describe("using separators", function(){
+        describe("using separators", function() {
             it("should work with hyphen separators", function() {
                 var date = Ext.Date.parse('2010-03-04', 'Y-m-d'),
                     expectedDate = new Date();
@@ -354,45 +371,46 @@ describe("Ext.Date", function() {
                 expect(date).toEqual(expectedDate);
            });
        });
-       
+
        describe("week/year", function() {
            var d;
+
            function expectDate(year, month, day) {
                expect(d.getFullYear()).toBe(year);
                expect(d.getMonth()).toBe(month);
                expect(d.getDate()).toBe(day);
            }
-           
+
            describe("first week of year", function() {
                it("should return the correct date for 2013", function() {
                    d = Ext.Date.parse('01/2013', 'W/Y');
                    expectDate(2012, 11, 31);
                });
-               
+
                it("should return the correct date for 2014", function() {
                    d = Ext.Date.parse('01/2014', 'W/Y');
                    expectDate(2013, 11, 30);
                });
-               
+
                it("should return the correct date for 2015", function() {
                    d = Ext.Date.parse('01/2015', 'W/Y');
                    expectDate(2014, 11, 29);
                });
-               
+
                it("should return the correct date for 2016", function() {
                    d = Ext.Date.parse('01/2016', 'W/Y');
                    expectDate(2016, 0, 4);
                });
            });
-           
+
            it("should always be a Monday", function() {
                var i, j;
-               
+
                for (i = 2012; i <= 2020; ++i) {
                    for (j = 1; j < 53; ++j) {
                        expect(Ext.Date.parse(i + '-' + Ext.String.leftPad(j, 2, '0'), 'Y-W').getDay()).toBe(1);
                    }
-               }    
+               }
            });
        });
 
@@ -402,11 +420,13 @@ describe("Ext.Date", function() {
         it("should return true if both dates are exactly the same", function() {
             var date1 = new Date(2011, 0, 20, 18, 37, 15, 0),
                 date2 = new Date(2011, 0, 20, 18, 37, 15, 0);
+
             expect(Ext.Date.isEqual(date1, date2)).toBeTruthy();
         });
         it("should return true if there is at least 1 millisecond difference between both dates", function() {
             var date1 = new Date(2011, 0, 20, 18, 37, 15, 0),
                 date2 = new Date(2011, 0, 20, 18, 37, 15, 1);
+
             expect(Ext.Date.isEqual(date1, date2)).toBeFalsy();
         });
         it("should return false if one one of the dates is null/undefined", function() {
@@ -520,6 +540,7 @@ describe("Ext.Date", function() {
        it("should return a copy of the given date", function() {
           var originalDate = new Date(),
               clonedDate;
+
           clonedDate = Ext.Date.clone(originalDate);
           expect(clonedDate).not.toBe(originalDate);
           expect(clonedDate).toEqual(originalDate);
@@ -563,11 +584,13 @@ describe("Ext.Date", function() {
        it("should return 'Invalid Date' if the date is invalid", function() {
            var date = new Date('foo'),
                clearedTimeDate = Ext.Date.clearTime(date);
+
            expect(clearedTimeDate.getTime()).toBeNaN();
        });
 
        it("should reset hrs/mins/secs/millis to 0", function() {
            var date = new Date(2012, 11, 21, 21, 21, 21, 21);
+
            Ext.Date.clearTime(date);
            expect(date.getHours()).toBe(0);
            expect(date.getMinutes()).toBe(0);
@@ -577,6 +600,7 @@ describe("Ext.Date", function() {
        it("should return a clone with hrs/mins/secs/millis reseted to 0 when clone option is selected", function() {
            var date = new Date(2012, 11, 21, 21, 21, 21, 21),
                clearedTimeDate;
+
            clearedTimeDate = Ext.Date.clearTime(date, true);
            expect(date.getHours()).toBe(21);
            expect(date.getMinutes()).toBe(21);
@@ -591,6 +615,7 @@ describe("Ext.Date", function() {
 
     describe("add", function() {
         var date = new Date(2000, 0, 1, 0, 0, 0, 0);
+
         it("should add milliseconds", function() {
             expect(Ext.Date.add(date, Ext.Date.MILLI, 1)).toEqual(new Date(2000, 0, 1, 0, 0, 0, 1));
         });
@@ -628,6 +653,7 @@ describe("Ext.Date", function() {
     describe("between", function() {
         var startDate = new Date(2000, 0, 1),
             endDate = new Date(2000, 0, 31);
+
         it("should return true if the date is equal to the start date", function() {
             expect(Ext.Date.between(new Date(2000, 0, 1), startDate, endDate)).toBeTruthy();
         });
@@ -645,7 +671,7 @@ describe("Ext.Date", function() {
         });
     });
 
-    describe("formatting", function(){
+    describe("formatting", function() {
         // Set the reference date to be an absolute time value so that tests will
         // run in any time zone.
         // This is Friday, January 1, 2010, 21:45:32.004 UTC
@@ -663,163 +689,171 @@ describe("Ext.Date", function() {
             expect(format(date, 'd')).toBe('01');
         });
 
-        it("should format with the D option", function(){
+        it("should format with the D option", function() {
             expect(format(date, 'D')).toBe('Fri');
         });
 
-        it("should format with the j option", function(){
+        it("should format with the j option", function() {
             expect(format(date, 'j')).toBe('1');
         });
 
-        it("should format with the l option", function(){
+        it("should format with the l option", function() {
             expect(format(date, 'l')).toBe('Friday');
         });
 
-        it("should format with the N option", function(){
+        it("should format with the N option", function() {
             expect(format(date, 'N')).toBe('5');
         });
 
-        it("should format with the S option", function(){
+        it("should format with the S option", function() {
             expect(format(date, 'S')).toBe('st');
         });
 
-        it("should format with the w option", function(){
+        it("should format with the w option", function() {
             expect(format(date, 'w')).toBe('5');
         });
 
-        it("should format with the z option", function(){
+        it("should format with the z option", function() {
             expect(format(date, 'z')).toBe('0');
         });
 
-        it("should format with the W option", function(){
+        it("should format with the W option", function() {
             expect(format(date, 'W')).toBe('53');
         });
 
-        it("should format with the F option", function(){
+        it("should format with the F option", function() {
             expect(format(date, 'F')).toBe('January');
         });
 
-        it("should format with the m option", function(){
+        it("should format with the m option", function() {
             expect(format(date, 'm')).toBe('01');
         });
 
-        it("should format with the M option", function(){
+        it("should format with the M option", function() {
             expect(format(date, 'M')).toBe('Jan');
         });
 
-        it("should format with the n option", function(){
+        it("should format with the n option", function() {
             expect(format(date, 'n')).toBe('1');
         });
 
-        it("should format with the t option", function(){
+        it("should format with the t option", function() {
             expect(format(date, 't')).toBe('31');
         });
 
-        it("should format with the L option", function(){
+        it("should format with the L option", function() {
             expect(format(date, 'L')).toBe('0');
         });
 
-        it("should format with the o option", function(){
+        it("should format with the o option", function() {
             expect(format(date, 'o')).toBe('2009');
         });
 
-        it("should format with the Y option", function(){
+        it("should format with the Y option", function() {
             expect(format(date, 'Y')).toBe('2010');
         });
 
-        it("should format with the y option", function(){
+        it("should format with the y option", function() {
             expect(format(date, 'y')).toBe('10');
         });
 
-        it("should format with the a option", function(){
+        it("should format with the a option", function() {
             expect(format(date, 'a')).toBe('pm');
         });
 
-        it("should format with the A option", function(){
+        it("should format with the A option", function() {
             expect(format(date, 'A')).toBe('PM');
         });
 
-        it("should format with the g option", function(){
+        it("should format with the g option", function() {
             expect(format(date, 'g')).toBe('9');
         });
 
-        it("should format with the G option", function(){
+        it("should format with the G option", function() {
             expect(format(date, 'G')).toBe('21');
         });
 
-        it("should format with the h option", function(){
+        it("should format with the h option", function() {
             expect(format(date, 'h')).toBe('09');
         });
 
-        it("should format with the H option", function(){
+        it("should format with the H option", function() {
             expect(format(date, 'H')).toBe('21');
         });
 
-        it("should format with the i option", function(){
+        it("should format with the i option", function() {
             expect(format(date, 'i')).toBe('45');
         });
 
-        it("should format with the s option", function(){
+        it("should format with the s option", function() {
             expect(format(date, 's')).toBe('32');
         });
 
-        it("should format with the u option", function(){
+        it("should format with the u option", function() {
             expect(format(date, 'u')).toBe('004');
         });
 
         // can't be static, relies on TZ
         it("should format with the O option", function() {
             var value = Ext.Date.getGMTOffset(date, false);
+
             expect(format(date, 'O')).toBe(value);
         });
 
         // can't be static, relies on TZ
-        it("should format with the P option", function(){
+        it("should format with the P option", function() {
             var value = Ext.Date.getGMTOffset(date, true);
+
             expect(format(date, 'P')).toBe(value);
         });
 
         // can't be static, relies on TZ
-        it("should format with the T option", function(){
+        it("should format with the T option", function() {
             var value = Ext.Date.getTimezone(date);
+
             expect(format(date, 'T')).toBe(value);
         });
 
         // can't be static, relies on TZ
-        it("should format with the Z option", function(){
+        it("should format with the Z option", function() {
             var value = (date.getTimezoneOffset() * -60) + '';
+
             expect(format(date, 'Z')).toBe(value);
         });
 
         // can't be static, relies on TZ
-        it("should format with the c option", function(){
+        it("should format with the c option", function() {
             var value = '2010-01-01T21:45:32' + Ext.Date.getGMTOffset(date, true);
+
             expect(format(date, 'c')).toBe(value);
         });
 
-        it("should format with the C option", function(){
+        it("should format with the C option", function() {
             // Use the baseline date here because we want a UTC string
             expect(format(new Date(baseline), 'C')).toBe('2010-01-01T21:45:32.004Z');
         });
 
-        it("should format with the U option", function(){
+        it("should format with the U option", function() {
             var value = Math.round((date.getTime() / 1000)) + '';
+
             expect(format(date, 'U')).toBe(value);
         });
 
-        it("should format with the MS option", function(){
+        it("should format with the MS option", function() {
             var value = '\\/Date(' + date.getTime() + ')\\/';
+
             expect(format(date, 'MS')).toBe(value);
         });
 
-        it("should format the time option", function(){
+        it("should format the time option", function() {
             // Can't use a static date because the timezone of the
             // local machine will change the result
             var value = date.getTime().toString();
+
             expect(format(date, 'time')).toBe(value);
         });
 
-        it("should format the timestamp option", function(){
+        it("should format the timestamp option", function() {
             // Can't use a static date because the timezone of the
             // local machine will change the result
             var stamp = Math.floor(date.getTime() / 1000),
@@ -828,7 +862,7 @@ describe("Ext.Date", function() {
             expect(format(date, 'timestamp')).toBe(value);
         });
 
-        it("should return an empty string", function(){
+        it("should return an empty string", function() {
             expect(format(undefined, 'd')).toBe('');
             expect(format(null, 'd')).toBe('');
             expect(format({}, 'd')).toBe('');
@@ -838,56 +872,56 @@ describe("Ext.Date", function() {
             expect(format(1992, 'd')).toBe('');
         });
 
-        it("should not return an empty string", function(){
+        it("should not return an empty string", function() {
             expect(format(new Date(), 'd')).not.toBe('');
         });
     });
 
-    describe("ISO-8601", function () {
+    describe("ISO-8601", function() {
         var ExtDate = Ext.Date;
 
-        describe("dates", function () {
-            describe("W - week", function () {
-                it("should parse with the W option", function () {
+        describe("dates", function() {
+            describe("W - week", function() {
+                it("should parse with the W option", function() {
                     expect(ExtDate.parse('40', 'W')).not.toBe(null);
                 });
 
-                it("should only parse weeks 1 - 9 when prefixed by a zero (0)", function () {
+                it("should only parse weeks 1 - 9 when prefixed by a zero (0)", function() {
                     expect(ExtDate.parse('01', 'W')).not.toBe(null);
                 });
 
-                it("should not parse weeks 1 - 9 when not prefixed by a zero (0)", function () {
+                it("should not parse weeks 1 - 9 when not prefixed by a zero (0)", function() {
                     expect(ExtDate.parse('1', 'W')).toBe(null);
                 });
 
-                it("should start with Monday", function () {
+                it("should start with Monday", function() {
                     // getDay() ... Monday === 1
                     expect(ExtDate.parse('01', 'W').getDay()).toBe(1);
                 });
             });
 
-            describe("o - year", function () {
-                it("should parse with the o option", function () {
+            describe("o - year", function() {
+                it("should parse with the o option", function() {
                     expect(ExtDate.parse('2012', 'o')).not.toBe(null);
                 });
 
-                it("should behave the same as Y when not parsed with another option", function(){
+                it("should behave the same as Y when not parsed with another option", function() {
                     expect(ExtDate.parse('2012', 'o').getTime()).toBe(ExtDate.parse('2012', 'Y').getTime());
                 });
             });
 
-            describe("can be part of year not same as the 'o' parse code", function () {
-                it("should be the previous year than 'o' parse code", function () {
+            describe("can be part of year not same as the 'o' parse code", function() {
+                it("should be the previous year than 'o' parse code", function() {
                     expect(ExtDate.parse('2008-01', 'o-W').getFullYear()).toBe(2007);
                 });
 
-                it("should set the same year if required", function () {
+                it("should set the same year if required", function() {
                     expect(ExtDate.parse('2009-53', 'o-W').getFullYear()).toBe(2009);
                 });
             });
         });
 
-        describe("times", function () {
+        describe("times", function() {
             it("should correctly parse ISO format", function() {
                 var date = Ext.Date.parse('2012-01-13T01:00:00', 'c'),
                     expectedDate = new Date();
@@ -912,8 +946,8 @@ describe("Ext.Date", function() {
                 expect(date).toEqual(expectedDate);
             });
 
-            describe("time zones", function(){
-                it("should evaluate as equal dates with the same time zone", function(){
+            describe("time zones", function() {
+                it("should evaluate as equal dates with the same time zone", function() {
                     var date, expectedDate;
 
                     date = Ext.Date.parse("2012-10-03T20:29:24+12:00", "c");
@@ -934,7 +968,7 @@ describe("Ext.Date", function() {
                         expectedDate.setUTCHours(20);
                         expectedDate.setUTCMinutes(29);
                         expectedDate.setUTCSeconds(24);
-                        expectedDate = new Date(expectedDate.valueOf() - 12*3600*1000);
+                        expectedDate = new Date(expectedDate.valueOf() - 12 * 3600 * 1000);
                     }
                     else {
                         expectedDate = new Date("2012-10-03T20:29:24+12:00");
@@ -943,7 +977,7 @@ describe("Ext.Date", function() {
                     expect(expectedDate.getTime()).toEqual(date.getTime());
                 });
 
-                it("should evaluate as equal dates with different time zones", function(){
+                it("should evaluate as equal dates with different time zones", function() {
                     // NOTE one hour difference between these times.
                     var date, expectedDate,
                         oneHourInMs = 1000 * 60 * 60; // 3,600,000
@@ -959,7 +993,7 @@ describe("Ext.Date", function() {
                         expectedDate.setUTCHours(20);
                         expectedDate.setUTCMinutes(29);
                         expectedDate.setUTCSeconds(24);
-                        expectedDate = new Date(expectedDate.valueOf() - 13*3600*1000);
+                        expectedDate = new Date(expectedDate.valueOf() - 13 * 3600 * 1000);
                     }
                     else {
                         expectedDate = new Date("2012-10-03T20:29:24+13:00");
@@ -968,7 +1002,7 @@ describe("Ext.Date", function() {
                     expect(expectedDate.getTime() + oneHourInMs).toEqual(date.getTime());
                 });
 
-                it("should evaluate as not equal dates with different time zones", function(){
+                it("should evaluate as not equal dates with different time zones", function() {
                     var date = Ext.Date.parse("2012-10-03T20:29:24+12:00", "c"),
                         expectedDate = new Date("2012-10-03T20:29:24+13:00");
 
@@ -980,5 +1014,175 @@ describe("Ext.Date", function() {
 
     describe("toUtc", function() {
         // TODO, once we have a library for mocking timezones
+    });
+
+    describe('flexParse', function() {
+        var parse = Ext.Date.parse,
+            localeDefaultDateFormat = Ext.Date.defaultFormat,
+            firstFeb1962 = new Date(1962, 1, 1),
+            secondJan1962 = new Date(1962, 0, 2),
+            twentynineFeb2016 = new Date(2016, 1, 29);
+
+        afterEach(function() {
+            Ext.Date.defaultFormat = localeDefaultDateFormat;
+        });
+
+        it('should reject invalid dates', function() {
+
+            // Reject rubbish
+            expect(parse()).toBe(null);
+            expect(parse('')).toBe(null);
+            expect(parse('foo')).toBe(null);
+            expect(parse('1 foo 2015')).toBe(null);
+            expect(parse('foo 1 2015')).toBe(null);
+
+            // Not a leap year
+            expect(parse('29 feb 20015')).toBe(null);
+
+            expect(parse('-1 feb 2015')).toBe(null);
+
+            expect(parse('feb -1 2015')).toBe(null);
+        });
+
+        describe('M/D/Y', function() {
+            beforeEach(function() {
+                Ext.Date.defaultFormat = 'm/d/y';
+            });
+
+            it('should be able to parse alphabetic months flexibly', function() {
+                expect(parse('1 feb 62')).toEqual(firstFeb1962);
+
+                expect(parse('2 jan 62')).toEqual(secondJan1962);
+
+                expect(parse('1 feb 1962')).toEqual(firstFeb1962);
+
+                expect(parse('2 jan 1962')).toEqual(secondJan1962);
+
+                // Test leap year
+                expect(parse('29 feb 2016')).toEqual(twentynineFeb2016);
+            });
+
+            it('should infer numeric dates from the locale order', function() {
+                expect(parse('2 1 62')).toEqual(firstFeb1962);
+
+                expect(parse('1 2 62')).toEqual(secondJan1962);
+
+                expect(parse('2/1/62')).toEqual(firstFeb1962);
+
+                expect(parse('1/2/62')).toEqual(secondJan1962);
+
+                expect(parse('2-1-62')).toEqual(firstFeb1962);
+
+                expect(parse('1-2-62')).toEqual(secondJan1962);
+
+                expect(parse('2 1 1962')).toEqual(firstFeb1962);
+
+                expect(parse('1 2 1962')).toEqual(secondJan1962);
+
+                expect(parse('2/1/1962')).toEqual(firstFeb1962);
+
+                expect(parse('1/2/1962')).toEqual(secondJan1962);
+
+                expect(parse('2-1-1962')).toEqual(firstFeb1962);
+
+                expect(parse('1-2-1962')).toEqual(secondJan1962);
+
+                // Test leap year
+                expect(parse('2 29 2016')).toEqual(twentynineFeb2016);
+                expect(parse('2 29 2015')).toBe(null);
+            });
+        });
+
+        describe('D/M/Y', function() {
+            beforeEach(function() {
+                Ext.Date.defaultFormat = 'd/m/y';
+            });
+
+            it('should be able to parse alphabetic months flexibly', function() {
+                expect(parse('1 feb 62')).toEqual(firstFeb1962);
+
+                expect(parse('2 jan 62')).toEqual(secondJan1962);
+
+                expect(parse('1 feb 1962')).toEqual(firstFeb1962);
+
+                expect(parse('2 jan 1962')).toEqual(secondJan1962);
+            });
+
+            it('should infer numeric dates from the locale order', function() {
+                expect(parse('2 1 62')).toEqual(secondJan1962);
+
+                expect(parse('1 2 62')).toEqual(firstFeb1962);
+
+                expect(parse('2/1/62')).toEqual(secondJan1962);
+
+                expect(parse('1/2/62')).toEqual(firstFeb1962);
+
+                expect(parse('2-1-62')).toEqual(secondJan1962);
+
+                expect(parse('1-2-62')).toEqual(firstFeb1962);
+
+                expect(parse('2 1 1962')).toEqual(secondJan1962);
+
+                expect(parse('1 2 1962')).toEqual(firstFeb1962);
+
+                expect(parse('2/1/1962')).toEqual(secondJan1962);
+
+                expect(parse('1/2/1962')).toEqual(firstFeb1962);
+
+                expect(parse('2-1-1962')).toEqual(secondJan1962);
+
+                expect(parse('1-2-1962')).toEqual(firstFeb1962);
+
+                // Test leap year
+                expect(parse('29 2 2016')).toEqual(twentynineFeb2016);
+                expect(parse('29 2 2015')).toBe(null);
+            });
+        });
+
+        describe('Y/M/D', function() {
+            beforeEach(function() {
+                Ext.Date.defaultFormat = 'y/m/d';
+            });
+
+            it('should be able to parse alphabetic months flexibly', function() {
+                expect(parse('1 feb 62')).toEqual(firstFeb1962);
+
+                expect(parse('2 jan 62')).toEqual(secondJan1962);
+
+                expect(parse('1 feb 1962')).toEqual(firstFeb1962);
+
+                expect(parse('2 jan 1962')).toEqual(secondJan1962);
+            });
+
+            it('should infer numeric dates from the locale order', function() {
+                expect(parse('62 2 1')).toEqual(firstFeb1962);
+
+                expect(parse('62 1 2')).toEqual(secondJan1962);
+
+                expect(parse('62/2/1')).toEqual(firstFeb1962);
+
+                expect(parse('62/1/2')).toEqual(secondJan1962);
+
+                expect(parse('62/2-1')).toEqual(firstFeb1962);
+
+                expect(parse('62-1-2')).toEqual(secondJan1962);
+
+                expect(parse('1962 2 1')).toEqual(firstFeb1962);
+
+                expect(parse('1962 1 2')).toEqual(secondJan1962);
+
+                expect(parse('1962/2/1')).toEqual(firstFeb1962);
+
+                expect(parse('1962/1/2')).toEqual(secondJan1962);
+
+                expect(parse('1962-2-1')).toEqual(firstFeb1962);
+
+                expect(parse('1962-1-2')).toEqual(secondJan1962);
+
+                // Test leap year
+                expect(parse('2016 2 29')).toEqual(twentynineFeb2016);
+                expect(parse('2015 2 29')).toBe(null);
+            });
+        });
     });
 });

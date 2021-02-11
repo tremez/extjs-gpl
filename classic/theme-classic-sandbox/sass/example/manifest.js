@@ -57,7 +57,7 @@ $Manifest = {
             ui: 'default'
         },
 
-        //tips
+        // tips
         {
             xtype: 'widget.tooltip',
             filename: 'tip',
@@ -69,7 +69,7 @@ $Manifest = {
                     component.showBy(ct);
                     ct.setHeight(component.height);
                 },
-                hide: function(){}
+                hide: function() {}
             }
         },
         {
@@ -85,7 +85,7 @@ $Manifest = {
                     component.showBy(ct);
                     ct.setHeight(component.height);
                 },
-                hide: function(){}
+                hide: function() {}
             }
         },
 
@@ -98,7 +98,7 @@ $Manifest = {
             filename: 'column-header',
             config: {
                 text: 'test',
-                //hack for 4.0.5
+                // hack for 4.0.5
                 up: function(which) {
                     if (which == "tablepanel") {
                         return {
@@ -124,7 +124,7 @@ $Manifest = {
             filename: 'column-header-over',
             config: {
                 text: 'test',
-                //hack for 4.0.5
+                // hack for 4.0.5
                 up: function(which) {
                     if (which == "tablepanel") {
                         return {

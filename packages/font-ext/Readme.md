@@ -1,2 +1,4 @@
-# font-ext - Read Me
+# font-ext 
+
+Ext JS Font Package.
 

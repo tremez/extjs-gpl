@@ -8,9 +8,11 @@ Ext.define('Ext.device.storage.HTML5.HTML5', {
 
     openDatabase: function(config) {
         config = this.callParent(arguments);
+
         if (!this.dbCache[config.name] || config.noCache) {
             this.dbCache[config.name] = Ext.create('Ext.device.storage.HTML5.Database', config);
         }
+
         return this.dbCache[config.name];
     },
 

@@ -9,9 +9,27 @@ Ext.define('KitchenSink.view.calendar.Week', {
         'Ext.button.Segmented'
     ],
 
-    width: 1000,
+    width: '${width}',
     height: 600,
 
+    profiles: {
+        classic: {
+            width: 1000,
+            calendarWidth: 150
+        },
+        neptune: {
+            width: 1000,
+            calendarWidth: 150
+        },
+        graphite: {
+            width: 1200,
+            calendarWidth: 180
+        },
+        'classic-material': {
+            width: 1200,
+            calendarWidth: 180
+        }
+    },
     viewModel: {
         data: {
             value: new Date(),
@@ -25,6 +43,7 @@ Ext.define('KitchenSink.view.calendar.Week', {
                 },
                 set: function(val) {
                     var work = val === 'workweek';
+
                     this.set('visibleDays', work ? 5 : 7);
                     this.set('firstDayOfWeek', work ? 1 : 0);
                 }
@@ -42,6 +61,7 @@ Ext.define('KitchenSink.view.calendar.Week', {
         }
     },
 
+    cls: 'calendar-view',
     layout: 'border',
     bind: {
         title: '{value:date("M Y")}'
@@ -62,7 +82,7 @@ Ext.define('KitchenSink.view.calendar.Week', {
         region: 'west',
         title: 'Calendars',
         ui: 'light',
-        width: 150,
+        width: '${calendarWidth}',
         bodyPadding: 5,
         collapsible: true,
         items: {
@@ -72,7 +92,6 @@ Ext.define('KitchenSink.view.calendar.Week', {
     }, {
         region: 'center',
         xtype: 'calendar-week',
-        timezoneOffset: 0,
         gestureNavigation: false,
         bind: {
             value: '{value}',
@@ -82,4 +101,4 @@ Ext.define('KitchenSink.view.calendar.Week', {
         }
     }]
 
-})
+});

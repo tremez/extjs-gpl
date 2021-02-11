@@ -1,7 +1,18 @@
 /**
- * This class provides Date specific processing for fields.
+ * A data field that automatically {@link #convert converts} its value to a date.
  *
- * In previous releases this functionality was integral to the `Field` base class.
+ *     @example
+ *     Ext.define('User', {
+ *         extend: 'Ext.data.Model',
+ *         fields: [
+ *             { name: 'birthDate', type: 'date' }
+ *         ]
+ *     });
+ *
+ *     var record = Ext.create('User', { birthDate: 'Tuesday, June 27, 2017' }),
+ *         value = record.get('birthDate');
+ *
+ *     Ext.toast("birthDate is " + value);
  */
 Ext.define('Ext.data.field.Date', {
     extend: 'Ext.data.field.Field',
@@ -15,26 +26,28 @@ Ext.define('Ext.data.field.Date', {
     /**
      * @cfg {String} dateFormat
      *
-     * Serves as a default for the {@link #dateReadFormat} and {@link #dateWriteFormat} config options. This
-     * will be used in place of those other configurations if not specified.
+     * Serves as a default for the {@link #dateReadFormat} and {@link #dateWriteFormat} config
+     * options. This will be used in place of those other configurations if not specified.
      * 
-     * A format string for the {@link Ext.Date#parse Ext.Date.parse} function, or "timestamp" if the value provided by
-     * the Reader is a UNIX timestamp, or "time" if the value provided by the Reader is a javascript millisecond
-     * timestamp. See {@link Ext.Date}.
+     * A format string for the {@link Ext.Date#parse Ext.Date.parse} function, or "timestamp"
+     * if the value provided by the Reader is a UNIX timestamp, or "time" if the value provided by
+     * the Reader is a javascript millisecond timestamp. See {@link Ext.Date}.
      * 
-     * It is quite important to note that while this config is optional, it will default to using the base
-     * JavaScript Date object's `parse` function if not specified, rather than {@link Ext.Date#parse Ext.Date.parse}.
-     * This can cause unexpected issues, especially when converting between timezones, or when converting dates that
-     * do not have a timezone specified. The behavior of the native `Date.parse` is implementation-specific, and
-     * depending on the value of the date string, it might return the UTC date or the local date. __For this reason
-     * it is strongly recommended that you always specify an explicit date format when parsing dates.__
+     * It is quite important to note that while this config is optional, it will default to using
+     * the base JavaScript Date object's `parse` function if not specified, rather than
+     * {@link Ext.Date#parse Ext.Date.parse}. This can cause unexpected issues, especially when
+     * converting between timezones, or when converting dates that do not have a timezone specified.
+     * The behavior of the native `Date.parse` is implementation-specific, and depending on the
+     * value of the date string, it might return the UTC date or the local date. __For this reason
+     * it is strongly recommended that you always specify an explicit date format when parsing
+     * dates.__
      */
     dateFormat: null,
 
     /**
      * @cfg {String} dateReadFormat
-     * Used when converting received data into a Date when the {@link #type} is specified as `"date"`.
-     * This configuration takes precedence over {@link #dateFormat}.
+     * Used when converting received data into a Date when the {@link #type} is specified as
+     * `"date"`. This configuration takes precedence over {@link #dateFormat}.
      * See {@link #dateFormat} for more information.
      */
     dateReadFormat: null,
@@ -47,24 +60,24 @@ Ext.define('Ext.data.field.Date', {
      *
      * See the {@link Ext.data.writer.Writer} docs for more information on writing dates.
      *
-     * **Note** It is not possible to use the standard date serialization pathway or {@link Ext#USE_NATIVE_JSON native browser JSON production}
-     * to use a {@link Ext.data.JsonWriter JsonWriter} to send Microsoft formated
-     * "JSON" dates.
+     * **Note** It is not possible to use the standard date serialization pathway or
+     * {@link Ext#USE_NATIVE_JSON native browser JSON production} to use a
+     * {@link Ext.data.JsonWriter JsonWriter} to send Microsoft formated "JSON" dates.
      *
      * To use a {@link Ext.data.JsonWriter JsonWriter} to write dates in a JSON packet in
      * the form `"\/Date(1357372800000)\/"` configure the field like this:
      *
-     *    {
-     *        type: 'date',
-     *        dateFormat: 'MS',     // To parse incoming dates from server correctly
-     *        serialize: null       // Avoid formatting or conversion by the Writer
-     *    }
+     *     {
+     *         type: 'date',
+     *         dateFormat: 'MS',     // To parse incoming dates from server correctly
+     *         serialize: null       // Avoid formatting or conversion by the Writer
+     *     }
      *
      * Then override the `Ext.JSON` date serialize function:
      *
-     *    Ext.JSON.encodeDate = function (d) {
-     *        return '"' + Ext.Date.format(d, 'MS') + '"';
-     *    };
+     *     Ext.JSON.encodeDate = function (d) {
+     *         return '"' + Ext.Date.format(d, 'MS') + '"';
+     *     };
      */
     dateWriteFormat: null,
 
@@ -72,27 +85,32 @@ Ext.define('Ext.data.field.Date', {
      * @cfg {Boolean} useStrict
      * @since 6.2.0
      * Used to manually set strict date parsing on a per-field basis. If no `useStrict`
-     * is specified, will use value of {@link Ext.Date.useStrict} to determine how to
+     * is specified, will use value of {@link Ext.Date#useStrict} to determine how to
      * process dates.
      */
 
-    compare: function (lhs, rhs) {
+    compare: function(lhs, rhs) {
         var lhsIsDate = lhs instanceof Date,
             rhsIsDate = rhs instanceof Date,
             result;
-            
+
         if (rhsIsDate && lhsIsDate) {
             result = lhs.getTime() - rhs.getTime();
+
             if (result === 0) {
                 result = 0;
-            } else {
+            }
+            else {
                 result = result < 0 ? -1 : 1;
             }
-        } else if (lhsIsDate === rhsIsDate) {
+        }
+        else if (lhsIsDate === rhsIsDate) {
             result = 0;
-        } else {
+        }
+        else {
             result = lhsIsDate ? 1 : -1;
         }
+
         return result;
     },
 
@@ -107,6 +125,7 @@ Ext.define('Ext.data.field.Date', {
             return v;
         }
 
+        /* eslint-disable-next-line vars-on-top */
         var dateFormat = this.dateReadFormat || this.dateFormat,
             parsed;
 
@@ -115,10 +134,11 @@ Ext.define('Ext.data.field.Date', {
         }
 
         parsed = Date.parse(v);
+
         return parsed ? new Date(parsed) : null;
     },
 
-    serialize: function (value) {
+    serialize: function(value) {
         var result = null,
             format;
 
@@ -129,7 +149,7 @@ Ext.define('Ext.data.field.Date', {
 
         return result;
     },
-    
+
     /**
      * Gets the dateFormat for this field. See {@link #dateFormat}.
      * @return {String} dateFormat
@@ -137,7 +157,7 @@ Ext.define('Ext.data.field.Date', {
     getDateFormat: function() {
         return this.dateFormat;
     },
-    
+
     /**
      * Gets the dateReadFormat for this field. See {@link #dateReadFormat}.
      * @return {String} dateReadFormat
@@ -145,7 +165,7 @@ Ext.define('Ext.data.field.Date', {
     getDateReadFormat: function() {
         return this.dateReadFormat;
     },
-    
+
     /**
      * Gets the dateWriteFormat for this field. See {@link #dateWriteFormat}.
      * @return {String} dateWriteFormat
@@ -163,7 +183,7 @@ Ext.define('Ext.data.field.Date', {
 
         return me.dateWriteFormat || me.dateFormat || 'timestamp';
     },
-    
+
     getType: function() {
         return 'date';
     }

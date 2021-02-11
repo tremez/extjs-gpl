@@ -1,7 +1,7 @@
 Ext.define('Ext.app.ContactForm', {
     extend: 'Ext.form.Panel',
     requires: [
-        'Ext.data.ArrayStore', 
+        'Ext.data.ArrayStore',
         'Ext.data.reader.Array',
         'Ext.form.field.ComboBox',
         'Ext.form.field.Date'
@@ -17,7 +17,7 @@ Ext.define('Ext.app.ContactForm', {
     birth: 'Date of Birth',
     save: 'Save',
     cancel: 'Cancel',
-    initComponent : function(config) {
+    initComponent: function(config) {
         Ext.apply(this, {
             url: 'save-form.php',
             frame: true,
@@ -29,45 +29,45 @@ Ext.define('Ext.app.ContactForm', {
                 width: 330
             },
             items: [{
-                    fieldLabel: this.firstName,
-                    name: 'firstname',
-                    allowBlank:false
-                },{
-                    fieldLabel: this.lastName,
-                    name: 'lastName'
-                },{
-                    fieldLabel: this.surnamePrefix,
-                    width: 150,
-                    name: 'surnamePrefix'
-                },{
-                    fieldLabel: this.company,
-                    name: 'company'
-                },  Ext.create('Ext.form.field.ComboBox', {
-                    fieldLabel: this.province,
-                    hiddenName: 'state',
-                    store: Ext.create('Ext.data.ArrayStore', {
-                        fields: ['provincie'],
-                        data : Ext.exampledata.dutch_provinces // from dutch-provinces.js
-                    }),
-                    displayField: 'provincie',
-                    typeAhead: true,
-                    queryMode: 'local',
-                    triggerAction: 'all',
-                    emptyText: this.stateEmptyText,
-                    selectOnFocus:true
-                }), {
-                    fieldLabel: this.email,
-                    name: 'email',
-                    vtype:'email'
-                }, Ext.create('Ext.form.field.Date', {
-                    fieldLabel: this.birth,
-                    name: 'birth'
-                })
+                fieldLabel: this.firstName,
+                name: 'firstname',
+                allowBlank: false
+            }, {
+                fieldLabel: this.lastName,
+                name: 'lastName'
+            }, {
+                fieldLabel: this.surnamePrefix,
+                width: 150,
+                name: 'surnamePrefix'
+            }, {
+                fieldLabel: this.company,
+                name: 'company'
+            }, Ext.create('Ext.form.field.ComboBox', {
+                fieldLabel: this.province,
+                hiddenName: 'state',
+                store: Ext.create('Ext.data.ArrayStore', {
+                    fields: ['provincie'],
+                    data: Ext.exampledata.dutch_provinces // from dutch-provinces.js
+                }),
+                displayField: 'provincie',
+                typeAhead: true,
+                queryMode: 'local',
+                triggerAction: 'all',
+                emptyText: this.stateEmptyText,
+                selectOnFocus: true
+            }), {
+                fieldLabel: this.email,
+                name: 'email',
+                vtype: 'email'
+            }, Ext.create('Ext.form.field.Date', {
+                fieldLabel: this.birth,
+                name: 'birth'
+            })
             ],
 
             buttons: [{
                 text: this.save
-            },{
+            }, {
                 text: this.cancel
             }]
         });
@@ -77,20 +77,23 @@ Ext.define('Ext.app.ContactForm', {
 });
 
 Ext.require([
-   'Ext.tip.QuickTipManager'
+    'Ext.tip.QuickTipManager'
 ]);
 
-Ext.onReady(function(){
+Ext.onReady(function() {
+    var bd, simple;
+
     Ext.tip.QuickTipManager.init();
 
     // turn on validation errors beside the field globally
     Ext.form.field.Base.prototype.msgTarget = 'side';
 
-    var bd = Ext.getBody();
+    bd = Ext.getBody();
 
-    bd.createChild({tag: 'h2', html: 'Localized Contact Form'});
+    bd.createChild({ tag: 'h2', html: 'Localized Contact Form' });
 
     // simple form
-    var simple = Ext.create('Ext.app.ContactForm', {});
+    simple = Ext.create('Ext.app.ContactForm', {});
+
     simple.render(document.body);
 });

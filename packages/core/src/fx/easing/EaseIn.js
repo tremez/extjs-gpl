@@ -23,6 +23,7 @@ Ext.define('Ext.fx.easing.EaseIn', {
 
         if (deltaTime >= duration) {
             this.isEnded = true;
+
             return endValue;
         }
 

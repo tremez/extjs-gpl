@@ -3,6 +3,7 @@
  * @class Ext.util.Operators
  * @private
  */
+/* eslint-disable eqeqeq */
 Ext.ns('Ext.util').Operators = {
 // @define Ext.util.Operators
     "=": function(a, v) {

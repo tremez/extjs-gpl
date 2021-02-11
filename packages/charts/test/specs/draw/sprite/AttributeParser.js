@@ -1,15 +1,14 @@
-describe('Ext.draw.sprite.AttributeParser', function () {
-
+topSuite("Ext.draw.sprite.AttributeParser", function() {
     var parser = Ext.draw.sprite.AttributeParser;
 
-    describe('angle', function () {
-        it("should normalize -Math.PI and Math.PI to the same value", function () {
+    describe('angle', function() {
+        it("should normalize -Math.PI and Math.PI to the same value", function() {
             var a = parser.angle(-Math.PI),
                 b = parser.angle(Math.PI);
 
             expect(a).toEqual(b);
         });
-        it("should make normalized values lie within [-Math.PI, Math.PI) interval", function () {
+        it("should make normalized values lie within [-Math.PI, Math.PI) interval", function() {
             var a = parser.angle(-Math.PI),
                 b = parser.angle(Math.PI),
                 c = parser.angle(-Math.PI * 3),

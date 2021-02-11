@@ -25,8 +25,9 @@ Ext.define('Ext.device.device.Cordova', {
         // We can't get the device details until the device is ready, so lets wait.
         if (Ext.isReady) {
             this.onReady();
-        } else {
-            Ext.onReady(this.onReady, this, {single: true});
+        }
+        else {
+            Ext.onReady(this.onReady, this, { single: true });
         }
     },
 
@@ -50,65 +51,65 @@ Ext.define('Ext.device.device.Cordova', {
      *
      *     alert('Device Model: ' + Ext.device.Device.model);
      */
-    
+
     /**
      * @event pause
      * Fires when the application goes into the background
      */
-    
+
     /**
      * @event resume
      * Fires when the application goes into the foreground
      */
-    
+
     /**
      * @event batterycritical
      * This event that fires when a Cordova application detects the percentage of battery 
      * has reached the critical battery threshold.
      */
-    
+
     /**
      * @event batterylow
      * This event that fires when a Cordova application detects the percentage of battery 
      * has reached the low battery threshold.
      */
-    
+
     /**
      * @event batterystatus
      * This event that fires when a Cordova application detects the percentage of battery 
      * has changed by at least 1 percent.
      */
-    
+
     /**
      * @event backbutton
      * This is an event that fires when the user presses the back button.
      */
-    
+
     /**
      * @event menubutton
      * This is an event that fires when the user presses the menu button.
      */
-    
+
     /**
      * @event searchbutton
      * This is an event that fires when the user presses the search button.
      */
-    
+
     /**
      * @event startcallbutton
      * This is an event that fires when the user presses the start call button.
      */
-    
+
     /**
      * @event endcallbutton
      * This is an event that fires when the user presses the end call button.
      */
-    
+
     /**
      * @event volumeupbutton
      * This is an event that fires when the user presses the volume up button.
      */
-    
+
     /**
      * @event volumedownbutton
      * This is an event that fires when the user presses the volume down button.
@@ -120,8 +121,8 @@ Ext.define('Ext.device.device.Cordova', {
 
         me.name = device.name || device.model;
         me.cordova = device.cordova;
-        me.platform =  device.platform || Ext.os.name;
-        me.uuid =  device.uuid;
+        me.platform = device.platform || Ext.os.name;
+        me.uuid = device.uuid;
         me.version = device.version;
         me.model = device.model;
     },

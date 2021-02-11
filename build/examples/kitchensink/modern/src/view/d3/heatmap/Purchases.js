@@ -7,15 +7,13 @@
 Ext.define('KitchenSink.view.d3.heatmap.Purchases', {
     extend: 'Ext.Panel',
     xtype: 'd3-view-heatmap-purchases',
+    controller: 'heatmap-heatmap',
 
     requires: [
         'Ext.d3.HeatMap'
     ],
 
-    controller: 'heatmap-heatmap',
-
-    // <example>
-    // Content between example tags is omitted from code preview.
+    //<example>
     otherContent: [
         {
             type: 'Controller',
@@ -26,85 +24,76 @@ Ext.define('KitchenSink.view.d3.heatmap.Purchases', {
             path: 'modern/src/store/HeatMap.js'
         }
     ],
-    //  </example>
 
-    layout: 'fit',
-    shadow: true,
-    items: {
-        xtype: 'd3-heatmap',
-        store: {
-            type: 'heatmap'
-        },
-
-        platformConfig: {
-            desktop: {
-                labels: true,
-                padding: {
-                    top: 20,
-                    right: 30,
-                    bottom: 20,
-                    left: 80
-                },
-                legend: {
-                    docked: 'bottom',
-                    padding: 60,
-                    items: {
-                        count: 7,
-                        slice: [1],
-                        reverse: true,
-                        size: {
-                            x: 60,
-                            y: 30
-                        }
+    profiles: {
+        defaults: {
+            padding: '40 40 20 80',
+            xTitle: {
+                text: 'Date'
+            },
+            yTitle: {
+                text: 'Total'
+            },
+            legend: {
+                docked: 'bottom',
+                padding: 60,
+                items: {
+                    count: 7,
+                    slice: [1],
+                    reverse: true,
+                    size: {
+                        x: 90,
+                        y: 20
                     }
                 }
             }
         },
+        phone: {
+            defaults: {
+                legend: undefined,
+                padding: '20 20 40 60',
+                xTitle: undefined,
+                yTitle: undefined
+            }
+        }
+    },
+    //  </example>
 
-        padding: {
-            top: 20,
-            right: 30,
-            bottom: 30,
-            left: 50
+    layout: 'fit',
+
+    items: [{
+        xtype: 'd3-heatmap',
+        store: {
+            type: 'heatmap'
         },
+        padding: '${padding}',
+        legend: '${legend}',
 
         xAxis: {
-            platformConfig: {
-                desktop: {
-                    title: {
-                        text: 'Date'
-                    }
-                }
-            },
+            field: 'date',
+            step: 24 * 60 * 60 * 1000,
+            title: '${xTitle}',
             axis: {
-                ticks: 'd3.time.days',
-                tickFormat: "d3.time.format('%b %d')",
+                ticks: 'd3.timeDay',
+                tickFormat: "d3.timeFormat('%b %d')",
                 orient: 'bottom'
             },
             scale: {
                 type: 'time'
-            },
-            field: 'date',
-            step: 24 * 60 * 60 * 1000
+            }
         },
 
         yAxis: {
-            platformConfig: {
-                desktop: {
-                    title: {
-                        text: 'Total'
-                    }
-                }
-            },
+            field: 'bucket',
+            step: 100,
+            title: '${yTitle}',
             axis: {
                 orient: 'left',
-                tickFormat: "d3.format('$ %d')"
+                tickFormat: "d3.format('$d')"
             },
             scale: {
                 type: 'linear'
-            },
-            field: 'bucket',
-            step: 100
+            }
         },
 
         colorAxis: {
@@ -123,15 +112,8 @@ Ext.define('KitchenSink.view.d3.heatmap.Purchases', {
             }
         },
 
-        labels: {
-            attr: {
-                'font-size': '10px'
-            }
-        },
-
         tooltip: {
             renderer: 'onTooltip'
         }
-    }
-
+    }]
 });

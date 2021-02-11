@@ -1,108 +1,110 @@
-describe("Ext.data.Types", function() {
+topSuite("Ext.data.Types", function() {
     var conv = function(type, scope, value) {
         var cfg = Ext.apply(scope || {}, {
             getAllowNull: function() {
                 return scope ? scope.allowNull : false;
             },
             getDateFormat: function() {
-                return scope ? scope.dateFormat : null    
+                return scope ? scope.dateFormat : null;
             },
             getDateReadFormat: function() {
-                return scope ? scope.dateReadFormat : null    
+                return scope ? scope.dateReadFormat : null;
             }
         });
-        return type.convert.call(cfg, value);   
+
+        return type.convert.call(cfg, value);
     };
 
-    describe("AUTO", function(){
+    describe("AUTO", function() {
         var type = Ext.data.Types.AUTO;
 
-        it ("should have a type property equal to auto", function() {
+        it("should have a type property equal to auto", function() {
             expect(type.type).toEqual("auto");
         });
 
-        it ("should not have a sortType", function() {
+        it("should not have a sortType", function() {
             expect(type.sortType).toEqual(Ext.data.SortTypes.none);
         });
 
-        describe("convert", function(){
-            it("should not be defined (because it's faster to create models this way)", function(){
+        describe("convert", function() {
+            it("should not be defined (because it's faster to create models this way)", function() {
                 expect(type.convert).toBeUndefined();
-            });         
+            });
         });
     });
 
-    describe("STRING", function(){
+    describe("STRING", function() {
         var type = Ext.data.Types.STRING;
 
-        it ("should have a type property equal to string", function() {
+        it("should have a type property equal to string", function() {
             expect(type.type).toEqual("string");
         });
 
-        it ("should have a sortType equal to asUCString", function() {
+        it("should have a sortType equal to asUCString", function() {
             expect(type.sortType).toEqual(Ext.data.SortTypes.asUCString);
         });
 
-        describe("convert", function(){
-            it("should not convert undefined", function(){
+        describe("convert", function() {
+            it("should not convert undefined", function() {
                 expect(conv(type, null, undefined)).toEqual("");
             });
 
-            it("should convert null", function(){
+            it("should convert null", function() {
                 expect(conv(type, null, null)).toEqual("");
             });
 
-            it("should convert number", function(){
+            it("should convert number", function() {
                 expect(conv(type, null, 1)).toEqual("1");
             });
 
-            it("should convert float", function(){
+            it("should convert float", function() {
                 expect(conv(type, null, 37.2)).toEqual("37.2");
             });
 
-            it("should not convert string", function(){
+            it("should not convert string", function() {
                 expect(conv(type, null, "sencha banzai!")).toEqual("sencha banzai!");
             });
 
-            it("should not convert empty string", function(){
+            it("should not convert empty string", function() {
                 expect(conv(type, null, "")).toEqual("");
             });
 
-            it("should convert date", function(){
+            it("should convert date", function() {
                 var d = new Date();
+
                 expect(conv(type, null, d)).toEqual(d.toString());
             });
 
-            it("should convert a boolean value", function(){
+            it("should convert a boolean value", function() {
                 expect(conv(type, null, true)).toEqual("true");
-            });      
-            
-            it("should set to null with allowNull and an undefined value", function(){
+            });
+
+            it("should set to null with allowNull and an undefined value", function() {
                 expect(conv(type, {
                     allowNull: true
                 }), undefined).toBeNull();
-            });   
-            
-            it("should set to null with allowNull and a null value", function(){
+            });
+
+            it("should set to null with allowNull and a null value", function() {
                 expect(conv(type, {
                     allowNull: true
                 }), undefined).toBeNull();
-            });     
+            });
         });
     });
 
-    describe("INT", function(){
+    describe("INT", function() {
         var type = Ext.data.Types.INT;
 
-        it ("should have a type property equal to int", function() {
+        it("should have a type property equal to int", function() {
             expect(type.type).toEqual("int");
         });
 
-        it ("should have an alias named INTEGER", function(){
+        it("should have an alias named INTEGER", function() {
             expect(type).toEqual(Ext.data.Types.INTEGER);
         });
 
-        it ("should not have a sortType", function() {
+        it("should not have a sortType", function() {
             expect(type.sortType).toEqual(Ext.data.SortTypes.none);
         });
 
@@ -122,15 +124,15 @@ describe("Ext.data.Types", function() {
                 });
 
                 it("should convert undefined to null", function() {
-                    expect(conv(type, {allowNull: true}, undefined)).toBeNull();
+                    expect(conv(type, { allowNull: true }, undefined)).toBeNull();
                 });
 
                 it("should convert null to null", function() {
-                    expect(conv(type, {allowNull: true}, null)).toBeNull();
+                    expect(conv(type, { allowNull: true }, null)).toBeNull();
                 });
 
                 it("should convert empty string to null", function() {
-                    expect(conv(type, {allowNull: true}, "")).toBeNull();
+                    expect(conv(type, { allowNull: true }, "")).toBeNull();
                 });
             });
 
@@ -177,6 +179,7 @@ describe("Ext.data.Types", function() {
 
                 it("should convert string with custom stripRe", function() {
                     var orig = Ext.data.Types.stripRe;
+
                     Ext.data.Types.stripRe = /[!]/g;
 
                     expect(conv(type, null, '987!654.34')).toEqual(987654);
@@ -187,18 +190,18 @@ describe("Ext.data.Types", function() {
         });
     });
 
-    describe("FLOAT", function(){
+    describe("FLOAT", function() {
         var type = Ext.data.Types.FLOAT;
 
-        it ("should have a type property equal to float", function() {
+        it("should have a type property equal to float", function() {
             expect(type.type).toEqual("float");
         });
 
-        it ("should have an alias named NUMBER", function(){
+        it("should have an alias named NUMBER", function() {
             expect(type).toEqual(Ext.data.Types.NUMBER);
         });
 
-        it ("should not have a sortType", function() {
+        it("should not have a sortType", function() {
             expect(type.sortType).toEqual(Ext.data.SortTypes.none);
         });
 
@@ -218,15 +221,15 @@ describe("Ext.data.Types", function() {
                 });
 
                 it("should convert undefined to null", function() {
-                    expect(conv(type, {allowNull: true}, undefined)).toBeNull();
+                    expect(conv(type, { allowNull: true }, undefined)).toBeNull();
                 });
 
                 it("should convert null to null", function() {
-                    expect(conv(type, {allowNull: true}, null)).toBeNull();
+                    expect(conv(type, { allowNull: true }, null)).toBeNull();
                 });
 
                 it("should convert empty string to null", function() {
-                    expect(conv(type, {allowNull: true}, "")).toBeNull();
+                    expect(conv(type, { allowNull: true }, "")).toBeNull();
                 });
             });
 
@@ -242,7 +245,7 @@ describe("Ext.data.Types", function() {
 
                     it("should convert negative integer", function() {
                         expect(conv(type, null, -42)).toEqual(-42);
-                    });                    
+                    });
                 });
 
                 describe("floats", function() {
@@ -256,7 +259,7 @@ describe("Ext.data.Types", function() {
 
                     it("should convert negative float", function() {
                         expect(conv(type, null, -42.55)).toEqual(-42.55);
-                    });                                        
+                    });
                 });
             });
 
@@ -275,6 +278,7 @@ describe("Ext.data.Types", function() {
 
                 it("should convert string with custom stripRe", function() {
                     var orig = Ext.data.Types.stripRe;
+
                     Ext.data.Types.stripRe = /[!]/g;
 
                     expect(conv(type, null, '987!654.34')).toEqual(987654.34);
@@ -285,18 +289,18 @@ describe("Ext.data.Types", function() {
         });
     });
 
-    describe("BOOL", function(){
+    describe("BOOL", function() {
         var type = Ext.data.Types.BOOL;
 
-        it ("should have a type property equal to bool", function() {
+        it("should have a type property equal to bool", function() {
             expect(type.type).toEqual("bool");
         });
 
-        it ("should have an alias named BOOLEAN", function(){
+        it("should have an alias named BOOLEAN", function() {
             expect(type).toEqual(Ext.data.Types.BOOLEAN);
         });
 
-        it ("should not have a sortType", function() {
+        it("should not have a sortType", function() {
             expect(type.sortType).toEqual(Ext.data.SortTypes.none);
         });
 
@@ -316,10 +320,10 @@ describe("Ext.data.Types", function() {
 
                 it("should convert integer string", function() {
                     expect(conv(type, null, '1')).toBe(true);
-                });                
+                });
             });
 
-            describe("the false things", function(){
+            describe("the false things", function() {
                 it("should convert false", function() {
                     expect(conv(type, null, false)).toBe(false);
                 });
@@ -344,20 +348,20 @@ describe("Ext.data.Types", function() {
                     expect(conv(type, null, new Date())).toBe(false);
                 });
             });
-            
-            describe("allowNull", function(){
+
+            describe("allowNull", function() {
                 it("should convert undefined to null if allowNull is specified", function() {
                     expect(conv(type, {
                         allowNull: true
                     }, undefined)).toBeNull();
                 });
-                
+
                 it("should convert null to null if allowNull is specified", function() {
                     expect(conv(type, {
                         allowNull: true
                     }, null)).toBeNull();
                 });
-                
+
                 it("should convert empty string to null if allowNull is specified", function() {
                     expect(conv(type, {
                         allowNull: true
@@ -367,14 +371,14 @@ describe("Ext.data.Types", function() {
         });
     });
 
-    describe("DATE", function(){
+    describe("DATE", function() {
         var type = Ext.data.Types.DATE;
 
-        it ("should have a type property equal to date", function() {
+        it("should have a type property equal to date", function() {
             expect(type.type).toEqual("date");
         });
 
-        it ("should not a sortType equal to asDate", function() {
+        it("should not a sortType equal to asDate", function() {
             expect(type.sortType).toEqual(Ext.data.SortTypes.asDate);
         });
 
@@ -392,7 +396,7 @@ describe("Ext.data.Types", function() {
                     expect(conv(type, null, false)).toBeNull();
                 });
 
-                it ("should convert a string", function(){
+                it("should convert a string", function() {
                     expect(conv(type, null, 'will fail')).toBeNull();
                 });
             });
@@ -400,6 +404,7 @@ describe("Ext.data.Types", function() {
             describe("expected", function() {
                 it("should convert date", function() {
                     var d = new Date();
+
                     expect(conv(type, null, d)).toEqual(d);
                 });
 
@@ -407,29 +412,30 @@ describe("Ext.data.Types", function() {
                     var n = 1234567890,
                         d = new Date(n * 1000);
 
-                    expect(conv(type, {dateFormat: 'timestamp'}, n).getTime()).toEqual(d.getTime());
+                    expect(conv(type, { dateFormat: 'timestamp' }, n).getTime()).toEqual(d.getTime());
                 });
 
                 it("should convert time", function() {
                     var n = 11111111110000,
                         d = new Date(n);
-                    expect(conv(type, {dateFormat: 'time'}, n).getTime()).toEqual(d.getTime());                        
+
+                    expect(conv(type, { dateFormat: 'time' }, n).getTime()).toEqual(d.getTime());
                 });
 
                 it("should convert custom date format", function() {
                     var format = 'Y-m-d',
                         val = '1986-03-03',
                         d = Ext.Date.parse(val, format);
-                        
-                    expect(conv(type, {dateFormat: format}, val).getTime()).toEqual(d.getTime());                        
+
+                    expect(conv(type, { dateFormat: format }, val).getTime()).toEqual(d.getTime());
                 });
-                //~  TODO: parse method disappear ?
-                 //~ it("should convert date with no format, default parse", function() {
-                    //~ var val = 'Wed, 18 Oct 2002 13:00:00',
-                        //~ d = Date.parse(val);
-                    //~ expect(conv(type, null, val).getTime()).toEqual(d);                        
-                //~ });               
+                // ~  TODO: parse method disappear ?
+                 // ~ it("should convert date with no format, default parse", function() {
+                    // ~ var val = 'Wed, 18 Oct 2002 13:00:00',
+                        // ~ d = Date.parse(val);
+                    // ~ expect(conv(type, null, val).getTime()).toEqual(d);                        
+                // ~ });               
             });
         });
-    });  
+    });
 });

@@ -14,13 +14,13 @@ Ext.define('Ext.state.Provider', {
     mixins: {
         observable: 'Ext.util.Observable'
     },
-    
+
     /**
      * @cfg {String} prefix A string to prefix to items stored in the underlying state store. 
      * Defaults to <tt>'ext-'</tt>
      */
     prefix: 'ext-',
-    
+
     /**
      * @event statechange
      * Fires when a state change occurs.
@@ -29,21 +29,23 @@ Ext.define('Ext.state.Provider', {
      * @param {String} value The encoded value for the state
      */
 
-    constructor : function(config){
+    constructor: function(config) {
         var me = this;
+
         Ext.apply(me, config);
         me.state = {};
         me.mixins.observable.constructor.call(me);
     },
-    
+
     /**
      * Returns the current value for a key
      * @param {String} name The key name
      * @param {Object} defaultValue A default value to return if the key's value is not found
      * @return {Object} The state data
      */
-    get : function(name, defaultValue){
+    get: function(name, defaultValue) {
         var ret = this.state[name];
+
         return ret === undefined ? defaultValue : ret;
     },
 
@@ -51,8 +53,9 @@ Ext.define('Ext.state.Provider', {
      * Clears a value from the state
      * @param {String} name The key name
      */
-    clear : function(name){
+    clear: function(name) {
         var me = this;
+
         delete me.state[name];
         me.fireEvent("statechange", me, name, null);
     },
@@ -62,8 +65,9 @@ Ext.define('Ext.state.Provider', {
      * @param {String} name The key name
      * @param {Object} value The value to set
      */
-    set : function(name, value){
+    set: function(name, value) {
         var me = this;
+
         me.state[name] = value;
         me.fireEvent("statechange", me, name, value);
     },
@@ -73,8 +77,7 @@ Ext.define('Ext.state.Provider', {
      * @param {String} value The value to decode
      * @return {Object} The decoded value
      */
-    decodeValue : function(value){
-
+    decodeValue: function(value) {
         // a -> Array
         // n -> Number
         // d -> Date
@@ -84,51 +87,62 @@ Ext.define('Ext.state.Provider', {
         // -> Empty (null)
 
         var me = this,
-            re = /^(a|n|d|b|s|o|e)\:(.*)$/,
+            re = /^(a|n|d|b|s|o|e):(.*)$/,
             matches = re.exec(unescape(value)),
             all, type, keyValue, values, vLen, v;
-            
+
         if (!matches || !matches[1]) {
             return; // non state
         }
-        
+
         type = matches[1];
         value = matches[2];
+
         switch (type) {
             case 'e':
                 return null;
+
             case 'n':
                 return parseFloat(value);
+
             case 'd':
                 return new Date(Date.parse(value));
+
             case 'b':
                 return (value === '1');
+
             case 'a':
                 all = [];
+
                 if (value) {
                     values = value.split('^');
-                    vLen   = values.length;
+                    vLen = values.length;
 
                     for (v = 0; v < vLen; v++) {
                         value = values[v];
                         all.push(me.decodeValue(value));
                     }
                 }
+
                 return all;
-           case 'o':
+
+            case 'o':
                 all = {};
+
                 if (value) {
                     values = value.split('^');
-                    vLen   = values.length;
+                    vLen = values.length;
 
                     for (v = 0; v < vLen; v++) {
                         value = values[v];
-                        keyValue         = value.split('=');
+                        keyValue = value.split('=');
                         all[keyValue[0]] = me.decodeValue(keyValue[1]);
                     }
                 }
+
                 return all;
-           default:
+
+            default:
                 return value;
         }
     },
@@ -138,37 +152,47 @@ Ext.define('Ext.state.Provider', {
      * @param {Object} value The value to encode
      * @return {String} The encoded value
      */
-    encodeValue : function(value){
+    encodeValue: function(value) {
         var flat = '',
             i = 0,
             enc, len, key;
-            
+
         if (value == null) {
-            return 'e:1';    
-        } else if(typeof value === 'number') {
+            return 'e:1';
+        }
+        else if (typeof value === 'number') {
             enc = 'n:' + value;
-        } else if(typeof value === 'boolean') {
+        }
+        else if (typeof value === 'boolean') {
             enc = 'b:' + (value ? '1' : '0');
-        } else if(Ext.isDate(value)) {
+        }
+        else if (Ext.isDate(value)) {
             enc = 'd:' + value.toUTCString();
-        } else if(Ext.isArray(value)) {
+        }
+        else if (Ext.isArray(value)) {
             for (len = value.length; i < len; i++) {
                 flat += this.encodeValue(value[i]);
+
                 if (i !== len - 1) {
                     flat += '^';
                 }
             }
+
             enc = 'a:' + flat;
-        } else if (typeof value === 'object') {
+        }
+        else if (typeof value === 'object') {
             for (key in value) {
                 if (typeof value[key] !== 'function' && value[key] !== undefined) {
                     flat += key + '=' + this.encodeValue(value[key]) + '^';
                 }
             }
-            enc = 'o:' + flat.substring(0, flat.length-1);
-        } else {
+
+            enc = 'o:' + flat.substring(0, flat.length - 1);
+        }
+        else {
             enc = 's:' + value;
         }
+
         return escape(enc);
     }
 });

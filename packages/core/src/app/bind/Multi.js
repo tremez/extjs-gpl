@@ -47,7 +47,7 @@ Ext.define('Ext.app.bind.Multi', {
      * @since 5.1.0
      */
 
-    constructor: function (descriptor, owner, callback, scope, options) {
+    constructor: function(descriptor, owner, callback, scope, options) {
         var me = this,
             trackStatics = options && options.trackStatics;
 
@@ -60,8 +60,10 @@ Ext.define('Ext.app.bind.Multi', {
             if (trackStatics) {
                 me.staticKeys = [];
             }
+
             me.addObject(descriptor, me.lastValue = {}, me.staticKeys);
-        } else {
+        }
+        else {
             me.addArray(descriptor, me.lastValue = []);
         }
 
@@ -73,7 +75,7 @@ Ext.define('Ext.app.bind.Multi', {
         }
     },
 
-    destroy: function () {
+    destroy: function() {
         var me = this;
 
         me.bindings = Ext.destroy(me.bindings);
@@ -81,18 +83,20 @@ Ext.define('Ext.app.bind.Multi', {
         me.callParent();
     },
 
-    add: function (descriptor, data, property) {
+    add: function(descriptor, data, property) {
         var me = this,
             owner = me.owner,
             bindings = me.bindings,
-            method = me.literal ? (descriptor.reference ? 'bindEntity' : 'bindExpression')
-                                : 'bind',
+            method = me.literal
+                ? (descriptor.reference ? 'bindEntity' : 'bindExpression')
+                : 'bind',
             binding, depth;
 
         ++me.missing;
 
+        /* eslint-disable indent */
         binding = owner[method](descriptor,
-            function (value) {
+            function(value) {
                 data[property] = value;
 
                 if (binding.calls === 1) {
@@ -103,19 +107,22 @@ Ext.define('Ext.app.bind.Multi', {
                     me.schedule();
                 }
             },
-            //TODO - split bind options between us and the sub-binds (pass null for now)
+            // TODO - split bind options between us and the sub-binds (pass null for now)
             me, null);
+        /* eslint-enable indent */
 
         depth = binding.depth;
+
         if (!bindings.length || depth < me.depth) {
             me.depth = depth;
         }
 
         bindings.push(binding);
+
         return !this.isBindingStatic(binding);
     },
 
-    addArray: function (multiBindDescr, array) {
+    addArray: function(multiBindDescr, array) {
         var me = this,
             n = multiBindDescr.length,
             hasDynamic = false,
@@ -126,20 +133,25 @@ Ext.define('Ext.app.bind.Multi', {
 
             if (b && (b.reference || Ext.isString(b))) {
                 dynamic = me.add(b, array, i);
-            } else if (Ext.isArray(b)) {
+            }
+            else if (Ext.isArray(b)) {
                 dynamic = me.addArray(b, array[i] = []);
-            } else if (b && b.constructor === Object) {
+            }
+            else if (b && b.constructor === Object) {
                 dynamic = me.addObject(b, array[i] = {});
-            } else {
+            }
+            else {
                 array[i] = b;
                 dynamic = false;
             }
+
             hasDynamic = hasDynamic || dynamic;
         }
+
         return hasDynamic;
     },
 
-    addObject: function (multiBindDescr, object, staticKeys) {
+    addObject: function(multiBindDescr, object, staticKeys) {
         var me = this,
             hasDynamic = false,
             dynamic, b, name;
@@ -149,23 +161,29 @@ Ext.define('Ext.app.bind.Multi', {
 
             if (b && (b.reference || Ext.isString(b))) {
                 dynamic = me.add(b, object, name);
-            } else if (Ext.isArray(b)) {
+            }
+            else if (Ext.isArray(b)) {
                 dynamic = me.addArray(b, object[name] = []);
-            } else if (b && b.constructor === Object) {
+            }
+            else if (b && b.constructor === Object) {
                 dynamic = me.addObject(b, object[name] = {});
-            } else {
+            }
+            else {
                 object[name] = b;
                 dynamic = false;
             }
+
             if (staticKeys && !dynamic) {
                 staticKeys.push(name);
             }
+
             hasDynamic = hasDynamic || dynamic;
         }
+
         return hasDynamic;
     },
 
-    getFullName: function () {
+    getFullName: function() {
         var me = this,
             fullName = me.fullName,
             bindings = me.bindings,
@@ -174,12 +192,15 @@ Ext.define('Ext.app.bind.Multi', {
 
         if (!fullName) {
             fullName = '@[';
+
             for (i = 0; i < length; ++i) {
                 if (i) {
                     fullName += ',';
                 }
+
                 fullName += bindings[i].getFullName();
             }
+
             fullName += ']';
 
             me.fullName = fullName;
@@ -188,17 +209,33 @@ Ext.define('Ext.app.bind.Multi', {
         return fullName;
     },
 
-    getRawValue: function () {
+    getRawValue: function() {
         return this.lastValue;
     },
 
-    isDescendantOf: function () {
+    isDescendantOf: function() {
         return false;
     },
 
-    isLoading: function () {
-        for (var bindings = this.bindings, n = bindings.length; n-- > 0; ) {
+    isLoading: function() {
+        var bindings = this.bindings,
+            n = bindings.length;
+
+        for (; n-- > 0;) {
             if (bindings[n].isLoading()) {
+                return true;
+            }
+        }
+
+        return false;
+    },
+
+    isAvailable: function() {
+        var bindings = this.bindings,
+            n = bindings.length;
+
+        for (; n-- > 0;) {
+            if (bindings[n].isAvailable()) {
                 return true;
             }
         }
@@ -217,10 +254,12 @@ Ext.define('Ext.app.bind.Multi', {
 
         for (i = 0; i < len; ++i) {
             binding = bindings[i];
+
             if (!this.isBindingStatic(binding)) {
                 return false;
             }
         }
+
         return true;
     },
 
@@ -233,23 +272,24 @@ Ext.define('Ext.app.bind.Multi', {
         for (i = 0; i < len; ++i) {
             delete value[keys[i]];
         }
+
         return value;
     },
 
-    react: function () {
+    react: function() {
         this.notify(this.lastValue);
     },
 
-    refresh: function () {
+    refresh: function() {
         // @TODO
     },
-    
+
     privates: {
-        sort: function () {
+        sort: function() {
             this.scheduler.sortItems(this.bindings);
 
             // Schedulable#sort === emptyFn
-            //me.callParent();
+            // me.callParent();
         }
     }
 });

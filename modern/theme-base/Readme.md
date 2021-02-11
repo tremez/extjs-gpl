@@ -486,8 +486,8 @@ In some cases when there may be  a varying number of dom elements in between
 the container element and it's child it may be necessary to add UI-specific
 class names to the child element, but this should be treated as the exception,
 not the rule.  An example of this is `Ext.Container`.  It adds a UI-specific
-class for each `classCls` to its `innerElement` because there can be a varying
-number of DOM ancestors in between the `innerElement` and the `element`
+class for each `classCls` to its `bodyElement` because there can be a varying
+number of DOM ancestors in between the `bodyElement` and the `element`
 depending on whether or not the container has docked items.
 
 

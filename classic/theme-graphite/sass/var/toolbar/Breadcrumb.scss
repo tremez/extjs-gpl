@@ -1,0 +1,270 @@
+$breadcrumb-button-cmp-cls: dynamic('breadcrumb-');
+$breadcrumb-button-cmp-ui: dynamic('default');
+
+$breadcrumb-base-color: dynamic($base-color);
+$breadcrumb-glyph-color: dynamic(#f0f0f0);
+$breadcrumb-folder-glyph-color: dynamic($breadcrumb-glyph-color);
+$breadcrumb-leaf-glyph-color: dynamic($breadcrumb-glyph-color);
+$breadcrumb-split-border-width: dynamic(1px);
+$breadcrumb-button-spacing: dynamic(3px);
+
+$button-breadcrumb-color: dynamic($button-default-color);
+$button-breadcrumb-color-over: dynamic($button-default-color-over);
+$button-breadcrumb-color-focus: dynamic($button-default-color-focus);
+$button-breadcrumb-color-focus-over: dynamic($button-default-color-focus-over);
+$button-breadcrumb-color-pressed: dynamic($button-default-color-pressed);
+$button-breadcrumb-color-pressed-over: dynamic($button-default-color-pressed-over);
+$button-breadcrumb-color-focus-pressed: dynamic($button-default-color-focus-pressed);
+$button-breadcrumb-color-disabled: dynamic($button-default-color-disabled);
+
+$button-breadcrumb-background-color: dynamic(transparent);
+$button-breadcrumb-background-color-over: dynamic(#aeaeae);
+$button-breadcrumb-background-color-focus: dynamic($button-default-background-color-focus);
+$button-breadcrumb-background-color-pressed: dynamic(#e6e6e6);
+$button-breadcrumb-background-color-pressed-over: dynamic($button-default-background-color-pressed-over);
+$button-breadcrumb-background-color-focus-over: dynamic($button-default-background-color-focus);
+$button-breadcrumb-background-color-focus-pressed: dynamic($button-default-background-color-focus-pressed);
+$button-breadcrumb-background-color-disabled: dynamic(transparent);
+
+$button-breadcrumb-focus-over-border-width: dynamic($button-default-focus-over-border-width);
+$button-breadcrumb-focus-over-border-color: dynamic($button-default-focus-over-border-color);
+
+$button-breadcrumb-opacity-disabled: dynamic($button-toolbar-opacity-disabled);
+
+@mixin extjs-breadcrumb-graphite-ui (
+    $ui: null,
+    
+    $color: null,
+    $color-over: null,
+    $color-focus: null,
+    $color-focus-over: null,
+    $color-pressed: null,
+    $color-pressed-over: null,
+    $color-focus-pressed: null,
+    
+    $background-color: null,
+    $background-color-over: null,
+    $background-color-focus: null,
+    $background-color-focus-over: null,
+    $background-color-pressed: null,
+    $background-color-pressed-over: null,
+    $background-color-focus-pressed: null,
+    
+    $inner-border-width-focus-over: null,
+    $inner-border-color-focus-over: null,
+    
+    $opacity-disabled: null
+) {
+    $button-ui: '#{$ui}-small';
+    
+    .#{$prefix}breadcrumb-btn.#{$prefix}btn-#{$button-ui} {
+        background-color: $background-color;
+        
+        .#{$prefix}btn-wrap-#{$button-ui} {
+            &.#{$prefix}btn-arrow:after {
+                background: none !important;
+                @include font-icon($breadcrumb-arrow-glyph, $pseudo: false);
+            }
+            
+            &.#{$prefix}btn-arrow:after,
+            &.#{$prefix}btn-split:after {
+                color: $color;
+            }
+            
+            .#{$prefix}btn-inner-#{$button-ui} {
+                color: $color;
+            }
+            
+            .#{$prefix}btn-icon-el-#{$button-ui} {
+                color: $color;
+            }
+        }
+        
+        &.#{$prefix}btn-over {
+            background-color: $background-color-over;
+            
+            .#{$prefix}btn-wrap-#{$button-ui} {
+                &.#{$prefix}btn-arrow:after,
+                &.#{$prefix}btn-split:after {
+                    color: $color-over;
+                }
+                
+                .#{$prefix}btn-inner-#{$button-ui} {
+                    color: $color-over;
+                }
+                
+                .#{$prefix}btn-icon-el-#{$button-ui} {
+                    color: $color-over;
+                }
+                
+                &.#{$prefix}btn-split .#{$prefix}btn-button:after {
+                    content: none;
+                }
+            }
+        }
+        
+        &.#{$prefix}btn-pressed,
+        &.#{$prefix}btn-menu-active {
+            background-color: $background-color-pressed;
+            
+            .#{$prefix}btn-wrap-#{$button-ui} {
+                &.#{$prefix}btn-arrow:after {
+                    background: none !important;
+                    @include font-icon($breadcrumb-arrow-expanded-glyph, $pseudo: false);
+                }
+                
+                &.#{$prefix}btn-arrow:after,
+                &.#{$prefix}btn-split:after {
+                    color: $color-pressed;
+                }
+                
+                .#{$prefix}btn-inner-#{$button-ui} {
+                    color: $color-pressed;
+                }
+                
+                .#{$prefix}btn-icon-el-#{$button-ui} {
+                    color: $color-pressed;
+                }
+                
+                &.#{$prefix}btn-split .#{$prefix}btn-button:after {
+                    content: none;
+                }
+            }
+            
+            &.#{$prefix}btn-over {
+                background-color: $background-color-pressed-over;
+                
+                .#{$prefix}btn-wrap-#{$button-ui} {
+                    &.#{$prefix}btn-arrow:after,
+                    &.#{$prefix}btn-split:after {
+                        color: $color-pressed-over;
+                    }
+                    
+                    .#{$prefix}btn-inner-#{$button-ui} {
+                        color: $color-pressed-over;
+                    }
+                    
+                    .#{$prefix}btn-icon-el-#{$button-ui} {
+                        color: $color-pressed-over;
+                    }
+                }
+            }
+        }
+        
+        // TODO Breadcrumb buttons are not supposed to have their arrow el focused
+        .#{$prefix}keyboard-mode &.#{$prefix}btn-focus,
+        .#{$prefix}keyboard-mode &.#{$prefix}arrow-focus {
+            background-color: $background-color-focus;
+            
+            .#{$prefix}btn-wrap-#{$button-ui} {
+                &.#{$prefix}btn-arrow:after,
+                &.#{$prefix}btn-split:after {
+                    color: $color-focus;
+                }
+                
+                .#{$prefix}btn-inner-#{$button-ui} {
+                    color: $color-focus;
+                }
+                
+                .#{$prefix}btn-icon-el-#{$button-ui} {
+                    color: $color-focus;
+                }
+                
+                &.#{$prefix}btn-split .#{$prefix}btn-button:after {
+                    content: none;
+                }
+            }
+            
+            &.#{$prefix}btn-over {
+                background-color: $background-color-focus-over;
+                
+                @include inner-border($inner-border-width-focus-over, $inner-border-color-focus-over);
+                
+                .#{$prefix}btn-wrap-#{$button-ui} {
+                    &.#{$prefix}btn-arrow:after,
+                    &.#{$prefix}btn-split:after {
+                        color: $color-focus-over;
+                    }
+                    
+                    .#{$prefix}btn-inner-#{$button-ui} {
+                        color: $color-focus-over;
+                    }
+                    
+                    .#{$prefix}btn-icon-el-#{$button-ui} {
+                        color: $color-focus-over;
+                    }
+                }
+            }
+            
+            &.#{$prefix}btn-pressed,
+            &.#{$prefix}btn-menu-active {
+                background-color: $background-color-focus-pressed;
+                
+                .#{$prefix}btn-wrap-#{$button-ui} {
+                    &.#{$prefix}btn-arrow:after,
+                    &.#{$prefix}btn-split:after {
+                        color: $color-focus-pressed;
+                    }
+                    
+                    .#{$prefix}btn-inner-#{$button-ui} {
+                        color: $color-focus-pressed;
+                    }
+                    
+                    .#{$prefix}btn-icon-el-#{$button-ui} {
+                        color: $color-focus-pressed;
+                    }
+                    
+                    &.#{$prefix}btn-split .#{$prefix}btn-button:after {
+                        content: none;
+                    }
+                }
+                
+                &.#{$prefix}btn-over {
+                    background-color: $background-color-focus-pressed;
+                    
+                    .#{$prefix}btn-wrap-#{$button-ui} {
+                        &.#{$prefix}btn-arrow:after,
+                        &.#{$prefix}btn-split:after {
+                            color: $color-focus-pressed;
+                        }
+                        
+                        .#{$prefix}btn-inner-#{$button-ui} {
+                            color: $color-focus-pressed;
+                        }
+                        
+                        .#{$prefix}btn-icon-el-#{$button-ui} {
+                            color: $color-focus-pressed;
+                        }
+                        
+                        &.#{$prefix}btn-split .#{$prefix}btn-button:after {
+                            content: none;
+                        }
+                    }
+                }
+            }
+        }
+
+        &.#{$prefix}btn-disabled {
+            background-color: rgba($background-color, $opacity-disabled);
+            
+            .#{$prefix}btn-wrap-#{$button-ui} {
+                &.#{$prefix}btn-arrow:after,
+                &.#{$prefix}btn-split:after {
+                    color: rgba($color, $opacity-disabled);
+                }
+                
+                .#{$prefix}btn-inner-#{$button-ui} {
+                    color: rgba($color, $opacity-disabled);
+                }
+                
+                .#{$prefix}btn-icon-el-#{$button-ui} {
+                    color: rgba($color, $opacity-disabled);
+                }
+                
+                &.#{$prefix}btn-split .#{$prefix}btn-button:after {
+                    content: none;
+                }
+            }
+        }
+    }
+}

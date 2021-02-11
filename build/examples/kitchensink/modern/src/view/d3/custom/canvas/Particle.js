@@ -3,7 +3,7 @@
  * affecting its position.
  */
 Ext.define('KitchenSink.view.d3.custom.canvas.Particle', {
-    constructor: function (x, y, r, color) {
+    constructor: function(x, y, r, color) {
         this.x = x;
         this.y = y;
         this.r = r;
@@ -13,17 +13,17 @@ Ext.define('KitchenSink.view.d3.custom.canvas.Particle', {
         this.maxUpdates = 250;
     },
 
-    setVelocity: function (vx, vy) {
+    setVelocity: function(vx, vy) {
         this.vx = vx;
         this.vy = vy;
     },
 
-    setGravity: function (gx, gy) {
+    setGravity: function(gx, gy) {
         this.gx = gx;
         this.gy = gy;
     },
 
-    updatePosition: function () {
+    updatePosition: function() {
         this.x += this.vx;
         this.y += this.vy;
 
@@ -31,12 +31,13 @@ Ext.define('KitchenSink.view.d3.custom.canvas.Particle', {
         this.vy += this.gy;
 
         this.updateCount++;
+
         if (this.updateCount >= this.maxUpdates) {
             this.isDead = true;
         }
     },
 
-    render: function (ctx) {
+    render: function(ctx) {
         ctx.fillStyle = this.color;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);

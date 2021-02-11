@@ -3,8 +3,8 @@
  * mechanics for acquiring the {@link Ext.dom.Element elements} and storing them on an object
  * instance as properties.
  *
- * This class is used by {@link Ext.Component components} and {@link Ext.layout.container.Container container layouts} to
- * manage their child elements.
+ * This class is used by {@link Ext.Component components} and
+ * {@link Ext.layout.container.Container container layouts} to manage their child elements.
  * 
  * A typical component that uses these features might look something like this:
  * 
@@ -77,7 +77,8 @@ Ext.define('Ext.util.ElementContainer', {
          * - `leaf` - Set to `true` to ignore content when scanning for childEls. This
          *  should be set on things like the generated content for an `Ext.view.View`.
          * - `select`: A selector that will be passed to {@link Ext.dom.Element#method-select}.
-         * - `selectNode`: A selector that will be passed to {@link Ext.dom.Element#method-selectNode}.
+         * - `selectNode`: A selector that will be passed to
+         * {@link Ext.dom.Element#method-selectNode}.
          *
          * For example:
          *
@@ -161,41 +162,50 @@ Ext.define('Ext.util.ElementContainer', {
             cached: true,
             lazy: true,
 
-            merge: function (newValue, oldValue, target, mixinClass) {
+            merge: function(newValue, oldValue, target, mixinClass) {
                 var childEls = oldValue ? Ext.Object.chain(oldValue) : {},
                     i, val;
 
                 // We'd use mergeSets except it assumes array elements are just names.
                 if (newValue instanceof Array) {
-                    for (i = newValue.length; i--; ) {
+                    for (i = newValue.length; i--;) {
                         val = newValue[i];
+
                         if (!mixinClass || !(val in childEls)) {
                             if (typeof val === 'string') {
                                 childEls[val] = { name: val, itemId: val };
-                            } else {
+                            }
+                            else {
                                 childEls[val.name] = val;
                             }
                         }
                     }
-                } else  if (newValue) {
+                }
+                else if (newValue) {
                     if (newValue.constructor === Object) {
                         for (i in newValue) {
                             if (!mixinClass || !(i in childEls)) {
                                 val = newValue[i];
+
                                 if (val === true) {
                                     childEls[i] = { itemId: i };
-                                } else if (typeof val === 'string') {
+                                }
+                                else if (typeof val === 'string') {
                                     childEls[i] = { itemId: val };
-                                } else {
+                                }
+                                else {
                                     childEls[i] = val;
+
                                     if (!('itemId' in val)) {
                                         val.itemId = i;
                                     }
                                 }
+
                                 childEls[i].name = i;
                             }
                         }
-                    } else {
+                    }
+                    else {
                         if (!mixinClass || !(newValue in childEls)) {
                             childEls[newValue] = { name: newValue, itemId: newValue };
                         }
@@ -207,7 +217,7 @@ Ext.define('Ext.util.ElementContainer', {
         }
     },
 
-    destroy: function () {
+    destroy: function() {
         var me = this,
             childEls = me.getChildEls(),
             child, childName;
@@ -220,6 +230,7 @@ Ext.define('Ext.util.ElementContainer', {
                     child.component = null;
                     child.destroy();
                 }
+
                 me[childName] = null;
             }
         }
@@ -232,7 +243,7 @@ Ext.define('Ext.util.ElementContainer', {
          * @private
          * @since 6.0.0
          */
-        addChildEl: function (childEl) {
+        addChildEl: function(childEl) {
             var me = this,
                 childEls = me.getChildEls();
 
@@ -253,7 +264,7 @@ Ext.define('Ext.util.ElementContainer', {
          * @param {Ext.Class} targetClass
          * @private
          */
-        afterClassMixedIn: function (targetClass) {
+        afterClassMixedIn: function(targetClass) {
             // When we are mixed in the targetClass may already have specified childEls,
             // so check the prototype for any...
             var proto = targetClass.prototype,
@@ -271,7 +282,7 @@ Ext.define('Ext.util.ElementContainer', {
          * Sets references to elements inside the component.
          * @private
          */
-        attachChildEls: function (el, owner) {
+        attachChildEls: function(el, owner) {
             var me = this,
                 childEls = me.getChildEls(),
                 comp = owner || me, // fyi - we are also used by layouts
@@ -282,34 +293,41 @@ Ext.define('Ext.util.ElementContainer', {
             for (childName in childEls) {
                 // hasOwnProperty is a no-go here since we use prototype chains...
                 entry = childEls[childName];
+
                 if (unframed && entry.frame) {
                     continue;
                 }
 
                 selector = entry.select;
+
                 if (selector) {
                     value = el.select(selector, true); // a CompositeElement
-                } else if (!(selector = entry.selectNode)) {
+                }
+                else if (!(selector = entry.selectNode)) {
                     if (!(id = entry.id)) {
                         // With a normal childEl we want to rely on data-ref to populate
                         // the cache and *not* use getById since that should never find
                         // anything we don't already know about.
                         id = baseId + entry.itemId;
                         value = Ext.cache[id];// || el.getById(id);
-                    } else {
+                    }
+                    else {
                         // With a specified id we may not be so lucky, so check the cache
                         // first but then fallback to getById.
                         value = Ext.cache[id] || el.getById(id);
                     }
-                } else {
+                }
+                else {
                     value = el.selectNode(selector, false);
                 }
 
                 if (value) {
                     if (value.isElement) {
                         value.component = comp;
-                    } else if (value.isComposite && !value.isLite) {
+                    }
+                    else if (value.isComposite && !value.isLite) {
                         elements = value.elements;
+
                         for (k = elements.length; k--;) {
                             elements[k].component = comp;
                         }

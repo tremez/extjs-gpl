@@ -1,3 +1,5 @@
+var isTouchTheme, sizing;
+
 Ext.require([
     'Ext.window.Window',
     'Ext.panel.Panel',
@@ -17,11 +19,9 @@ Ext.require([
     'Ext.perf.Monitor'
 ]);
 
-function hasOption (name) {
+function hasOption(name) {
     return window.location.search.indexOf(name) >= 0;
 }
-
-var isTouchTheme;
 
 if (hasOption('diag')) {
     Ext.require([
@@ -30,7 +30,7 @@ if (hasOption('diag')) {
     ]);
 }
 
-function getBasicPanel () {
+function getBasicPanel() {
     return applySizing('basicPanel', {
         xtype: 'panel',
         title: 'Basic Panel',
@@ -40,7 +40,7 @@ function getBasicPanel () {
     });
 }
 
-function getCollapsedPanel () {
+function getCollapsedPanel() {
     return applySizing('collapsedPanel', {
         xtype: 'panel',
         title: 'Collapsed Panel',
@@ -52,7 +52,7 @@ function getCollapsedPanel () {
     });
 }
 
-function getMaskedPanel () {
+function getMaskedPanel() {
     return Ext.widget(applySizing('maskedPanel', {
         xtype: 'panel',
         title: 'Masked Panel',
@@ -63,7 +63,7 @@ function getMaskedPanel () {
     }));
 }
 
-function getFramedPanel () {
+function getFramedPanel() {
     return applySizing('framedPanel', {
         xtype: 'panel',
         title: 'Framed Panel',
@@ -87,12 +87,12 @@ function getFramedPanel () {
                 text: 'test A'
             }]
         }],
-        html : 'Some content',
+        html: 'Some content',
         frame: true
     });
 }
 
-function getCollapsedFramedPanel () {
+function getCollapsedFramedPanel() {
     return applySizing('collapsedFramedPanel', {
         xtype: 'panel',
         title: 'Collapsed Framed Panel',
@@ -106,7 +106,7 @@ function getCollapsedFramedPanel () {
     });
 }
 
-function getPanelWithToolbars () {
+function getPanelWithToolbars() {
     /**
      * Toolbar with a menu
      */
@@ -127,17 +127,17 @@ function getPanelWithToolbars () {
                 },
                 items: [
                     {
-                        xtype:'splitbutton',
+                        xtype: 'splitbutton',
                         text: 'Menu Button',
                         iconCls: 'add16',
-                        menu: [{text: 'Menu Button 1'}]
+                        menu: [{ text: 'Menu Button 1' }]
                     },
                     {
-                        xtype:'splitbutton',
+                        xtype: 'splitbutton',
                         text: 'Cut',
                         icon: '../shared/icons/fam/cross.gif',
                         id: 'panelWithToolbars_splitbtn',
-                        menu: [{text: 'Cut Menu Item'}]
+                        menu: [{ text: 'Cut Menu Item' }]
                     }
                 ]
             }]
@@ -148,24 +148,24 @@ function getPanelWithToolbars () {
                 'Toolbar',
                 ' ',
                 '-',
-                isTouchTheme ? null : {text: 'Button'},
+                isTouchTheme ? null : { text: 'Button' },
                 {
                     text: 'Menu' + (isTouchTheme ? ' Button' : ''),
-                    id  : 'menu-btn',
+                    id: 'menu-btn',
                     menu: [
-                        {text: 'Menu item'},
-                        {text: 'Check 1', checked: true},
-                        {text: 'Check 2', checked: false},
+                        { text: 'Menu item' },
+                        { text: 'Check 1', checked: true },
+                        { text: 'Check 2', checked: false },
                         '-',
-                        {text: 'Option 1', checked: true,  group: 'opts'},
-                        {text: 'Option 2', checked: false, group: 'opts'},
+                        { text: 'Option 1', checked: true, group: 'opts' },
+                        { text: 'Option 2', checked: false, group: 'opts' },
                         '-',
                         {
                             text: 'Sub-items',
                             menu: Ext.widget('menu', {
                                 items: [
-                                    {text: 'Item 1'},
-                                    {text: 'Item 2'}
+                                    { text: 'Item 1' },
+                                    { text: 'Item 2' }
                                 ]
                             })
                         }
@@ -173,19 +173,19 @@ function getPanelWithToolbars () {
                 },
                 {
                     xtype: 'splitbutton',
-                    text : 'Split Button',
-                    menu : Ext.widget('menu', {
+                    text: 'Split Button',
+                    menu: Ext.widget('menu', {
                         items: [
-                            {text: 'Item 1'},
-                            {text: 'Item 2'}
+                            { text: 'Item 1' },
+                            { text: 'Item 2' }
                         ]
                     })
                 },
                 {
-                    xtype       : 'button',
+                    xtype: 'button',
                     enableToggle: true,
-                    pressed     : true,
-                    text        : 'Toggle Button'
+                    pressed: true,
+                    text: 'Toggle Button'
                 }
             ]
         },
@@ -204,51 +204,51 @@ function getPanelWithToolbars () {
     });
 }
 
-function getFormWidgets () {
+function getFormWidgets() {
     return applySizing('formWidgets', {
         xtype: 'form',
-        id   : 'form-widgets',
+        id: 'form-widgets',
         title: 'Form Widgets',
         frame: true,
 
         tools: [
-            {type:'close'},
-            {type:'minimize'},
-            {type:'maximize'},
-            {type:'restore'},
-            {type:'gear'},
-            {type:'pin'},
-            {type:'unpin'},
-            {type:'right'},
-            {type:'left'},
-            {type:'down'},
-            {type:'refresh'},
-            {type:'minus'},
-            {type:'plus'},
-            {type:'help'},
-            {type:'search'},
-            {type:'save'},
-            {type:'print'}
+            { type: 'close' },
+            { type: 'minimize' },
+            { type: 'maximize' },
+            { type: 'restore' },
+            { type: 'gear' },
+            { type: 'pin' },
+            { type: 'unpin' },
+            { type: 'right' },
+            { type: 'left' },
+            { type: 'down' },
+            { type: 'refresh' },
+            { type: 'minus' },
+            { type: 'plus' },
+            { type: 'help' },
+            { type: 'search' },
+            { type: 'save' },
+            { type: 'print' }
         ],
 
         bodyPadding: '10 20',
 
         defaults: {
-            anchor    : '98%',
-            msgTarget : 'side',
+            anchor: '98%',
+            msgTarget: 'side',
             allowBlank: false
         },
 
         items: [
             {
                 xtype: 'label',
-                text : 'Plain Label'
+                text: 'Plain Label'
             },
             {
                 fieldLabel: 'TextField',
-                xtype     : 'textfield',
-                name      : 'someField',
-                emptyText : 'Enter a value'
+                xtype: 'textfield',
+                name: 'someField',
+                emptyText: 'Enter a value'
             },
             {
                 fieldLabel: 'ComboBox',
@@ -257,8 +257,8 @@ function getFormWidgets () {
             },
             {
                 fieldLabel: 'DateField',
-                xtype     : 'datefield',
-                name      : 'date'
+                xtype: 'datefield',
+                name: 'date'
             },
             {
                 fieldLabel: 'TimeField',
@@ -267,59 +267,59 @@ function getFormWidgets () {
             },
             {
                 fieldLabel: 'NumberField',
-                xtype     : 'numberfield',
-                name      : 'number',
-                emptyText : '(This field is optional)',
+                xtype: 'numberfield',
+                name: 'number',
+                emptyText: '(This field is optional)',
                 allowBlank: true
             },
             {
                 fieldLabel: 'TextArea',
-                xtype     : 'textareafield',
-                name      : 'message',
-                cls       : 'x-form-valid',
-                value     : 'This field is hard-coded to have the "valid" style (it will require some code changes to add/remove this style dynamically)'
+                xtype: 'textareafield',
+                name: 'message',
+                cls: 'x-form-valid',
+                value: 'This field is hard-coded to have the "valid" style (it will require some code changes to add/remove this style dynamically)'
             },
             {
                 fieldLabel: 'Checkboxes',
                 xtype: 'checkboxgroup',
-                columns: [100,100],
+                columns: [100, 100],
                 items: [
-                    {boxLabel: 'Foo', checked: true,id:'fooChk',inputId:'fooChkInput'},
-                    {boxLabel: 'Bar'}
+                    { boxLabel: 'Foo', checked: true, id: 'fooChk', inputId: 'fooChkInput' },
+                    { boxLabel: 'Bar' }
                 ]
             },
             {
                 fieldLabel: 'Radios',
                 xtype: 'radiogroup',
-                columns: [100,100],
-                items: [{boxLabel: 'Foo', checked: true, name: 'radios'},{boxLabel: 'Bar', name: 'radios'}]
+                columns: [100, 100],
+                items: [{ boxLabel: 'Foo', checked: true, name: 'radios' }, { boxLabel: 'Bar', name: 'radios' }]
             },
             {
-                hideLabel   : true,
-                id          : 'htmleditor',
-                xtype       : 'htmleditor',
-                name        : 'html',
+                hideLabel: true,
+                id: 'htmleditor',
+                xtype: 'htmleditor',
+                name: 'html',
                 enableColors: false,
-                value       : 'Mouse over toolbar for tooltips.<br /><br />The HTMLEditor IFrame requires a refresh between a stylesheet switch to get accurate colors.',
-                height      : 110
+                value: 'Mouse over toolbar for tooltips.<br /><br />The HTMLEditor IFrame requires a refresh between a stylesheet switch to get accurate colors.',
+                height: 110
             },
             {
-                xtype : 'fieldset',
-                title : 'Plain Fieldset',
+                xtype: 'fieldset',
+                title: 'Plain Fieldset',
                 items: [
                     {
                         hideLabel: true,
                         xtype: 'radiogroup',
                         items: [
-                            {boxLabel: 'Radio A', checked: true, name: 'radiogrp2'},
-                            {boxLabel: 'Radio B', name: 'radiogrp2'}
+                            { boxLabel: 'Radio A', checked: true, name: 'radiogrp2' },
+                            { boxLabel: 'Radio B', name: 'radiogrp2' }
                         ]
                     }
                 ]
             },
             {
-                xtype      : 'fieldset',
-                title      : 'Collapsible Fieldset',
+                xtype: 'fieldset',
+                title: 'Collapsible Fieldset',
                 collapsible: true,
                 items: [
                     { xtype: 'checkbox', boxLabel: 'Checkbox 1' },
@@ -327,8 +327,8 @@ function getFormWidgets () {
                 ]
             },
             {
-                xtype         : 'fieldset',
-                title         : 'Checkbox Fieldset',
+                xtype: 'fieldset',
+                title: 'Checkbox Fieldset',
                 checkboxToggle: true,
                 items: [
                     { xtype: 'radio', boxLabel: 'Radio 1', name: 'radiongrp1' },
@@ -339,7 +339,7 @@ function getFormWidgets () {
 
         buttons: [
             {
-                text   :'Toggle Enabled',
+                text: 'Toggle Enabled',
                 handler: function() {
                     this.up('form').items.each(function(item) {
                         item.setDisabled(!item.disabled);
@@ -347,13 +347,13 @@ function getFormWidgets () {
                 }
             },
             {
-                text   : 'Reset Form',
+                text: 'Reset Form',
                 handler: function() {
                     Ext.getCmp('form-widgets').getForm().reset();
                 }
             },
             {
-                text   : 'Validate',
+                text: 'Validate',
                 handler: function() {
                     Ext.getCmp('form-widgets').getForm().isValid();
                 }
@@ -367,13 +367,14 @@ function getBorderLayout() {
         classic: 5,
         gray: 5,
         triton: 10,
+        graphite: 16,
         'neptune-touch': 16,
         'crisp-touch': 16
     };
 
     return applySizing('borderLayout', {
         xtype: 'panel',
-        title : 'BorderLayout Panel',
+        title: 'BorderLayout Panel',
         layout: {
             type: 'border',
             padding: padding[Ext.themeName] || 8 // match padding to theme splitter size
@@ -382,71 +383,71 @@ function getBorderLayout() {
 
         defaults: {
             collapsible: true,
-            split      : true
+            split: true
         },
 
         items: [
             {
-                title  : 'North',
-                region : 'north',
-                html   : 'North',
-                height      : isTouchTheme ? 100 : 70
+                title: 'North',
+                region: 'north',
+                html: 'North',
+                height: isTouchTheme ? 100 : 70
             },
             {
-                title       : 'South',
-                region      : 'south',
-                html        : 'South',
+                title: 'South',
+                region: 'south',
+                html: 'South',
                 collapseMode: 'mini',
-                height      : isTouchTheme ? 100 : 70
+                height: isTouchTheme ? 100 : 70
             },
             {
-                title       : 'West',
-                region      : 'west',
-                html        : 'West',
+                title: 'West',
+                region: 'west',
+                html: 'West',
                 collapseMode: 'mini',
-                width       : isTouchTheme ? 150 : 100
+                width: isTouchTheme ? 150 : 100
             },
             {
-                title  : 'East',
-                region : 'east',
-                html   : 'East',
-                width  : isTouchTheme ? 150 : 100
+                title: 'East',
+                region: 'east',
+                html: 'East',
+                width: isTouchTheme ? 150 : 100
             },
             {
-                title      : 'Center',
-                region     : 'center',
+                title: 'Center',
+                region: 'center',
                 collapsible: false,
-                html       : 'Center'
+                html: 'Center'
             }
         ]
     });
 }
 
-function getStore () {
+function getStore() {
     // Reverse order data should get sorted by the MemoryProxy
     var myData = [
-        ['E.I. du Pont de Nemours and Company',40.48,0.51,1.28,'9/1 12:00am'],
-        ['Citigroup, Inc.',49.37,0.02,0.04,'9/1 12:00am'],
-        ['Caterpillar Inc.',67.27,0.92,1.39,'9/1 12:00am'],
-        ['Boeing Co.',75.43,0.53,0.71,'9/1 12:00am'],
-        ['AT&T Inc.',31.61,-0.48,-1.54,'9/1 12:00am'],
-        ['American International Group, Inc.',64.13,0.31,0.49,'9/1 12:00am'],
-        ['American Express Company',52.55,0.01,0.02,'9/1 12:00am'],
-        ['Altria Group Inc',83.81,0.28,0.34,'9/1 12:00am'],
-        ['Alcoa Inc',29.01,0.42,1.47,'9/1 12:00am'],
-        ['3m Co',71.72,0.02,0.03,'9/1 12:00am']
+        ['E.I. du Pont de Nemours and Company', 40.48, 0.51, 1.28, '9/1 12:00am'],
+        ['Citigroup, Inc.', 49.37, 0.02, 0.04, '9/1 12:00am'],
+        ['Caterpillar Inc.', 67.27, 0.92, 1.39, '9/1 12:00am'],
+        ['Boeing Co.', 75.43, 0.53, 0.71, '9/1 12:00am'],
+        ['AT&T Inc.', 31.61, -0.48, -1.54, '9/1 12:00am'],
+        ['American International Group, Inc.', 64.13, 0.31, 0.49, '9/1 12:00am'],
+        ['American Express Company', 52.55, 0.01, 0.02, '9/1 12:00am'],
+        ['Altria Group Inc', 83.81, 0.28, 0.34, '9/1 12:00am'],
+        ['Alcoa Inc', 29.01, 0.42, 1.47, '9/1 12:00am'],
+        ['3m Co', 71.72, 0.02, 0.03, '9/1 12:00am']
     ];
 
     return Ext.create('Ext.data.ArrayStore', {
         fields: [
-            {name: 'company'},
-            {name: 'price', type: 'float', convert: null},
-            {name: 'change', type: 'float', convert: null},
-            {name: 'pctChange', type: 'float', convert: null},
-            {name: 'lastChange', type: 'date', dateFormat: 'n/j h:ia'}
+            { name: 'company' },
+            { name: 'price', type: 'float', convert: null },
+            { name: 'change', type: 'float', convert: null },
+            { name: 'pctChange', type: 'float', convert: null },
+            { name: 'lastChange', type: 'date', dateFormat: 'n/j h:ia' }
         ],
         sorters: {
-            property : 'company',
+            property: 'company',
             direction: 'ASC'
         },
         data: myData,
@@ -454,12 +455,12 @@ function getStore () {
     });
 }
 
-function getGrid () {
+function getGrid() {
     var store = getStore(),
         pagingBar = Ext.widget('pagingtoolbar', {
-            store      : store,
+            store: store,
             displayInfo: true,
-            displayMsg : 'Displaying topics {0} - {1} of {2}'
+            displayMsg: 'Displaying topics {0} - {1} of {2}'
         });
 
     return applySizing('grid', {
@@ -470,17 +471,17 @@ function getGrid () {
         store: store,
 
         columns: [
-            {header: "Company",      flex: 1, sortable: true, dataIndex: 'company'},
-            {header: "Price",        width: 75,  sortable: true, dataIndex: 'price'},
-            {header: "Change",       width: isTouchTheme ? 90 : 80,  sortable: true, dataIndex: 'change'},
-            {header: "% Change",     width: isTouchTheme ? 105 : 95,  sortable: true, dataIndex: 'pctChange'},
-            {header: "Last Updated", width: isTouchTheme ? 130 : 110,  sortable: true, xtype: 'datecolumn', dataIndex: 'lastChange'}
+            { header: "Company", flex: 1, sortable: true, dataIndex: 'company' },
+            { header: "Price", width: 75, sortable: true, dataIndex: 'price' },
+            { header: "Change", width: isTouchTheme ? 90 : 80, sortable: true, dataIndex: 'change' },
+            { header: "% Change", width: isTouchTheme ? 105 : 95, sortable: true, dataIndex: 'pctChange' },
+            { header: "Last Updated", width: isTouchTheme ? 130 : 110, sortable: true, xtype: 'datecolumn', dataIndex: 'lastChange' }
         ],
         loadMask: true,
 
         bbar: pagingBar,
         tbar: [
-            {text: 'Toolbar'},
+            { text: 'Toolbar' },
             '->',
             {
                 xtype: 'triggerfield',
@@ -491,7 +492,7 @@ function getGrid () {
     });
 }
 
-function getAccordion () {
+function getAccordion() {
     var tree = Ext.create('Ext.tree.Panel', {
         title: 'TreePanel',
         root: {
@@ -514,7 +515,7 @@ function getAccordion () {
     });
 
     return applySizing('accordion', {
-        title : 'Accordion and TreePanel',
+        title: 'Accordion and TreePanel',
         collapsible: true,
         layout: 'accordion',
 
@@ -524,13 +525,13 @@ function getAccordion () {
                 html: 'Some content'
             }, {
                 title: 'Item 3',
-                html : 'Some content'
+                html: 'Some content'
             }
         ]
     });
 }
 
-function getTabs (config) {
+function getTabs(config) {
     return Ext.apply({
         xtype: 'tabpanel',
         activeTab: 0,
@@ -541,65 +542,65 @@ function getTabs (config) {
         items: [
             {
                 title: 'Tab 1',
-                html : 'Free-standing tab panel'
+                html: 'Free-standing tab panel'
             },
             {
-                title   : 'Tab 2',
+                title: 'Tab 2',
                 closable: true
             },
             {
-                title   : 'Tab 3',
+                title: 'Tab 3',
                 closable: true
             }
         ]
     }, config);
 }
 
-function getScrollingTabs () {
+function getScrollingTabs() {
     return applySizing('scrollingTabs', getTabs({
         enableTabScroll: true,
         plain: true,
         items: [
             {
                 title: 'Tab 1',
-                html : 'Tab panel 1 content'
+                html: 'Tab panel 1 content'
             },
             {
                 title: 'Tab 2',
-                html : 'Tab panel 2 content',
+                html: 'Tab panel 2 content',
                 closable: true
             },
             {
                 title: 'Tab 3',
-                html : 'Tab panel 3 content',
+                html: 'Tab panel 3 content',
                 closable: true
             },
             {
                 title: 'Tab 4',
-                html : 'Tab panel 4 content',
+                html: 'Tab panel 4 content',
                 closable: true
             },
             {
                 title: 'Tab 5',
-                html : 'Tab panel 5 content',
+                html: 'Tab panel 5 content',
                 closable: true
             },
             {
                 title: 'Tab 6',
-                html : 'Tab panel 6 content',
+                html: 'Tab panel 6 content',
                 closable: true
             }
         ]
     }));
 }
 
-function getPlainTabs () {
+function getPlainTabs() {
     return applySizing('plainTabs', getTabs({
         plain: true
     }));
 }
 
-function getDatePicker () {
+function getDatePicker() {
     return applySizing('datePicker', {
         xtype: 'panel',
         border: false,
@@ -609,7 +610,7 @@ function getDatePicker () {
     });
 }
 
-function getProgressBar () {
+function getProgressBar() {
     var progressbar = Ext.widget('progressbar', {
         value: 0.5
     });
@@ -617,7 +618,7 @@ function getProgressBar () {
     if (!hasOption('nopbar')) {
         setTimeout(function() {
             progressbar.wait({
-                //animate: true,
+                // animate: true,
                 text: 'Progress text...'
             });
         }, 7000);
@@ -632,24 +633,24 @@ function getProgressBar () {
         items: [
             progressbar,
             {
-                xtype    : 'slider',
+                xtype: 'slider',
                 hideLabel: true,
-                value    : 50,
-                margin   : '5 0 0 0',
-                anchor   : '100%'
+                value: 50,
+                margin: '5 0 0 0',
+                anchor: '100%'
             },
             {
-                xtype   : 'slider',
+                xtype: 'slider',
                 vertical: true,
-                value   : 50,
-                height  : isTouchTheme ? 200 : 100,
-                margin  : '5 0 0 0'
+                value: 50,
+                height: isTouchTheme ? 200 : 100,
+                margin: '5 0 0 0'
             }
         ]
     });
 }
 
-function getFramedGrid () {
+function getFramedGrid() {
     return applySizing('framedGrid', {
         xtype: 'grid',
         title: 'Framed Grid',
@@ -660,34 +661,34 @@ function getFramedGrid () {
         frame: true,
         enableColumnMove: false,
         columns: [
-            {header: "Company", flex:  1,   sortable: true, dataIndex: 'company'},
-            {header: "Price",   width: isTouchTheme ? 90 : 75,  sortable: true, dataIndex: 'price'},
-            {header: "Change",  width: isTouchTheme ? 90 : 75,  sortable: true, dataIndex: 'change'}
+            { header: "Company", flex: 1, sortable: true, dataIndex: 'company' },
+            { header: "Price", width: isTouchTheme ? 90 : 75, sortable: true, dataIndex: 'price' },
+            { header: "Change", width: isTouchTheme ? 90 : 75, sortable: true, dataIndex: 'change' }
         ]
     });
 }
 
-function getBasicWindow () {
+function getBasicWindow() {
     return Ext.widget('window', applySizing('basicWindow', {
         id: 'basicWindow',
         hidden: false,
         title: 'Window',
         bodyPadding: 5,
-        html       : 'Click Submit for Confirmation Msg.',
+        html: 'Click Submit for Confirmation Msg.',
         collapsible: true,
-        floating   : false,
-        closable   : false,
-        draggable  : false,
+        floating: false,
+        closable: false,
+        draggable: false,
         resizable: { handles: 's' },
         animCollapse: true,
 
         tbar: [
-            {text: 'Toolbar'}
+            { text: 'Toolbar' }
         ],
         buttons: [
             {
-                text   : 'Submit',
-                id     : 'message_box',
+                text: 'Submit',
+                id: 'message_box',
                 handler: function() {
                     Ext.MessageBox.confirm('Confirm', 'Are you sure you want to do that?');
                 }
@@ -708,11 +709,12 @@ function getResizer() {
     }));
 }
 
-function addFormWindow () {
+// eslint-disable-next-line no-unused-vars
+function addFormWindow() {
     Ext.widget('window', {
         x: 660, y: 1230,
 
-        width   : 450,
+        width: 450,
         // height  : 360,
         minWidth: 450,
 
@@ -721,73 +723,73 @@ function addFormWindow () {
         bodyPadding: '5 5 0 5',
 
         collapsible: true,
-        closable   : false,
-        draggable  : false,
+        closable: false,
+        draggable: false,
         resizable: { handles: 's' },
         animCollapse: true,
 
         items: [
             {
-                xtype : 'fieldset',
-                title : 'Plain Fieldset',
+                xtype: 'fieldset',
+                title: 'Plain Fieldset',
                 items: [
                     {
                         fieldLabel: 'TextField',
-                        xtype     : 'textfield',
-                        name      : 'someField',
-                        emptyText : 'Enter a value',
-                        anchor    : '100%'
+                        xtype: 'textfield',
+                        name: 'someField',
+                        emptyText: 'Enter a value',
+                        anchor: '100%'
                     },
                     {
                         fieldLabel: 'ComboBox',
-                        xtype     : 'combo',
-                        store     : ['Foo', 'Bar'],
-                        anchor    : '100%'
+                        xtype: 'combo',
+                        store: ['Foo', 'Bar'],
+                        anchor: '100%'
                     },
                     {
                         fieldLabel: 'DateField',
-                        xtype     : 'datefield',
-                        name      : 'date',
-                        anchor    : '100%'
+                        xtype: 'datefield',
+                        name: 'date',
+                        anchor: '100%'
                     },
                     {
                         fieldLabel: 'TimeField',
-                        name      : 'time',
-                        xtype     : 'timefield',
-                        anchor    : '100%'
+                        name: 'time',
+                        xtype: 'timefield',
+                        anchor: '100%'
                     },
                     {
                         fieldLabel: 'NumberField',
-                        xtype     : 'numberfield',
-                        name      : 'number',
-                        emptyText : '(This field is optional)',
+                        xtype: 'numberfield',
+                        name: 'number',
+                        emptyText: '(This field is optional)',
                         allowBlank: true,
-                        anchor    : '100%'
+                        anchor: '100%'
                     },
                     {
                         fieldLabel: 'TextArea',
-                        xtype     : 'textareafield',
-                        name      : 'message',
-                        cls       : 'x-form-valid',
-                        value     : 'This field is hard-coded to have the "valid" style (it will require some code changes to add/remove this style dynamically)',
-                        anchor    : '100%'
+                        xtype: 'textareafield',
+                        name: 'message',
+                        cls: 'x-form-valid',
+                        value: 'This field is hard-coded to have the "valid" style (it will require some code changes to add/remove this style dynamically)',
+                        anchor: '100%'
                     },
                     {
                         fieldLabel: 'Checkboxes',
                         xtype: 'checkboxgroup',
-                        columns: [100,100],
+                        columns: [100, 100],
                         items: [
-                            {boxLabel: 'Foo', checked: true,id:'winFooChk',inputId:'winFooChkInput'},
-                            {boxLabel: 'Bar'}
+                            { boxLabel: 'Foo', checked: true, id: 'winFooChk', inputId: 'winFooChkInput' },
+                            { boxLabel: 'Bar' }
                         ]
                     },
                     {
                         xtype: 'radiogroup',
-                        columns: [100,100],
+                        columns: [100, 100],
                         fieldLabel: 'Radio Group',
                         items: [
-                            {boxLabel: 'Radio A', checked: true, name: 'radiogrp2'},
-                            {boxLabel: 'Radio B', name: 'radiogrp2'}
+                            { boxLabel: 'Radio A', checked: true, name: 'radiogrp2' },
+                            { boxLabel: 'Radio B', name: 'radiogrp2' }
                         ]
                     }
                 ]
@@ -796,7 +798,7 @@ function addFormWindow () {
 
         buttons: [
             {
-                text   : 'Submit',
+                text: 'Submit',
                 handler: function() {
                     Ext.MessageBox.confirm('Confirm', 'Are you sure you want to do that?');
                 }
@@ -805,36 +807,43 @@ function addFormWindow () {
     }).show();
 }
 
-var sizing = {
+sizing = {
     mainContainer: {
         classic: [1130, 1460],
+        triton: [1300, 1850],
         neptune: [1250, 1600],
-        'neptune-touch': [790, 4140]
+        'neptune-touch': [790, 4140],
+        'graphite': [790, 5500]
     },
     basicPanel: {
         classic: [150, 90, 20, 20],
         neptune: [150, 130, 20, 20],
-        'neptune-touch': [250, 150, 0, 0]
+        'neptune-touch': [250, 150, 0, 0],
+        'graphite': [250, 150, 0, 0]
     },
     collapsedPanel: {
         classic: [150, 70, 20, 120],
         neptune: [150, 120, 20, 160],
-        'neptune-touch': [250, 150, 0, 170]
+        'neptune-touch': [250, 150, 0, 170],
+        'graphite': [250, 150, 0, 170]
     },
     maskedPanel: {
         classic: [130, 170, 180, 20],
         neptune: [130, 260, 180, 20],
-        'neptune-touch': [230, 320, 270, 0]
+        'neptune-touch': [230, 320, 270, 0],
+        'graphite': [230, 320, 270, 0]
     },
     framedPanel: {
         classic: [170, 100, 320, 20],
         neptune: [200, 150, 320, 20],
-        'neptune-touch': [270, 150, 520, 0]
+        'neptune-touch': [270, 150, 520, 0],
+        'graphite': [500, 260, 290, 340]
     },
     collapsedFramedPanel: {
         classic: [170, 60, 320, 130],
         neptune: [200, 100, 320, 180],
-        'neptune-touch': [270, 150, 520, 170]
+        'neptune-touch': [270, 150, 520, 170],
+        'graphite': [270, 150, 520, 0]
     },
     basicWindow: {
         classic: [150, 170, 500, 20, {
@@ -851,93 +860,113 @@ var sizing = {
             minWidth: 150,
             minHeight: 200,
             maxHeight: 260
+        }],
+        'graphite': [270, 350, 0, 340, {
+            minWidth: 170,
+            minHeight: 300,
+            maxHeight: 350
         }]
     },
     panelWithToolbars: {
         classic: [450, 170, 660, 20],
-        neptune: [500, 260, 690, 20],
-        'neptune-touch': [520, 260, 270, 340]
+        triton: [560, 260, 690, 20],
+        neptune: [560, 260, 690, 20],
+        'neptune-touch': [520, 260, 270, 340],
+        'graphite': [790, 400, 0, 620]
     },
     formWidgets: {
         classic: [630, 750, 20, 200],
         neptune: [660, 750, 20, 290],
         triton: [660, 1000, 20, 290],
-        'neptune-touch': [790, 940, 0, 620]
+        'neptune-touch': [790, 940, 0, 620],
+        'graphite': [790, 1340, 0, 1040]
     },
     borderLayout: {
         classic: [450, 350, 660, 200],
-        neptune: [500, 350, 690, 290],
-        'neptune-touch': [790, 500, 0, 1580]
+        triton: [560, 350, 690, 290],
+        neptune: [560, 350, 690, 290],
+        'neptune-touch': [790, 500, 0, 1580],
+        'graphite': [790, 500, 0, 2400]
     },
     grid: {
         classic: [450, 200, 660, 560],
-        neptune: [500, 200, 690, 650],
-        triton: [500, 300, 690, 650],
-        'neptune-touch': [790, 400, 0, 2100]
+        neptune: [560, 200, 690, 650],
+        triton: [560, 300, 690, 650],
+        'neptune-touch': [790, 400, 0, 2100],
+        'graphite': [790, 600, 0, 2920]
     },
     accordion: {
         classic: [450, 240, 660, 770],
-        neptune: [500, 240, 690, 860],
-        triton: [500, 340, 690, 960],
-        'neptune-touch': [790, 340, 0, 2520]
+        neptune: [560, 240, 690, 860],
+        triton: [560, 340, 690, 960],
+        'neptune-touch': [790, 340, 0, 2520],
+        'graphite': [790, 440, 0, 3540]
     },
     scrollingTabs: {
         classic: [310, 150, 20, 960],
         neptune: [325, 150, 20, 1050],
         triton: [325, 150, 20, 1300],
-        'neptune-touch': [420, 200, 0, 2880]
+        'neptune-touch': [420, 200, 0, 2880],
+        'graphite': [420, 200, 0, 4000]
     },
     plainTabs: {
         classic: [310, 150, 340, 960],
         neptune: [325, 150, 355, 1050],
         triton: [325, 150, 355, 1300],
-        'neptune-touch': [350, 200, 440, 2880]
+        'neptune-touch': [350, 200, 440, 2880],
+        'graphite': [350, 200, 440, 4000]
     },
     datePicker: {
         classic: [180, undefined, 20, 1120],
         neptune: [212, undefined, 20, 1210],
         triton: [310, undefined, 20, 1460],
-        'neptune-touch': [282, undefined, 0, 3780]
+        'neptune-touch': [282, undefined, 0, 3780],
+        'graphite': [400, undefined, 0, 4970]
     },
     progressBar: {
         classic: [450, 200, 660, 1020],
-        neptune: [500, 200, 690, 1110],
-        triton: [500, 220, 690, 1310],
-        'neptune-touch': [790, 340, 0, 3100]
+        neptune: [560, 200, 690, 1110],
+        triton: [560, 220, 690, 1310],
+        'neptune-touch': [790, 340, 0, 3100],
+        'graphite': [790, 340, 0, 4220]
     },
     framedGrid: {
         classic: [450, 180, 660, 1230],
-        neptune: [500, 180, 690, 1320],
-        triton: [500, 280, 690, 1540],
-        'neptune-touch': [790, 300, 0, 3460]
+        neptune: [560, 180, 690, 1320],
+        triton: [560, 280, 690, 1540],
+        'neptune-touch': [790, 300, 0, 3460],
+        'graphite': [790, 360, 0, 4580]
     },
     resizer: {
         classic: [440, 220, 210, 1120],
         neptune: [440, 220, 240, 1210],
         triton: [340, 220, 340, 1460],
-        'neptune-touch': [488, 314, 302, 3780]
+        'neptune-touch': [488, 314, 302, 3780],
+        'graphite': [425, 314, 362, 4970]
     }
 };
 
-var theme;
 function getSizing(id) {
     var theme = Ext.themeName,
         info;
 
-    if (theme == 'gray') {
+    if (theme === 'gray') {
         // same dimensions
         theme = 'classic';
     }
 
     info = sizing[id][theme];
+
     if (!info && theme === 'crisp') {
         // default to neptune for crisp
-        info = sizing[id]['neptune'];
+        info = sizing[id].neptune;
     }
+
     if (!info && theme === 'triton') {
         // default to neptune for triton
-        info = sizing[id]['neptune'];
+        info = sizing[id].neptune;
     }
+
     if (!info && theme === 'crisp-touch') {
         // default to neptune-touch for crisp
         info = sizing[id]['neptune-touch'];
@@ -957,6 +986,7 @@ function applySizing(id, config) {
     if (info) {
         for (; i < len; ++i) {
             val = info[i];
+
             if (val !== undefined) {
                 config[keys[i]] = val;
             }
@@ -969,40 +999,41 @@ function applySizing(id, config) {
     return config;
 }
 
-function doThemes () {
+function doThemes() {
     var time = Ext.perf.getTimestamp(),
-        maskedPanel;
+        maskedPanel,
 
-    var items = [
-        getBasicPanel(),
-        getCollapsedPanel(),
-        maskedPanel = getMaskedPanel(),
-        getFramedPanel(),
-        getCollapsedFramedPanel(),
-        getBasicWindow(),
-        getPanelWithToolbars(),
-        getFormWidgets(),
-        getBorderLayout(),
-        getGrid(),
-        getAccordion(),
-        getScrollingTabs(),
-        getPlainTabs(),
-        getDatePicker(),
-        getProgressBar(),
-        getFramedGrid(),
-        getResizer(),
-        0 // end of list (makes commenting out any of the above easy
-    ];
+        items = [
+            getBasicPanel(),
+            getCollapsedPanel(),
+            maskedPanel = getMaskedPanel(),
+            getFramedPanel(),
+            getCollapsedFramedPanel(),
+            getBasicWindow(),
+            getPanelWithToolbars(),
+            getFormWidgets(),
+            getBorderLayout(),
+            getGrid(),
+            getAccordion(),
+            getScrollingTabs(),
+            getPlainTabs(),
+            getDatePicker(),
+            getProgressBar(),
+            getFramedGrid(),
+            getResizer(),
+            0 // end of list (makes commenting out any of the above easy
+        ];
+
     items.pop(); // remove the 0 on the end
 
-    mainContainer = Ext.create('Ext.container.Container', applySizing('mainContainer', {
+    Ext.create('Ext.container.Container', applySizing('mainContainer', {
         id: 'main-container',
         renderTo: document.body,
         layout: 'absolute',
         items: items
     }));
 
-    //addFormWindow();
+    // addFormWindow();
 
     setTimeout(function() {
         // we may comment out the creation of this for testing
@@ -1024,15 +1055,19 @@ function doThemes () {
 
 Ext.onReady(function() {
     isTouchTheme = Ext.themeName === 'neptune-touch' || Ext.themeName === 'crisp-touch';
+
     if (!hasOption('perf')) {
         if (hasOption('delay')) {
             setTimeout(doThemes, 1000);
-        } else {
+        }
+        else {
             doThemes();
         }
-    } else {
-        setTimeout(function () {
+    }
+    else {
+        setTimeout(function() {
             var a = document.createElement('a');
+
             a.innerHTML = 'Page Analyzer';
             a.style.position = "absolute";
             a.style.left = "5px";

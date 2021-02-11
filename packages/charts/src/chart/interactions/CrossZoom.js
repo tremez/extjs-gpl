@@ -116,11 +116,13 @@ Ext.define('Ext.chart.interactions.CrossZoom', {
     config: {
         /**
          * @cfg {Object/Array} axes
-         * Specifies which axes should be made navigable. The config value can take the following formats:
+         * Specifies which axes should be made navigable. The config value can take the following
+         * formats:
          *
-         * - An Object whose keys correspond to the {@link Ext.chart.axis.Axis#position position} of each
-         *   axis that should be made navigable. Each key's value can either be an Object with further
-         *   configuration options for each axis or simply `true` for a default set of options.
+         * - An Object whose keys correspond to the {@link Ext.chart.axis.Axis#position position}
+         *   of each axis that should be made navigable. Each key's value can either be an Object
+         *   with further configuration options for each axis or simply `true` for a default
+         *   set of options.
          *       {
          *           type: 'crosszoom',
          *           axes: {
@@ -134,26 +136,28 @@ Ext.define('Ext.chart.interactions.CrossZoom', {
          *
          *   If using the full Object form, the following options can be specified for each axis:
          *
-         *   - minZoom (Number) A minimum zoom level for the axis. Defaults to `1` which is its natural size.
+         *   - minZoom (Number) A minimum zoom level for the axis. Defaults to `1` which is its
+         *     natural size.
          *   - maxZoom (Number) A maximum zoom level for the axis. Defaults to `10`.
          *   - startZoom (Number) A starting zoom level for the axis. Defaults to `1`.
          *   - allowZoom (Boolean) Whether zooming is allowed for the axis. Defaults to `true`.
          *   - allowPan (Boolean) Whether panning is allowed for the axis. Defaults to `true`.
          *   - startPan (Boolean) A starting panning offset for the axis. Defaults to `0`.
          *
-         * - An Array of strings, each one corresponding to the {@link Ext.chart.axis.Axis#position position}
-         *   of an axis that should be made navigable. The default options will be used for each named axis.
+         * - An Array of strings, each one corresponding to the
+         *   {@link Ext.chart.axis.Axis#position position} of an axis that should be made navigable.
+         *   The default options will be used for each named axis.
          *
          *       {
          *           type: 'crosszoom',
          *           axes: ['left', 'bottom']
          *       }
          *
-         * If the `axes` config is not specified, it will default to making all axes navigable with the
-         * default axis options.
+         * If the `axes` config is not specified, it will default to making all axes navigable
+         * with the default axis options.
          */
         axes: true,
-        
+
         gestures: {
             dragstart: 'onGestureStart',
             drag: 'onGesture',
@@ -168,12 +172,12 @@ Ext.define('Ext.chart.interactions.CrossZoom', {
 
     zoomAnimationInProgress: false,
 
-    constructor: function () {
+    constructor: function() {
         this.callParent(arguments);
         this.zoomHistory = [];
     },
 
-    applyAxes: function (axesConfig) {
+    applyAxes: function(axesConfig) {
         var result = {};
 
         if (axesConfig === true) {
@@ -183,26 +187,30 @@ Ext.define('Ext.chart.interactions.CrossZoom', {
                 bottom: {},
                 left: {}
             };
-        } else if (Ext.isArray(axesConfig)) {
+        }
+        else if (Ext.isArray(axesConfig)) {
             // array of axis names - translate to full object form
             result = {};
-            Ext.each(axesConfig, function (axis) {
+            Ext.each(axesConfig, function(axis) {
                 result[axis] = {};
             });
-        } else if (Ext.isObject(axesConfig)) {
-            Ext.iterate(axesConfig, function (key, val) {
+        }
+        else if (Ext.isObject(axesConfig)) {
+            Ext.iterate(axesConfig, function(key, val) {
                 // axis name with `true` value -> translate to object
                 if (val === true) {
                     result[key] = {};
-                } else if (val !== false) {
+                }
+                else if (val !== false) {
                     result[key] = val;
                 }
             });
         }
+
         return result;
     },
 
-    applyUndoButton: function (button, oldButton) {
+    applyUndoButton: function(button, oldButton) {
         var me = this;
 
         if (oldButton) {
@@ -214,25 +222,26 @@ Ext.define('Ext.chart.interactions.CrossZoom', {
                 cls: [],
                 text: 'Undo Zoom',
                 disabled: true,
-                handler: function () {
+                handler: function() {
                     me.undoZoom();
                 }
             }, button));
         }
     },
 
-    getSurface: function () {
-        return this.getChart() && this.getChart().getSurface('main');
+    getSurface: function() {
+        return this.getChart() && this.getChart().getSurface('overlay');
     },
-    
-    setSeriesOpacity: function (opacity) {
+
+    setSeriesOpacity: function(opacity) {
         var surface = this.getChart() && this.getChart().getSurface('series');
+
         if (surface) {
             surface.element.setStyle('opacity', opacity);
         }
     },
 
-    onGestureStart: function (e) {
+    onGestureStart: function(e) {
         var me = this,
             chart = me.getChart(),
             surface = me.getSurface(),
@@ -251,6 +260,7 @@ Ext.define('Ext.chart.interactions.CrossZoom', {
         if (me.zoomAnimationInProgress) {
             return;
         }
+
         if (x > minX && x < maxX && y > minY && y < maxY) {
             me.gestureEvent = 'drag';
             me.lockEvents(me.gestureEvent);
@@ -269,16 +279,20 @@ Ext.define('Ext.chart.interactions.CrossZoom', {
                 zIndex: 10000
             });
             me.setSeriesOpacity(0.8);
+
             return false;
         }
     },
 
-    onGesture: function (e) {
+    onGesture: function(e) {
         var me = this;
+
         if (me.zoomAnimationInProgress) {
             return;
         }
+
         if (me.getLocks()[me.gestureEvent] === me) {
+            // eslint-disable-next-line vars-on-top, one-var
             var chart = me.getChart(),
                 surface = me.getSurface(),
                 rect = chart.getInnerRect(),
@@ -293,34 +307,45 @@ Ext.define('Ext.chart.interactions.CrossZoom', {
 
             if (x < minX) {
                 x = minX;
-            } else if (x > maxX) {
+            }
+            else if (x > maxX) {
                 x = maxX;
             }
+
             if (y < minY) {
                 y = minY;
-            } else if (y > maxY) {
+            }
+            else if (y > maxY) {
                 y = maxY;
             }
+
             me.selectionRect.setAttributes({
                 width: x - me.startX,
                 height: y - me.startY
             });
+
             if (Math.abs(me.startX - x) < 11 || Math.abs(me.startY - y) < 11) {
-                me.selectionRect.setAttributes({globalAlpha: 0.5});
-            } else {
-                me.selectionRect.setAttributes({globalAlpha: 1});
+                me.selectionRect.setAttributes({ globalAlpha: 0.5 });
             }
+            else {
+                me.selectionRect.setAttributes({ globalAlpha: 1 });
+            }
+
             surface.renderFrame();
+
             return false;
         }
     },
 
-    onGestureEnd: function (e) {
+    onGestureEnd: function(e) {
         var me = this;
+
         if (me.zoomAnimationInProgress) {
             return;
         }
+
         if (me.getLocks()[me.gestureEvent] === me) {
+            // eslint-disable-next-line vars-on-top, one-var
             var chart = me.getChart(),
                 surface = me.getSurface(),
                 rect = chart.getInnerRect(),
@@ -337,17 +362,22 @@ Ext.define('Ext.chart.interactions.CrossZoom', {
 
             if (x < minX) {
                 x = minX;
-            } else if (x > maxX) {
+            }
+            else if (x > maxX) {
                 x = maxX;
             }
+
             if (y < minY) {
                 y = minY;
-            } else if (y > maxY) {
+            }
+            else if (y > maxY) {
                 y = maxY;
             }
+
             if (Math.abs(me.startX - x) < 11 || Math.abs(me.startY - y) < 11) {
                 surface.remove(me.selectionRect);
-            } else {
+            }
+            else {
                 me.zoomBy([
                     Math.min(me.startX, x) / rectWidth,
                     1 - Math.max(me.startY, y) / rectHeight,
@@ -362,7 +392,7 @@ Ext.define('Ext.chart.interactions.CrossZoom', {
                     height: Math.abs(me.startY - y)
                 });
 
-                me.selectionRect.setAnimation(chart.getAnimation() || {duration: 0});
+                me.selectionRect.setAnimation(chart.getAnimation() || { duration: 0 });
                 me.selectionRect.setAttributes({
                     globalAlpha: 0,
                     x: 0,
@@ -374,7 +404,7 @@ Ext.define('Ext.chart.interactions.CrossZoom', {
                 me.zoomAnimationInProgress = true;
 
                 chart.suspendThicknessChanged();
-                me.selectionRect.fx.on('animationend', function () {
+                me.selectionRect.getAnimation().on('animationend', function() {
                     chart.resumeThicknessChanged();
 
                     surface.remove(me.selectionRect);
@@ -396,36 +426,41 @@ Ext.define('Ext.chart.interactions.CrossZoom', {
         }
     },
 
-    zoomBy: function (rect) {
+    zoomBy: function(rect) {
         var me = this,
             axisConfigs = me.getAxes(),
             chart = me.getChart(),
             axes = chart.getAxes(),
             isRtl = chart.getInherited().rtl,
-            config,
             zoomMap = {},
-            x1, x2;
+            config, axis, x1, x2, isSide, oldRange, i;
 
         if (isRtl) {
             rect = rect.slice();
-            x1 =  1 - rect[0];
-            x2 =  1 - rect[2];
+            x1 = 1 - rect[0];
+            x2 = 1 - rect[2];
             rect[0] = Math.min(x1, x2);
             rect[2] = Math.max(x1, x2);
         }
-        for (var i = 0; i < axes.length; i++) {
-            var axis = axes[i];
+
+        for (i = 0; i < axes.length; i++) {
+            axis = axes[i];
+
             config = axisConfigs[axis.getPosition()];
+
             if (config && config.allowZoom !== false) {
-                var isSide = axis.isSide(),
-                    oldRange = axis.getVisibleRange();
+                isSide = axis.isSide();
+                oldRange = axis.getVisibleRange();
+
                 zoomMap[axis.getId()] = oldRange.slice(0);
+
                 if (!isSide) {
                     axis.setVisibleRange([
                         (oldRange[1] - oldRange[0]) * rect[0] + oldRange[0],
                         (oldRange[1] - oldRange[0]) * rect[2] + oldRange[0]
                     ]);
-                } else {
+                }
+                else {
                     axis.setVisibleRange([
                         (oldRange[1] - oldRange[0]) * rect[1] + oldRange[0],
                         (oldRange[1] - oldRange[0]) * rect[3] + oldRange[0]
@@ -438,28 +473,31 @@ Ext.define('Ext.chart.interactions.CrossZoom', {
         me.getUndoButton().setDisabled(false);
     },
 
-    undoZoom: function () {
+    undoZoom: function() {
         var zoomMap = this.zoomHistory.pop(),
-            axes = this.getChart().getAxes();
+            axes = this.getChart().getAxes(),
+            axis, i;
+
         if (zoomMap) {
-            for (var i = 0; i < axes.length; i++) {
-                var axis = axes[i];
+            for (i = 0; i < axes.length; i++) {
+                axis = axes[i];
+
                 if (zoomMap[axis.getId()]) {
                     axis.setVisibleRange(zoomMap[axis.getId()]);
                 }
             }
         }
+
         this.getUndoButton().setDisabled(this.zoomHistory.length === 0);
         this.sync();
     },
 
-    onDoubleTap: function (e) {
+    onDoubleTap: function(e) {
         this.undoZoom();
     },
 
-    destroy: function () {
+    destroy: function() {
         this.setUndoButton(null);
         this.callParent();
     }
-
 });

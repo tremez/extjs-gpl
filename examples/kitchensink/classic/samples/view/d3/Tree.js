@@ -8,37 +8,39 @@
 Ext.define('KitchenSink.view.d3.Tree', {
     extend: 'Ext.panel.Panel',
     xtype: 'd3-view-tree',
-    controller: 'tree',
+    controller: 'd3-tree',
 
     requires: [
         'KitchenSink.view.d3.SalaryViewModel',
-        'Ext.d3.hierarchy.tree.HorizontalTree'
+        'Ext.d3.hierarchy.tree.HorizontalTree',
+        'Ext.d3.interaction.PanZoom',
+        'Ext.tip.ToolTip'
     ],
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     otherContent: [
         {
             type: 'Controller',
-            path: 'classic/samples/view/d3/TreeController.js'
+            path: 'app/view/d3/TreeController.js'
         },
         {
             type: 'View Model',
-            path: 'classic/samples/view/d3/SalaryViewModel.js'
+            path: 'app/view/d3/SalaryViewModel.js'
         },
         {
             type: 'Model',
-            path: 'classic/samples/model/Salary.js'
+            path: 'app/model/Salary.js'
         },
         {
             type: 'Reader',
-            path: 'classic/samples/reader/Salary.js'
+            path: 'app/reader/Salary.js'
         }
         // { // Too much for a browser to handle.
         //     type: 'Data',
         //     path: 'data/tree/salary.json'
         // }
     ],
-    // </example>
+    //</example>
 
     width: 930,
     height: 600,
@@ -46,7 +48,7 @@ Ext.define('KitchenSink.view.d3.Tree', {
     layout: 'border',
 
     viewModel: {
-        type: 'salary'
+        type: 'd3-salary'
     },
 
     items: [
@@ -75,7 +77,7 @@ Ext.define('KitchenSink.view.d3.Tree', {
 
             xtype: 'panel',
             layout: 'fit',
-            title: 'Highest-paying Industries',
+            title: 'Highest Paying Industries',
             items: {
                 xtype: 'd3-tree',
                 interactions: {
@@ -91,16 +93,17 @@ Ext.define('KitchenSink.view.d3.Tree', {
                 tooltip: {
                     renderer: 'onTooltip'
                 },
-                nodeText: function (tree, node) {
-                    var text = node.data.text;
+                nodeText: function(tree, node) {
+                    var model = node.data,
+                        text = model.data.text;
 
                     if (node.depth > 1) {
-                        text += ' (' + Ext.util.Format.currency(node.data.salary, '$', 0) + ')';
+                        text += ' (' + Ext.util.Format.currency(model.data.salary, '$', 0) + ')';
                     }
 
                     return text;
                 },
-                nodeSize: [30, 250],
+                nodeSize: [250, 30],
                 nodeRadius: 10,
                 bind: {
                     store: '{store}',
@@ -108,7 +111,7 @@ Ext.define('KitchenSink.view.d3.Tree', {
                 },
                 platformConfig: {
                     desktop: {
-                        nodeSize: [20, 250],
+                        nodeSize: [250, 20],
                         nodeRadius: 5
                     }
                 }

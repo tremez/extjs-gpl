@@ -46,9 +46,9 @@ Ext.define('Ext.layout.container.Dashboard', {
      * considered part of row[0].
      */
 
-    getSplitterConfig: function () {
+    getSplitterConfig: function() {
         return {
-           xtype: 'columnsplitter'
+            xtype: 'columnsplitter'
         };
     },
 
@@ -58,19 +58,22 @@ Ext.define('Ext.layout.container.Dashboard', {
      * @param items
      * @return {Array|*}
      */
-    getColumns : function(items) {
+    getColumns: function(items) {
         var array = Ext.Array;
+
         return array.filter(array.from(items), function(item) {
             return item.target && item.target.isSplitter !== true;
         });
     },
 
-    beginLayout: function (ownerContext) {
+    beginLayout: function(ownerContext) {
         var me = this;
+
         me.callParent([ownerContext]);
 
         // We need to reset the heights of the splitters so that they don't influence the
         // layout (mostly overflow management).
+        // eslint-disable-next-line vars-on-top, one-var
         var childItems = ownerContext.childItems,
             rows = (ownerContext.rows = []),
             length = childItems.length,
@@ -94,6 +97,7 @@ Ext.define('Ext.layout.container.Dashboard', {
                     prev.orphan = 1;
                     prev.el.setHeight(0);
                 }
+
                 totalWidth = 0;
                 columnTargets = 1;
 
@@ -106,6 +110,7 @@ Ext.define('Ext.layout.container.Dashboard', {
                         me.getColumns(rows[lastRow].items)
                     );
                 }
+
                 rows.push(row = {
                     index: rows.length,
                     items: [],
@@ -125,14 +130,14 @@ Ext.define('Ext.layout.container.Dashboard', {
             prev = child;
         }
 
-        if (rows.length ) {
+        if (rows.length) {
             me.syncFirstLast(
-                me.getColumns(rows[rows.length-1].items)
+                me.getColumns(rows[rows.length - 1].items)
             );
         }
     },
 
-    beforeLayoutCycle: function (ownerContext) {
+    beforeLayoutCycle: function(ownerContext) {
         var me = this,
             items = me.owner.items;
 
@@ -148,7 +153,7 @@ Ext.define('Ext.layout.container.Dashboard', {
         me.callParent(arguments);
     },
 
-    finishedLayout: function (ownerContext) {
+    finishedLayout: function(ownerContext) {
         var items = ownerContext.childItems,
             len = items.length,
             box, child, i, target, row;
@@ -166,10 +171,23 @@ Ext.define('Ext.layout.container.Dashboard', {
             target.width = box.width;
         }
 
-        for (i = 1; i < len; i += 2) {
+        for (i = 0; i < len; i ++) {
             target = (child = items[i]).target;
+
             if (!child.orphan) {
-                target.el.setHeight(child.row.maxHeight);
+                if (i % 2 === 0) {
+                    // Set min height of column to the max height
+                    // So that it can increase on adding placeholder
+                    target.el.setMinHeight(child.row.maxHeight);
+                }
+                else {
+                    // Set height for splitter
+                    target.el.setHeight(child.row.maxHeight);
+                }
+            }
+            else {
+                // since this is an orphan child, set its width to 0
+                target.el.setWidth(0);
             }
         }
     },
@@ -179,14 +197,14 @@ Ext.define('Ext.layout.container.Dashboard', {
      * column.
      * @private
      */
-    syncSplitters: function () {
+    syncSplitters: function() {
         var me = this,
             owner = me.owner,
             items = owner.items.items,
             index = items.length,
             ok = true,
             shouldBeSplitter = false,
-            item, splitter;
+            item, splitter; // eslint-disable-line no-unused-vars
 
         // Walk backwards over the items so that an insertion index is stable.
         while (index-- > 0) {
@@ -195,7 +213,8 @@ Ext.define('Ext.layout.container.Dashboard', {
             if (shouldBeSplitter) {
                 if (item.isSplitter) {
                     shouldBeSplitter = false;
-                } else {
+                }
+                else {
                     // An item is adjacent to an item, so inject a splitter beyond
                     // the current item to separate the columns. Keep shouldBeSplitter
                     // at true since we just encountered an item.
@@ -203,9 +222,11 @@ Ext.define('Ext.layout.container.Dashboard', {
                         ok = false;
                         owner.suspendLayouts();
                     }
-                    splitter = owner.add(index+1, me.getSplitterConfig());
+
+                    splitter = owner.add(index + 1, me.getSplitterConfig());
                 }
-            } else {
+            }
+            else {
                 if (item.isSplitter) {
                     // A splitter is adjacent to a splitter so we remove this one. We
                     // leave shouldBeSplitter at false because the next thing we see
@@ -214,8 +235,10 @@ Ext.define('Ext.layout.container.Dashboard', {
                         ok = false;
                         owner.suspendLayouts();
                     }
+
                     owner.remove(item);
-                } else {
+                }
+                else {
                     shouldBeSplitter = true;
                 }
             }
@@ -228,6 +251,7 @@ Ext.define('Ext.layout.container.Dashboard', {
                 ok = false;
                 owner.suspendLayouts();
             }
+
             owner.remove(item);
         }
 
@@ -236,7 +260,7 @@ Ext.define('Ext.layout.container.Dashboard', {
         }
     },
 
-    syncFirstLast: function (items) {
+    syncFirstLast: function(items) {
         var me = this,
             firstCls = me.firstColumnCls,
             lastCls = me.lastColumnCls,
@@ -247,23 +271,74 @@ Ext.define('Ext.layout.container.Dashboard', {
         items = Ext.Array.from(items);
         len = items.length;
 
-        for (i = 0; i < len; ++i ) {
+        for (i = 0; i < len; ++i) {
             item = items[i].target;
-            last = (i === len-1);
+            last = (i === len - 1);
 
             if (!i) { // if (first)
                 if (last) {
                     item.addCls(firstAndLast);
-                } else {
+                }
+                else {
                     item.addCls(firstCls);
                     item.removeCls(lastCls);
                 }
-            } else if (last) {
+            }
+            else if (last) {
                 item.addCls(lastCls);
                 item.removeCls(firstCls);
-            } else {
+            }
+            else {
                 item.removeCls(firstAndLast);
             }
         }
+    },
+
+    calculateItemSizeWithContent: function(availableWidth, contentWidth, items) {
+        var itemMarginWidth, itemContext,
+            splitterItemWidth = 0,
+            halfSplitterItemWidth = 0,
+            itemWidth, i,
+            len = items.length,
+            rowindex, rowLen;
+
+        availableWidth = (availableWidth < contentWidth) ? 0 : availableWidth;
+
+        for (i = 0; i < len; i += 2) {
+            itemContext = items[i];
+            rowLen = itemContext.row.items.length;
+            rowindex = itemContext.row.items.indexOf(itemContext);
+
+            itemMarginWidth = itemContext.marginInfo.width; // always set by above loop
+            itemWidth = itemContext.target.columnWidth;
+            itemWidth = Math.floor(itemWidth * availableWidth) - itemMarginWidth;
+
+            // Get the width of splitter item. We calculate the half value for width
+            // since splitter must form a part of both items between which it lies equally.
+            if (splitterItemWidth === 0 && (rowindex + 1 < rowLen)) {
+                splitterItemWidth = items[i + 1].getProp('width');
+                halfSplitterItemWidth = Math.ceil(splitterItemWidth / 2);
+            }
+
+            if (halfSplitterItemWidth) {
+                // if there exists a splitter to the right and this splitter 
+                // is not the last item of this row, reduce the width of the
+                // column since splitter will take half width from the item
+                if (rowindex + 2 < rowLen) {
+                    itemWidth -= halfSplitterItemWidth;
+                }
+
+                // if there exists a splitter to the left, reduce the width 
+                // of the column since splitter will take half width from the item
+                if (rowindex > 0) {
+                    itemWidth -= halfSplitterItemWidth;
+                }
+            }
+
+            itemWidth = itemContext.setWidth(itemWidth); // constrains to min/maxWidth
+            contentWidth += itemWidth + itemMarginWidth;
+        }
+
+        return contentWidth;
     }
 });

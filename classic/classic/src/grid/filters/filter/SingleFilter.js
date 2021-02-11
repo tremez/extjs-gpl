@@ -6,7 +6,7 @@
 Ext.define('Ext.grid.filters.filter.SingleFilter', {
     extend: 'Ext.grid.filters.filter.Base',
 
-    constructor: function (config) {
+    constructor: function(config) {
         var me = this,
             filter, value;
 
@@ -19,10 +19,11 @@ Ext.define('Ext.grid.filters.filter.SingleFilter', {
         if (filter) {
             // This filter was restored from stateful filters on the store so enforce it as active.
             me.active = true;
-        } else {
-            // Once we've reached this block, we know that this grid filter doesn't have a stateful filter, so if our
-            // flag to begin saving future filter mutations is set we know that any configured filter must be nulled
-            // out or it will replace our stateful filter.
+        }
+        else {
+            // Once we've reached this block, we know that this grid filter doesn't have a stateful
+            // filter, so if our flag to begin saving future filter mutations is set we know
+            // that any configured filter must be nulled out or it will replace our stateful filter.
             if (me.grid.stateful && me.getGridStore().saveStatefulFilters) {
                 value = undefined;
             }
@@ -48,25 +49,26 @@ Ext.define('Ext.grid.filters.filter.SingleFilter', {
         me.filter = filter;
     },
 
-    activate: function (showingMenu) {
+    activate: function(showingMenu) {
         if (showingMenu) {
             this.activateMenu();
-        } else {
+        }
+        else {
             this.addStoreFilter(this.filter);
         }
     },
 
-    deactivate: function () {
+    deactivate: function() {
         this.removeStoreFilter(this.filter);
     },
 
-    getValue: function (field) {
+    getValue: function(field) {
         return field.getValue();
     },
 
-    onFilterRemove: function () {
-        // Filters can be removed at any time, even before a column filter's menu has been created (i.e.,
-        // store.clearFilter()).
+    onFilterRemove: function() {
+        // Filters can be removed at any time, even before a column filter's menu
+        // has been created (i.e., store.clearFilter()).
         if (!this.menu || this.active) {
             this.active = false;
         }

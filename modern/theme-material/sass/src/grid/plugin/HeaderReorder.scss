@@ -1,0 +1,7 @@
+.#{$prefix}header-drop-indicator-before,
+.#{$prefix}header-drop-indicator-after {
+    &:before, &:after {
+        /* Roboto uses ligatures.  Android and IE seem to need this */
+        font-feature-settings: 'liga';
+    }
+}

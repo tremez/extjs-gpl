@@ -74,7 +74,7 @@ Ext.define('Neptune.view.combination.ToolbarsInTabs', {
                 {
                     title: 'Active Tab',
                     html: Neptune.DummyText.text,
-                    tbar: [ {xtype: 'complexButtonGroup' } ],
+                    tbar: [ { xtype: 'complexButtonGroup' } ],
                     bbar: { xtype: 'basicToolbar' },
                     lbar: { xtype: 'basicToolbar' },
                     rbar: { xtype: 'basicToolbar' }
@@ -91,7 +91,7 @@ Ext.define('Neptune.view.combination.ToolbarsInTabs', {
                 {
                     title: 'Active Tab',
                     html: Neptune.DummyText.text,
-                    tbar: [ {xtype: 'complexButtonGroup' } ],
+                    tbar: [ { xtype: 'complexButtonGroup' } ],
                     bbar: { xtype: 'basicToolbar' },
                     lbar: { xtype: 'basicToolbar' },
                     rbar: { xtype: 'basicToolbar' }

@@ -8,18 +8,18 @@ Ext.define('KitchenSink.view.d3.heatmap.Pivot', {
         'Ext.pivot.d3.HeatMap'
     ],
 
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     otherContent: [
         {
             type: 'Controller',
             path: 'classic/samples/view/d3/heatmap/PivotController.js'
-        },{
+        }, {
             type: 'Store',
-            path: 'classic/samples/store/SalesPerEmployee.js'
+            path: 'app/store/SalesPerEmployee.js'
         }
     ],
-    // </example>
+    //</example>
 
     width: 960,
     height: 600,

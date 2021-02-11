@@ -5,5 +5,5 @@ Ext.define("Ext.locale.es.window.MessageBox", {
         cancel: "Cancelar",
         yes: "Sí",
         no: "No"
-    }    
+    }
 });

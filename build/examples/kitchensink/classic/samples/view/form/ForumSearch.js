@@ -9,14 +9,33 @@
 Ext.define('KitchenSink.view.form.ForumSearch', {
     extend: 'Ext.panel.Panel',
     xtype: 'form-forumsearch',
-    
+
     //<example>
     exampleTitle: 'Forum Search',
+
+    profiles: {
+        classic: {
+            hideTrigger: true,
+            bodyPadding: 10
+        },
+        neptune: {
+            hideTrigger: true,
+            bodyPadding: 10
+        },
+        graphite: {
+            hideTrigger: true,
+            bodyPadding: 10
+        },
+        'classic-material': {
+            hideTrigger: false,
+            bodyPadding: '8 16'
+        }
+    },
     //</example>
-    
+
     title: 'Search the Ext Forums',
     width: 600,
-    bodyPadding: 10,
+    bodyPadding: '${bodyPadding}',
     layout: 'anchor',
 
     height: 300,
@@ -30,20 +49,21 @@ Ext.define('KitchenSink.view.form.ForumSearch', {
         displayField: 'title',
         typeAhead: false,
         hideLabel: true,
-        hideTrigger:true,
+        hideTrigger: '${hideTrigger}',
+        cls: 'forum-searchIcon',
         anchor: '100%',
 
         listConfig: {
             loadingText: 'Searching...',
             emptyText: 'No matching posts found.',
-            
+
             itemSelector: '.search-item',
 
             // Custom rendering template for each item
             itemTpl: [
                 '<a class="search-item" href="http://www.sencha.com/forum/showthread.php?t={topicId}&p={id}">',
-                    '<h3><span>{[Ext.Date.format(values.lastPost, "M j, Y")]}<br />by {author}</span>{title}</h3>',
-                    '{excerpt}',
+                '<h3><span>{[Ext.Date.format(values.lastPost, "M j, Y")]}<br />by {author}</span>{title}</h3>',
+                '{excerpt}',
                 '</a>'
             ]
         }

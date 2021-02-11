@@ -67,7 +67,8 @@ Ext.define('Ext.event.gesture.EdgeSwipe', {
         if (me.isVertical && me.isHorizontal) {
             if (absDeltaY > absDeltaX) {
                 me.isHorizontal = false;
-            } else {
+            }
+            else {
                 me.isVertical = false;
             }
         }
@@ -84,10 +85,12 @@ Ext.define('Ext.event.gesture.EdgeSwipe', {
 
         direction = me.direction || (me.direction = direction);
 
-        // Invert the distance if we are going up or left so the distance is a positive number FROM the side
+        // Invert the distance if we are going up or left so the distance is a positive number
+        // FROM the side
         if (direction === 'up') {
             distance = deltaY * -1;
-        } else if (direction === 'left') {
+        }
+        else if (direction === 'left') {
             distance = deltaX * -1;
         }
 
@@ -101,8 +104,7 @@ Ext.define('Ext.event.gesture.EdgeSwipe', {
             if ((direction === 'right' && me.startX > minDistance) ||
                 (direction === 'down' && me.startY > minDistance) ||
                 (direction === 'left' && (elementWidth - me.startX) > minDistance) ||
-                (direction === 'up' && (elementHeight - me.startY) > minDistance))
-            {
+                (direction === 'up' && (elementHeight - me.startY) > minDistance)) {
                 return me.cancel(e);
             }
 
@@ -115,7 +117,8 @@ Ext.define('Ext.event.gesture.EdgeSwipe', {
                 distance: distance,
                 duration: duration
             });
-        } else {
+        }
+        else {
             me.fire('edgeswipe', e, {
                 touch: touch,
                 direction: direction,
@@ -159,5 +162,6 @@ Ext.define('Ext.event.gesture.EdgeSwipe', {
     }
 }, function(EdgeSwipe) {
     var gestures = Ext.manifest.gestures;
+
     EdgeSwipe.instance = new EdgeSwipe(gestures && gestures.edgeSwipe);
 });

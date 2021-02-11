@@ -12,14 +12,40 @@ Ext.define('KitchenSink.view.enterprise.SoapGrid', {
     otherContent: [{
         type: 'Model',
         path: 'classic/samples/model/SoapBook.js'
-    },{
+    }, {
         type: 'Data',
         path: 'data/enterprise/soap.xml'
     }],
     //</example>
-    width: 600,
+    width: '${width}',
     height: 350,
 
+    profiles: {
+        classic: {
+            width: 600,
+            columnOneWidth: 180,
+            columnTwoWidth: 115,
+            columnThreeWidth: 125
+        },
+        neptune: {
+            width: 600,
+            columnOneWidth: 180,
+            columnTwoWidth: 115,
+            columnThreeWidth: 125
+        },
+        graphite: {
+            width: 870,
+            columnOneWidth: 250,
+            columnTwoWidth: 270,
+            columnThreeWidth: 165
+        },
+        'classic-material': {
+            width: 870,
+            columnOneWidth: 250,
+            columnTwoWidth: 270,
+            columnThreeWidth: 165
+        }
+    },
     frame: true,
     title: 'Soap Grid Example',
     store: {
@@ -48,9 +74,9 @@ Ext.define('KitchenSink.view.enterprise.SoapGrid', {
         }
     },
     columns: [
-        {text: "Author", flex: 1, dataIndex: 'Author'},
-        {text: "Title", width: 180, dataIndex: 'Title'},
-        {text: "Manufacturer", width: 115, dataIndex: 'Manufacturer'},
-        {text: "Product Group", width: 125, dataIndex: 'ProductGroup'}
+        { text: "Author", flex: 1, dataIndex: 'Author' },
+        { text: "Title", width: '${columnOneWidth}', dataIndex: 'Title' },
+        { text: "Manufacturer", width: '${columnTwoWidth}', dataIndex: 'Manufacturer' },
+        { text: "Product Group", width: '${columnThreeWidth}', dataIndex: 'ProductGroup' }
     ]
 });

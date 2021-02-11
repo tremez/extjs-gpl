@@ -11,19 +11,22 @@ Ext.define('Neptune.view.grid.widget.Grouped', {
 
     features: [{
         ftype: 'grouping',
-        groupHeaderTpl: '{columnName}: {name} ({rows.length} Item{[values.rows.length > 1 ? "s" : ""]})',
+        groupHeaderTpl: '{columnName}: {name} ({rows.length} ' +
+                        'Item{[values.rows.length > 1 ? "s" : ""]})',
         hideGroupedHeader: true,
         startCollapsed: true,
         id: 'restaurantGrouping'
     }],
 
     initComponent: function() {
+        var store, toggleMenu;
+
         this.store = new Neptune.store.Restaurants();
         this.columns = [{
             text: 'Name',
             flex: 1,
             dataIndex: 'name'
-        },{
+        }, {
             text: 'Cuisine',
             flex: 1,
             dataIndex: 'cuisine'
@@ -31,8 +34,8 @@ Ext.define('Neptune.view.grid.widget.Grouped', {
 
         this.callParent();
 
-        var store = this.getStore(),
-            toggleMenu = [];
+        store = this.getStore();
+        toggleMenu = [];
 
         this.groupingFeature = this.view.getFeature('restaurantGrouping');
 
@@ -58,7 +61,7 @@ Ext.define('Neptune.view.grid.widget.Grouped', {
             ui: 'footer',
             dock: 'bottom',
             items: ['->', {
-                text:'Clear Grouping',
+                text: 'Clear Grouping',
                 iconCls: 'icon-clear-group',
                 scope: this,
                 handler: this.onClearGroupingClick
@@ -73,15 +76,17 @@ Ext.define('Neptune.view.grid.widget.Grouped', {
         });
     },
 
-    onClearGroupingClick: function(){
+    onClearGroupingClick: function() {
         this.groupingFeature.disable();
     },
 
     toggleGroup: function(item) {
         var groupName = item.text;
+
         if (item.checked) {
             this.groupingFeature.expand(groupName, true);
-        } else {
+        }
+        else {
             this.groupingFeature.collapse(groupName, true);
         }
     },
@@ -89,7 +94,8 @@ Ext.define('Neptune.view.grid.widget.Grouped', {
     onGroupChange: function(store, grouper) {
         var grouped = store.isGrouped(),
             groupBy = grouper ? grouper.getProperty() : '',
-            toggleMenuItems, len, i = 0;
+            toggleMenuItems, len,
+            i = 0;
 
         // Clear grouping button only valid if the store is grouped
         this.down('[text=Clear Grouping]').setDisabled(!grouped);
@@ -97,13 +103,16 @@ Ext.define('Neptune.view.grid.widget.Grouped', {
         // Sync state of group toggle checkboxes
         if (grouped && groupBy === 'cuisine') {
             toggleMenuItems = this.down('button[text=Toggle groups...]').menu.items.items;
+
             for (len = toggleMenuItems.length; i < len; i++) {
                 toggleMenuItems[i].setChecked(
                     this.groupingFeature.isExpanded(toggleMenuItems[i].text)
                 );
             }
+
             this.down('[text=Toggle groups...]').enable();
-        } else {
+        }
+        else {
             this.down('[text=Toggle groups...]').disable();
         }
     },

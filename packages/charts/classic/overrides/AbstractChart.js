@@ -4,7 +4,7 @@
 Ext.define('Ext.chart.overrides.AbstractChart', {
     override: 'Ext.chart.AbstractChart',
 
-    updateLegend: function (legend, oldLegend) {
+    updateLegend: function(legend, oldLegend) {
         this.callParent([legend, oldLegend]);
 
         if (legend && legend.isDomLegend) {
@@ -16,20 +16,25 @@ Ext.define('Ext.chart.overrides.AbstractChart', {
         if (this.isVisible(true)) {
             return this.callParent();
         }
+
         this.cancelChartLayout();
+
         return false;
     },
 
     afterComponentLayout: function(width, height, oldWidth, oldHeight) {
         this.callParent([width, height, oldWidth, oldHeight]);
-        this.scheduleLayout();
+
+        if (!this.hasFirstLayout) {
+            this.scheduleLayout();
+        }
     },
 
     allowSchedule: function() {
         return this.rendered;
     },
 
-    doDestroy: function () {
+    doDestroy: function() {
         this.destroyChart();
         this.callParent();
     }

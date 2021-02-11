@@ -1,9 +1,10 @@
 /**
- * A simple Component for displaying an Adobe Flash SWF movie. The movie will be sized and can participate
- * in layout like any other Component.
+ * A simple Component for displaying an Adobe Flash SWF movie. The movie will be sized and can
+ * participate in layout like any other Component.
  *
- * This component requires the third-party SWFObject library version 2.2 or above. It is not included within
- * the ExtJS distribution, so you will have to include it into your page manually in order to use this component.
+ * This component requires the third-party SWFObject library version 2.2 or above. It is not
+ * included within the ExtJS distribution, so you will have to include it into your page manually
+ * in order to use this component.
  * The SWFObject library can be downloaded from the [SWFObject project page](http://code.google.com/p/swfobject)
  * and then simply import it into the head of your HTML document:
  *
@@ -11,9 +12,9 @@
  *
  * ## Configuration
  *
- * This component allows several options for configuring how the target Flash movie is embedded. The most
- * important is the required {@link #url} which points to the location of the Flash movie to load. Other
- * configurations include:
+ * This component allows several options for configuring how the target Flash movie is embedded.
+ * The most important is the required {@link #url} which points to the location of the Flash movie
+ * to load. Other configurations include:
  *
  * - {@link #backgroundColor}
  * - {@link #wmode}
@@ -41,8 +42,9 @@
  * ## Express Install
  *
  * Adobe provides a tool called [Express Install](http://www.adobe.com/devnet/flashplayer/articles/express_install.html)
- * that offers users an easy way to upgrade their Flash player. If you wish to make use of this, you should set
- * the static EXPRESS\_INSTALL\_URL property to the location of your Express Install SWF file:
+ * that offers users an easy way to upgrade their Flash player. If you wish to make use of this,
+ * you should set the static EXPRESS_INSTALL_URL property to the location of your Express Install
+ * SWF file:
  *
  *     Ext.flash.Component.EXPRESS_INSTALL_URL = 'path/to/local/expressInstall.swf';
  */
@@ -55,7 +57,7 @@ Ext.define('Ext.flash.Component', {
      * @cfg {String} [flashVersion="9.0.115"]
      * Indicates the version the flash content was published for.
      */
-    flashVersion : '9.0.115',
+    flashVersion: '9.0.115',
 
     /**
      * @cfg {String} [backgroundColor="#ffffff"]
@@ -66,8 +68,8 @@ Ext.define('Ext.flash.Component', {
     /**
      * @cfg {String} [wmode="opaque"]
      * The wmode of the flash object. This can be used to control layering.
-     * Set to 'transparent' to ignore the {@link #backgroundColor} and make the background of the Flash
-     * movie transparent.
+     * Set to 'transparent' to ignore the {@link #backgroundColor} and make the background
+     * of the Flash movie transparent.
      */
     wmode: 'opaque',
 
@@ -78,8 +80,8 @@ Ext.define('Ext.flash.Component', {
 
     /**
      * @cfg {Object} flashParams
-     * A set of key value pairs to be passed to the flash object as parameters. Possible parameters can be found here:
-     * http://kb2.adobe.com/cps/127/tn_12701.html
+     * A set of key value pairs to be passed to the flash object as parameters. Possible parameters
+     * can be found here: http://kb2.adobe.com/cps/127/tn_12701.html
      */
 
     /**
@@ -121,7 +123,8 @@ Ext.define('Ext.flash.Component', {
      * populated after the component is rendered and the SWF has been successfully embedded.
      */
 
-    // Have to create a placeholder div with the swfId, which SWFObject will replace with the object/embed element.
+    // Have to create a placeholder div with the swfId, which SWFObject will replace with the
+    // object/embed element.
     renderTpl: ['<div id="{swfId}" role="application"></div>'],
 
     /**
@@ -137,21 +140,24 @@ Ext.define('Ext.flash.Component', {
      */
 
     initComponent: function() {
-        // <debug>
+        /* global swfobject */
+        //<debug>
         if (!('swfobject' in window)) {
-            Ext.raise('The SWFObject library is not loaded. Ext.flash.Component requires SWFObject version 2.2 or later: http://code.google.com/p/swfobject/');
+            Ext.raise('The SWFObject library is not loaded. Ext.flash.Component requires ' +
+                      'SWFObject version 2.2 or later: http://code.google.com/p/swfobject/');
         }
+
         if (!this.url) {
             Ext.raise('The "url" config is required for Ext.flash.Component');
         }
-        // </debug>
+        //</debug>
 
         this.callParent();
     },
-    
-    beforeRender: function(){
+
+    beforeRender: function() {
         this.callParent();
-        
+
         Ext.applyIf(this.renderData, {
             swfId: this.getSwfId()
         });
@@ -159,7 +165,7 @@ Ext.define('Ext.flash.Component', {
 
     afterRender: function() {
         var me = this,
-            flashParams = Ext.apply({}, me.flashParams), 
+            flashParams = Ext.apply({}, me.flashParams),
             flashVars = Ext.apply({}, me.flashVars);
 
         me.callParent();
@@ -174,7 +180,7 @@ Ext.define('Ext.flash.Component', {
             allowedDomain: document.location.hostname
         }, flashVars);
 
-        new swfobject.embedSWF( // jshint ignore:line
+        new swfobject.embedSWF(
             me.url,
             me.getSwfId(),
             me.swfWidth,
@@ -195,11 +201,13 @@ Ext.define('Ext.flash.Component', {
      */
     swfCallback: function(e) {
         var me = this;
+
         if (e.success) {
             me.swf = Ext.get(e.ref);
             me.onSuccess();
             me.fireEvent('success', me);
-        } else {
+        }
+        else {
             me.onFailure();
             me.fireEvent('failure', me);
         }
@@ -223,12 +231,12 @@ Ext.define('Ext.flash.Component', {
     doDestroy: function() {
         var me = this,
             swf = me.swf;
-        
+
         if (swf) {
-            swfobject.removeSWF(me.getSwfId()); // jshint ignore:line
+            swfobject.removeSWF(me.getSwfId());
             me.swf = Ext.destroy(swf);
         }
-        
+
         me.callParent();
     },
 
@@ -239,6 +247,6 @@ Ext.define('Ext.flash.Component', {
          * See [http://get.adobe.com/flashplayer/](http://get.adobe.com/flashplayer/) for details.
          * @static
          */
-        EXPRESS_INSTALL_URL: 'http:/' + '/swfobject.googlecode.com/svn/trunk/swfobject/expressInstall.swf'
+        EXPRESS_INSTALL_URL: 'http://swfobject.googlecode.com/svn/trunk/swfobject/expressInstall.swf'
     }
 });

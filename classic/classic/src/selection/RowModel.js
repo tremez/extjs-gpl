@@ -46,7 +46,6 @@ Ext.define('Ext.selection.RowModel', {
         'Ext.grid.CellContext'
     ],
 
-
     /**
      * @cfg {Boolean} enableKeyNav
      *
@@ -91,7 +90,8 @@ Ext.define('Ext.selection.RowModel', {
     isRowModel: true,
 
     /**
-     * @inheritdoc
+     * @cfg deselectOnContainerClick
+     * @inheritdoc Ext.mixin.Selectable#cfg!deselectOnContainerClick
      */
     deselectOnContainerClick: false,
 
@@ -103,6 +103,7 @@ Ext.define('Ext.selection.RowModel', {
         if (view && me.isSelected(record)) {
             index = view.indexOf(record);
             view.onRowSelect(index);
+
             if (record === me.lastFocused) {
                 view.onRowFocus(index, true);
             }
@@ -112,27 +113,29 @@ Ext.define('Ext.selection.RowModel', {
     // Allow the GridView to update the UI by
     // adding/removing a CSS class from the row.
     onSelectChange: function(record, isSelected, suppressEvent, commitFn) {
-        var me      = this,
-            views   = me.views || [me.view],
+        var me = this,
+            views = me.views || [me.view],
             viewsLn = views.length,
             recordIndex = me.store.indexOf(record),
             eventName = isSelected ? 'select' : 'deselect',
             i, view;
 
-        if ((suppressEvent || me.fireEvent('before' + eventName, me, record, recordIndex)) !== false &&
+        if ((suppressEvent ||
+            me.fireEvent('before' + eventName, me, record, recordIndex)) !== false &&
                 commitFn() !== false) {
 
             // Selection models can handle more than one view
             for (i = 0; i < viewsLn; i++) {
                 view = views[i];
-                recordIndex  = view.indexOf(record);
+                recordIndex = view.indexOf(record);
 
                 // The record might not be rendered due to either buffered rendering,
                 // or removal/hiding of all columns (eg empty locked side).
                 if (view.indexOf(record) !== -1) {
                     if (isSelected) {
                         view.onRowSelect(recordIndex, suppressEvent);
-                    } else {
+                    }
+                    else {
                         view.onRowDeselect(recordIndex, suppressEvent);
                     }
                 }
@@ -145,20 +148,27 @@ Ext.define('Ext.selection.RowModel', {
     },
 
     /**
-     * Returns position of the first selected cell in the selection in the format {row: row, column: column}
+     * Returns position of the first selected cell in the selection in the format
+     * {row: row, column: column}
      * @deprecated 5.0.1 Use the {@link Ext.view.Table#getNavigationModel NavigationModel} instead.
      */
     getCurrentPosition: function() {
         var firstSelection = this.selected.getAt(0);
+
         if (firstSelection) {
-            return new Ext.grid.CellContext(this.view).setPosition(this.store.indexOf(firstSelection), 0);
+            return new Ext.grid.CellContext(this.view).setPosition(
+                this.store.indexOf(firstSelection), 0
+            );
         }
     },
 
-    selectByPosition: function (position, keepExisting) {
+    selectByPosition: function(position, keepExisting) {
         if (!position.isCellContext) {
-            position = new Ext.grid.CellContext(this.view).setPosition(position.row, position.column);
+            position = new Ext.grid.CellContext(this.view).setPosition(
+                position.row, position.column
+            );
         }
+
         this.select(position.record, keepExisting);
     },
 
@@ -178,10 +188,12 @@ Ext.define('Ext.selection.RowModel', {
 
         if (index === store.getCount() || index === 0) {
             success = false;
-        } else {
+        }
+        else {
             me.doSelect(index, keepExisting, suppressEvent);
             success = true;
         }
+
         return success;
     },
 
@@ -200,10 +212,12 @@ Ext.define('Ext.selection.RowModel', {
 
         if (index < 0) {
             success = false;
-        } else {
+        }
+        else {
             me.doSelect(index, keepExisting, suppressEvent);
             success = true;
         }
+
         return success;
     },
 

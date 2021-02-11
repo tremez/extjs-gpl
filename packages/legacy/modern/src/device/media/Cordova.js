@@ -24,6 +24,7 @@ Ext.define('Ext.device.media.Cordova', {
 
     play: function() {
         var media = this.getMedia();
+
         if (media) {
             media.play();
         }
@@ -31,6 +32,7 @@ Ext.define('Ext.device.media.Cordova', {
 
     pause: function() {
         var media = this.getMedia();
+
         if (media) {
             media.pause();
         }
@@ -38,6 +40,7 @@ Ext.define('Ext.device.media.Cordova', {
 
     stop: function() {
         var media = this.getMedia();
+
         if (media) {
             media.stop();
         }
@@ -45,6 +48,7 @@ Ext.define('Ext.device.media.Cordova', {
 
     release: function() {
         var media = this.getMedia();
+
         if (media) {
             media.release();
         }
@@ -52,6 +56,7 @@ Ext.define('Ext.device.media.Cordova', {
 
     seekTo: function(miliseconds) {
         var media = this.getMedia();
+
         if (media) {
             media.seekTo(miliseconds);
         }
@@ -59,6 +64,7 @@ Ext.define('Ext.device.media.Cordova', {
 
     getDuration: function() {
         var media = this.getMedia();
+
         if (media) {
             media.getDuration();
         }
@@ -76,6 +82,7 @@ Ext.define('Ext.device.media.Cordova', {
 
     stopRecord: function() {
         var media = this.getMedia();
+
         if (media) {
             media.stopRecord();
         }

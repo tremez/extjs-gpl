@@ -1,12 +1,8 @@
-.stretch-html .x-innerhtml {
-    height: 100%;
-}
-
 .proxy-source {
     width: 120px;
     height: 120px;
     padding: 5px;
-    position: absolute;
+    position: relative;
     text-align: center;
     color: #FFF;
     @include border-radius(5px);
@@ -15,7 +11,7 @@
 }
 
 .proxy-none {
-    background-color: #FF5722;  
+    background-color: #FF5722;
     left: 10px;
     top: 10px;
 }
@@ -23,13 +19,13 @@
 .proxy-original {
     background-color: #43A047;
     left: 10px;
-    top: 140px;
+    top: 20px;
 }
 
 .proxy-placeholder {
     background-color: #4071CA;
-    left: 10px; 
-    top: 270px;
+    left: 10px;
+    top: 30px;
 }
 
 .proxy-drag-custom {

@@ -5,6 +5,7 @@ Ext.define('KitchenSink.view.CodePreview', {
     ],
 
     xtype: 'codePreview',
+    bodyCls: 'content-panel-body',
 
     // The code must be read in LTR
     bodyPadding: 5,

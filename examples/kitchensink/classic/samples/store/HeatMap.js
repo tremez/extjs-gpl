@@ -3,7 +3,7 @@ Ext.define('KitchenSink.store.HeatMap', {
     alias: 'store.heatmap',
 
     fields: [
-        {name: 'date', type: 'date', dateFormat: 'Y-m-d'},
+        { name: 'date', type: 'date', dateFormat: 'Y-m-d' },
         'bucket',
         'count'
     ],

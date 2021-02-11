@@ -26,16 +26,16 @@
  */
 Ext.define('Ext.direct.PollingProvider', {
     extend: 'Ext.direct.JsonProvider',
-    alias:  'direct.pollingprovider',
-    
+    alias: 'direct.pollingprovider',
+
     requires: [
         'Ext.Ajax',
         'Ext.util.TaskRunner',
         'Ext.direct.ExceptionEvent'
     ],
-    
+
     type: 'polling',
-    
+
     /**
      * @cfg {Number} [interval=3000]
      * How often to poll the server-side in milliseconds. Defaults to every 3 seconds.
@@ -48,16 +48,15 @@ Ext.define('Ext.direct.PollingProvider', {
      * polling request. Note that if baseParams are set and {@link #url} parameter
      * is an URL string, poll requests will use POST method instead of default GET.
      */
-    
+
     /**
      * @cfg {String/Function} url
      * The url which the PollingProvider should contact with each request. This can also be
      * an imported Ext Direct method which will be passed baseParams as named arguments.
      *
-     * *Note* that using Function `url` is deprecated, use {@link #pollFn} instead.
-     * @deprecated 5.1.0
+     * @deprecated 5.1.0 Using Function `url` is deprecated, please use {@link #pollFn} instead
      */
-    
+
     /**
      * @cfg {String/Function} pollFn
      *
@@ -68,13 +67,13 @@ Ext.define('Ext.direct.PollingProvider', {
      * The method should accept named arguments and will be passed {@link #baseParams}
      * if set.
      */
-    
+
     /**
      * @cfg {Number} [timeout]
      *
      * The timeout to use for each request.
      */
-    
+
     /**
      * @event beforepoll
      * @preventable
@@ -89,41 +88,40 @@ Ext.define('Ext.direct.PollingProvider', {
      *
      * @param {Ext.direct.PollingProvider} this
      */
-    
+
     constructor: function(config) {
         var me = this;
-        
+
         me.callParent([config]);
-        
+
         me.pollTask = Ext.TaskManager.newTask({
             run: me.runPoll,
             interval: me.interval,
             scope: me
         });
     },
-    
+
     destroy: function() {
-        this.pollTask = null;
-        
+        this.pollTask.stop(true);
         this.callParent();
     },
-    
+
     doConnect: function() {
         var me = this,
             url = me.url,
             pollFn = me.pollFn;
-        
+
         // It is important that pollFn resolution happens at the time when
         // Provider is first connected, and not at construction time. If
         // pollFn is configured as a string, the API stub may not exist yet
         // when PollingProvider is constructed.
         if (pollFn && Ext.isString(pollFn)) {
             //<debug>
-            var fnName = pollFn;
+            var fnName = pollFn; // eslint-disable-line vars-on-top, one-var
             //</debug>
-            
+
             me.pollFn = pollFn = Ext.direct.Manager.parseMethod(pollFn);
-            
+
             //<debug>
             if (!Ext.isFunction(pollFn)) {
                 Ext.raise("Cannot resolve Ext Direct API method " + fnName +
@@ -135,14 +133,14 @@ Ext.define('Ext.direct.PollingProvider', {
             //<debug>
             Ext.log.warn('Using a function for url is deprecated, use pollFn instead.');
             //</debug>
-            
+
             me.pollFn = pollFn = url;
             me.url = url = null;
         }
-        
+
         if (url || pollFn) {
             me.setInterval(me.interval);
-            
+
             me.pollTask.start();
         }
     },
@@ -152,30 +150,30 @@ Ext.define('Ext.direct.PollingProvider', {
             this.pollTask.stop();
         }
     },
-    
+
     getInterval: function() {
         return this.pollTask && this.pollTask.interval;
     },
-    
+
     setInterval: function(interval) {
         var me = this,
             pollTask = me.pollTask;
-        
+
         //<debug>
         if (interval < 100) {
             Ext.raise("Attempting to configure PollProvider " + me.id +
                             " with interval that is less than 100ms.");
-                            
+
         }
         //</debug>
-        
+
         me.interval = pollTask.interval = interval;
-        
+
         if (me.isConnected()) {
             pollTask.restart(interval);
         }
     },
-    
+
     /**
      * @private
      */
@@ -185,7 +183,7 @@ Ext.define('Ext.direct.PollingProvider', {
             pollFn = me.pollFn,
             baseParams = me.baseParams,
             args, request;
-        
+
         if (me.fireEvent('beforepoll', me) !== false) {
             if (pollFn) {
                 args = pollFn.directCfg.method.getArgs({
@@ -193,7 +191,7 @@ Ext.define('Ext.direct.PollingProvider', {
                     callback: me.onPollFn,
                     scope: me
                 });
-                
+
                 pollFn.apply(window, args);
             }
             else {
@@ -204,14 +202,14 @@ Ext.define('Ext.direct.PollingProvider', {
                     params: baseParams,
                     headers: me.getHeaders()
                 };
-                
+
                 if (me.timeout != null) {
                     request.timeout = me.timeout;
                 }
-                
+
                 me.sendAjaxRequest(request);
             }
-            
+
             me.fireEvent('poll', me);
         }
     },
@@ -220,17 +218,17 @@ Ext.define('Ext.direct.PollingProvider', {
      * @private
      */
     onData: function(opt, success, response) {
-        var me = this, 
+        var me = this,
             i, len, events, event;
-        
+
         if (success) {
             events = me.createEvents(response);
-            
+
             for (i = 0, len = events.length; i < len; ++i) {
                 event = events[i];
-                
+
                 me.fireEvent('data', me, event);
-                
+
                 if (!event.status) {
                     me.fireEvent('exception', me, event);
                 }
@@ -243,21 +241,21 @@ Ext.define('Ext.direct.PollingProvider', {
                 message: 'Unable to connect to the server.',
                 xhr: response
             });
-            
+
             me.fireEvent('data', me, event);
             me.fireEvent('exception', me, event);
         }
-        
+
         me.callParent([opt, success, response]);
     },
-    
+
     /**
      * @private
      */
     onPollFn: function(result, event, success, options) {
         this.onData(null, success, { responseText: result });
     },
-    
+
     inheritableStatics: {
         /**
          * @private

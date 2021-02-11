@@ -1,14 +1,39 @@
-.x-sheet,
-.x-picker,
-.x-sheet-action {
-    padding: $sheet-padding;
-    background-color: $sheet-background-color;
-    border-top: 1px solid $sheet-border-color;
+@include panel-ui(
+    $xtype: sheet,
+    $border-color: $sheet-border-color,
+    $body-border-color: $sheet-border-color,
+    $body-background-color: $sheet-background-color,
+    $body-padding: $sheet-padding,
+    $manage-borders: false
+);
+
+.#{$prefix}sheet {
+    border-color: $sheet-border-color;
+    border-style: $sheet-border-style;
+
+    @if $sheet-border-width == 0 {
+        border-width: 0;
+    } @else {
+        &.#{$prefix}left {
+            border-width: 0 right($sheet-border-width) 0 0;
+        }
+
+        &.#{$prefix}right {
+            border-width: 0 0 0 left($sheet-border-width);
+        }
+
+        &.#{$prefix}top {
+            border-width: 0 0 bottom($sheet-border-width);
+        }
+
+        &.#{$prefix}bottom {
+            border-width: top($sheet-border-width) 0 0;
+        }
+    }
 }
 
-.x-sheet-inner,
-.x-sheet-action-inner {
-    > .x-button {
+.#{$prefix}sheet-body-el.#{$prefix}vertical {
+    > .#{$prefix}button {
         margin-bottom: $sheet-button-spacing;
 
         &:last-child {
@@ -16,3 +41,4 @@
         }
     }
 }
+

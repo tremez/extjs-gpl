@@ -82,23 +82,8 @@ img {
     @include opacity(0);
 }
 
-.#{$prefix}hidden-display {
-    display: none !important;
-}
-
-.#{$prefix}hidden-visibility {
-    visibility: hidden !important;
-}
-
-.#{$prefix}hidden,
-.#{$prefix}hidden-offsets {
-    // to deal with inline elements that can't be position:absolute
-    display: block !important;
-    // ensure the browser disallows tabbing into this element
-    visibility: hidden !important;
-    position: absolute !important;
-    // hide using top since left  can trigger a horizontal scrollbar in rtl mode.
-    top: -10000px !important;
+.#{$prefix}hidden {
+    @extend .#{$prefix}hidden-offsets; // on core/sass/src/dom/Element.scss
 }
 
 // A hide method which is still accessible to screen readers
@@ -118,10 +103,6 @@ img {
         position: absolute;
         overflow: hidden;
     }
-}
-
-.#{$prefix}unselectable {
-    @include no-select;
 }
 
 .#{$prefix}selectable {

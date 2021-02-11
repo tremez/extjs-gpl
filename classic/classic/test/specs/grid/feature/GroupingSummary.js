@@ -1,12 +1,14 @@
-describe('Ext.grid.feature.GroupingSummary', function () {
+topSuite("Ext.grid.feature.GroupingSummary", ['Ext.grid.Panel'], function() {
     var data, grid, store, groupingSummary, columns, params, selector,
         synchronousLoad = true,
         proxyStoreLoad = Ext.data.ProxyStore.prototype.load,
         loadStore = function() {
             proxyStoreLoad.apply(this, arguments);
+
             if (synchronousLoad) {
                 this.flushLoad.apply(this, arguments);
             }
+
             return this;
         };
 
@@ -16,17 +18,17 @@ describe('Ext.grid.feature.GroupingSummary', function () {
             subject: 'Math',
             mark: 84,
             allowance: 15.50
-        },{
+        }, {
             student: 'Student 1',
             subject: 'Science',
             mark: 72,
             allowance: 10.75
-        },{
+        }, {
             student: 'Student 2',
             subject: 'Math',
             mark: 96,
             allowance: 100.75
-        },{
+        }, {
             student: 'Student 2',
             subject: 'Science',
             mark: 68,
@@ -70,8 +72,9 @@ describe('Ext.grid.feature.GroupingSummary', function () {
             dataIndex: 'student',
             text: 'Name',
             summaryType: 'count',
-            summaryRenderer: function (value, summaryData, field, metaData) {
+            summaryRenderer: function(value, summaryData, field, metaData) {
                 params = arguments;
+
                 return Ext.String.format('{0} student{1}', value, value !== 1 ? 's' : '');
             }
         }, {
@@ -81,7 +84,7 @@ describe('Ext.grid.feature.GroupingSummary', function () {
             summaryType: 'average'
         }, {
             itemId: 'noDataIndexColumn',
-            summaryType: function (records, values) {
+            summaryType: function(records, values) {
                 var i = 0,
                     length = records.length,
                     total = 0,
@@ -91,9 +94,10 @@ describe('Ext.grid.feature.GroupingSummary', function () {
                     record = records[i];
                     total += record.get('allowance');
                 }
+
                 return total;
             },
-            summaryRenderer: function (value, summaryData, field, metaData) {
+            summaryRenderer: function(value, summaryData, field, metaData) {
                 return Ext.util.Format.usMoney(value || metaData.record.get('allowance'));
             },
             renderer: function(value, metaData, record, rowIdx, colIdx, store, view) {
@@ -141,8 +145,8 @@ describe('Ext.grid.feature.GroupingSummary', function () {
         Ext.data.Model.schema.clear();
     });
 
-    describe('summaryRenderer', function () {
-        it('should be passed the expected function parameters', function () {
+    describe('summaryRenderer', function() {
+        it('should be passed the expected function parameters', function() {
             // Note that we're only capturing the values for the second group.
             createGrid();
 
@@ -162,7 +166,7 @@ describe('Ext.grid.feature.GroupingSummary', function () {
             expect(params[3].tdCls).toBeDefined();
         });
 
-        it('should be able to read the data from the summary record when there is no column.dataIndex', function () {
+        it('should be able to read the data from the summary record when there is no column.dataIndex', function() {
             var node;
 
             createGrid();
@@ -174,7 +178,7 @@ describe('Ext.grid.feature.GroupingSummary', function () {
             expect((node.textContent || node.innerText).replace(/\r\n?|\n/g, '')).toBe('Student 296$100.752 students90$116.25');
         });
 
-        it('should update when group records are removed', function () {
+        it('should update when group records are removed', function() {
             var mathGroup;
 
             createGrid();
@@ -247,18 +251,18 @@ describe('Ext.grid.feature.GroupingSummary', function () {
             store.first().set('mark', 0);
             toggle();
 
-            var row = grid.getView().getEl().select(selector).first(),
-                cell = row.down(grid.down('#markColumn').getCellSelector());
+            var row = grid.getView().getEl().dom.querySelector(selector),
+                cell = row.querySelector(grid.down('#markColumn').getCellSelector());
 
+            var content = cell.querySelector(grid.getView().innerSelector).innerHTML;
 
-            var content = cell.down(grid.getView().innerSelector).dom.innerHTML;
             expect(content).toBe('48');
         });
     });
 
-    describe('when the view is refreshed', function () {
+    describe('when the view is refreshed', function() {
         function expectIt(data) {
-            it('should retain the summary feature row information in the feature cache', function () {
+            it('should retain the summary feature row information in the feature cache', function() {
                 // Get the cached information that the feature is retaining for the Math group.
                 var groupInfo = groupingSummary.getMetaGroup(store.getGroups().getAt(0)),
                     record = groupInfo.aggregateRecord;
@@ -268,17 +272,17 @@ describe('Ext.grid.feature.GroupingSummary', function () {
                 expect(record.get('noDataIndexColumn')).toBe(data.noDataIndexColumn);
             });
 
-            it('should retain the summary feature row information in the view', function () {
+            it('should retain the summary feature row information in the view', function() {
                 var summaryRow = grid.view.body.down('.x-grid-row-summary', true);
 
                 expect((summaryRow.textContent || summaryRow.innerText).replace(/\s/g, '')).toBe(data.view);
             });
         }
 
-        describe('when toggling the enabled/disabled state of the groups', function () {
+        describe('when toggling the enabled/disabled state of the groups', function() {
             // Note that the bug only happens when toggling twice (first to disable, then to enable).
             // See EXTJS-16141.
-            beforeEach(function () {
+            beforeEach(function() {
                 createGrid();
 
                 groupingSummary.disable();
@@ -293,15 +297,15 @@ describe('Ext.grid.feature.GroupingSummary', function () {
             });
         });
 
-        describe('when filtering the store', function () {
+        describe('when filtering the store', function() {
             // See EXTJS-15267.
-            beforeEach(function () {
+            beforeEach(function() {
                 createGrid();
 
-                grid.store.addFilter({property: 'mark', operator: 'eq', value: 84})
+                grid.store.addFilter({ property: 'mark', operator: 'eq', value: 84 });
             });
 
-            describe('adding a filter', function () {
+            describe('adding a filter', function() {
                 expectIt({
                     student: 1,
                     mark: 84,
@@ -310,8 +314,8 @@ describe('Ext.grid.feature.GroupingSummary', function () {
                 });
             });
 
-            describe('clearing the filters', function () {
-                beforeEach(function () {
+            describe('clearing the filters', function() {
+                beforeEach(function() {
                     grid.store.clearFilter();
                 });
 
@@ -325,13 +329,13 @@ describe('Ext.grid.feature.GroupingSummary', function () {
         });
     });
 
-    describe('reconfiguring', function () {
-        beforeEach(function () {
+    describe('reconfiguring', function() {
+        beforeEach(function() {
             createGrid();
         });
 
-        describe('new store', function () {
-            it('should update the summary row', function () {
+        describe('new store', function() {
+            it('should update the summary row', function() {
                 store = new Ext.data.Store({
                     model: 'spec.GroupingSummary',
                     groupField: 'subject',
@@ -340,7 +344,7 @@ describe('Ext.grid.feature.GroupingSummary', function () {
                         subject: 'Math',
                         mark: 84,
                         allowance: 15.50
-                    },{
+                    }, {
                         student: 'Student 2',
                         subject: 'Science',
                         mark: 68,
@@ -360,15 +364,16 @@ describe('Ext.grid.feature.GroupingSummary', function () {
             });
         });
 
-        describe('new columns', function () {
-            it('should update the summary row', function () {
+        describe('new columns', function() {
+            it('should update the summary row', function() {
                 grid.reconfigure(null, [{
                     itemId: 'studentColumn',
                     dataIndex: 'student',
                     text: 'Name',
                     summaryType: 'count',
-                    summaryRenderer: function (value, summaryData, field, metaData) {
+                    summaryRenderer: function(value, summaryData, field, metaData) {
                         params = arguments;
+
                         return Ext.String.format('{0} student{1}', value, value !== 1 ? 's' : '');
                     }
                 }, {
@@ -485,7 +490,7 @@ describe('Ext.grid.feature.GroupingSummary', function () {
         });
     });
 
-    describe('remoteRoot', function () {
+    describe('remoteRoot', function() {
         function completeWithData(data) {
             Ext.Ajax.mockComplete({
                 status: 200,
@@ -493,7 +498,7 @@ describe('Ext.grid.feature.GroupingSummary', function () {
             });
         }
 
-        beforeEach(function () {
+        beforeEach(function() {
             MockAjaxManager.addMethods();
 
             createGrid(null, {
@@ -508,7 +513,7 @@ describe('Ext.grid.feature.GroupingSummary', function () {
                         rootProperty: 'data'
                     }
                 },
-                grouper: {property: 'student'},
+                grouper: { property: 'student' },
                 data: null
             });
 
@@ -529,25 +534,25 @@ describe('Ext.grid.feature.GroupingSummary', function () {
             });
         });
 
-        afterEach(function () {
+        afterEach(function() {
             MockAjaxManager.removeMethods();
         });
 
-        it('should correctly render the data in the view', function () {
+        it('should correctly render the data in the view', function() {
             var rows = grid.view.body.query('.x-grid-row-summary');
 
             expect((rows[0].textContent || rows[0].innerText).replace(/\s/g, '')).toBe('Student1students42$67.00');
             expect((rows[1].textContent || rows[1].innerText).replace(/\s/g, '')).toBe('Student2students99$100.00');
         });
 
-        it('should create a summaryData object for each group', function () {
+        it('should create a summaryData object for each group', function() {
             var summaryData = groupingSummary.summaryData;
 
             expect(summaryData['Student 1']).toBeDefined();
             expect(summaryData['Student 2']).toBeDefined();
         });
 
-        it('should create a metaGroupCache entry for each group', function () {
+        it('should create a metaGroupCache entry for each group', function() {
             var metaGroupCache = groupingSummary.getCache();
 
             expect(metaGroupCache['Student 1']).toBeDefined();
@@ -555,4 +560,3 @@ describe('Ext.grid.feature.GroupingSummary', function () {
         });
     });
 });
-

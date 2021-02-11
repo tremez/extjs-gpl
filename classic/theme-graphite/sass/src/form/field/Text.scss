@@ -1,0 +1,56 @@
+.#{$prefix}form-trigger-wrap-default {
+    background-color: $form-trigger-background-color;
+}
+
+.#{$prefix}form-trigger-wrap-focus {
+    background-color: $form-field-background-color-focus;
+
+    .#{$prefix}form-text-wrap .#{$prefix}form-text-default,
+    .#{$prefix}form-trigger,
+    .#{$prefix}form-spinner-focus {
+        background-color: transparent;
+    }
+    
+    .#{$prefix}form-text-wrap input {
+        background-color: transparent;
+        
+        &::-ms-clear {
+            display: none;
+        }
+    }
+
+    &:hover {
+        // adding overlay on hover for form fields
+        position: relative;
+        @include css-outline(
+            $width: $form-field-focus-over-border-width,
+            $style: $form-field-focus-over-border-style,
+            $color: $form-field-focus-over-border-color,
+            $offset: -($form-field-focus-over-border-width)
+        );
+    }
+}
+
+.#{$prefix}form-trigger-default {
+    &.#{$prefix}form-trigger-over,
+    .#{$prefix}form-spinner-over {
+        background-color: $form-trigger-background-color-over;
+    }
+    
+    .#{$prefix}form-trigger-wrap-focus & {
+        &.#{$prefix}form-trigger-over,
+        .#{$prefix}form-spinner-over {
+            background-color: $form-trigger-background-color-focus-over;
+        }
+    }
+}
+
+.#{$prefix}form-text {
+    @include selection-color($form-text-selection-color);
+    @include placeholder-text-color($form-field-placeholder-color);
+}
+
+.#{$prefix}form-trigger-wrap-invalid {
+    border-width: $form-trigger-invalid-border-width;
+    border-color: $form-trigger-invalid-border-color;
+}

@@ -1,86 +1,150 @@
+/**
+ * @class Ext.dom.Element
+ * @override Ext.dom.Element
+ */
+Ext.define('Ext.overrides.dom.Element', {
+    override: 'Ext.dom.Element',
+    /**
+     * @property  {Number/Boolean} rippleShowTimeout
+     * The amount of time take by ripple to completely shown.
+     * Settings this to `true` defaults to 300ms.
+     */
+    rippleShowTimeout: 300
+});
+
+Ext.define('Ext.theme.material.Widget', {
+    override: 'Ext.Widget',
+    statics: {
+        floatInset: 16 / (window.devicePixelRatio || 1)
+    }
+});
+
+Ext.define('Ext.theme.material.list.Tree', {
+    override: 'Ext.list.Tree',
+    config: {
+        itemRipple: {
+            release: true,
+            delegate: '.' + Ext.baseCSSPrefix + 'treelist-row',
+            color: 'default'
+        }
+    }
+});
+
 Ext.define('Ext.theme.material.Button', {
     override: 'Ext.Button',
     config: {
-        ripple: true
-    },
-    destroy: function() {
-        this.callParent(arguments);
-        this.destroyRipple();
-    },
-    updateHidden: function(hidden) {
-        this.callParent(arguments);
-        if (hidden) {
-            this.removeRippleEffect();
+        ripple: {
+            delegate: '.' + Ext.baseCSSPrefix + 'inner-el'
         }
     },
-    onPress: function(e) {
-        if (!this.getDisabled()) {
-            var shouldRipple = this.getRipple();
-            if (shouldRipple) {
-                var color = window.getComputedStyle(this.element.dom).color,
-                    offset = this.element.getXY(),
-                    elementWidth = this.element.getWidth(),
-                    elementHeight = this.element.getHeight(),
-                    rippleDiameter = elementWidth > elementHeight ? elementWidth : elementHeight,
-                    pos = e.getXY(),
-                    posX = pos[0] - offset[0] - (rippleDiameter / 2),
-                    posY = pos[1] - offset[1] - (rippleDiameter / 2);
-                this.$ripple.setStyle('backgroundColor', color);
-                this.$ripple.toggleCls('md-ripple-effect', true);
-                this.$ripple.setWidth(rippleDiameter);
-                this.$ripple.setHeight(rippleDiameter);
-                this.$ripple.setTop(posY);
-                this.$ripple.setLeft(posX);
-                this.$rippleWrap.show();
-                if (this.$rippleAnimationListener) {
-                    this.$rippleAnimationListener.destroy();
+    materialIconRe: /^md-icon[-|_](.*)/,
+    applyIconCls: function(classList) {
+        var len, i, cls, materialMatch;
+        if (classList) {
+            classList = Ext.dom.Element.splitCls(classList);
+            len = classList.length;
+            for (i = 0; i < len; i++) {
+                cls = classList[i];
+                materialMatch = cls && cls.match(this.materialIconRe);
+                if (materialMatch && materialMatch.length > 1) {
+                    classList.unshift('md-icon');
+                    break;
                 }
-                this.$rippleAnimationListener = this.$ripple.on('animationend', this.onRippleEnd, this, {
-                    single: true,
-                    destroyable: true
-                });
+            }
+            return classList.join(' ');
+        }
+        return classList;
+    }
+});
+
+Ext.define('Ext.theme.material.Tool', {
+    override: 'Ext.Tool',
+    config: {
+        ripple: {
+            bound: false,
+            color: 'default',
+            centered: true
+        }
+    }
+});
+
+Ext.define('Ext.theme.material.Panel', {
+    override: 'Ext.Panel',
+    config: {
+        buttonAlign: 'right',
+        buttonToolbar: {
+            defaultButtonUI: null
+        }
+    }
+});
+
+Ext.define('Ext.theme.material.menu.Item', {
+    override: 'Ext.menu.Item',
+    config: {
+        ripple: {
+            delegate: '.' + Ext.baseCSSPrefix + 'body-el'
+        }
+    },
+    shouldRipple: function() {
+        var me = this,
+            rippleDelay = me.el.rippleShowTimeout;
+        // To delay menu hide(closing of menu) after menu item is clicked. RippleDelayis used to
+        // show ripple effect on menu items. Max(clickHideDelay,rippleDelay) should be used
+        me.clickHideDelay = me.clickHideDelay > rippleDelay ? me.clickHideDelay : rippleDelay;
+        return this.getRipple();
+    }
+});
+
+Ext.define('Ext.theme.material.menu.Menu', {
+    override: 'Ext.menu.Menu',
+    config: {
+        indented: false
+    }
+});
+
+Ext.define('Ext.theme.material.SplitButton', {
+    override: 'Ext.SplitButton',
+    /**
+     * @private
+     * @cfg {Number/Boolean} menuShowDelay
+     * The amount of delay between the `tap` or `onClick` and the moment the
+     * split menu button shows the menu.
+     */
+    config: {
+        splitRipple: {
+            delegate: '.x-splitInner-el'
+        },
+        arrowRipple: {
+            delegate: '.x-splitArrow-el'
+        }
+    },
+    menuShowDelay: 0,
+    doDestroy: function() {
+        var me = this;
+        if (me.hasOwnProperty('menuShowTimeout')) {
+            Ext.undefer(me.menuShowTimeout);
+        }
+        me.callParent();
+    }
+});
+
+Ext.define('Ext.theme.material.layout.overflow.Scroller', {
+    override: 'Ext.layout.overflow.Scroller',
+    config: {
+        backwardTool: {
+            ripple: {
+                centered: false,
+                bound: true,
+                diameterLimit: false
+            }
+        },
+        forwardTool: {
+            ripple: {
+                centered: false,
+                bound: true,
+                diameterLimit: false
             }
         }
-        this.callParent(arguments);
-    },
-    onRippleEnd: function() {
-        if (this.$ripple) {
-            this.$ripple.toggleCls('md-ripple-effect', false);
-            this.$rippleWrap.hide();
-        }
-    },
-    updateRipple: function(ripple, oldRipple) {
-        var me = this;
-        if (ripple) {
-            me.$rippleWrap = me.element.insertFirst({
-                cls: 'md-ripple-wrap'
-            });
-            me.$ripple = me.$rippleWrap.insertFirst({
-                cls: 'md-ripple'
-            });
-        } else if (me.$ripple) {
-            me.destroyRipple();
-        }
-    },
-    removeRippleEffect: function() {
-        if (this.$rippleAnimationListener) {
-            this.$rippleAnimationListener.destroy();
-        }
-        this.onRippleEnd();
-    },
-    destroyRipple: function() {
-        this.removeRippleEffect();
-        if (this.$rippleWrap) {
-            this.$rippleWrap.destroy();
-        }
-    },
-    applyIconCls: function(cls) {
-        var materialMatch = cls && cls.match(/^md-icon[-|_](.*)/),
-            materialIcon = materialMatch && materialMatch.length > 1 ? materialMatch[1] : null;
-        if (materialIcon) {
-            return 'md-icon ' + cls;
-        }
-        return cls;
     }
 });
 
@@ -91,14 +155,11 @@ Ext.define('Ext.theme.material.field.Field', {
     }
 });
 
-Ext.define('Ext.theme.material.MessageBox', {
-    override: 'Ext.MessageBox',
+Ext.define('Ext.theme.material.field.Text', {
+    override: 'Ext.field.Text',
     config: {
-        buttonToolbar: {
-            layout: {
-                pack: 'end'
-            }
-        }
+        labelAlign: 'placeholder',
+        animateUnderline: true
     }
 });
 
@@ -117,10 +178,34 @@ Ext.define('Ext.theme.material.TitleBar', {
     }
 });
 
+Ext.define('Ext.theme.material.Toast', {
+    override: 'Ext.Toast',
+    config: {
+        alignment: 'b-b'
+    }
+});
+
+Ext.define('Ext.theme.material.dataview.Abstract', {
+    override: 'Ext.dataview.Abstract',
+    config: {
+        itemRipple: {
+            release: true,
+            color: 'default'
+        }
+    }
+});
+
+Ext.define('Ext.theme.material.dataview.List', {
+    override: 'Ext.dataview.List',
+    config: {
+        rowLines: false
+    }
+});
+
 Ext.define('Ext.theme.material.dataview.IndexBar', {
     override: 'Ext.dataview.IndexBar',
     config: {
-        direction: 'vertical',
+        autoHide: true,
         letters: [
             '*',
             '#',
@@ -151,65 +236,6 @@ Ext.define('Ext.theme.material.dataview.IndexBar', {
             'Y',
             'Z'
         ]
-    },
-    getElementConfig: function() {
-        return {
-            reference: 'wrapper',
-            classList: [
-                'x-center',
-                'x-indexbar-wrapper'
-            ],
-            children: [
-                {
-                    reference: 'indicator',
-                    classList: [
-                        'x-indexbar-indicator'
-                    ],
-                    hidden: true,
-                    children: [
-                        {
-                            reference: 'indicatorInner',
-                            classList: [
-                                'x-indexbar-indicator-inner'
-                            ]
-                        }
-                    ]
-                },
-                // We want to skip the default list getElementConfig
-                this.callSuper()
-            ]
-        };
-    },
-    onDragEnd: function(event, target) {
-        this.callParent([
-            event,
-            target
-        ]);
-        this.indicator.hide();
-    },
-    privates: {
-        onVerticalDrag: function(point, target, isValidTarget) {
-            var indicator = this.indicator;
-            indicator.show();
-            var element = this.element,
-                indicatorInner = this.indicatorInner,
-                indicatorHeight = indicator.getHeight(),
-                halfIndicatorHeight = indicatorHeight / 2,
-                elementY = element.getY(),
-                y = point.y - elementY;
-            y = Math.min(Math.max(y, halfIndicatorHeight), element.getHeight() - halfIndicatorHeight);
-            if (isValidTarget) {
-                indicatorInner.setHtml(target.getHtml().toUpperCase());
-            }
-            indicator.setTop(y - halfIndicatorHeight);
-        }
-    }
-});
-
-Ext.define('Ext.theme.material.dataview.List', {
-    override: 'Ext.dataview.List',
-    config: {
-        rowLines: false
     }
 });
 
@@ -225,24 +251,93 @@ Ext.define('Ext.theme.material.dataview.NestedList', {
     }
 });
 
-Ext.define('Ext.theme.neptune.tip.ToolTip', {
-    override: 'Ext.tip.ToolTip',
-    bodyBorder: false
+Ext.define('Ext.theme.material.dataview.pullrefresh.PullRefresh', {
+    override: 'Ext.dataview.pullrefresh.PullRefresh',
+    config: {
+        overlay: true,
+        widget: {
+            xtype: 'pullrefreshspinner'
+        }
+    }
 });
 
 Ext.define('Ext.theme.material.field.Checkbox', {
     override: 'Ext.field.Checkbox',
     config: {
         labelAlign: 'left',
-        bodyAlign: 'end'
+        bodyAlign: 'end',
+        ripple: {
+            delegate: '.' + Ext.baseCSSPrefix + 'icon-el',
+            bound: false,
+            color: 'default'
+        }
     }
 });
 
-Ext.define('Ext.theme.material.form.FieldContainer', {
-    override: 'Ext.form.FieldContainer',
+Ext.define('Ext.theme.neptune.panel.Date', {
+    override: 'Ext.panel.Date',
+    border: true
+});
+
+Ext.define('Ext.theme.material.panel.Date', {
+    override: 'Ext.panel.Date',
+    config: {
+        headerFormat: 'D, M j',
+        hideCaptions: false,
+        hideOutside: true,
+        navigationPosition: 'caption',
+        selectOnNavigate: false,
+        showTodayButton: false,
+        splitTitle: true,
+        titleAnimation: false,
+        tools: {
+            previousYear: null,
+            nextYear: null
+        }
+    }
+});
+
+Ext.define('Ext.theme.material.field.Date', {
+    override: 'Ext.field.Date',
+    config: {
+        floatedPicker: {
+            selectOnNavigate: true,
+            header: {
+                hidden: true
+            }
+        }
+    }
+});
+
+Ext.define('Ext.theme.material.form.Borders', {
+    override: 'Ext.form.Borders',
     config: {
         fieldSeparators: false,
         inputBorders: true
+    }
+});
+
+Ext.define('Ext.theme.material.field.Toggle', {
+    override: 'Ext.field.Toggle',
+    config: {
+        ripple: {
+            delegate: '.' + Ext.baseCSSPrefix + 'thumb',
+            bound: false,
+            fit: false,
+            color: 'default'
+        }
+    }
+});
+
+Ext.define('Ext.theme.material.grid.cell.Check', {
+    override: 'Ext.grid.cell.Check',
+    config: {
+        ripple: {
+            delegate: '.' + Ext.baseCSSPrefix + 'checkbox-el',
+            bound: false,
+            color: 'default',
+            centered: true
+        }
     }
 });
 
@@ -280,6 +375,25 @@ Ext.define('Ext.theme.material.tab.Tab', {
     config: {
         iconAlign: 'top',
         flex: 1
+    },
+    platformConfig: {
+        desktop: {
+            maxWidth: 200
+        }
+    }
+});
+
+Ext.define('Ext.theme.material.tab.Bar', {
+    override: 'Ext.tab.Bar',
+    config: {
+        animateIndicator: true
+    },
+    platformConfig: {
+        desktop: {
+            layout: {
+                pack: 'center'
+            }
+        }
     }
 });
 
@@ -589,7 +703,8 @@ Ext.define('Ext.theme.Material', {
         }
     },
     hasFashion: function() {
-        return !!Fashion.css && Fashion.css.setVariables;
+        // eslint-disable-next-line no-undef
+        return !!window.Fashion && !!Fashion.css && Fashion.css.setVariables;
     },
     setAutoUpdateMeta: function(value) {
         this._autoUpdateMeta = value;
@@ -607,6 +722,7 @@ Ext.define('Ext.theme.Material', {
             //</debug>
             return;
         }
+        // eslint-disable-next-line no-undef
         Fashion.css.setVariables({
             'dark-mode': value ? 'true' : 'false'
         });
@@ -617,10 +733,13 @@ Ext.define('Ext.theme.Material', {
      * @param {String} colorsConfig.base Name of the base color (red, green, blue, etc)
      * @param {String} colorsConfig.baseWeight Weight for the base color ('500', '400', '300', etc)
      * @param {String} colorsConfig.accent Name of the accent color (red, green, blue, etc)
-     * @param {String} colorsConfig.accentWeight Weight for the accent color ('500', '400', '300', etc)
+     * @param {String} colorsConfig.accentWeight Weight for the accent color
+     * ('500', '400', '300', etc)
      * @param {Boolean} colorsConfig.darkMode Determines if the theme is in Light or Dark Mode
      */
     setColors: function(colorsConfig) {
+        var obj = {},
+            baseColor, accentColor;
         if (!this.hasFashion()) {
             //<debug>
             Ext.Logger.warn('Fashion was not found and is required to set CSS Variables for Material Theme');
@@ -631,13 +750,11 @@ Ext.define('Ext.theme.Material', {
             baseWeight: this.getDefaultWeight(),
             accentWeight: this.getDefaultWeight()
         }, colorsConfig);
-        var baseColor = this._colors[colorsConfig.base],
-            accentColor = this._colors[colorsConfig.accent],
-            obj = {};
+        baseColor = this._colors[colorsConfig.base];
+        accentColor = this._colors[colorsConfig.accent];
         if (baseColor) {
-            baseColor = baseColor[colorsConfig.baseWeight];
-            if (baseColor) {
-                obj['base-color'] = baseColor;
+            if (baseColor[colorsConfig.baseWeight]) {
+                obj['base-color-name'] = colorsConfig.base;
                 if (this.getAutoUpdateMeta()) {
                     this.updateMetaThemeColor(colorsConfig.base, colorsConfig.baseWeight);
                 }
@@ -648,9 +765,8 @@ Ext.define('Ext.theme.Material', {
             Ext.Logger.warn("Base color: " + colorsConfig.base + " is not a valid material color", this);
         }
         if (accentColor) {
-            accentColor = accentColor[colorsConfig.accentWeight];
-            if (accentColor) {
-                obj['accent-color'] = accentColor;
+            if (accentColor[colorsConfig.accentWeight]) {
+                obj['accent-color-name'] = colorsConfig.accent;
             } else {
                 Ext.Logger.warn("Accent color weight: " + colorsConfig.accentWeight + " is not a valid weight", this);
             }
@@ -660,6 +776,7 @@ Ext.define('Ext.theme.Material', {
         if (colorsConfig.darkMode !== null) {
             obj['dark-mode'] = colorsConfig.darkMode ? 'true' : 'false';
         }
+        // eslint-disable-next-line no-undef
         Fashion.css.setVariables(obj);
     },
     updateMetaThemeColor: function(colorName, weight) {
@@ -682,12 +799,12 @@ Ext.define('Ext.theme.Material', {
     }
 });
 
+var color, toolbarIsDynamic, head, meta;
 Ext.require('Ext.theme.Material');
 if (Ext.platformTags.android && Ext.platformTags.chrome && Ext.manifest.material && Ext.manifest.material.toolbar) {
-    var color = Ext.manifest.material.toolbar.color,
-        toolbarIsDynamic = Ext.manifest.material.toolbar.dynamic,
-        head = document.head,
-        meta;
+    color = Ext.manifest.material.toolbar.color;
+    toolbarIsDynamic = Ext.manifest.material.toolbar.dynamic;
+    head = document.head;
     if (toolbarIsDynamic && Ext.supports.CSSVariables) {
         color = getComputedStyle(document.body).getPropertyValue('--primary-color-md');
         color = color.replace(/ /g, '').replace(/^#(?:\\3)?/, '#');

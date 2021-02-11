@@ -1,0 +1,25 @@
+.#{$prefix}form-file-wrap .#{$prefix}form-trigger-wrap-default {
+    background: none;
+    
+    .#{$prefix}form-text-wrap.#{$prefix}form-text-wrap-default {
+        background-color: $form-field-background-color;
+    }
+    
+    &.#{$prefix}form-trigger-wrap-focus:hover {
+        position: relative;
+        outline: none;
+        
+        &:after {
+            display: none;
+        }
+    }
+    
+
+    .#{$prefix}form-trigger {
+        &.#{$prefix}form-trigger-over,
+        &.#{$prefix}form-spinner-over {
+            background: none;
+            cursor: initial;
+        }
+    }
+}

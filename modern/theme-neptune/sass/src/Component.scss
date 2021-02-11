@@ -1,9 +1,9 @@
-// font-size must be set on the html element in order for rem units to be used throughout the theme
-html {
+.#{$prefix}root {
 	font: $font-weight-normal #{$font-size}/#{$line-height} $font-family;
 	color: $color;
 
-	&.x-big {
+    &.#{$prefix}big,
+    .#{$prefix}big & {
 		font-size: $font-size-big;
 	}
 }
@@ -13,4 +13,24 @@ html {
 	// ensure that font icon does not inherit font-weight from parent node
 }
 
-@include st-loading-spinner(1em, $loading-spinner-color, .1em, .25em);
+@include st-loading-spinner(16px, $loading-spinner-color, 1px, 4px);
+
+.#{$prefix}draggable {
+	cursor: $draggable-cursor !important;
+}
+
+.#{$prefix}fi:before {
+    @extend .#{$fi-class-name};
+}
+
+.#{$prefix}fi-angle-left {
+    @extend .#{$fi-icon-angle-left};
+}
+
+.#{$prefix}fi-angle-right {
+    @extend .#{$fi-icon-angle-right};
+}
+
+.#{$prefix}fi-arrow-left {
+    @extend .#{$fi-icon-arrow-left};
+}

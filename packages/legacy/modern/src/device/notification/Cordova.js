@@ -17,13 +17,14 @@ Ext.define('Ext.device.notification.Cordova', {
         var buttons = config.buttons,
             ln = config.buttons.length;
 
-        if (ln && typeof buttons[0] != "string") {
+        if (ln && typeof buttons[0] !== "string") {
             var newButtons = [],
                 i;
 
             for (i = 0; i < ln; i++) {
                 newButtons.push(buttons[i].text);
             }
+
             buttons = newButtons;
         }
 
@@ -32,7 +33,6 @@ Ext.define('Ext.device.notification.Cordova', {
                 config.callback.apply(config.scope, (buttons) ? [buttons[index - 1].toLowerCase()] : []);
             }
         };
-
 
         navigator.notification.confirm(
             config.message,
@@ -56,13 +56,14 @@ Ext.define('Ext.device.notification.Cordova', {
         var buttons = config.buttons,
             ln = config.buttons.length;
 
-        if (ln && typeof buttons[0] != "string") {
+        if (ln && typeof buttons[0] !== "string") {
             var newButtons = [],
                 i;
 
             for (i = 0; i < ln; i++) {
                 newButtons.push(buttons[i].text);
             }
+
             buttons = newButtons;
         }
 

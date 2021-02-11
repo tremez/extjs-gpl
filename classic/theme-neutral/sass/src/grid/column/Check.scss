@@ -8,15 +8,17 @@
 
     @if $grid-no-row-lines-show-focus-border {
         .#{$prefix}grid-no-row-lines .#{$prefix}grid-row-focused & {
-            padding-top: top($grid-checkcolumn-cell-padding) - $grid-row-cell-border-width;
-            padding-bottom: bottom($grid-checkcolumn-cell-padding) - $grid-row-cell-border-width;
+            .#{$prefix}keyboard-mode & {
+                padding-top: top($grid-checkcolumn-cell-padding) - $grid-row-cell-border-width;
+                padding-bottom: bottom($grid-checkcolumn-cell-padding) - $grid-row-cell-border-width;
+            }
         }
     }
     text-overflow: clip;
 }
 
 .#{$prefix}column-header-checkbox {
-    border-color: $grid-header-background-color;
+    border-color: $grid-header-border-color;
     .#{$prefix}column-header-text {
         overflow: visible;
     }
@@ -70,5 +72,11 @@
         &:after {
             background-position: 0 (-$form-checkbox-size);
         }
+    }
+}
+
+.#{$prefix}selmodel-checkbox, .#{$prefix}selmodel-column {
+    .#{$prefix}grid-checkcolumn {
+        pointer-events: none;
     }
 }

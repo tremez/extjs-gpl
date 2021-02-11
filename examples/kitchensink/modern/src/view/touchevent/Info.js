@@ -1,11 +1,17 @@
 Ext.define('KitchenSink.view.touchevent.Info', {
-    extend: 'Ext.Component',
+    extend: 'Ext.Container',
     xtype: 'toucheventinfo',
 
+    //<example>
+    cls: 'toucheventinfo demo-solid-background',
+    //</example>
+
     padding: 5,
-    styleHtmlContent: true,
+    scrollable: true,
+
     html: [
-        '<p>Sencha Touch comes with a multitude of touch events available on components. Included touch events that can be used are:</p>',
+        '<p>Ext JS comes with a multitude of touch events available on components. ',
+        'Included touch events that can be used are:</p>',
         '<ul>',
         '<li>touchstart</li>',
         '<li>touchmove</li>',
@@ -18,8 +24,8 @@ Ext.define('KitchenSink.view.touchevent.Info', {
         '<li>doubletap</li>',
         '<li>longpress</li>',
         '<li>swipe</li>',
-        '<li>pinch (on iOS and Android 3+)</li>',
-        '<li>rotate (on iOS and Android 3+)</li>',
+        '<li>pinch</li>',
+        '<li>rotate</li>',
         '</ul>'
     ].join('')
 });

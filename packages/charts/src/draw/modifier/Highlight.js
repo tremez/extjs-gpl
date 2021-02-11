@@ -3,7 +3,7 @@
  * @extends Ext.draw.modifier.Modifier
  *
  * Highlight is a modifier that will override sprite attributes
- * with {@link Ext.draw.modifier.Highlight#highlightStyle highlightStyle} attributes
+ * with {@link Ext.draw.modifier.Highlight#style style} attributes
  * when sprite's `highlighted` attribute is true.
  */
 Ext.define('Ext.draw.modifier.Highlight', {
@@ -18,24 +18,27 @@ Ext.define('Ext.draw.modifier.Highlight', {
         enabled: false,
 
         /**
-         * @cfg {Object} highlightStyle The style attributes of the highlight modifier.
+         * @cfg {Object} style The style attributes of the highlight modifier.
          */
-        highlightStyle: null
+        style: null
     },
 
     preFx: true,
 
-    applyHighlightStyle: function (style, oldStyle) {
+    applyStyle: function(style, oldStyle) {
         oldStyle = oldStyle || {};
+
         if (this.getSprite()) {
             Ext.apply(oldStyle, this.getSprite().self.def.normalize(style));
-        } else {
+        }
+        else {
             Ext.apply(oldStyle, style);
         }
+
         return oldStyle;
     },
 
-    prepareAttributes: function (attr) {
+    prepareAttributes: function(attr) {
         if (!attr.hasOwnProperty('highlightOriginal')) {
             attr.highlighted = false;
             attr.highlightOriginal = Ext.Object.chain(attr);
@@ -44,52 +47,59 @@ Ext.define('Ext.draw.modifier.Highlight', {
             // when it is unhighlighted.
             attr.highlightOriginal.removeFromInstance = {};
         }
+
         if (this._lower) {
             this._lower.prepareAttributes(attr.highlightOriginal);
         }
     },
 
-    updateSprite: function (sprite, oldSprite) {
+    updateSprite: function(sprite, oldSprite) {
+        var me = this,
+            style = me.getStyle(),
+            attributeDefinitions;
+
         if (sprite) {
-            if (this.getHighlightStyle()) {
-                this._highlightStyle = sprite.self.def.normalize(this.getHighlightStyle());
+            attributeDefinitions = sprite.self.def;
+
+            if (style) {
+                me._style = attributeDefinitions.normalize(style);
             }
-            this.setHighlightStyle(sprite.config.highlight);
+
+            me.setStyle(sprite.config.highlight);
+            // Add highlight related attributes to sprite's attribute definition.
+            // This will affect all sprites of the same type, even those without
+            // the highlight modifier.
+            attributeDefinitions.setConfig({
+                defaults: {
+                    highlighted: false
+                },
+                processors: {
+                    highlighted: 'bool'
+                }
+            });
         }
 
-        // Add highlight related attributes to sprite's attribute definition.
-        // TODO: Unfortunately this will affect all sprites of the same type,
-        // TODO: even those without the highlight modifier.
-        sprite.self.def.setConfig({
-            defaults: {
-                highlighted: false
-            },
-            processors: {
-                highlighted: 'bool'
-            }
-        });
         this.setSprite(sprite);
     },
 
     /**
      * @private
-     * Filter out modifier changes that override highlightStyle or source attributes.
+     * Filter out modifier changes that override highlight style or source attributes.
      * @param {Object} attr The source attributes.
      * @param {Object} changes The modifier changes.
      * @return {*} The filtered changes.
      */
-    filterChanges: function (attr, changes) {
+    filterChanges: function(attr, changes) {
         var me = this,
             highlightOriginal = attr.highlightOriginal,
-            style = me.getHighlightStyle(),
+            style = me.getStyle(),
             name;
+
         if (attr.highlighted) {
-            // TODO: Remove changes that match highlightStyle attribute names.
-            // TODO: Backup such changes to highlightOriginal before removing.
             for (name in changes) {
                 if (style.hasOwnProperty(name)) {
                     // If sprite is highlighted, then stash the changes
-                    // to the `highlightStyle` attributes made by lower level modifiers
+                    // to the `style` attributes made by lower level modifiers
                     // to apply them later when sprite is unhighlighted.
                     highlightOriginal[name] = changes[name];
                     delete changes[name];
@@ -97,58 +107,55 @@ Ext.define('Ext.draw.modifier.Highlight', {
             }
         }
 
-        // TODO: Remove changes (except the 'highlighted' flag) that match the original values. Why?
-        for (name in changes) {
-            if (name !== 'highlighted' && highlightOriginal[name] === changes[name]) {
-                delete changes[name];
-            }
-        }
-
         return changes;
     },
 
-    pushDown: function (attr, changes) {
-        var highlightStyle = this.getHighlightStyle(),
+    pushDown: function(attr, changes) {
+        var style = this.getStyle(),
             highlightOriginal = attr.highlightOriginal,
             removeFromInstance = highlightOriginal.removeFromInstance,
             highlighted, name, tplAttr, timer;
 
         if (changes.hasOwnProperty('highlighted')) {
             highlighted = changes.highlighted;
-            // Hide `highlighted` and `highlightStyle` from underlying modifiers.
+            // Hide `highlighted` and `style` from underlying modifiers.
             delete changes.highlighted;
 
             if (this._lower) {
                 changes = this._lower.pushDown(highlightOriginal, changes);
             }
+
             changes = this.filterChanges(attr, changes);
 
             if (highlighted !== attr.highlighted) {
                 if (highlighted) {
                     // Switching ON.
                     // At this time, original should be empty.
-                    for (name in highlightStyle) {
+                    for (name in style) {
                         // Remember the values of attributes to revert back to them on unhighlight.
                         if (name in changes) {
                             // Remember value set by lower level modifiers.
                             highlightOriginal[name] = changes[name];
-                        } else {
+                        }
+                        else {
                             // Remember the original value.
 
                             // If this is a sprite instance and it doesn't have its own
                             // 'name' attribute, (i.e. inherits template's attribute value)
                             // than we have to get the value for the 'name' attribute from
-                            // the template's 'animationOriginal' object instead of its
+                            // the template's 'targets' object instead of its
                             // 'attr' object (which is the prototype of the instance),
                             // because the 'name' attribute of the template may be animating.
                             // Check out the prepareAttributes method of the Animation
-                            // modifier for more details on the 'animationOriginal' object.
+                            // modifier for more details on the 'targets' object.
 
                             tplAttr = attr.template && attr.template.ownAttr;
+
                             if (tplAttr && !attr.prototype.hasOwnProperty(name)) {
                                 removeFromInstance[name] = true;
-                                highlightOriginal[name] = tplAttr.animationOriginal[name];
-                            } else {
+                                highlightOriginal[name] = tplAttr.targets[name];
+                            }
+                            else {
 
                                 // Even if a sprite instance has its own property, it may
                                 // still have to be removed from the instance after
@@ -168,45 +175,54 @@ Ext.define('Ext.draw.modifier.Highlight', {
                                 // for the attribute and see if the 'remove' flag is set.
 
                                 timer = highlightOriginal.timers[name];
+
                                 if (timer && timer.remove) {
                                     removeFromInstance[name] = true;
                                 }
+
                                 highlightOriginal[name] = attr[name];
                             }
                         }
-                        if (highlightOriginal[name] !== highlightStyle[name]) {
-                            changes[name] = highlightStyle[name];
+
+                        if (highlightOriginal[name] !== style[name]) {
+                            changes[name] = style[name];
                         }
                     }
-                } else {
+                }
+                else {
                     // Switching OFF.
-                    for (name in highlightStyle) {
+                    for (name in style) {
                         if (!(name in changes)) {
                             changes[name] = highlightOriginal[name];
                         }
+
                         delete highlightOriginal[name];
                     }
+
                     changes.removeFromInstance = changes.removeFromInstance || {};
                     // Let the higher lever animation modifier know which attributes
                     // should be removed from instance when the animation is done.
                     Ext.apply(changes.removeFromInstance, removeFromInstance);
                     highlightOriginal.removeFromInstance = {};
                 }
+
                 changes.highlighted = highlighted;
             }
-        } else {
+        }
+        else {
             if (this._lower) {
                 changes = this._lower.pushDown(highlightOriginal, changes);
             }
+
             changes = this.filterChanges(attr, changes);
         }
 
         return changes;
     },
 
-    popUp: function (attr, changes) {
+    popUp: function(attr, changes) {
         changes = this.filterChanges(attr, changes);
-        Ext.draw.modifier.Modifier.prototype.popUp.call(this, attr, changes);
+        this.callParent([attr, changes]);
     }
 
 });

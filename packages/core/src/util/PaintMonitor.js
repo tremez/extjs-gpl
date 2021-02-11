@@ -6,7 +6,7 @@ Ext.define('Ext.util.PaintMonitor', {
         'Ext.util.paintmonitor.CssAnimation'
     ],
 
-    constructor: function (config) {
+    constructor: function(config) {
         return new Ext.util.paintmonitor.CssAnimation(config);
     }
 });

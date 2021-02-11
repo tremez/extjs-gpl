@@ -16,15 +16,18 @@
 function initializePatientDragZone(v) {
     v.dragZone = Ext.create('Ext.dd.DragZone', v.getEl(), {
 
-//      On receipt of a mousedown event, see if it is within a draggable element.
-//      Return a drag data object if so. The data object can contain arbitrary application
-//      data, but it should also contain a DOM element in the ddel property to provide
-//      a proxy to drag.
+        //      On receipt of a mousedown event, see if it is within a draggable element.
+        //      Return a drag data object if so. The data object can contain arbitrary application
+        //      data, but it should also contain a DOM element in the ddel property to provide
+        //      a proxy to drag.
         getDragData: function(e) {
-            var sourceEl = e.getTarget(v.itemSelector, 10), d;
+            var sourceEl = e.getTarget(v.itemSelector, 10),
+                d;
+
             if (sourceEl) {
                 d = sourceEl.cloneNode(true);
                 d.id = Ext.id();
+
                 return (v.dragData = {
                     sourceEl: sourceEl,
                     repairXY: Ext.fly(sourceEl).getXY(),
@@ -34,8 +37,8 @@ function initializePatientDragZone(v) {
             }
         },
 
-//      Provide coordinates for the proxy to slide back to on failed drag.
-//      This is the original XY coordinates of the draggable element.
+        //      Provide coordinates for the proxy to slide back to on failed drag.
+        //      This is the original XY coordinates of the draggable element.
         getRepairXY: function() {
             return this.dragData.repairXY;
         }
@@ -72,30 +75,31 @@ function initializeHospitalDropZone(v) {
 
     function allowPatient(hospital, name) {
         var patients = hospital.get('patients');
+
         return !patients || Ext.Array.indexOf(patients, name) === -1;
     }
 
     grid.dropZone = Ext.create('Ext.dd.DropZone', v.el, {
 
-//      If the mouse is over a target node, return that node. This is
-//      provided as the "target" parameter in all "onNodeXXXX" node event handling functions
+        //      If the mouse is over a target node, return that node. This is
+        //      provided as the "target" parameter in all "onNodeXXXX" node event handling functions
         getTargetFromEvent: function(e) {
             return e.getTarget('.hospital-target');
         },
 
-//      On entry into a target node, highlight that node.
-        onNodeEnter : function(target, dd, e, data){
+        //      On entry into a target node, highlight that node.
+        onNodeEnter: function(target, dd, e, data) {
             Ext.fly(target).addCls('hospital-target-hover');
         },
 
-//      On exit from a target node, unhighlight that node.
-        onNodeOut : function(target, dd, e, data){
+        //      On exit from a target node, unhighlight that node.
+        onNodeOut: function(target, dd, e, data) {
             Ext.fly(target).removeCls('hospital-target-hover');
         },
 
-//      While over a target node, return the default drop allowed class which
-//      places a "tick" icon into the drag proxy.
-        onNodeOver : function(target, dd, e, data){
+        //      While over a target node, return the default drop allowed class which
+        //      places a "tick" icon into the drag proxy.
+        onNodeOver: function(target, dd, e, data) {
             var hospital = getHospitalFromTarget(target),
                 name = data.patientData.name,
                 proto = Ext.dd.DropZone.prototype;
@@ -103,12 +107,12 @@ function initializeHospitalDropZone(v) {
             return allowPatient(hospital, name) ? proto.dropAllowed : proto.dropNotAllowed;
         },
 
-//      On node drop, we can interrogate the target node to find the underlying
-//      application object that is the real target of the dragged data.
-//      In this case, it is a Record in the GridPanel's Store.
-//      We can use the data set up by the DragZone's getDragData method to read
-//      any data we decided to attach.
-        onNodeDrop : function(target, dd, e, data){
+        //      On node drop, we can interrogate the target node to find the underlying
+        //      application object that is the real target of the dragged data.
+        //      In this case, it is a Record in the GridPanel's Store.
+        //      We can use the data set up by the DragZone's getDragData method to read
+        //      any data we decided to attach.
+        onNodeDrop: function(target, dd, e, data) {
             var rowBody = Ext.fly(target).findParent('.x-grid-rowbody-tr', null, false),
                 mainRow = rowBody.previousSibling,
                 hospital = gridView.getRecord(mainRow),
@@ -120,49 +124,52 @@ function initializeHospitalDropZone(v) {
                     patients = [];
                     hospital.set('patients', patients);
                 }
+
                 patients.push(name);
                 Ext.fly(rowBody).down('.x-grid-rowbody').update(patients.join(', '));
                 Ext.Msg.alert('Drop gesture', 'Dropped patient ' + name +
                     ' on hospital ' + hospital.get('name'));
-                
+
                 return true;
             }
+
             return false;
         }
     });
 }
-
 
 Ext.require(['*']);
 
 Ext.onReady(function() {
 
     var patients = [{
-        insuranceCode: '11111',
-        name: 'Fred Bloggs',
-        address: 'Main Street',
-        telephone: '555 1234 123'
-    }, {
-        insuranceCode: '22222',
-        name: 'Fred Bansod',
-        address: 'Van Ness',
-        telephone: '666 666 666'
-    }, {
-        insuranceCode: '33333',
-        name: 'Fred Mercury',
-        address: 'Over The Rainbow',
-        telephone: '555 321 0987'
-    }, {
-        insuranceCode: '44444',
-        name: 'Fred Forsyth',
-        address: 'Blimp Street',
-        telephone: '555 111 2222'
-    }, {
-        insuranceCode: '55555',
-        name: 'Fred Douglass',
-        address: 'Talbot County, Maryland',
-        telephone: 'N/A'
-    }];
+            insuranceCode: '11111',
+            name: 'Fred Bloggs',
+            address: 'Main Street',
+            telephone: '555 1234 123'
+        }, {
+            insuranceCode: '22222',
+            name: 'Fred Bansod',
+            address: 'Van Ness',
+            telephone: '666 666 666'
+        }, {
+            insuranceCode: '33333',
+            name: 'Fred Mercury',
+            address: 'Over The Rainbow',
+            telephone: '555 321 0987'
+        }, {
+            insuranceCode: '44444',
+            name: 'Fred Forsyth',
+            address: 'Blimp Street',
+            telephone: '555 111 2222'
+        }, {
+            insuranceCode: '55555',
+            name: 'Fred Douglass',
+            address: 'Talbot County, Maryland',
+            telephone: 'N/A'
+        }],
+
+        patientStore, hospitals, hospitalStore, patientView, helpWindow, hospitalGrid;
 
     Ext.define('Patient', {
         extend: 'Ext.data.Model',
@@ -170,12 +177,12 @@ Ext.onReady(function() {
         fields: ['name', 'address', 'telephone']
     });
 
-    var patientStore = Ext.create('Ext.data.Store', {
+    patientStore = Ext.create('Ext.data.Store', {
         model: 'Patient',
         data: patients
     });
 
-    var hospitals = [{
+    hospitals = [{
         code: 'AAAAA',
         name: 'Saint Thomas',
         address: 'Westminster Bridge Road, SE1 7EH',
@@ -203,20 +210,20 @@ Ext.onReady(function() {
         fields: ['name', 'address', 'telephone', 'patients']
     });
 
-    var hospitalStore = Ext.create('Ext.data.Store', {
+    hospitalStore = Ext.create('Ext.data.Store', {
         model: 'Hospital',
         data: hospitals
     });
 
-    var patientView = Ext.create('Ext.view.View', {
+    patientView = Ext.create('Ext.view.View', {
         cls: 'patient-view',
         tpl: '<tpl for=".">' +
-                '<div class="patient-source x-unselectable"><table><tbody>' +
-                    '<tr><td class="patient-label">Name</td><td class="patient-name">{name}</td></tr>' +
-                    '<tr><td class="patient-label">Address</td><td class="patient-name">{address}</td></tr>' +
-                    '<tr><td class="patient-label">Telephone</td><td class="patient-name">{telephone}</td></tr>' +
-                '</tbody></table></div>' +
-             '</tpl>',
+            '<div class="patient-source x-unselectable"><table><tbody>' +
+                '<tr><td class="patient-label">Name</td><td class="patient-name">{name}</td></tr>' +
+                '<tr><td class="patient-label">Address</td><td class="patient-name">{address}</td></tr>' +
+                '<tr><td class="patient-label">Telephone</td><td class="patient-name">{telephone}</td></tr>' +
+            '</tbody></table></div>' +
+            '</tpl>',
         itemSelector: 'div.patient-source',
         overItemCls: 'patient-over',
         selectedItemClass: 'patient-selected',
@@ -227,7 +234,7 @@ Ext.onReady(function() {
         }
     });
 
-    var helpWindow = Ext.create('Ext.Window', {
+    helpWindow = Ext.create('Ext.Window', {
         title: 'Source code',
         width: 920,
         height: 500,
@@ -245,6 +252,7 @@ Ext.onReady(function() {
                     url: 'dragdropzones.js',
                     success: function(r) {
                         var text = Ext.htmlEncode(r.responseText);
+
                         w.down('#src').update('<pre>' + text + '</pre>');
                     }
                 });
@@ -252,7 +260,7 @@ Ext.onReady(function() {
         }
     });
 
-    var hospitalGrid = Ext.create('Ext.grid.Panel', {
+    hospitalGrid = Ext.create('Ext.grid.Panel', {
         title: 'Hospitals',
         region: 'center',
         margin: '0 5 5 0',
@@ -277,15 +285,18 @@ Ext.onReady(function() {
             width: 100
         }],
         features: [{
-            ftype:'rowbody',
+            ftype: 'rowbody',
             getAdditionalData: function(data) {
                 var patients = data.patients,
                     html;
+
                 if (patients) {
                     html = patients.join(', ');
-                } else {
+                }
+                else {
                     html = 'Drop patients here';
                 }
+
                 return {
                     rowBody: html,
                     rowBodyCls: 'hospital-target'

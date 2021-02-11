@@ -3,40 +3,42 @@ Ext.define('KitchenSink.view.form.CheckoutController', {
 
     alias: 'controller.form-checkout',
 
-    getForm: function () {
+    getForm: function() {
         return this.getView().getForm();
     },
 
-    getOtherField: function (field) {
+    getOtherField: function(field) {
         var name = field.name;
 
         if (/^mailing/.test(name)) {
             name = name.replace('mailing', 'billing');
-        } else {
+        }
+        else {
             name = name.replace('billing', 'mailing');
         }
 
         return this.lookup(name);
     },
 
-    isBillingSameAsMailing: function () {
+    isBillingSameAsMailing: function() {
         return this.lookup('billingSameAsMailing').getValue();
     },
 
-    onResetClick: function () {
+    onResetClick: function() {
         this.getForm().reset();
     },
 
-    onCompleteClick: function () {
+    onCompleteClick: function() {
         var form = this.getForm(),
-            pretty, values;
+            pretty, values, i;
 
         if (form.isValid()) {
             values = form.getValues(true);
 
-            pretty = Ext.Array.map(values.split('&'), function (val) {
+            pretty = Ext.Array.map(values.split('&'), function(val) {
                 val = decodeURIComponent(val);
-                var i = val.indexOf('=');
+                i = val.indexOf('=');
+
                 return '<b>' + val.substr(0, i) + ': </b>' +
                         Ext.htmlEncode(val.substr(i + 1));
             });
@@ -51,10 +53,11 @@ Ext.define('KitchenSink.view.form.CheckoutController', {
         }
     },
 
-    onMailingAddrFieldChange: function (mailingField) {
-        if (this.isBillingSameAsMailing()) {
-            var billingField = this.getOtherField(mailingField);
+    onMailingAddrFieldChange: function(mailingField) {
+        var billingField;
 
+        if (this.isBillingSameAsMailing()) {
+            billingField = this.getOtherField(mailingField);
             billingField.setValue(mailingField.getValue());
         }
     },
@@ -64,17 +67,18 @@ Ext.define('KitchenSink.view.form.CheckoutController', {
      * In addition to disabling the fields, they are animated to a low opacity so they don't take
      * up visual attention.
      */
-    onSameAddressChange: function (checkbox, isBillingSameAsMailing) {
+    onSameAddressChange: function(checkbox, isBillingSameAsMailing) {
         var me = this,
             fieldset = checkbox.ownerCt,
             mailAddrForm = me.lookup('mailingAddressForm');
 
-        Ext.each(mailAddrForm.query('textfield'), function (mailingField) {
+        Ext.each(mailAddrForm.query('textfield'), function(mailingField) {
             var billingField = me.getOtherField(mailingField);
 
             if (isBillingSameAsMailing) {
                 billingField.setValue(mailingField.getValue());
-            } else {
+            }
+            else {
                 billingField.clearInvalid();
             }
         });

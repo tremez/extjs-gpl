@@ -1,15 +1,15 @@
-describe("Ext.slider.Widget", function() {
+topSuite("Ext.slider.Widget", ['Ext.Panel', 'Ext.app.ViewModel'], function() {
     var panel, slider, viewModel, data;
 
-    afterEach(function () {
+    afterEach(function() {
         panel = slider = viewModel = data = Ext.destroy(panel, slider, viewModel);
     });
 
-    function notify () {
+    function notify() {
         viewModel.getScheduler().notify();
     }
 
-    function makeSlider (config, useBinding) {
+    function makeSlider(config, useBinding) {
         if (useBinding) {
             viewModel = new Ext.app.ViewModel({
                 data: {
@@ -24,7 +24,7 @@ describe("Ext.slider.Widget", function() {
 
         panel = Ext.create({
             xtype: 'panel',
-            renderTo:  Ext.getBody(),
+            renderTo: Ext.getBody(),
             items: slider = Ext.create(Ext.apply({
                 xtype: 'sliderwidget',
                 width: 200,
@@ -38,11 +38,12 @@ describe("Ext.slider.Widget", function() {
         }
     }
 
-    describe('binding', function () {
-        it('should receive the initial value', function () {
+    describe('binding', function() {
+        it('should receive the initial value', function() {
             makeSlider({}, true);
 
             var v = slider.getValue();
+
             expect(v).toBe(20);
         });
 
@@ -57,7 +58,7 @@ describe("Ext.slider.Widget", function() {
 //            expect(data.val).toBe(20);
 //        });
 
-        it('should update viewModel on setValue complete', function () {
+        it('should update viewModel on setValue complete', function() {
             makeSlider({
                 publishOnComplete: true
             }, true);
@@ -68,7 +69,7 @@ describe("Ext.slider.Widget", function() {
             expect(data.val).toBe(50);
         });
 
-        it('should update viewModel on setValue when publishOnComplete:false', function () {
+        it('should update viewModel on setValue when publishOnComplete:false', function() {
             makeSlider({
                 publishOnComplete: false
             }, true);
@@ -80,10 +81,10 @@ describe("Ext.slider.Widget", function() {
         });
     });
 
-    describe("update minValue", function () {
+    describe("update minValue", function() {
         var thumb;
 
-        beforeEach(function () {
+        beforeEach(function() {
             makeSlider({
                 minValue: 10,
                 maxValue: 50,
@@ -93,7 +94,7 @@ describe("Ext.slider.Widget", function() {
             thumb = slider.getThumb(0);
         });
 
-        it("should update value when minValue is greater than current value", function () {
+        it("should update value when minValue is greater than current value", function() {
             var oldValue, newValue;
 
             oldValue = slider.getValue();
@@ -104,7 +105,7 @@ describe("Ext.slider.Widget", function() {
             expect(oldValue).toBeLessThan(newValue);
         });
 
-        it("should update position of thumb when new minValue is less than current value", function () {
+        it("should update position of thumb when new minValue is less than current value", function() {
             var expectedPos,
                 thumbPos;
 
@@ -115,7 +116,7 @@ describe("Ext.slider.Widget", function() {
             // run expectations for current state
             // slider position should be 25% (10|[20]|30|40|50)
             expect(expectedPos).toBe(25);
-            expect(thumbPos).toBe(expectedPos+'%');
+            expect(thumbPos).toBe(expectedPos + '%');
 
             // update minValue
             slider.setMinValue(0);
@@ -127,10 +128,10 @@ describe("Ext.slider.Widget", function() {
             // run expectations for current state
             // slider position should be 40% (0|10|[20]|30|40|50)
             expect(expectedPos).toBe(40);
-            expect(thumbPos).toBe(expectedPos+'%');
+            expect(thumbPos).toBe(expectedPos + '%');
         });
 
-        it("should update position of thumb when new minValue is greater than current value", function () {
+        it("should update position of thumb when new minValue is greater than current value", function() {
             var expectedPos,
                 thumbPos;
 
@@ -141,7 +142,7 @@ describe("Ext.slider.Widget", function() {
             // run expectations for current state
             // slider position should be 25% (10|[20]|30|40|50)
             expect(expectedPos).toBe(25);
-            expect(thumbPos).toBe(expectedPos+'%');
+            expect(thumbPos).toBe(expectedPos + '%');
 
             // update minValue
             slider.setMinValue(30);
@@ -153,23 +154,23 @@ describe("Ext.slider.Widget", function() {
             // run expectations for current state
             // slider position should be 50% (10|20|[30]|40|50)
             expect(expectedPos).toBe(0);
-            expect(thumbPos).toBe(expectedPos+'%');
+            expect(thumbPos).toBe(expectedPos + '%');
         });
     });
 
-    describe("update maxValue", function () {
+    describe("update maxValue", function() {
         var thumb;
 
-        beforeEach(function () {
+        beforeEach(function() {
             makeSlider({
                 maxValue: 40,
-                value: 20              
+                value: 20
             }, false);
 
             thumb = slider.getThumb(0);
         });
 
-        it("should update value when maxValue is less than current value", function () {
+        it("should update value when maxValue is less than current value", function() {
             var oldValue, newValue;
 
             oldValue = slider.getValue();
@@ -180,7 +181,7 @@ describe("Ext.slider.Widget", function() {
             expect(oldValue).toBeGreaterThan(newValue);
         });
 
-        it("should update position of thumb when new maxValue is less than current value", function () {
+        it("should update position of thumb when new maxValue is less than current value", function() {
             var expectedPos,
                 thumbPos;
 
@@ -191,7 +192,7 @@ describe("Ext.slider.Widget", function() {
             // run expectations for current state
             // slider position should be 50% (20/40)
             expect(expectedPos).toBe(50);
-            expect(thumbPos).toBe(expectedPos+'%');
+            expect(thumbPos).toBe(expectedPos + '%');
 
             // update maxValue
             slider.setMaxValue(10);
@@ -203,10 +204,10 @@ describe("Ext.slider.Widget", function() {
             // run expectations for current state
             // slider position should be 50% (20/40)
             expect(expectedPos).toBe(100);
-            expect(thumbPos).toBe(expectedPos+'%');
+            expect(thumbPos).toBe(expectedPos + '%');
         });
 
-        it("should update position of thumb when new maxValue is greater than current value", function () {
+        it("should update position of thumb when new maxValue is greater than current value", function() {
             var expectedPos,
                 thumbPos;
 
@@ -217,7 +218,7 @@ describe("Ext.slider.Widget", function() {
             // run expectations for current state
             // slider position should be 50% (20/40)
             expect(expectedPos).toBe(50);
-            expect(thumbPos).toBe(expectedPos+'%');
+            expect(thumbPos).toBe(expectedPos + '%');
 
             // update maxValue
             slider.setMaxValue(80);
@@ -229,7 +230,7 @@ describe("Ext.slider.Widget", function() {
             // run expectations for current state
             // slider position should be 50% (20/40)
             expect(expectedPos).toBe(25);
-            expect(thumbPos).toBe(expectedPos+'%');
+            expect(thumbPos).toBe(expectedPos + '%');
         });
     });
 });

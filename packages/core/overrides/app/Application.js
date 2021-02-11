@@ -17,17 +17,21 @@
  * from Ext.app.Application.
  */
 Ext.application = function(config) {
-    var createApp = function (App) {
-            // This won't be called until App class has been created.
-            Ext.onReady(function() {
-                var Viewport = Ext.viewport;
-                Viewport = Viewport && Viewport['Viewport'];
-                if (Viewport && Viewport.setup) {
-                    Viewport.setup(App.prototype.config.viewport);
-                }
-                Ext.app.Application.instance = new App();
-            });
-        };
+    var createApp = function(App) {
+        // This won't be called until App class has been created.
+        Ext.onReady(function() {
+            var Viewport = Ext.viewport;
+
+            // eslint-disable-next-line dot-notation
+            Viewport = Viewport && Viewport['Viewport'];
+
+            if (Viewport && Viewport.setup) {
+                Viewport.setup(App.prototype.config.viewport);
+            }
+
+            Ext.app.Application.instance = new App();
+        });
+    };
 
     if (typeof config === "string") {
         Ext.require(config, function() {
@@ -47,8 +51,8 @@ Ext.application = function(config) {
 
         // Let Ext.define do the hard work but don't assign a class name.
         Ext.define(config.name + ".$application", config,
-            function () {
-                createApp(this);
-            });
+                   function() {
+                       createApp(this);
+                   });
     }
 };

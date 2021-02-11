@@ -18,7 +18,8 @@ Ext.define('Ext.grid.column.ActionProxy', {
     setDisabled: function(disabled) {
         if (disabled) {
             this.column.disableAction(this.itemIndex);
-        } else {
+        }
+        else {
             this.column.enableAction(this.itemIndex);
         }
     },
@@ -32,7 +33,7 @@ Ext.define('Ext.grid.column.ActionProxy', {
         this.item.glyph = glyph;
         this.column.getView().refreshView();
     },
-    
+
     setHidden: function(hidden) {
         this.item.hidden = hidden;
         this.column.getView().refreshView();

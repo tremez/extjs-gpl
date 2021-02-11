@@ -23,18 +23,17 @@ Ext.define('Ext.rtl.layout.component.Dock', {
 
     // Neptune + RTL :)
 
-    getBorderClassTable: function () {
+    getBorderClassTable: function() {
         var me = this;
 
         if (!me.borderTablesInited) {
             me.initBorderTables();
         }
 
-        return me.owner.getInherited().rtl ? me.noBorderClassTableRtl
-                                                : me.noBorderClassTableLtr;
+        return me.owner.getInherited().rtl ? me.noBorderClassTableRtl : me.noBorderClassTableLtr;
     },
 
-    getBorderCollapseTable: function () {
+    getBorderCollapseTable: function() {
         var me = this,
             table = me.callParent();
 
@@ -45,7 +44,7 @@ Ext.define('Ext.rtl.layout.component.Dock', {
         return me.owner.getInherited().rtl ? table.rtl : table;
     },
 
-    initBorderTables: function () {
+    initBorderTables: function() {
         var me = Ext.layout.component.Dock.prototype,
             ltr = me.noBorderClassTable,
             rtl = [];
@@ -58,7 +57,8 @@ Ext.define('Ext.rtl.layout.component.Dock', {
         me.borderTablesInited = true;
     },
 
-    setupBorderTable: function (ltr, rtl) {
+    /* eslint-disable indent, no-multi-spaces */
+    setupBorderTable: function(ltr, rtl) {
                             // TRBL
         rtl[0]  = ltr[0];   // 0000
         rtl[1]  = ltr[4];   // 0001 = 1   ==> 0100 = 4
@@ -77,4 +77,5 @@ Ext.define('Ext.rtl.layout.component.Dock', {
         rtl[14] = ltr[11];  // 1110 = 14  ==> 1011 = 11
         rtl[15] = ltr[15];  // 1111 = 15  ==> same
     }
+    /* eslint-enable indent, no-multi-spaces */
 });

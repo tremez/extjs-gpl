@@ -1,0 +1,22 @@
+.#{$prefix}grid-item-selected.#{$prefix}grid-item-focused .#{$prefix}selmodel-column .#{$prefix}grid-checkcolumn:after {
+    color: $grid-row-cell-focus-color;
+}
+
+.x-grid-item-selected .x-grid-cell-row-numberer {
+    color: $grid-row-cell-focus-color;
+}
+
+.#{$prefix}grid-with-row-lines .#{$prefix}grid-item.#{$prefix}grid-item-selected:first-child {
+    border-top-color: $grid-row-cell-background-color;
+}
+
+.#{$prefix}grid-item {
+   min-height: $grid-row-min-height;
+}
+
+.#{$prefix}keyboard-mode .#{$prefix}grid-row {
+    .#{$prefix}grid-cell.#{$prefix}grid-item-focused.#{$prefix}grid-cell-selected {
+        color: $grid-row-cell-focus-color;
+        background-color: $grid-row-cell-focus-background-color;
+    }
+}

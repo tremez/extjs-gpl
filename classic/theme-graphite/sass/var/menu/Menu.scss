@@ -1,0 +1,7 @@
+$menu-background-color: dynamic(#1b1b1b);
+$menu-item-active-background-color: dynamic($focus-background-color);
+$menu-glyph-color: dynamic($font-color);
+$menu-item-active-text-color: dynamic($focus-font-color);
+$menu-item-background-gradient: dynamic($base-gradient);
+$menu-separator-background-color: dynamic($body-background-color);
+$menu-text-color: dynamic(contrast-color-by($body-background-color, 100));

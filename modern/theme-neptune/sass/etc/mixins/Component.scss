@@ -10,9 +10,9 @@
 @mixin bevel-text($type: 'shadow') {
     @if $enable-highlights {
         @if $type == shadow {
-            text-shadow: rgba(0,0,0,.5) 0 -.08em 0;
+            text-shadow: rgba(0,0,0,.5) 0 -1px 0;
         } @else {
-            text-shadow: rgba(255,255,255,.25) 0 .08em 0;
+            text-shadow: rgba(255,255,255,.25) 0 1px 0;
         }
     }
 }
@@ -25,9 +25,9 @@
 @mixin bevel-box($type: 'light') {
     @if $enable-highlights {
         @if $type == shadow {
-            @include st-box-shadow(rgba(#000, .5) 0 -.06em 0);
+            @include st-box-shadow(rgba(#000, .5) 0 -1px 0);
         } @else {
-            @include st-box-shadow(rgba(#fff, .35) 0 .06em 0);
+            @include st-box-shadow(rgba(#fff, .35) 0 1px 0);
         }
     }
 }
@@ -51,12 +51,16 @@
  * Creates a background gradient for masked elements, based on the lightness of their background.
  *
  * @param {color} $bg-color Background color of element.
- * @param {percent} $percent Contrast of the new gradient to its background.
+ * @param {percent} $contrast Contrast of the new gradient to its background.
  * @param {percent} $style Gradient style of the gradient.
  *
  * See background-gradient mixin.
  */
-@mixin mask-by-background($bg-color, $contrast: 100%, $style: $base-background-gradient) {
+@mixin mask-by-background(
+    $bg-color,
+    $contrast: 100%,
+    $style: $base-background-gradient
+) {
     @if (lightness($bg-color) > 50) {
         @include background-gradient(darken($bg-color, $contrast), $style);
     } @else {

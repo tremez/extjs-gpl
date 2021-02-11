@@ -1,60 +1,58 @@
 [
     {
-        "platform": "OS X 10.10",
-        "browserName": "iPad",
-        "version": "8.1",
-        "device-orientation": "landscape",
-        "chunks": 1
-    }
-    ,
+        "platform": "Windows 10",
+        "browserName": "chrome",
+        "version": "latest",
+        "chunks": 10,
+        "remoteOptions": {
+            "queueSizeThreshold": 500
+        }
+    },
     {
-        "platform": "Linux",
-        "deviceName": "Android Emulator",
-        "version": "5.0",
-        "browserName": "Android",
-        "device-orientation": "portrait",
-        "chunks": 1
-    }
-    ,
-    {
-        "platform": "Windows 7",
-        "browserName": "internet explorer",
-        "version": "10",
-        "chunks": 1
-    }
-    ,
+        "platform": "Windows 10",
+        "browserName": "firefox",
+        "version": "latest",
+        "chunks": 10,
+        "remoteOptions": {
+            "queueSizeThreshold": 500
+        }
+    },
     {
         "platform": "Windows 7",
         "browserName": "internet explorer",
         "version": "11",
-        "chunks": 1
-    }
-    ,
+        "chunks": 10,
+        "remoteOptions": {
+            "queueSizeThreshold": 300
+        }
+    },
     {
-        "platform": "OS X 10.9",
+        "browserName": "MicrosoftEdge",
+        "platform": "Windows 10",
+        "version": "latest",
+        "chunks": 10,
+        "remoteOptions": {
+            "queueSizeThreshold": 500
+        }
+    },
+    {
+        "platform": "OS X 10.11",
         "browserName": "safari",
-        "version": "7",
-        "chunks": 1
-    }
-    ,
+        "version": "9",
+        "chunks": 10,
+        "seleniumVersion": "2.48.0",
+        "remoteOptions": {
+            "queueSizeThreshold": 500
+        }
+    },
     {
-        "platform": "OS X 10.10",
+        "platform": "macOS 10.13",
         "browserName": "safari",
-        "version": "8",
-        "chunks": 1
-    }
-    ,
-    {
-        "platform": "Windows 7",
-        "browserName": "firefox",
-        "version": "34",
-        "chunks": 1
-    }
-    ,
-    {
-        "platform": "Windows 7",
-        "browserName": "chrome",
-        "version": "39",
-        "chunks": 1
+        "version": "11.1",
+        "pingTimeout": 60000,
+        "chunks": 10,
+        "remoteOptions": {
+            "queueSizeThreshold": 500
+        }
     }
 ]

@@ -6,16 +6,18 @@ Ext.define('Ext.ux.grid.TransformGrid', {
 
     /**
      * Creates the grid from HTML table element.
-     * @param {String/HTMLElement/Ext.Element} table The table element from which this grid will be created -
-     * The table MUST have some type of size defined for the grid to fill. The container will be
-     * automatically set to position relative if it isn't already.
-     * @param {Object} [config] A config object that sets properties on this grid and has two additional (optional)
-     * properties: fields and columns which allow for customizing data fields and columns for this grid.
+     * @param {String/HTMLElement/Ext.Element} table The table element from which this grid
+     * will be created - The table MUST have some type of size defined for the grid to fill.
+     * The container will be automatically set to position relative if it isn't already.
+     * @param {Object} [config] A config object that sets properties on this grid and has two
+     * additional (optional) properties: fields and columns which allow for customizing data fields
+     * and columns for this grid.
      */
     constructor: function(table, config) {
         config = Ext.apply({}, config);
         table = this.table = Ext.get(table);
 
+        // eslint-disable-next-line vars-on-top
         var configFields = config.fields || [],
             configColumns = config.columns || [],
             fields = [],
@@ -24,12 +26,7 @@ Ext.define('Ext.ux.grid.TransformGrid', {
             i = 0,
             len = headers.length,
             data = table.dom,
-            width,
-            height,
-            store,
-            col,
-            text,
-            name;
+            width, height, col, text, name;
 
         for (; i < len; ++i) {
             col = headers[i];
@@ -53,7 +50,8 @@ Ext.define('Ext.ux.grid.TransformGrid', {
 
         if (config.width) {
             width = config.width;
-        } else {
+        }
+        else {
             width = table.getWidth() + 1;
         }
 
@@ -77,8 +75,9 @@ Ext.define('Ext.ux.grid.TransformGrid', {
             width: width,
             height: height
         });
+
         this.callParent([config]);
-        
+
         if (config.remove !== false) {
             // Don't use table.remove() as that destroys the row/cell data in the table in
             // IE6-7 so it cannot be read by the data reader.

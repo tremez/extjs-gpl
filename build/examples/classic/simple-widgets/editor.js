@@ -5,7 +5,7 @@ Ext.require([
     'Ext.form.field.Date'
 ]);
 
-Ext.onReady(function(){
+Ext.onReady(function() {
     var isLargeTheme = Ext.themeName !== 'classic',
         titleOffset = isLargeTheme ? -6 : -4;
 
@@ -34,39 +34,43 @@ Ext.onReady(function(){
             fieldLabel: 'D.O.B'
         }],
         listeners: {
-            afterrender: function(form){
+            afterrender: function(form) {
                 var cfg = {
-                    shadow: false,
-                    completeOnEnter: true,
-                    cancelOnEsc: true,
-                    updateEl: true,
-                    ignoreNoChange: true
-                }, height = form.child('textfield').getHeight();
+                        shadow: false,
+                        completeOnEnter: true,
+                        cancelOnEsc: true,
+                        updateEl: true,
+                        ignoreNoChange: true
+                    },
+                    height = form.child('textfield').getHeight(),
 
-                var labelEditor = new Ext.Editor(Ext.apply({
-                    autoSize: {
-                        width: 'field'
-                    },
-                    height: height,
-                    alignment: 'l-l',
-                    listeners: {
-                        beforecomplete: function(ed, value){
-                            if (value.charAt(value.length - 1) != ':') {
-                                ed.setValue(ed.getValue() + ':');
+                    labelEditor = new Ext.Editor(Ext.apply({
+                        autoSize: {
+                            width: 'field'
+                        },
+                        height: height,
+                        alignment: 'l-l',
+                        listeners: {
+                            beforecomplete: function(ed, value) {
+                                if (value.charAt(value.length - 1) !== ':') {
+                                    ed.setValue(ed.getValue() + ':');
+                                }
+
+                                return true;
                             }
-                            return true;
+                        },
+                        field: {
+                            width: 100,
+                            name: 'labelfield',
+                            allowBlank: false,
+                            xtype: 'textfield',
+                            selectOnFocus: true,
+                            maxLength: 20,
+                            enforceMaxLength: true
                         }
-                    },
-                    field: {
-                        width: 100,
-                        name: 'labelfield',
-                        allowBlank: false,
-                        xtype: 'textfield',
-                        selectOnFocus: true,
-                        maxLength: 20,
-                        enforceMaxLength: true
-                    }
-                }, cfg));
+                    }, cfg)),
+                    titleEditor;
+
                 form.getTargetEl().on('dblclick', function(e, t) {
                     labelEditor.startEdit(t);
                     // Manually focus, since clicking on the label will focus the text field
@@ -75,7 +79,7 @@ Ext.onReady(function(){
                     delegate: 'label.x-form-item-label'
                 });
 
-                var titleEditor = new Ext.Editor(Ext.apply({
+                titleEditor = new Ext.Editor(Ext.apply({
                     alignment: 'tl',
                     offsets: [0, titleOffset],
                     field: {
@@ -90,16 +94,16 @@ Ext.onReady(function(){
                             fields: ['text'],
                             data: [{
                                 text: 'User Details'
-                            },{
+                            }, {
                                 text: 'Developer Details'
-                            },{
+                            }, {
                                 text: 'Manager Details'
                             }]
                         }
                     }
                 }, cfg));
 
-                form.header.getTitle().textEl.on('dblclick', function(e, t){
+                form.header.getTitle().textEl.on('dblclick', function(e, t) {
                     titleEditor.startEdit(t);
                 });
             }

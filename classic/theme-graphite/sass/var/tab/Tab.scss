@@ -1,0 +1,185 @@
+$tab-line-height: dynamic(27px);
+$tab-outline-width-focus: dynamic($focus-border-width);
+$tab-padding: dynamic(16px 16px 16px 16px);
+$tab-border-radius: dynamic(null);
+
+$tab-base-color: dynamic(#686868);
+$tab-color: dynamic(#fff);
+$tab-glyph-color: dynamic($tab-color);
+$tab-closable-icon-glyph-color: dynamic($tab-color);
+
+$tab-background-opacity: dynamic(1);
+$tab-opacity: dynamic(0.8);
+$tab-glyph-opacity: dynamic($tab-opacity);
+$tab-closable-icon-opacity: dynamic($tab-opacity);
+
+$tab-base-color-over: dynamic(#ffffff);
+$tab-color-over: dynamic(#1b1b1b);
+$tab-glyph-color-over: dynamic($tab-color-over);
+$tab-closable-icon-glyph-color-over: dynamic($tab-color-over);
+
+$tab-background-opacity-over: dynamic(0.7);
+$tab-opacity-over: dynamic(1);
+$tab-glyph-opacity-over: dynamic($tab-opacity-over);
+$tab-closable-icon-opacity-over: dynamic($tab-opacity-over);
+
+$tab-base-color-active: dynamic(#f2f2f2);
+$tab-color-active: dynamic(#1b1b1b);
+$tab-glyph-color-active: dynamic($tab-color-active);
+$tab-closable-icon-glyph-color-active: dynamic($tab-color-active);
+
+$tab-background-opacity-active: dynamic(1);
+$tab-opacity-active: dynamic(1);
+$tab-glyph-opacity-active: dynamic($tab-opacity-active);
+$tab-closable-icon-opacity-active: dynamic($tab-opacity-active);
+
+$tab-base-color-active-over: dynamic(#bcbcbc);
+$tab-color-active-over: dynamic($tab-color-active);
+$tab-glyph-color-active-over: dynamic($tab-color-active-over);
+$tab-closable-icon-glyph-color-active-over: dynamic($tab-color-active-over);
+
+$tab-background-opacity-active-over: dynamic(1);
+$tab-opacity-active-over: dynamic(1);
+$tab-glyph-opacity-active-over: dynamic($tab-opacity-active-over);
+$tab-closable-icon-opacity-active-over: dynamic($tab-opacity-active-over);
+
+$tab-base-color-focus: dynamic($focus-background-color);
+$tab-color-focus: dynamic(#fff);
+$tab-glyph-color-focus: dynamic($tab-color-focus);
+$tab-closable-icon-glyph-color-focus: dynamic($tab-color-focus);
+
+$tab-background-opacity-focus: dynamic(1);
+$tab-opacity-focus: dynamic(1);
+$tab-glyph-opacity-focus: dynamic($tab-opacity-focus);
+$tab-closable-icon-opacity-focus: dynamic($tab-opacity-focus);
+
+$tab-base-color-focus-active: dynamic($tab-base-color-focus);
+$tab-color-focus-active: dynamic($tab-color-focus);
+$tab-glyph-color-focus-active: dynamic($tab-color-focus-active);
+$tab-closable-icon-glyph-color-focus-active: dynamic($tab-color-focus-active);
+
+$tab-background-opacity-focus-active: dynamic(1);
+$tab-opacity-focus-active: dynamic(1);
+$tab-glyph-opacity-focus-active: dynamic($tab-opacity-focus-active);
+$tab-closable-icon-opacity-focus-active: dynamic($tab-opacity-focus-active);
+
+$tab-base-color-focus-over: dynamic($tab-base-color-focus-active);
+$tab-color-focus-over: dynamic($tab-color-focus-active);
+$tab-glyph-color-focus-over: dynamic($tab-color-focus-over);
+$tab-closable-icon-glyph-color-focus-over: dynamic($tab-color-focus-over);
+
+$tab-background-opacity-focus-over: dynamic(1);
+$tab-opacity-focus-over: dynamic(1);
+$tab-glyph-opacity-focus-over: dynamic($tab-opacity-focus-over);
+$tab-closable-icon-opacity-focus-over: dynamic($tab-opacity-focus-over);
+
+$tab-inner-border-width-focus-over: dynamic(3px);
+$tab-inner-border-color-focus-over: dynamic(#fff);
+
+$tab-opacity-disabled: dynamic(null);
+$tab-text-opacity-disabled: dynamic(0.5);
+$tab-icon-opacity-disabled: dynamic($tab-text-opacity-disabled);
+$tab-glyph-opacity-disabled: dynamic($tab-text-opacity-disabled);
+$tab-closable-icon-opacity-disabled: dynamic($tab-text-opacity-disabled);
+
+$tab-plain-background-color: dynamic(transparent);
+$tab-plain-background-color-active: dynamic($tab-base-color-active);
+$tab-plain-background-color-focus: dynamic($focus-background-color);
+$tab-plain-background-color-focus-active: dynamic($tab-plain-background-color-focus);
+$tab-plain-background-color-focus-over: dynamic($tab-plain-background-color-focus);
+$tab-plain-background-color-over: dynamic(#686868);
+$tab-plain-color: dynamic($font-color);
+$tab-plain-color-over: dynamic($font-color);
+$tab-plain-color-active: dynamic($base-color);
+$tab-plain-color-focus: dynamic(#fff);
+$tab-plain-color-focus-over: dynamic($tab-plain-color-focus);
+$tab-plain-color-focus-active: dynamic($tab-plain-color-focus);
+$tab-plain-glyph-color: dynamic($font-color);
+$tab-plain-closable-icon-glyph-color: dynamic($tab-plain-color);
+$tab-plain-closable-icon-glyph-color-over: dynamic($tab-plain-color-over);
+$tab-plain-closable-icon-glyph-color-active: dynamic($tab-plain-color-active);
+$tab-plain-closable-icon-glyph-color-focus: dynamic($tab-plain-color-focus);
+$tab-plain-closable-icon-glyph-color-focus-active: dynamic($tab-plain-color-focus-active);
+$tab-plain-closable-icon-glyph-color-focus-over: dynamic($tab-plain-color-focus-over);
+
+@mixin extjs-graphite-tab-ui(
+    $ui: nul,
+    
+    $base-color-active-over: null,
+    $background-opacity-active-over: null,
+    
+    $color-active-over: null,
+    $opacity-active-over: null,
+    
+    $glyph-color-active-over: null,
+    $glyph-opacity-active-over: null,
+    
+    $closable-icon-glyph-color-active-over: null,
+    $closable-icon-opacity-active-over: null,
+    
+    $color-pressed-focus: null,
+    $opacity-pressed-focus: null,
+    
+    $inner-border-width-focus-over: null,
+    $inner-border-color-focus-over: null
+) {
+    .#{$prefix}tab-#{$ui}.#{$prefix}tab-active.#{$prefix}tab-over {
+        @if $base-color-active-over != null {
+            background-color: $base-color-active-over;
+        }
+        
+        @if $background-opacity-active-over != null and $background-opacity-active-over != 1 {
+            @include background-opacity($background-opacity-active-over);
+        }
+        
+        @if $color-active-over != null {
+            .#{$prefix}tab-inner-default {
+                color: $color-active-over;
+                
+                @if $opacity-active-over != null and $opacity-active-over != 1 {
+                    @include opacity($opacity-active-over);
+                }
+            }
+        }
+        
+        @if $glyph-color-active-over != null {
+            .#{$prefix}tab-icon-el {
+                color: $glyph-color-active-over;
+                
+                @if $glyph-opacity-active-over != null and $glyph-opacity-active-over != 1 {
+                    @include opacity($glyph-opacity-active-over);
+                }
+            }
+        }
+        
+        @if $closable-icon-glyph-color-active-over != null {
+            .#{$prefix}tab-close-btn {
+                color: $closable-icon-glyph-color-active-over;
+                
+                @if $closable-icon-opacity-active-over != null and $closable-icon-opacity-active-over != 1 {
+                    @include opacity($closable-icon-opacity-active-over);
+                }
+            }
+        }
+        
+        @if $inner-border-width-focus-over != null {
+            .#{$prefix}keyboard-mode &.#{$prefix}tab-focus {
+                @include inner-border($inner-border-width-focus-over, $inner-border-color-focus-over);
+            }
+        }
+    }
+    
+    @if $color-pressed-focus != null {
+        .#{$prefix}keyboard-mode {
+            .#{$prefix}tab-#{$ui}.#{$prefix}tab-focus.#{$prefix}tab-pressed:not(.#{$prefix}tab-active) {
+                .#{$prefix}tab-inner-#{$ui} {
+                    color: $color-pressed-focus;
+                    
+                    @if $opacity-pressed-focus != null and $opacity-pressed-focus != 1 {
+                        @include opacity($opacity-pressed-focus);
+                    }
+                }
+            }
+        }
+    }
+}

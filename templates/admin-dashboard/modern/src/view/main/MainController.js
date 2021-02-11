@@ -2,16 +2,20 @@ Ext.define('Admin.view.main.MainController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.main',
 
+    requires: [
+        'Ext.MessageBox'
+    ],
+
     listen : {
         controller : {
             '#' : {
-                unmatchedroute : 'onRouteChange'
+                unmatchedroute : 'setCurrentView'
             }
         }
     },
 
     routes: {
-        ':node': 'onRouteChange'
+        ':node': 'setCurrentView'
     },
 
     config: {
@@ -19,16 +23,6 @@ Ext.define('Admin.view.main.MainController', {
     },
 
     collapsedCls: 'main-nav-collapsed',
-
-    init: function (view) {
-        var me = this,
-            refs = me.getReferences();
-
-        me.callParent([ view ]);
-
-        me.nav = refs.navigation;
-        me.navigationTree = refs.navigationTree;
-    },
 
     onNavigationItemClick: function () {
         // The phone profile's controller uses this event to slide out the navigation
@@ -44,25 +38,24 @@ Ext.define('Admin.view.main.MainController', {
         }
     },
 
-    onRouteChange: function (id) {
-        this.setCurrentView(id);
-    },
-
     onSwitchToClassic: function () {
         Ext.Msg.confirm('Switch to Classic', 'Are you sure you want to switch toolkits?',
-                        this.onSwitchToClassicConfirmed, this);
+                        'onSwitchToClassicConfirmed', this);
     },
 
     onSwitchToClassicConfirmed: function (choice) {
         if (choice === 'yes') {
-            var s = location.search;
+            var obj = Ext.Object.fromQueryString(location.search);
 
-            // Strip "?modern" or "&modern" with optionally more "&foo" tokens following
-            // and ensure we don't start with "?".
-            s = s.replace(/(^\?|&)modern($|&)/, '').replace(/^\?/, '');
+            delete obj.modern;
 
-            // Add "?classic&" before the remaining tokens and strip & if there are none.
-            location.search = ('?classic&' + s).replace(/&$/, '');
+            obj.classic = '';
+
+            location.search = '?' + Ext.Object.toQueryString(obj).replace('classic=', 'classic');
+        } else {
+            var button = this.lookup('toolkitSwitch');
+
+            button.setValue(Ext.isModern ? 'modern' : 'classic');
         }
     },
 
@@ -73,29 +66,23 @@ Ext.define('Admin.view.main.MainController', {
     setCurrentView: function (hashTag) {
         hashTag = (hashTag || '').toLowerCase();
 
-        var me = this,
-            refs = me.getReferences(),
-            mainCard = refs.mainCard,
-            navigationTree = me.navigationTree,
+        var view = this.getView(),
+            navigationTree = this.lookup('navigationTree'),
             store = navigationTree.getStore(),
             node = store.findNode('routeId', hashTag) ||
                    store.findNode('viewType', hashTag),
-            item = mainCard.child('component[routeId=' + hashTag + ']');
+            item = view.child('component[routeId=' + hashTag + ']');
 
         if (!item) {
-            item = mainCard.add({
+            item = {
                 xtype: node.get('viewType'),
                 routeId: hashTag
-            });
+            };
         }
-        
-        mainCard.setActiveItem(item);
-        
-        navigationTree.setSelection(node);
 
-        //if (newView.isFocusable(true)) {
-        //    newView.focus();
-        //}
+        view.setActiveItem(item);
+
+        navigationTree.setSelection(node);
     },
 
     updateShowNavigation: function (showNavigation, oldValue) {
@@ -106,10 +93,9 @@ Ext.define('Admin.view.main.MainController', {
         if (oldValue !== undefined) {
             var me = this,
                 cls = me.collapsedCls,
-                refs = me.getReferences(),
-                logo = refs.logo,
-                navigation = me.nav,
-                navigationTree = refs.navigationTree,
+                logo = me.lookup('logo'),
+                navigation = me.lookup('navigation'),
+                navigationTree = me.lookup('navigationTree'),
                 rootEl = navigationTree.rootItem.el;
 
             navigation.toggleCls(cls);
@@ -128,6 +114,7 @@ Ext.define('Admin.view.main.MainController', {
             }
 
             logo.element.on({
+                single: true,
                 transitionend: function () {
                     if (showNavigation) {
                         // after expanding, we should remove the forced width
@@ -135,14 +122,14 @@ Ext.define('Admin.view.main.MainController', {
                     } else {
                         navigationTree.setMicro(true);
                     }
-                },
-                single: true
+                }
             });
         }
     },
 
-    toolbarButtonClick: function(btn){
+    toolbarButtonClick: function (btn) {
         var href = btn.config.href;
+
         this.redirectTo(href);
     }
 });

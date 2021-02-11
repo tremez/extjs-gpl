@@ -10,7 +10,7 @@ Ext.define('Admin.view.charts.Pie', {
     ],
 
     title: '2D Pie Chart',
-    iconCls: 'x-fa fa-pie-chart',
+    iconCls: 'x-fa fa-chart-pie',
 
     items: [{
         xtype: 'polar',

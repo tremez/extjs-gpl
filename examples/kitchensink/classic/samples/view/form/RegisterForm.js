@@ -4,13 +4,13 @@
 Ext.define('KitchenSink.view.form.RegisterForm', {
     extend: 'Ext.form.Panel',
     xtype: 'form-register',
-    
+
     //<example>
     requires: [
         'KitchenSink.model.State',
         'KitchenSink.store.States'
     ],
-    
+
     exampleTitle: 'Registration Form',
     otherContent: [{
         type: 'Store',
@@ -19,20 +19,38 @@ Ext.define('KitchenSink.view.form.RegisterForm', {
         type: 'Model',
         path: 'classic/samples/model/State.js'
     }],
+
+    profiles: {
+        classic: {
+            labelAlign: 'right'
+        },
+        neptune: {
+            labelAlign: 'right'
+        },
+        gray: {
+            labelAlign: 'right'
+        },
+        graphite: {
+            labelAlign: 'right'
+        },
+        'classic-material': {
+            labelAlign: 'top'
+        }
+    },
     //</example>
-    
+
     frame: true,
     title: 'Register',
     bodyPadding: 10,
-    scrollable:true,
+    scrollable: true,
     width: 355,
 
     fieldDefaults: {
-        labelAlign: 'right',
+        labelAlign: '${labelAlign}',
         labelWidth: 115,
         msgTarget: 'side'
     },
-    
+
     items: [{
         xtype: 'fieldset',
         title: 'User Info',
@@ -40,21 +58,21 @@ Ext.define('KitchenSink.view.form.RegisterForm', {
         defaults: {
             anchor: '100%'
         },
-        
+
         items: [
-            { allowBlank:false, fieldLabel: 'User ID', name: 'user', emptyText: 'user id' },
-            { allowBlank:false, fieldLabel: 'Password', name: 'pass', emptyText: 'password', inputType: 'password' },
-            { allowBlank:false, fieldLabel: 'Verify', name: 'pass', emptyText: 'password', inputType: 'password' }
+            { allowBlank: false, fieldLabel: 'User ID', name: 'user', emptyText: 'user id' },
+            { allowBlank: false, fieldLabel: 'Password', name: 'pass', emptyText: 'password', inputType: 'password' },
+            { allowBlank: false, fieldLabel: 'Verify', name: 'pass', emptyText: 'password', inputType: 'password' }
         ]
     }, {
         xtype: 'fieldset',
         title: 'Contact Information',
-        
+
         defaultType: 'textfield',
         defaults: {
             anchor: '100%'
         },
-        
+
         items: [{
             fieldLabel: 'First Name',
             emptyText: 'First Name',

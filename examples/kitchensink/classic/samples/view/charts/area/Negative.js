@@ -6,7 +6,7 @@ Ext.define('KitchenSink.view.charts.area.Negative', {
     xtype: 'area-negative',
     controller: 'area-negative',
 
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     bodyStyle: 'background: transparent !important',
     layout: {
@@ -18,9 +18,9 @@ Ext.define('KitchenSink.view.charts.area.Negative', {
         path: 'classic/samples/view/charts/area/NegativeController.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/Earnings.js'
+        path: 'app/store/Earnings.js'
     }],
-    // </example>
+    //</example>
     width: 650,
 
     tbar: [
@@ -43,15 +43,9 @@ Ext.define('KitchenSink.view.charts.area.Negative', {
         legend: {
             docked: 'bottom'
         },
-        sprites: [{
-            type: 'text',
-            text: 'Profits and Losses (per product category)',
-            fontSize: 22,
-            width: 100,
-            height: 30,
-            x: 40, // the sprite x position
-            y: 20  // the sprite y position
-        }],
+        captions: {
+            title: 'Profits and Losses (per product category)'
+        },
         axes: [{
             type: 'numeric',
             position: 'left',
@@ -73,20 +67,20 @@ Ext.define('KitchenSink.view.charts.area.Negative', {
     }, {
         style: 'margin-top: 10px;',
         xtype: 'gridpanel',
-        columns : {
+        columns: {
             defaults: {
                 sortable: false,
                 menuDisabled: true
             },
             items: [
                 { text: 'Quarter', dataIndex: 'quarter' },
-                { text: 'Consumer', dataIndex: 'consumer'},
-                { text: 'Gaming', dataIndex: 'gaming'},
-                { text: 'Phone', dataIndex: 'phone'},
-                { text: 'Corporate', dataIndex: 'corporate'}
+                { text: 'Consumer', dataIndex: 'consumer' },
+                { text: 'Gaming', dataIndex: 'gaming' },
+                { text: 'Phone', dataIndex: 'phone' },
+                { text: 'Corporate', dataIndex: 'corporate' }
             ]
         },
-        store: {type: 'earnings'},
+        store: { type: 'earnings' },
         width: '100%'
         //</example>
     }],

@@ -5,28 +5,28 @@
 Ext.define('Books.view.book.View', {
     alias: 'widget.bookview',
     extend: 'Ext.panel.Panel',
-    
+
     requires: ['Ext.Img'],
 
     cls: 'item-ct',
     flex: 2,
     border: false,
     scrollable: true,
-    
+
     initComponent: function() {
         Ext.apply(this, {
             layout: {
-                type : 'hbox',
+                type: 'hbox',
                 align: 'middle',
-                pack : 'center'
+                pack: 'center'
             },
-            
+
             items: [{
                 xtype: 'image',
                 itemId: 'imgCt',
                 src: Ext.BLANK_IMAGE_URL,
                 margin: '0 20 0 0',
-                width : 250,
+                width: 250,
                 height: 308
             }, {
                 xtype: 'component',
@@ -40,10 +40,10 @@ Ext.define('Books.view.book.View', {
                 border: false
             }]
         });
-                
+
         this.callParent(arguments);
     },
-    
+
     /**
      * Binds a record to this view
      */

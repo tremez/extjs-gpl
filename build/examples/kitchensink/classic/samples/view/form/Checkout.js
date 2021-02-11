@@ -23,28 +23,42 @@ Ext.define('KitchenSink.view.form.Checkout', {
         classic: {
             bodyPadding: 5,
             width: 550,
-
             normalLabelWidth: 90,
             longLabelWidth: 90,
             phoneWidth: 200,
             phoneLabelWidth: 100,
             stateWidth: 115,
             postalCodeLabelWidth: 80,
+            postalCodeFieldlWidth: 160,
             expirationMonthWidth: 100,
-            expirationYearWidth: 80
+            expirationYearWidth: 80,
+            cardLabelWidth: 110,
+            expirationLabelWidth: 75,
+            completeButtonWidth: 150,
+            style: 'opacity: 0.5',
+            componentCls: '',
+            textfieldPadding: 0,
+            flexContainer: 1
         },
         neptune: {
             bodyPadding: 10,
             width: 620,
-            
             normalLabelWidth: 90,
             longLabelWidth: 110,
             phoneWidth: 220,
             phoneLabelWidth: 100,
             stateWidth: 125,
             postalCodeLabelWidth: 80,
+            postalCodeFieldlWidth: 160,
             expirationMonthWidth: 100,
-            expirationYearWidth: 90
+            expirationYearWidth: 90,
+            cardLabelWidth: 110,
+            expirationLabelWidth: 75,
+            completeButtonWidth: 150,
+            style: 'opacity: 0.5',
+            componentCls: '',
+            textfieldPadding: 0,
+            flexContainer: 1
         },
         'neptune-touch': {
             width: 680,
@@ -54,8 +68,55 @@ Ext.define('KitchenSink.view.form.Checkout', {
             phoneLabelWidth: 120,
             stateWidth: 135,
             postalCodeLabelWidth: 90,
+            postalCodeFieldlWidth: 160,
             expirationMonthWidth: 120,
-            expirationYearWidth: 110
+            expirationYearWidth: 110,
+            cardLabelWidth: 110,
+            expirationLabelWidth: 75,
+            completeButtonWidth: 150,
+            style: 'opacity: 0.5',
+            componentCls: '',
+            textfieldPadding: 0,
+            flexContainer: 1
+        },
+        graphite: {
+            width: 900,
+            normalLabelWidth: 100,
+            longLabelWidth: 130,
+            phoneWidth: 330,
+            phoneLabelWidth: 150,
+            stateWidth: 135,
+            postalCodeLabelWidth: 120,
+            postalCodeFieldlWidth: 220,
+            expirationMonthWidth: 120,
+            expirationYearWidth: 110,
+            cardLabelWidth: 130,
+            expirationLabelWidth: 95,
+            completeButtonWidth: 210,
+            style: 'opacity: 0.75',
+            componentCls: 'customCls',
+            textfieldPadding: 0,
+            flexContainer: 1
+        },
+        'classic-material': {
+            bodyPadding: 5,
+            width: 750,
+            normalLabelWidth: 90,
+            longLabelWidth: 90,
+            phoneWidth: 200,
+            phoneLabelWidth: 100,
+            stateWidth: 200,
+            postalCodeLabelWidth: 80,
+            postalCodeFieldlWidth: 160,
+            expirationMonthWidth: 150,
+            expirationYearWidth: 150,
+            cardLabelWidth: 110,
+            expirationLabelWidth: 75,
+            completeButtonWidth: 200,
+            style: 'opacity: 0.5',
+            componentCls: '',
+            textfieldPadding: 0,
+            flexContainer: 1
         }
     },
     //</example>
@@ -77,12 +138,13 @@ Ext.define('KitchenSink.view.form.Checkout', {
         defaultType: 'textfield',
         layout: 'anchor',
         defaults: {
-            anchor: '100%'
+            anchor: '100%',
+            componentCls: '${componentCls}'
         },
         items: [{
             xtype: 'fieldcontainer',
             fieldLabel: 'Name',
-
+            labelWidth: '${longLabelWidth}',
             layout: 'hbox',
             combineErrors: true,
             defaultType: 'textfield',
@@ -93,14 +155,12 @@ Ext.define('KitchenSink.view.form.Checkout', {
             items: [{
                 fieldLabel: 'First Name',
                 name: 'firstName',
-
                 flex: 2,
                 emptyText: 'First',
                 allowBlank: false
             }, {
                 fieldLabel: 'Last Name',
                 name: 'lastName',
-
                 flex: 3,
                 margin: '0 0 0 6',
                 emptyText: 'Last',
@@ -115,14 +175,14 @@ Ext.define('KitchenSink.view.form.Checkout', {
             items: [{
                 fieldLabel: 'Email Address',
                 name: 'email',
-
+                labelWidth: '${longLabelWidth}',
                 vtype: 'email',
                 flex: 1,
                 allowBlank: false
             }, {
                 fieldLabel: 'Phone Number',
                 name: 'phone',
-
+                cls: 'input-label-zero-transform',
                 labelWidth: '${phoneLabelWidth}',
                 width: '${phoneWidth}',
                 emptyText: 'xxx-xxx-xxxx',
@@ -135,13 +195,14 @@ Ext.define('KitchenSink.view.form.Checkout', {
         xtype: 'fieldset',
         title: 'Mailing Address',
         reference: 'mailingAddressForm',
-        
+
         defaultType: 'textfield',
         layout: 'anchor',
         defaults: {
-            anchor: '100%'
+            anchor: '100%',
+            componentCls: '${componentCls}'
         },
-        
+
         items: [{
             fieldLabel: 'Street Address',
             name: 'mailingStreet',
@@ -149,7 +210,7 @@ Ext.define('KitchenSink.view.form.Checkout', {
 
             labelWidth: '${longLabelWidth}',
             allowBlank: false,
-            
+
             listeners: {
                 change: 'onMailingAddrFieldChange'
             }
@@ -165,9 +226,9 @@ Ext.define('KitchenSink.view.form.Checkout', {
                 reference: 'mailingCity',
 
                 labelWidth: '${longLabelWidth}',
-                flex: 1,
+                flex: '${flexContainer}',
                 allowBlank: false,
-                
+
                 listeners: {
                     change: 'onMailingAddrFieldChange'
                 }
@@ -186,7 +247,7 @@ Ext.define('KitchenSink.view.form.Checkout', {
                 typeAhead: true,
                 queryMode: 'local',
                 allowBlank: false,
-                
+
                 listConfig: {
                     minWidth: null
                 },
@@ -202,9 +263,9 @@ Ext.define('KitchenSink.view.form.Checkout', {
                 fieldLabel: 'Postal Code',
                 name: 'mailingPostalCode',
                 reference: 'mailingPostalCode',
-
+                padding: '${textfieldPadding}',
                 labelWidth: '${postalCodeLabelWidth}',
-                width: 160,
+                width: '${postalCodeFieldlWidth}',
                 allowBlank: false,
                 maxLength: 10,
                 enforceMaxLength: true,
@@ -223,7 +284,8 @@ Ext.define('KitchenSink.view.form.Checkout', {
         layout: 'anchor',
 
         defaults: {
-            anchor: '100%'
+            anchor: '100%',
+            componentCls: '${componentCls}'
         },
 
         items: [{
@@ -243,7 +305,7 @@ Ext.define('KitchenSink.view.form.Checkout', {
             reference: 'billingStreet',
 
             labelWidth: '${longLabelWidth}',
-            style: 'opacity:.5',
+            style: '${style}',
             disabled: true,
             allowBlank: false
         }, {
@@ -258,8 +320,8 @@ Ext.define('KitchenSink.view.form.Checkout', {
                 reference: 'billingCity',
 
                 labelWidth: '${longLabelWidth}',
-                style: 'opacity:.5',
-                flex: 1,
+                style: '${style}',
+                flex: '${flexContainer}',
                 disabled: true,
                 allowBlank: false
             }, {
@@ -270,7 +332,7 @@ Ext.define('KitchenSink.view.form.Checkout', {
 
                 width: '${stateWidth}',
                 enforceMaxLength: true,
-                style: 'opacity:.5',
+                style: '${style}',
                 labelWidth: 50,
                 valueField: 'abbr',
                 displayField: 'abbr',
@@ -291,10 +353,10 @@ Ext.define('KitchenSink.view.form.Checkout', {
                 fieldLabel: 'Postal Code',
                 name: 'billingPostalCode',
                 reference: 'billingPostalCode',
-
+                padding: '${textfieldPadding}',
                 labelWidth: '${postalCodeLabelWidth}',
-                style: 'opacity:.5',
-                width: 160,
+                style: '${style}',
+                width: '${postalCodeFieldlWidth}',
                 disabled: true,
                 allowBlank: false,
                 maxLength: 10,
@@ -310,7 +372,8 @@ Ext.define('KitchenSink.view.form.Checkout', {
 
         layout: 'anchor',
         defaults: {
-            anchor: '100%'
+            anchor: '100%',
+            componentCls: '${componentCls}'
         },
 
         items: [{
@@ -343,8 +406,7 @@ Ext.define('KitchenSink.view.form.Checkout', {
             xtype: 'textfield',
             fieldLabel: 'Name On Card',
             name: 'ccName',
-
-            labelWidth: 110,
+            labelWidth: '${cardLabelWidth}',
             allowBlank: false
         }, {
             xtype: 'container',
@@ -355,9 +417,8 @@ Ext.define('KitchenSink.view.form.Checkout', {
                 xtype: 'textfield',
                 fieldLabel: 'Card Number',
                 name: 'ccNumber',
-
-                labelWidth: 110,
-                flex: 1,
+                labelWidth: '${cardLabelWidth}',
+                flex: '${flexContainer}',
                 allowBlank: false,
                 minLength: 15,
                 maxLength: 16,
@@ -366,9 +427,9 @@ Ext.define('KitchenSink.view.form.Checkout', {
             }, {
                 xtype: 'fieldcontainer',
                 fieldLabel: 'Expiration',
-
-                labelWidth: 75,
+                labelWidth: '${expirationLabelWidth}',
                 layout: 'hbox',
+                componentCls: '${componentCls}',
 
                 items: [{
                     xtype: 'combobox',
@@ -379,7 +440,6 @@ Ext.define('KitchenSink.view.form.Checkout', {
                     queryMode: 'local',
                     emptyText: 'Month',
                     hideLabel: true,
-                    margin: '0 6 0 0',
                     width: '${expirationMonthWidth}',
                     allowBlank: false,
                     forceSelection: true,
@@ -390,7 +450,7 @@ Ext.define('KitchenSink.view.form.Checkout', {
                 }, {
                     xtype: 'numberfield',
                     name: 'ccExpireYear',
-
+                    padding: '${textfieldPadding}',
                     width: '${expirationYearWidth}',
                     hideLabel: true,
                     value: new Date().getFullYear(),
@@ -406,7 +466,7 @@ Ext.define('KitchenSink.view.form.Checkout', {
         handler: 'onResetClick'
     }, {
         text: 'Complete Purchase',
-        width: 150,
+        width: '${completeButtonWidth}',
         handler: 'onCompleteClick'
     }]
 });

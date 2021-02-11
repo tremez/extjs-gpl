@@ -3,27 +3,27 @@ Ext.define('KitchenSink.view.pivot.PivotController', {
 
     alias: 'controller.pivot',
 
-    yearLabelRenderer: function(value){
+    yearLabelRenderer: function(value) {
         return 'Year ' + value;
     },
 
-    monthLabelRenderer: function(value){
+    monthLabelRenderer: function(value) {
         return Ext.Date.monthNames[value];
     },
 
-    expandAll: function(){
+    expandAll: function() {
         this.getView().expandAll();
     },
 
-    collapseAll: function(){
+    collapseAll: function() {
         this.getView().collapseAll();
     },
 
-    onPivotBeforeUpdate: function(){
+    onPivotBeforeUpdate: function() {
         Ext.log('Event "pivotbeforeupdate" fired');
     },
 
-    onPivotUpdate: function(){
+    onPivotUpdate: function() {
         Ext.log('Event "pivotupdate" fired');
     }
 

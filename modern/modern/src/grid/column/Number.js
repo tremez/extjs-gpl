@@ -1,5 +1,5 @@
 /**
- * A Column definition class which renders a numeric data field according to a {@link #format} string.
+ * A Column type for rendering numeric data field according to a {@link #format} string.
  *
  *     @example
  *     Ext.create('Ext.data.Store', {
@@ -22,10 +22,10 @@
  *         title: 'Number Column Demo',
  *         store: Ext.data.StoreManager.lookup('sampleStore'),
  *         columns: [
- *             { text: 'Symbol',         dataIndex: 'symbol', width: 100},
- *             { text: 'Current Price',  dataIndex: 'price',  renderer: Ext.util.Format.usMoney },
- *             { text: 'Change',         dataIndex: 'change', xtype: 'numbercolumn', format:'0.00' },
- *             { text: 'Volume',         dataIndex: 'volume', xtype: 'numbercolumn', format:'0,000' }
+ *             { text: 'Symbol', dataIndex: 'symbol', width: 100},
+ *             { text: 'Price',  dataIndex: 'price',  formatter: 'usMoney' },
+ *             { text: 'Change', dataIndex: 'change', xtype: 'numbercolumn', format:'0.00' },
+ *             { text: 'Volume', dataIndex: 'volume', xtype: 'numbercolumn', format:'0,000' }
  *         ],
  *         height: 200,
  *         width: 400
@@ -33,13 +33,14 @@
  */
 Ext.define('Ext.grid.column.Number', {
     extend: 'Ext.grid.column.Column',
+    xtype: 'numbercolumn',
+
+    isNumberColumn: true,
 
     requires: [
         'Ext.util.Format',
         'Ext.grid.cell.Number'
     ],
-
-    xtype: 'numbercolumn',
 
     config: {
         /**
@@ -47,14 +48,14 @@ Ext.define('Ext.grid.column.Number', {
          * A format string as used by {@link Ext.util.Format#number} to format values
          * for this column.
          */
-        format: null,
+        format: null
+    },
 
-        defaultEditor: {
-            xtype: 'numberfield'
-        },
+    cell: {
+        xtype: 'numbercell'
+    },
 
-        cell: {
-            xtype: 'numbercell'
-        }
+    defaultEditor: {
+        xtype: 'numberfield'
     }
 });

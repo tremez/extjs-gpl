@@ -26,13 +26,15 @@ Ext.define('Ext.layout.component.BoundList', {
         if (toolbar) {
             ownerContext.toolbarContext = ownerContext.context.getCmp(toolbar);
         }
+
         ownerContext.listContext = ownerContext.getEl('listWrap');
     },
 
-    beginLayoutCycle: function(ownerContext){
+    beginLayoutCycle: function(ownerContext) {
         var owner = this.owner;
 
         this.callParent(arguments);
+
         if (ownerContext.heightModel.auto) {
             // Set the el/listWrap to be autoHeight since they may have been previously sized
             // by another layout process. If the el was at maxHeight first, the listWrap will
@@ -44,6 +46,7 @@ Ext.define('Ext.layout.component.BoundList', {
 
     getLayoutItems: function() {
         var toolbar = this.owner.pagingToolbar;
+
         return toolbar ? [toolbar] : [];
     },
 
@@ -61,9 +64,11 @@ Ext.define('Ext.layout.component.BoundList', {
             scrollPos = me.scrollPos;
 
         me.callParent(arguments);
+
         if (xy) {
             me.owner.setXY(xy);
         }
+
         listWrap.setScrollLeft(scrollPos.left);
         listWrap.setScrollTop(scrollPos.top);
     },
@@ -86,18 +91,22 @@ Ext.define('Ext.layout.component.BoundList', {
 
         if (toolbarHeight === undefined) {
             this.done = false;
-        } else {
-            ownerContext.listContext.setHeight(height - ownerContext.getFrameInfo().height - toolbarHeight);
+        }
+        else {
+            ownerContext.listContext.setHeight(
+                height - ownerContext.getFrameInfo().height - toolbarHeight
+            );
         }
     },
 
-    calculateOwnerHeightFromContentHeight: function(ownerContext){
+    calculateOwnerHeightFromContentHeight: function(ownerContext) {
         var height = this.callParent(arguments),
             toolbar = ownerContext.toolbarContext;
 
         if (toolbar) {
             height += toolbar.getProp('height');
         }
+
         return height;
     }
 });

@@ -1,12 +1,12 @@
 Ext.define('Ticket.view.dashboard.Dashboard', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.app-dashboard',
-    
+
     controller: 'dashboard',
     viewModel: {
         type: 'dashboard'
     },
-    
+
     requires: [
         'Ticket.view.dashboard.DashboardController',
         'Ticket.view.dashboard.DashboardModel',
@@ -19,7 +19,7 @@ Ext.define('Ticket.view.dashboard.Dashboard', {
         'Ext.layout.container.Fit',
         'Ext.layout.container.Border'
     ],
-    
+
     bodyPadding: 20,
     bodyCls: 'app-dashboard',
 
@@ -60,7 +60,7 @@ Ext.define('Ticket.view.dashboard.Dashboard', {
                 items: {
                     xtype: 'polar',
                     bind: '{ticketStatusSummary}',
-                    interactions: 'rotatePie3d',
+                    interactions: 'rotate',
                     animate: {
                         duration: 500,
                         easing: 'easeIn'

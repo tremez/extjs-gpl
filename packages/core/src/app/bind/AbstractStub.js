@@ -19,7 +19,7 @@ Ext.define('Ext.app.bind.AbstractStub', {
 
     parent: null,
 
-    constructor: function (owner, name) {
+    constructor: function(owner, name) {
         var me = this;
 
         /**
@@ -33,7 +33,7 @@ Ext.define('Ext.app.bind.AbstractStub', {
         me.callParent();
     },
 
-    destroy: function () {
+    destroy: function() {
         var me = this,
             children = me.children,
             bindings = me.bindings,
@@ -48,15 +48,15 @@ Ext.define('Ext.app.bind.AbstractStub', {
         for (key in children) {
             children[key].destroy();
         }
-        
+
         if (me.scheduled) {
             me.unschedule();
         }
-        
+
         me.callParent();
     },
 
-    add: function (child) {
+    add: function(child) {
         var me = this;
 
         (me.children || (me.children = {}))[child.name] = child;
@@ -65,7 +65,7 @@ Ext.define('Ext.app.bind.AbstractStub', {
         child.parent = me;
     },
 
-    getChild: function (path) {
+    getChild: function(path) {
         var pathArray = Ext.isString(path) ? path.split('.') : path;
 
         if (pathArray && pathArray.length) {
@@ -75,7 +75,7 @@ Ext.define('Ext.app.bind.AbstractStub', {
         return this;
     },
 
-    getFullName: function () {
+    getFullName: function() {
         var me = this,
             name = me.fullName,
             parent = me.parent,
@@ -83,22 +83,24 @@ Ext.define('Ext.app.bind.AbstractStub', {
 
         if (!name) {
             name = me.name || me.id;
+
             if (parent && (s = parent.getFullName())) {
-                name = ((s.charAt(s.length-1) !== ':') ? s + '.' : s) + name;
+                name = ((s.charAt(s.length - 1) !== ':') ? s + '.' : s) + name;
             }
+
             me.fullName = name;
         }
 
         return name;
     },
 
-    getSession: function () {
+    getSession: function() {
         var owner = this.owner;
 
         return owner.isSession ? owner : owner.getSession();
     },
 
-    bind: function (callback, scope, options) {
+    bind: function(callback, scope, options) {
         var me = this,
             binding = new Ext.app.bind.Binding(me, callback, scope, options),
             bindings = (me.bindings || (me.bindings = []));
@@ -109,11 +111,11 @@ Ext.define('Ext.app.bind.AbstractStub', {
         return binding;
     },
 
-    getValue: function () {
-        return this.isLoading() ? null : this.getRawValue();
+    getValue: function() {
+        return this.isAvailable() ? this.getRawValue() : null;
     },
 
-    graft: function (replacement) {
+    graft: function(replacement) {
         var me = this,
             bindings = me.bindings,
             name = me.name,
@@ -132,33 +134,48 @@ Ext.define('Ext.app.bind.AbstractStub', {
 
         // Now for the fun part...
         if (bindings) {
-            for (i = bindings.length; i-- > 0; ) {
+            for (i = bindings.length; i-- > 0;) {
                 bindings[i].stub = replacement;
             }
-        } 
+        }
 
         return replacement;
     },
 
-    isDescendantOf: function (item) {
-        for (var parent = this; parent = parent.parent; ) {
+    isDescendantOf: function(item) {
+        var parent;
+
+        for (parent = this; parent = parent.parent;) { // eslint-disable-line no-cond-assign
             if (parent === item) {
                 return true;
             }
         }
+
+        return false;
+    },
+
+    isAvailable: function() {
+        return true;
+    },
+
+    isLoading: function() {
         return false;
     },
 
     onSchedule: function() {
+        var i, len, binding, bindings, p;
+
         // When a stub changes, say "foo.bar.baz" we may need to notify bindings on our
         // parents "foo.bar" and "foo", This is true especially when these are targets of
         // links. To economize on this we require that bindings that want to be notified
         // of changes to sub-properties of their target set the "deep" property to true.
-        for (var i, len, binding, bindings, p = this.parent; p; p = p.parent) {
+        for (p = this.parent; p; p = p.parent) {
             bindings = p.bindings;
+
             if (bindings) {
                 for (i = 0, len = bindings.length; i < len; ++i) {
                     binding = bindings[i];
+
                     if (binding.deep && !binding.scheduled) {
                         binding.schedule();
                     }
@@ -167,13 +184,14 @@ Ext.define('Ext.app.bind.AbstractStub', {
         }
     },
 
-    react: function () {
+    react: function() {
         var bindings = this.bindings,
             binding, i, len;
-            
+
         if (bindings) {
             for (i = 0, len = bindings.length; i < len; ++i) {
                 binding = bindings[i];
+
                 if (!binding.scheduled) {
                     binding.schedule();
                 }
@@ -181,7 +199,7 @@ Ext.define('Ext.app.bind.AbstractStub', {
         }
     },
 
-    unbind: function (binding) {
+    unbind: function(binding) {
         var bindings = this.bindings;
 
         if (bindings && bindings.length) {
@@ -195,36 +213,38 @@ Ext.define('Ext.app.bind.AbstractStub', {
                 bindings = this.bindings,
                 totalCount = 0,
                 count = 0,
-                child,
-                key;
-            
+                child, key;
+
             if (children) {
                 for (key in children) {
                     child = children[key];
                     count = child.collect();
+
                     if (count === 0) {
                         // The child (and any deep children) have no bindings,
                         // so we can consider it a dead node.
                         child.destroy();
                         delete children[key];
                     }
+
                     totalCount += count;
                 }
             }
-            
+
             if (bindings) {
                 totalCount += bindings.length;
             }
-            
+
             return totalCount;
         },
-        
-        getScheduler: function () {
+
+        getScheduler: function() {
             var owner = this.owner;
+
             return owner && owner.getScheduler();
         },
-        
-        sort: function () {
+
+        sort: function() {
             var parent = this.parent;
 
             if (parent) {
@@ -236,7 +256,7 @@ Ext.define('Ext.app.bind.AbstractStub', {
             }
 
             // Schedulable#sort === emptyFn
-            //me.callParent();
+            // me.callParent();
         }
     }
 });

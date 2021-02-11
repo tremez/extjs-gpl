@@ -4,6 +4,7 @@ Ext.define('Ext.rtl.util.Renderable', {
     _rtlCls: Ext.baseCSSPrefix + 'rtl',
     _ltrCls: Ext.baseCSSPrefix + 'ltr',
 
+    /* eslint-disable indent, max-len */
     // this template should be exactly the same as frameTableTpl, except with the order
     // of right and left TD elements switched.
     rtlFrameTableTpl: [
@@ -33,12 +34,15 @@ Ext.define('Ext.rtl.util.Renderable', {
         '</table>',
         '<tpl if="hasTabGuard">{% this.renderTabGuard(out, values, \'after\'); %}</tpl>'
     ],
+    /* eslint-enable indent, max-len */
 
     beforeRender: function() {
         var rtl = this.getInherited().rtl;
+
         if (rtl) {
             this.addCls(this._rtlCls);
-        } else if (rtl === false) {
+        }
+        else if (rtl === false) {
             this.addCls(this._ltrCls);
         }
 
@@ -59,11 +63,12 @@ Ext.define('Ext.rtl.util.Renderable', {
 
     privates: {
         getFrameTpl: function(table) {
-            return (table && this.getInherited().rtl) ?
-                this.lookupTpl('rtlFrameTableTpl') : this.callParent(arguments);
+            return (table && this.getInherited().rtl)
+                ? this.lookupTpl('rtlFrameTableTpl')
+                : this.callParent(arguments);
         },
 
-        getFrameRenderData: function () {
+        getFrameRenderData: function() {
             var me = this,
                 data = me.callParent(),
                 rtlCls = me._rtlCls;

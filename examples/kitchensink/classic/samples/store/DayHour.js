@@ -3,9 +3,9 @@ Ext.define('KitchenSink.store.DayHour', {
     alias: 'store.dayhour',
 
     fields: [
-        {name: 'day', type: 'number'},
-        {name: 'hour', type: 'number'},
-        {name: 'value', type: 'number'}
+        { name: 'day', type: 'number' },
+        { name: 'hour', type: 'number' },
+        { name: 'value', type: 'number' }
     ],
 
     proxy: {

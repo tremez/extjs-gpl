@@ -92,16 +92,17 @@
  *
  * @private
  */
-Ext.define('Ext.parse.Tokenizer', function (Tokenizer) {
+Ext.define('Ext.parse.Tokenizer', function(Tokenizer) {
     var flyweights = (Tokenizer.flyweights = []),
-        BOOLEAN = { literal: true, boolean: true },
+        BOOLEAN = { literal: true, boolean: true, type: 'boolean' },
         ERROR = { error: true },
         IDENT = { ident: true },
         LITERAL = { literal: true },
         NULL = { literal: true, nil: true },
-        NUMBER = { literal: true, number: true },
-        STRING = { literal: true, string: true };
+        NUMBER = { literal: true, number: true, type: 'number' },
+        STRING = { literal: true, string: true, type: 'string' };
 
+/* eslint-disable indent */
 return {
     extend: 'Ext.util.Fly',
 
@@ -125,9 +126,9 @@ return {
          * value tokens.
          */
         keywords: {
-            'null':  { type: 'literal', is: NULL,    value: null },
+            'null': { type: 'literal', is: NULL, value: null },
             'false': { type: 'literal', is: BOOLEAN, value: false },
-            'true':  { type: 'literal', is: BOOLEAN, value: true }
+            'true': { type: 'literal', is: BOOLEAN, value: true }
         },
 
         /**
@@ -140,7 +141,7 @@ return {
             '-': 'minus',
             '*': 'multiply',
             '/': 'divide',
-            '!': 'bang',
+            '!': 'not',
             ',': 'comma',
             ':': 'colon',
             '[': 'arrayOpen',
@@ -149,7 +150,9 @@ return {
             '}': 'curlyClose',
             '(': 'parenOpen',
             ')': 'parenClose'
-        }
+        },
+
+        patterns: null
     },
 
     /**
@@ -170,8 +173,9 @@ return {
      */
     index: -1,
 
-    constructor: function (config) {
+    constructor: function(config) {
         this.operators = {};
+        this.patterns = [];
 
         this.initConfig(config);
     },
@@ -185,7 +189,7 @@ return {
      *
      * @return {Object} The next token in the stream (now consumed).
      */
-    next: function () {
+    next: function() {
         var token = this.peek();
 
         this.head = undefined;  // indicates that more parsing is needed (see peek)
@@ -222,10 +226,10 @@ return {
      * @return {Boolean} return.is.string True if the token is a string literal.
      * @return {Boolean} return.is.operator True if the token is a operator (i.e.,
      * "@!,:[]{}()"). operators will also have one of these boolean proprieties, in
-     * the respective order: `at`, `bang`, `comma`, `colon`, `arrayOpen`, `arrayClose`,
+     * the respective order: `at`, `not`, `comma`, `colon`, `arrayOpen`, `arrayClose`,
      * `curlyOpen`, `curlyClose`, `parentOpen` and `parenClose`).
      */
-    peek: function () {
+    peek: function() {
         var me = this,
             error = me.error,
             token = me.head;
@@ -244,7 +248,7 @@ return {
     /**
      * Returns this flyweight instance to the flyweight pool for reuse.
      */
-    release: function () {
+    release: function() {
         this.reset();
 
         if (flyweights.length < Tokenizer.flyPoolSize) {
@@ -260,7 +264,7 @@ return {
      * @param {Number} [end] The index of the first character beyond the token range.
      * @returns {Ext.parse.Tokenizer}
      */
-    reset: function (text, pos, end) {
+    reset: function(text, pos, end) {
         var me = this;
 
         me.error = null;
@@ -311,7 +315,7 @@ return {
          */
         text: null,
 
-        applyOperators: function (ops) {
+        applyOperators: function(ops) {
             var operators = this.operators,
                 block, c, def, i, len, name, op;
 
@@ -341,14 +345,38 @@ return {
                 if (name) {
                     block.token = def = {
                         type: 'operator',
+                        name: name,
                         value: op,
                         is: { operator: true }
                     };
 
                     def.is[name] = true;
-                } else {
+                }
+                else {
                     block.token = null;
                 }
+            }
+        },
+
+        applyPatterns: function(pat) {
+            var patterns = this.patterns,
+                def, extract, name, re;
+
+            for (name in pat) {
+                def = pat[name];
+
+                extract = def.extract;
+                re = def.re;
+
+                delete def.extract;
+                delete def.re;
+
+                patterns.push({
+                    name: name,
+                    re: re,
+                    extract: extract,
+                    token: def
+                });
             }
         },
 
@@ -356,7 +384,7 @@ return {
          * Parses and returns the next token from `text` starting at `pos`.
          * @return {Object} The next token
          */
-        advance: function () {
+        advance: function() {
             var me = this,
                 spaceRe = me.spaceRe,
                 text = me.text,
@@ -372,6 +400,7 @@ return {
                 }
 
                 me.index = me.pos;
+
                 return me.parse(c);
             }
 
@@ -384,17 +413,36 @@ return {
          * @param {String} c The current character.
          * @return {Object} The next token
          */
-        parse: function (c) {
+        parse: function(c) {
             var me = this,
                 digitRe = me.digitRe,
                 text = me.text,
                 length = me.end,
-                ret;
+                patterns = me.patterns,
+                i, match, pat, ret;
 
             // Handle ".123"
-            if ( c === '.' && me.pos+1 < length) {
-                if (digitRe.test(text.charAt(me.pos+1))) {
+            if (c === '.' && me.pos + 1 < length) {
+                if (digitRe.test(text.charAt(me.pos + 1))) {
                     ret = me.parseNumber();
+                }
+            }
+
+            if (!ret) {
+                for (i = 0; i < patterns.length; ++i) {
+                    pat = patterns[i];
+
+                    pat.re.lastIndex = me.pos;
+                    match = pat.re.exec(text);
+
+                    if (match && match.index === me.pos) {
+                        ret = Ext.apply({
+                            value: pat.extract ? pat.extract(match) : match[0]
+                        }, pat.token);
+
+                        me.pos += match[0].length;
+                        break;
+                    }
                 }
             }
 
@@ -424,7 +472,7 @@ return {
          * Parses the next identifier token.
          * @return {Object} The next token.
          */
-        parseIdent: function () {
+        parseIdent: function() {
             var me = this,
                 identRe = me.identRe,
                 keywords = me.getKeywords(),
@@ -443,6 +491,7 @@ return {
                     if (prev === '.') {
                         return me.syntaxError(end, 'Unexpected dot operator');
                     }
+
                     ++end;
                 }
                 else if (identRe.test(c)) {
@@ -472,7 +521,7 @@ return {
          * Parses the next number literal token.
          * @return {Object} The next token.
          */
-        parseNumber: function () {
+        parseNumber: function() {
             var me = this,
                 digitRe = me.digitRe,
                 text = me.text,
@@ -485,14 +534,16 @@ return {
 
                 if (c === '-' || c === '+') {
                     if (me.pos !== start) {
-                        return me.syntaxError(start, 'Invalid number');
+                        break;
                     }
+
                     ++me.pos;
                 }
                 else if (c === '.') {
                     if (decimal) {
                         break;
                     }
+
                     decimal = true;
                     ++me.pos;
                 }
@@ -532,7 +583,7 @@ return {
             return token;
         },
 
-        parseOperator: function (c) {
+        parseOperator: function(c) {
             var me = this,
                 block = me.operators,
                 text = me.text,
@@ -552,7 +603,8 @@ return {
 
                 if (end < length) {
                     c = text.charAt(end);
-                } else {
+                }
+                else {
                     break;
                 }
             }
@@ -568,7 +620,7 @@ return {
          * Parses the next string literal token.
          * @return {Object} The next token.
          */
-        parseString: function () {
+        parseString: function() {
             var me = this,
                 text = me.text,
                 pos = me.pos,
@@ -584,8 +636,10 @@ return {
 
                 if (c === quote) {
                     closed = true;
+
                     break;
                 }
+
                 if (c === '\\' && pos < length) {
                     c = text.charAt(pos++);
                 }
@@ -594,9 +648,9 @@ return {
                 // text as a single chunk...
                 str += c;
             }
-            
+
             me.pos = pos;
-            
+
             if (!closed) {
                 return me.syntaxError(start, 'Unterminated string');
             }
@@ -615,12 +669,13 @@ return {
          * @param {String} message The error message.
          * @return {Object} The error token.
          */
-        syntaxError: function (at, message) {
+        syntaxError: function(at, message) {
             if (typeof at === 'string') {
                 message = at;
                 at = this.pos;
             }
 
+            // eslint-disable-next-line vars-on-top
             var suffix = (at == null) ? '' : (' (at index ' + at + ')'),
                 error = new Error(message + suffix);
 
@@ -634,4 +689,5 @@ return {
             return this.error = error;
         }
     }
-}});
+};
+});

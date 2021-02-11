@@ -9,5 +9,5 @@ Ext.define("Ext.locale.it.toolbar.Paging", {
     prevText: 'Pagina precedente',
     nextText: 'Pagina successiva',
     lastText: 'Ultima pagina',
-    refreshText: 'Aggiorna' 
+    refreshText: 'Aggiorna'
 });

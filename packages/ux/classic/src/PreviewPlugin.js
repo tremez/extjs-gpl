@@ -1,27 +1,27 @@
 /**
  * The Preview Plugin enables toggle of a configurable preview of all visible records.
  *
- * Note: This plugin does NOT assert itself against an existing RowBody feature and may conflict with
- * another instance of the same plugin.
+ * Note: This plugin does NOT assert itself against an existing RowBody feature and may conflict
+ * with another instance of the same plugin.
  */
 Ext.define('Ext.ux.PreviewPlugin', {
     extend: 'Ext.plugin.Abstract',
     alias: 'plugin.preview',
     requires: ['Ext.grid.feature.RowBody'],
-    
+
     /**
      * @private
      * css class to use to hide the body
      */
     hideBodyCls: 'x-grid-row-body-hidden',
-    
+
     /**
      * @cfg {String} bodyField
      * Field to display in the preview. Must be a field within the Model definition
      * that the store is using.
      */
     bodyField: '',
-    
+
     /**
      * @cfg {Boolean} previewExpanded
      */
@@ -35,12 +35,13 @@ Ext.define('Ext.ux.PreviewPlugin', {
         this.callParent(arguments);
 
         // Resolve grid from view as necessary
+        // eslint-disable-next-line vars-on-top
         var me = this,
-            grid        = me.cmp = target.isXType('gridview') ? target.grid : target,
-            bodyField   = me.bodyField,
+            grid = me.cmp = target.isXType('gridview') ? target.grid : target,
+            bodyField = me.bodyField,
             hideBodyCls = me.hideBodyCls,
-            feature     = Ext.create('Ext.grid.feature.RowBody', {
-                grid : grid,
+            feature = Ext.create('Ext.grid.feature.RowBody', {
+                grid: grid,
                 getAdditionalData: function(data, idx, model, rowValues) {
 
                     var getAdditionalData = Ext.grid.feature.RowBody.prototype.getAdditionalData,
@@ -53,13 +54,15 @@ Ext.define('Ext.ux.PreviewPlugin', {
                         // "this" is the RowBody object hjere. Do not change to "me"
                         Ext.apply(additionalData, getAdditionalData.apply(this, arguments));
                     }
+
                     return additionalData;
                 }
             }),
             initFeature = function(grid, view) {
                 view.previewExpanded = me.previewExpanded;
 
-                // By this point, existing features are already in place, so this must be initialized and added
+                // By this point, existing features are already in place, so this must be
+                // initialized and added
                 view.featuresMC.add(feature);
                 feature.init(grid);
             };
@@ -90,7 +93,7 @@ Ext.define('Ext.ux.PreviewPlugin', {
             bufferedRenderer = view.bufferedRenderer,
             scrollManager = view.scrollManager;
 
-        if (grid && view && expanded !== view.previewExpanded ) {
+        if (grid && view && expanded !== view.previewExpanded) {
             this.previewExpanded = view.previewExpanded = !!expanded;
             view.refreshView();
 
@@ -99,7 +102,8 @@ Ext.define('Ext.ux.PreviewPlugin', {
             if (scrollManager) {
                 if (bufferedRenderer) {
                     bufferedRenderer.stretchView(view, bufferedRenderer.getScrollHeight(true));
-                } else {
+                }
+                else {
                     scrollManager.refresh(true);
                 }
             }

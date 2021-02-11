@@ -10,10 +10,10 @@ Ext.define('Ext.chart.Markers', {
     isMarkers: true,
     defaultCategory: 'default',
 
-    constructor: function () {
+    constructor: function() {
         this.callParent(arguments);
-        // `categories` maps category names to a map that maps instance index in category to its global index:
-        // categoryName: {instanceIndexInCategory: globalInstanceIndex}
+        // `categories` maps category names to a map that maps instance index in category to its
+        // global index: categoryName: {instanceIndexInCategory: globalInstanceIndex}
         this.categories = {};
         // The `revisions` map keeps revision numbers of instance categories.
         // When a marker (instance) is put (created or updated), it gets the revision
@@ -25,15 +25,18 @@ Ext.define('Ext.chart.Markers', {
         this.revisions = {};
     },
 
-    destroy: function () {
+    destroy: function() {
         this.categories = null;
         this.revisions = null;
         this.callParent();
     },
 
-    getMarkerFor: function (category, index) {
+    getMarkerFor: function(category, index) {
+        var categoryInstances;
+
         if (category in this.categories) {
-            var categoryInstances = this.categories[category];
+            categoryInstances = this.categories[category];
+
             if (index in categoryInstances) {
                 return this.get(categoryInstances[index]);
             }
@@ -44,13 +47,21 @@ Ext.define('Ext.chart.Markers', {
      * Clears the markers in the category.
      * @param {String} category
      */
-    clear: function (category) {
+    clear: function(category) {
         category = category || this.defaultCategory;
+
         if (!(category in this.revisions)) {
             this.revisions[category] = 1;
-        } else {
+        }
+        else {
             this.revisions[category]++;
         }
+    },
+
+    clearAll: function() {
+        this.callParent();
+        this.categories = {};
+        this.revisions = {};
     },
 
     /**
@@ -61,22 +72,27 @@ Ext.define('Ext.chart.Markers', {
      * @param {Boolean} [bypassNormalization]
      * @param {Boolean} [keepRevision]
      */
-    putMarkerFor: function (category, attr, index, bypassNormalization, keepRevision) {
-        category = category || this.defaultCategory;
-
+    putMarkerFor: function(category, attr, index, bypassNormalization, keepRevision) {
         var me = this,
-            categoryInstances = me.categories[category] || (me.categories[category] = {}),
-            instance;
+            categoryInstances, instance;
+
+        category = category || this.defaultCategory;
+        categoryInstances = me.categories[category] || (me.categories[category] = {});
 
         if (index in categoryInstances) {
             me.setAttributesFor(categoryInstances[index], attr, bypassNormalization);
-        } else {
-            categoryInstances[index] = me.getCount(); // get the index of the instance created on next line
+        }
+        else {
+            // get the index of the instance created on next line
+            categoryInstances[index] = me.getCount();
             me.add(attr, bypassNormalization);
         }
+
         instance = me.get(categoryInstances[index]);
+
         if (instance) {
             instance.category = category;
+
             if (!keepRevision) {
                 instance.revision = me.revisions[category] || (me.revisions[category] = 1);
             }
@@ -89,18 +105,23 @@ Ext.define('Ext.chart.Markers', {
      * @param {Mixed} index
      * @param {Boolean} [isWithoutTransform]
      */
-    getMarkerBBoxFor: function (category, index, isWithoutTransform) {
+    getMarkerBBoxFor: function(category, index, isWithoutTransform) {
+        var categoryInstances;
+
         if (category in this.categories) {
-            var categoryInstances = this.categories[category];
+            categoryInstances = this.categories[category];
+
             if (index in categoryInstances) {
                 return this.getBBoxFor(categoryInstances[index], isWithoutTransform);
             }
         }
     },
 
-    getBBox: function () { return null; },
+    getBBox: function() {
+        return null;
+    },
 
-    render: function (surface, ctx, rect) {
+    render: function(surface, ctx, rect) {
         var me = this,
             surfaceRect = surface.getRect(),
             revisions = me.revisions,
@@ -116,9 +137,11 @@ Ext.define('Ext.chart.Markers', {
 
         for (i = 0; i < ln; i++) {
             instance = me.get(i);
+
             if (instance.hidden || instance.revision !== revisions[instance.category]) {
                 continue;
             }
+
             ctx.save();
             template.attr = instance;
             template.useAttributes(ctx, surfaceRect);

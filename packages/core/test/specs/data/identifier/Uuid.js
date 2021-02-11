@@ -1,12 +1,11 @@
-describe("Ext.data.identifier.Uuid", function() {
-    
+topSuite("Ext.data.identifier.Uuid", function() {
     var Generator = Ext.data.identifier.Generator,
         idgen;
-    
+
     function make(cfg) {
         idgen = new Ext.data.identifier.Uuid(cfg);
     }
-    
+
     afterEach(function() {
         idgen = null;
         // Purposefully NOT clearing the cache here, since the global
@@ -15,21 +14,22 @@ describe("Ext.data.identifier.Uuid", function() {
             uuid: Ext.data.identifier.Uuid.Global
         };
     });
-    
+
     describe("defaults", function() {
         it("should create a global instance with the id 'uuid", function() {
             expect(Ext.Factory.dataIdentifier('uuid') instanceof Ext.data.identifier.Uuid).toBe(true);
         });
     });
-    
+
     it("should allow creation of a new instance", function() {
         make({
             id: 'foo'
-        });    
+        });
+
         expect(Ext.Factory.dataIdentifier('foo')).toBe(idgen);
         expect(Ext.Factory.dataIdentifier('uuid')).not.toBe(idgen);
     });
-    
+
     describe("generate", function() {
         it("should be able to generate version 1 ids", function() {
             make({
@@ -39,7 +39,7 @@ describe("Ext.data.identifier.Uuid", function() {
                 salt: { hi: 0xDEAD & ~0x0100, lo: 0xBADBEEF },
                 timestamp: { hi: 0xDEFACED, lo: 0xBADF00D }
             });
-            
+
             //                                  time_mid      clock_hi (low 6 bits)
             //                         time_low     | time_hi |clock_lo
             //                             |        |     |   || salt[0]
@@ -53,16 +53,17 @@ describe("Ext.data.identifier.Uuid", function() {
 
             expect(idgen.generate()).toBe('0badf00e-aced-1def-b123-dfad0badbeef');
         });
-        
-        it('should generate Version 4 uuids', function () {
+
+        it('should generate Version 4 uuids', function() {
             make();
-            
-            // 2fc0fdf4-d127-4db1-a47e-7b4bc2fb8d5a           
+
+            // 2fc0fdf4-d127-4db1-a47e-7b4bc2fb8d5a
+            // eslint-disable-next-line no-useless-escape
             var guidRegex = /[0-9a-f]{8}(\-[0-9a-f]{4}){3}\-[0-9a-f]{12}/;
 
             var id1 = idgen.generate(),
                 id2 = idgen.generate();
-                
+
             expect(id1).toMatch(guidRegex);
             expect(id2).toMatch(guidRegex);
 
@@ -70,5 +71,4 @@ describe("Ext.data.identifier.Uuid", function() {
             expect(id2.charAt(14)).toEqual('4');
         });
     });
-    
 });

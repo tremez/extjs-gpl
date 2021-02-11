@@ -6,8 +6,22 @@ Ext.define('KitchenSink.view.binding.HelloWorld', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.binding-hello-world',
     width: 500,
-    bodyPadding: 10,
-    
+    profiles: {
+        classic: {
+            bodyPadding: 10
+        },
+        neptune: {
+            bodyPadding: 10
+        },
+        graphite: {
+            bodyPadding: 10
+        },
+        'classic-material': {
+            bodyPadding: 20
+        }
+    },
+    bodyPadding: '${bodyPadding}',
+
     viewModel: {
         data: {
             title: 'Hello World',
@@ -15,12 +29,12 @@ Ext.define('KitchenSink.view.binding.HelloWorld', {
             buttonText: 'A button'
         }
     },
-    
+
     bind: {
         title: '{title}',
         html: '{html}'
     },
-    
+
     tbar: [{
         bind: '{buttonText}'
     }]

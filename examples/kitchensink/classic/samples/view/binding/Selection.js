@@ -7,22 +7,41 @@ Ext.define('KitchenSink.view.binding.Selection', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.binding-selection',
     width: 600,
-    height: 270,
+    height: '${height}',
+
+    profiles: {
+        classic: {
+            height: 270,
+            phoneColumnWidth: 100
+        },
+        neptune: {
+            height: 270,
+            phoneColumnWidth: 100
+        },
+        graphite: {
+            height: 400,
+            phoneColumnWidth: 150
+        },
+        'classic-material': {
+            height: 400,
+            phoneColumnWidth: 150
+        }
+    },
 
     //<example>
     requires: ['KitchenSink.view.binding.SelectionController'],
     otherContent: [{
-        type: 'ViewController',
+        type: 'Controller',
         path: 'classic/samples/view/binding/SelectionController.js'
     }, {
         type: 'Model',
-        path: 'classic/samples/model/Company.js'
+        path: 'app/model/Company.js'
     }, {
         type: 'Model',
-        path: 'classic/samples/model/field/PhoneNumber.js'
+        path: 'app/model/field/PhoneNumber.js'
     }, {
         type: 'Data',
-        path: 'classic/samples/data/Company.js'
+        path: 'app/data/Company.js'
     }],
     //</example>
 
@@ -76,7 +95,7 @@ Ext.define('KitchenSink.view.binding.Selection', {
             columns: [{
                 text: 'Name', dataIndex: 'name', flex: 1
             }, {
-                text: 'Phone', dataIndex: 'phone'
+                text: 'Phone', dataIndex: 'phone', width: '${phoneColumnWidth}'
             }]
         }, {
             flex: 1,

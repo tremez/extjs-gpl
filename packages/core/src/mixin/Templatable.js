@@ -20,7 +20,9 @@ Ext.define('Ext.mixin.Templatable', {
 
     getElementTemplate: function() {
         var elementTemplate = document.createDocumentFragment();
+
         elementTemplate.appendChild(Ext.Element.create(this.getElementConfig(), true));
+
         return elementTemplate;
     },
 
@@ -44,7 +46,7 @@ Ext.define('Ext.mixin.Templatable', {
         renderElement = this.elementTemplate.cloneNode(true);
         referenceNodes = renderElement.querySelectorAll(this.referenceSelector);
 
-        for (i = 0,ln = referenceNodes.length; i < ln; i++) {
+        for (i = 0, ln = referenceNodes.length; i < ln; i++) {
             referenceNode = referenceNodes[i];
             reference = referenceNode.getAttribute(referenceAttributeName);
             referenceNode.removeAttribute(referenceAttributeName);

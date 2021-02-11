@@ -1,36 +1,15 @@
 Ext.define('KitchenSink.view.charts.line.ImageMarkersController', {
-    extend: 'Ext.app.ViewController',
+    extend: 'KitchenSink.view.chart.ChartController',
     alias: 'controller.line-markers',
 
-    onRefresh: function () {
-        var chart = this.lookupReference('chart'),
-            store = chart.getStore();
+    onRefresh: function() {
+        var store = this.getChart().getStore();
 
         store.refreshData();
     },
 
-    onThemeSwitch: function () {
-        var chart = this.lookupReference('chart'),
-            currentThemeClass = Ext.getClassName(chart.getTheme()),
-            themes = Ext.chart.theme,
-            themeNames = [],
-            currentIndex = 0,
-            name;
-
-        for (name in themes) {
-            if (Ext.getClassName(themes[name]) === currentThemeClass) {
-                currentIndex = themeNames.length;
-            }
-            if (name !== 'Base' && name.indexOf('Gradients') < 0) {
-                themeNames.push(name);
-            }
-        }
-        chart.setTheme(themes[themeNames[++currentIndex % themeNames.length]]);
-        chart.redraw();
-    },
-
-    onPanZoomReset: function () {
-        var chart = this.lookupReference('chart'),
+    onPanZoomReset: function() {
+        var chart = this.lookup('chart'),
             axes = chart.getAxes();
 
         axes[0].setVisibleRange([0, 1]);
@@ -38,22 +17,27 @@ Ext.define('KitchenSink.view.charts.line.ImageMarkersController', {
         chart.redraw();
     },
 
-    onAxisRangeChange: function (axis, range) {
+    onAxisRangeChange: function(axis, range) {
+        var max;
+
         if (!range) {
             return;
         }
+
         // expand the range slightly to make sure markers aren't clipped
-        var max = range[1];
+        max = range[1];
+
         if (max >= 1000) {
             range[1] = max - max % 100 + 100;
-        } else {
+        }
+        else {
             range[1] = max - max % 50 + 50;
         }
     },
 
-    onAfterRender: function () {
-        var chart = this.lookupReference('chart'),
-            toolbar = this.lookupReference('toolbar'),
+    onAfterRender: function() {
+        var chart = this.lookup('chart'),
+            toolbar = this.lookup('toolbar'),
             panzoom = chart.getInteractions()[0];
 
         toolbar.add(panzoom.getModeToggleButton());

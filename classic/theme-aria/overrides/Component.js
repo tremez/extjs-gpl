@@ -4,3 +4,4 @@ Ext.define('Ext.theme.aria.Component', {
     Ext.namespace('Ext.theme.is').Aria = true;
     Ext.theme.name = 'Aria';
 });
+

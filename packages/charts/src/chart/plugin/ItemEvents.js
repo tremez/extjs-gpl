@@ -14,8 +14,9 @@
  *
  *     Ext.create('Ext.chart.CartesianChart', {
  *         plugins: {
- *             ptype: 'chartitemevents',
- *             moveEvents: true
+ *             chartitemevents: {
+ *                 moveEvents: true
+ *             }
  *         },
  *         store: {
  *             fields: ['pet', 'households', 'total'],
@@ -81,13 +82,14 @@ Ext.define('Ext.chart.plugin.ItemEvents', {
         itemmouseout: true
     },
 
-    init: function (chart) {
+    init: function(chart) {
         var handleEvent = 'handleEvent';
 
         this.chart = chart;
 
         chart.addElementListener({
             click: handleEvent,
+            tap: handleEvent,
             dblclick: handleEvent,
             mousedown: handleEvent,
             mousemove: handleEvent,
@@ -100,18 +102,20 @@ Ext.define('Ext.chart.plugin.ItemEvents', {
         });
     },
 
-    hasItemMouseMoveListeners: function () {
+    hasItemMouseMoveListeners: function() {
         var listeners = this.chart.hasListeners,
             name;
+
         for (name in this.itemMouseMoveEvents) {
             if (name in listeners) {
                 return true;
             }
         }
+
         return false;
     },
 
-    handleEvent: function (e) {
+    handleEvent: function(e) {
         var me = this,
             chart = me.chart,
             isMouseMoveEvent = e.type in me.mouseMoveEvents,
@@ -130,6 +134,7 @@ Ext.define('Ext.chart.plugin.ItemEvents', {
                 chart.fireEvent('itemmouseout', chart, lastItem, e);
                 lastItem.series.fireEvent('itemmouseout', lastItem.series, lastItem, e);
             }
+
             if (item) {
                 chart.fireEvent('itemmouseover', chart, item, e);
                 item.series.fireEvent('itemmouseover', item.series, item, e);

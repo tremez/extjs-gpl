@@ -1,9 +1,13 @@
-describe('Ext.draw.sprite.Image', function () {
+topSuite("Ext.draw.sprite.Image", ['Ext.draw.Container'], function() {
+    beforeEach(function() {
+        // Silence warnings regarding Sencha download server
+        spyOn(Ext.log, 'warn');
+    });
 
-    describe("hitTest", function () {
+    describe("hitTest", function() {
         var sprite, surface, container;
 
-        beforeEach(function () {
+        beforeEach(function() {
             container = new Ext.draw.Container({
                 renderTo: Ext.getBody()
             });
@@ -80,28 +84,34 @@ describe('Ext.draw.sprite.Image', function () {
             container.add(surface);
         });
 
-        afterEach(function () {
+        afterEach(function() {
             Ext.destroy(sprite, surface, container);
         });
 
         it("should return an object with the 'sprite' property set to the sprite itself, " +
-            "if the sprite is visible and its bounding box is hit", function () {
+            "if the sprite is visible and its bounding box is hit", function() {
             // Testing hitTest method of the abstract Sprite class.
             // Even though, (10,10) is not inside the circle, it's inside it's bounding box.
             var result = Ext.draw.sprite.Sprite.prototype.hitTest.call(sprite, [60, 70]);
+
             expect(result && result.sprite).toBe(sprite);
         });
 
-        it("should return null, if the sprite's bounding box is hit, but the sprite is not visible", function () {
+        it("should return null, if the sprite's bounding box is hit, but the sprite is not visible", function() {
             var originalMethod = sprite.isVisible;
-            sprite.isVisible = function () { return false; };
+
+            sprite.isVisible = function() {
+ return false;
+};
             var result = Ext.draw.sprite.Sprite.prototype.hitTest.call(sprite, [60, 70]);
+
             expect(result).toBe(null);
             sprite.isVisible = originalMethod;
         });
 
-        it("should return null, if the sprite is visible, but it's bounding box is not hit", function () {
+        it("should return null, if the sprite is visible, but it's bounding box is not hit", function() {
             var result = Ext.draw.sprite.Sprite.prototype.hitTest.call(sprite, [210, 200]);
+
             expect(result).toBe(null);
         });
     });

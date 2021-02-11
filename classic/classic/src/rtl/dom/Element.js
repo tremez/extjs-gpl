@@ -4,7 +4,7 @@ Ext.define('Ext.rtl.dom.Element', {
     requires: [
         "Ext.CompositeElementLite"
     ],
-    
+
     rtlXAnchors: {
         l: 'r',
         r: 'l'
@@ -13,20 +13,20 @@ Ext.define('Ext.rtl.dom.Element', {
     _positionTopRight: ['position', 'top', 'right'],
 
     pxRe: /^\d+(?:\.\d*)?px$/i,
-   
-    statics: { 
-        rtlParseBox: function (box) {
+
+    statics: {
+        rtlParseBox: function(box) {
             var ret = Ext.Element.parseBox(box),
                 temp;
-               
+
             temp = ret.left;
             ret.left = ret.right;
             ret.right = temp;
-            
+
             return ret;
         },
 
-        rtlUnitizeBox: function(box, units){
+        rtlUnitizeBox: function(box, units) {
             var Element = Ext.Element,
                 a = Element.addUnits,
                 b = Element.parseBox(box);
@@ -44,20 +44,23 @@ Ext.define('Ext.rtl.dom.Element', {
         if (Ext.rootInheritedState.rtl) {
             anchor = this.rtlXAnchors[anchor];
         }
+
         this.callParent(arguments);
     },
 
-    getPositioning: function(autoPx){
+    getPositioning: function(autoPx) {
         var xStyle = Ext.rootInheritedState.rtl ? 'right' : 'left',
             styles = this.getStyle([xStyle, 'top', 'position', 'z-index']),
             dom = this.dom;
 
-        if(autoPx) {
-            if(styles[xStyle] === 'auto') {
-                styles[xStyle] = (xStyle === 'left') ? (dom.offsetLeft + 'px') :
-                    (dom.offsetParent.offsetWidth - dom.offsetLeft - dom.offsetWidth);
+        if (autoPx) {
+            if (styles[xStyle] === 'auto') {
+                styles[xStyle] = (xStyle === 'left')
+                    ? (dom.offsetLeft + 'px')
+                    : (dom.offsetParent.offsetWidth - dom.offsetLeft - dom.offsetWidth);
             }
-            if(styles.top === 'auto') {
+
+            if (styles.top === 'auto') {
                 styles.top = dom.offsetTop + 'px';
             }
         }
@@ -74,7 +77,7 @@ Ext.define('Ext.rtl.dom.Element', {
             y = 0,
             bodyRect, rect;
 
-        if(dom !== doc && dom !== body){
+        if (dom !== doc && dom !== body) {
             // IE (including IE10) throws an error when getBoundingClientRect
             // is called on an element not attached to dom
             try {
@@ -87,7 +90,10 @@ Ext.define('Ext.rtl.dom.Element', {
                 if (Ext.rootInheritedState.rtl) {
                     x = body.scrollWidth - rect.right;
                 }
-            } catch (ex) {}
+            }
+            catch (ex) {
+                // ignore
+            }
         }
 
         return [round(x), round(y)];
@@ -100,10 +106,13 @@ Ext.define('Ext.rtl.dom.Element', {
 
         if (!x || x === 'auto') {
             x = 0;
-        } else if (me.pxRe.test(x)) {
+        }
+        else if (me.pxRe.test(x)) {
             x = parseFloat(x);
-        } else {
+        }
+        else {
             x = me.getX();
+
             if (offsetParent) {
                 x -= Ext.fly(offsetParent, '_internal').getX();
             }
@@ -121,10 +130,13 @@ Ext.define('Ext.rtl.dom.Element', {
 
         if (!x || x === 'auto') {
             x = 0;
-        } else if (me.pxRe.test(x)) {
+        }
+        else if (me.pxRe.test(x)) {
             x = parseFloat(x);
-        } else {
+        }
+        else {
             x = me.getX();
+
             if (offsetParent) {
                 x -= Ext.fly(offsetParent, '_internal').getX();
             }
@@ -132,10 +144,13 @@ Ext.define('Ext.rtl.dom.Element', {
 
         if (!y || y === 'auto') {
             y = 0;
-        } else if (me.pxRe.test(y)) {
+        }
+        else if (me.pxRe.test(y)) {
             y = parseFloat(y);
-        } else {
+        }
+        else {
             y = me.getY();
+
             if (offsetParent) {
                 y -= Ext.fly(offsetParent, '_internal').getY();
             }
@@ -151,37 +166,44 @@ Ext.define('Ext.rtl.dom.Element', {
             body = doc.body,
             scroll = me.getScroll(),
             left = scroll.left,
+            flag = me._rtlScrollFlag,
             isDocOrBody = (dom === doc || dom === body);
 
-        if (isDocOrBody ? (3 & me._rtlDocScrollFlag) : (me._rtlScrollFlag === 1)) { // jshint ignore:line
+        if (isDocOrBody ? (3 & me._rtlDocScrollFlag) : (flag === 1)) {
             // If the browser reports scrollLeft as the number of pixels from left
             // (same as ltr) we need to convert it to a rtl position by subtracting it
             // from scrollWidth
             if (isDocOrBody) {
                 dom = body;
             }
-            
+
             left = dom.scrollWidth - left -
                 (isDocOrBody ? Ext.Element.getViewportWidth() : dom.clientWidth);
         }
+        else if (!isDocOrBody && flag === 0) {
+            left = -left;
+        }
+
         scroll.left = left;
 
         return scroll;
     },
-    
+
     rtlGetScrollLeft: function() {
         return this.rtlGetScroll().left;
     },
 
-    rtlNormalizeScrollLeft: function(left){
+    rtlNormalizeScrollLeft: function(left) {
         var dom = this.dom,
             flag = this._rtlScrollFlag;
-            
+
         if (flag === 0) {
             left = -left;
-        } else if (flag === 1) {
+        }
+        else if (flag === 1) {
             left = dom.scrollWidth - left - dom.clientWidth;
         }
+
         return left;
     },
 
@@ -195,19 +217,21 @@ Ext.define('Ext.rtl.dom.Element', {
             animate = deltaY;
             deltaY = deltaX[1];
             deltaX = deltaX[0];
-        } else if (typeof deltaX !== 'number') { // or an object
+        }
+        else if (typeof deltaX !== 'number') { // or an object
             animate = deltaY;
             deltaY = deltaX.y;
             deltaX = deltaX.x;
         }
-       
+
         if (deltaX) {
             left = me.rtlNormalizeScrollLeft(
                 me.constrainScrollLeft(me.rtlGetScrollLeft() + deltaX)
-            ); 
- 
+            );
+
             me.scrollTo('left', left, animate);
         }
+
         if (deltaY) {
             me.scrollTo('top', me.constrainScrollTop(dom.scrollTop + deltaY), animate);
         }
@@ -265,13 +289,15 @@ Ext.define('Ext.rtl.dom.Element', {
 
         if (x === null) {
             style.right = 'auto';
-        } else if (x !== undefined) {
+        }
+        else if (x !== undefined) {
             style.right = x + 'px';
         }
 
         if (y === null) {
             style.top = 'auto';
-        } else if (y !== undefined) {
+        }
+        else if (y !== undefined) {
             style.top = y + 'px';
         }
 
@@ -282,10 +308,11 @@ Ext.define('Ext.rtl.dom.Element', {
         return me;
     },
 
-    rtlSetScrollLeft: function(left){
+    rtlSetScrollLeft: function(left) {
         var me = this;
 
         me.dom.scrollLeft = me.rtlNormalizeScrollLeft(left);
+
         return me;
     },
 
@@ -309,29 +336,38 @@ Ext.define('Ext.rtl.dom.Element', {
             doc, body, offsetParentWidth, offsetParent;
 
         if (x && x.length) {
-             y = x[1];
-             x = x[0];
+            y = x[1];
+            x = x[0];
         }
+
         if (isNaN(right)) {
             doc = document;
             body = doc.body;
+
             if (dom === body) {
                 // translateXY can sometimes be called on the body element.
                 // e.g. in Renderable#afterFirstLayout if the "container" is a viewport
                 right = 0;
-            } else {
+            }
+            else {
                 offsetParent = dom.offsetParent;
+
                 offsetParentWidth = (offsetParent &&
-                    offsetParent !== body && offsetParent !== doc.documentElement) ?
-                        offsetParent.scrollWidth : Ext.Element.getViewportWidth();
+                    offsetParent !== body && offsetParent !== doc.documentElement)
+                    ? offsetParent.scrollWidth
+                    : Ext.Element.getViewportWidth();
+
                 right = offsetParentWidth - dom.offsetLeft - me.getWidth();
             }
         }
+
         if (isNaN(top)) {
             top = relative ? 0 : me.dom.offsetTop;
         }
+
         right = (typeof x === 'number') ? x - xy[0] + right : undefined;
         top = (typeof y === 'number') ? y - xy[1] + top : undefined;
+
         return {
             x: right,
             y: top
@@ -339,17 +375,20 @@ Ext.define('Ext.rtl.dom.Element', {
     },
 
     translatePoints: function(x, y) {
-        return Ext.rootInheritedState.rtl ? this.rtlTranslatePoints(x, y) :
-            this.callParent(arguments);
+        return Ext.rootInheritedState.rtl
+            ? this.rtlTranslatePoints(x, y)
+            : this.callParent(arguments);
     },
 
     translateXY: function(x, y) {
-        return Ext.rootInheritedState.rtl ? this.rtlTranslateXY(x, y) :
-            this.callParent(arguments);
+        return Ext.rootInheritedState.rtl
+            ? this.rtlTranslateXY(x, y)
+            : this.callParent(arguments);
     },
 
     wrap: function() {
-        var parent = this.parent(),
+        var wrapFly =
+                (this.wrapFly || (this.wrapFly = new Ext.dom.Fly())).attach(this.dom.parentNode),
             rtlCls = Ext.baseCSSPrefix + 'rtl',
             ltrCls = Ext.baseCSSPrefix + 'ltr',
             wrapEl = this.callParent(arguments),
@@ -358,15 +397,16 @@ Ext.define('Ext.rtl.dom.Element', {
         // if the parentNode of the element being wrapped has the "x-rtl" or "x-ltr" css
         // class, then add that class to the wrapper as well.  This ensures that descendant
         // and child selectors still apply e.g. ".x-rtl > .x-foo" or ".x-ltr .x-foo"
-        if (parent.hasCls(rtlCls)) {
+        if (wrapFly.hasCls(rtlCls)) {
             cls = rtlCls;
-        } else if (parent.hasCls(ltrCls)) {
+        }
+        else if (wrapFly.hasCls(ltrCls)) {
             cls = ltrCls;
         }
 
         if (cls) {
             // superclass method may return dom, so use fly() to access the wrap el
-            Ext.fly(wrapEl, '_internal').addCls(cls);
+            wrapFly.attach(wrapEl).addCls(cls);
         }
 
         return wrapEl;
@@ -390,35 +430,41 @@ Ext.define('Ext.rtl.dom.Element', {
      */
     function cacheRtlScrollFlag() {
         var el = Ext.getBody().createChild({
-            tag: 'div',
-            style: 'direction:rtl;position:absolute;overflow:auto;height:100px;width:100px;background-color:yellow',
-            children: [{
                 tag: 'div',
-                style: 'height:30px;width:150px;background-color:red'
-            }]
-        }),
-        dom = el.dom,
-        inner = dom.firstChild,
-        flag = 2;
+                style: 'direction:rtl;position:absolute;overflow:auto;height:100px;' +
+                       'width:100px;background-color:yellow',
+                children: [{
+                    tag: 'div',
+                    style: 'height:30px;width:150px;background-color:red'
+                }]
+            }),
+            dom = el.dom,
+            inner = dom.firstChild,
+            flag = 2;
 
         if (dom.scrollLeft === 50) {
             flag = 1;
-        } else {
+        }
+        else {
             dom.scrollLeft = -1;
+
             if (dom.scrollLeft) {
                 flag = 0;
             }
         }
 
-        // Make content overflow vertically to see where the vertical scsrollbar is
+        // Make content overflow vertically to see where the vertical scrollbar is
         inner.style.width = '30px';
         inner.style.height = '150px';
 
-        // Scrollbar is erroneously on right in RTL mode if the inner element is not flush against the right egde of the outer.
+        // Scrollbar is erroneously on right in RTL mode if the inner element is not flush
+        // against the right egde of the outer.
         // Safaris suffers from this bug.
-        Element.prototype._rtlScrollbarOnRight = inner.getBoundingClientRect().right < dom.getBoundingClientRect().right;
+        Element.prototype._rtlScrollbarOnRight =
+            inner.getBoundingClientRect().right < dom.getBoundingClientRect().right;
 
         el.destroy();
+
         Element.prototype._rtlScrollFlag = flag;
     }
 
@@ -436,7 +482,7 @@ Ext.define('Ext.rtl.dom.Element', {
      *    b. number of pixels offset from right expressed as a positive number
      *       (IE8 - IE10)
      *
-     * The following logic feture detects the handling of scrollLeft and sets the 
+     * The following logic feature detects the handling of scrollLeft and sets the
      * _rtlDocScrollFlag property on this class' prototype as a bit flag which has 
      * the following values:
      * 
@@ -465,19 +511,23 @@ Ext.define('Ext.rtl.dom.Element', {
         // body. This means scrollLeft is a positive number offset from the left.
         if (docEl.scrollLeft > 0) {
             flag = 1;
-        } else {
+        }
+        else {
             // The next step is to attempt to set scrollLeft values, This allows us to
             // test for non-zero values to see if the value was valid (scrollLeft
             // resets to 0 when a non-valid value is set).
             // attempt to set the documentElement's scrollLeft to a negative number
             docEl.scrollLeft = -1;
+
             if (docEl.scrollLeft) {
                 // it worked! we were able to set a negative scroll left on the
                 // documentElement (firefox)
                 flag = 0;
-            } else {
+            }
+            else {
                 // attempt to set the documentElement's scrollLeft to a positive number
                 docEl.scrollLeft = 1;
+
                 if (docEl.scrollLeft) {
                     // success setting scroll left to a positive number on
                     // documentElement (IE8 & IE9)
@@ -487,22 +537,27 @@ Ext.define('Ext.rtl.dom.Element', {
         }
 
         el.destroy();
+
         if (!direction) {
             // if direction is an empty string, we set it back to "ltr", because once
             // the direction style on the body element is changed to "rtl" in webkit,
             // it becomes permanent, even after it is set back to "", unless it is first
             // explicitly set back to "ltr"
             bodyStyle.direction = 'ltr';
+
             // read the scroll width before setting the direction back to "".
             // This forces webkit to update its computed direction style to ltr
-            body.scrollWidth; // jshint ignore:line
+
+            // eslint-disable-next-line no-unused-expressions
+            body.scrollWidth;
         }
+
         // set direction back to its original value
         bodyStyle.direction = direction;
         Element.prototype._rtlDocScrollFlag = flag;
     }
 
-    Ext.onInternalReady(function () {
+    Ext.onInternalReady(function() {
         // This function attaches to onReady with a priority of 1000 so that we can
         // detect how the browser reports scrollLeft by manipulating the document/body
         // before any components have been rendered to the page.  

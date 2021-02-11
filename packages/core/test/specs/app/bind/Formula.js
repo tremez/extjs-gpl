@@ -1,5 +1,6 @@
-describe("Ext.app.bind.Formula", function() {
+topSuite("Ext.app.bind.Formula", ['Ext.app.ViewModel'], function() {
     var vm;
+
     beforeEach(function() {
         vm = new Ext.app.ViewModel({
             // this is a config not an instance so the VM knows it owns the instance
@@ -17,8 +18,10 @@ describe("Ext.app.bind.Formula", function() {
 
     function makeFormula(fn, name) {
         var o = {};
+
         o[name || 'fn'] = fn;
         vm.setFormulas(o);
+
         return vm.getRoot().children.fn.formula;
     }
 
@@ -27,7 +30,7 @@ describe("Ext.app.bind.Formula", function() {
             toString: function() {
                 return s;
             }
-        }
+        };
     }
 
     function matchExpr(fn, result) {
@@ -39,6 +42,7 @@ describe("Ext.app.bind.Formula", function() {
                 return fn;
             }
         });
+
         delete expr.$literal;
         expect(Ext.Object.getKeys(expr)).toEqual(result);
     }
@@ -46,40 +50,208 @@ describe("Ext.app.bind.Formula", function() {
     // we parse out the argument name, so it should give us argName.expression.
     // here, we just want to check whether we get the name correctly
     describe("argument parsing", function() {
-        it("should work with a simple function definition", function() {
-            matchExpr("function (get) { return get('foo'); };", ['foo']);
+        describe("function keyword", function() {
+            describe("anonymous function", function() {
+                it("should parse an empty parameter", function() {
+                    matchExpr("function () { return 1; }", []);
+                });
+
+                it("should parse a simple function definition", function() {
+                    matchExpr("function (get) { return get('foo'); }", ['foo']);
+                });
+
+                it("should parse a var with numbers in the name", function() {
+                    matchExpr("function (g2et) { return g2et('foo'); }", ['foo']);
+                });
+
+                it("should parse a var starting with _", function() {
+                    matchExpr("function (_get) { return _get('foo'); }", ['foo']);
+                });
+
+                it("should parse a var starting with $", function() {
+                    matchExpr("function ($get) { return $get('foo'); }", ['foo']);
+                });
+
+                it("should parse a with multi vars", function() {
+                    matchExpr("function (get, some, other, stuff) { return get('foo'); }", ['foo']);
+                });
+
+                it("should parse with no spaces between function and parens", function() {
+                    matchExpr("function(get) { return get('foo'); }", ['foo']);
+                });
+
+                it("should parse with no spaces between parens and curly", function() {
+                    matchExpr("function (get){ return get('foo'); }", ['foo']);
+                });
+
+                it("should parse with an ending semi colon", function() {
+                    matchExpr("function (get) { return get('foo'); };", ['foo']);
+                });
+
+                it("should parse with leading spaces", function() {
+                    matchExpr("    function (get) { return get('foo'); }", ['foo']);
+                });
+
+                it("should parse with trailing spaces", function() {
+                    matchExpr("function (get) { return get('foo'); }                ", ['foo']);
+                });
+
+                it("should parse comments out", function() {
+                    matchExpr("function (get) { /* FOO: return get('bar') */ return get('foo'); }", ['foo']);
+                });
+            });
+
+            describe("named function", function() {
+                it("should parse an empty parameter", function() {
+                    matchExpr("function myFn() { return 1; }", []);
+                });
+
+                it("should parse a simple function definition", function() {
+                    matchExpr("function myFn(get) { return get('foo'); }", ['foo']);
+                });
+
+                it("should parse a var with numbers in the name", function() {
+                    matchExpr("function myFn(g2et) { return g2et('foo'); }", ['foo']);
+                });
+
+                it("should parse a var starting with _", function() {
+                    matchExpr("function myFn(_get) { return _get('foo'); }", ['foo']);
+                });
+
+                it("should parse a var starting with $", function() {
+                    matchExpr("function myFn($get) { return $get('foo'); }", ['foo']);
+                });
+
+                it("should parse a with multi vars", function() {
+                    matchExpr("function myFn(get, some, other, stuff) { return get('foo'); }", ['foo']);
+                });
+
+                it("should parse with spaces between function and parens", function() {
+                    matchExpr("function myFn (get) { return get('foo'); }", ['foo']);
+                });
+
+                it("should parse with no spaces between parens and curly", function() {
+                    matchExpr("function myFn(get){ return get('foo'); }", ['foo']);
+                });
+
+                it("should parse with an ending semi colon", function() {
+                    matchExpr("function myFn(get) { return get('foo'); };", ['foo']);
+                });
+
+                it("should parse with leading spaces", function() {
+                    matchExpr("    function myFn(get) { return get('foo'); }", ['foo']);
+                });
+
+                it("should parse with trailing spaces", function() {
+                    matchExpr("function myFn(get) { return get('foo'); }                ", ['foo']);
+                });
+
+                it("should parse with many spaces between the function keyword and the name", function() {
+                    matchExpr("function         myFn(get) { return get('foo'); };", ['foo']);
+                });
+
+                it("should parse with the function name starting with _", function() {
+                    matchExpr("function _myFn(get) { return get('foo'); }", ['foo']);
+                });
+
+                it("should parse with the function name starting with $", function() {
+                    matchExpr("function $myFn(get) { return get('foo'); }", ['foo']);
+                });
+            });
         });
 
-        it("should parse a var with numbers in the name", function() {
-            matchExpr("function (g2et) { return g2et('foo'); };", ['foo']);
-        });
+        describe("arrow functions", function() {
+            describe("without parens", function() {
+                it("should parse a simple function definition", function() {
+                    matchExpr("get => get('foo')", ['foo']);
+                });
 
-        it("should parse a var starting with an underscore", function() {
-            matchExpr("function (_get) { return _get('foo'); };", ['foo']);
-        });
+                it("should parse a var with numbers in the name", function() {
+                    matchExpr("g2et => g2et('foo')", ['foo']);
+                });
 
-        it("should parse a with multi vars", function() {
-            matchExpr("function (get, some, other, stuff) { return get('foo'); };", ['foo']);
-        });
+                it("should parse a var starting with _", function() {
+                    matchExpr("_get => _get('foo')", ['foo']);
+                });
 
-        it("should parse with no spaces between function and parens", function() {
-            matchExpr("function(get) { return get('foo'); };", ['foo']);
-        });
+                it("should parse a var starting with $", function() {
+                    matchExpr("$get => $get('foo')", ['foo']);
+                });
 
-        it("should parse with no spaces between parens and curly", function() {
-            matchExpr("function (get){ return get('foo'); };", ['foo']);
-        });
+                it("should parse with spacing between the parameter and the arrow", function() {
+                    matchExpr("get     => get('foo')", ['foo']);
+                });
 
-        it("should parse without an ending semi colon", function() {
-            matchExpr("function (get) { return get('foo'); }", ['foo']);
-        });
+                it("should parse with spacing between the arrow and the body", function() {
+                    matchExpr("get     => get('foo')", ['foo']);
+                });
 
-        it("should parse with leading spaces", function() {
-            matchExpr("    function (get) { return get('foo'); }", ['foo']);
-        });
+                it("should parse when using braces in the body", function() {
+                    matchExpr("get => { return get('foo'); }", ['foo']);
+                });
 
-        it("should parse with trailing spaces", function() {
-            matchExpr("function (get) { return get('foo'); };                ", ['foo']);
+                it("should parse with an ending semi colon", function() {
+                    matchExpr("get => get('foo');", ['foo']);
+                });
+
+                it("should parse with leading spaces", function() {
+                    matchExpr("          get => get('foo')", ['foo']);
+                });
+
+                it("should parse with trailing spaces", function() {
+                    matchExpr("get => get('foo')           ", ['foo']);
+                });
+            });
+
+            describe("with parens", function() {
+                it("should parse an empty parameter", function() {
+                    matchExpr("() => 1", []);
+                });
+
+                it("should parse a simple function definition", function() {
+                    matchExpr("(get) => get('foo')", ['foo']);
+                });
+
+                it("should parse a var with numbers in the name", function() {
+                    matchExpr("(g2et) => g2et('foo')", ['foo']);
+                });
+
+                it("should parse a var starting with _", function() {
+                    matchExpr("(_get) => _get('foo')", ['foo']);
+                });
+
+                it("should parse a var starting with $", function() {
+                    matchExpr("($get) => $get('foo')", ['foo']);
+                });
+
+                it("should parse a with multi vars", function() {
+                    matchExpr("(get, some, other, stuff) => get('foo')", ['foo']);
+                });
+
+                it("should parse with spacing between the parameter and the arrow", function() {
+                    matchExpr("(get)     => get('foo')", ['foo']);
+                });
+
+                it("should parse with spacing between the arrow and the body", function() {
+                    matchExpr("(get)     => get('foo')", ['foo']);
+                });
+
+                it("should parse when using braces in the body", function() {
+                    matchExpr("(get) => { return get('foo'); }", ['foo']);
+                });
+
+                it("should parse with an ending semi colon", function() {
+                    matchExpr("(get) => get('foo');", ['foo']);
+                });
+
+                it("should parse with leading spaces", function() {
+                    matchExpr("          (get) => get('foo')", ['foo']);
+                });
+
+                it("should parse with trailing spaces", function() {
+                    matchExpr("(get) => get('foo')           ", ['foo']);
+                });
+            });
         });
     });
 
@@ -96,11 +268,11 @@ describe("Ext.app.bind.Formula", function() {
             matchExpr("function (get) { return get('foo') + get('bar') + get('baz'); };", ['foo', 'bar', 'baz']);
         });
 
-        it("should match an expression with a number in it", function() {   
+        it("should match an expression with a number in it", function() {
             matchExpr("function (get) { return get('foo1'); };", ['foo1']);
         });
 
-        it("should match an expression that starts with an underscore", function() {   
+        it("should match an expression that starts with an underscore", function() {
             matchExpr("function (get) { return get('_foo'); };", ['_foo']);
         });
 
@@ -186,6 +358,6 @@ describe("Ext.app.bind.Formula", function() {
             it("should match get calls inside get calls", function() {
                 matchExpr("function (get) { return (get(get('foo') + get('bar')); };", ['foo', 'bar']);
             });
-        })
+        });
     });
 });

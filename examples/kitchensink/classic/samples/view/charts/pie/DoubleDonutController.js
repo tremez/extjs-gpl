@@ -2,30 +2,35 @@ Ext.define('KitchenSink.view.charts.pie.DoubleDonutController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.pie-double-donut',
 
-    onPreview: function () {
+    onPreview: function() {
+        var chart;
+
         if (Ext.isIE8) {
             Ext.Msg.alert('Unsupported Operation', 'This operation requires a newer version of Internet Explorer.');
+
             return;
         }
-        var chart = this.lookupReference('chart');
+
+        chart = this.lookup('chart');
+
         chart.preview();
     },
 
-    onDataRender: function (v) {
+    onDataRender: function(v) {
         return v + '%';
     },
 
-    onOuterSeriesTooltipRender: function (tooltip, record, item) {
+    onOuterSeriesTooltipRender: function(tooltip, record, item) {
         tooltip.setHtml(record.get('provider') + ': ' + record.get('usage'));
     },
 
-    onInnerSeriesTooltipRender: function (tooltip, record, item) {
-        tooltip.setHtml(Ext.String.capitalize(record.get('type'))
-            + ' sector: ' + record.get('usage'));
+    onInnerSeriesTooltipRender: function(tooltip, record, item) {
+        tooltip.setHtml(Ext.String.capitalize(record.get('type')) +
+            ' sector: ' + record.get('usage'));
     },
 
-    onAfterRender: function () {
-        var chart = this.lookupReference('chart'),
+    onAfterRender: function() {
+        var chart = this.lookup('chart'),
             series = chart.getSeries(),
             outerSeries = series[0],
             store = outerSeries.getStore(),
@@ -35,7 +40,7 @@ Ext.define('KitchenSink.view.charts.pie.DoubleDonutController', {
 
         store.sort('type', 'DESC');
 
-        store.each(function () {
+        store.each(function() {
             var name = this.get('type'),
                 value = dataMap[name];
 
@@ -43,7 +48,8 @@ Ext.define('KitchenSink.view.charts.pie.DoubleDonutController', {
                 dataMap[name] = value = {};
                 value.type = name;
                 value.usage = this.get('usage');
-            } else {
+            }
+            else {
                 value.usage += this.get('usage');
             }
         });

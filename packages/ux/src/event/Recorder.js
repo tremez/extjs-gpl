@@ -2,8 +2,10 @@
  * @extends Ext.ux.event.Driver
  * Event recorder.
  */
-Ext.define('Ext.ux.event.Recorder', function (Recorder) {
-    function apply () {
+Ext.define('Ext.ux.event.Recorder', function(Recorder) {
+    var eventsToRecord, eventKey;
+
+    function apply() {
         var a = arguments,
             n = a.length,
             obj = { kind: 'other' },
@@ -16,48 +18,49 @@ Ext.define('Ext.ux.event.Recorder', function (Recorder) {
         if (obj.alt && !obj.event) {
             obj.event = obj.alt;
         }
+
         return obj;
     }
 
-    function key (extra) {
+    function key(extra) {
         return apply({
-                kind: 'keyboard',
-                modKeys: true,
-                key: true
-            }, extra);
+            kind: 'keyboard',
+            modKeys: true,
+            key: true
+        }, extra);
     }
 
-    function mouse (extra) {
+    function mouse(extra) {
         return apply({
-                kind: 'mouse',
-                button: true,
-                modKeys: true,
-                xy: true
-            }, extra);
+            kind: 'mouse',
+            button: true,
+            modKeys: true,
+            xy: true
+        }, extra);
     }
 
-    var eventsToRecord = {
-            keydown: key(),
-            keypress: key(),
-            keyup: key(),
+    eventsToRecord = {
+        keydown: key(),
+        keypress: key(),
+        keyup: key(),
 
-            dragmove: mouse({ alt: 'mousemove', pageCoords: true, whileDrag: true }),
-            mousemove: mouse({ pageCoords: true }),
-            mouseover: mouse(),
-            mouseout: mouse(),
-            click: mouse(),
-            wheel: mouse({ wheel: true }),
-            mousedown: mouse({ press: true }),
-            mouseup: mouse({ release: true }),
+        dragmove: mouse({ alt: 'mousemove', pageCoords: true, whileDrag: true }),
+        mousemove: mouse({ pageCoords: true }),
+        mouseover: mouse(),
+        mouseout: mouse(),
+        click: mouse(),
+        wheel: mouse({ wheel: true }),
+        mousedown: mouse({ press: true }),
+        mouseup: mouse({ release: true }),
 
-            scroll: apply({ listen: false }),
-            focus: apply(),
-            blur: apply()
-        };
+        scroll: apply({ listen: false }),
+        focus: apply(),
+        blur: apply()
+    };
 
-    for (var key in eventsToRecord) {
-        if (!eventsToRecord[key].event) {
-            eventsToRecord[key].event = key;
+    for (eventKey in eventsToRecord) {
+        if (!eventsToRecord[eventKey].event) {
+            eventsToRecord[eventKey].event = eventKey;
         }
     }
 
@@ -87,13 +90,13 @@ Ext.define('Ext.ux.event.Recorder', function (Recorder) {
 
         inputRe: /^(input|textarea)$/i,
 
-        constructor: function (config) {
+        constructor: function(config) {
             var me = this,
                 events = config && config.eventsToRecord;
 
             if (events) {
                 me.eventsToRecord = Ext.apply(Ext.apply({}, me.eventsToRecord), // duplicate
-                                        events); // and merge
+                                              events); // and merge
                 delete config.eventsToRecord; // don't smash
             }
 
@@ -104,14 +107,14 @@ Ext.define('Ext.ux.event.Recorder', function (Recorder) {
             me.attachTo = me.attachTo || window;
         },
 
-        clear: function () {
+        clear: function() {
             this.eventsRecorded = [];
         },
 
-        listenToEvent: function (event) {
+        listenToEvent: function(event) {
             var me = this,
                 el = me.attachTo.document.body,
-                fn = function () {
+                fn = function() {
                     return me.onEvent.apply(me, arguments);
                 },
                 cleaner = {};
@@ -120,16 +123,17 @@ Ext.define('Ext.ux.event.Recorder', function (Recorder) {
                 event = 'on' + event;
                 el.attachEvent(event, fn);
 
-                cleaner.destroy = function () {
+                cleaner.destroy = function() {
                     if (fn) {
                         el.detachEvent(event, fn);
                         fn = null;
                     }
                 };
-            } else {
+            }
+            else {
                 el.addEventListener(event, fn, true);
 
-                cleaner.destroy = function () {
+                cleaner.destroy = function() {
                     if (fn) {
                         el.removeEventListener(event, fn, true);
                         fn = null;
@@ -140,13 +144,13 @@ Ext.define('Ext.ux.event.Recorder', function (Recorder) {
             return cleaner;
         },
 
-        coalesce: function (rec, ev) {
+        coalesce: function(rec, ev) {
             var me = this,
                 events = me.eventsRecorded,
                 length = events.length,
-                tail = length && events[length-1],
-                tail2 = (length > 1) && events[length-2],
-                tail3 = (length > 2) && events[length-3];
+                tail = length && events[length - 1],
+                tail2 = (length > 1) && events[length - 2],
+                tail3 = (length > 2) && events[length - 3];
 
             if (!tail) {
                 return false;
@@ -155,20 +159,24 @@ Ext.define('Ext.ux.event.Recorder', function (Recorder) {
             if (rec.type === 'mousemove') {
                 if (tail.type === 'mousemove' && rec.ts - tail.ts < 200) {
                     rec.ts = tail.ts;
-                    events[length-1] = rec;
+                    events[length - 1] = rec;
+
                     return true;
                 }
-            } else if (rec.type === 'click') {
+            }
+            else if (rec.type === 'click') {
                 if (tail2 && tail.type === 'mouseup' && tail2.type === 'mousedown') {
-                    if (rec.button == tail.button && rec.button == tail2.button &&
-                            rec.target == tail.target && rec.target == tail2.target &&
-                            me.samePt(rec, tail) && me.samePt(rec, tail2) ) {
+                    if (rec.button === tail.button && rec.button === tail2.button &&
+                            rec.target === tail.target && rec.target === tail2.target &&
+                            me.samePt(rec, tail) && me.samePt(rec, tail2)) {
                         events.pop(); // remove mouseup
                         tail2.type = 'mduclick';
+
                         return true;
                     }
                 }
-            } else if (rec.type === 'keyup') {
+            }
+            else if (rec.type === 'keyup') {
                 // tail3 = { type: "type",     text: "..." },
                 // tail2 = { type: "keydown",  charCode: 65, keyCode: 65 },
                 // tail  = { type: "keypress", charCode: 97, keyCode: 97 },
@@ -187,6 +195,7 @@ Ext.define('Ext.ux.event.Recorder', function (Recorder) {
                                 events.pop();
                             }
                         }
+
                         return true;
                     }
                 }
@@ -195,6 +204,7 @@ Ext.define('Ext.ux.event.Recorder', function (Recorder) {
                 else if (me.completeKeyStroke(tail, rec)) {
                     tail.type = 'type';
                     me.completeSpecialKeyStroke(ev.target, tail, rec);
+
                     return true;
                 }
                 // tail2 = { type: "keydown", charCode: 40, keyCode: 40 },
@@ -207,6 +217,7 @@ Ext.define('Ext.ux.event.Recorder', function (Recorder) {
                     events.pop();
                     events.pop();
                     events.push(tail, tail2);
+
                     return true;
                 }
             }
@@ -214,15 +225,17 @@ Ext.define('Ext.ux.event.Recorder', function (Recorder) {
             return false;
         },
 
-        completeKeyStroke: function (down, up) {
+        completeKeyStroke: function(down, up) {
             if (down && down.type === 'keydown' && down.keyCode === up.keyCode) {
                 delete down.charCode;
+
                 return true;
             }
+
             return false;
         },
 
-        completeSpecialKeyStroke: function (target, down, up) {
+        completeSpecialKeyStroke: function(target, down, up) {
             var key = this.specialKeysByCode[up.keyCode];
 
             if (key && this.inputRe.test(target.tagName)) {
@@ -242,7 +255,7 @@ Ext.define('Ext.ux.event.Recorder', function (Recorder) {
             return false;
         },
 
-        getElementXPath: function (el) {
+        getElementXPath: function(el) {
             var me = this,
                 good = false,
                 xpath = [],
@@ -252,27 +265,30 @@ Ext.define('Ext.ux.event.Recorder', function (Recorder) {
                 tag;
 
             for (t = el; t; t = t.parentNode) {
-                if (t == me.attachTo.document.body) {
+                if (t === me.attachTo.document.body) {
                     xpath.unshift('~');
                     good = true;
                     break;
                 }
+
                 if (t.id && !me.ignoreIdRegEx.test(t.id)) {
                     xpath.unshift('#' + t.id);
                     good = true;
                     break;
                 }
 
-                for (count = 1, sibling = t; !!(sibling = sibling.previousSibling); ) {
-                    if (sibling.tagName == t.tagName) {
+                for (count = 1, sibling = t; !!(sibling = sibling.previousSibling);) {
+                    if (sibling.tagName === t.tagName) {
                         ++count;
                     }
                 }
 
                 tag = t.tagName.toLowerCase();
+
                 if (count < 2) {
                     xpath.unshift(tag);
-                } else {
+                }
+                else {
                     xpath.unshift(tag + '[' + count + ']');
                 }
             }
@@ -280,11 +296,11 @@ Ext.define('Ext.ux.event.Recorder', function (Recorder) {
             return good ? xpath.join('/') : null;
         },
 
-        getRecordedEvents: function () {
+        getRecordedEvents: function() {
             return this.eventsRecorded;
         },
 
-        onEvent: function (ev) {
+        onEvent: function(ev) {
             var me = this,
                 e = new Ext.event.Event(ev),
                 info = me.eventsToRecord[e.type],
@@ -300,8 +316,10 @@ Ext.define('Ext.ux.event.Recorder', function (Recorder) {
             if (!info || !rec.target) {
                 return;
             }
+
             root = e.target.ownerDocument;
             root = root.defaultView || root.parentWindow; // Standards || IE
+
             if (root !== me.attachTo) {
                 return;
             }
@@ -309,13 +327,15 @@ Ext.define('Ext.ux.event.Recorder', function (Recorder) {
             if (me.eventsToRecord.scroll) {
                 me.syncScroll(e.target);
             }
+
             if (info.xy) {
                 xy = e.getXY();
 
                 if (info.pageCoords || !rec.target) {
                     rec.px = xy[0];
                     rec.py = xy[1];
-                } else {
+                }
+                else {
                     elXY = Ext.fly(e.getTarget()).getXY();
                     xy[0] -= elXY[0];
                     xy[1] -= elXY[1];
@@ -328,7 +348,8 @@ Ext.define('Ext.ux.event.Recorder', function (Recorder) {
             if (info.button) {
                 if ('buttons' in ev) {
                     rec.button = ev.buttons; // LEFT=1, RIGHT=2, MIDDLE=4, etc.
-                } else {
+                }
+                else {
                     rec.button = ev.button;
                 }
 
@@ -345,14 +366,17 @@ Ext.define('Ext.ux.event.Recorder', function (Recorder) {
                     // checking document.onwheel does not detect this)
                     rec.dx = ev.deltaX;
                     rec.dy = ev.deltaY;
-                } else if (typeof ev.wheelDeltaX === 'number') {
+                }
+                else if (typeof ev.wheelDeltaX === 'number') {
                     // new WebKit has both X & Y
-                    rec.dx = -1/40 * ev.wheelDeltaX;
-                    rec.dy = -1/40 * ev.wheelDeltaY;
-                } else if (ev.wheelDelta) {
+                    rec.dx = -1 / 40 * ev.wheelDeltaX;
+                    rec.dy = -1 / 40 * ev.wheelDeltaY;
+                }
+                else if (ev.wheelDelta) {
                     // old WebKit and IE
-                    rec.dy = -1/40 * ev.wheelDelta;
-                } else if (ev.detail) {
+                    rec.dy = -1 / 40 * ev.wheelDelta;
+                }
+                else if (ev.detail) {
                     // Old Gecko
                     rec.dy = ev.detail;
                 }
@@ -365,6 +389,7 @@ Ext.define('Ext.ux.event.Recorder', function (Recorder) {
                 me.modKeys[3] = e.shiftKey ? 'S' : '';
 
                 modKeys = me.modKeys.join('');
+
                 if (modKeys) {
                     rec.modKeys = modKeys;
                 }
@@ -377,13 +402,14 @@ Ext.define('Ext.ux.event.Recorder', function (Recorder) {
 
             if (me.coalesce(rec, e)) {
                 me.fireEvent('coalesce', me, rec);
-            } else {
+            }
+            else {
                 me.eventsRecorded.push(rec);
                 me.fireEvent('add', me, rec);
             }
         },
 
-        onStart: function () {
+        onStart: function() {
             var me = this,
                 ddm = me.attachTo.Ext.dd.DragDropManager,
                 evproto = me.attachTo.Ext.EventObjectImpl.prototype,
@@ -395,39 +421,41 @@ Ext.define('Ext.ux.event.Recorder', function (Recorder) {
                     ('onwheel' in me.attachTo.document) ? 'wheel' : 'mousewheel';
 
             me.listeners = [];
-            Ext.Object.each(me.eventsToRecord, function (name, value) {
+            Ext.Object.each(me.eventsToRecord, function(name, value) {
                 if (value && value.listen !== false) {
                     if (!value.event) {
                         value.event = name;
                     }
+
                     if (value.alt && value.alt !== name) {
                         // The 'drag' event is just mousemove while buttons are pressed,
                         // so if there is a mousemove entry as well, ignore the drag
                         if (!me.eventsToRecord[value.alt]) {
                             special.push(value);
                         }
-                    } else {
+                    }
+                    else {
                         me.listeners.push(me.listenToEvent(value.event));
                     }
                 }
             });
 
-            Ext.each(special, function (info) {
+            Ext.each(special, function(info) {
                 me.eventsToRecord[info.alt] = info;
                 me.listeners.push(me.listenToEvent(info.alt));
             });
 
             me.ddmStopEvent = ddm.stopEvent;
-            ddm.stopEvent = Ext.Function.createSequence(ddm.stopEvent, function (e) {
+            ddm.stopEvent = Ext.Function.createSequence(ddm.stopEvent, function(e) {
                 me.onEvent(e);
             });
             me.evStopEvent = evproto.stopEvent;
-            evproto.stopEvent = Ext.Function.createSequence(evproto.stopEvent, function () {
+            evproto.stopEvent = Ext.Function.createSequence(evproto.stopEvent, function() {
                 me.onEvent(this);
             });
         },
 
-        onStop: function () {
+        onStop: function() {
             var me = this;
 
             Ext.destroy(me.listeners);
@@ -437,16 +465,16 @@ Ext.define('Ext.ux.event.Recorder', function (Recorder) {
             me.attachTo.Ext.EventObjectImpl.prototype.stopEvent = me.evStopEvent;
         },
 
-        samePt: function (pt1, pt2) {
-            return pt1.x == pt2.x && pt1.y == pt2.y;
+        samePt: function(pt1, pt2) {
+            return pt1.x === pt2.x && pt1.y === pt2.y;
         },
 
-        syncScroll: function (el) {
+        syncScroll: function(el) {
             var me = this,
                 ts = me.getTimestamp(),
-                oldX, oldY, x, y, scrolled, rec;
+                oldX, oldY, x, y, scrolled, rec, p;
 
-            for (var p = el; p; p = p.parentNode) {
+            for (p = el; p; p = p.parentNode) {
                 oldX = p.$lastScrollLeft;
                 oldY = p.$lastScrollTop;
                 x = p.scrollLeft;
@@ -457,17 +485,20 @@ Ext.define('Ext.ux.event.Recorder', function (Recorder) {
                     if (x) {
                         scrolled = true;
                     }
+
                     p.$lastScrollLeft = x;
                 }
+
                 if (oldY !== y) {
                     if (y) {
                         scrolled = true;
                     }
+
                     p.$lastScrollTop = y;
                 }
 
                 if (scrolled) {
-                    //console.log('scroll x:' + x + ' y:' + y, p);
+                    // console.log('scroll x:' + x + ' y:' + y, p);
                     me.eventsRecorded.push(rec = {
                         type: 'scroll',
                         target: me.getElementXPath(p),

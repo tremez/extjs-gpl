@@ -1,0 +1,9 @@
+.#{$prefix}keyboard-mode {
+    .#{$prefix}grid-cell-inner-action-col {
+        text-align: center;
+
+        .#{$prefix}action-col-icon:focus {
+            background-color: $grid-row-cell-focus-background-color;
+        }
+    }
+}

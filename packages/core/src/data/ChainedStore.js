@@ -6,7 +6,18 @@
 Ext.define('Ext.data.ChainedStore', {
     extend: 'Ext.data.AbstractStore',
     alias: 'store.chained',
-    
+
+    mixins: [
+        'Ext.data.LocalStore'
+    ],
+
+    /**
+     * @property {Boolean} isChainedStore
+     * `true` in this class to identify an object as an instantiated ChainedStore, or subclass
+     * thereof.
+     */
+    isChainedStore: true,
+
     config: {
         /**
          * @cfg {Ext.data.Store/String} source
@@ -20,15 +31,14 @@ Ext.define('Ext.data.ChainedStore', {
         remoteSort: false
     },
 
-    mixins: [
-        'Ext.data.LocalStore'
-    ],
-    
+    syncSourceGrouping: false,
+
     //<debug>
     updateRemoteFilter: function(remoteFilter, oldRemoteFilter) {
         if (remoteFilter) {
             Ext.raise('Remote filtering cannot be used with chained stores.');
         }
+
         this.callParent([remoteFilter, oldRemoteFilter]);
     },
 
@@ -36,27 +46,43 @@ Ext.define('Ext.data.ChainedStore', {
         if (remoteSort) {
             Ext.raise('Remote sorting cannot be used with chained stores.');
         }
+
         this.callParent([remoteSort, oldRemoteSort]);
     },
     //</debug>
-    
+
     remove: function() {
         var source = this.getSource();
+
+        //<debug>
+        if (!source) {
+            Ext.raise('Cannot remove records with no source.');
+        }
+        //</debug>
+
         return source.remove.apply(source, arguments);
     },
 
     removeAll: function() {
         var source = this.getSource();
+
+        //<debug>
+        if (!source) {
+            Ext.raise('Cannot remove records with no source.');
+        }
+        //</debug>
+
         return source.removeAll();
     },
-    
+
     getData: function() {
         var me = this,
             data = me.data;
-        
+
         if (!data) {
             me.data = data = me.constructDataCollection();
         }
+
         return data;
     },
 
@@ -65,16 +91,19 @@ Ext.define('Ext.data.ChainedStore', {
     },
 
     getSession: function() {
-        return this.getSource().getSession();
+        return this.getSourceValue('getSession', null);
     },
 
     applySource: function(source) {
         if (source) {
             //<debug>
+            /* eslint-disable-next-line vars-on-top */
             var original = source,
                 s;
             //</debug>
+
             source = Ext.data.StoreManager.lookup(source);
+
             //<debug>
             if (!source) {
                 s = 'Invalid source {0}specified for Ext.data.ChainedStore';
@@ -83,50 +112,65 @@ Ext.define('Ext.data.ChainedStore', {
             }
             //</debug>
         }
+
         return source;
     },
-    
+
     updateSource: function(source, oldSource) {
         var me = this,
             data;
-        
+
         if (oldSource && !oldSource.destroyed) {
             oldSource.removeObserver(me);
         }
-        
+
         if (source) {
             data = me.getData();
             data.setSource(source.getData());
+
+            if (me.syncSourceGrouping) {
+                me.setGrouper(source.getGrouper());
+            }
+
             if (!me.isInitializing) {
                 me.fireEvent('refresh', me);
                 me.fireEvent('datachanged', me);
             }
+
             source.addObserver(me);
         }
     },
-    
+
     /**
      * Get the model used for this store.
      * @return {Ext.data.Model} The model
      */
     getModel: function() {
-        return this.getSource().getModel();
+        return this.getSourceValue('getModel', null);
     },
 
     getProxy: function() {
         return null;
     },
-    
+
     onCollectionAdd: function(collection, info) {
         var me = this,
             records = info.items,
             lastChunk = !info.next;
-        
+
         if (me.ignoreCollectionAdd) {
             return;
         }
-        
+
+        // Collection add changes the items reference of the collection, and that array
+        // object if directly referenced by Ranges. The ranges have to refresh themselves
+        // upon add.
+        if (me.activeRanges) {
+            me.syncActiveRanges();
+        }
+
         me.fireEvent('add', me, records, info.at);
+
         // If there is a next property, that means there is another range that needs
         // to be removed after this. Wait until everything is gone before firign datachanged
         // since it should be a bulk operation
@@ -142,13 +186,18 @@ Ext.define('Ext.data.ChainedStore', {
             modifiedFieldNames = info.modified || null,
             type = info.meta;
 
+        if (me.activeRanges && info.newIndex !== info.oldIndex) {
+            me.syncActiveRanges();
+        }
+
         // Inform any interested parties that a record has been mutated.
         // This will be invoked on TreeStores in which the invoking record
         // is an descendant of a collapsed node, and so *will not be contained by this store
         me.onUpdate(record, type, modifiedFieldNames, info);
         me.fireEvent('update', me, record, type, modifiedFieldNames, info);
+        me.fireEvent('datachanged', me);
     },
-    
+
     onCollectionUpdateKey: function(source, details) {
         // Must react to upstream Collection key update by firing idchanged event
         this.fireEvent('idchanged', this, details.item, details.oldKey, details.newKey);
@@ -156,16 +205,30 @@ Ext.define('Ext.data.ChainedStore', {
 
     onUpdate: Ext.emptyFn,
 
+    lastCollectionRefesh: null,
+
+    onCollectionRefresh: function(collection) {
+        var me = this,
+            gen = collection.generation;
+
+        if (!me.isConfiguring && me.lastCollectionRefesh !== gen) {
+            me.lastCollectionRefesh = gen;
+            me.fireEvent('datachanged', me);
+            me.fireEvent('refresh', me);
+        }
+    },
+
     onCollectionRemove: function(collection, info) {
         var me = this,
             records = info.items,
             lastChunk = !info.next;
-        
+
         if (me.ignoreCollectionRemove) {
             return;
         }
-        
+
         me.fireEvent('remove', me, records, info.at, false);
+
         // If there is a next property, that means there is another range that needs
         // to be removed after this. Wait until everything is gone before firign datachanged
         // since it should be a bulk operation
@@ -176,71 +239,96 @@ Ext.define('Ext.data.ChainedStore', {
 
     onSourceBeforeLoad: function(source, operation) {
         this.fireEvent('beforeload', this, operation);
+        this.callObservers('BeforeLoad', [operation]);
     },
 
     onSourceAfterLoad: function(source, records, successful, operation) {
         this.fireEvent('load', this, records, successful, operation);
+        this.callObservers('AfterLoad', [records, successful, operation]);
     },
 
     onFilterEndUpdate: function() {
-        this.callParent(arguments);
-        this.callObservers('Filter');
+        var me = this;
+
+        if (me.getData().generation === me.lastCollectionRefesh && !me.getRemoteFilter()) {
+            me.suppressNextFilter = true;
+        }
+
+        me.callParent(arguments);
+
+        me.callObservers('Filter');
     },
-    
+
     onSourceBeforePopulate: function() {
         this.ignoreCollectionAdd = true;
         this.callObservers('BeforePopulate');
     },
-    
+
     onSourceAfterPopulate: function() {
         var me = this;
+
         me.ignoreCollectionAdd = false;
         me.fireEvent('datachanged', me);
         me.fireEvent('refresh', me);
+
         this.callObservers('AfterPopulate');
     },
-    
+
     onSourceBeforeClear: function() {
         this.ignoreCollectionRemove = true;
         this.callObservers('BeforeClear');
     },
-    
+
     onSourceAfterClear: function() {
         this.ignoreCollectionRemove = false;
         this.callObservers('AfterClear');
     },
-    
+
     onSourceBeforeRemoveAll: function() {
         this.ignoreCollectionRemove = true;
         this.callObservers('BeforeRemoveAll');
     },
-    
+
     onSourceAfterRemoveAll: function(source, silent) {
         var me = this;
+
         me.ignoreCollectionRemove = false;
+
         if (!silent) {
             me.fireEvent('clear', me);
             me.fireEvent('datachanged', me);
         }
+
         this.callObservers('AfterRemoveAll', [silent]);
     },
 
     onSourceFilter: function() {
-        var me = this;
-        me.fireEvent('refresh', me);
-        me.fireEvent('datachanged', me);
+        var me = this,
+            gen = me.getData().generation;
+
+        if (me.lastCollectionRefesh !== gen) {
+            me.lastCollectionRefesh = gen;
+            me.fireEvent('refresh', me);
+            me.fireEvent('datachanged', me);
+        }
     },
-    
+
+    onSourceGrouperChange: function(source, grouper) {
+        if (this.syncSourceGrouping) {
+            this.setGrouper(grouper);
+        }
+    },
+
     hasPendingLoad: function() {
-        return this.getSource().hasPendingLoad();
+        return this.getSourceValue('hasPendingLoad', false);
     },
-    
+
     isLoaded: function() {
-        return this.getSource().isLoaded();
+        return this.getSourceValue('isLoaded', false);
     },
 
     isLoading: function() {
-        return this.getSource().isLoading();
+        return this.getSourceValue('isLoading', false);
     },
 
     doDestroy: function() {
@@ -250,13 +338,25 @@ Ext.define('Ext.data.ChainedStore', {
         me.setSource(null);
         me.getData().destroy(true);
         me.data = null;
-        
+
         me.callParent();
     },
 
     privates: {
-        isMoving: function () {
+        getSourceValue: function(method, defaultValue) {
+            var source = this.getSource(),
+                val = defaultValue;
+
+            if (source && !source.destroyed) {
+                val = source[method]();
+            }
+
+            return val;
+        },
+
+        isMoving: function() {
             var source = this.getSource();
+
             return source.isMoving ? source.isMoving.apply(source, arguments) : false;
         },
 
@@ -266,7 +366,7 @@ Ext.define('Ext.data.ChainedStore', {
     }
 
     // Provides docs from the mixin
-    
+
     /**
      * @method add
      * @inheritdoc Ext.data.LocalStore#add
@@ -301,7 +401,7 @@ Ext.define('Ext.data.ChainedStore', {
      * @method indexOfId
      * @inheritdoc Ext.data.LocalStore#indexOfId
      */
-    
+
     /**
      * @method insert
      * @inheritdoc Ext.data.LocalStore#insert

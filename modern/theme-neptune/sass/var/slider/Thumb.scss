@@ -6,25 +6,25 @@
  * @var {number}
  * Thumb height
  */
-$thumb-height: dynamic(1.154rem);
+$thumb-height: dynamic(15px);
 
 /**
  * @var {number}
  * Thumb height in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$thumb-height-big: dynamic(1.867rem);
+$thumb-height-big: dynamic(28px);
 
 /**
  * @var {number}
  * Thumb width
  */
-$thumb-width: dynamic(1.154rem);
+$thumb-width: dynamic(15px);
 
 /**
  * @var {number}
  * Thumb width in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$thumb-width-big: dynamic(1.867rem);
+$thumb-width-big: dynamic(28px);
 
 /**
  * @var {color}
@@ -96,25 +96,25 @@ $thumb-icon-color: dynamic($highlight-color);
  * @var {number}
  * Thumb icon size
  */
-$thumb-icon-size: dynamic(7px); // use px here because this is smaller than the browser's minimum font size for rem units
+$thumb-icon-size: dynamic(7px);
 
 /**
  * @var {number}
  * Thumb icon size in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$thumb-icon-size-big: dynamic(.8rem);
+$thumb-icon-size-big: dynamic(12px);
 
 /**
  * @var {number}
  * Thumb icon font-size
  */
-$thumb-icon-font-size: dynamic($thumb-icon-size);
+$thumb-icon-font-size: dynamic(null);
 
 /**
  * @var {number}
  * Thumb icon font-size in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$thumb-icon-font-size-big: dynamic($thumb-icon-size-big);
+$thumb-icon-font-size-big: dynamic(null);
 
 /**
  * @var {list}
@@ -128,6 +128,19 @@ $thumb-box-shadow: dynamic(1px 1px 2px $neutral-dark-color);
  */
 $thumb-box-shadow-big: dynamic($thumb-box-shadow);
 
+/**
+ * @var {map}
+ * Parameters for the "toggle-on" thumb UI.
+ * Set to `null` to eliminate the UI from the CSS output.
+ */
+$thumb-toggle-on-ui: dynamic(null);
+
+/**
+ * @var {map}
+ * Parameters for the "toggle-off" thumb UI.
+ * Set to `null` to eliminate the UI from the CSS output.
+ */
+$thumb-toggle-off-ui: dynamic(null);
 
 /**
  * Creates a visual theme for a Thumb.
@@ -249,12 +262,11 @@ $thumb-box-shadow-big: dynamic($thumb-box-shadow);
         }
 
         .#{$prefix}icon-el {
-            color: $icon-color;
-            size: $icon-size;
-            size-big: $icon-size-big;
-
             @include icon(
                 $icon: $icon,
+                $color: $icon-color,
+                $size: $icon-size,
+                $size-big: $icon-size-big,
                 $font-size: $icon-font-size,
                 $font-size-big: $icon-font-size-big
             );
@@ -283,16 +295,4 @@ $thumb-box-shadow-big: dynamic($thumb-box-shadow);
             }
         }
     }
-}
-
-@mixin thumb-toggle-on-ui {
-    @include thumb-ui(
-        $ui: 'toggle-on'
-    );
-}
-
-@mixin thumb-toggle-off-ui {
-    @include thumb-ui(
-        $ui: 'toggle-off'
-    );
 }

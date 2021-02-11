@@ -3,30 +3,33 @@
  * @private
  */
 Ext.define('Ext.ux.colorpick.SliderValue', {
-    extend : 'Ext.ux.colorpick.Slider',
-    alias  : 'widget.colorpickerslidervalue',
-    cls    : Ext.baseCSSPrefix + 'colorpicker-value',
+    extend: 'Ext.ux.colorpick.Slider',
+    alias: 'widget.colorpickerslidervalue',
+    cls: Ext.baseCSSPrefix + 'colorpicker-value',
 
     requires: [
         'Ext.XTemplate'
     ],
 
-    gradientStyleTpl: Ext.create('Ext.XTemplate',
+    /* eslint-disable max-len */
+    gradientStyleTpl: Ext.create(
+        'Ext.XTemplate',
         Ext.isIE && Ext.ieVersion < 10
-        ? 'filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr=\'#{hex}\', endColorstr=\'#000000\');' /* IE6-9 */
-        : 'background: -mox-linear-gradient(top, #{hex} 0%, #000000 100%);' +   /* FF3.6+ */
+            ? 'filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr=\'#{hex}\', endColorstr=\'#000000\');' /* IE6-9 */
+            : 'background: -mox-linear-gradient(top, #{hex} 0%, #000000 100%);' +   /* FF3.6+ */
           'background: -webkit-linear-gradient(top, #{hex} 0%,#000000 100%);' + /* Chrome10+,Safari5.1+ */
           'background: -o-linear-gradient(top, #{hex} 0%,#000000 100%);' +      /* Opera 11.10+ */
           'background: -ms-linear-gradient(top, #{hex} 0%,#000000 100%);' +     /* IE10+ */
           'background: linear-gradient(to bottom, #{hex} 0%,#000000 100%);'     /* W3C */
     ),
+    /* eslint-enable max-len */
 
     // Called via data binding whenever selectedColor.v changes; value param is 0-100
     setValue: function(value) {
-        var me              = this,
-            container       = me.getDragContainer(),
-            dragHandle      = me.getDragHandle(),
-            containerEl     = container.getEl(),
+        var me = this,
+            container = me.getDragContainer(),
+            dragHandle = me.getDragHandle(),
+            containerEl = container.getEl(),
             containerHeight = containerEl.getHeight(),
             yRatio,
             top;
@@ -42,12 +45,12 @@ Ext.define('Ext.ux.colorpick.SliderValue', {
         }
 
         // y-axis of slider with value 0-1 translates to reverse of "value"
-        yRatio = 1-(value/100);
-        top = containerHeight*yRatio;
+        yRatio = 1 - (value / 100);
+        top = containerHeight * yRatio;
 
         // Position dragger
         dragHandle.getEl().setStyle({
-            top  : top + 'px'
+            top: top + 'px'
         });
     },
 
@@ -65,6 +68,6 @@ Ext.define('Ext.ux.colorpick.SliderValue', {
         // Determine HEX for new hue and set as background based on template
         rgb = Ext.ux.colorpick.ColorUtils.hsv2rgb(hue, 1, 1);
         hex = Ext.ux.colorpick.ColorUtils.rgb2hex(rgb.r, rgb.g, rgb.b);
-        container.getEl().applyStyles(me.gradientStyleTpl.apply({hex: hex}));
+        container.getEl().applyStyles(me.gradientStyleTpl.apply({ hex: hex }));
     }
 });

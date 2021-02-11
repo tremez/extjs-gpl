@@ -4,10 +4,12 @@ Ext.define('Ext.theme.classic.grid.column.Widget', {
     config: {
         /**
          * @cfg defaultCellUI {Object}
-         * A map of xtype to {@link Ext.Component#ui} names to use when using Components in this column.
+         * A map of xtype to {@link Ext.Component#ui} names to use when using Components
+         * in this column.
          *
-         * Currently {@link Ext.Button Button} and all subclasses of {@link Ext.form.field.Text TextField} default
-         * to using `ui: "grid-cell"` when in a WidgetColumn.
+         * Currently {@link Ext.Button Button} and all subclasses of
+         * {@link Ext.form.field.Text TextField}.
+         * Default to using `ui: "grid-cell"` when in a WidgetColumn.
          */
         defaultWidgetUI: {
             button: 'grid-cell',

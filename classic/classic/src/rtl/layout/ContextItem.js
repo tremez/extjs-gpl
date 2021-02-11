@@ -5,20 +5,25 @@
 Ext.define('Ext.rtl.layout.ContextItem', {
     override: 'Ext.layout.ContextItem',
 
-    addPositionStyles: function(styles, props) {
-        var x = props.x,
-            y = props.y,
-            count = 0;
+    rtlTranslateProps: {
+        x: 'right',
+        y: 'top'
+    },
 
-        if (x !== undefined) {
-            styles[this.parent.target.getInherited().rtl ? 'right' : 'left'] = x + 'px';
-            ++count;
+    constructor: function(config) {
+        var me = this,
+            componentContext = config.componentContext;
+
+        me.callParent([config]);
+
+        // If a componentContext exists, it means this context item is the child element
+        // of a component, so just ask for the state. If no componentContext, then ask
+        // the component for the state
+        me.rtl = componentContext ? componentContext.rtl : me.target.getInherited().rtl;
+
+        if (me.rtl) {
+            me.translateProps = me.rtlTranslateProps;
         }
-        if (y !== undefined) {
-            styles.top = y + 'px';
-            ++count;
-        }
-        return count;
     }
 
 });

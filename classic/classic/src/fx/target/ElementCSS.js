@@ -6,12 +6,7 @@
  * will be passed to the animation and the appropriate target will be created.
  */
 Ext.define('Ext.fx.target.ElementCSS', {
-
-    /* Begin Definitions */
-
     extend: 'Ext.fx.target.Element',
-
-    /* End Definitions */
 
     setAttr: function(targetData, isFirstFrame) {
         var cssArr = {
@@ -33,11 +28,13 @@ Ext.define('Ext.fx.target.ElementCSS', {
             duration = attrs.duration;
             easing = attrs.easing;
             attrs = attrs.attrs;
+
             for (attr in attrs) {
-                if (Ext.Array.indexOf(cssArr.attrs, attr) == -1) {
+                if (Ext.Array.indexOf(cssArr.attrs, attr) === -1) {
                     cssArr.attrs.push(attr.replace(/[A-Z]/g, function(v) {
                         return '-' + v.toLowerCase();
                     }));
+
                     cssArr.duration.push(duration + 'ms');
                     cssArr.easing.push(easing);
                 }
@@ -50,16 +47,32 @@ Ext.define('Ext.fx.target.ElementCSS', {
 
         for (i = 0; i < ln; i++) {
             attrs = targetData[i].attrs;
+
             for (attr in attrs) {
                 ln2 = attrs[attr].length;
+
                 for (j = 0; j < ln2; j++) {
                     o = attrs[attr][j];
-                    o[0].setStyle(Ext.supports.CSS3Prefix + 'TransitionProperty', isFirstFrame ? '' : attributes);
-                    o[0].setStyle(Ext.supports.CSS3Prefix + 'TransitionDuration', isFirstFrame ? '' : duration);
-                    o[0].setStyle(Ext.supports.CSS3Prefix + 'TransitionTimingFunction', isFirstFrame ? '' : easing);
+
+                    o[0].setStyle(
+                        Ext.supports.CSS3Prefix + 'TransitionProperty',
+                        isFirstFrame ? '' : attributes
+                    );
+
+                    o[0].setStyle(
+                        Ext.supports.CSS3Prefix + 'TransitionDuration',
+                        isFirstFrame ? '' : duration
+                    );
+
+                    o[0].setStyle(
+                        Ext.supports.CSS3Prefix + 'TransitionTimingFunction',
+                        isFirstFrame ? '' : easing
+                    );
+
                     o[0].setStyle(attr, o[1]);
 
-                    // Must trigger reflow to make this get used as the start point for the transition that follows
+                    // Must trigger reflow to make this get used as the start point
+                    // for the transition that follows
                     if (isFirstFrame) {
                         o = o[0].dom.offsetWidth;
                     }

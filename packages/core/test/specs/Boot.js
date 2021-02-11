@@ -1,4 +1,4 @@
-describe("Boot", function() {
+topSuite("Ext.Boot", false, function() {
     // This was taken from live 6.0 environment, and is a bit long ;(
     var requestCfg = {
       "loadOrder": [
@@ -17600,37 +17600,6 @@ describe("Boot", function() {
           "uses": [],
           "idx": 846
         },
-        "http://localhost/ext/packages/ux/classic/src/GroupTabRenderer.js": {
-          "path": "http://localhost/ext/packages/ux/classic/src/GroupTabRenderer.js",
-          "requires": [
-            98,
-            336
-          ],
-          "uses": [],
-          "idx": 847
-        },
-        "http://localhost/ext/packages/ux/classic/src/GroupTabPanel.js": {
-          "path": "http://localhost/ext/packages/ux/classic/src/GroupTabPanel.js",
-          "requires": [
-            359,
-            668,
-            847
-          ],
-          "uses": [
-            178,
-            183,
-            184,
-            246,
-            357,
-            367,
-            411,
-            524,
-            525,
-            617,
-            664
-          ],
-          "idx": 848
-        },
         "http://localhost/ext/packages/ux/classic/src/IFrame.js": {
           "path": "http://localhost/ext/packages/ux/classic/src/IFrame.js",
           "requires": [
@@ -19728,8 +19697,6 @@ describe("Boot", function() {
         "Ext.ux.Explorer",
         "Ext.ux.FieldReplicator",
         "Ext.ux.GMapPanel",
-        "Ext.ux.GroupTabPanel",
-        "Ext.ux.GroupTabRenderer",
         "Ext.ux.IFrame",
         "Ext.ux.LiveSearchGridPanel",
         "Ext.ux.PreviewPlugin",
@@ -20665,8 +20632,6 @@ describe("Boot", function() {
         "http://localhost/ext/packages/ux/classic/src/Explorer.js",
         "http://localhost/ext/packages/ux/classic/src/FieldReplicator.js",
         "http://localhost/ext/packages/ux/classic/src/GMapPanel.js",
-        "http://localhost/ext/packages/ux/classic/src/GroupTabPanel.js",
-        "http://localhost/ext/packages/ux/classic/src/GroupTabRenderer.js",
         "http://localhost/ext/packages/ux/classic/src/IFrame.js",
         "http://localhost/ext/packages/ux/classic/src/LiveSearchGridPanel.js",
         "http://localhost/ext/packages/ux/classic/src/PreviewPlugin.js",
@@ -21633,8 +21598,6 @@ describe("Boot", function() {
       "http://localhost/ext/packages/ux/classic/src/Explorer.js",
       "http://localhost/ext/packages/ux/classic/src/FieldReplicator.js",
       "http://localhost/ext/packages/ux/classic/src/GMapPanel.js",
-      "http://localhost/ext/packages/ux/classic/src/GroupTabRenderer.js",
-      "http://localhost/ext/packages/ux/classic/src/GroupTabPanel.js",
       "http://localhost/ext/packages/ux/classic/src/IFrame.js",
       "http://localhost/ext/packages/ux/classic/src/statusbar/StatusBar.js",
       "http://localhost/ext/packages/ux/classic/src/LiveSearchGridPanel.js",
@@ -21705,25 +21668,25 @@ describe("Boot", function() {
       "http://localhost/ext/classic/classic/src/view/MultiSelector.js",
       "http://localhost/ext/classic/classic/src/window/Toast.js"
     ];
-    
+
     describe("URL resolution", function() {
         var oldScripts, request;
-        
+
         beforeEach(function() {
             oldScripts = Ext.Boot.scripts;
             Ext.Boot.scripts = [];
-            
+
             request = new Ext.Boot.Request(requestCfg);
         });
-        
+
         afterEach(function() {
             request = null;
             Ext.Boot.scripts = oldScripts;
         });
-        
+
         it("should work as expected", function() {
             var urls = request.getUrls();
-            
+
             expect(urls).toEqual(resolvedUrls);
         });
     });

@@ -21,8 +21,8 @@ Ext.define('KitchenSink.profile.Base', {
 
     onAnimationEnd: function(animator, animation, element) {
         var delay = (Date.now() - animation.startTime) - animation.getDuration(),
-                benchmark = this.benchmark,
-                item;
+            benchmark = this.benchmark,
+            item;
 
         item = benchmark.add({
             html: element.id + ' <b>' + delay + '</b>'

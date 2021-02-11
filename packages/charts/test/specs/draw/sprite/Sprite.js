@@ -1,8 +1,111 @@
-describe('Ext.draw.sprite.Sprite', function () {
+topSuite("Ext.draw.sprite.Sprite", ['Ext.draw.*'], function() {
+    beforeEach(function() {
+        // Silence warnings regarding Sencha download server
+        spyOn(Ext.log, 'warn');
+    });
 
-    describe('transformation matrix calculation', function () {
-        describe('default centers of scaling and rotation', function () {
-            it('should apply transformation in the following order: scale, rotate, translate', function () {
+    describe('setAttributes', function() {
+        var draw;
+
+        afterEach(function() {
+            Ext.destroy(draw);
+        });
+
+        it('should filter out attributes properly', function() {
+            // This actually tests many things: the setAttributes method of the sprite,
+            // the abstract and Animation modifiers and the Animator class.
+            var animationend;
+
+            draw = new Ext.draw.Container({
+                renderTo: document.body,
+                width: 200,
+                height: 200
+            });
+            var surface = draw.getSurface();
+
+            var circle = new Ext.draw.sprite.Circle({
+                r: 10,
+                cx: 100,
+                cy: 100,
+                fillStyle: 'red',
+                strokeStyle: 'none'
+            });
+
+            var animation = circle.getAnimation();
+
+            animation.setDuration(250);
+            animation.on('animationend', function() {
+                animationend = true;
+            });
+
+            surface.add(circle);
+
+            circle.setAttributes({
+                r: 90
+            });
+
+            surface.renderFrame();
+
+            waitsFor(function() {
+                return animationend;
+            });
+
+            runs(function() {
+                expect(circle.attr.r).toBe(90);
+                animationend = false;
+                circle.setAttributes({
+                    r: 50
+                });
+                // The call below should compare the value being set with the target value
+                // at the end of animation, not the current value, which is still 90.
+                // If this is buggy, the attribute won't be set and the animation to 50
+                // will be performed instead.
+                circle.setAttributes({
+                    r: 90
+                });
+                surface.renderFrame();
+            });
+
+            waitsFor(function() {
+                return animationend;
+            });
+
+            runs(function() {
+                expect(circle.attr.r).toBe(90);
+            });
+        });
+    });
+
+    describe('surface', function() {
+        var surface;
+
+        it('should remove itself from the old surface', function() {
+            surface = new Ext.draw.Surface({
+                items: {
+                    type: 'rect',
+                    id: 'rect',
+                    x: 50,
+                    y: 50,
+                    width: 100,
+                    height: 100,
+                    fillStyle: 'orange'
+                }
+            });
+            var sprite = surface.get('rect');
+
+            expect(surface.getItems().length).toBe(1);
+            sprite.setSurface(null);
+            expect(surface.getItems().length).toBe(0);
+        });
+
+        afterEach(function() {
+            Ext.destroy(surface);
+        });
+    });
+
+    describe('transformation matrix calculation', function() {
+        describe('default centers of scaling and rotation', function() {
+            it('should apply transformation in the following order: scale, rotate, translate', function() {
                 var theta = Math.PI / 2,
                     sin = Math.sin(theta),
                     cos = Math.cos(theta),
@@ -40,8 +143,8 @@ describe('Ext.draw.sprite.Sprite', function () {
                 expect(rect.attr.matrix.elements).toEqual(referenceMatrix);
             });
         });
-        describe('custom centers of scaling and rotation', function () {
-            it('should apply transformation in the following order: scale, rotate, translate', function () {
+        describe('custom centers of scaling and rotation', function() {
+            it('should apply transformation in the following order: scale, rotate, translate', function() {
                 var theta = Math.PI / 2,
                     sin = Math.sin(theta),
                     cos = Math.cos(theta),
@@ -87,32 +190,34 @@ describe('Ext.draw.sprite.Sprite', function () {
         });
     });
 
-    describe('setTransform', function () {
+    describe('setTransform', function() {
         // This is a result of scaling by (2.5, 7.5), rotating by Math.PI/4 and translating by (3,4).
         var elements = [1.76776695, 1.76776695, -5.30330086, 5.30330086, 3, 4],
             sprite;
 
-        beforeEach(function () {
+        beforeEach(function() {
             sprite = new Ext.draw.sprite.Rect();
         });
 
-        afterEach(function () {
+        afterEach(function() {
             Ext.destroy(sprite);
         });
 
-        it("should use the given elements for the transformation matrix of the sprite", function () {
+        it("should use the given elements for the transformation matrix of the sprite", function() {
             sprite.setTransform(elements);
             var matrixElements = sprite.attr.matrix.elements;
 
             expect(matrixElements).toEqual(elements);
         });
-        it("should mark the sprite and its parent as dirty", function () {
+        it("should mark the sprite and its parent as dirty", function() {
             var drawContainer = new Ext.draw.Container({
                 renderTo: Ext.getBody(),
                 width: 200,
                 height: 200
             });
+
             var surface = drawContainer.getSurface();
+
             expect(surface.getDirty()).toBe(false);
             surface.add(sprite);
             expect(surface.getDirty()).toBe(true);
@@ -124,7 +229,7 @@ describe('Ext.draw.sprite.Sprite', function () {
 
             drawContainer.destroy();
         });
-        it("should properly calculate the inverse matrix from the given matrix", function () {
+        it("should properly calculate the inverse matrix from the given matrix", function() {
             sprite.setTransform(elements);
             var inverseMatrixElements = sprite.attr.inverseMatrix.elements,
                 precision = 8;
@@ -136,11 +241,11 @@ describe('Ext.draw.sprite.Sprite', function () {
             expect(inverseMatrixElements[4]).toBeCloseTo(-1.97989899, precision);
             expect(inverseMatrixElements[5]).toBeCloseTo(-0.0942809, precision);
         });
-        it("should mark bbox transform as dirty", function () {
+        it("should mark bbox transform as dirty", function() {
             sprite.setTransform(elements);
             expect(sprite.attr.bbox.transform.dirty).toBe(true);
         });
-        it("should not update the transformation attributes by default", function () {
+        it("should not update the transformation attributes by default", function() {
             var attr = sprite.attr,
                 rotationRads = attr.rotationRads,
                 rotationCenterX = attr.rotationCenterX,
@@ -164,7 +269,7 @@ describe('Ext.draw.sprite.Sprite', function () {
             expect(attr.translationX).toEqual(translationX);
             expect(attr.translationY).toEqual(translationY);
         });
-        it("should update the transformation attributes, if explicitly asked", function () {
+        it("should update the transformation attributes, if explicitly asked", function() {
             var attr = sprite.attr,
                 precision = 8;
 
@@ -180,19 +285,20 @@ describe('Ext.draw.sprite.Sprite', function () {
             expect(attr.translationX).toEqual(3);
             expect(attr.translationY).toEqual(4);
         });
-        it("should not modify the given array", function () {
+        it("should not modify the given array", function() {
             sprite.setTransform(elements);
             sprite.attr.matrix.rotate(Math.PI / 4);
 
             expect(elements).toEqual([1.76776695, 1.76776695, -5.30330086, 5.30330086, 3, 4]);
         });
-        it("should return the sprite itself", function () {
+        it("should return the sprite itself", function() {
             var result = sprite.transform([1, 0, 0, 1, 100, 100]);
+
             expect(result).toEqual(sprite);
         });
     });
 
-    describe('resetTransform', function () {
+    describe('resetTransform', function() {
         var spriteConfig = {
             type: 'rect',
             x: 0,
@@ -210,15 +316,18 @@ describe('Ext.draw.sprite.Sprite', function () {
             translationY: 50
         };
 
-        it("should mark the sprite and its parent as dirty", function () {
+        it("should mark the sprite and its parent as dirty", function() {
             var drawContainer = new Ext.draw.Container({
                 renderTo: Ext.getBody(),
                 width: 200,
                 height: 200
             });
+
             var surface = drawContainer.getSurface();
+
             expect(surface.getDirty()).toBe(false);
             var sprite = surface.add(spriteConfig);
+
             expect(surface.getDirty()).toBe(true);
             surface.renderFrame();
             expect(surface.getDirty()).toBe(false);
@@ -229,7 +338,7 @@ describe('Ext.draw.sprite.Sprite', function () {
             drawContainer.destroy();
         });
 
-        it("should reset the transformation matrix and its reverse to the identity matrix", function () {
+        it("should reset the transformation matrix and its reverse to the identity matrix", function() {
             var sprite = new Ext.draw.sprite.Rect(spriteConfig),
                 identityMatrixElements = [1, 0, 0, 1, 0, 0];
 
@@ -242,7 +351,7 @@ describe('Ext.draw.sprite.Sprite', function () {
 
             sprite.destroy();
         });
-        it("should return the sprite itself", function () {
+        it("should return the sprite itself", function() {
             var sprite = new Ext.draw.sprite.Rect(),
                 result = sprite.transform([1, 0, 0, 1, 100, 100]);
 
@@ -252,8 +361,8 @@ describe('Ext.draw.sprite.Sprite', function () {
         });
     });
 
-    describe('transform', function () {
-        it("should multiply the given matrix with the current transformation matrix", function () {
+    describe('transform', function() {
+        it("should multiply the given matrix with the current transformation matrix", function() {
             var sprite = new Ext.draw.sprite.Rect(),
                 precision = 12;
 
@@ -271,7 +380,7 @@ describe('Ext.draw.sprite.Sprite', function () {
             expect(inverseMatrixElements[4]).toBeCloseTo(-4, precision);
             expect(inverseMatrixElements[5]).toBeCloseTo(0, precision);
         });
-        it("should pre-multiply the current matrix with the given matrix", function () {
+        it("should pre-multiply the current matrix with the given matrix", function() {
             var sprite = new Ext.draw.sprite.Rect(),
                 scale = [2, 0, 0, 3, 0, 0],
                 translate = [1, 0, 0, 1, 100, 100],
@@ -299,7 +408,7 @@ describe('Ext.draw.sprite.Sprite', function () {
 
             sprite.destroy();
         });
-        it("should return the sprite itself", function () {
+        it("should return the sprite itself", function() {
             var sprite = new Ext.draw.sprite.Rect(),
                 result = sprite.transform([1, 0, 0, 1, 100, 100]);
 
@@ -309,8 +418,8 @@ describe('Ext.draw.sprite.Sprite', function () {
         });
     });
 
-    describe('remove', function () {
-        it("should remove itself from the surface, returning itself or null (if already removed)", function () {
+    describe('remove', function() {
+        it("should remove itself from the surface, returning itself or null (if already removed)", function() {
             var surface = new Ext.draw.Surface({}),
                 sprite = new Ext.draw.sprite.Rect({}),
                 id = sprite.getId(),
@@ -331,8 +440,8 @@ describe('Ext.draw.sprite.Sprite', function () {
         });
     });
 
-    describe('destroy', function () {
-        it("should remove itself from the surface", function () {
+    describe('destroy', function() {
+        it("should remove itself from the surface", function() {
             var surface = new Ext.draw.Surface({}),
                 sprite = new Ext.draw.sprite.Rect({}),
                 id = sprite.getId();
@@ -347,12 +456,12 @@ describe('Ext.draw.sprite.Sprite', function () {
         });
     });
 
-    describe("isVisible", function () {
+    describe("isVisible", function() {
         var none = 'none',
             rgba_none = 'rgba(0,0,0,0)',
             sprite, surface, container;
 
-        beforeEach(function () {
+        beforeEach(function() {
             container = new Ext.draw.Container({
                 renderTo: Ext.getBody()
             });
@@ -369,11 +478,11 @@ describe('Ext.draw.sprite.Sprite', function () {
             container.add(surface);
         });
 
-        afterEach(function () {
+        afterEach(function() {
             Ext.destroy(sprite, surface, container);
         });
 
-        it("should return true if the sprite belongs to a visible parent, false otherwise", function () {
+        it("should return true if the sprite belongs to a visible parent, false otherwise", function() {
             expect(sprite.isVisible()).toBe(true);
 
             surface.remove(sprite);
@@ -382,25 +491,27 @@ describe('Ext.draw.sprite.Sprite', function () {
             var instancing = new Ext.draw.sprite.Instancing({
                 template: sprite
             });
+
             surface.add(instancing);
             expect(sprite.isVisible()).toBe(true);
 
             instancing.destroy();
         });
 
-        it("should return false if the sprite belongs to a parent that doesn't belong to a surface", function () {
+        it("should return false if the sprite belongs to a parent that doesn't belong to a surface", function() {
             var instancing = new Ext.draw.sprite.Instancing({
                 template: sprite
             });
+
             expect(sprite.isVisible()).toBe(false);
         });
 
-        it("should return false in case the sprite is hidden", function () {
+        it("should return false in case the sprite is hidden", function() {
             sprite.hide();
             expect(sprite.isVisible()).toBe(false);
         });
 
-        it("should return false in case the sprite has no fillStyle and strokeStyle, true otherwise", function () {
+        it("should return false in case the sprite has no fillStyle and strokeStyle, true otherwise", function() {
             sprite.setAttributes({
                 fillStyle: none
             });
@@ -447,14 +558,14 @@ describe('Ext.draw.sprite.Sprite', function () {
             expect(sprite.isVisible()).toBe(false);
         });
 
-        it("should return false if the globalAlpha attribute is zero", function () {
+        it("should return false if the globalAlpha attribute is zero", function() {
             sprite.setAttributes({
                 globalAlpha: 0
             });
             expect(sprite.isVisible()).toBe(false);
         });
 
-        it("should return false if both fill and stroke are completely transparent, true otherwise", function () {
+        it("should return false if both fill and stroke are completely transparent, true otherwise", function() {
             sprite.setAttributes({
                 fillOpacity: 0,
                 strokeOpacity: 0
@@ -475,10 +586,10 @@ describe('Ext.draw.sprite.Sprite', function () {
         });
     });
 
-    describe("hitTest", function () {
+    describe("hitTest", function() {
         var sprite, surface, container;
 
-        beforeEach(function () {
+        beforeEach(function() {
             container = new Ext.draw.Container({
                 renderTo: Ext.getBody()
             });
@@ -498,43 +609,50 @@ describe('Ext.draw.sprite.Sprite', function () {
             container.add(surface);
         });
 
-        afterEach(function () {
+        afterEach(function() {
             Ext.destroy(sprite, surface, container);
         });
 
         it("should return an object with the 'sprite' property set to the sprite itself, " +
-            "if the sprite is visible and its bounding box is hit", function () {
+            "if the sprite is visible and its bounding box is hit", function() {
             // Testing hitTest method of the abstract Sprite class.
             // Even though, (10,10) is not inside the circle, it's inside it's bounding box.
             var result = Ext.draw.sprite.Sprite.prototype.hitTest.call(sprite, [10, 10]);
+
             expect(result && result.sprite).toBe(sprite);
         });
 
-        it("should return null, if the sprite's bounding box is hit, but the sprite is not visible", function () {
+        it("should return null, if the sprite's bounding box is hit, but the sprite is not visible", function() {
             var originalMethod = sprite.isVisible;
-            sprite.isVisible = function () { return false; };
+
+            // eslint-disable-next-line brace-style
+            sprite.isVisible = function() { return false; };
+
             var result = Ext.draw.sprite.Sprite.prototype.hitTest.call(sprite, [10, 10]);
+
             expect(result).toBe(null);
             sprite.isVisible = originalMethod;
         });
 
-        it("should return null, if the sprite is visible, but it's bounding box is not hit", function () {
+        it("should return null, if the sprite is visible, but it's bounding box is not hit", function() {
             var result = Ext.draw.sprite.Sprite.prototype.hitTest.call(sprite, [210, 210]);
+
             expect(result).toBe(null);
         });
     });
 
-    describe("getAnimation", function () {
-        it("should return the stored reference to the sprite's animation modifier", function () {
+    describe("getAnimation", function() {
+        it("should return the stored reference to the sprite's animation modifier", function() {
             var sprite = new Ext.draw.sprite.Rect();
 
-            expect(sprite.getAnimation()).toEqual(sprite.fx);
+            expect(sprite.getAnimation()).toEqual(sprite.modifiers.animation);
         });
     });
 
-    describe("setAnimation", function () {
-        it("should set the config of the Animation modifier of a sprite", function () {
+    describe("setAnimation", function() {
+        it("should set the config of the Animation modifier of a sprite", function() {
             var sprite = new Ext.draw.sprite.Rect();
+
             var config = {
                 duration: 2000,
                 easing: 'bounceOut',
@@ -548,7 +666,8 @@ describe('Ext.draw.sprite.Sprite', function () {
 
             sprite.setAnimation(config);
 
-            var actualConfig = sprite.fx.getInitialConfig();
+            var actualConfig = sprite.modifiers.animation.getInitialConfig();
+
             expect(actualConfig.duration).toEqual(config.duration);
             expect(actualConfig.easing).toEqual(config.easing);
             expect(actualConfig.customEasings).toEqual(config.customEasings);

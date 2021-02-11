@@ -1,13 +1,15 @@
 /**
- * This layout manages multiple child Components, each fitted to the Container, where only a single child Component can be
- * visible at any given time.  This layout style is most commonly used for wizards, tab implementations, etc.
- * This class is intended to be extended or created via the layout:'card' {@link Ext.container.Container#layout} config,
- * and should generally not need to be created directly via the new keyword.
+ * This layout manages multiple child Components, each fitted to the Container, where only
+ * a single child Component can be visible at any given time.  This layout style is most commonly
+ * used for wizards, tab implementations, etc. This class is intended to be extended or created
+ * via the `layout: 'card'` {@link Ext.container.Container#layout} config, and should generally
+ * not need to be created directly via the new keyword.
  *
- * The CardLayout's focal method is {@link #setActiveItem}.  Since only one panel is displayed at a time,
- * the only way to move from one Component to the next is by calling setActiveItem, passing the next panel to display
- * (or its id or index).  The layout itself does not provide a user interface for handling this navigation,
- * so that functionality must be provided by the developer.
+ * The CardLayout's focal method is {@link #setActiveItem}.  Since only one panel is displayed
+ * at a time, the only way to move from one Component to the next is by calling setActiveItem,
+ * passing the next panel to display (or its id or index).  The layout itself does not provide
+ * a user interface for handling this navigation, so that functionality must be provided
+ * by the developer.
  *
  * To change the active card of a container, call the setActiveItem method of its layout:
  *
@@ -23,8 +25,9 @@
  *
  *     p.getLayout().setActiveItem(1);
  * 
- * The {@link Ext.Component#beforedeactivate beforedeactivate} and {@link Ext.Component#beforeactivate beforeactivate}
- * events can be used to prevent a card from activating or deactivating by returning `false`.
+ * The {@link Ext.Component#beforedeactivate beforedeactivate} and
+ * {@link Ext.Component#beforeactivate beforeactivate} events can be used to prevent a card
+ * from activating or deactivating by returning `false`.
  * 
  *     @example   
  *     var active = 0;
@@ -57,10 +60,10 @@
  *     });
  *
  * In the following example, a simplistic wizard setup is demonstrated.  A button bar is added
- * to the footer of the containing panel to provide navigation buttons.  The buttons will be handled by a
- * common navigation routine.  Note that other uses of a CardLayout (like a tab control) would require a
- * completely different implementation.  For serious implementations, a better approach would be to extend
- * CardLayout to provide the custom functionality needed.
+ * to the footer of the containing panel to provide navigation buttons.  The buttons will be handled
+ * by a common navigation routine.  Note that other uses of a CardLayout (like a tab control)
+ * would require a completely different implementation.  For serious implementations,
+ * a better approach would be to extend CardLayout to provide the custom functionality needed.
  *
  *     @example
  *     var navigate = function(panel, direction){
@@ -120,16 +123,9 @@
  *     });
  */
 Ext.define('Ext.layout.container.Card', {
-
-    /* Begin Definitions */
-
     extend: 'Ext.layout.container.Fit',
-
     alternateClassName: 'Ext.layout.CardLayout',
-
     alias: 'layout.card',
-
-    /* End Definitions */
 
     type: 'card',
 
@@ -137,28 +133,29 @@ Ext.define('Ext.layout.container.Card', {
 
     /**
      * @cfg {Boolean} deferredRender
-     * True to render each contained item at the time it becomes active, false to render all contained items
-     * as soon as the layout is rendered (defaults to false).  If there is a significant amount of content or
-     * a lot of heavy controls being rendered into panels that are not displayed by default, setting this to
-     * true might improve performance.
+     * `true` to render each contained item at the time it becomes active, `false` to render
+     * all contained items as soon as the layout is rendered (defaults to false). If there is
+     * a significant amount of content or a lot of heavy controls being rendered into panels
+     * that are not displayed by default, setting this to `true` might improve performance.
      */
-    deferredRender : false,
+    deferredRender: false,
 
-    getRenderTree: function () {
+    getRenderTree: function() {
         var me = this,
             activeItem = me.getActiveItem();
 
         if (activeItem) {
 
             // If they veto the activate, we have no active item
-            if (activeItem.hasListeners.beforeactivate && activeItem.fireEvent('beforeactivate', activeItem) === false) {
- 
+            if (activeItem.hasListeners.beforeactivate &&
+                activeItem.fireEvent('beforeactivate', activeItem) === false) {
+
                 // We must null our activeItem reference, AND the one in our owning Container.
-                // Because upon layout invalidation, renderChildren will use this.getActiveItem which
-                // uses this.activeItem || this.owner.activeItem
+                // Because upon layout invalidation, renderChildren will use this.getActiveItem
+                // which uses this.activeItem || this.owner.activeItem
                 activeItem = me.activeItem = me.owner.activeItem = null;
             }
-            
+
             // Item is to be the active one. Fire event after it is first layed out
             else if (activeItem.hasListeners.activate) {
                 activeItem.on({
@@ -173,28 +170,32 @@ Ext.define('Ext.layout.container.Card', {
                 if (activeItem) {
                     return me.getItemsRenderTree([activeItem]);
                 }
-            } else {
+            }
+            else {
                 return me.callParent(arguments);
             }
         }
     },
 
-    renderChildren: function () {
+    renderChildren: function() {
         var me = this,
             active = me.getActiveItem();
 
         if (!me.deferredRender) {
             me.callParent();
-        } else if (active) {
+        }
+        else if (active) {
             // ensure the active item is configured for the layout
             me.renderItems([active], me.getRenderTarget());
         }
     },
 
-    isValidParent : function(item, target, position) {
-        // Note: Card layout does not care about order within the target because only one is ever visible.
+    isValidParent: function(item, target, position) {
+        // Note: Card layout does not care about order within the target because only one
+        // is ever visible.
         // We only care whether the item is a direct child of the target.
         var itemEl = item.el ? item.el.dom : Ext.getDom(item);
+
         return (itemEl && itemEl.parentNode === (target.dom || target)) || false;
     },
 
@@ -204,10 +205,12 @@ Ext.define('Ext.layout.container.Card', {
      */
     getActiveItem: function() {
         var me = this,
-            // It's necessary to check that me.activeItem is not undefined as it could be 0 (falsey). We're more interested in
-            // checking the layout's activeItem property, since that is the source of truth for an activeItem.  If it's
-            // determined to be empty, check the owner. Note that a default item is returned if activeItem is `undefined` but
-            // not `null`. Also, note that `null` is legitimate value and completely different from `undefined`.
+            // It's necessary to check that me.activeItem is not undefined
+            // as it could be 0 (falsey). We're more interested in checking
+            // the layout's activeItem property, since that is the source of truth
+            // for an activeItem. If it's determined to be empty, check the owner.
+            // Note that a default item is returned if activeItem is `undefined` but not `null`.
+            // Also, note that `null` is legitimate value and completely different from `undefined`.
             item = me.activeItem === undefined ? (me.owner && me.owner.activeItem) : me.activeItem,
             result = me.parseActiveItem(item);
 
@@ -216,8 +219,9 @@ Ext.define('Ext.layout.container.Card', {
             me.activeItem = result;
         }
 
-        // Note that in every use case me.activeItem will have a truthy value except for when a container or tabpanel is explicity
-        // configured with activeItem/Tab === null or when an out-of-range index is given for an active tab (as it will be undefined).
+        // Note that in every use case me.activeItem will have a truthy value except for
+        // when a container or tabpanel is explicity configured with activeItem/Tab === null
+        // or when an out-of-range index is given for an active tab (as it will be undefined).
         // In those cases, it is meaningful to return the null value, so do so.
         return result == null ? null : (me.activeItem || me.owner.activeItem);
     },
@@ -225,16 +229,19 @@ Ext.define('Ext.layout.container.Card', {
     /**
      * @private
      */
-    parseActiveItem: function (item) {
+    parseActiveItem: function(item) {
         var activeItem;
 
         if (item && item.isComponent) {
             activeItem = item;
-        } else if (typeof item === 'number' || item === undefined) {
+        }
+        else if (typeof item === 'number' || item === undefined) {
             activeItem = this.getLayoutItems()[item || 0];
-        } else if (item === null) {
+        }
+        else if (item === null) {
             activeItem = null;
-        } else {
+        }
+        else {
             activeItem = this.owner.getComponent(item);
         }
 
@@ -251,7 +258,7 @@ Ext.define('Ext.layout.container.Card', {
         this.callParent(arguments);
     },
 
-    onAdd: function (item, pos) {
+    onAdd: function(item, pos) {
         this.callParent([item, pos]);
         this.setItemHideMode(item);
     },
@@ -263,8 +270,9 @@ Ext.define('Ext.layout.container.Card', {
         me.resetItemHideMode(component);
 
         if (component === me.activeItem) {
-            // Note setting to `undefined` is intentional. Don't null it out since null now has a specific meaning in
-            // tab management (it specifies not setting an active item).
+            // Note setting to `undefined` is intentional. Don't null it out since null
+            // now has a specific meaning in tab management (it specifies not setting
+            // an active item).
             me.activeItem = undefined;
         }
     },
@@ -274,9 +282,11 @@ Ext.define('Ext.layout.container.Card', {
      */
     getAnimation: function(newCard, owner) {
         var newAnim = (newCard || {}).cardSwitchAnimation;
+
         if (newAnim === false) {
             return false;
         }
+
         return newAnim || owner.cardSwitchAnimation;
     },
 
@@ -288,7 +298,7 @@ Ext.define('Ext.layout.container.Card', {
         var wrap = arguments[0],
             items = this.getLayoutItems(),
             index = Ext.Array.indexOf(items, this.activeItem);
-            
+
         return items[index + 1] || (wrap ? items[0] : false);
     },
 
@@ -297,8 +307,9 @@ Ext.define('Ext.layout.container.Card', {
      * @return {Ext.Component} the activated component or false when nothing activated.
      */
     next: function() {
-        var anim = arguments[0], 
+        var anim = arguments[0],
             wrap = arguments[1];
+
         return this.setActiveItem(this.getNext(wrap), anim);
     },
 
@@ -310,7 +321,7 @@ Ext.define('Ext.layout.container.Card', {
         var wrap = arguments[0],
             items = this.getLayoutItems(),
             index = Ext.Array.indexOf(items, this.activeItem);
-            
+
         return items[index - 1] || (wrap ? items[items.length - 1] : false);
     },
 
@@ -319,8 +330,9 @@ Ext.define('Ext.layout.container.Card', {
      * @return {Ext.Component} the activated component or false when nothing activated.
      */
     prev: function() {
-        var anim = arguments[0], 
+        var anim = arguments[0],
             wrap = arguments[1];
+
         return this.setActiveItem(this.getPrev(wrap), anim);
     },
 
@@ -339,8 +351,8 @@ Ext.define('Ext.layout.container.Card', {
      *     panel.getLayout().setActiveItem('card-2');
      *     panel.getLayout().setActiveItem(1);
      *
-     * @param {Ext.Component/Number/String} newCard  The component, component {@link Ext.Component#id id},
-     * {@link Ext.Component#itemId itemId}, or index of component.
+     * @param {Ext.Component/Number/String} newCard  The component, component 
+     * {@link Ext.Component#id id}, {@link Ext.Component#itemId itemId}, or index of component.
      * @return {Ext.Component} the activated component or false when nothing activated.
      * False is returned also when trying to activate an already active card.
      */
@@ -369,6 +381,7 @@ Ext.define('Ext.layout.container.Card', {
             if (newCard.fireEvent('beforeactivate', newCard, oldCard) === false) {
                 return false;
             }
+
             if (oldCard && oldCard.fireEvent('beforedeactivate', oldCard, newCard) === false) {
                 return false;
             }
@@ -407,7 +420,8 @@ Ext.define('Ext.layout.container.Card', {
                 // set it if the show has *not* been vetoed.
                 if (newCard.hidden) {
                     me.activeItem = newCard = null;
-                } else {
+                }
+                else {
                     me.activeItem = newCard;
 
                     // If the card being hidden contained focus, attempt to focus the new card
@@ -418,12 +432,14 @@ Ext.define('Ext.layout.container.Card', {
                         if (!newCard.defaultFocus) {
                             newCard.defaultFocus = ':focusable';
                         }
+
                         newCard.focus();
                     }
                 }
 
                 Ext.resumeLayouts(true);
-            } else {
+            }
+            else {
                 me.activeItem = newCard;
             }
 
@@ -431,6 +447,7 @@ Ext.define('Ext.layout.container.Card', {
 
             return me.activeItem;
         }
+
         return false;
     },
 
@@ -438,7 +455,7 @@ Ext.define('Ext.layout.container.Card', {
      * @private
      * Reset back to initial config when item is removed from the panel.
      */
-    resetItemHideMode: function (item) {
+    resetItemHideMode: function(item) {
         item.hideMode = item.originalHideMode;
         delete item.originalHideMode;
     },
@@ -450,7 +467,7 @@ Ext.define('Ext.layout.container.Card', {
      *
      * Do this automatically when an item is added to the panel.
      */
-    setItemHideMode: function (item) {
+    setItemHideMode: function(item) {
         item.originalHideMode = item.hideMode;
         item.hideMode = 'offsets';
     }

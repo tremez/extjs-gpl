@@ -1,0 +1,17 @@
+@include scrolloverlay-ui(
+    $background-color: $scrolloverlay-background-color,
+    $opacity: $scrolloverlay-opacity,
+    $border-radius: $scrolloverlay-border-radius,
+    $width: $scrolloverlay-width,
+    $min-length: $scrolloverlay-min-length,
+    $margin: $scrolloverlay-margin
+);
+
+
+@if $scrolloverlay-ios-ui {
+    @include scrolloverlay-ui(map-merge((ui: ios), $scrolloverlay-ios-ui)...);
+}
+
+@if $scrolloverlay-android-ui {
+    @include scrolloverlay-ui(map-merge((ui: android), $scrolloverlay-android-ui)...);
+}

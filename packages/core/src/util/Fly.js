@@ -31,12 +31,13 @@ Ext.define('Ext.util.Fly', {
          *
          * @return {Ext.util.Fly} the flyweight instance
          */
-        fly: function () {
+        fly: function() {
             var T = this,
                 flyweights = T.flyweights || (T.flyweights = []),
                 instance = flyweights.length ? flyweights.pop() : new T();
 
             instance.reset.apply(instance, arguments);
+
             return instance;
         }
     },
@@ -45,7 +46,7 @@ Ext.define('Ext.util.Fly', {
      * This method should be called when a flyweight instance is no longer needed and
      * should be returned to the flyweight pool.
      */
-    release: function () {
+    release: function() {
         var me = this,
             T = me.self,
             flyweights = T.flyweights || (T.flyweights = []);

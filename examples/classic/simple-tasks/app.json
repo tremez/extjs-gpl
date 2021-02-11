@@ -49,7 +49,19 @@
          * root namespace, change this to "". Doing so would change the mapping of
          * "SimpleTasks.view.Foo" to "sass/src/SimpleTasks/view/Foo.scss".
          */
-        "namespace": "SimpleTasks"
+        "namespace": "SimpleTasks",
+
+        "src": [
+            "${app.dir}/sass/src"
+        ],
+
+        "var": [
+            "${app.dir}/sass/var"
+        ],
+
+        "etc": [
+            "${app.dir}/sass/etc/all.scss"
+        ]
     },
 
     /**

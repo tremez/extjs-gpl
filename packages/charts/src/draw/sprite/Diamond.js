@@ -44,10 +44,11 @@ Ext.define('Ext.draw.sprite.Diamond', {
         }
     },
 
-    updatePath: function (path, attr) {
+    updatePath: function(path, attr) {
         var s = attr.size * 1.25,
             x = attr.x - attr.lineWidth / 2,
             y = attr.y;
+
         path.fromSvgString(['M', x, y - s, 'l', s, s, -s, s, -s, -s, s, -s, 'z']);
     }
 

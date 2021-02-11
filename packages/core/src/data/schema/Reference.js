@@ -1,7 +1,8 @@
 /**
  * @class Ext.data.schema.Reference
  *
- * **This is not a real JavaScript class and cannot be created.  This is for documentation purposes only.**
+ * **This is not a real JavaScript class and cannot be created. This is for documentation purposes
+ * only.**
  *
  * This documentation is for:
  *
@@ -22,18 +23,6 @@
  *
  *          fields: [
  *              { name: 'organizationId', reference: 'Organization' }
- *          ],
- *          ...
- *      });
- *
- * If a `reference` is not nullable, set the {@link Ext.data.field.Field#allowBlank} property
- * to false.
- *
- *      Ext.define('MyApp.models.User', {
- *          extend: 'Ext.data.Model',
- *
- *          fields: [
- *              { name: 'organizationId', reference: 'Organization', allowBlank: false }
  *          ],
  *          ...
  *      });
@@ -115,8 +104,8 @@
  */
 
 /**
- * @cfg {String} [getterName] The name of the setter function (if required). Typically this is generated
- * based on the {@link #role}.
+ * @cfg {String} [setterName] The name of the setter function (if required). Typically this is
+ * generated based on the {@link #role}.
  */
 
 /**

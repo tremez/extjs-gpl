@@ -2,31 +2,74 @@
  * @class Ext.Panel
  */
 
-.x-panel,
-.x-msgbox {
-    position: relative;
+.#{$prefix}panel {
+    &.#{$prefix}header-position-top {
+        &, > .#{$prefix}max-height-el {
+            flex-direction: column;
+        }
+    }
 
-    // Override base Container's overflow setting.
-    // This allows a Panel's anchor element to be visible.
-    overflow: visible;
-}
+    &.#{$prefix}header-position-bottom {
+        &, > .#{$prefix}max-height-el {
+            flex-direction: column-reverse;
+        }
+    }
 
-.x-panel.x-floating,
-.x-msgbox {
-    .x-panel-inner,
-    > .x-body {
-        z-index: 1;
+    &.#{$prefix}header-position-left {
+        &, > .#{$prefix}max-height-el {
+            flex-direction: row;
+        }
+    }
+
+    &.#{$prefix}header-position-right {
+        &, > .#{$prefix}max-height-el {
+            flex-direction: row-reverse;
+        }
+    }
+
+    > .#{$prefix}anchor-el {
+        position: absolute;
+        z-index: 1000;
+
+        // In the panel-ui mixin we pad one side of the anchor element to increase its height
+        // to overlap the panel's border.  In order for this to work the anchor has to use
+        // content box sizing;
+        box-sizing: content-box;
+
+        .#{$prefix}pointer-el {
+            position: absolute;
+            top: 0;
+        }
+
+        &.#{$prefix}bottom .#{$prefix}pointer-el {
+            transform: rotate(180deg);
+        }
+
+        &.#{$prefix}left {
+            top: 0;
+
+            .#{$prefix}pointer-el {
+                transform: rotate(270deg);
+            }
+        }
+
+        &.#{$prefix}right {
+            top: 0;
+
+            .#{$prefix}pointer-el {
+                transform: rotate(90deg);
+            }
+        }
     }
 }
 
-.x-panel.x-floating > .x-dock,
-.x-msgbox > .x-dock {
-    z-index: 1;
-}
+.#{$prefix}panel-body-wrap-el {
+    overflow: hidden;
+    flex: 1 1;
+    display: flex;
+    flex-direction: column;
 
-.x-anchor, .x-anchor:after {
-    position: absolute;
-    height: 0;
-    width: 0;
-    content: "";
+    .#{$prefix}has-flexbasis-bug & {
+        flex-basis: auto;
+    }
 }

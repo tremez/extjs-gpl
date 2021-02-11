@@ -3,31 +3,39 @@
  * First we create a simple Person model with first and last name fields, then we create a Store to contain
  * the data, finally we create the List itself, which gets its data out of the Store
  */
-
 Ext.define('KitchenSink.view.lists.GroupedList', {
-    extend: 'Ext.Container',
-    requires: ['KitchenSink.model.Person'],
-    // <example>
+    extend: 'Ext.dataview.List',
+    xtype: 'grouped-list',
+
+    //<example>
     otherContent: [{
+        type: 'Store',
+        path: 'modern/src/store/List.js'
+    }, {
         type: 'Model',
         path: 'modern/src/model/Person.js'
     }],
-    // </example>
-    layout: Ext.os.deviceType == 'Phone' ? 'fit' : {
-        type: 'vbox',
-        align: 'center',
-        pack: 'center'
+
+    profiles: {
+        defaults: {
+            height: 400,
+            width: 300
+        },
+        phone: {
+            defaults: {
+                height: undefined,
+                width: undefined
+            }
+        }
     },
-    cls: 'demo-list',
-    items: [{
-        width: Ext.os.deviceType == 'Phone' ? null : '50%',
-        height: Ext.os.deviceType == 'Phone' ? null : '80%',
-        xtype: 'list',
-        store: 'List',
-        indexBar: true,
-        shadow: true,
-        itemTpl: '{firstName} {lastName}',
-        grouped: true,
-        pinHeaders: false
-    }]
+    //</example>
+
+    height: '${height}',
+    width: '${width}',
+    indexBar: true,
+    itemTpl: '{firstName} {lastName}',
+    grouped: true,
+    pinHeaders: false,
+    infinite: true,
+    store: 'List'
 });

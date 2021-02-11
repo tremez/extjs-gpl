@@ -1,37 +1,50 @@
 Ext.define('KitchenSink.view.binding.ChainedSelect', {
-    extend: 'Ext.form.Panel',
+    extend: 'Ext.Container',
+    xtype: 'binding-combo-chaining',
 
-    // <example>
+    viewModel: {
+        type: 'binding-chainedselect'
+    },
+
+    //<example>
     otherContent: [{
         type: 'ViewModel',
         path: 'modern/src/view/binding/ChainedSelectModel.js'
     }, {
         type: 'Store',
-        path: 'modern/src/store/Countries.js'
+        path: 'app/store/Countries.js'
     }, {
         type: 'Store',
-        path: 'modern/src/store/States.js'
+        path: 'app/store/CountryStates.js'
     }],
-    // </example>
 
-    referenceHolder: true,
+    profiles: {
+        defaults: {
+            width: 400
+        },
+        phone: {
+            defaults: {
+                width: undefined
+            }
+        }
+    },
 
-    shadow: true,
     cls: 'demo-solid-background',
+    //</example>
 
-    viewModel: 'binding-chainedselect',
+    padding: 20,
+    referenceHolder: true,
+    width: '${width}',
+    autoSize: true,
 
-    items: {
+    items: [{
         xtype: 'fieldset',
-        instructions: [
-            'The states store contains all states, however it filters based upon the ',
-            'id of the selected record in the country field.'
-        ].join(''),
         items: [{
             xtype: 'selectfield',
             label: 'Country',
+            placeholder: 'Choose a country',
             reference: 'countryField',
-            valueField: 'id',
+            valueField: 'name',
             displayField: 'name',
             bind: {
                 store: '{countries}'
@@ -39,12 +52,17 @@ Ext.define('KitchenSink.view.binding.ChainedSelect', {
         }, {
             xtype: 'selectfield',
             label: 'States',
-            placeHolder: 'Choose a country',
-            valueField: 'id',
-            displayField: 'name',
+            valueField: 'abbr',
+            displayField: 'state',
             bind: {
-                store: '{states}'
+                store: '{states}',
+                placeholder: '{countryField.value === "USA" ? "Chose a state" : countryField.value === "Canada" ? "Chose a province" : ""}'
             }
+        }, {
+            xtype: 'component',
+            margin: '20 0 0',
+            html: 'The states store contains all US states and Canadian provinces, however it filters based upon the ' +
+                'id of the selected record in the country field.'
         }]
-    }
+    }]
 });

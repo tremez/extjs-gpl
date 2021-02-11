@@ -11,16 +11,30 @@ Ext.define('KitchenSink.view.draw.HitTest', {
         'KitchenSink.view.HitTestComponent'
     ],
 
+    profiles: {
+        classic: {
+            strokeStyle: 'black'
+        },
+        neptune: {
+            strokeStyle: 'black'
+        },
+        graphite: {
+            strokeStyle: '#fff'
+        },
+        'classic-material': {
+            strokeStyle: '#2196f3'
+        }
+    },
     layout: 'fit',
     width: 650,
 
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     otherContent: [{
         type: 'Component',
         path: 'classic/samples/view/draw/HitTestComponent.js'
     }],
-    // </example>
+    //</example>
 
     items: [
         {
@@ -36,14 +50,14 @@ Ext.define('KitchenSink.view.draw.HitTest', {
                     scalingY: 0.8,
                     translationX: -50,
                     translationY: -50,
-                    strokeStyle: 'black',
+                    strokeStyle: '${strokeStyle}',
                     lineWidth: 2
                 },
                 {
                     type: 'path',
                     path: 'M101.5,64.5 C90.5,-92.5 147.5,331.5 186.5,324.5 C225.5,317.5 218.918,71.535 331,73 C484,75 41.567,219.437 107,229 C237,248 455,239 246,277 C87.952,305.736 30.5,313.5 59.5,230.5 C88.5,147.5 307,-64 270,65 C234.647,188.257 182.604,55.554 91.5,83.5 C-71.5,133.5 112.5,221.5 101.5,64.5 z',
                     fillStyle: 'rgba(255,0,0,0.2)',
-                    strokeStyle: 'black',
+                    strokeStyle: '${strokeStyle}',
                     lineWidth: 2,
                     rotationRads: Math.PI / 4,
                     translationX: 250,
@@ -52,7 +66,7 @@ Ext.define('KitchenSink.view.draw.HitTest', {
                 {
                     type: 'path',
                     path: 'M20,450L300,200Z',
-                    strokeStyle: 'black',
+                    strokeStyle: '${strokeStyle}',
                     lineWidth: 2
                 }
             ]

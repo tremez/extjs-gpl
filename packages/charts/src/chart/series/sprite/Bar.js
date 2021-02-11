@@ -46,7 +46,7 @@ Ext.define('Ext.chart.series.sprite.Bar', {
         }
     },
 
-    drawLabel: function (text, dataX, dataStartY, dataY, labelId) {
+    drawLabel: function(text, dataX, dataStartY, dataY, labelId) {
         var me = this,
             attr = me.attr,
             label = me.getMarker('labels'),
@@ -75,16 +75,19 @@ Ext.define('Ext.chart.series.sprite.Bar', {
 
         if (calloutLine) {
             calloutLineLength = calloutLine.length;
-        } else {
+        }
+        else {
             calloutLineLength = 0;
         }
 
         // Set defaults
         if (!attr.flipXY) {
             labelCfg.rotationRads = -Math.PI * 0.5;
-        } else {
+        }
+        else {
             labelCfg.rotationRads = 0;
         }
+
         labelCfg.calloutVertical = !attr.flipXY;
 
         // Check if we have a specific orientation specified, if so, set
@@ -94,6 +97,7 @@ Ext.define('Ext.chart.series.sprite.Bar', {
                 labelCfg.rotationRads = 0;
                 labelCfg.calloutVertical = false;
                 break;
+
             case 'vertical':
                 labelCfg.rotationRads = -Math.PI * 0.5;
                 labelCfg.calloutVertical = true;
@@ -103,19 +107,30 @@ Ext.define('Ext.chart.series.sprite.Bar', {
         labelCfg.text = text;
 
         if (labelTpl.attr.renderer) {
-            params = [text, label, labelCfg, {store: me.getStore()}, labelId];
+            // The label instance won't exist on first render before the renderer is called,
+            // it's only created later by `me.putMarker` after the renderer call. To make
+            // sure the renderer always can access the label instance, we make this check here.
+            if (!label.get(labelId)) {
+                label.putMarkerFor('labels', {}, labelId);
+            }
+
+            params = [text, label, labelCfg, { store: me.getStore() }, labelId];
             changes = Ext.callback(labelTpl.attr.renderer, null, params, 0, me.getSeries());
+
             if (typeof changes === 'string') {
                 labelCfg.text = changes;
-            } else if (typeof changes === 'object') {
+            }
+            else if (typeof changes === 'object') {
                 if ('text' in changes) {
                     labelCfg.text = changes.text;
                 }
+
                 hasPendingChanges = true;
             }
         }
 
         labelBBox = me.getMarkerBBox('labels', labelId, true);
+
         if (!labelBBox) {
             me.putMarker('labels', labelCfg, labelId);
             labelBBox = me.getMarkerBBox('labels', labelId, true);
@@ -123,24 +138,30 @@ Ext.define('Ext.chart.series.sprite.Bar', {
 
         if (calloutLineLength > 0) {
             halfText = calloutLineLength;
-        } else if (calloutLineLength === 0) {
-            halfText = (isVerticalText ? labelBBox.width : labelBBox.height) / 2;
-        } else {
-            halfText = (isVerticalText ? labelBBox.width : labelBBox.height) / 2 + labelOverflowPadding;
         }
+        else if (calloutLineLength === 0) {
+            halfText = (isVerticalText ? labelBBox.width : labelBBox.height) / 2;
+        }
+        else {
+            halfText =
+                (isVerticalText ? labelBBox.width : labelBBox.height) / 2 + labelOverflowPadding;
+        }
+
         if (dataStartY > dataY) {
             halfText = -halfText;
         }
 
         if (isVerticalText) {
-            labelY = (labelDisplay === 'insideStart') ?
-                dataStartY + halfText :
-                dataY - halfText;
-        } else {
-            labelY = (labelDisplay === 'insideStart') ?
-                dataStartY + labelOverflowPadding * 2 :
-                dataY - labelOverflowPadding * 2;
+            labelY = (labelDisplay === 'insideStart')
+                ? dataStartY + halfText
+                : dataY - halfText;
         }
+        else {
+            labelY = (labelDisplay === 'insideStart')
+                ? dataStartY + labelOverflowPadding * 2
+                : dataY - labelOverflowPadding * 2;
+        }
+
         labelCfg.x = surfaceMatrix.x(dataX, labelY);
         labelCfg.y = surfaceMatrix.y(dataX, labelY);
 
@@ -153,20 +174,24 @@ Ext.define('Ext.chart.series.sprite.Bar', {
         labelCfg.calloutPlaceY = surfaceMatrix.y(dataX, labelY);
 
         labelCfg.calloutColor = (calloutLine && calloutLine.color) || me.attr.fillStyle;
+
         if (calloutLine) {
             if (calloutLine.width) {
                 labelCfg.calloutWidth = calloutLine.width;
             }
-        } else {
+        }
+        else {
             labelCfg.calloutColor = 'none';
         }
 
         if (dataStartY > dataY) {
             halfText = -halfText;
         }
+
         if (Math.abs(dataY - dataStartY) <= halfText * 2 || labelDisplay === 'outside') {
             labelCfg.callout = 1;
-        } else {
+        }
+        else {
             labelCfg.callout = 0;
         }
 
@@ -177,7 +202,7 @@ Ext.define('Ext.chart.series.sprite.Bar', {
         me.putMarker('labels', labelCfg, labelId);
     },
 
-    drawBar: function (ctx, surface, rect, left, top, right, bottom, index) {
+    drawBar: function(ctx, surface, rect, left, top, right, bottom, index) {
         var me = this,
             itemCfg = {},
             renderer = me.attr.renderer,
@@ -190,20 +215,20 @@ Ext.define('Ext.chart.series.sprite.Bar', {
         itemCfg.radius = me.attr.radius;
 
         if (renderer) {
-            changes = Ext.callback(renderer, null,
-                [me, itemCfg, {store: me.getStore()}, index], 0, me.getSeries());
+            changes = Ext.callback(renderer, null, [me, itemCfg, { store: me.getStore() }, index],
+                                   0, me.getSeries());
             Ext.apply(itemCfg, changes);
         }
+
         me.putMarker('items', itemCfg, index, !renderer);
     },
 
-    /**
-     * @inheritdoc
-     */
-    renderClipped: function (surface, ctx, rect) {
+    renderClipped: function(surface, ctx, dataClipRect) {
         if (this.cleanRedraw) {
             return;
         }
+
+        // eslint-disable-next-line vars-on-top
         var me = this,
             attr = me.attr,
             dataX = attr.dataX,
@@ -219,19 +244,25 @@ Ext.define('Ext.chart.series.sprite.Bar', {
             yy = matrix.elements[3],
             dx = matrix.elements[4],
             dy = surface.roundPixel(matrix.elements[5]) - 1,
-            maxBarWidth = (xx < 0 ? -1 : 1) * xx - attr.minGapWidth,
-            minBarWidth = ( Math.min(maxBarWidth, attr.maxBarWidth) - inGroupGapWidth * (groupCount - 1) ) / groupCount,
-            barWidth = surface.roundPixel( Math.max(attr.minBarWidth, minBarWidth) ),
+            maxBarWidth = Math.abs(xx) - attr.minGapWidth,
+            minBarWidth = (Math.min(maxBarWidth, attr.maxBarWidth) -
+                           inGroupGapWidth * (groupCount - 1)) / groupCount,
+            barWidth = surface.roundPixel(Math.max(attr.minBarWidth, minBarWidth)),
             surfaceMatrix = me.surfaceMatrix,
             left, right, bottom, top, i, center,
             halfLineWidth = 0.5 * attr.lineWidth,
-            min = Math.min(rect[0], rect[2]),
-            max = Math.max(rect[0], rect[2]),
+            // Finding min/max so that bars render properly in both LTR and RTL modes.
+            min = Math.min(dataClipRect[0], dataClipRect[2]),
+            max = Math.max(dataClipRect[0], dataClipRect[2]),
             start = Math.max(0, Math.floor(min)),
             end = Math.min(dataX.length - 1, Math.ceil(max)),
             isDrawLabels = dataText && me.getMarker('labels'),
             yLow, yHi;
 
+        // The scaling (xx) and translation (dx) here will already be such that the midpoints
+        // of the first and last bars are not at the surface edges (which would mean that
+        // bars are half-clipped), but padded, so that those bars are fully visible
+        // (assuming no pan/zoom).
         for (i = start; i <= end; i++) {
             yLow = dataStartY ? dataStartY[i] : 0;
             yHi = dataY[i];
@@ -241,56 +272,18 @@ Ext.define('Ext.chart.series.sprite.Bar', {
             right = surface.roundPixel(center + barWidth / 2) - halfLineWidth;
             bottom = surface.roundPixel(yLow * yy + dy + lineWidth);
 
-            me.drawBar(ctx, surface, rect, left, top - halfLineWidth, right, bottom - halfLineWidth, i);
+            me.drawBar(ctx, surface, dataClipRect, left, top - halfLineWidth, right,
+                       bottom - halfLineWidth, i);
 
             // We want 0 values to be passed to the renderer
             if (isDrawLabels && dataText[i] != null) {
                 me.drawLabel(dataText[i], center, bottom, top, i);
             }
+
             me.putMarker('markers', {
                 translationX: surfaceMatrix.x(center, top),
                 translationY: surfaceMatrix.y(center, top)
             }, i, true);
         }
-    },
-
-    /**
-     * @inheritdoc
-     */
-    getIndexNearPoint: function (x, y) {
-        var sprite = this,
-            attr = sprite.attr,
-            dataX = attr.dataX,
-            surface = sprite.getSurface(),
-            surfaceRect = surface.getRect() || [0,0,0,0],
-            surfaceHeight = surfaceRect[3],
-            hitX, hitY,
-            i, bbox,
-            index = -1;
-
-        // The "items" sprites that draw the bars work in a reverse vertical coordinate system
-        // starting with 0 at the bottom and increasing the Y coordinate toward the top.
-        // See also Ext.chart.series.Bar.getItemForPoint(x,y) regarding the chart's innerPadding.
-        if (attr.flipXY) {
-            hitX = surfaceHeight - y;
-            if (surface.getInherited().rtl) {
-                hitY = surfaceRect[2] - x;
-            } else {
-                hitY = x;
-            }
-        } else {
-            hitX = x;
-            hitY = surfaceHeight - y;
-        }
-
-        for (i = 0; i < dataX.length; i++) {
-            bbox = sprite.getMarkerBBox('items', i);
-            if (Ext.draw.Draw.isPointInBBox(hitX, hitY, bbox)) {
-                index = i;
-                break;
-            }
-        }
-        return index;
     }
-
 });

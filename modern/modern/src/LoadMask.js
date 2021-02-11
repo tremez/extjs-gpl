@@ -1,20 +1,22 @@
 /**
  * A simple class used to mask any {@link Ext.Container}.
  *
- * This should rarely be used directly, instead look at the {@link Ext.Container#masked} configuration.
+ * This should rarely be used directly, instead look at the {@link Ext.Container#masked}
+ * configuration.
  *
  * ## Example
  *
- *     @example miniphone
+ *     @example
  *     Ext.Viewport.add({
  *         masked: {
  *            xtype: 'loadmask'
  *         }
  *     });
  *
- * You can customize the loading {@link #message} and whether or not you want to show the {@link #indicator}:
+ * You can customize the loading {@link #message} and whether or not you want to show the
+ * {@link #indicator}:
  *
- *     @example miniphone
+ *     @example
  *     Ext.Viewport.add({
  *         masked: {
  *            xtype: 'loadmask',
@@ -63,11 +65,11 @@ Ext.define('Ext.LoadMask', {
 
         return [
             {
-                //it needs an inner so it can be centered within the mask, and have a background
+                // it needs an inner so it can be centered within the mask, and have a background
                 reference: 'innerElement',
                 cls: prefix + 'mask-inner',
                 children: [
-                    //the elements required for the CSS loading {@link #indicator}
+                    // the elements required for the CSS loading {@link #indicator}
                     {
                         reference: 'indicatorElement',
                         cls: prefix + 'loading-spinner-outer',
@@ -83,7 +85,7 @@ Ext.define('Ext.LoadMask', {
                             }
                         ]
                     },
-                    //the element used to display the {@link #message}
+                    // the element used to display the {@link #message}
                     {
                         reference: 'messageElement'
                     }
@@ -101,7 +103,8 @@ Ext.define('Ext.LoadMask', {
 
         if (newMessage) {
             this.addCls(cls);
-        } else {
+        }
+        else {
             this.removeCls(cls);
         }
 
@@ -109,7 +112,8 @@ Ext.define('Ext.LoadMask', {
     },
 
     /**
-     * Replaces the cls of the message element with the value of the {@link #messageCls} configuration.
+     * Replaces the cls of the message element with the value of the {@link #messageCls}
+     * configuration.
      * @private
      */
     updateMessageCls: function(newMessageCls, oldMessageCls) {

@@ -1,24 +1,28 @@
 Ext.define('KitchenSink.view.icons.XRay', {
     alias: 'sprite.xray',
     extend: 'Ext.draw.sprite.Path',
-    shadow: true,
 
-    render: function (surface, ctx) {
+    render: function(surface, ctx) {
         var attr = this.attr,
             mat = attr.matrix,
             imat = attr.inverseMatrix,
             path = attr.path,
-            size = imat.x(2, 0) - imat.x(0, 0);
+            size = imat.x(2, 0) - imat.x(0, 0),
+            i, j, commands, params, ln;
+
         if (attr.path.params.length === 0) {
             return;
         }
+
         mat.toContext(ctx);
-        var i = 0, j = 0,
-            commands = path.commands,
-            params = path.params,
-            ln = commands.length;
+        i = 0;
+        j = 0;
+        commands = path.commands;
+        params = path.params;
+        ln = commands.length;
 
         ctx.beginPath();
+
         for (; i < ln; i++) {
             switch (commands[i]) {
                 case "M":
@@ -43,10 +47,12 @@ Ext.define('KitchenSink.view.icons.XRay', {
                 default:
             }
         }
+
         ctx.fillStroke(attr);
 
         mat.toContext(ctx);
         ctx.beginPath();
+
         for (i = 0, j = 0; i < ln; i++) {
             switch (commands[i]) {
                 case "M":
@@ -73,6 +79,7 @@ Ext.define('KitchenSink.view.icons.XRay', {
                 default:
             }
         }
+
         imat.toContext(ctx);
         ctx.strokeStyle = "black";
         ctx.strokeOpacity = 1;
@@ -81,6 +88,7 @@ Ext.define('KitchenSink.view.icons.XRay', {
 
         mat.toContext(ctx);
         ctx.beginPath();
+
         for (i = 0, j = 0; i < ln; i++) {
             switch (commands[i]) {
                 case "M":
@@ -102,6 +110,7 @@ Ext.define('KitchenSink.view.icons.XRay', {
                 default:
             }
         }
+
         imat.toContext(ctx);
         ctx.lineWidth = 1 / 2;
         ctx.stroke();

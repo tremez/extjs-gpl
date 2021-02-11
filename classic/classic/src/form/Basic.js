@@ -1,24 +1,26 @@
 /**
- * Provides input field management, validation, submission, and form loading services for the collection
- * of {@link Ext.form.field.Field Field} instances within a {@link Ext.container.Container}. It is recommended
- * that you use a {@link Ext.form.Panel} as the form container, as that has logic to automatically
- * hook up an instance of {@link Ext.form.Basic} (plus other conveniences related to field configuration.)
+ * Provides input field management, validation, submission, and form loading services for the
+ * collection of {@link Ext.form.field.Field Field} instances within a
+ * {@link Ext.container.Container}. It is recommended that you use a {@link Ext.form.Panel}
+ * as the form container, as that has logic to automatically hook up an instance of
+ * {@link Ext.form.Basic} (plus other conveniences related to field configuration.)
  *
  * ## Form Actions
  *
- * The Basic class delegates the handling of form loads and submits to instances of {@link Ext.form.action.Action}.
- * See the various Action implementations for specific details of each one's functionality, as well as the
- * documentation for {@link #doAction} which details the configuration options that can be specified in
- * each action call.
+ * The Basic class delegates the handling of form loads and submits to instances of
+ * {@link Ext.form.action.Action}. See the various Action implementations for specific details
+ * of each one's functionality, as well as the documentation for {@link #doAction} which details
+ * the configuration options that can be specified in each action call.
  *
- * The default submit Action is {@link Ext.form.action.Submit}, which uses an Ajax request to submit the
- * form's values to a configured URL. To enable normal browser submission of an Ext form, use the
- * {@link #standardSubmit} config option.
+ * The default submit Action is {@link Ext.form.action.Submit}, which uses an Ajax request
+ * to submit the form's values to a configured URL. To enable normal browser submission
+ * of an Ext form, use the {@link #standardSubmit} config option.
  *
  * ## File uploads
  *
  * File uploads are not performed using normal 'Ajax' techniques; see the description for
- * {@link #hasUpload} for details. If you're using file uploads you should read the method description.
+ * {@link #hasUpload} for details. If you're using file uploads you should read the method
+ * description.
  *
  * ## Example usage:
  *
@@ -53,7 +55,10 @@
  *                            Ext.Msg.alert('Success', action.result.message);
  *                         },
  *                         failure: function(form, action) {
- *                             Ext.Msg.alert('Failed', action.result ? action.result.message : 'No response');
+ *                             Ext.Msg.alert(
+ *                                 'Failed',
+ *                                 action.result ? action.result.message : 'No response'
+ *                             );
  *                         }
  *                     });
  *                 }
@@ -113,7 +118,7 @@ Ext.define('Ext.form.Basic', {
      * @param {Ext.form.Basic} this
      * @param {Boolean} dirty `true` if the form is now dirty, `false` if it is no longer dirty.
      */
-    
+
     /**
      * @event errorchange
      * Fires when the error of one (or more) of the fields in the form changes.
@@ -124,9 +129,11 @@ Ext.define('Ext.form.Basic', {
 
     /**
      * Creates new form.
-     * @param {Ext.container.Container} owner The component that is the container for the form, usually a {@link Ext.form.Panel}
-     * @param {Object} config Configuration options. These are normally specified in the config to the
-     * {@link Ext.form.Panel} constructor, which passes them along to the BasicForm automatically.
+     * @param {Ext.container.Container} owner The component that is the container for the form,
+     * usually a {@link Ext.form.Panel}
+     * @param {Object} config Configuration options. These are normally specified in the config
+     * to the {@link Ext.form.Panel} constructor, which passes them along to the BasicForm
+     * automatically.
      */
     constructor: function(owner, config) {
         var me = this,
@@ -137,7 +144,7 @@ Ext.define('Ext.form.Basic', {
          * The container component to which this BasicForm is attached.
          */
         me.owner = owner;
-        
+
         me.fieldMonitors = {
             validitychange: me.checkValidityDelay,
             enable: me.checkValidityDelay,
@@ -150,10 +157,10 @@ Ext.define('Ext.form.Basic', {
         me.checkValidityTask = new Ext.util.DelayedTask(me.checkValidity, me);
         me.checkDirtyTask = new Ext.util.DelayedTask(me.checkDirty, me);
         me.checkErrorTask = new Ext.util.DelayedTask(me.checkError, me);
-        
-        // We use the monitor here as opposed to event bubbling. The problem with bubbling is it doesn't
-        // let us react to items being added/remove at different places in the hierarchy which may have an
-        // impact on the dirty/valid state.
+
+        // We use the monitor here as opposed to event bubbling.
+        // The problem with bubbling is it doesn't let us react to items being added/remove
+        // at different places in the hierarchy which may have an impact on the dirty/valid state.
         me.monitor = new Ext.container.Monitor({
             selector: '[isFormField]:not([excludeForm])',
             scope: me,
@@ -169,24 +176,28 @@ Ext.define('Ext.form.Basic', {
         if (Ext.isString(me.paramOrder)) {
             me.paramOrder = me.paramOrder.split(/[\s,|]/);
         }
-        
+
         reader = me.reader;
+
         if (reader && !reader.isReader) {
             if (typeof reader === 'string') {
                 reader = {
                     type: reader
                 };
             }
+
             me.reader = Ext.createByAlias('reader.' + reader.type, reader);
         }
-        
+
         reader = me.errorReader;
+
         if (reader && !reader.isReader) {
             if (typeof reader === 'string') {
                 reader = {
                     type: reader
                 };
             }
+
             me.errorReader = Ext.createByAlias('reader.' + reader.type, reader);
         }
 
@@ -197,15 +208,15 @@ Ext.define('Ext.form.Basic', {
      * Do any post layout initialization
      * @private
      */
-    initialize : function() {
+    initialize: function() {
         this.initialized = true;
         this.onValidityChange(!this.hasInvalidField());
     },
 
-
     /**
      * @cfg {String} method
-     * The request method to use (GET or POST) for form actions if one isn't supplied in the action options.
+     * The request method to use (GET or POST) for form actions if one isn't supplied
+     * in the action options.
      */
 
     /**
@@ -256,20 +267,22 @@ Ext.define('Ext.form.Basic', {
 
     /**
      * @cfg {Object} api
-     * If specified, load and submit actions will be handled with {@link Ext.form.action.DirectLoad DirectLoad}
-     * and {@link Ext.form.action.DirectSubmit DirectSubmit}.  Methods which have been imported by
-     * {@link Ext.direct.Manager} can be specified here to load and submit forms. API methods may also be
-     * specified as strings. See {@link Ext.data.proxy.Direct#directFn}.  Such as the following:
+     * If specified, load and submit actions will be handled with
+     * {@link Ext.form.action.DirectLoad DirectLoad} and
+     * {@link Ext.form.action.DirectSubmit DirectSubmit}. Methods which have been imported by
+     * {@link Ext.direct.Manager} can be specified here to load and submit forms. API methods
+     * may also be specified as strings. See {@link Ext.data.proxy.Direct#directFn}.
+     * Such as the following:
      *
      *     api: {
      *         load: App.ss.MyProfile.load,
      *         submit: App.ss.MyProfile.submit
      *     }
      *
-     * Load actions can use {@link #paramOrder} or {@link #paramsAsHash} to customize how the load method
-     * is invoked.  Submit actions will always use a standard form submit. The `formHandler` configuration
-     * (see Ext.direct.RemotingProvider#action) must be set on the associated server-side method which has
-     * been imported by {@link Ext.direct.Manager}.
+     * Load actions can use {@link #paramOrder} or {@link #paramsAsHash} to customize how the load
+     * method is invoked. Submit actions will always use a standard form submit. The `formHandler`
+     * configuration (see Ext.direct.RemotingProvider#action) must be set on the associated
+     * server-side method which has been imported by {@link Ext.direct.Manager}.
      */
 
     /**
@@ -295,20 +308,19 @@ Ext.define('Ext.form.Basic', {
      * configuration.
      */
     paramsAsHash: false,
-    
+
     /**
      * @cfg {Object/Array} [metadata]
      * Optional metadata to pass with the actions when Ext Direct {@link #api} is used.
      * See {@link Ext.direct.Manager} for more information.
      */
 
-    //<locale>
     /**
      * @cfg {String} waitTitle
      * The default title to show for the waiting message box
+     * @locale
      */
     waitTitle: 'Please Wait...',
-    //</locale>
 
     /**
      * @cfg {Boolean} trackResetOnLoad
@@ -320,16 +332,18 @@ Ext.define('Ext.form.Basic', {
 
     /**
      * @cfg {Boolean} standardSubmit
-     * If set to true, a standard HTML form submit is used instead of a XHR (Ajax) style form submission.
-     * All of the field values, plus any additional params configured via {@link #baseParams}
-     * and/or the `options` to {@link #submit}, will be included in the values submitted in the form.
+     * If set to true, a standard HTML form submit is used instead of a XHR (Ajax) style form
+     * submission. All of the field values, plus any additional params configured via
+     * {@link #baseParams} and/or the `options` to {@link #submit}, will be included in the values
+     * submitted in the form.
      */
 
     /**
      * @cfg {Boolean} jsonSubmit
      * If set to true, the field values are sent as JSON in the request body.
      * All of the field values, plus any additional params configured via {@link #baseParams}
-     * and/or the `options` to {@link #submit}, will be included in the values POSTed in the body of the request.
+     * and/or the `options` to {@link #submit}, will be included in the values POSTed in the body
+     * of the request.
      */
 
     /**
@@ -349,11 +363,14 @@ Ext.define('Ext.form.Basic', {
     destroy: function() {
         var me = this,
             mon = me.monitor;
-        
+
+        Ext.undefer(me.actionTimer);
+
         if (mon) {
             mon.unbind();
             me.monitor = null;
         }
+
         me.clearListeners();
         me.checkValidityTask.cancel();
         me.checkDirtyTask.cancel();
@@ -362,23 +379,23 @@ Ext.define('Ext.form.Basic', {
         me.checkValidityTask = me.checkDirtyTask = me.checkErrorTask = null;
         me.callParent();
     },
-    
-    onFieldAdd: function(field){
+
+    onFieldAdd: function(field) {
         field.on(this.fieldMonitors);
         this.onMonitorInvalidate();
     },
-    
-    onFieldRemove: function(field){
+
+    onFieldRemove: function(field) {
         field.un(this.fieldMonitors);
         this.onMonitorInvalidate();
     },
-    
+
     onMonitorInvalidate: function() {
         if (this.initialized) {
             this.checkValidityDelay();
         }
     },
-    
+
     /**
      * Return all the {@link Ext.form.field.Field} components in the owner container.
      * @return {Ext.util.MixedCollection} Collection of the Field objects
@@ -394,12 +411,12 @@ Ext.define('Ext.form.Basic', {
      */
     getBoundItems: function() {
         var boundItems = this._boundItems;
-        
+
         if (!boundItems || boundItems.getCount() === 0) {
             boundItems = this._boundItems = new Ext.util.MixedCollection();
             boundItems.addAll(this.owner.query('[formBind]'));
         }
-        
+
         return boundItems;
     },
 
@@ -411,27 +428,31 @@ Ext.define('Ext.form.Basic', {
         return !!this.getFields().findBy(function(field) {
             var preventMark = field.preventMark,
                 isValid;
+
             field.preventMark = true;
             isValid = field.isValid();
             field.preventMark = preventMark;
+
             return !isValid;
         });
     },
 
     /**
      * Returns true if client-side validation on the form is successful. Any invalid fields will be
-     * marked as invalid. If you only want to determine overall form validity without marking anything,
-     * use {@link #hasInvalidField} instead.
+     * marked as invalid. If you only want to determine overall form validity without marking
+     * anything, use {@link #hasInvalidField} instead.
      * @return {Boolean}
      */
     isValid: function() {
         var me = this,
             invalid;
+
         Ext.suspendLayouts();
         invalid = me.getFields().filterBy(function(field) {
             return !field.validate();
         });
         Ext.resumeLayouts(true);
+
         return invalid.length < 1;
     },
 
@@ -443,24 +464,27 @@ Ext.define('Ext.form.Basic', {
     checkValidity: function() {
         var me = this,
             valid;
-        
+
         if (me.destroyed) {
             return;
         }
-            
+
         valid = !me.hasInvalidField();
+
         if (valid !== me.wasValid) {
             me.onValidityChange(valid);
             me.fireEvent('validitychange', me, valid);
             me.wasValid = valid;
         }
     },
-    
-    checkValidityDelay: function(){
+
+    checkValidityDelay: function() {
         var timer = this.taskDelay;
+
         if (timer) {
             this.checkValidityTask.delay(timer);
-        } else {
+        }
+        else {
             this.checkValidity();
         }
     },
@@ -475,9 +499,11 @@ Ext.define('Ext.form.Basic', {
 
     checkErrorDelay: function() {
         var timer = this.taskDelay;
+
         if (timer) {
             this.checkErrorTask.delay(timer);
-        } else {
+        }
+        else {
             this.checkError();
         }
     },
@@ -494,7 +520,7 @@ Ext.define('Ext.form.Basic', {
 
         if (boundItems) {
             items = boundItems.items;
-            iLen  = items.length;
+            iLen = items.length;
 
             for (i = 0; i < iLen; i++) {
                 cmp = items[i];
@@ -524,12 +550,14 @@ Ext.define('Ext.form.Basic', {
             return f.isDirty();
         });
     },
-    
-    checkDirtyDelay: function(){
+
+    checkDirtyDelay: function() {
         var timer = this.taskDelay;
+
         if (timer) {
             this.checkDirtyTask.delay(timer);
-        } else {
+        }
+        else {
             this.checkDirty();
         }
     },
@@ -542,12 +570,13 @@ Ext.define('Ext.form.Basic', {
     checkDirty: function() {
         var me = this,
             dirty;
-            
+
         if (me.destroyed) {
             return;
         }
-            
+
         dirty = this.isDirty();
+
         if (dirty !== this.wasDirty) {
             this.fireEvent('dirtychange', this, dirty);
             this.wasDirty = dirty;
@@ -555,25 +584,29 @@ Ext.define('Ext.form.Basic', {
     },
 
     /**
-     * Returns `true` if the form contains a file upload field. This is used to determine the method for submitting the
-     * form: File uploads are not performed using normal 'Ajax' techniques, that is they are **not** performed using
-     * XMLHttpRequests. Instead a hidden `<form>` element containing all the fields is created temporarily and submitted
-     * with its [target][1] set to refer to a dynamically generated, hidden `<iframe>` which is inserted into the document
-     * but removed after the return data has been gathered.
+     * Returns `true` if the form contains a file upload field. This is used to determine the method
+     * for submitting the form: File uploads are not performed using normal 'Ajax' techniques,
+     * that is they are **not** performed using XMLHttpRequests. Instead a hidden `<form>` element
+     * containing all the fields is created temporarily and submitted with its [target][1]
+     * set to refer to a dynamically generated, hidden `<iframe>` which is inserted
+     * into the document but removed after the return data has been gathered.
      *
-     * The server response is parsed by the browser to create the document for the IFRAME. If the server is using JSON
-     * to send the return object, then the [Content-Type][2] header should be set to "text/plain" in order to tell the
-     * browser to insert the text unchanged into a '&lt;pre>' element in the document body from which it can be retrieved.
+     * The server response is parsed by the browser to create the document for the IFRAME.
+     * If the server is using JSON to send the return object, then the [Content-Type][2] header
+     * should be set to "text/plain" in order to tell the browser to insert the text unchanged
+     * into a '<pre>' element in the document body from which it can be retrieved.
      *
-     * If the [Content-Type][2] header is sent as the default, "text/html", then characters which are significant to an HTML
-     * parser must be sent as HTML entities, so encode `"<"` as `"&lt;"`, `"&"` as `"&amp;"` etc.
+     * If the [Content-Type][2] header is sent as the default, "text/html", then characters
+     * which are significant to an HTML parser must be sent as HTML entities, so encode
+     * `"<"` as `"&lt;"`, `"&"` as `"&amp;"` etc.
      *
-     * The response text is retrieved from the document, and a fake XMLHttpRequest object is created containing a
-     * responseText property in order to conform to the requirements of event handlers and callbacks.
+     * The response text is retrieved from the document, and a fake XMLHttpRequest object is created
+     * containing a responseText property in order to conform to the requirements of event handlers
+     * and callbacks.
      *
-     * Be aware that file upload packets are sent with the content type [multipart/form][3] and some server technologies
-     * (notably JEE) may require some custom processing in order to retrieve parameter names and parameter values from
-     * the packet content.
+     * Be aware that file upload packets are sent with the content type [multipart/form][3]
+     * and some server technologies (notably JEE) may require some custom processing in order to
+     * retrieve parameter names and parameter values from the packet content.
      *
      * [1]: http://www.w3.org/TR/REC-html40/present/frames.html#adef-target
      * [2]: http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.17
@@ -588,18 +621,18 @@ Ext.define('Ext.form.Basic', {
     },
 
     /**
-     * Performs a predefined action (an implementation of {@link Ext.form.action.Action}) to perform application-
-     * specific processing.
+     * Performs a predefined action (an implementation of {@link Ext.form.action.Action})
+     * to perform application-specific processing.
      *
-     * @param {String/Ext.form.action.Action} action The name of the predefined action type, or instance of {@link
-     * Ext.form.action.Action} to perform.
+     * @param {String/Ext.form.action.Action} action The name of the predefined action type,
+     * or instance of {@link Ext.form.action.Action} to perform.
      *
-     * @param {Object} [options] The options to pass to the {@link Ext.form.action.Action} that will get created,
-     * if the action argument is a String.
+     * @param {Object} [options] The options to pass to the {@link Ext.form.action.Action}
+     * that will get created, if the action argument is a String.
      *
-     * All of the config options listed below are supported by both the {@link Ext.form.action.Submit submit} and
-     * {@link Ext.form.action.Load load} actions unless otherwise noted (custom actions could also accept other
-     * config options):
+     * All of the config options listed below are supported by both the
+     * {@link Ext.form.action.Submit submit} and {@link Ext.form.action.Load load} actions
+     * unless otherwise noted (custom actions could also accept other config options):
      *
      * @param {String} options.url
      * The url for the action (defaults to the form's {@link #url}.)
@@ -610,16 +643,19 @@ Ext.define('Ext.form.Basic', {
      * @param {String/Object} options.params
      * The params to pass (defaults to the form's baseParams, or none if not defined)
      *
-     * Parameters are encoded as standard HTTP parameters using {@link Ext#urlEncode Ext.Object.toQueryString}.
+     * Parameters are encoded as standard HTTP parameters using
+     * {@link Ext#urlEncode Ext.Object.toQueryString}.
      *
      * @param {Object} options.headers
      * Request headers to set for the action.
      *
      * @param {Function} options.success
-     * The callback that will be invoked after a successful response (see top of {@link Ext.form.action.Submit submit}
-     * and {@link Ext.form.action.Load load} for a description of what constitutes a successful response).
+     * The callback that will be invoked after a successful response (see top of
+     * {@link Ext.form.action.Submit submit} and {@link Ext.form.action.Load load}
+     * for a description of what constitutes a successful response).
      * @param {Ext.form.Basic} options.success.form The form that requested the action.
-     * @param {Ext.form.action.Action} options.success.action The Action object which performed the operation.
+     * @param {Ext.form.action.Action} options.success.action The Action object which performed
+     * the operation.
      * The action object contains these properties of interest:
      *
      *  - {@link Ext.form.action.Action#response response}
@@ -629,7 +665,8 @@ Ext.define('Ext.form.Basic', {
      * @param {Function} options.failure
      * The callback that will be invoked after a failed transaction attempt.
      * @param {Ext.form.Basic} options.failure.form The form that requested the action.
-     * @param {Ext.form.action.Action} options.failure.action The Action object which performed the operation.
+     * @param {Ext.form.action.Action} options.failure.action The Action object which performe
+     * d the operation.
      * The action object contains these properties of interest:
      *
      * - {@link Ext.form.action.Action#failureType failureType}
@@ -638,31 +675,39 @@ Ext.define('Ext.form.Basic', {
      * - {@link Ext.form.action.Action#type type}
      *
      * @param {Object} options.scope
-     * The scope in which to call the callback functions (The this reference for the callback functions).
+     * The scope in which to call the callback functions (The this reference for the callback
+     * functions).
      *
      * @param {Boolean} options.clientValidation
-     * Submit Action only. Determines whether a Form's fields are validated in a final call to {@link
-     * Ext.form.Basic#isValid isValid} prior to submission. Set to false to prevent this. If undefined, pre-submission
-     * field validation is performed.
+     * Submit Action only. Determines whether a Form's fields are validated in a final call to
+     * {@link Ext.form.Basic#isValid isValid} prior to submission. Set to false to prevent this.
+     * If undefined, pre-submission field validation is performed.
      *
      * @return {Ext.form.Basic} this
      */
     doAction: function(action, options) {
+        var me = this;
+
         if (Ext.isString(action)) {
-            action = Ext.ClassManager.instantiateByAlias('formaction.' + action, Ext.apply({}, options, {form: this}));
+            action = Ext.ClassManager.instantiateByAlias(
+                'formaction.' + action, Ext.apply({}, options, { form: me })
+            );
         }
-        if (this.fireEvent('beforeaction', this, action) !== false) {
-            this.beforeAction(action);
-            Ext.defer(action.run, 100, action);
+
+        if (me.fireEvent('beforeaction', me, action) !== false) {
+            me.beforeAction(action);
+            me.actionTimer = Ext.defer(action.run, 100, action);
         }
-        return this;
+
+        return me;
     },
 
     /**
-     * Shortcut to {@link #doAction do} a {@link Ext.form.action.Submit submit action}. This will use the
-     * {@link Ext.form.action.Submit AJAX submit action} by default. If the {@link #standardSubmit} config
-     * is enabled it will use a standard form element to submit, or if the {@link #api} config is present
-     * it will use the {@link Ext.form.action.DirectLoad Ext.direct.Direct submit action}.
+     * Shortcut to {@link #doAction do} a {@link Ext.form.action.Submit submit action}. This will
+     * use the {@link Ext.form.action.Submit AJAX submit action} by default. If the
+     * {@link #standardSubmit} config is enabled it will use a standard form element to submit,
+     * or if the {@link #api} config is present it will use the
+     * {@link Ext.form.action.DirectLoad Ext.direct.Direct submit action}.
      *
      * The following code:
      *
@@ -678,7 +723,10 @@ Ext.define('Ext.form.Basic', {
      *         failure: function(form, action) {
      *             switch (action.failureType) {
      *                 case Ext.form.action.Action.CLIENT_INVALID:
-     *                     Ext.Msg.alert('Failure', 'Form fields may not be submitted with invalid values');
+     *                     Ext.Msg.alert(
+     *                         'Failure',
+     *                         'Form fields may not be submitted with invalid values'
+     *                     );
      *                     break;
      *                 case Ext.form.action.Action.CONNECT_FAILURE:
      *                     Ext.Msg.alert('Failure', 'Ajax communication failed');
@@ -703,26 +751,30 @@ Ext.define('Ext.form.Basic', {
      *         "msg":"You do not have permission to perform this operation"
      *     }
      *
-     * @param {Object} options The options to pass to the action (see {@link #doAction} for details).
+     * @param {Object} options The options to pass to the action (see {@link #doAction}
+     * for details).
      * @return {Ext.form.Basic} this
      */
     submit: function(options) {
-        options = options || {};
         var me = this,
             action;
-            
+
+        options = options || {};
+
         if (options.standardSubmit || me.standardSubmit) {
             action = 'standardsubmit';
-        } else {
+        }
+        else {
             action = me.api ? 'directsubmit' : 'submit';
         }
-            
+
         return me.doAction(action, options);
     },
 
     /**
      * Shortcut to {@link #doAction do} a {@link Ext.form.action.Load load action}.
-     * @param {Object} options The options to pass to the action (see {@link #doAction} for details)
+     * @param {Object} options The options to pass to the action (see {@link #doAction}
+     * for details)
      * @return {Ext.form.Basic} this
      */
     load: function(options) {
@@ -730,20 +782,24 @@ Ext.define('Ext.form.Basic', {
     },
 
     /**
-     * Persists the values in this form into the passed {@link Ext.data.Model} object in a beginEdit/endEdit block.
-     * If the record is not specified, it will attempt to update (if it exists) the record provided to loadRecord.
+     * Persists the values in this form into the passed {@link Ext.data.Model} object
+     * in a beginEdit/endEdit block. If the record is not specified, it will attempt to update
+     * (if it exists) the record provided to loadRecord.
      * @param {Ext.data.Model} [record] The record to edit
      * @return {Ext.form.Basic} this
      */
     updateRecord: function(record) {
         record = record || this._record;
+
         if (!record) {
             //<debug>
             Ext.raise("A record is required.");
             //</debug>
+
             return this;
         }
-        
+
+        // eslint-disable-next-line vars-on-top
         var fields = record.self.fields,
             values = this.getFieldValues(),
             obj = {},
@@ -752,7 +808,7 @@ Ext.define('Ext.form.Basic', {
             name;
 
         for (; i < len; ++i) {
-            name  = fields[i].name;
+            name = fields[i].name;
 
             if (values.hasOwnProperty(name)) {
                 obj[name] = values[name];
@@ -769,13 +825,14 @@ Ext.define('Ext.form.Basic', {
     /**
      * Loads an {@link Ext.data.Model} into this form by calling {@link #setValues} with the
      * {@link Ext.data.Model#getData record data}. The fields in the model are mapped to 
-     * fields in the form by matching either the {@link Ext.form.field.Base#name} or {@link Ext.Component#itemId}.  
-     * See also {@link #trackResetOnLoad}. 
+     * fields in the form by matching either the {@link Ext.form.field.Base#name} or
+     * {@link Ext.Component#itemId}.  See also {@link #trackResetOnLoad}. 
      * @param {Ext.data.Model} record The record to load
      * @return {Ext.form.Basic} this
      */
     loadRecord: function(record) {
         this._record = record;
+
         return this.setValues(record.getData());
     },
 
@@ -796,9 +853,9 @@ Ext.define('Ext.form.Basic', {
         var me = this,
             waitMsg = action.waitMsg,
             maskCls = Ext.baseCSSPrefix + 'mask-loading',
-            fields  = me.getFields().items,
+            fields = me.getFields().items,
             f,
-            fLen    = fields.length,
+            fLen = fields.length,
             field, waitMsgTarget;
 
         // Call HtmlEditor's syncValue before actions
@@ -812,12 +869,15 @@ Ext.define('Ext.form.Basic', {
 
         if (waitMsg) {
             waitMsgTarget = me.waitMsgTarget;
+
             if (waitMsgTarget === true) {
                 me.owner.el.mask(waitMsg, maskCls);
-            } else if (waitMsgTarget) {
+            }
+            else if (waitMsgTarget) {
                 waitMsgTarget = me.waitMsgTarget = Ext.get(waitMsgTarget);
                 waitMsgTarget.mask(waitMsg, maskCls);
-            } else {
+            }
+            else {
                 me.floatingAncestor = me.owner.up('[floating]');
 
                 // https://sencha.jira.com/browse/EXTJSIV-6397
@@ -831,6 +891,7 @@ Ext.define('Ext.form.Basic', {
                     me.savePreventFocusOnActivate = me.floatingAncestor.preventFocusOnActivate;
                     me.floatingAncestor.preventFocusOnActivate = true;
                 }
+
                 Ext.MessageBox.wait(waitMsg, action.waitTitle || me.waitTitle);
             }
         }
@@ -843,47 +904,54 @@ Ext.define('Ext.form.Basic', {
      * @param {Boolean} success True if the action completed successfully, false, otherwise.
      */
     afterAction: function(action, success) {
-        var me = this;
+        var me = this,
+            messageBox = Ext.MessageBox,
+            waitMsgTarget;
+
         if (action.waitMsg) {
-            var messageBox = Ext.MessageBox,
-                waitMsgTarget = me.waitMsgTarget;
+            waitMsgTarget = me.waitMsgTarget;
+
             if (waitMsgTarget === true) {
                 me.owner.el.unmask();
-            } else if (waitMsgTarget) {
+            }
+            else if (waitMsgTarget) {
                 waitMsgTarget.unmask();
-            } else {
+            }
+            else {
                 messageBox.hide();
             }
         }
+
         // Restore setting of any floating ancestor which was manipulated in beforeAction
         if (me.floatingAncestor) {
             me.floatingAncestor.preventFocusOnActivate = me.savePreventFocusOnActivate;
         }
+
         if (success) {
             if (action.reset) {
                 me.reset();
             }
+
             Ext.callback(action.success, action.scope || action, [me, action]);
             me.fireEvent('actioncomplete', me, action);
-        } else {
+        }
+        else {
             Ext.callback(action.failure, action.scope || action, [me, action]);
             me.fireEvent('actionfailed', me, action);
         }
     },
 
-
     /**
      * Find a specific {@link Ext.form.field.Field} in this form by id or name.
      * @param {String} id The value to search for (specify either a {@link Ext.Component#id id} or
-     * {@link Ext.form.field.Field#getName name or hiddenName}).
+     * {@link Ext.form.field.Field#method!getName name} or hiddenName).
      * @return {Ext.form.field.Field} The first matching field, or `null` if none was found.
      */
-    findField: function (id) {
-        return this.getFields().findBy(function (f) {
+    findField: function(id) {
+        return this.getFields().findBy(function(f) {
             return f.id === id || f.name === id || f.dataIndex === id;
         });
     },
-
 
     /**
      * This method allows you to mark one or more fields in a form as invalid along with 
@@ -963,6 +1031,7 @@ Ext.define('Ext.form.Basic', {
 
         function mark(fieldId, msg) {
             var field = me.findField(fieldId);
+
             if (field) {
                 field.markInvalid(msg);
             }
@@ -975,14 +1044,17 @@ Ext.define('Ext.form.Basic', {
                 error = errors[e];
                 mark(error.id || error.field, error.msg || error.message);
             }
-        } else if (errors instanceof Ext.data.ErrorCollection) {
-            eLen  = errors.items.length;
+        }
+        else if (errors instanceof Ext.data.ErrorCollection) {
+            eLen = errors.items.length;
+
             for (e = 0; e < eLen; e++) {
                 error = errors.items[e];
 
                 mark(error.field, error.message);
             }
-        } else {
+        }
+        else {
             for (key in errors) {
                 if (errors.hasOwnProperty(key)) {
                     value = errors[key];
@@ -990,6 +1062,7 @@ Ext.define('Ext.form.Basic', {
                 }
             }
         }
+
         return this;
     },
 
@@ -1018,8 +1091,10 @@ Ext.define('Ext.form.Basic', {
 
         function setVal(fieldId, val) {
             var field = me.findField(fieldId);
+
             if (field) {
                 field.setValue(val);
+
                 if (me.trackResetOnLoad) {
                     field.resetOriginalValue();
                 }
@@ -1029,6 +1104,7 @@ Ext.define('Ext.form.Basic', {
         // Suspend here because setting the value on a field could trigger
         // a layout, for example if an error gets set, or it's a display field
         Ext.suspendLayouts();
+
         if (Ext.isArray(values)) {
             // array of objects
             vLen = values.length;
@@ -1038,42 +1114,51 @@ Ext.define('Ext.form.Basic', {
 
                 setVal(val.id, val.value);
             }
-        } else {
+        }
+        else {
             // object hash
             Ext.iterate(values, setVal);
         }
+
         Ext.resumeLayouts(true);
+
         return this;
     },
 
     /**
      * Retrieves the fields in the form as a set of key/value pairs, using their
      * {@link Ext.form.field.Field#getSubmitData getSubmitData()} method to collect the values.
-     * If multiple fields return values under the same name those values will be combined into an Array.
-     * This is similar to {@link Ext.form.Basic#getFieldValues getFieldValues} except that this method
-     * collects only String values for submission, while getFieldValues collects type-specific data
-     * values (e.g. Date objects for date fields.)
+     * If multiple fields return values under the same name those values will be combined
+     * into an Array. This is similar to {@link Ext.form.Basic#getFieldValues getFieldValues}
+     * except that this method collects only String values for submission, while getFieldValues
+     * collects type-specific data values (e.g. Date objects for date fields.)
      *
      * @param {Boolean} [asString=false] If true, will return the key/value collection as a single
      * URL-encoded param string.
-     * @param {Boolean} [dirtyOnly=false] If true, only fields that are dirty will be included in the result.
-     * @param {Boolean} [includeEmptyText=false] If true, the configured emptyText of empty fields will be used.
-     * @param {Boolean} [useDataValues=false] If true, the {@link Ext.form.field.Field#getModelData getModelData}
-     * method is used to retrieve values from fields, otherwise the {@link Ext.form.field.Field#getSubmitData getSubmitData}
-     * method is used.
+     * @param {Boolean} [dirtyOnly=false] If true, only fields that are dirty will be included
+     * in the result.
+     * @param {Boolean} [includeEmptyText=false] If true, the configured emptyText of empty fields
+     * will be used.
+     * @param {Boolean} [useDataValues=false] If true, the
+     * {@link Ext.form.field.Field#getModelData getModelData}
+     * method is used to retrieve values from fields, otherwise the
+     * {@link Ext.form.field.Field#getSubmitData getSubmitData} method is used.
+     * @param {Boolean} isSubmitting
      * @return {String/Object}
      */
     getValues: function(asString, dirtyOnly, includeEmptyText, useDataValues, isSubmitting) {
-        var values  = {},
-            fields  = this.getFields().items,
-            fLen    = fields.length,
+        var values = {},
+            fields = this.getFields().items,
+            fLen = fields.length,
             isArray = Ext.isArray,
+            dataMethod = useDataValues ? 'getModelData' : 'getSubmitData',
             field, data, val, bucket, name, f;
 
         for (f = 0; f < fLen; f++) {
             field = fields[f];
+
             if (!dirtyOnly || field.isDirty()) {
-                data = field[useDataValues ? 'getModelData' : 'getSubmitData'](includeEmptyText, isSubmitting);
+                data = field[dataMethod](includeEmptyText, isSubmitting);
 
                 if (Ext.isObject(data)) {
                     for (name in data) {
@@ -1085,10 +1170,6 @@ Ext.define('Ext.form.Basic', {
                             }
 
                             if (!field.isRadio) {
-                                // skipping checkbox null values since they have no contextual value
-                                if(field.isCheckbox && val===null) {
-                                    continue;
-                                }
                                 if (values.hasOwnProperty(name)) {
                                     bucket = values[name];
 
@@ -1098,13 +1179,16 @@ Ext.define('Ext.form.Basic', {
 
                                     if (isArray(val)) {
                                         values[name] = bucket.concat(val);
-                                    } else {
+                                    }
+                                    else {
                                         bucket.push(val);
                                     }
-                                } else {
+                                }
+                                else {
                                     values[name] = val;
                                 }
-                            } else {
+                            }
+                            else {
                                 values[name] = values[name] || val;
                             }
                         }
@@ -1116,17 +1200,20 @@ Ext.define('Ext.form.Basic', {
         if (asString) {
             values = Ext.Object.toQueryString(values);
         }
+
         return values;
     },
 
     /**
      * Retrieves the fields in the form as a set of key/value pairs, using their
      * {@link Ext.form.field.Field#getModelData getModelData()} method to collect the values.
-     * If multiple fields return values under the same name those values will be combined into an Array.
-     * This is similar to {@link #getValues} except that this method collects type-specific data values
-     * (e.g. Date objects for date fields) while getValues returns only String values for submission.
+     * If multiple fields return values under the same name those values will be combined
+     * into an Array. This is similar to {@link #getValues} except that this method collects
+     * type-specific data values (e.g. Date objects for date fields) while getValues returns
+     * only String values for submission.
      *
-     * @param {Boolean} [dirtyOnly=false] If true, only fields that are dirty will be included in the result.
+     * @param {Boolean} [dirtyOnly=false] If true, only fields that are dirty will be included
+     * in the result.
      * @return {Object}
      */
     getFieldValues: function(dirtyOnly) {
@@ -1140,16 +1227,18 @@ Ext.define('Ext.form.Basic', {
     clearInvalid: function() {
         Ext.suspendLayouts();
 
-        var me     = this,
+        // eslint-disable-next-line vars-on-top
+        var me = this,
             fields = me.getFields().items,
-            f,
-            fLen   = fields.length;
+            fLen = fields.length,
+            f;
 
         for (f = 0; f < fLen; f++) {
             fields[f].clearInvalid();
         }
 
         Ext.resumeLayouts(true);
+
         return me;
     },
 
@@ -1163,20 +1252,22 @@ Ext.define('Ext.form.Basic', {
     reset: function(resetRecord) {
         Ext.suspendLayouts();
 
-        var me     = this,
+        // eslint-disable-next-line vars-on-top
+        var me = this,
             fields = me.getFields().items,
-            f,
-            fLen   = fields.length;
+            fLen = fields.length,
+            f;
 
         for (f = 0; f < fLen; f++) {
             fields[f].reset();
         }
 
         Ext.resumeLayouts(true);
-        
+
         if (resetRecord === true) {
             delete me._record;
         }
+
         return me;
     },
 
@@ -1188,7 +1279,7 @@ Ext.define('Ext.form.Basic', {
     applyToFields: function(obj) {
         var fields = this.getFields().items,
             f,
-            fLen   = fields.length;
+            fLen = fields.length;
 
         for (f = 0; f < fLen; f++) {
             Ext.apply(fields[f], obj);
@@ -1205,7 +1296,7 @@ Ext.define('Ext.form.Basic', {
     applyIfToFields: function(obj) {
         var fields = this.getFields().items,
             f,
-            fLen   = fields.length;
+            fLen = fields.length;
 
         for (f = 0; f < fLen; f++) {
             Ext.applyIf(fields[f], obj);

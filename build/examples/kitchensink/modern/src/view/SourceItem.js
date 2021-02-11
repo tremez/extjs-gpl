@@ -1,42 +1,47 @@
 Ext.define('KitchenSink.view.SourceItem', {
-    extend: 'Ext.Panel',
+    extend: 'Ext.Component',
     xtype: 'sourceitem',
 
     cls: 'ux-code',
-    styleHtmlContent: true,
     scrollable: true,
     padding: 8,
 
-    exampleRe: /^\s*\/\/\s*(\<\/?example\>)\s*$/,
+    constructor: function(config) {
+        this.renderDiv = document.createElement('div');
+        this.callParent([config]);
+    },
 
-    clearExampleTags: function (text) {
-        var lines = text.split('\n'),
-            removing = false,
-            keepLines = [],
-            len = lines.length,
-            exampleRe = this.exampleRe,
-            i, line;
-
-        for (i = 0; i < len; ++i) {
-            line = lines[i];
-            if (removing) {
-                if (exampleRe.test(line)) {
-                    removing = false;
-                }
-            } else if (exampleRe.test(line)) {
-                removing = true;
-            } else {
-                keepLines.push(line);
-            }
-        }
-
-        return keepLines.join('\n');
+    doDestroy: function() {
+        this.renderDiv = null;
+        this.callParent();
     },
 
     applyHtml: function(html) {
-        html = this.clearExampleTags(html);
-        html = html.replace(/</g, '&lt;');
-        html = html.replace(/\r/g, '');
-        return '<pre style="line-height: 14px; padding-left: 5px" class="prettyprint">' + html + '</pre>';
+        html = html
+            .replace(/</g, '&lt;')
+            .replace(/\r/g, '');
+
+        return '<pre style="line-height: 14px; padding-left: 5px" class="prettyprint">' +
+               html +
+               '</pre>';
+    },
+
+    updateHtml: function(html, oldHtml) {
+        var me = this,
+            renderDiv = me.renderDiv;
+
+        if (this.prettyPrint) {
+            renderDiv.innerHTML = html;
+
+            // eslint-disable-next-line no-undef
+            PR.prettyPrint(function() {
+                if (!me.destroyed) {
+                    me.superclass.updateHtml.call(me, renderDiv.innerHTML, oldHtml);
+                }
+            }, renderDiv);
+        }
+        else {
+            me.callParent([html, oldHtml]);
+        }
     }
 });

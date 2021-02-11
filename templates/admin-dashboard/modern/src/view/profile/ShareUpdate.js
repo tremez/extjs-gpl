@@ -3,47 +3,30 @@ Ext.define('Admin.view.profile.ShareUpdate', {
     xtype: 'profileshare',
 
     requires: [
-        'Ext.Button',
         'Ext.field.Text',
         'Ext.Toolbar'
     ],
 
-    padding: 10,
-    layout: 'fit',
-
     cls: 'share-panel',
+    layout: 'fit',
+    padding: 10,
 
-    items: [
-        {
-            xtype: 'textareafield',
-            placeHolder: "What's on your mind?"
-        },
-        {
-            xtype: 'toolbar',
-            docked: 'bottom',
-            defaults : {
-                margin:'0 10 5 0'
-            },
+    bbar: [{
+        iconCls: 'x-fa fa-video',
+        ui: 'header'
+    }, {
+        iconCls: 'x-fa fa-camera',
+        ui: 'header'
+    }, {
+        iconCls: 'x-fa fa-file',
+        ui: 'header'
+    }, '->', {
+        text: 'Share',
+        ui: 'soft-blue'
+    }],
 
-            items: [
-                {
-                    iconCls: 'x-fa fa-video-camera',
-                    ui: 'header'
-                },
-                {
-                    iconCls: 'x-fa fa-camera',
-                    ui: 'header'
-                },
-                {
-                    iconCls: 'x-fa fa-file',
-                    ui: 'header'
-                },
-                '->',
-                {
-                    text: 'Share',
-                    ui: 'soft-blue'
-                }
-            ]
-        }
-    ]
+    items: [{
+        xtype: 'textareafield',
+        placeholder: 'What\'s on your mind?'
+    }]
 });

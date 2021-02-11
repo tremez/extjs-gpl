@@ -1,4 +1,4 @@
-describe("Ext.util.Base64", function() {
+topSuite("Ext.util.Base64", function() {
     // https://www.base64encode.org was used as the reference for encoding
     var tests = [{
         name: 'lowercase Latin characters',
@@ -37,29 +37,29 @@ describe("Ext.util.Base64", function() {
         plain: 'すべてのハンターはキジが座る場所を知りたいです',
         encoded: '44GZ44G544Gm44Gu44OP44Oz44K/44O844Gv44Kt44K444GM5bqn44KL5aC05omA44KS55+l44KK44Gf44GE44Gn44GZ'
     }];
-    
+
     describe("encode", function() {
         for (var i = 0; i < tests.length; i++) {
             var test = tests[i];
-            
+
             (function(name, input, want) {
                 it('should encode ' + name, function() {
                     var have = Ext.util.Base64.encode(input);
-                    
+
                     expect(have).toBe(want);
                 });
             })(test.name, test.plain, test.encoded);
         }
     });
-    
+
     describe("decode", function() {
         for (var i = 0; i < tests.length; i++) {
             var test = tests[i];
-            
+
             (function(name, input, want) {
                 it('should decode ' + name, function() {
                     var have = Ext.util.Base64.decode(input);
-                    
+
                     expect(have).toBe(want);
                 });
             })(test.name, test.encoded, test.plain);

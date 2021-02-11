@@ -1,33 +1,44 @@
 /**
- * Proxies are used by {@link Ext.data.Store Stores} to handle the loading and saving of {@link Ext.data.Model Model}
- * data. Usually developers will not need to create or interact with proxies directly.
+ * Proxies are used by {@link Ext.data.Store Stores} to handle the loading and saving of
+ * {@link Ext.data.Model Model} data. Usually developers will not need to create or interact
+ * with proxies directly.
  *
  * # Types of Proxy
  *
- * There are two main types of Proxy - {@link Ext.data.proxy.Client Client} and {@link Ext.data.proxy.Server Server}.
- * The Client proxies save their data locally and include the following subclasses:
+ * There are two main types of Proxy - {@link Ext.data.proxy.Client Client} and
+ * {@link Ext.data.proxy.Server Server}. The Client proxies save their data locally and include
+ * the following subclasses:
  *
- * - {@link Ext.data.proxy.LocalStorage LocalStorageProxy} - saves its data to localStorage if the browser supports it
- * - {@link Ext.data.proxy.SessionStorage SessionStorageProxy} - saves its data to sessionStorage if the browsers supports it
- * - {@link Ext.data.proxy.Memory MemoryProxy} - holds data in memory only, any data is lost when the page is refreshed
+ * - {@link Ext.data.proxy.LocalStorage LocalStorageProxy} - saves its data to localStorage
+ *   if the browser supports it
+ * - {@link Ext.data.proxy.SessionStorage SessionStorageProxy} - saves its data to sessionStorage
+ *   if the browsers supports it
+ * - {@link Ext.data.proxy.Memory MemoryProxy} - holds data in memory only, any data is lost
+ *   when the page is refreshed
  *
- * The Server proxies save their data by sending requests to some remote server. These proxies include:
+ * The Server proxies save their data by sending requests to some remote server. These proxies
+ * include:
  *
  * - {@link Ext.data.proxy.Ajax Ajax} - sends requests to a server on the same domain
- * - {@link Ext.data.proxy.JsonP JsonP} - uses JSON-P to send requests to a server on a different domain
- * - {@link Ext.data.proxy.Rest Rest} - uses RESTful HTTP methods (GET/PUT/POST/DELETE) to communicate with server
+ * - {@link Ext.data.proxy.JsonP JsonP} - uses JSON-P to send requests to a server on a different
+ *   domain
+ * - {@link Ext.data.proxy.Rest Rest} - uses RESTful HTTP methods (GET/PUT/POST/DELETE)
+ *   to communicate with server
  * - {@link Ext.data.proxy.Direct Direct} - uses {@link Ext.direct.Manager} to send requests
  *
- * Proxies operate on the principle that all operations performed are either Create, Read, Update or Delete. These four
- * operations are mapped to the methods {@link #create}, {@link #read}, {@link #update} and {@link #erase}
- * respectively. Each Proxy subclass implements these functions.
+ * Proxies operate on the principle that all operations performed are either Create, Read, Update
+ * or Delete. These four operations are mapped to the methods {@link #method!create},
+ * {@link #method!read}, {@link #method!update} and {@link #method!erase} respectively. Each Proxy
+ * subclass implements these functions.
  *
- * The CRUD methods each expect an {@link Ext.data.operation.Operation Operation} object as the sole argument. The Operation
- * encapsulates information about the action the Store wishes to perform, the {@link Ext.data.Model model} instances
- * that are to be modified, etc. See the {@link Ext.data.operation.Operation Operation} documentation for more details. Each CRUD
+ * The CRUD methods each expect an {@link Ext.data.operation.Operation Operation} object as the only
+ * argument. The Operation encapsulates information about the action the Store wishes to perform,
+ * the {@link Ext.data.Model model} instances that are to be modified, etc. See the
+ * {@link Ext.data.operation.Operation Operation} documentation for more details. Each CRUD
  * method also accepts a callback function to be called asynchronously on completion.
  *
- * Proxies also support batching of Operations via a {@link Ext.data.Batch batch} object, invoked by the {@link #batch}
+ * Proxies also support batching of Operations via a {@link Ext.data.Batch batch} object, invoked
+ * by the {@link #batch}
  * method.
  */
 Ext.define('Ext.data.proxy.Proxy', {
@@ -60,21 +71,23 @@ Ext.define('Ext.data.proxy.Proxy', {
     config: {
         /**
          * @cfg {String} batchOrder
-         * Comma-separated ordering 'create', 'update' and 'destroy' actions when batching. Override this to set a different
-         * order for the batched CRUD actions to be executed in. Defaults to 'create,update,destroy'.
+         * Comma-separated ordering 'create', 'update' and 'destroy' actions when batching.
+         * Override this to set a different order for the batched CRUD actions to be executed in.
+         * Defaults to 'create,update,destroy'.
          */
         batchOrder: 'create,update,destroy',
 
         /**
          * @cfg {Boolean} batchActions
-         * True to batch actions of a particular type when synchronizing the store. Defaults to true.
+         * True to batch actions of a particular type when synchronizing the store. Defaults to
+         * `true`.
          */
         batchActions: true,
 
         /**
          * @cfg {String/Ext.data.Model} model
-         * The name of the Model to tie to this Proxy. Can be either the string name of the Model, or a reference to the
-         * Model constructor. Required.
+         * The name of the Model to tie to this Proxy. Can be either the string name of the Model,
+         * or a reference to the Model constructor. Required.
          */
         model: undefined,
 
@@ -112,8 +125,8 @@ Ext.define('Ext.data.proxy.Proxy', {
      * Identifies the proxy as (a)synchronous.
      */
     isSynchronous: false,
-     
-     /**
+
+    /**
      * @event metachange
      * Fires when this proxy's reader provides new metadata. Metadata usually consists
      * of new field definitions, but can include any configuration data required by an
@@ -131,25 +144,27 @@ Ext.define('Ext.data.proxy.Proxy', {
     constructor: function(config) {
         // Will call initConfig
         this.mixins.observable.constructor.call(this, config);
-        
+
         // We need to abort all pending operations when destroying
         this.pendingOperations = {};
     },
-     
+
     applyModel: function(model) {
         return Ext.data.schema.Schema.lookupEntity(model);
     },
 
     updateModel: function(model) {
+        var reader;
+
         if (model) {
-            var reader = this.getReader();
-                
+            reader = this.getReader();
+
             if (reader && !reader.getModel()) {
                 reader.setModel(model);
             }
         }
     },
-    
+
     applyReader: function(reader) {
         // Synchronous proxies need to force keepRawData to allow Grid features
         // like Summary and Grouping access rawData after the Reader processed records.
@@ -159,22 +174,30 @@ Ext.define('Ext.data.proxy.Proxy', {
             reader = reader || {};
             reader.keepRawData = true;
         }
-        
+
         return Ext.Factory.reader(reader);
     },
-    
-    updateReader: function (reader) {
+
+    updateReader: function(reader) {
+        var me = this,
+            model;
+
         if (reader) {
-            var me = this,
-                model = me.getModel();
-                
+            model = me.getModel();
+
             if (!model) {
                 model = reader.getModel();
+
                 if (model) {
                     me.setModel(model);
                 }
-            } else {
+            }
+            else {
                 reader.setModel(model);
+            }
+
+            if (reader.responseType != null) {
+                me.responseType = reader.responseType;
             }
         }
     },
@@ -188,18 +211,21 @@ Ext.define('Ext.data.proxy.Proxy', {
         // If not set, but the Reader has a record config, use the Reader's record config.
         if (writer.getRecord && !writer.getRecord() && reader && reader.getRecord) {
             reader = reader.getRecord();
+
             if (reader) {
                 writer.setRecord(reader);
             }
         }
+
         return writer;
     },
-    
+
     abort: Ext.emptyFn,
 
     /**
      * @private
-     * Called each time the reader's onMetaChange is called so that the proxy can fire the metachange event
+     * Called each time the reader's onMetaChange is called so that the proxy can fire the
+     * metachange event
      */
     onMetaChange: function(meta) {
         this.fireEvent('metachange', this, meta);
@@ -234,8 +260,9 @@ Ext.define('Ext.data.proxy.Proxy', {
     erase: Ext.emptyFn,
 
     /**
-     * Performs a batch of {@link Ext.data.operation.Operation Operations}, in the order specified by {@link #batchOrder}. Used
-     * internally by {@link Ext.data.Store}'s {@link Ext.data.Store#sync sync} method. Example usage:
+     * Performs a batch of {@link Ext.data.operation.Operation Operations}, in the order specified
+     * by {@link #batchOrder}. Used internally by {@link Ext.data.Store}'s
+     * {@link Ext.data.Store#sync sync} method. Example usage:
      *
      *     myProxy.batch({
      *         create : [myModel1, myModel2],
@@ -243,58 +270,73 @@ Ext.define('Ext.data.proxy.Proxy', {
      *         destroy: [myModel4, myModel5]
      *     });
      *
-     * Where the myModel* above are {@link Ext.data.Model Model} instances - in this case 1 and 2 are new instances and
-     * have not been saved before, 3 has been saved previously but needs to be updated, and 4 and 5 have already been
-     * saved but should now be destroyed.
+     * Where the myModel* above are {@link Ext.data.Model Model} instances - in this case 1 and 2
+     * are new instances and have not been saved before, 3 has been saved previously but needs to be
+     * updated, and 4 and 5 have already been saved but should now be destroyed.
      * 
-     * Note that the previous version of this method took 2 arguments (operations and listeners). While this is still
-     * supported for now, the current signature is now a single `options` argument that can contain both operations and
-     * listeners, in addition to other options. The multi-argument signature will likely be deprecated in a future release.
+     * Note that the previous version of this method took 2 arguments (operations and listeners).
+     * While this is still supported for now, the current signature is now a single `options`
+     * argument that can contain both operations and listeners, in addition to other options.
+     * The multi-argument signature will likely be deprecated in a future release.
      *
-     * @param {Object} options Object containing one or more properties supported by the batch method:
+     * @param {Object} options Object containing one or more properties supported by the batch
+     * method:
      * 
-     * @param {Object} options.operations Object containing the Model instances to act upon, keyed by action name
+     * @param {Object} options.operations Object containing the Model instances to act upon, keyed
+     * by action name
      * 
-     * @param {Object} [options.listeners] Event listeners object passed straight through to the Batch -
-     * see {@link Ext.data.Batch} for details
+     * @param {Object} [options.listeners] Event listeners object passed straight through to the
+     * Batch - see {@link Ext.data.Batch} for details
      * 
-     * @param {Ext.data.Batch/Object} [options.batch] A {@link Ext.data.Batch} object (or batch config to apply 
-     * to the created batch). If unspecified a default batch will be auto-created.
+     * @param {Ext.data.Batch/Object} [options.batch] A {@link Ext.data.Batch} object (or batch
+     * config to apply  to the created batch). If unspecified a default batch will be auto-created.
      * 
-     * @param {Function} [options.callback] The function to be called upon completion of processing the batch.
-     * The callback is called regardless of success or failure and is passed the following parameters:
-     * @param {Ext.data.Batch} options.callback.batch The {@link Ext.data.Batch batch} that was processed,
-     * containing all operations in their current state after processing
-     * @param {Object} options.callback.options The options argument that was originally passed into batch
-     * 
-     * @param {Function} [options.success] The function to be called upon successful completion of the batch. The 
-     * success function is called only if no exceptions were reported in any operations. If one or more exceptions
-     * occurred then the `failure` function will be called instead. The success function is called 
-     * with the following parameters:
-     * @param {Ext.data.Batch} options.success.batch The {@link Ext.data.Batch batch} that was processed,
-     * containing all operations in their current state after processing
-     * @param {Object} options.success.options The options argument that was originally passed into batch
-     * 
-     * @param {Function} [options.failure] The function to be called upon unsuccessful completion of the batch. The 
-     * failure function is called when one or more operations returns an exception during processing (even if some
-     * operations were also successful). In this case you can check the batch's {@link Ext.data.Batch#exceptions
-     * exceptions} array to see exactly which operations had exceptions. The failure function is called with the 
+     * @param {Function} [options.callback] The function to be called upon completion of processing
+     * the batch. The callback is called regardless of success or failure and is passed the
      * following parameters:
-     * @param {Ext.data.Batch} options.failure.batch The {@link Ext.data.Batch batch} that was processed,
-     * containing all operations in their current state after processing
-     * @param {Object} options.failure.options The options argument that was originally passed into batch
+     * @param {Ext.data.Batch} options.callback.batch The {@link Ext.data.Batch batch} that was
+     * processed, containing all operations in their current state after processing
+     * @param {Object} options.callback.options The options argument that was originally passed
+     * into batch
      * 
-     * @param {Object} [options.scope] The scope in which to execute any callbacks (i.e. the `this` object inside
-     * the callback, success and/or failure functions). Defaults to the proxy.
+     * @param {Function} [options.success] The function to be called upon successful completion
+     * of the batch. The  success function is called only if no exceptions were reported in any
+     * operations. If one or more exceptions occurred then the `failure` function will be called
+     * instead. The success function is called  with the following parameters:
+     * @param {Ext.data.Batch} options.success.batch The {@link Ext.data.Batch batch} that was
+     * processed, containing all operations in their current state after processing
+     * @param {Object} options.success.options The options argument that was originally passed into
+     * batch
+     * 
+     * @param {Function} [options.failure] The function to be called upon unsuccessful completion
+     * of the batch. The  failure function is called when one or more operations returns an
+     * exception during processing (even if some operations were also successful). In this case you
+     * can check the batch's {@link Ext.data.Batch#exceptions exceptions} array to see exactly
+     * which operations had exceptions. The failure function is called with the following
+     * parameters:
+     * @param {Ext.data.Batch} options.failure.batch The {@link Ext.data.Batch batch} that was
+     * processed, containing all operations in their current state after processing
+     * @param {Object} options.failure.options The options argument that was originally passed into
+     * batch
+     * 
+     * @param {Object} [options.scope] The scope in which to execute any callbacks (i.e. the `this`
+     * object inside the callback, success and/or failure functions). Defaults to the proxy.
+     *
+     * @param {Object} [listeners] (deprecated) If `options` is the `operations`, this
+     * parameter is the listeners. Instead of passing these two arguments, the proper form
+     * is to pass them as:
+     *
+     *      batch({
+     *          operations: ...
+     *          listeners: ...
+     *      });
      *
      * @return {Ext.data.Batch} The newly created Batch
      */
-    batch: function(options, /* deprecated */listeners) {
+    batch: function(options, listeners) {
         var me = this,
             useBatch = me.getBatchActions(),
-            batch,
-            records,
-            actions, aLen, action, a, r, rLen, record;
+            batch, records, actions, aLen, action, a, r, rLen, record;
 
         if (options.operations === undefined) {
             // the old-style (operations, listeners) signature was called
@@ -312,7 +354,8 @@ Ext.define('Ext.data.proxy.Proxy', {
                     listeners: {}
                 });
             }
-        } else {
+        }
+        else {
             options.batch = {
                 proxy: me,
                 listeners: options.listeners || {}
@@ -323,30 +366,37 @@ Ext.define('Ext.data.proxy.Proxy', {
             batch = new Ext.data.Batch(options.batch);
         }
 
-        batch.on('complete', Ext.bind(me.onBatchComplete, me, [options], 0));
+        // Use single so that the listener gets removed upon completion.
+        batch.on('complete', Ext.bind(me.onBatchComplete, me, [options], 0), null, {
+            single: true,
+            priority: 1000
+        });
+
+        batch.$destroyOwner = options.$destroyOwner;
 
         actions = me.getBatchOrder().split(',');
-        aLen    = actions.length;
+        aLen = actions.length;
 
         for (a = 0; a < aLen; a++) {
-            action  = actions[a];
+            action = actions[a];
             records = options.operations[action];
 
             if (records) {
                 if (useBatch) {
                     batch.add(me.createOperation(action, {
-                        records : records,
+                        records: records,
                         // Relay any additional params through to the Operation (and Request).
                         params: options.params
                     }));
-                } else {
+                }
+                else {
                     rLen = records.length;
 
                     for (r = 0; r < rLen; r++) {
                         record = records[r];
 
                         batch.add(me.createOperation(action, {
-                            records : [record],
+                            records: [record],
                             // Relay any additional params through to the Operation (and Request).
                             params: options.params
                         }));
@@ -356,12 +406,14 @@ Ext.define('Ext.data.proxy.Proxy', {
         }
 
         batch.start();
+
         return batch;
     },
 
     /**
      * @private
-     * The internal callback that the proxy uses to call any specified user callbacks after completion of a batch
+     * The internal callback that the proxy uses to call any specified user callbacks after
+     * completion of a batch
      */
     onBatchComplete: function(batchOptions, batch) {
         var scope = batchOptions.scope || this;
@@ -370,25 +422,33 @@ Ext.define('Ext.data.proxy.Proxy', {
             if (Ext.isFunction(batchOptions.failure)) {
                 Ext.callback(batchOptions.failure, scope, [batch, batchOptions]);
             }
-        } else if (Ext.isFunction(batchOptions.success)) {
+        }
+        else if (Ext.isFunction(batchOptions.success)) {
             Ext.callback(batchOptions.success, scope, [batch, batchOptions]);
         }
 
         if (Ext.isFunction(batchOptions.callback)) {
             Ext.callback(batchOptions.callback, scope, [batch, batchOptions]);
         }
+
+        // In certain cases when the batch was created by a ProxyStore we need to
+        // defer destruction until the store can process the batch results.
+        // The store will then destroy the batch.
+        if (!batch.$destroyOwner) {
+            batch.destroy();
+        }
     },
-    
+
     createOperation: function(action, config) {
         var operation = Ext.createByAlias('data.operation.' + action, config);
-        
+
         operation.setProxy(this);
-        
+
         this.pendingOperations[operation._internalId] = operation;
-        
-        return operation;  
+
+        return operation;
     },
-    
+
     completeOperation: function(operation) {
         delete this.pendingOperations[operation._internalId];
     },
@@ -396,21 +456,23 @@ Ext.define('Ext.data.proxy.Proxy', {
     clone: function() {
         return new this.self(this.getInitialConfig());
     },
-    
+
     destroy: function() {
         var ops = this.pendingOperations,
             opId, op;
-        
+
         for (opId in ops) {
             op = ops[opId];
-            
+
             if (op && op.isRunning()) {
                 op.abort();
             }
+
+            op.destroy();
         }
-        
+
         this.pendingOperations = null;
-        
+
         this.callParent();
     }
 });

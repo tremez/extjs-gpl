@@ -11,7 +11,7 @@ Ext.define('Ext.selection.TreeModel', {
      * @cfg {Boolean} pruneRemoved
      * @hide
      */
-    
+
     /**
      * @cfg {Boolean} selectOnExpanderClick
      * `true` to select the row when clicking on the icon to collapse or expand
@@ -26,8 +26,8 @@ Ext.define('Ext.selection.TreeModel', {
 
         me.callParent([config]);
 
-        // If pruneRemoved is required, we must listen to the the Store's bubbled noderemove event to know when nodes
-        // are added and removed from parentNodes.
+        // If pruneRemoved is required, we must listen to the the Store's bubbled noderemove
+        // event to know when nodes are added and removed from parentNodes.
         // The Store's remove event will be fired during collapses.
         if (me.pruneRemoved) {
             me.pruneRemoved = false;
@@ -40,14 +40,18 @@ Ext.define('Ext.selection.TreeModel', {
             result = me.callParent();
 
         result.noderemove = me.onNodeRemove;
+
         return result;
     },
 
     onNodeRemove: function(parent, node, isMove) {
         // deselection of deleted records done in base Model class
         if (!isMove) {
+            // eslint-disable-next-line vars-on-top
             var toDeselect = [];
+
             this.gatherSelected(node, toDeselect);
+
             if (toDeselect.length) {
                 this.deselect(toDeselect);
             }
@@ -65,7 +69,13 @@ Ext.define('Ext.selection.TreeModel', {
     vetoSelection: function(e) {
         var view = this.view,
             select = this.selectOnExpanderClick,
-            veto = !select && e.type === 'click' && e.getTarget(view.expanderSelector || (view.lockingPartner && view.lockingPartner.expanderSelector));
+            veto;
+
+        veto = !select && e.type === 'click' &&
+               e.getTarget(
+                   view.expanderSelector ||
+                   (view.lockingPartner && view.lockingPartner.expanderSelector)
+               );
 
         return veto || this.callParent([e]);
     },

@@ -1,0 +1,9 @@
+@if $theme-name == 'theme-material' {
+    .dark-mode {
+        .btn-primary.#{$prefix}btn-disabled {
+            .#{$prefix}btn-inner {
+                color: #e1e1e1 !important;
+            }
+        }
+    }
+}

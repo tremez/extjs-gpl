@@ -1,3 +1,10 @@
+/**
+ * @class Ext.picker.Date
+ */
+
+/**
+ * @var {color} [$datepicker-header-background-color=$neutral-highlight-color]
+ */
 $datepicker-header-background-color: dynamic($neutral-highlight-color);
 $datepicker-month-button-color: dynamic($color);
 $datepicker-month-button-font-size: dynamic(round($font-size * 1.15));

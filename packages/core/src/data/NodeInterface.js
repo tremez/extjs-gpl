@@ -54,13 +54,13 @@
  *         renderTo: document.body,
  *         bbar: ['The first node ', {
  *             text: 'is a leaf?',
- *             handler: function () {
+ *             handler: function() {
  *                 var firstChild = tree.getRootNode().getChildAt(0);
  *                 Ext.Msg.alert('Is Leaf?', firstChild.isLeaf());
  *             }
  *         }, {
  *             text: 'has text?',
- *             handler: function () {
+ *             handler: function() {
  *                 var firstChild = tree.getRootNode().getChildAt(0);
  *                 Ext.Msg.alert('Has Text:', firstChild.get('text'));
  *             }
@@ -137,8 +137,8 @@ Ext.define('Ext.data.NodeInterface', {
 
     /**
      * @cfg {Boolean} [leaf=false]
-     * Set to true to indicate that this child can have no children. The expand icon/arrow will then not be
-     * rendered for this node.
+     * Set to true to indicate that this child can have no children. The expand icon/arrow will
+     * then not be rendered for this node.
      *
      * See also: {@link #isLeaf}.
      */
@@ -149,18 +149,17 @@ Ext.define('Ext.data.NodeInterface', {
      */
 
     /**
-     * @cfg {String} iconCls
-     * @inheritdoc Ext.panel.Header#iconCls
+     * @cfg iconCls
+     * @inheritdoc Ext.panel.Header#cfg-iconCls
      * @localdoc Use {@link #icon} to set the icon src path directly.
      */
 
     /**
-     * @cfg {String} icon
-     * @inheritdoc Ext.panel.Header#icon
+     * @cfg icon
+     * @inheritdoc Ext.panel.Header#cfg-icon
      */
 
     /**
-     * @cfg {String} glyph
      * @cfg {Number/String} glyph
      *
      * A numeric unicode character code to use as the icon.  The default font-family 
@@ -195,8 +194,8 @@ Ext.define('Ext.data.NodeInterface', {
      * SDK.  For more information see:
      * 
      *  - [Font Awesome icons](http://fortawesome.github.io/Font-Awesome/cheatsheet/)
-     *  - [Pictos icons](http://docs.sencha.com/extjs/6.2/core_concepts/font_ext.html)
-     *  - [Theming Guide](http://docs.sencha.com/extjs/6.2/core_concepts/theming.html)
+     *  - [Pictos icons](../guides/core_concepts/font_ext.html)
+     *  - [Theming Guide](../guides/core_concepts/theming.html)
      * @since 6.2.0
      */
 
@@ -321,8 +320,8 @@ Ext.define('Ext.data.NodeInterface', {
     /**
      * @cfg {Number} index
      * @private
-     * The position of the node inside its parent. When parent has 4 children and the node is third amongst them,
-     * index will be 2.
+     * The position of the node inside its parent. When parent has 4 children and the node is third
+     * amongst them, index will be 2.
      *
      * See {@link #indexOf} and {@link #indexOfId}.
      */
@@ -330,19 +329,22 @@ Ext.define('Ext.data.NodeInterface', {
     /**
      * @cfg {Number} depth
      * @private
-     * The number of parents this node has. A root node has depth 0, a child of it depth 1, and so on...
+     * The number of parents this node has. A root node has depth 0, a child of it depth 1, and
+     * so on...
      *
      * See {@link #getDepth}.
      */
 
     /**
      * @property {Ext.data.NodeInterface} nextSibling
-     * A reference to this node's next sibling node. `null` if this node does not have a next sibling.
+     * A reference to this node's next sibling node. `null` if this node does not have a next
+     * sibling.
      */
 
     /**
      * @property {Ext.data.NodeInterface} previousSibling
-     * A reference to this node's previous sibling node. `null` if this node does not have a previous sibling.
+     * A reference to this node's previous sibling node. `null` if this node does not have a
+     * previous sibling.
      */
 
     /**
@@ -367,109 +369,121 @@ Ext.define('Ext.data.NodeInterface', {
 
     /**
      * @method onRegisterTreeNode
-     * Implement this method in a tree record subclass if it needs to track whenever it is registered
-     * with a {@link Ext.data.TreeStore TreeStore}.
+     * Implement this method in a tree record subclass if it needs to track whenever it is
+     * registered with a {@link Ext.data.TreeStore TreeStore}.
      * @param {Ext.data.TreeStore} treeStore The TreeStore to which the node is being registered.
      * @template
      */
 
     /**
      * @method onUnregisterTreeNode
-     * Implement this method in a tree record subclass if it needs to track whenever it is unregistered
-     * from a {@link Ext.data.TreeStore TreeStore}.
-     * @param {Ext.data.TreeStore} treeStore The TreeStore from which the node is being unregistered.
+     * Implement this method in a tree record subclass if it needs to track whenever it is
+     * unregistered from a {@link Ext.data.TreeStore TreeStore}.
+     * @param {Ext.data.TreeStore} treeStore The TreeStore from which the node is being
+     * unregistered.
      * @template
      */
 
     statics: {
         /**
-         * This method allows you to decorate a Model's class to implement the NodeInterface.
-         * This adds a set of methods, new events, new properties and new fields on every Record.
-         * @param {Ext.Class/Ext.data.Model} model The Model class or an instance of the Model class you want to
-         * decorate the prototype of.
+         * This method decorates a Model class such that it implements the interface of
+         * a tree node. That is, it adds a set of methods, events, properties and fields
+         * on every record.
+         * @param {Ext.Class/Ext.data.Model} modelClass The Model class or an instance of
+         * the Model class you want to decorate. In either case, this method decorates
+         * the class so all instances of that type will have the new capabilities.
          * @static
          */
-        decorate: function (modelClass) {
+        decorate: function(modelClass) {
             var model = Ext.data.schema.Schema.lookupEntity(modelClass),
                 proto = model.prototype,
                 idName, idField, idType;
-            
+
             if (!model.prototype.isObservable) {
                 model.mixin(Ext.mixin.Observable.prototype.mixinId, Ext.mixin.Observable);
             }
+
             if (proto.isNode) { // if (already decorated)
                 return;
             }
 
-            idName  = proto.idProperty;
+            idName = proto.idProperty;
             idField = model.getField(idName);
-            idType  = idField.type;
+            idType = idField.type;
 
             model.override(this.getPrototypeBody());
+
+            /* eslint-disable max-len, no-multi-spaces */
             model.addFields([
-                { name : 'parentId',   type : idType,    defaultValue : null,  allowNull : idField.allowNull            },
-                { name : 'index',      type : 'int',     defaultValue : -1,    persist : false          , convert: null },
-                { name : 'depth',      type : 'int',     defaultValue : 0,     persist : false          , convert: null },
-                { name : 'expanded',   type : 'bool',    defaultValue : false, persist : false          , convert: null },
-                { name : 'expandable', type : 'bool',    defaultValue : true,  persist : false          , convert: null },
-                { name : 'checked',    type : 'auto',    defaultValue : null,  persist : false          , convert: null },
-                { name : 'leaf',       type : 'bool',    defaultValue : false                            },
-                { name : 'cls',        type : 'string',  defaultValue : '',    persist : false          , convert: null },
-                { name : 'iconCls',    type : 'string',  defaultValue : '',    persist : false          , convert: null },
-                { name : 'icon',       type : 'string',  defaultValue : '',    persist : false          , convert: null },
-                { name : 'glyph',      type : 'string',  defaultValue : '',    persist : false          , convert: null },
-                { name : 'root',       type : 'boolean', defaultValue : false, persist : false          , convert: null },
-                { name : 'isLast',     type : 'boolean', defaultValue : false, persist : false          , convert: null },
-                { name : 'isFirst',    type : 'boolean', defaultValue : false, persist : false          , convert: null },
-                { name : 'allowDrop',  type : 'boolean', defaultValue : true,  persist : false          , convert: null },
-                { name : 'allowDrag',  type : 'boolean', defaultValue : true,  persist : false          , convert: null },
-                { name : 'loaded',     type : 'boolean', defaultValue : false, persist : false          , convert: null },
-                { name : 'loading',    type : 'boolean', defaultValue : false, persist : false          , convert: null },
-                { name : 'href',       type : 'string',  defaultValue : '',    persist : false          , convert: null },
-                { name : 'hrefTarget', type : 'string',  defaultValue : '',    persist : false          , convert: null },
-                { name : 'qtip',       type : 'string',  defaultValue : '',    persist : false          , convert: null },
-                { name : 'qtitle',     type : 'string',  defaultValue : '',    persist : false          , convert: null },
-                { name : 'qshowDelay', type : 'int',     defaultValue : 0,     persist : false          , convert: null },
-                { name : 'children',   type : 'auto',    defaultValue : null,  persist : false          , convert: null },
-                { name : 'visible',    type : 'boolean', defaultValue : true,  persist : false },
-                { name : 'text',       type : 'string',                        persist : false }
+                { name: 'parentId',   type: idType,    defaultValue: null,  allowNull: idField.allowNull  },
+                { name: 'index',      type: 'int',     defaultValue: -1,    persist: false, convert: null },
+                { name: 'depth',      type: 'int',     defaultValue: 0,     persist: false, convert: null },
+                { name: 'expanded',   type: 'bool',    defaultValue: false, persist: false, convert: null },
+                { name: 'expandable', type: 'bool',    defaultValue: true,  persist: false, convert: null },
+                { name: 'checked',    type: 'auto',    defaultValue: null,  persist: false, convert: null },
+                { name: 'leaf',       type: 'bool',    defaultValue: false                                },
+                { name: 'cls',        type: 'string',  defaultValue: '',    persist: false, convert: null },
+                { name: 'iconCls',    type: 'string',  defaultValue: '',    persist: false, convert: null },
+                { name: 'icon',       type: 'string',  defaultValue: '',    persist: false, convert: null },
+                { name: 'glyph',      type: 'string',  defaultValue: '',    persist: false, convert: null },
+                { name: 'root',       type: 'boolean', defaultValue: false, persist: false, convert: null },
+                { name: 'isLast',     type: 'boolean', defaultValue: false, persist: false, convert: null },
+                { name: 'isFirst',    type: 'boolean', defaultValue: false, persist: false, convert: null },
+                { name: 'allowDrop',  type: 'boolean', defaultValue: true,  persist: false, convert: null },
+                { name: 'allowDrag',  type: 'boolean', defaultValue: true,  persist: false, convert: null },
+                { name: 'loaded',     type: 'boolean', defaultValue: false, persist: false, convert: null },
+                { name: 'loading',    type: 'boolean', defaultValue: false, persist: false, convert: null },
+                { name: 'href',       type: 'string',  defaultValue: '',    persist: false, convert: null },
+                { name: 'hrefTarget', type: 'string',  defaultValue: '',    persist: false, convert: null },
+                { name: 'qtip',       type: 'string',  defaultValue: '',    persist: false, convert: null },
+                { name: 'qtitle',     type: 'string',  defaultValue: '',    persist: false, convert: null },
+                { name: 'qshowDelay', type: 'int',     defaultValue: 0,     persist: false, convert: null },
+                { name: 'children',   type: 'auto',    defaultValue: null,  persist: false, convert: null },
+                { name: 'visible',    type: 'boolean', defaultValue: true,  persist: false                },
+                { name: 'text',       type: 'string',                       persist: false                }
             ]);
+            /* eslint-enable max-len, no-multi-spaces */
         },
 
         getPrototypeBody: function() {
             var bubbledEvents = {
-                idchanged     : true,
-                append        : true,
-                remove        : true,
-                move          : true,
-                insert        : true,
-                beforeappend  : true,
-                beforeremove  : true,
-                beforemove    : true,
-                beforeinsert  : true,
-                expand        : true,
-                collapse      : true,
-                beforeexpand  : true,
-                beforecollapse: true,
-                sort          : true
-            }, silently = {
-                silent: true
-            };
+                    idchanged: true,
+                    append: true,
+                    remove: true,
+                    move: true,
+                    insert: true,
+                    beforeappend: true,
+                    beforeremove: true,
+                    beforemove: true,
+                    beforeinsert: true,
+                    expand: true,
+                    collapse: true,
+                    beforeexpand: true,
+                    beforecollapse: true,
+                    sort: true
+                },
+                silently = {
+                    silent: true
+                };
 
             // bulkUpdate usage:
             // This is used in 3 contexts:
             // a) When registering nodes. When bulk updating, we don't want to descend down the tree
-            // recursively making calls to register which is redundant. We do need to call it for each node
-            // because they need to be findable via id as soon as append events fire, so we only do the minimum needed.
-            // b) When setting a data property on the model. We only need to go through set (and the subsequent event chain)
-            // so that the UI can update. If we're doing a bulk update, the UI will update regardless.
-            // c) triggerUIUpdate. This is because we know "something has changed", but not exactly what, so we allow the UI to redraw itself.
-            // It has no purpose as far as data goes, so skip it when we can
+            // recursively making calls to register which is redundant. We do need to call it for
+            // each node because they need to be findable via id as soon as append events fire,
+            // so we only do the minimum needed.
+            // b) When setting a data property on the model. We only need to go through set
+            // (and the subsequent event chain) so that the UI can update. If we're doing a bulk
+            // update, the UI will update regardless.
+            // c) triggerUIUpdate. This is because we know "something has changed", but not exactly
+            // what, so we allow the UI to redraw itself. It has no purpose as far as data goes, so
+            // skip it when we can
 
             return {
                 /**
                  * @property {Boolean} isNode
-                 * `true` in this class to identify an object as an instantiated Node, or subclass thereof.
+                 * `true` in this class to identify an object as an instantiated Node, or subclass
+                 * thereof.
                  */
                 isNode: true,
 
@@ -501,13 +515,19 @@ Ext.define('Ext.data.NodeInterface', {
                      * Fires when a child node is removed
                      * @param {Ext.data.NodeInterface} this This node
                      * @param {Ext.data.NodeInterface} node The removed node
-                     * @param {Boolean} isMove `true` if the child node is being removed so it can be moved to another position in the tree.
-                     * @param {Object} context An object providing information about where the removed node came from. It contains the following properties:
-                     * @param {Ext.data.NodeInterface} context.parentNode The node from which the removed node was removed.
-                     * @param {Ext.data.NodeInterface} context.previousSibling The removed node's former previous sibling.
-                     * @param {Ext.data.NodeInterface} context.nextSibling The removed node's former next sibling.
-                     * (a side effect of calling {@link Ext.data.NodeInterface#appendChild appendChild} or
-                     * {@link Ext.data.NodeInterface#insertBefore insertBefore} with a node that already has a parentNode)
+                     * @param {Boolean} isMove `true` if the child node is being removed so it can
+                     * be moved to another position in the tree.
+                     * @param {Object} context An object providing information about where the
+                     * removed node came from. It contains the following properties:
+                     * @param {Ext.data.NodeInterface} context.parentNode The node from which the
+                     * removed node was removed.
+                     * @param {Ext.data.NodeInterface} context.previousSibling The removed node's
+                     * former previous sibling.
+                     * @param {Ext.data.NodeInterface} context.nextSibling The removed node's former
+                     * next sibling. (a side effect of calling
+                     * {@link Ext.data.NodeInterface#appendChild appendChild} or
+                     * {@link Ext.data.NodeInterface#insertBefore insertBefore} with a node that
+                     * already has a parentNode)
                      */
                     /**
                      * @event move
@@ -522,7 +542,8 @@ Ext.define('Ext.data.NodeInterface', {
                      * Fires when a new child node is inserted.
                      * @param {Ext.data.NodeInterface} this This node
                      * @param {Ext.data.NodeInterface} node The child node inserted
-                     * @param {Ext.data.NodeInterface} refNode The child node the node was inserted before
+                     * @param {Ext.data.NodeInterface} refNode The child node the node was inserted
+                     * before
                      */
                     /**
                      * @event beforeappend
@@ -535,16 +556,20 @@ Ext.define('Ext.data.NodeInterface', {
                      * Fires before a child is removed, return false to cancel the remove.
                      * @param {Ext.data.NodeInterface} this This node
                      * @param {Ext.data.NodeInterface} node The child node to be removed
-                     * @param {Boolean} isMove `true` if the child node is being removed so it can be moved to another position in the tree.
-                     * (a side effect of calling {@link Ext.data.NodeInterface#appendChild appendChild} or
-                     * {@link Ext.data.NodeInterface#insertBefore insertBefore} with a node that already has a parentNode)
+                     * @param {Boolean} isMove `true` if the child node is being removed so it can
+                     * be moved to another position in the tree. (a side effect of calling
+                     * {@link Ext.data.NodeInterface#appendChild appendChild} or
+                     * {@link Ext.data.NodeInterface#insertBefore insertBefore} with a node that
+                     * already has a parentNode)
                      */
                     /**
                      * @event beforemove
-                     * Fires before this node is moved to a new location in the tree. Return false to cancel the move.
+                     * Fires before this node is moved to a new location in the tree. Return false
+                     * to cancel the move.
                      * @param {Ext.data.NodeInterface} this This node
                      * @param {Ext.data.NodeInterface} oldParent The parent of this node
-                     * @param {Ext.data.NodeInterface} newParent The new parent this node is moving to
+                     * @param {Ext.data.NodeInterface} newParent The new parent this node is moving
+                     * to
                      * @param {Number} index The index it is being moved to
                      */
                     /**
@@ -552,7 +577,8 @@ Ext.define('Ext.data.NodeInterface', {
                      * Fires before a new child is inserted, return false to cancel the insert.
                      * @param {Ext.data.NodeInterface} this This node
                      * @param {Ext.data.NodeInterface} node The child node to be inserted
-                     * @param {Ext.data.NodeInterface} refNode The child node the node is being inserted before
+                     * @param {Ext.data.NodeInterface} refNode The child node the node is being
+                     * inserted before
                      */
                     /**
                      * @event expand
@@ -584,10 +610,11 @@ Ext.define('Ext.data.NodeInterface', {
                 },
 
                 /**
-                 * Ensures that the passed object is an instance of a Record with the NodeInterface applied
+                 * Ensures that the passed object is an instance of a Record with the NodeInterface
+                 * applied
                  * @return {Ext.data.NodeInterface}
                  */
-                createNode: function (node) {
+                createNode: function(node) {
                     var me = this,
                         childType = me.childType,
                         store,
@@ -611,11 +638,19 @@ Ext.define('Ext.data.NodeInterface', {
                             nodeProxy = me.getProxy();
                             nodeReader = nodeProxy ? nodeProxy.getReader() : null;
 
-                            // If the node's proxy's reader was configured with a special typeProperty (property name which defines the child type name) use that.
-                            reader = !storeReader || (nodeReader && nodeReader.initialConfig.typeProperty) ? nodeReader : storeReader;
+                            // If the node's proxy's reader was configured with a special
+                            // typeProperty (property name which defines the child type name)
+                            // use that.
+                            /* eslint-disable indent */
+                            reader = !storeReader ||
+                                    (nodeReader && nodeReader.initialConfig.typeProperty)
+                                        ? nodeReader
+                                        : storeReader;
+                            /* eslint-enable indent */
 
                             if (reader) {
                                 typeProperty = reader.getTypeProperty();
+
                                 if (typeProperty) {
                                     T = reader.getChildType(me.schema, node, typeProperty);
                                 }
@@ -630,7 +665,8 @@ Ext.define('Ext.data.NodeInterface', {
                     // setup defaults here
                     if (!node.childNodes) {
                         node.firstChild = node.lastChild = node.parentNode =
-                                node.previousSibling = node.nextSibling = null;
+                        node.previousSibling = node.nextSibling = null;
+
                         node.childNodes = [];
                     }
 
@@ -676,32 +712,33 @@ Ext.define('Ext.data.NodeInterface', {
                  *  @param {Object} info.index
                  *  @param {Object} info.depth
                  *  @param {Object} info.parentId
-                 *  @return {String}[]} The names of any persistent fields that were modified.
+                 *  @return {String[]} The names of any persistent fields that were modified.
                  */
                 updateInfo: function(commit, info) {
                     var me = this,
                         phantom = me.phantom,
-                        result;
+                        result, childInfo, children, childCount, i;
 
                     commit = {
                         silent: true,
                         commit: commit
                     };
 
-                    // The only way child data can be influenced is if this node has changed level in this update.
-                    if (info.depth !== me.data.depth) {
-                        var childInfo = {
-                                depth: me.data.depth + 1
-                            },
-                            children = me.childNodes,
-                            childCount = children.length,
-                            i;
+                    // The only way child data can be influenced is if this node has changed level
+                    // in this update.
+                    if (info.depth != null && info.depth !== me.data.depth) {
+                        childInfo = {
+                            depth: info.depth + 1
+                        };
+
+                        children = me.childNodes;
+                        childCount = children.length;
 
                         for (i = 0; i < childCount; i++) {
-                            children[i].set(childInfo);
+                            children[i].updateInfo(commit, childInfo);
                         }
                     }
-                    
+
                     result = me.set(info, commit);
 
                     // Restore phantom flag which might get cleared by a commit.
@@ -715,7 +752,7 @@ Ext.define('Ext.data.NodeInterface', {
                  * @return {Boolean}
                  */
                 isLast: function() {
-                   return this.get('isLast');
+                    return this.get('isLast');
                 },
 
                 /**
@@ -723,7 +760,7 @@ Ext.define('Ext.data.NodeInterface', {
                  * @return {Boolean}
                  */
                 isFirst: function() {
-                   return this.get('isFirst');
+                    return this.get('isFirst');
                 },
 
                 /**
@@ -735,7 +772,7 @@ Ext.define('Ext.data.NodeInterface', {
                 },
 
                 /**
-                 * Returns true if this node has one or more child nodes, or if the <tt>expandable</tt>
+                 * Returns true if this node has one or more child nodes, or if the `expandable`
                  * node attribute is explicitly specified as true, otherwise returns false.
                  * @return {Boolean}
                  */
@@ -743,47 +780,46 @@ Ext.define('Ext.data.NodeInterface', {
                     var me = this;
 
                     if (me.get('expandable')) {
-                        return !(me.isLeaf() || (me.isLoaded() && !me.phantom && !me.hasChildNodes()));
+                        return !(me.isLeaf() ||
+                                (me.isLoaded() && !me.phantom && !me.hasChildNodes()));
                     }
+
                     return false;
                 },
-                
+
                 triggerUIUpdate: function() {
                     // This isn't ideal, however none of the underlying fields have changed
                     // but we still need to update the UI
-                    // callJoined calls both the Stores we are joined to, and any TreeStore of which we may be a descendant.
+                    // callJoined calls both the Stores we are joined to, and any TreeStore
+                    // of which we may be a descendant.
                     this.callJoined('afterEdit', []);
                 },
 
                 /**
                  * Inserts node(s) as the last child node of this node.
                  *
-                 * If the node was previously a child node of another parent node, it will be removed from that node first.
+                 * If the node was previously a child node of another parent node, it will be
+                 * removed from that node first.
                  *
-                 * @param {Ext.data.NodeInterface/Ext.data.NodeInterface[]/Object} node The node or Array of nodes to append
+                 * @param {Ext.data.NodeInterface/Ext.data.NodeInterface[]/Object} node The node
+                 * or Array of nodes to append
                  * @param {Boolean} [suppressEvents=false] True to suppress firing of 
                  * events.
                  * @param {Boolean} [commit=false]
-                 * @return {Ext.data.NodeInterface} The appended node if single append, or null if an array was passed
+                 * @return {Ext.data.NodeInterface} The appended node if single append, or null
+                 * if an array was passed
                  */
                 appendChild: function(node, suppressEvents, commit) {
                     var me = this,
-                        i, ln,
-                        index,
-                        oldParent,
-                        previousSibling,
+                        treeStore = me.getTreeStore(),
+                        bulkUpdate = treeStore && treeStore.bulkUpdate,
                         childInfo = {
                             isLast: true,
                             parentId: me.getId(),
-                            depth: (me.data.depth||0) + 1
+                            depth: (me.data.depth || 0) + 1
                         },
-                        result,
-                        treeStore = me.getTreeStore(),
-                        halfCheckedValue = treeStore && treeStore.triStateCheckbox ? 1 : false,
-                        bulkUpdate = treeStore && treeStore.bulkUpdate,
-                        meChecked,
-                        nodeChecked,
-                        modifiedFields;
+                        oldParent, previousSibling, modifiedFields, index, result,
+                        i, ln;
 
                     // Coalesce all layouts caused by node append
                     Ext.suspendLayouts();
@@ -794,18 +830,23 @@ Ext.define('Ext.data.NodeInterface', {
                         result = new Array(ln);
                         // Suspend view updating and data syncing during update
                         me.callTreeStore('beginFill');
+
                         for (i = 0; i < ln; i++) {
                             result[i] = me.appendChild(node[i], suppressEvents, commit);
                         }
+
                         // Resume view updating and data syncing after appending all new children.
                         // This will fire the add event to any views (if its the top level append)
                         me.callTreeStore('endFill', [result]);
-                    } else {
+                    }
+                    else {
                         // Make sure it is a record
                         node = me.createNode(node);
 
+                        /* eslint-disable-next-line max-len */
                         if (suppressEvents !== true && me.fireBubbledEvent('beforeappend', [me, node]) === false) {
                             Ext.resumeLayouts(true);
+
                             return false;
                         }
 
@@ -814,22 +855,31 @@ Ext.define('Ext.data.NodeInterface', {
 
                         // it's a move, make sure we move it cleanly
                         if (oldParent) {
+                            /* eslint-disable-next-line max-len */
                             if (suppressEvents !== true && node.fireBubbledEvent('beforemove', [node, oldParent, me, index]) === false) {
                                 Ext.resumeLayouts(true);
+
                                 return false;
                             }
+
                             // Return false if a beforeremove listener vetoed the remove
+                            /* eslint-disable-next-line max-len */
                             if (oldParent.removeChild(node, false, suppressEvents, oldParent.getTreeStore() === treeStore) === false) {
                                 Ext.resumeLayouts(true);
+
                                 return false;
                             }
                         }
 
                         // Coalesce sync operations across this operation
-                        // Node field setting (loaded, expanded) and node addition both trigger a sync if autoSync is set.
-                        treeStore && treeStore.beginUpdate();
+                        // Node field setting (loaded, expanded) and node addition both trigger
+                        // a sync if autoSync is set.
+                        if (treeStore) {
+                            treeStore.beginUpdate();
+                        }
 
                         index = me.childNodes.length;
+
                         if (index === 0) {
                             me.setFirstChild(node);
                         }
@@ -841,17 +891,21 @@ Ext.define('Ext.data.NodeInterface', {
                         me.setLastChild(node);
 
                         previousSibling = me.childNodes[index - 1];
+
                         if (previousSibling) {
                             node.previousSibling = previousSibling;
                             previousSibling.nextSibling = node;
+
                             previousSibling.updateInfo(commit, {
                                 isLast: false
                             });
+
                             // No need to trigger a ui update if we're doing a bulk update
                             if (!bulkUpdate) {
                                 previousSibling.triggerUIUpdate();
                             }
-                        } else {
+                        }
+                        else {
                             node.previousSibling = null;
                         }
 
@@ -873,14 +927,17 @@ Ext.define('Ext.data.NodeInterface', {
                         if (!me.isLoaded()) {
                             if (bulkUpdate) {
                                 me.data.loaded = true;
-                            } else {
+                            }
+                            else {
                                 me.set('loaded', true);
                             }
-                        } else if (me.childNodes.length === 1 && !bulkUpdate) {
+                        }
+                        else if (me.childNodes.length === 1 && !bulkUpdate) {
                             me.triggerUIUpdate();
                         }
 
-                        // Ensure connectors are correct by updating the UI on all intervening nodes (descendants) between last sibling and new node.
+                        // Ensure connectors are correct by updating the UI on all intervening
+                        // nodes (descendants) between last sibling and new node.
                         if (index && me.childNodes[index - 1].isExpanded() && !bulkUpdate) {
                             me.childNodes[index - 1].cascade(me.triggerUIUpdate);
                         }
@@ -893,14 +950,16 @@ Ext.define('Ext.data.NodeInterface', {
                         // deeply here to ensure everything is captured.
                         if (treeStore) {
                             treeStore.registerNode(me, !bulkUpdate);
+
                             if (bulkUpdate) {
                                 treeStore.registerNode(node);
                             }
                         }
 
                         // This node MUST fire its events first, so that if the TreeStore's
-                        // onNodeAppend loads and appends local children, the events are still in order;
-                        // This node appended this child first, before the descendant cascade.
+                        // onNodeAppend loads and appends local children, the events are still
+                        // in order. This node appended this child first, before the descendant
+                        // cascade.
                         if (suppressEvents !== true) {
                             me.fireBubbledEvent('append', [me, node, index]);
 
@@ -913,7 +972,8 @@ Ext.define('Ext.data.NodeInterface', {
                         // and registered.
                         me.callTreeStore('onNodeAppend', [node, index]);
 
-                        // Now that the store contains the new node, we cam inform it of field changes.
+                        // Now that the store contains the new node, we cam inform it of field
+                        // changes.
                         if (modifiedFields) {
                             node.callJoined('afterEdit', [modifiedFields]);
                         }
@@ -921,7 +981,8 @@ Ext.define('Ext.data.NodeInterface', {
                         result = node;
 
                         // Coalesce sync operations across this operation
-                        // Node field setting (loaded, expanded) and node addition both trigger a sync if autoSync is set.
+                        // Node field setting (loaded, expanded) and node addition both trigger
+                        // a sync if autoSync is set.
                         if (treeStore) {
                             treeStore.endUpdate();
                         }
@@ -936,13 +997,11 @@ Ext.define('Ext.data.NodeInterface', {
                 /**
                 * Returns the tree this node is in.
                 * @return {Ext.tree.Panel} The tree panel which owns this node.
-                * @deprecated 6.2.0
                 */
                 getOwnerTree: function() {
                     var store = this.getTreeStore();
-                    if (store) {
-                        return store.ownerTree;
-                    }
+
+                    return store && store.ownerTree;
                 },
 
                 /**
@@ -955,6 +1014,7 @@ Ext.define('Ext.data.NodeInterface', {
                     while (root && !root.treeStore) {
                         root = root.parentNode;
                     }
+
                     return root && root.treeStore;
                 },
 
@@ -963,6 +1023,8 @@ Ext.define('Ext.data.NodeInterface', {
                  * @param {Ext.data.NodeInterface} node The node to remove
                  * @param {Boolean} [erase=false] True to erase the record using the
                  * configured proxy.
+                 * @param {Boolean} [suppressEvents] (private)
+                 * @param {Boolean} [isMove] (private)
                  * @return {Ext.data.NodeInterface} The removed node
                  */
                 removeChild: function(node, erase, suppressEvents, isMove) {
@@ -975,7 +1037,8 @@ Ext.define('Ext.data.NodeInterface', {
                         removeContext,
                         removeRange = [];
 
-                    if (index === -1 || (suppressEvents !== true && me.fireBubbledEvent('beforeremove', [me, node, !!isMove]) === false)) {
+                    if (index === -1 || (suppressEvents !== true &&
+                        me.fireBubbledEvent('beforeremove', [me, node, !!isMove]) === false)) {
                         return false;
                     }
 
@@ -983,7 +1046,9 @@ Ext.define('Ext.data.NodeInterface', {
                     Ext.suspendLayouts();
 
                     // Coalesce sync operations across this operation
-                    treeStore && treeStore.beginUpdate();
+                    if (treeStore) {
+                        treeStore.beginUpdate();
+                    }
 
                     // remove it from childNodes collection
                     Ext.Array.erase(me.childNodes, index, 1);
@@ -992,16 +1057,18 @@ Ext.define('Ext.data.NodeInterface', {
                     if (me.firstChild === node) {
                         me.setFirstChild(node.nextSibling);
                     }
+
                     if (me.lastChild === node) {
                         me.setLastChild(node.previousSibling);
                     }
 
                     // Update previous sibling to point to its new next.
                     previousSibling = node.previousSibling;
+
                     if (previousSibling) {
                         node.previousSibling.nextSibling = node.nextSibling;
                     }
-                    
+
                     // Update the next sibling to point to its new previous
                     if (node.nextSibling) {
                         node.nextSibling.previousSibling = node.previousSibling;
@@ -1029,7 +1096,8 @@ Ext.define('Ext.data.NodeInterface', {
                         });
 
                         // We're removing the last child.
-                        // Ensure connectors are correct by updating the UI on all intervening nodes (descendants) between previous sibling and new node.
+                        // Ensure connectors are correct by updating the UI on all intervening
+                        // nodes (descendants) between previous sibling and new node.
                         if (!bulkUpdate) {
                             if (previousSibling.isExpanded()) {
                                 previousSibling.cascade(me.triggerUIUpdate);
@@ -1057,6 +1125,7 @@ Ext.define('Ext.data.NodeInterface', {
                             previousSibling: node.previousSibling,
                             nextSibling: node.nextSibling
                         };
+
                         // Inform the TreeStore so that descendant nodes can be removed.
                         me.callTreeStore('beforeNodeRemove', [[node], !!isMove, removeRange]);
 
@@ -1072,16 +1141,17 @@ Ext.define('Ext.data.NodeInterface', {
                     // can tell where the removal took place
                     if (erase) {
                         node.erase(true);
-                    } else {
+                    }
+                    else {
                         node.clear();
                     }
 
                     // Must clear the parentNode silently upon remove from the TreeStore.
                     // Any subsequent append to any node will trigger dirtiness
                     // (It may be added to a different node of the same ID, e.g. "root").
-                    // lastParentId still needed for TreeStore's clearRemovedOnLoad functionality to be able to link
-                    // nodes in the removed array to nodes under the reloading node's tree.
-                    // to be able to 
+                    // lastParentId still needed for TreeStore's clearRemovedOnLoad functionality
+                    // to be able to link nodes in the removed array to nodes under the reloading
+                    // node's tree.
                     if (!isMove) {
                         node.set({
                             parentId: null,
@@ -1099,10 +1169,11 @@ Ext.define('Ext.data.NodeInterface', {
 
                 /**
                  * Creates a copy (clone) of this Node.
-                 * @param {String} [id] A new id, defaults to this Node's id.
-                 * @param {Ext.data.session.Session} [session] The session to which the new record belongs.
-                 * @param {Boolean} [deep=false] True to recursively copy all child Nodes into the new Node.
-                 * False to copy without child Nodes.
+                 * @param {String} [newId] A new id, defaults to this Node's id.
+                 * @param {Ext.data.session.Session} [session] The session to which the
+                 * new record belongs.
+                 * @param {Boolean} [deep=false] True to recursively copy all child nodes
+                 * into the new Node. False to copy without child Nodes.
                  * @return {Ext.data.NodeInterface} A copy of this Node.
                  */
                 copy: function(newId, session, deep) {
@@ -1117,9 +1188,11 @@ Ext.define('Ext.data.NodeInterface', {
                     // Second argument is Session in superclass copy method.
                     if (session && session.isSession) {
                         args.push(session);
-                    } else if (arguments.length < 3) {
+                    }
+                    else if (arguments.length < 3) {
                         deep = session;
                     }
+
                     result = me.callParent(args);
 
                     // Move child nodes across to the copy if required
@@ -1128,6 +1201,7 @@ Ext.define('Ext.data.NodeInterface', {
                             result.appendChild(me.childNodes[i].copy(undefined, true));
                         }
                     }
+
                     return result;
                 },
 
@@ -1139,21 +1213,20 @@ Ext.define('Ext.data.NodeInterface', {
                  * @param {Boolean} [resetChildren=false] True to reset child nodes
                  */
                 clear: function(erase, resetChildren) {
-                    var me = this,
-                        data;
+                    var me = this;
 
                     // clear any references from the node
                     me.parentNode = me.previousSibling = me.nextSibling = null;
-                    
+
                     if (erase) {
                         me.firstChild = me.lastChild = me.childNodes = null;
                     }
-                    
+
                     // This is used by TreeStore for clearing root node state on reload
                     if (resetChildren) {
                         me.firstChild = me.lastChild = null;
                         me.childNodes.length = 0;
-                        
+
                         if (me.data) {
                             me.data.children = null;
                         }
@@ -1164,10 +1237,8 @@ Ext.define('Ext.data.NodeInterface', {
                     var me = this,
                         childNodes = me.childNodes,
                         parentNode = me.parentNode,
-                        len,
-                        i,
-                        node,
-                        treeStore = me.getTreeStore();
+                        treeStore = me.getTreeStore(),
+                        node, i, len;
 
                     // Ensure Model operations are performed.
                     // Store removal is NOT handled.
@@ -1176,27 +1247,32 @@ Ext.define('Ext.data.NodeInterface', {
 
                     // If called in recursion from here, there'll be no parentNode
                     if (parentNode) {
-                        // TreeStore.onNodeRemove also adds invisible descendant nodes to the remove tracking array.
+                        // TreeStore.onNodeRemove also adds invisible descendant nodes to the remove
+                        // tracking array.
                         parentNode.removeChild(me);
                     }
-                    // If we are the root, there'll be no parent node. It's a special case. We must update the TreeStore's root with a null node.
+                    // If we are the root, there'll be no parent node. It's a special case. We must
+                    // update the TreeStore's root with a null node.
                     else if (me.get('root')) {
                         treeStore.setRoot(null);
                     }
-                    // Removing a node removes the node and all *VISIBLE* descendant nodes from the Store and
-                    // adds them to the remove tracking array.
+                    // Removing a node removes the node and all *VISIBLE* descendant nodes from the
+                    // Store and adds them to the remove tracking array.
                     //
                     // After this point, no descendant nodes have a connection to the TreeStore.
 
                     // Coalesce sync operations across this operation
-                    treeStore && treeStore.beginUpdate();
+                    if (treeStore) {
+                        treeStore.beginUpdate();
+                    }
 
                     // Recurse down dropping all descendants.
                     // This will NOT remove them from the store's data collection
                     for (i = 0, len = childNodes ? childNodes.length : 0; i < len; i++) {
                         node = childNodes[i];
 
-                        // Detach descendant nodes so that they do not all attempt to perform removal from the parent.
+                        // Detach descendant nodes so that they do not all attempt to perform
+                        // removal from the parent.
                         node.clear();
 
                         // Drop descendant nodes.
@@ -1204,18 +1280,20 @@ Ext.define('Ext.data.NodeInterface', {
                     }
 
                     // Coalesce sync operations across this operation
-                    treeStore && treeStore.endUpdate();
+                    if (treeStore) {
+                        treeStore.endUpdate();
+                    }
                 },
 
                 /**
                  * Destroys the node.
+                 * @param {Boolean} [options] (private)
                  */
                 erase: function(options) {
                     var me = this,
                         childNodes = me.childNodes,
                         len = childNodes && childNodes.length,
-                        i,
-                        node;
+                        i, node;
 
                     // This unhooks this node from the tree structure
                     // The UI is updated.
@@ -1226,6 +1304,7 @@ Ext.define('Ext.data.NodeInterface', {
                     // this method has to recurse to do all its stuff.
                     me.clear(true);
                     me.callParent([options]);
+
                     for (i = 0; i < len; i++) {
                         node = childNodes[i];
 
@@ -1237,22 +1316,24 @@ Ext.define('Ext.data.NodeInterface', {
                 },
 
                 /**
-                 * Inserts the first node before the second node in this nodes childNodes collection.
-                 * @param {Ext.data.NodeInterface/Ext.data.NodeInterface[]/Object} node The node to insert
-                 * @param {Ext.data.NodeInterface} refNode The node to insert before (if null the node is appended)
+                 * Inserts the first node before the second node in this nodes childNodes
+                 * collection.
+                 * @param {Ext.data.NodeInterface/Ext.data.NodeInterface[]/Object} node The node
+                 * to insert
+                 * @param {Ext.data.NodeInterface} refNode The node to insert before (if null the
+                 * node is appended)
+                 * @param {Boolean} [suppressEvents] (private)
                  * @return {Ext.data.NodeInterface} The inserted node
                  */
                 insertBefore: function(node, refNode, suppressEvents) {
                     var me = this,
-                        index     = me.indexOf(refNode),
+                        index = me.indexOf(refNode),
                         oldParent = node.parentNode,
-                        refIndex  = index,
+                        refIndex = index,
                         childCount, previousSibling, i,
                         treeStore = me.getTreeStore(),
                         bulkUpdate = treeStore && treeStore.bulkUpdate,
-                        modifiedFields,
-                        sibling,
-                        siblingModifiedFields;
+                        modifiedFields, sibling, siblingModifiedFields;
 
                     if (!refNode) { // like standard Dom, refNode can be null for append
                         return me.appendChild(node);
@@ -1266,6 +1347,7 @@ Ext.define('Ext.data.NodeInterface', {
                     // Make sure it is a record with the NodeInterface
                     node = me.createNode(node);
 
+                    /* eslint-disable-next-line max-len */
                     if (suppressEvents !== true && me.fireBubbledEvent('beforeinsert', [me, node, refNode]) === false) {
                         return false;
                     }
@@ -1277,20 +1359,26 @@ Ext.define('Ext.data.NodeInterface', {
 
                     // it's a move, make sure we move it cleanly
                     if (oldParent) {
+                        /* eslint-disable-next-line max-len */
                         if (suppressEvents !== true && node.fireBubbledEvent('beforemove', [node, oldParent, me, index, refNode]) === false) {
                             return false;
                         }
+
                         // Return false if a beforeremove listener vetoed the remove
+                        /* eslint-disable-next-line max-len */
                         if (oldParent.removeChild(node, false, suppressEvents, oldParent.getTreeStore() === treeStore) === false) {
                             return false;
                         }
                     }
 
                     // Coalesce sync operations across this operation
-                    // Node field setting (loaded, expanded) and node addition both trigger a sync if autoSync is set.
-                    // Nodes acquire a treeStore early now by virtue of getting a parentNode, so set operations on them will
-                    // arrive to this Store's onCollectionUpdate
-                    treeStore && treeStore.beginUpdate();
+                    // Node field setting (loaded, expanded) and node addition both trigger a sync
+                    // if autoSync is set.
+                    // Nodes acquire a treeStore early now by virtue of getting a parentNode, so
+                    // set operations on them will arrive to this Store's onCollectionUpdate
+                    if (treeStore) {
+                        treeStore.beginUpdate();
+                    }
 
                     if (refIndex === 0) {
                         me.setFirstChild(node);
@@ -1303,10 +1391,12 @@ Ext.define('Ext.data.NodeInterface', {
                     refNode.previousSibling = node;
 
                     previousSibling = me.childNodes[refIndex - 1];
+
                     if (previousSibling) {
                         node.previousSibling = previousSibling;
                         previousSibling.nextSibling = node;
-                    } else {
+                    }
+                    else {
                         node.previousSibling = null;
                     }
 
@@ -1318,15 +1408,17 @@ Ext.define('Ext.data.NodeInterface', {
                         index: refIndex,
                         isFirst: refIndex === 0,
                         isLast: false,
-                        depth: (me.data.depth||0) + 1
+                        depth: (me.data.depth || 0) + 1
                     });
 
                     // Update the index for all following siblings.
                     for (i = refIndex + 1, childCount = me.childNodes.length; i < childCount; i++) {
                         sibling = me.childNodes[i];
+
                         siblingModifiedFields = sibling.updateInfo(false, {
                             index: i
                         });
+
                         if (siblingModifiedFields) {
                             sibling.callJoined('afterEdit', [siblingModifiedFields]);
                         }
@@ -1335,7 +1427,8 @@ Ext.define('Ext.data.NodeInterface', {
                     if (!me.isLoaded()) {
                         if (bulkUpdate) {
                             me.data.loaded = true;
-                        } else {
+                        }
+                        else {
                             me.set('loaded', true);
                         }
                     }
@@ -1365,13 +1458,15 @@ Ext.define('Ext.data.NodeInterface', {
                     // Inform the TreeStore so that the node can be registered and added
                     me.callTreeStore('onNodeInsert', [node, refIndex]);
 
-                    // Now that the store contains the new record, we cam inform it of field changes.
+                    // Now that the store contains the new record, we cam inform it of
+                    // field changes.
                     if (modifiedFields) {
                         node.callJoined('afterEdit', [modifiedFields]);
                     }
 
                     // Coalesce sync operations across this operation
-                    // Node field setting (loaded, expanded) and node addition both trigger a sync if autoSync is set.
+                    // Node field setting (loaded, expanded) and node addition both trigger a sync
+                    // if autoSync is set.
                     if (treeStore) {
                         treeStore.endUpdate();
                     }
@@ -1387,6 +1482,7 @@ Ext.define('Ext.data.NodeInterface', {
                  */
                 insertChild: function(index, node) {
                     var sibling = this.childNodes[index];
+
                     if (sibling) {
                         return this.insertBefore(node, sibling);
                     }
@@ -1396,10 +1492,11 @@ Ext.define('Ext.data.NodeInterface', {
                 },
 
                 /**
-                 * @private
-                 * Used by {@link Ext.tree.Column#initTemplateRendererData} to determine whether a node is the last *visible*
+                 * Used by {@link Ext.tree.Column#initTemplateRendererData} to determine whether
+                 * a node is the last *visible*
                  * sibling.
-                 * 
+                 *
+                 * @private
                  */
                 isLastVisible: function() {
                     var me = this,
@@ -1414,27 +1511,36 @@ Ext.define('Ext.data.NodeInterface', {
                             if (next.data.visible) {
                                 return false;
                             }
+
                             next = next.nextSibling;
                         }
+
                         return true;
                     }
+
                     return result;
                 },
 
                 /**
                  * Removes this node from its parent.
                  *
-                 * **If** the node is not phantom (only added in the client side), then it may be marked for removal.
+                 * **If** the node is not phantom (only added in the client side), then it may be
+                 * marked for removal.
                  *
-                 * If the owning {@link Ext.data.TreeStore tree store} is set to {@link Ext.data.ProxyStore#trackRemoved track removed}
-                 * then the node will be added to the stack of nodes due to be removed the next time the store is synced with the server.
+                 * If the owning {@link Ext.data.TreeStore tree store} is set to
+                 * {@link Ext.data.ProxyStore#trackRemoved track removed} then the node will be
+                 * added to the stack of nodes due to be removed the next time the store is
+                 * synced with the server.
                  *
-                 * If the owning {@link Ext.data.TreeStore tree store} is set to {@link Ext.data.ProxyStore#autoSync auto synchronize}
-                 * then the synchronize request will be initiated immediately.
+                 * If the owning {@link Ext.data.TreeStore tree store} is set to
+                 * {@link Ext.data.ProxyStore#autoSync auto synchronize} then the synchronize
+                 * request will be initiated immediately.
                  *
-                 * @param {Boolean} [erase=false] True to erase the node using the configured proxy. This is only needed when the
-                 * owning {@link Ext.data.TreeStore tree store} is not taking care of synchronization operations.
+                 * @param {Boolean} [erase=false] True to erase the node using the configured
+                 * proxy. This is only needed when the owning {@link Ext.data.TreeStore tree store}
+                 * is not taking care of synchronization operations.
                  *
+                 * @param {Boolean} [suppressEvents] (private)
                  * @return {Ext.data.NodeInterface} this
                  */
                 remove: function(erase, suppressEvents) {
@@ -1443,10 +1549,12 @@ Ext.define('Ext.data.NodeInterface', {
 
                     if (parentNode) {
                         parentNode.removeChild(me, erase, suppressEvents);
-                    } else if (erase) {
+                    }
+                    else if (erase) {
                         // If we don't have a parent, just erase it
                         me.erase(true);
                     }
+
                     return me;
                 },
 
@@ -1454,6 +1562,8 @@ Ext.define('Ext.data.NodeInterface', {
                  * Removes all child nodes from this node.
                  * @param {Boolean} [erase=false] True to erase the node using the configured
                  * proxy.
+                 * @param {Boolean} [suppressEvents] (private)
+                 * @param {Boolean} [fromParent] (private)
                  * @return {Ext.data.NodeInterface} this
                  */
                 removeAll: function(erase, suppressEvents, fromParent) {
@@ -1468,7 +1578,7 @@ Ext.define('Ext.data.NodeInterface', {
 
                     // Avoid all this if nothing to remove
                     if (!len) {
-                        return;
+                        return me;
                     }
 
                     // Inform the TreeStore so that descendant nodes can be removed.
@@ -1516,10 +1626,11 @@ Ext.define('Ext.data.NodeInterface', {
                     me.firstChild = me.lastChild = null;
 
                     childNodes.length = 0;
+
                     if (!fromParent) {
                         me.triggerUIUpdate();
                     }
-                    
+
                     return me;
                 },
 
@@ -1536,6 +1647,7 @@ Ext.define('Ext.data.NodeInterface', {
                  * Replaces one child node in this node with another.
                  * @param {Ext.data.NodeInterface} newChild The replacement node
                  * @param {Ext.data.NodeInterface} oldChild The node to replace
+                 * @param {Boolean} [suppressEvents] (private)
                  * @return {Ext.data.NodeInterface} The replaced node
                  */
                 replaceChild: function(newChild, oldChild, suppressEvents) {
@@ -1543,18 +1655,19 @@ Ext.define('Ext.data.NodeInterface', {
 
                     this.removeChild(oldChild, false, suppressEvents);
                     this.insertBefore(newChild, s, suppressEvents);
+
                     return oldChild;
                 },
 
                 /**
                  * Returns the index of a child node
-                 * @param {Ext.data.NodeInterface} node
-                 * @return {Number} The index of the node or -1 if it was not found
+                 * @param {Ext.data.NodeInterface} child
+                 * @return {Number} The index of the child node or -1 if it was not found.
                  */
                 indexOf: function(child) {
                     return Ext.Array.indexOf(this.childNodes, child);
                 },
-                
+
                 /**
                  * Returns the index of a child node that matches the id
                  * @param {String} id The id of the node to find
@@ -1564,18 +1677,20 @@ Ext.define('Ext.data.NodeInterface', {
                     var childNodes = this.childNodes,
                         len = childNodes.length,
                         i = 0;
-                        
+
                     for (; i < len; ++i) {
                         if (childNodes[i].getId() === id) {
                             return i;
-                        }    
+                        }
                     }
+
                     return -1;
                 },
 
                 /**
                  * Gets the hierarchical path from the root of the current node.
-                 * @param {String} [field] The field to construct the path from. Defaults to the model idProperty.
+                 * @param {String} [field] The field to construct the path from. Defaults to the
+                 * model idProperty.
                  * @param {String} [separator='/'] A separator to use.
                  * @return {String} The node path
                  */
@@ -1583,6 +1698,7 @@ Ext.define('Ext.data.NodeInterface', {
                     field = field || this.idProperty;
                     separator = separator || '/';
 
+                    /* eslint-disable-next-line vars-on-top */
                     var path = [this.get(field)],
                         parent = this.parentNode;
 
@@ -1590,6 +1706,7 @@ Ext.define('Ext.data.NodeInterface', {
                         path.unshift(parent.get(field));
                         parent = parent.parentNode;
                     }
+
                     return separator + path.join(separator);
                 },
 
@@ -1602,53 +1719,71 @@ Ext.define('Ext.data.NodeInterface', {
                 },
 
                 /**
-                 * Bubbles up the tree from this node, calling the specified function with each node. The arguments to the function
-                 * will be the args provided or the current node. If the function returns false at any point,
-                 * the bubble is stopped.
+                 * Bubbles up the tree from this node, calling the specified function with each
+                 * node. The arguments to the function will be the args provided or the current
+                 * node. If the function returns false at any point, the bubble is stopped.
                  * @param {Function} fn The function to call
-                 * @param {Object} [scope] The scope (this reference) in which the function is executed. Defaults to the current Node.
-                 * @param {Array} [args] The args to call the function with. Defaults to passing the current Node.
+                 * @param {Object} [scope] The scope (this reference) in which the function
+                 * is executed. Defaults to the current Node.
+                 * @param {Array} [args] The args to call the function with. Defaults to passing
+                 * the current Node.
                  */
                 bubble: function(fn, scope, args) {
                     var p = this;
+
                     while (p) {
                         if (fn.apply(scope || p, args || [p]) === false) {
                             break;
                         }
+
                         p = p.parentNode;
                     }
                 },
 
                 /**
-                 * Cascades down the tree from this node, calling the specified functions with each node. The arguments to the function
-                 * will be the args provided or the current node. If the `before` function returns false at any point,
-                 * the cascade is stopped on that branch.
+                 * Cascades down the tree from this node, calling the specified functions with each
+                 * node. The arguments to the function will be the args provided or the current
+                 * node. If the `before` function returns false at any point, the cascade is
+                 * stopped on that branch.
                  *
-                 * Note that the 3 argument form passing `fn, scope, args` is still supported. The `fn` function is as before, called
-                 * *before* cascading down into child nodes. If it returns `false`, the child nodes are not traversed.
-                 *
-                 * @param {Object} spec An object containing before and after functions, scope and an argument list.
-                 * @param {Function} [spec.before] A function to call on a node *before* cascading down into child nodes.
+                 * Note that the 3 argument form passing `fn, scope, args` is still supported.
+                 * The `fn` function is as before, called *before* cascading down into child nodes.
                  * If it returns `false`, the child nodes are not traversed.
-                 * @param {Function} [spec.after] A function to call on a node *after* cascading down into child nodes.
-                 * @param {Object} [spec.scope] The scope (this reference) in which the functions are executed. Defaults to the current Node.
-                 * @param {Array} [spec.args] The args to call the function with. Defaults to passing the current Node.
+                 *
+                 * @param {Object/Function} spec An object containing `before` and `after`
+                 * functions, scope and an argument list or simply the `before` function.
+                 * @param {Function} [spec.before] A function to call on a node *before*
+                 * cascading down into child nodes. If it returns `false`, the child nodes
+                 * are not traversed.
+                 * @param {Function} [spec.after] A function to call on a node *after*
+                 * cascading down into child nodes.
+                 * @param {Object} [spec.scope] The scope (this reference) in which the
+                 * functions are executed. Defaults to the current Node.
+                 * @param {Array} [spec.args] The args to call the function with. Defaults
+                 * to passing the current Node.
+                 * @param {Object} [scope] If `spec` is the `before` function instead of
+                 * an object, this argument is the `this` pointer.
+                 * @param {Array} [args] If `spec` is the `before` function instead of
+                 * an object, this argument is the `args` to pass.
+                 * @param {Function} [after] If `spec` is the `before` function instead of
+                 * an object, this argument is the `after` function to call.
                  */
-                cascade: function(before, scope, args, after) {
-                    var me = this;
+                cascade: function(spec, scope, args, after) {
+                    var me = this,
+                        before = spec,
+                        childNodes, length, i;
 
-                    if (arguments.length === 1 && !Ext.isFunction(before)) {
-                        after = before.after;
-                        scope = before.scope;
-                        args = before.args;
-                        before = before.before;
+                    if (arguments.length === 1 && !Ext.isFunction(spec)) {
+                        after = spec.after;
+                        scope = spec.scope;
+                        args = spec.args;
+                        before = spec.before;
                     }
-                    if (!before || before.apply(scope || me, args || [me]) !== false) {
-                        var childNodes = me.childNodes,
-                            length     = childNodes.length,
-                            i;
 
-                        for (i = 0; i < length; i++) {
+                    if (!before || before.apply(scope || me, args || [me]) !== false) {
+                        childNodes = me.childNodes;
+
+                        for (i = 0, length = childNodes.length; i < length; i++) {
                             childNodes[i].cascade.call(childNodes[i], before, scope, args, after);
                         }
 
@@ -1676,7 +1811,7 @@ Ext.define('Ext.data.NodeInterface', {
                  */
                 eachChild: function(fn, scope, args) {
                     var childNodes = this.childNodes,
-                        length     = childNodes.length,
+                        length = childNodes.length,
                         i;
 
                     for (i = 0; i < length; i++) {
@@ -1690,34 +1825,40 @@ Ext.define('Ext.data.NodeInterface', {
                  * Finds the first child that has the attribute with the specified value.
                  * @param {String} attribute The attribute name
                  * @param {Object} value The value to search for
-                 * @param {Boolean} [deep=false] True to search through nodes deeper than the immediate children
+                 * @param {Boolean} [deep=false] True to search through nodes deeper than the
+                 * immediate children
                  * @return {Ext.data.NodeInterface} The found child or null if none was found
                  */
                 findChild: function(attribute, value, deep) {
                     return this.findChildBy(function() {
-                        return this.get(attribute) == value;
+                        return this.get(attribute) == value; // eslint-disable-line eqeqeq
                     }, null, deep);
                 },
 
                 /**
-                 * Finds the first child by a custom function. The child matches if the function passed returns true.
-                 * @param {Function} fn A function which must return true if the passed Node is the required Node.
-                 * @param {Object} [scope] The scope (this reference) in which the function is executed. Defaults to the Node being tested.
-                 * @param {Boolean} [deep=false] True to search through nodes deeper than the immediate children
+                 * Finds the first child by a custom function. The child matches if the function
+                 * passed returns true.
+                 * @param {Function} fn A function which must return true if the passed Node is the
+                 * required Node.
+                 * @param {Object} [scope] The scope (this reference) in which the function is
+                 * executed. Defaults to the Node being tested.
+                 * @param {Boolean} [deep=false] True to search through nodes deeper than the
+                 * immediate children
                  * @return {Ext.data.NodeInterface} The found child or null if none was found
                  */
                 findChildBy: function(fn, scope, deep) {
                     var cs = this.childNodes,
-                        len = cs.length,
-                        i = 0, n, res;
+                        i, len, n, res;
 
-                    for (; i < len; i++) {
+                    for (i = 0, len = cs.length; i < len; i++) {
                         n = cs[i];
+
                         if (fn.call(scope || n, n) === true) {
                             return n;
                         }
                         else if (deep) {
                             res = n.findChildBy(fn, scope, deep);
+
                             if (res !== null) {
                                 return res;
                             }
@@ -1743,44 +1884,51 @@ Ext.define('Ext.data.NodeInterface', {
                  */
                 isAncestor: function(node) {
                     var p = this.parentNode;
+
                     while (p) {
                         if (p === node) {
                             return true;
                         }
+
                         p = p.parentNode;
                     }
+
                     return false;
                 },
 
                 /**
                  * Sorts this nodes children using the supplied sort function.
-                 * @param {Function} [sortFn] A function which, when passed two Nodes, returns -1, 0 or 1 depending upon required sort order.
+                 * @param {Function} [sortFn] A function which, when passed two Nodes, returns -1,
+                 * 0 or 1 depending upon required sort order.
                  *
-                 * It omitted, the node is sorted according to the existing sorters in the owning {@link Ext.data.TreeStore TreeStore}.
+                 * It omitted, the node is sorted according to the existing sorters in the owning
+                 * {@link Ext.data.TreeStore TreeStore}.
                  * @param {Boolean} [recursive=false] True to apply this sort recursively
                  * @param {Boolean} [suppressEvent=false] True to not fire a sort event.
                  */
                 sort: function(sortFn, recursive, suppressEvent) {
                     var me = this,
-                        childNodes  = me.childNodes,
+                        childNodes = me.childNodes,
                         ln = childNodes.length,
-                        i, n, info = {
+                        info = {
                             isFirst: true
-                        };
+                        },
+                        i, n;
 
                     if (ln > 0) {
                         if (!sortFn) {
                             sortFn = me.getTreeStore().getSortFn();
                         }
+
                         Ext.Array.sort(childNodes, sortFn);
                         me.setFirstChild(childNodes[0]);
                         me.setLastChild(childNodes[ln - 1]);
 
                         for (i = 0; i < ln; i++) {
                             n = childNodes[i];
-                            n.previousSibling = childNodes[i-1];
-                            n.nextSibling = childNodes[i+1];
-                            
+                            n.previousSibling = childNodes[i - 1];
+                            n.nextSibling = childNodes[i + 1];
+
                             // Update the index and first/last status of children
                             info.isLast = (i === ln - 1);
                             info.index = i;
@@ -1817,9 +1965,10 @@ Ext.define('Ext.data.NodeInterface', {
                 isLoaded: function() {
                     return this.get('loaded');
                 },
-                
+
                 /**
-                 * Returns true if this node is a branch node, and the entire branch is fully loaded.
+                 * Returns true if this node is a branch node, and the entire branch is fully
+                 * loaded.
                  *
                  * Using this method, it is possible to ascertain whether an
                  * `expandAll()` call (_classic toolkit TreePanel method_) will have 
@@ -1834,9 +1983,11 @@ Ext.define('Ext.data.NodeInterface', {
                             if (!node.isLeaf()) {
                                 isBranchLoaded = isBranchLoaded || node.isBranchLoaded();
                             }
+
                             return isBranchLoaded;
                         });
                     }
+
                     return isBranchLoaded;
                 },
 
@@ -1865,12 +2016,15 @@ Ext.define('Ext.data.NodeInterface', {
                  */
                 isVisible: function() {
                     var parent = this.parentNode;
+
                     while (parent) {
                         if (!parent.isExpanded()) {
                             return false;
                         }
+
                         parent = parent.parentNode;
                     }
+
                     return true;
                 },
 
@@ -1894,33 +2048,41 @@ Ext.define('Ext.data.NodeInterface', {
                         if (me.isLoading()) {
                             me.on('expand', function() {
                                 me.expand(recursive, callback, scope);
-                            }, me, {single: true});
-                        } else {
+                            }, me, { single: true });
+                        }
+                        else {
                             // Now we check if this record is already expanding or expanded
                             if (!me.isExpanded()) {
 
                                 if (me.fireBubbledEvent('beforeexpand', [me]) !== false) {
 
-                                    // Here we are testing if all the descendant nodes required by a recursive expansion
-                                    // are available without an asynchronous store load.
+                                    // Here we are testing if all the descendant nodes required
+                                    // by a recursive expansion are available without an
+                                    // asynchronous store load.
                                     //
-                                    // That is either all branch nodes are loaded, or the store loads synchronously.
+                                    // That is either all branch nodes are loaded, or the store
+                                    // loads synchronously.
                                     //
-                                    // If that is the case, then we do not want the TreeStore to fire add events
-                                    // and update the UI (and layout) for every batch of child nodes inserted.
-                                    // Instead, we suspend the add event, and at the end, fire a data refresh
-                                    // so that the UI gets only one update. It will be a view refresh, but will
-                                    // still be more efficient.
+                                    // If that is the case, then we do not want the TreeStore to
+                                    // fire add events and update the UI (and layout) for every
+                                    // batch of child nodes inserted.
+                                    // Instead, we suspend the add event, and at the end, fire
+                                    // a data refresh so that the UI gets only one update. It will
+                                    // be a view refresh, but will still be more efficient.
                                     if (recursive) {
-                                        // Only the topmost node in a recursive expand should suspend the add event
-                                        // and fire the refresh event, so if our parent is synchronously, recursively expanding,
+                                        // Only the topmost node in a recursive expand should
+                                        // suspend the add event and fire the refresh event, so if
+                                        // our parent is synchronously, recursively expanding,
                                         // we just flag that we are doing likewise.
-                                        if (me.parentNode && me.parentNode.isSynchronousRecursiveExpand) {
+                                        if (me.parentNode &&
+                                            me.parentNode.isSynchronousRecursiveExpand) {
                                             me.isSynchronousRecursiveExpand = true;
                                         }
                                         else {
                                             treeStore = me.getTreeStore();
-                                            if (treeStore.getProxy().isSynchronous || me.isBranchLoaded()) {
+
+                                            if (treeStore.getProxy().isSynchronous ||
+                                                me.isBranchLoaded()) {
                                                 me.isSynchronousRecursiveExpand = true;
                                                 treeStore.suspendEvent('add', 'datachanged');
                                                 resumeAddEvent = true;
@@ -1928,30 +2090,39 @@ Ext.define('Ext.data.NodeInterface', {
                                         }
                                     }
 
-                                    // Inform the TreeStore that we intend to expand, and that it should call onChildNodesAvailable
-                                    // when the child nodes are available
+                                    // Inform the TreeStore that we intend to expand, and that
+                                    // it should call onChildNodesAvailable when the child nodes
+                                    // are available
+                                    /* eslint-disable-next-line max-len */
                                     me.callTreeStore('onBeforeNodeExpand', [me.onChildNodesAvailable, me, [recursive, callback, scope]]);
 
-                                    // If we suspended the add event so that all additions of descendant nodes
-                                    // did not update the UI, then resume the event here, and refresh the data
+                                    // If we suspended the add event so that all additions of
+                                    // descendant nodes did not update the UI, then resume the
+                                    // event here, and refresh the data
                                     if (resumeAddEvent) {
                                         treeStore.resumeEvent('add', 'datachanged');
 
-                                        // Fire the generic datachanged event in addition to the refresh event
+                                        // Fire the generic datachanged event in addition to the
+                                        // refresh event
                                         treeStore.fireEvent('datachanged', treeStore);
                                         treeStore.fireEvent('refresh', treeStore);
                                     }
+
                                     me.isSynchronousRecursiveExpand = false;
                                 }
 
-                            } else if (recursive) {
-                                // If it is is already expanded but we want to recursively expand then call expandChildren
+                            }
+                            else if (recursive) {
+                                // If it is is already expanded but we want to recursively expand
+                                // then call expandChildren
                                 me.expandChildren(true, callback, scope);
-                            } else {
+                            }
+                            else {
                                 Ext.callback(callback, scope || me, [me.childNodes]);
                             }
                         }
-                    } else {
+                    }
+                    else {
                         // If it's not then we fire the callback right away
                         Ext.callback(callback, scope || me); // leaf = no childNodes
                     }
@@ -1959,18 +2130,18 @@ Ext.define('Ext.data.NodeInterface', {
 
                 /**
                  * @private
-                 * Called as a callback from the {@link Ext.data.TreeStore#onBeforeNodeExpand} when the child nodes needed by {@link #method-expand} have been loaded and appended.
+                 * Called as a callback from the {@link Ext.data.TreeStore#onBeforeNodeExpand} when
+                 * the child nodes needed by {@link #method-expand} have been loaded and appended.
                  */
                 onChildNodesAvailable: function(records, recursive, callback, scope) {
                     var me = this,
                         treeStore = me.getTreeStore(),
                         bulkUpdate = treeStore && treeStore.bulkUpdate,
-                        ancestor,
-                        i,
-                        collapsedAncestors;
+                        ancestor, collapsedAncestors, i;
 
                     // Bracket expansion with layout suspension.
-                    // In optimum case, when recursive, child node data are loaded and expansion is synchronous within the suspension.
+                    // In optimum case, when recursive, child node data are loaded and expansion is
+                    // synchronous within the suspension.
                     Ext.suspendLayouts();
 
                     // Collect collapsed ancestors.
@@ -1982,23 +2153,30 @@ Ext.define('Ext.data.NodeInterface', {
                         }
                     }
 
-                    // Not structural. The TreeView's onUpdate listener just updates the [+] icon to [-] in response.
+                    // Not structural. The TreeView's onUpdate listener just updates the [+] icon
+                    // to [-] in response.
                     if (bulkUpdate || !treeStore.isVisible(me)) {
                         me.data.expanded = true;
-                    } else {
+                    }
+                    else {
                         me.set('expanded', true);
                     }
 
-                    // Set the intervening collapsed nodes to expanded state, then expand the topmost.
-                    // The whole descendant tree will be inserted into the collection below the topmost ancestor.
+                    // Set the intervening collapsed nodes to expanded state, then expand the
+                    // topmost.
+                    // The whole descendant tree will be inserted into the collection below the
+                    // topmost ancestor.
                     if (collapsedAncestors) {
                         // Ensure intervening collapsed nodes have their status set to expanded
-                        // Not structural. The TreeView's onUpdate listener just updates the [+] icon to [-] in response.
+                        // Not structural. The TreeView's onUpdate listener just updates the
+                        // [+] icon to [-] in response.
                         for (i = 1; i < collapsedAncestors.length; i++) {
                             ancestor = collapsedAncestors[i];
+
                             if (bulkUpdate || !treeStore.isVisible(ancestor)) {
                                 ancestor.data.expanded = true;
-                            } else {
+                            }
+                            else {
                                 ancestor.set('expanded', true);
                             }
                         }
@@ -2013,7 +2191,8 @@ Ext.define('Ext.data.NodeInterface', {
                             ancestor = collapsedAncestors[i];
                             ancestor.fireBubbledEvent('expand', [ancestor, ancestor.childNodes]);
                         }
-                    } else {
+                    }
+                    else {
                         // TreeStore's onNodeExpand inserts the child nodes below the parent
                         me.callTreeStore('onNodeExpand', [records, false]);
                     }
@@ -2023,7 +2202,8 @@ Ext.define('Ext.data.NodeInterface', {
                     // Call the expandChildren method if recursive was set to true
                     if (recursive) {
                         me.expandChildren(true, callback, scope);
-                    } else {
+                    }
+                    else {
                         Ext.callback(callback, scope || me, [me.childNodes]);
                     }
 
@@ -2033,10 +2213,12 @@ Ext.define('Ext.data.NodeInterface', {
                 /**
                  * Expand all the children of this node.
                  * @param {Boolean} [recursive=false] True to recursively expand all the children
-                 * @param {Function} [callback] The function to execute once all the children are expanded
-                 * @param {Object} [scope] The scope to run the callback in
+                 * @param {Function} [callback] The function to execute once all the children are
+                 * expanded
+                 * @param {Object} [scope] The `this` pointer for the callback.
+                 * @param {Boolean} [singleExpand] (private)
                  */
-                expandChildren: function(recursive, callback, scope, /* private */ singleExpand) {
+                expandChildren: function(recursive, callback, scope, singleExpand) {
                     var me = this,
                         origCallback, i, allNodes, expandNodes, ln, node, treeStore;
 
@@ -2055,16 +2237,19 @@ Ext.define('Ext.data.NodeInterface', {
                         treeStore = me.getTreeStore();
                         singleExpand = treeStore && treeStore.singleExpand;
                     }
+
                     allNodes = me.childNodes;
                     expandNodes = [];
                     ln = singleExpand ? Math.min(allNodes.length, 1) : allNodes.length;
 
                     for (i = 0; i < ln; ++i) {
                         node = allNodes[i];
+
                         if (!node.isLeaf()) {
                             expandNodes[expandNodes.length] = node;
                         }
                     }
+
                     ln = expandNodes.length;
 
                     for (i = 0; i < ln; ++i) {
@@ -2094,18 +2279,20 @@ Ext.define('Ext.data.NodeInterface', {
                     //      already collapsed but the recursive flag is passed to target child nodes
                     //   or
                     //      the collapse is not vetoed by a listener
-                    if (!me.isLeaf() && ((!expanded && recursive) || me.fireBubbledEvent('beforecollapse', [me]) !== false)) {
+                    if (!me.isLeaf() && ((!expanded && recursive) ||
+                        me.fireBubbledEvent('beforecollapse', [me]) !== false)) {
                         // Bracket collapsing with layout suspension.
                         // Collapsing is synchronous within the suspension.
                         Ext.suspendLayouts();
 
                         // Inform listeners of a collapse event if we are still expanded.
                         if (me.isExpanded()) {
-                            
-                            // Set up the callback to set non-leaf descendants to collapsed if necessary.
-                            // If recursive, we just need to set all non-leaf descendants to collapsed state.
-                            // We *DO NOT* call collapse on them. That would attempt to remove their descendants
-                            // from the UI, and that is done: THIS node is collapsed - ALL descendants are removed from the UI.
+                            // Set up the callback to set non-leaf descendants to collapsed
+                            // if necessary. If recursive, we just need to set all non-leaf
+                            // descendants to collapsed state.
+                            // We *DO NOT* call collapse on them. That would attempt to remove
+                            // their descendants from the UI, and that is done: THIS node
+                            // is collapsed - ALL descendants are removed from the UI.
                             // Descendant non-leaves just silently change state.
                             if (recursive) {
                                 collapseChildren = function() {
@@ -2113,24 +2300,31 @@ Ext.define('Ext.data.NodeInterface', {
                                         me.childNodes[i].setCollapsed(true);
                                     }
                                 };
+
                                 if (callback) {
+                                    /* eslint-disable-next-line max-len */
                                     callback = Ext.Function.createSequence(collapseChildren, Ext.Function.bind(callback, scope, [me.childNodes]));
-                                } else {
+                                }
+                                else {
                                     callback = collapseChildren;
                                 }
-                            } else if (callback) {
+                            }
+                            else if (callback) {
                                 callback = Ext.Function.bind(callback, scope, [me.childNodes]);
                             }
 
-                            // Not structural. The TreeView's onUpdate listener just updates the [+] icon to [-] in response.
+                            // Not structural. The TreeView's onUpdate listener just updates the
+                            // [+] icon to [-] in response.
                             if (bulkUpdate || !treeStore.contains(me)) {
                                 me.data.expanded = false;
-                            } else {
+                            }
+                            else {
                                 me.set('expanded', false);
                             }
 
-                            // Call the TreeStore's onNodeCollapse which removes all descendant nodes to achieve UI collapse
-                            // and passes callback on in its beforecollapse event which is poked into the animWrap for
+                            // Call the TreeStore's onNodeCollapse which removes all descendant
+                            // nodes to achieve UI collapse and passes callback on in its
+                            // beforecollapse event which is poked into the animWrap for
                             // final calling in the animation callback.
                             me.callTreeStore('onNodeCollapse', [me.childNodes, callback, scope]);
 
@@ -2140,9 +2334,10 @@ Ext.define('Ext.data.NodeInterface', {
                             callback = null;
                         }
 
-                        // If recursive, we just need to set all non-leaf descendants to collapsed state.
-                        // We *DO NOT* call collapse on them. That would attempt to remove their descendants
-                        // from the UI, and that is done: THIS node is collapsed - ALL descendants are removed from the UI.
+                        // If recursive, we just need to set all non-leaf descendants to collapsed
+                        // state. We *DO NOT* call collapse on them. That would attempt to remove
+                        // their descendants from the UI, and that is done: THIS node is collapsed -
+                        // ALL descendants are removed from the UI.
                         // Descendant non-leaves just silently change state.
                         else if (recursive) {
                             for (i = 0; i < len; i++) {
@@ -2162,9 +2357,9 @@ Ext.define('Ext.data.NodeInterface', {
                  *
                  * Sets the node into the collapsed state without affecting the UI.
                  *
-                 * This is called when a node is collapsed with the recursive flag. All the descendant
-                 * nodes will have been removed from the store, but descendant non-leaf nodes still
-                 * need to be set to the collapsed state without affecting the UI.
+                 * This is called when a node is collapsed with the recursive flag. All the
+                 * descendant nodes will have been removed from the store, but descendant non-leaf
+                 * nodes still need to be set to the collapsed state without affecting the UI.
                  */
                 setCollapsed: function(recursive) {
                     var me = this,
@@ -2177,9 +2372,9 @@ Ext.define('Ext.data.NodeInterface', {
                         // Update the state directly.
                         me.data.expanded = false;
 
-                        // Listened for by NodeStore.onNodeCollapse, but will do nothing except pass on the
-                        // documented events because the records have already been removed from the store when
-                        // the ancestor node was collapsed.
+                        // Listened for by NodeStore.onNodeCollapse, but will do nothing except
+                        // pass on the documented events because the records have already been
+                        // removed from the store when the ancestor node was collapsed.
                         me.fireBubbledEvent('collapse', [me, me.childNodes]);
 
                         if (recursive) {
@@ -2193,24 +2388,26 @@ Ext.define('Ext.data.NodeInterface', {
                 /**
                  * Collapse all the children of this node.
                  * @param {Function} [recursive=false] True to recursively collapse all the children
-                 * @param {Function} [callback] The function to execute once all the children are collapsed
+                 * @param {Function} [callback] The function to execute once all the children are
+                 * collapsed
                  * @param {Object} [scope] The scope to run the callback in
                  */
                 collapseChildren: function(recursive, callback, scope) {
                     var me = this,
-                        i,
                         allNodes = me.childNodes,
                         ln = allNodes.length,
                         collapseNodes = [],
-                        node;
+                        node, i;
 
                     // Only bother with loaded, expanded, non-leaf nodes
                     for (i = 0; i < ln; ++i) {
                         node = allNodes[i];
+
                         if (!node.isLeaf() && node.isLoaded() && node.isExpanded()) {
                             collapseNodes.push(node);
                         }
                     }
+
                     ln = collapseNodes.length;
 
                     if (ln) {
@@ -2218,53 +2415,65 @@ Ext.define('Ext.data.NodeInterface', {
                         // Pass our callback to the last one.
                         for (i = 0; i < ln; ++i) {
                             node = collapseNodes[i];
+
                             if (i === ln - 1) {
                                 node.collapse(recursive, callback, scope);
-                            } else {
+                            }
+                            else {
                                 node.collapse(recursive);
                             }
                         }
-                    } else {
+                    }
+                    else {
                         // Nothing to collapse, so fire the callback
                         Ext.callback(callback, scope);
                     }
                 },
 
                 /**
-                * Fires the specified event with the passed parameters (minus the event name, plus the `options` object passed
-                * to {@link Ext.mixin.Observable#addListener addListener}).
-                *
-                * An event may be set to bubble up an Observable parent hierarchy (See {@link Ext.Component#getBubbleTarget}) by
-                * calling {@link Ext.mixin.Observable#enableBubble enableBubble}.
-                *
-                * @param {String} eventName The name of the event to fire.
-                * @param {Object...} args Variable number of parameters are passed to handlers.
-                * @return {Boolean} returns false if any of the handlers return false otherwise it returns true.
-                */
+                 * Fires the specified event with the passed parameters (minus the event name,
+                 * plus the `options` object passed to
+                 * {@link Ext.mixin.Observable#addListener addListener}).
+                 *
+                 * An event may be set to bubble up an Observable parent hierarchy (See
+                 * {@link Ext.Component#getBubbleTarget}) by
+                 * calling {@link Ext.mixin.Observable#enableBubble enableBubble}.
+                 *
+                 * @param {String} eventName The name of the event to fire.
+                 * @param {Object...} args Variable number of parameters are passed to handlers.
+                 * @return {Boolean} returns `false` if any of the handlers return `false`
+                 * otherwise it returns `true`.
+                 */
                 fireEvent: function(eventName) {
                     return this.fireBubbledEvent(eventName, Ext.Array.slice(arguments, 1));
                 },
 
-                // Node events always bubble, but events which bubble are always created, so bubble in a loop and
-                // only fire when there are listeners at each level.
-                // bubbled events always fire because they cannot tell if there is a listener at each level.
+                // Node events always bubble, but events which bubble are always created,
+                // so bubble in a loop and only fire when there are listeners at each level.
+                // bubbled events always fire because they cannot tell if there is a listener
+                // at each level.
                 fireBubbledEvent: function(eventName, args) {
                     var result, eventSource, topNode;
 
                     // The event bubbles (all native NodeInterface events do)...
                     if (bubbledEvents[eventName]) {
+                        /* eslint-disable-next-line max-len */
                         for (eventSource = this; result !== false && eventSource; eventSource = (topNode = eventSource).parentNode) {
                             result = eventSource.fireEventArgs.call(eventSource, eventName, args);
                         }
 
                         // We hit the topmost node in the loop above.
-                        // Fire the event on its TreeStore if any (might be a disembodied tree fragment with no TreeStore)
+                        // Fire the event on its TreeStore if any (might be a disembodied
+                        // tree fragment with no TreeStore)
                         if (result !== false) {
                             eventSource = topNode.getTreeStore();
-                            if (eventSource && eventSource.hasListeners && eventSource.hasListeners[eventName = 'node' + eventName]) {
+
+                            if (eventSource && eventSource.hasListeners &&
+                                eventSource.hasListeners[eventName = 'node' + eventName]) {
                                 result = eventSource.fireEventArgs(eventName, args);
                             }
                         }
+
                         return result;
                     }
                     // Event does not bubble.
@@ -2287,14 +2496,17 @@ Ext.define('Ext.data.NodeInterface', {
 
                     if (len > 0) {
                         result.children = children = [];
+
                         for (i = 0; i < len; i++) {
                             children.push(childNodes[i].serialize(writer));
                         }
                     }
+
                     return result;
                 },
 
-                // Used to inform the TreeStore that we belong to about some event which requires its participation.
+                // Used to inform the TreeStore that we belong to about some event which requires
+                // its participation.
                 callTreeStore: function(funcName, args) {
                     var me = this,
                         target = me.getTreeStore(),
@@ -2302,22 +2514,24 @@ Ext.define('Ext.data.NodeInterface', {
 
                     if (target && fn) {
                         args = args || [];
+
                         if (args[0] !== me) {
                             args.unshift(me);
                         }
+
                         fn.apply(target, args);
                     }
                 },
 
-                addCls: function (cls) {
+                addCls: function(cls) {
                     this.replaceCls(null, cls);
                 },
 
-                removeCls: function (cls) {
+                removeCls: function(cls) {
                     this.replaceCls(cls);
                 },
 
-                replaceCls: function (oldCls, newCls) {
+                replaceCls: function(oldCls, newCls) {
                     var pieces = this._parseCls(this.data.cls),
                         parts = this._parseCls(oldCls);
 
@@ -2326,6 +2540,7 @@ Ext.define('Ext.data.NodeInterface', {
                     }
 
                     parts = this._parseCls(newCls);
+
                     if (parts.length) {
                         pieces = Ext.Array.unique(pieces.concat(parts));
                     }
@@ -2333,19 +2548,20 @@ Ext.define('Ext.data.NodeInterface', {
                     this.set('cls', pieces.join(' '));
                 },
 
-                toggleCls: function (cls, state) {
-                    if (state === undefined) {
-                        var pieces = this._parseCls(this.data.cls),
-                            parts = this._parseCls(cls),
-                            len = parts.length,
-                            i, p;
+                toggleCls: function(cls, state) {
+                    var pieces, parts, len, i, p;
 
-                        for (i = 0; i < len; ++i) {
+                    if (state === undefined) {
+                        pieces = this._parseCls(this.data.cls);
+                        parts = this._parseCls(cls);
+
+                        for (i = 0, len = parts.length; i < len; ++i) {
                             p = parts[i];
 
                             if (Ext.Array.contains(pieces, p)) {
                                 Ext.Array.remove(pieces, p);
-                            } else {
+                            }
+                            else {
                                 pieces.push(p);
                             }
                         }
@@ -2364,7 +2580,7 @@ Ext.define('Ext.data.NodeInterface', {
                 privates: {
                     _noCls: [],
                     spacesRe: /\s+/,
-                    
+
                     join: function(store) {
 
                         // Only the root node is linked to the TreeStore
@@ -2381,19 +2597,22 @@ Ext.define('Ext.data.NodeInterface', {
                         }
                     },
 
-                    // Used by Model base class methods to inform all interested Stores that the record has been mutated.
+                    // Used by Model base class methods to inform all interested Stores that the
+                    // record has been mutated.
                     callJoined: function(funcName, args) {
                         this.callParent([funcName, args]);
                         this.callTreeStore(funcName, args);
                     },
 
-                    _parseCls: function (cls) {
+                    _parseCls: function(cls) {
                         if (!cls) {
                             return this._noCls;
                         }
+
                         if (typeof cls === 'string') {
                             return cls.split(this.spacesRe);
                         }
+
                         return cls;
                     }
                 }

@@ -67,12 +67,11 @@ Ext.define('Ext.chart.series.Pie3D', {
          */
 
         /**
-         * @cfg {Boolean/Number} donut
-         * Whether to set the pie chart as donut chart.
-         * Can be set to a particular percentage to set the radius
-         * of the donut chart.
+         * @cfg {Number} donut Specifies the radius of the donut hole, as a percentage
+         * of the chart's radius.
+         * Defaults to 0 (no donut hole).
          */
-        donut: false,
+        donut: 0,
 
         /**
          * @cfg {Array} hidden Determines which pie slices are hidden.
@@ -102,40 +101,44 @@ Ext.define('Ext.chart.series.Pie3D', {
     // zero value makes first pie sector start at noon, rather than 3 o'clock.
     rotationOffset: -Math.PI / 2,
 
-    setField: function (value) {
+    setField: function(value) {
         return this.setXField(value);
     },
 
-    getField: function () {
+    getField: function() {
         return this.getXField();
     },
 
-    updateRotation: function (rotation) {
-        this.setStyle({
-            baseRotation: rotation + this.rotationOffset
+    updateRotation: function(rotation) {
+        var attributes = { baseRotation: rotation + this.rotationOffset };
+
+        this.forEachSprite(function(sprite) {
+            sprite.setAttributes(attributes);
         });
-        this.doUpdateStyles();
     },
 
-    updateDistortion: function () {
-        this.setRadius();
+    updateColors: function(colors) {
+        var chart;
+
+        this.setSubStyle({ baseColor: colors });
+
+        if (!this.isConfiguring) {
+            chart = this.getChart();
+
+            if (chart) {
+                chart.refreshLegendStore();
+            }
+        }
     },
 
-    updateThickness: function () {
-        this.setRadius();
-    },
-
-    updateColors: function (colors) {
-        this.setSubStyle({baseColor: colors});
-    },
-
-    applyShadow: function (shadow) {
+    applyShadow: function(shadow) {
         if (shadow === true) {
             shadow = {
                 shadowColor: 'rgba(0,0,0,0.8)',
                 shadowBlur: 30
             };
-        } else if (!Ext.isObject(shadow)) {
+        }
+        else if (!Ext.isObject(shadow)) {
             shadow = {
                 shadowColor: Ext.util.Color.RGBA_NONE
             };
@@ -144,7 +147,7 @@ Ext.define('Ext.chart.series.Pie3D', {
         return shadow;
     },
 
-    updateShadow: function (shadow) {
+    updateShadow: function(shadow) {
         var me = this,
             sprites = me.getSprites(),
             spritesPerSlice = me.spritesPerSlice,
@@ -153,7 +156,8 @@ Ext.define('Ext.chart.series.Pie3D', {
 
         for (i = 1; i < ln; i += spritesPerSlice) {
             sprite = sprites[i];
-            if (sprite.attr.part = 'bottom') {
+
+            if (sprite.attr.part === 'bottom') {
                 sprite.setAttributes(shadow);
             }
         }
@@ -165,7 +169,7 @@ Ext.define('Ext.chart.series.Pie3D', {
     // the 'baseColor' attribute should be set, from which the stops of the
     // gradient (used for fillStyle) will be calculated. Themes can't handle
     // situations like that properly.
-    getStyleByIndex: function (i) {
+    getStyleByIndex: function(i) {
         var indexStyle = this.callParent([i]),
             style = this.getStyle(),
             // 'fill' and 'color' are 'fillStyle' aliases
@@ -179,6 +183,7 @@ Ext.define('Ext.chart.series.Pie3D', {
             delete indexStyle.fill;
             delete indexStyle.color;
         }
+
         if (strokeStyle) {
             indexStyle.strokeStyle = strokeStyle;
         }
@@ -186,111 +191,187 @@ Ext.define('Ext.chart.series.Pie3D', {
         return indexStyle;
     },
 
-    doUpdateStyles: function () {
+    doUpdateStyles: function() {
         var me = this,
             sprites = me.getSprites(),
             spritesPerSlice = me.spritesPerSlice,
             ln = sprites && sprites.length,
-            i = 0, j = 0, k,
+            i = 0,
+            j = 0,
+            k,
             style;
 
         for (; i < ln; i += spritesPerSlice, j++) {
             style = me.getStyleByIndex(j);
+
             for (k = 0; k < spritesPerSlice; k++) {
                 sprites[i + k].setAttributes(style);
             }
         }
     },
 
-    coordinateX: function () {
+    coordinateX: function() {
         var me = this,
-            chart = me.getChart(),
-            animation = chart && chart.getAnimation(),
             store = me.getStore(),
             records = store.getData().items,
             recordCount = records.length,
             xField = me.getXField(),
+            animation = me.getAnimation(),
             rotation = me.getRotation(),
             hidden = me.getHidden(),
-            value, sum = 0, ratio,
-            summation = [],
-            sprites = me.getSprites(),
+            sprites = me.getSprites(true),
             spriteCount = sprites.length,
             spritesPerSlice = me.spritesPerSlice,
+            center = me.getCenter(),
+            offsetX = me.getOffsetX(),
+            offsetY = me.getOffsetY(),
+            radius = me.getRadius(),
+            thickness = me.getThickness(),
+            distortion = me.getDistortion(),
+            renderer = me.getRenderer(),
+            rendererData = me.getRendererData(),
+            highlight = me.getHighlight(), // eslint-disable-line no-unused-vars
             lastAngle = 0,
             twoPi = Math.PI * 2,
             // To avoid adjacent start/end part blinking (z-index jitter)
             // when rotating a translucent pie chart.
             delta = 1e-10,
+            endAngles = [],
+            sum = 0,
+            value, unit,
+            sprite, style,
             i, j;
 
         for (i = 0; i < recordCount; i++) {
-            value = Math.abs(Number(records[i].get(xField))) || 0;
+            value = Math.abs(+records[i].get(xField)) || 0;
+
             if (!hidden[i]) {
                 sum += value;
             }
-            summation[i] = sum;
+
+            endAngles[i] = sum;
+
             if (i >= hidden.length) {
                 hidden[i] = false;
             }
         }
-        hidden.length = recordCount;
 
         if (sum === 0) {
             return;
         }
-        ratio = 2 * Math.PI / sum;
-        for (i = 0; i < recordCount; i++) {
-            summation[i] *= ratio;
-        }
 
-        for (i = 0; i < spriteCount; i++) {
-            sprites[i].setAnimation(animation);
-        }
+        // Angular value of 1 in radians.
+        unit = 2 * Math.PI / sum;
 
         for (i = 0; i < recordCount; i++) {
+            endAngles[i] *= unit;
+        }
+
+        for (i = 0; i < recordCount; i++) {
+            style = this.getStyleByIndex(i);
+
             for (j = 0; j < spritesPerSlice; j++) {
-                sprites[i * spritesPerSlice + j].setAttributes({
+                sprite = sprites[i * spritesPerSlice + j];
+                sprite.setAnimation(animation);
+                sprite.setAttributes({
+                    centerX: center[0] + offsetX,
+                    centerY: center[1] + offsetY - thickness / 2,
+                    endRho: radius,
+                    startRho: radius * me.getDonut() / 100,
+                    baseRotation: rotation + me.rotationOffset,
                     startAngle: lastAngle,
-                    endAngle: summation[i] - delta,
-                    globalAlpha: 1,
-                    baseRotation: rotation
+                    endAngle: endAngles[i] - delta,
+                    thickness: thickness,
+                    distortion: distortion,
+                    globalAlpha: 1
                 });
+                sprite.setAttributes(style);
+                sprite.setConfig({
+                    renderer: renderer,
+                    rendererData: rendererData,
+                    rendererIndex: i
+                });
+                // if (highlight) {
+                //     if (!sprite.modifiers.highlight) {
+                //         debugger
+                //         sprite.addModifier(highlight, true);
+                //     }
+                //     // sprite.modifiers.highlight.setConfig(highlight);
+                // }
             }
-            lastAngle = summation[i];
+
+            lastAngle = endAngles[i];
         }
 
         for (i *= spritesPerSlice; i < spriteCount; i++) {
-            sprites[i].setAnimation(animation);
-            sprites[i].setAttributes({
+            sprite = sprites[i];
+            sprite.setAnimation(animation);
+            sprite.setAttributes({
                 startAngle: twoPi,
                 endAngle: twoPi,
                 globalAlpha: 0,
-                baseRotation: rotation
+                baseRotation: rotation + me.rotationOffset
             });
         }
     },
 
-    updateLabelData: function () {
+    updateHighlight: function(highlight, oldHighlight) {
+        this.callParent([highlight, oldHighlight]);
+
+        this.forEachSprite(function(sprite) {
+            if (highlight) {
+                if (sprite.modifiers.highlight) {
+                    sprite.modifiers.highlight.setConfig(highlight);
+                }
+                else {
+                    sprite.config.highlight = highlight;
+                    sprite.addModifier(highlight, true);
+                }
+            }
+        });
+    },
+
+    updateLabelData: function() {
         var me = this,
             store = me.getStore(),
             items = store.getData().items,
             sprites = me.getSprites(),
-            labelField = me.getLabel().getTemplate().getField(),
+            label = me.getLabel(),
+            labelField = label && label.getTemplate().getField(),
             hidden = me.getHidden(),
             spritesPerSlice = me.spritesPerSlice,
-            i, j, ln, labels, sprite;
+            ln, labels, sprite,
+            name = 'labels',
+            i, // sprite index
+            j; // record index
 
-        if (sprites.length && labelField) {
-            labels = [];
-            for (i = 0, ln = items.length; i < ln; i++) {
-                labels.push(items[i].get(labelField));
+        if (sprites.length) {
+            if (labelField) {
+                labels = [];
+
+                for (j = 0, ln = items.length; j < ln; j++) {
+                    labels.push(items[j].get(labelField));
+                }
             }
+
             // Only set labels for the sprites that compose the top lid of the pie.
             for (i = 0, j = 0, ln = sprites.length; i < ln; i += spritesPerSlice, j++) {
                 sprite = sprites[i];
-                sprite.setAttributes({label: labels[j]});
-                sprite.putMarker('labels', {hidden: hidden[j]}, sprite.attr.attributeId);
+
+                if (label) {
+                    if (!sprite.getMarker(name)) {
+                        sprite.bindMarker(name, label);
+                    }
+
+                    if (labels) {
+                        sprite.setAttributes({ label: labels[j] });
+                    }
+
+                    sprite.putMarker(name, { hidden: hidden[j] }, sprite.attr.attributeId);
+                }
+                else {
+                    sprite.releaseMarker(name);
+                }
             }
         }
     },
@@ -301,7 +382,7 @@ Ext.define('Ext.chart.series.Pie3D', {
     // distortion into account to calculate the proper radius.
     // The passed value is never used (or derived from) since the radius config
     // is not really meant to be used directly, as it will be reset by the next layout.
-    applyRadius: function () {
+    applyRadius: function() {
         var me = this,
             chart = me.getChart(),
             padding = chart.getInnerPadding(),
@@ -309,77 +390,216 @@ Ext.define('Ext.chart.series.Pie3D', {
             width = rect[2] - padding * 2,
             height = rect[3] - padding * 2 - me.getThickness(),
             horizontalRadius = width / 2,
-            verticalRadius = horizontalRadius * me.getDistortion();
+            verticalRadius = horizontalRadius * me.getDistortion(),
+            result;
 
         if (verticalRadius > height / 2) {
-            return height / (me.getDistortion() * 2);
-        } else {
-            return horizontalRadius;
+            result = height / (me.getDistortion() * 2);
+        }
+        else {
+            result = horizontalRadius;
+        }
+
+        return Math.max(result, 0);
+    },
+
+    forEachSprite: function(fn) {
+        var sprites = this.sprites,
+            ln = sprites.length,
+            i;
+
+        for (i = 0; i < ln; i++) {
+            fn(sprites[i], Math.floor(i / this.spritesPerSlice));
         }
     },
 
-    getSprites: function () {
+    updateRadius: function(radius) {
+        var donut;
+
+        // The side effects of the 'getChart' call will result
+        // in the 'coordinateX' method call, which we want to have called
+        // first, to coordinate the data and create sprites for pie slices,
+        // before we set their attributes here.
+        // updateChart -> onChartAttached -> processData -> coordinateX
+        this.getChart();
+
+        donut = this.getDonut();
+
+        this.forEachSprite(function(sprite) {
+            sprite.setAttributes({
+                endRho: radius,
+                startRho: radius * donut / 100
+            });
+        });
+    },
+
+    updateDonut: function(donut) {
+        var radius;
+
+        // See 'updateRadius' comments.
+        this.getChart();
+
+        radius = this.getRadius();
+
+        this.forEachSprite(function(sprite) {
+            sprite.setAttributes({
+                startRho: radius * donut / 100
+            });
+        });
+    },
+
+    updateCenter: function(center) {
+        var offsetX, offsetY, thickness;
+
+        // See 'updateRadius' comments.
+        this.getChart();
+
+        offsetX = this.getOffsetX();
+        offsetY = this.getOffsetY();
+        thickness = this.getThickness();
+
+        this.forEachSprite(function(sprite) {
+            sprite.setAttributes({
+                centerX: center[0] + offsetX,
+                centerY: center[1] + offsetY - thickness / 2
+            });
+        });
+    },
+
+    updateThickness: function(thickness) {
+        var center, offsetY;
+
+        // See 'updateRadius' comments.
+        this.getChart();
+
+        // Radius depends on thickness and distortion,
+        // this will trigger its recalculation in the applier.
+        this.setRadius();
+
+        center = this.getCenter();
+        offsetY = this.getOffsetY();
+
+        this.forEachSprite(function(sprite) {
+            sprite.setAttributes({
+                thickness: thickness,
+                centerY: center[1] + offsetY - thickness / 2
+            });
+        });
+    },
+
+    updateDistortion: function(distortion) {
+        // See 'updateRadius' comments.
+        this.getChart();
+
+        // Radius depends on thickness and distortion,
+        // this will trigger its recalculation in the applier.
+        this.setRadius();
+
+        this.forEachSprite(function(sprite) {
+            sprite.setAttributes({
+                distortion: distortion
+            });
+        });
+    },
+
+    updateOffsetX: function(offsetX) {
+        var center;
+
+        // See 'updateRadius' comments.
+        this.getChart();
+
+        center = this.getCenter();
+
+        this.forEachSprite(function(sprite) {
+            sprite.setAttributes({
+                centerX: center[0] + offsetX
+            });
+        });
+    },
+
+    updateOffsetY: function(offsetY) {
+        var center, thickness;
+
+        // See 'updateRadius' comments.
+        this.getChart();
+
+        center = this.getCenter();
+        thickness = this.getThickness();
+
+        this.forEachSprite(function(sprite) {
+            sprite.setAttributes({
+                centerY: center[1] + offsetY - thickness / 2
+            });
+        });
+    },
+
+    updateAnimation: function(animation) {
+        // See 'updateRadius' comments.
+        this.getChart();
+
+        this.forEachSprite(function(sprite) {
+            sprite.setAnimation(animation);
+        });
+    },
+
+    updateRenderer: function(renderer) {
+        var rendererData;
+
+        // See 'updateRadius' comments.
+        this.getChart();
+
+        rendererData = this.getRendererData();
+
+        this.forEachSprite(function(sprite, itemIndex) {
+            sprite.setConfig({
+                renderer: renderer,
+                rendererData: rendererData,
+                rendererIndex: itemIndex
+            });
+        });
+    },
+
+    getRendererData: function() {
+        return {
+            store: this.getStore(),
+            angleField: this.getXField(),
+            radiusField: this.getYField(),
+            series: this
+        };
+    },
+
+    getSprites: function(createMissing) {
         var me = this,
-            store = me.getStore();
+            store = me.getStore(),
+            sprites = me.sprites;
 
         if (!store) {
-            return [];
+            return Ext.emptyArray;
         }
 
-        var chart = me.getChart(),
-            surface = me.getSurface(),
+        if (sprites && !createMissing) {
+            return sprites;
+        }
+
+        // eslint-disable-next-line vars-on-top, one-var
+        var surface = me.getSurface(),
             records = store.getData().items,
             spritesPerSlice = me.spritesPerSlice,
+            partCount = me.partNames.length,
             recordCount = records.length,
-            animation = me.getAnimation() || chart && chart.getAnimation(),
-            center = me.getCenter(),
-            offsetX = me.getOffsetX(),
-            offsetY = me.getOffsetY(),
-            radius = me.getRadius(),
-            rotation = me.getRotation(),
-            highlight = me.getHighlight(),
-            commonAttributes = {
-                centerX: center[0] + offsetX,
-                centerY: center[1] + offsetY - me.getThickness() / 2,
-                endRho: radius,
-                startRho: radius * me.getDonut() / 100,
-                thickness: me.getThickness(),
-                distortion: me.getDistortion()
-            },
-            sprites = me.sprites,
-            label = me.getLabel(),
-            labelTpl = label.getTemplate(),
-            sliceSprites, sliceAttributes, sprite,
+            sprite,
             i, j;
 
         for (i = 0; i < recordCount; i++) {
-            sliceAttributes = Ext.apply({}, this.getStyleByIndex(i), commonAttributes);
             if (!sprites[i * spritesPerSlice]) {
-                for (j = 0; j < me.partNames.length; j++) {
+                for (j = 0; j < partCount; j++) {
                     sprite = surface.add({
                         type: 'pie3dPart',
-                        part: me.partNames[j]
+                        part: me.partNames[j],
+                        series: me
                     });
-                    if (j === 0 && labelTpl.getField()) {
-                        // Make the 'top' part hold the label.
-                        sprite.bindMarker('labels', label);
-                    }
-                    sprite.fx.setDurationOn('baseRotation', rotation);
-                    if (highlight) {
-                        sprite.config.highlight = highlight;
-                        sprite.addModifier('highlight', true);
-                    }
-                    sprite.setAttributes(sliceAttributes);
+                    sprite.getAnimation().setDurationOn('baseRotation', 0);
                     sprites.push(sprite);
-                }
-            } else {
-                sliceSprites = sprites.slice(i * spritesPerSlice, (i + 1) * spritesPerSlice);
-                for (j = 0; j < sliceSprites.length; j++) {
-                    sprite = sliceSprites[j];
-                    if (animation) {
-                        sprite.setAnimation(animation);
-                    }
-                    sprite.setAttributes(sliceAttributes);
                 }
             }
         }
@@ -387,7 +607,7 @@ Ext.define('Ext.chart.series.Pie3D', {
         return sprites;
     },
 
-    betweenAngle: function (x, a, b) {
+    betweenAngle: function(x, a, b) {
         var pp = Math.PI * 2,
             offset = this.rotationOffset;
 
@@ -410,59 +630,65 @@ Ext.define('Ext.chart.series.Pie3D', {
         return x < b || b === 0;
     },
 
-    getItemForPoint: function (x, y) {
+    getItemForPoint: function(x, y) {
         var me = this,
-            sprites = me.getSprites();
+            sprites = me.getSprites(),
+            spritesPerSlice = me.spritesPerSlice,
+            result = null,
+            store, records, hidden, i, ln, sprite, topPartIndex;
 
-        if (sprites) {
-            var store = me.getStore(),
-                records = store.getData().items,
-                spritesPerSlice = me.spritesPerSlice,
-                hidden = me.getHidden(),
-                i, ln, sprite, topPartIndex;
-
-            for (i = 0, ln = records.length; i < ln; i++) {
-                if (!hidden[i]) {
-                    topPartIndex = i * spritesPerSlice;
-                    sprite = sprites[topPartIndex];
-
-                    // This is CPU intensive on mousemove (no visial slowdown
-                    // on a fast machine, but some throttling might be desirable
-                    // on slower machines).
-                    // On touch devices performance/battery hit is negligible.
-                    if (sprite.hitTest([x, y])) {
-                        return {
-                            series: me,
-                            sprite: sprites.slice(topPartIndex, topPartIndex + spritesPerSlice),
-                            index: i,
-                            record: records[i],
-                            category: 'sprites',
-                            field: me.getXField()
-                        };
-                    }
-
-                }
-            }
-            return null;
+        if (!sprites) {
+            return result;
         }
+
+        store = me.getStore();
+        records = store.getData().items;
+        hidden = me.getHidden();
+
+        for (i = 0, ln = records.length; i < ln; i++) {
+            if (hidden[i]) {
+                continue;
+            }
+
+            topPartIndex = i * spritesPerSlice;
+            sprite = sprites[topPartIndex];
+
+            // This is CPU intensive on mousemove (no visial slowdown
+            // on a fast machine, but some throttling might be desirable
+            // on slower machines).
+            // On touch devices performance/battery hit is negligible.
+            if (sprite.hitTest([x, y])) {
+                result = {
+                    series: me,
+                    sprite: sprites.slice(topPartIndex, topPartIndex + spritesPerSlice),
+                    index: i,
+                    record: records[i],
+                    category: 'sprites',
+                    field: me.getXField()
+                };
+                break;
+            }
+        }
+
+        return result;
     },
 
-    provideLegendInfo: function (target) {
+    provideLegendInfo: function(target) {
         var me = this,
-            store = me.getStore();
+            store = me.getStore(),
+            items, labelField, field, hidden, style, color, i;
 
         if (store) {
-            var items = store.getData().items,
-                labelField = me.getLabel().getTemplate().getField(),
-                field = me.getField(),
-                hidden = me.getHidden(),
-                i, style, color;
+            items = store.getData().items;
+            labelField = me.getLabel().getTemplate().getField();
+            field = me.getField();
+            hidden = me.getHidden();
 
             for (i = 0; i < items.length; i++) {
                 style = me.getStyleByIndex(i);
                 color = style.baseColor;
                 target.push({
-                    name: labelField ? String(items[i].get(labelField))  : field + ' ' + i,
+                    name: labelField ? String(items[i].get(labelField)) : field + ' ' + i,
                     mark: color || 'black',
                     disabled: hidden[i],
                     series: me.getId(),
@@ -471,7 +697,7 @@ Ext.define('Ext.chart.series.Pie3D', {
             }
         }
     }
-}, function () {
+}, function() {
     var proto = this.prototype,
         definition = Ext.chart.series.sprite.Pie3DPart.def.getInitialConfig().processors.part;
 

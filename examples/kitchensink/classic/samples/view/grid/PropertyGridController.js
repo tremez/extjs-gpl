@@ -3,26 +3,29 @@ Ext.define('KitchenSink.view.grid.PropertyGridController', {
 
     alias: 'controller.property-grid',
 
-    beforeRender: function () {
+    beforeRender: function() {
         this.setData('primary');
     },
 
-    onPrimary: function () {
+    onPrimary: function() {
         this.setData('primary');
     },
-    
-    onAlternate: function(){
+
+    onAlternate: function() {
         this.setData('alternate');
     },
-    
-    renderColor: function (v) {
+
+    renderColor: function(v) {
+        var lower;
+
         v = v || '';
-        
-        var lower = v.toLowerCase();
+
+        lower = v.toLowerCase();
+
         return Ext.String.format('<span style="color: {0};">{1}</span>', lower, v);
     },
 
-    setData: function (name) {
+    setData: function(name) {
         var grid = this.lookup('propGrid'),
             view = this.getView(),
             data = view.extra[name],

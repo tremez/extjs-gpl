@@ -2,97 +2,34 @@ Ext.define('Ext.theme.material.Button', {
     override: 'Ext.Button',
 
     config: {
-        ripple: true
-    },
-
-    destroy: function () {
-        this.callParent(arguments);
-        this.destroyRipple();
-    },
-
-    updateHidden: function (hidden) {
-        this.callParent(arguments);
-
-        if (hidden) {
-            this.removeRippleEffect();
+        ripple: {
+            delegate: '.' + Ext.baseCSSPrefix + 'inner-el'
         }
     },
 
-    onPress: function (e) {
-        if (!this.getDisabled()) {
-            var shouldRipple = this.getRipple();
-            if (shouldRipple) {
-                var color = window.getComputedStyle(this.element.dom).color,
-                    offset = this.element.getXY(),
-                    elementWidth = this.element.getWidth(),
-                    elementHeight = this.element.getHeight(),
-                    rippleDiameter = elementWidth > elementHeight ? elementWidth : elementHeight,
-                    pos = e.getXY(),
-                    posX = pos[0] - offset[0] - (rippleDiameter / 2),
-                    posY = pos[1] - offset[1] - (rippleDiameter / 2);
+    materialIconRe: /^md-icon[-|_](.*)/,
 
-                this.$ripple.setStyle('backgroundColor', color);
-                this.$ripple.toggleCls('md-ripple-effect', true);
-                this.$ripple.setWidth(rippleDiameter);
-                this.$ripple.setHeight(rippleDiameter);
-                this.$ripple.setTop(posY);
-                this.$ripple.setLeft(posX);
-                this.$rippleWrap.show();
+    applyIconCls: function(classList) {
+        var len, i, cls, materialMatch;
 
-                if (this.$rippleAnimationListener) {
-                    this.$rippleAnimationListener.destroy();
+        if (classList) {
+            classList = Ext.dom.Element.splitCls(classList);
+
+            len = classList.length;
+
+            for (i = 0; i < len; i++) {
+                cls = classList[i];
+                materialMatch = cls && cls.match(this.materialIconRe);
+
+                if (materialMatch && materialMatch.length > 1) {
+                    classList.unshift('md-icon');
+                    break;
                 }
-
-                this.$rippleAnimationListener = this.$ripple.on('animationend', this.onRippleEnd, this, {
-                    single: true,
-                    destroyable: true
-                });
             }
+
+            return classList.join(' ');
         }
 
-        this.callParent(arguments);
-    },
-
-    onRippleEnd: function () {
-        if (this.$ripple) {
-            this.$ripple.toggleCls('md-ripple-effect', false);
-            this.$rippleWrap.hide();
-        }
-    },
-
-    updateRipple: function (ripple, oldRipple) {
-        var me = this;
-
-        if (ripple) {
-            me.$rippleWrap = me.element.insertFirst({cls: 'md-ripple-wrap'});
-            me.$ripple = me.$rippleWrap.insertFirst({cls: 'md-ripple'});
-        } else if (me.$ripple) {
-            me.destroyRipple();
-        }
-    },
-
-    removeRippleEffect: function () {
-        if (this.$rippleAnimationListener) {
-            this.$rippleAnimationListener.destroy();
-        }
-        this.onRippleEnd();
-    },
-
-    destroyRipple: function () {
-        this.removeRippleEffect();
-        if (this.$rippleWrap) {
-            this.$rippleWrap.destroy();
-        }
-    },
-
-    applyIconCls: function (cls) {
-        var materialMatch = cls && cls.match(/^md-icon[-|_](.*)/),
-            materialIcon = materialMatch && materialMatch.length > 1 ? materialMatch[1] : null;
-
-        if (materialIcon) {
-            return 'md-icon ' + cls;
-        }
-
-        return cls;
+        return classList;
     }
 });

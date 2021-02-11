@@ -41,7 +41,7 @@ Ext.define('Admin.view.dashboard.DashboardModel', {
             proxy: {
                 type: 'api',
                 url: '~api/qg/pie'
-            }            
+            }
 
         },
         topMovies: {
@@ -103,7 +103,7 @@ Ext.define('Admin.view.dashboard.DashboardModel', {
             proxy: {
                 type: 'api',
                 url: '~api/dashboard/tasks'
-            }            
+            }
         }
     }
 });

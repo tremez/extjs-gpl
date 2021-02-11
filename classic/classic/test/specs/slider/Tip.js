@@ -1,11 +1,11 @@
-describe("Ext.slider.Tip", function() {
+topSuite("Ext.slider.Tip", ['Ext.slider.Single'], function() {
     var slider, tip, thumb0, spaceEl,
         createSlider = function(config) {
             tip = new Ext.slider.Tip();
-            
+
             spyOn(tip, "show").andCallThrough();
             spyOn(tip, "update").andCallThrough();
-            
+
             // make enough room to display tip correctly
             spaceEl = Ext.getBody().createChild({});
             spaceEl.setHeight(100);
@@ -28,22 +28,25 @@ describe("Ext.slider.Tip", function() {
         if (slider) {
             slider.destroy();
         }
+
         spaceEl.destroy();
         slider = null;
     });
 
     describe("when thumb is dragged", function() {
         var thumbXY, thumbSize, tipXY, tipSize;
+
         beforeEach(function() {
             createSlider();
             var xy = thumb0.el.getXY();
+
             jasmine.fireMouseEvent(thumb0.el, 'mousedown', xy[0], xy[1] + 5);
             jasmine.fireMouseEvent(thumb0.el, 'mousemove', xy[0] + 50, xy[1] + 5);
-            
+
             waitsFor(function() {
                 return tip.el;
             });
-            
+
             runs(function() {
                 tipXY = tip.el.getXY();
                 tipSize = tip.el.getSize();
@@ -56,7 +59,7 @@ describe("Ext.slider.Tip", function() {
         it("should show the tooltip", function() {
             expect(tip.show).toHaveBeenCalled();
         });
-        
+
         it("should update the tooltip text", function() {
             expect(tip.update).toHaveBeenCalledWith(tip.getText(thumb0));
         });
@@ -66,7 +69,6 @@ describe("Ext.slider.Tip", function() {
             expect(tipXY[0] + tipSize.width > thumbXY[0] + thumbSize.width).toBe(true);
             expect(tipXY[1] - tip.offsets[1] + tipSize.height).toBe(thumbXY[1]);
         });
-            
+
     });
-    
 });

@@ -57,13 +57,15 @@
     }
     
     .#{$prefix}form-display-field-#{$ui}.#{$prefix}field-form-focus {
-        @include css-outline(
-            $width: $ui-focus-border-width,
-            $style: $ui-focus-border-style,
-            $color: $ui-focus-border-color,
-            $offset: -$ui-focus-border-width
-        );
-        
+        .#{$prefix}keyboard-mode & {
+            @include css-outline(
+                $width: $ui-focus-border-width,
+                $style: $ui-focus-border-style,
+                $color: $ui-focus-border-color,
+                $offset: -$ui-focus-border-width
+            );
+        }
+
         // IE8 needs displayEl to be positioned for the pseudo-outline to work
         @if $include-ie {
             .#{$prefix}ie8 & {

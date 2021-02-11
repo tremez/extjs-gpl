@@ -15,20 +15,34 @@ Ext.define('KitchenSink.view.charts.line.ImageMarkers', {
         'Ext.chart.axis.Time',
         'Ext.chart.interactions.ItemHighlight'
     ],
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
+    profiles: {
+        classic: {
+            width: 650
+        },
+        neptune: {
+            width: 650
+        },
+        graphite: {
+            width: 750
+        },
+        'classic-material': {
+            width: 750
+        }
+    },
     otherContent: [{
         type: 'Controller',
         path: 'classic/samples/view/charts/line/ImageMarkersController.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/Pie.js'
+        path: 'app/store/Pie.js'
     }],
-    // </example>
+    //</example>
 
     layout: 'fit',
 
-    width: 650,
+    width: '${width}',
 
     tbar: {
         reference: 'toolbar',
@@ -61,7 +75,10 @@ Ext.define('KitchenSink.view.charts.line.ImageMarkers', {
             'itemhighlight'
         ],
         legend: {
-            position: 'bottom'
+            position: 'bottom',
+            marker: {
+                size: 20
+            }
         },
         series: [
             {
@@ -89,7 +106,7 @@ Ext.define('KitchenSink.view.charts.line.ImageMarkers', {
                     x: -24,
                     y: -24,
                     scale: 0.7,
-                    fx: {
+                    animation: {
                         duration: 200
                     }
                 }
@@ -114,7 +131,7 @@ Ext.define('KitchenSink.view.charts.line.ImageMarkers', {
                     x: -24,
                     y: -24,
                     scale: 0.7,
-                    fx: {
+                    animation: {
                         duration: 200
                     }
                 }
@@ -139,7 +156,7 @@ Ext.define('KitchenSink.view.charts.line.ImageMarkers', {
                     x: -24,
                     y: -24,
                     scale: 0.7,
-                    fx: {
+                    animation: {
                         duration: 200
                     }
                 }

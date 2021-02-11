@@ -17,13 +17,82 @@
 }
 
 // These get shared by other views
+@if $theme-name == 'theme-graphite' {
+    .x-btn {
+        &.x-btn-focus {
+            .sort-direction-asc:after {
+                color: #ffffff;
+            }
 
-.x-btn .sort-direction-asc {
-    background-image: theme-background-image('grid/sort_asc');
-    background-position: 4px center;
-}
+            .sort-direction-desc:after {
+                color: #ffffff;
+            }
+        }
 
-.x-btn .sort-direction-desc {
-    background-image: theme-background-image('grid/sort_desc');
-    background-position: 4px center;
+        .sort-direction-desc {
+            margin-top: -5px;
+
+            &:after {
+                content: "\f175";
+                font: 14px/1 'Font Awesome 5 Free';
+                color: #1b1b1b;
+            }
+        }
+
+        .sort-direction-asc {
+            margin-top: -5px;
+
+            &:after {
+                content: "\f176";
+                font: 14px/1 'Font Awesome 5 Free';
+                color: #1b1b1b;
+            }
+        }
+    }
+} @else if $theme-name == 'theme-material' {
+    .x-btn {
+        &.x-btn-focus {
+            .sort-direction-asc:after {
+                color: #ffffff;
+            }
+
+            .sort-direction-desc:after {
+                color: #ffffff;
+            }
+        }
+
+        .sort-direction-desc {
+            margin-top: -5px;
+
+            &:after {
+                content: "\f0dd";
+
+                font: 14px/1 'Font Awesome 5 Free';
+                color: $base-color;
+                vertical-align: 'text-top';
+            }
+        }
+
+        .sort-direction-asc {
+            margin-top: -5px;
+
+            &:after {
+                content: "\f0de";
+
+                font: 14px/1 'Font Awesome 5 Free';
+                color: $base-color;
+                vertical-align: -webkit-baseline-middle;
+            }
+        }
+    }
+} @else {
+    .x-btn .sort-direction-asc {
+        background-image: theme-background-image('grid/sort_asc');
+        background-position: 4px center;
+    }
+
+    .x-btn .sort-direction-desc {
+        background-image: theme-background-image('grid/sort_desc');
+        background-position: 4px center;
+    }
 }

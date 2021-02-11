@@ -12,16 +12,30 @@ Ext.define('KitchenSink.view.draw.Intersections', {
         'KitchenSink.view.IntersectionsComponent'
     ],
 
+    profiles: {
+        classic: {
+            strokeStyle: 'black'
+        },
+        neptune: {
+            strokeStyle: 'black'
+        },
+        graphite: {
+            strokeStyle: '#fff'
+        },
+        'classic-material': {
+            strokeStyle: '#2196f3'
+        }
+    },
     layout: 'fit',
     width: 650,
 
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     otherContent: [{
         type: 'Component',
         path: 'classic/samples/view/draw/IntersectionsComponent.js'
     }],
-    // </example>
+    //</example>
 
     items: [
         {
@@ -33,14 +47,14 @@ Ext.define('KitchenSink.view.draw.Intersections', {
                 {
                     type: 'path',
                     path: 'M50,50C100,1000 150,-500, 200,450',
-                    strokeStyle: 'black',
+                    strokeStyle: '${strokeStyle}',
                     translationY: -50,
                     lineWidth: 2
                 },
                 {
                     type: 'path',
                     path: 'M10,100C1000,150 -500,200, 500,250',
-                    strokeStyle: 'black',
+                    strokeStyle: '${strokeStyle}',
                     lineWidth: 2
                 },
                 {
@@ -50,7 +64,7 @@ Ext.define('KitchenSink.view.draw.Intersections', {
                     width: 200,
                     height: 200,
                     fillStyle: 'rgba(255,0,0,0.2)',
-                    strokeStyle: 'black',
+                    strokeStyle: '${strokeStyle}',
                     lineWidth: 2
                 },
                 {
@@ -61,13 +75,13 @@ Ext.define('KitchenSink.view.draw.Intersections', {
                     translationX: 250,
                     translationY: 200,
                     fillStyle: 'rgba(255,0,0,0.2)',
-                    strokeStyle: 'black',
+                    strokeStyle: '${strokeStyle}',
                     lineWidth: 2
                 },
                 {
                     type: 'path',
                     path: 'M0,350L200,500Z',
-                    strokeStyle: 'black',
+                    strokeStyle: '${strokeStyle}',
                     lineWidth: 2,
                     translationX: 20,
                     translationY: -20

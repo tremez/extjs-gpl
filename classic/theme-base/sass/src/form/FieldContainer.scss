@@ -1,3 +1,10 @@
+// Safari has known issues with table-layout and box-sizing.
+// Changing table-layout to auto instead of fixed will calculate the
+// inner width correctly.
+.#{$prefix}safari .#{$prefix}form-fieldcontainer {
+    table-layout: auto;
+}
+
 // IE8 has a bug where a table-cell element sandwiched between two table-row elements
 // takes 100% of the parent element height. Using table-row for the sandwiched
 // element takes care of this.

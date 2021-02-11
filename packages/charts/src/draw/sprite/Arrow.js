@@ -44,11 +44,14 @@ Ext.define('Ext.draw.sprite.Arrow', {
         }
     },
 
-    updatePath: function (path, attr) {
+    updatePath: function(path, attr) {
         var s = attr.size * 1.5,
             x = attr.x - attr.lineWidth / 2,
             y = attr.y;
-        path.fromSvgString('M'.concat(x - s * 0.7, ',', y - s * 0.4, 'l', [s * 0.6, 0, 0, -s * 0.4, s, s * 0.8, -s, s * 0.8, 0, -s * 0.4, -s * 0.6, 0], 'z'));
+
+        path.fromSvgString('M'.concat(x - s * 0.7, ',', y - s * 0.4, 'l',
+                                      [s * 0.6, 0, 0, -s * 0.4, s, s * 0.8, -s, s * 0.8, 0,
+                                       -s * 0.4, -s * 0.6, 0], 'z'));
     }
 
 });

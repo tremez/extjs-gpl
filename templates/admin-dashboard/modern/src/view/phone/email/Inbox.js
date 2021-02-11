@@ -17,7 +17,7 @@ Ext.define('Admin.view.phone.email.Inbox', {
                 '<div class="inbox-summary">{title}</div>'+
                 '<div class="inbox-favorite">'+
                     '<tpl if="favorite">'+
-                        '<span class="x-fa fa-heart-o"></span>'+
+                        '<span class="x-fa fa-heart inactive"></span>'+
                     '<tpl else>'+
                         '<span class="x-fa inbox-favorite-icon fa-heart"></span>'+
                     '</tpl>'+

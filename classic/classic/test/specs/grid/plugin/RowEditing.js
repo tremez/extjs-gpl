@@ -1,12 +1,17 @@
-describe('Ext.grid.plugin.RowEditing', function () {
+topSuite("Ext.grid.plugin.RowEditing",
+    ['Ext.grid.Panel', 'Ext.grid.column.Widget', 'Ext.form.field.*',
+     'Ext.grid.selection.SpreadsheetModel', 'Ext.grid.feature.GroupingSummary'],
+function() {
     var store, plugin, grid, view, column,
         synchronousLoad = true,
         proxyStoreLoad = Ext.data.ProxyStore.prototype.load,
         loadStore = function() {
             proxyStoreLoad.apply(this, arguments);
+
             if (synchronousLoad) {
                 this.flushLoad.apply(this, arguments);
             }
+
             return this;
         };
 
@@ -17,10 +22,10 @@ describe('Ext.grid.plugin.RowEditing', function () {
         store = new Ext.data.Store(Ext.apply({
             fields: ['name', 'email', 'phone'],
             data: [
-                {'name': 'Lisa', 'email': 'lisa@simpsons.com', 'phone': '555-111-1224'},
-                {'name': 'Bart', 'email': 'bart@simpsons.com', 'phone': '555-222-1234'},
-                {'name': 'Homer', 'email': 'homer@simpsons.com', 'phone': '555-222-1244'},
-                {'name': 'Marge', 'email': 'marge@simpsons.com', 'phone': '555-222-1254'}
+                { 'name': 'Lisa', 'email': 'lisa@simpsons.com', 'phone': '555-111-1224' },
+                { 'name': 'Bart', 'email': 'bart@simpsons.com', 'phone': '555-222-1234' },
+                { 'name': 'Homer', 'email': 'homer@simpsons.com', 'phone': '555-222-1244' },
+                { 'name': 'Marge', 'email': 'marge@simpsons.com', 'phone': '555-222-1254' }
             ],
             autoDestroy: true
         }, storeCfg));
@@ -34,14 +39,14 @@ describe('Ext.grid.plugin.RowEditing', function () {
 
         grid = new Ext.grid.Panel(Ext.apply({
             columns: [
-                {header: 'Name',  dataIndex: 'name', editor: 'textfield'},
-                {header: 'Email', dataIndex: 'email',
+                { header: 'Name',  dataIndex: 'name', editor: 'textfield' },
+                { header: 'Email', dataIndex: 'email',
                     editor: {
                         xtype: 'textfield',
                         allowBlank: false
                     }
                 },
-                {header: 'Phone', dataIndex: 'phone'}
+                { header: 'Phone', dataIndex: 'phone' }
             ],
             store: store,
             plugins: plugins || [plugin],
@@ -58,10 +63,9 @@ describe('Ext.grid.plugin.RowEditing', function () {
         Ext.data.ProxyStore.prototype.load = loadStore;
     });
 
-    afterEach(function () {
+    afterEach(function() {
         // Undo the overrides.
         Ext.data.ProxyStore.prototype.load = proxyStoreLoad;
-
         store = plugin = grid = view = column = Ext.destroy(grid);
     });
 
@@ -71,14 +75,14 @@ describe('Ext.grid.plugin.RowEditing', function () {
                 clicksToEdit: 2
             }, {
                 columns: [
-                    {header: 'Name',  dataIndex: 'name', editor: 'textfield'},
-                    {header: 'Email', dataIndex: 'email',
+                    { header: 'Name',  dataIndex: 'name', editor: 'textfield' },
+                    { header: 'Email', dataIndex: 'email',
                         editor: {
                             xtype: 'textfield',
                             allowBlank: false
                         }
                     },
-                    {header: 'Phone', dataIndex: 'phone'},
+                    { header: 'Phone', dataIndex: 'phone' },
                     {
                         xtype: 'widgetcolumn',
                         widget: {
@@ -96,6 +100,7 @@ describe('Ext.grid.plugin.RowEditing', function () {
 
             function onDeleteClick(btn) {
                 var rec = btn.getWidgetRecord();
+
                 store.remove(rec);
             }
 
@@ -116,14 +121,14 @@ describe('Ext.grid.plugin.RowEditing', function () {
         });
     });
 
-    describe('should work', function () {
+    describe('should work', function() {
         var node;
 
-        afterEach(function () {
+        afterEach(function() {
             node = null;
         });
 
-        it('should display the row editor for the grid in editing mode', function () {
+        it('should display the row editor for the grid in editing mode', function() {
             makeGrid();
 
             node = grid.view.getNode(0);
@@ -133,29 +138,54 @@ describe('Ext.grid.plugin.RowEditing', function () {
             expect(plugin.editor).toBeDefined();
             expect(plugin.editing).toBe(true);
         });
+
+        it('should work with spreadsheet selection', function() {
+            var selModel = selModel = new Ext.grid.selection.SpreadsheetModel({
+                dragSelect: true,
+                cellSelect: true,
+                columnSelect: true,
+                rowSelect: true,
+                checkboxSelect: false
+            }),
+            record, items;
+
+            makeGrid(undefined, {
+                selModel: selModel
+            });
+
+            record = grid.store.getAt(0);
+            column = grid.columns[0];
+            expect(function() {
+                plugin.startEdit(record, column);
+            }).not.toThrow();
+
+            items = plugin.editor.items;
+            expect(items.getAt(1).getValue()).toBe('Lisa');
+        });
     });
 
-    describe('renderers', function () {
-        it('should be called with the correct scope for the defaultRenderer (column)', function () {
+    describe('renderers', function() {
+        it('should be called with the correct scope for the defaultRenderer (column)', function() {
             // See EXTJS-15047.
             var record, scope;
 
             makeGrid(null, {
                 columns: [
-                    {text: 'Foo', width: 50,
-                        defaultRenderer: function () {
+                    { text: 'Foo', width: 50,
+                        defaultRenderer: function() {
                             scope = this;
+
                             return 'some text';
                         }
                     },
-                    {header: 'Name',  dataIndex: 'name', editor: 'textfield'},
-                    {header: 'Email', dataIndex: 'email',
+                    { header: 'Name',  dataIndex: 'name', editor: 'textfield' },
+                    { header: 'Email', dataIndex: 'email',
                         editor: {
                             xtype: 'textfield',
                             allowBlank: false
                         }
                     },
-                    {header: 'Phone', dataIndex: 'phone'}
+                    { header: 'Phone', dataIndex: 'phone' }
                 ]
             });
 
@@ -167,11 +197,11 @@ describe('Ext.grid.plugin.RowEditing', function () {
         });
     });
 
-    describe('starting the edit', function () {
+    describe('starting the edit', function() {
         var combo, textfield, record, items;
 
-        describe('should work', function () {
-            beforeEach(function () {
+        describe('should work', function() {
+            beforeEach(function() {
                 combo = new Ext.form.field.ComboBox({
                     queryMode: 'local',
                     valueField: 'name',
@@ -191,14 +221,14 @@ describe('Ext.grid.plugin.RowEditing', function () {
 
                 makeGrid(null, {
                     columns: [
-                        {header: 'Name',  dataIndex: 'name', editor: combo},
-                        {header: 'Email', dataIndex: 'email',
+                        { header: 'Name',  dataIndex: 'name', editor: combo },
+                        { header: 'Email', dataIndex: 'email',
                             editor: {
                                 xtype: 'textfield',
                                 allowBlank: false
                             }
                         },
-                        {header: 'Phone', dataIndex: 'phone', editor: textfield}
+                        { header: 'Phone', dataIndex: 'phone', editor: textfield }
                     ]
                 });
 
@@ -206,14 +236,16 @@ describe('Ext.grid.plugin.RowEditing', function () {
                 column = grid.columns[0];
 
                 plugin.startEdit(record, column);
+
+                waitsForFocus(plugin.getEditor(), null, 10000);
             });
 
-            afterEach(function () {
+            afterEach(function() {
                 record = items = null;
             });
 
-            describe('initial values', function () {
-                it('should give each editor a dataIndex property', function () {
+            describe('initial values', function() {
+                it('should give each editor a dataIndex property', function() {
                     items = plugin.editor.items;
 
                     expect(items.getAt(0).dataIndex).toBe('name');
@@ -221,7 +253,7 @@ describe('Ext.grid.plugin.RowEditing', function () {
                     expect(items.getAt(2).dataIndex).toBe('phone');
                 });
 
-                it('should start the editor with values taken from the model', function () {
+                it('should start the editor with values taken from the model', function() {
                     items = plugin.editor.items;
 
                     expect(items.getAt(0).getValue()).toBe('Lisa');
@@ -230,8 +262,8 @@ describe('Ext.grid.plugin.RowEditing', function () {
                 });
             });
 
-            describe('using an existing component as an editor', function () {
-                it('should be able to lookup its value from the corresponding model field', function () {
+            describe('using an existing component as an editor', function() {
+                it('should be able to lookup its value from the corresponding model field', function() {
                     items = plugin.editor.items;
 
                     // The combo editor is an existing component.
@@ -243,8 +275,8 @@ describe('Ext.grid.plugin.RowEditing', function () {
             });
         });
 
-        describe('calling startEdit with different columnHeader values', function () {
-            it('should allow columnHeader to be a Number', function () {
+        describe('calling startEdit with different columnHeader values', function() {
+            it('should allow columnHeader to be a Number', function() {
                 makeGrid();
 
                 record = grid.store.getAt(0);
@@ -253,7 +285,7 @@ describe('Ext.grid.plugin.RowEditing', function () {
                 expect(plugin.startEdit(record, 0)).toBe(true);
             });
 
-            it('should allow columnHeader to be a Column instance', function () {
+            it('should allow columnHeader to be a Column instance', function() {
                 makeGrid();
 
                 record = grid.store.getAt(0);
@@ -263,7 +295,7 @@ describe('Ext.grid.plugin.RowEditing', function () {
                 expect(plugin.startEdit(record, column)).toBe(true);
             });
 
-            it('should default to the first visible column if unspecified', function () {
+            it('should default to the first visible column if unspecified', function() {
                 makeGrid();
 
                 record = grid.store.getAt(0);
@@ -273,14 +305,14 @@ describe('Ext.grid.plugin.RowEditing', function () {
             });
         });
 
-        describe('adding new rows to the view', function () {
+        describe('adding new rows to the view', function() {
             var viewEl, count, record, editor;
 
             function addRecord(index) {
                 var el;
 
                 plugin.cancelEdit();
-                store.insert(index, {name: 'Homer', email: 'homer@simpsons.com', phone: '555-222-1244'});
+                store.insert(index, { name: 'Homer', email: 'homer@simpsons.com', phone: '555-222-1244' });
                 record = store.getAt(index ? index - 1 : 0);
                 plugin.startEdit(record, 0);
                 editor = plugin.editor;
@@ -290,11 +322,11 @@ describe('Ext.grid.plugin.RowEditing', function () {
                 return new Ext.util.Point(el.getX(), el.getY());
             }
 
-            afterEach(function () {
+            afterEach(function() {
                 count = viewEl = record = editor = null;
             });
 
-            it('should be contained by and visible in the view', function () {
+            it('should be contained by and visible in the view', function() {
                 makeGrid(null, {
                     height: 100
                 });
@@ -315,10 +347,10 @@ describe('Ext.grid.plugin.RowEditing', function () {
                 expect(addRecord(count).isContainedBy(viewEl)).toBe(true);
             });
 
-            describe('scrolling into view', function () {
+            describe('scrolling into view', function() {
                 function buffered(buffered) {
-                    describe('buffered renderer = ' + buffered, function () {
-                        beforeEach(function () {
+                    describe('buffered renderer = ' + buffered, function() {
+                        beforeEach(function() {
                             makeGrid(null, {
                                 buffered: buffered,
                                 height: 100
@@ -328,13 +360,13 @@ describe('Ext.grid.plugin.RowEditing', function () {
                             viewEl = view.getEl();
                         });
 
-                        it('should scroll when adding to the beginning', function () {
+                        it('should scroll when adding to the beginning', function() {
                             addRecord(0);
                             expect(editor.isVisible()).toBe(true);
                             expect(editor.context.record).toBe(record);
                         });
 
-                        it('should scroll when adding to the end', function () {
+                        it('should scroll when adding to the end', function() {
                             addRecord(store.getCount());
                             expect(editor.isVisible()).toBe(true);
                             expect(editor.context.record).toBe(record);
@@ -348,10 +380,10 @@ describe('Ext.grid.plugin.RowEditing', function () {
         });
     });
 
-    describe('completing the edit', function () {
+    describe('completing the edit', function() {
         var combo, record, items;
 
-        beforeEach(function () {
+        beforeEach(function() {
             combo = new Ext.form.field.ComboBox({
                 queryMode: 'local',
                 valueField: 'name',
@@ -369,8 +401,8 @@ describe('Ext.grid.plugin.RowEditing', function () {
 
             makeGrid(null, {
                 columns: [
-                    {header: 'Name',  dataIndex: 'name', editor: combo},
-                    {header: 'Email', dataIndex: 'email',
+                    { header: 'Name',  dataIndex: 'name', editor: combo },
+                    { header: 'Email', dataIndex: 'email',
                         editor: {
                             xtype: 'textfield',
                             allowBlank: false
@@ -385,12 +417,12 @@ describe('Ext.grid.plugin.RowEditing', function () {
             plugin.startEdit(record, column);
         });
 
-        afterEach(function () {
+        afterEach(function() {
             combo = record = items = null;
         });
 
-        describe('using an existing component as an editor', function () {
-            it('should update the underlying cell and the record', function () {
+        describe('using an existing component as an editor', function() {
+            it('should update the underlying cell and the record', function() {
                 column.getEditor().setValue('utley');
                 plugin.editor.completeEdit();
 
@@ -400,14 +432,14 @@ describe('Ext.grid.plugin.RowEditing', function () {
         });
     });
 
-    describe('canceledit', function () {
+    describe('canceledit', function() {
         var editorContext = {},
             record;
 
-        beforeEach(function () {
+        beforeEach(function() {
             makeGrid({
                 listeners: {
-                    canceledit: function (editor, context) {
+                    canceledit: function(editor, context) {
                         editorContext = context;
                     }
                 }
@@ -419,7 +451,7 @@ describe('Ext.grid.plugin.RowEditing', function () {
             plugin.startEdit(record, column);
         });
 
-        afterEach(function () {
+        afterEach(function() {
             editorContext = record = null;
         });
 
@@ -452,12 +484,12 @@ describe('Ext.grid.plugin.RowEditing', function () {
         });
     });
 
-    describe('locked grid', function () {
+    describe('locked grid', function() {
         var suiteCfg = {
             columns: [
-                {header: 'Name',  dataIndex: 'name', width: 100, locked: true, editor: true},
-                {header: 'Email', dataIndex: 'email', width: 100, editor: true},
-                {header: 'Phone', dataIndex: 'phone', width: 100, editor: true}
+                { header: 'Name',  dataIndex: 'name', width: 100, locked: true, editor: true },
+                { header: 'Email', dataIndex: 'email', width: 100, editor: true },
+                { header: 'Phone', dataIndex: 'phone', width: 100, editor: true }
             ],
             plugins: {
                 ptype: 'rowediting'
@@ -465,17 +497,16 @@ describe('Ext.grid.plugin.RowEditing', function () {
         },
         node;
 
-        beforeEach(function () {
+        beforeEach(function() {
             makeGrid(null, suiteCfg);
         });
 
-        afterEach(function () {
+        afterEach(function() {
             node = null;
         });
 
-        it('should display the row editor for the locked grid in editing mode', function () {
+        it('should display the row editor for the locked grid in editing mode', function() {
             node = grid.lockedGrid.view.getNode(0);
-
             jasmine.fireMouseEvent(Ext.fly(node).down('.x-grid-cell-inner', true), 'dblclick');
 
             plugin = grid.findPlugin('rowediting');
@@ -484,7 +515,7 @@ describe('Ext.grid.plugin.RowEditing', function () {
             expect(plugin.editing).toBe(true);
         });
 
-        it('should display the row editor for the normal grid in editing mode', function () {
+        it('should display the row editor for the normal grid in editing mode', function() {
             node = grid.normalGrid.view.getNode(0);
 
             jasmine.fireMouseEvent(Ext.fly(node).down('.x-grid-cell-inner', true), 'dblclick');
@@ -495,8 +526,40 @@ describe('Ext.grid.plugin.RowEditing', function () {
             expect(plugin.editing).toBe(true);
         });
 
-        describe('with grouping feature', function () {
-            describe('when the activeRecord of the activeEditor has been filtered', function () {
+        describe('locking and unlocking columns', function() {
+            it("should move the editor from the locked to the normal side after unlocking a column", function() {
+                node = grid.lockedGrid.view.getNode(0);
+                jasmine.fireMouseEvent(Ext.fly(node).down('.x-grid-cell-inner', true), 'dblclick');
+                plugin = grid.findPlugin('rowediting');
+
+                expect(grid.columns[0].getEditor().ownerCt).toBe(plugin.editor.lockedColumnContainer);
+                plugin.cancelEdit();
+
+                grid.unlock(grid.columns[0], 0);
+                node = grid.normalGrid.view.getNode(0);
+                jasmine.fireMouseEvent(Ext.fly(node).down('.x-grid-cell-inner', true), 'dblclick');
+
+                expect(grid.columns[0].getEditor().ownerCt).toBe(plugin.editor.normalColumnContainer);
+            });
+
+            it("should move the editor from the normal to the locked side after locking a column", function() {
+                node = grid.normalGrid.view.getNode(0);
+                jasmine.fireMouseEvent(Ext.fly(node).down('.x-grid-cell-inner', true), 'dblclick');
+                plugin = grid.findPlugin('rowediting');
+
+                expect(grid.columns[1].getEditor().ownerCt).toBe(plugin.editor.normalColumnContainer);
+                plugin.cancelEdit();
+
+                grid.lock(grid.columns[1], 0);
+                node = grid.lockedGrid.view.getNode(0);
+                jasmine.fireMouseEvent(Ext.fly(node).down('.x-grid-cell-inner', true), 'dblclick');
+
+                expect(grid.columns[0].getEditor().ownerCt).toBe(plugin.editor.lockedColumnContainer);
+            });
+        });
+
+        describe('with grouping feature', function() {
+            describe('when the activeRecord of the activeEditor has been filtered', function() {
                 // These specs simulate the filtering of the data store when the row editing plugin is active
                 // and over a record that has been filtered after the row editor was activated/started editing.
                 // The bug appeared in KS when the row editor was open and the dataset was filtered by the grid
@@ -517,13 +580,13 @@ describe('Ext.grid.plugin.RowEditing', function () {
                 // Note these specs must use the bufferedrenderer plugin.
                 var normalView, lockedView, record;
 
-                beforeEach(function () {
+                beforeEach(function() {
                     grid.destroy();
 
                     makeGrid(null, Ext.applyIf({
                         features: {
-                            ftype : 'groupingsummary',
-                            groupHeaderTpl : '{name}'
+                            ftype: 'groupingsummary',
+                            groupHeaderTpl: '{name}'
                         },
                         plugins: ['bufferedrenderer'],
                         lockedGridConfig: null,
@@ -536,12 +599,12 @@ describe('Ext.grid.plugin.RowEditing', function () {
                     lockedView = grid.lockedGrid.view;
                 });
 
-                afterEach(function () {
+                afterEach(function() {
                     normalView = lockedView = record = null;
                 });
 
-                describe('activating the editor from the normal view', function () {
-                    beforeEach(function () {
+                describe('activating the editor from the normal view', function() {
+                    beforeEach(function() {
                         node = normalView.getNode(0);
 
                         jasmine.fireMouseEvent(Ext.fly(node).down('.x-grid-cell-inner', true), 'dblclick');
@@ -553,18 +616,18 @@ describe('Ext.grid.plugin.RowEditing', function () {
                         record = normalView.getRecord(node);
                     });
 
-                    it('should still be able to lookup the record in the datastore when filtered', function () {
+                    it('should still be able to lookup the record in the datastore when filtered', function() {
                         expect(record).toBeDefined();
                         expect(record.get('email')).toBe('bart@simpsons.com');
                     });
 
-                    it('should close the editor', function () {
+                    it('should close the editor', function() {
                         expect(plugin.editing).toBe(false);
                     });
                 });
 
-                describe('activating the editor from the locked view', function () {
-                    beforeEach(function () {
+                describe('activating the editor from the locked view', function() {
+                    beforeEach(function() {
                         node = lockedView.getNode(0);
 
                         jasmine.fireMouseEvent(Ext.fly(node).down('.x-grid-cell-inner', true), 'dblclick');
@@ -573,12 +636,12 @@ describe('Ext.grid.plugin.RowEditing', function () {
                         record = lockedView.getRecord(node);
                     });
 
-                    it('should still be able to lookup the record in the datastore when filtered', function () {
+                    it('should still be able to lookup the record in the datastore when filtered', function() {
                         expect(record).toBeDefined();
                         expect(record.get('email')).toBe('bart@simpsons.com');
                     });
 
-                    it('should close the editor', function () {
+                    it('should close the editor', function() {
                         expect(plugin.editing).toBe(false);
                     });
                 });
@@ -586,77 +649,77 @@ describe('Ext.grid.plugin.RowEditing', function () {
         });
     });
 
-    describe('clicksToEdit', function () {
+    describe('clicksToEdit', function() {
         var node, record;
 
-        afterEach(function () {
+        afterEach(function() {
             node = record = null;
         });
 
-        describe('2 clicks', function () {
-            beforeEach(function () {
+        describe('2 clicks', function() {
+            beforeEach(function() {
                 makeGrid();
             });
 
-            it('should default to 2', function () {
+            it('should default to 2', function() {
                 expect(plugin.clicksToEdit).toBe(2);
             });
 
-            it('should begin editing when double-clicked', function () {
+            it('should begin editing when double-clicked', function() {
                 record = grid.store.getAt(0);
                 node = grid.view.getNodeByRecord(record);
-                jasmine.fireMouseEvent(Ext.fly(node).down('.x-grid-cell'), 'dblclick');
+                jasmine.fireMouseEvent(node.querySelector('.x-grid-cell'), 'dblclick');
 
                 expect(plugin.editor).not.toBeFalsy();
             });
 
-            it('should not begin editing when single-clicked', function () {
+            it('should not begin editing when single-clicked', function() {
                 record = grid.store.getAt(0);
                 node = grid.view.getNodeByRecord(record);
-                jasmine.fireMouseEvent(Ext.fly(node).down('.x-grid-cell'), 'click');
+                jasmine.fireMouseEvent(node.querySelector('.x-grid-cell'), 'click');
 
                 expect(plugin.editor).toBeFalsy();
             });
         });
 
-        describe('1 click', function () {
-            beforeEach(function () {
+        describe('1 click', function() {
+            beforeEach(function() {
                 makeGrid({
                     clicksToEdit: 1
                 });
             });
 
-            it('should honor a different number than the default', function () {
+            it('should honor a different number than the default', function() {
                 expect(plugin.clicksToEdit).toBe(1);
             });
 
-            it('should begin editing when single-clicked', function () {
+            it('should begin editing when single-clicked', function() {
                 record = grid.store.getAt(0);
                 node = grid.view.getNodeByRecord(record);
-                jasmine.fireMouseEvent(Ext.fly(node).down('.x-grid-cell'), 'click');
+                jasmine.fireMouseEvent(node.querySelector('.x-grid-cell'), 'click');
 
                 expect(plugin.editor).not.toBeFalsy();
             });
 
-            it('should not begin editing when double-clicked', function () {
+            it('should not begin editing when double-clicked', function() {
                 record = grid.store.getAt(0);
                 node = grid.view.getNodeByRecord(record);
-                jasmine.fireMouseEvent(Ext.fly(node).down('.x-grid-cell'), 'dblclick');
+                jasmine.fireMouseEvent(node.querySelector('.x-grid-cell'), 'dblclick');
 
                 expect(plugin.editor).not.toBeFalsy();
             });
         });
     });
 
-    describe('the RowEditor', function () {
+    describe('the RowEditor', function() {
         var field;
 
-        afterEach(function () {
+        afterEach(function() {
             field = null;
         });
 
-        describe('as textfield', function () {
-            beforeEach(function () {
+        describe('as textfield', function() {
+            beforeEach(function() {
                 makeGrid();
 
                 column = grid.columns[0];
@@ -664,7 +727,7 @@ describe('Ext.grid.plugin.RowEditing', function () {
                 field = column.field;
             });
 
-            it('should start the edit when ENTER is pressed', function () {
+            it('should start the edit when ENTER is pressed', function() {
                 var node;
 
                 // First complete the edit (we start an edit in the top-level beforeEach).
@@ -675,17 +738,17 @@ describe('Ext.grid.plugin.RowEditing', function () {
                 node = view.body.query('td', true)[0];
                 jasmine.fireKeyEvent(node, 'keydown', 13);
 
-                waitsFor(function () {
+                waitsFor(function() {
                     return plugin.editing;
                 });
 
-                runs(function () {
+                runs(function() {
                     expect(plugin.editing).toBe(true);
                 });
             });
 
-            describe('when currently editing', function () {
-                it('should complete the edit when ENTER is pressed', function () {
+            describe('when currently editing', function() {
+                it('should complete the edit when ENTER is pressed', function() {
                     var str = 'Utley is Top Dog',
                         model = store.getAt(0);
 
@@ -694,16 +757,16 @@ describe('Ext.grid.plugin.RowEditing', function () {
 
                     jasmine.fireKeyEvent(field.inputEl, 'keydown', 13);
 
-                    waitsFor(function () {
+                    waitsFor(function() {
                         return model.get('name') === str;
                     });
 
-                    runs(function () {
+                    runs(function() {
                         expect(model.get('name')).toBe(str);
                     });
                 });
 
-                it('should cancel the edit when ESCAPE is pressed', function () {
+                it('should cancel the edit when ESCAPE is pressed', function() {
                     spyOn(plugin, 'cancelEdit');
 
                     jasmine.fireKeyEvent(field.inputEl, 'keydown', 27);
@@ -713,8 +776,8 @@ describe('Ext.grid.plugin.RowEditing', function () {
             });
         });
 
-        describe('as textarea', function () {
-            beforeEach(function () {
+        describe('as textarea', function() {
+            beforeEach(function() {
                 makeGrid();
 
                 column = grid.columns[1];
@@ -722,7 +785,7 @@ describe('Ext.grid.plugin.RowEditing', function () {
                 field = column.field;
             });
 
-            it('should start the edit when ENTER is pressed', function () {
+            it('should start the edit when ENTER is pressed', function() {
                 var node;
 
                 // First complete the edit (we start an edit in the top-level beforeEach).
@@ -736,8 +799,8 @@ describe('Ext.grid.plugin.RowEditing', function () {
                 expect(plugin.editing).toBe(true);
             });
 
-            describe('when currently editing', function () {
-                it('should complete the edit when ENTER is pressed', function () {
+            describe('when currently editing', function() {
+                it('should complete the edit when ENTER is pressed', function() {
                     spyOn(plugin, 'completeEdit');
 
                     jasmine.fireKeyEvent(field.inputEl, 'keydown', 13);
@@ -745,7 +808,7 @@ describe('Ext.grid.plugin.RowEditing', function () {
                     expect(plugin.completeEdit).toHaveBeenCalled();
                 });
 
-                it('should not cancel the edit when ENTER is pressed', function () {
+                it('should not cancel the edit when ENTER is pressed', function() {
                     spyOn(plugin, 'cancelEdit');
 
                     jasmine.fireKeyEvent(field.inputEl, 'keydown', 13);
@@ -753,7 +816,7 @@ describe('Ext.grid.plugin.RowEditing', function () {
                     expect(plugin.cancelEdit).not.toHaveBeenCalled();
                 });
 
-                it('should cancel the edit when ESCAPE is pressed', function () {
+                it('should cancel the edit when ESCAPE is pressed', function() {
                     spyOn(plugin, 'cancelEdit');
 
                     jasmine.fireKeyEvent(field.inputEl, 'keydown', 27);
@@ -763,7 +826,7 @@ describe('Ext.grid.plugin.RowEditing', function () {
             });
         });
     });
-    
+
     describe("button position", function() {
         describe("not enough space to fit the editor", function() {
             beforeEach(function() {
@@ -773,21 +836,21 @@ describe('Ext.grid.plugin.RowEditing', function () {
                     height: undefined
                 }, {
                     data: [
-                        {'name': 'Lisa', 'email': 'lisa@simpsons.com', 'phone': '555-111-1224'},
-                        {'name': 'Bart', 'email': 'bart@simpsons.com', 'phone': '555-222-1234'}
+                        { 'name': 'Lisa', 'email': 'lisa@simpsons.com', 'phone': '555-111-1224' },
+                        { 'name': 'Bart', 'email': 'bart@simpsons.com', 'phone': '555-222-1234' }
                     ]
                 });
             });
-            
+
             it("should position buttons at the bottom when editing first row", function() {
                 plugin.startEdit(store.getAt(0), grid.columns[0]);
-                
+
                 expect(plugin.editor.floatingButtons.el.hasCls('x-grid-row-editor-buttons-bottom')).toBe(true);
             });
-            
+
             it("should position buttons at the top when editing last row", function() {
                 plugin.startEdit(store.getAt(1), grid.columns[0]);
-                
+
                 expect(plugin.editor.floatingButtons.el.hasCls('x-grid-row-editor-buttons-top')).toBe(true);
             });
         });

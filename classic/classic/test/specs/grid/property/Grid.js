@@ -1,4 +1,4 @@
-describe("Ext.grid.property.Grid", function() {
+topSuite("Ext.grid.property.Grid", function() {
     var grid;
 
     function makeGrid(source) {
@@ -7,7 +7,8 @@ describe("Ext.grid.property.Grid", function() {
                 stringProp: 'foo',
                 numProp: 100,
                 boolProp: true,
-                dateProp: new Date(2000, 0, 1)
+                dateProp: new Date(2000, 0, 1),
+                value: 'bar'
             },
             renderTo: Ext.getBody()
         });
@@ -68,6 +69,27 @@ describe("Ext.grid.property.Grid", function() {
                 expect(function() {
                     grid.removeProperty('foo');
                 }).not.toThrow();
+            });
+        });
+    });
+
+    describe('cell editing', function() {
+        beforeEach(function() {
+            makeGrid();
+        });
+
+        describe('inferring editors', function() {
+            it('should infer the editor based on the data type', function() {
+                var plugin = grid.findPlugin('cellediting'),
+                    store = grid.getStore(),
+                    column = grid.getHeaderContainer().getGridColumns()[1];
+
+                // 'value' record must be first for testing editor issue EXTJS-15537
+                store.sort('name', 'desc');
+
+                store.each(function(record) {
+                    expect(plugin.getEditor(record, column).editorId).toEqual(record.get(grid.nameField));
+                });
             });
         });
     });

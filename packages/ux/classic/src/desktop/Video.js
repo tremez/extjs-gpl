@@ -1,9 +1,9 @@
-/*!
-* Ext JS Library
-* Copyright(c) 2006-2015 Sencha Inc.
-* licensing@sencha.com
-* http://www.sencha.com/license
-*/
+/*
+ * Ext JS Library
+ * Copyright(c) 2006-2015 Sencha Inc.
+ * licensing@sencha.com
+ * http://www.sencha.com/license
+ */
 
 /**
  * From code originally written by David Davis
@@ -11,6 +11,7 @@
  * For HTML5 video to work, your server must
  * send the right content type, for more info see:
  * <http://developer.mozilla.org/En/HTML/Element/Video>
+ * @class Ext.ux.desktop.Video
  */
 Ext.define('Ext.ux.desktop.Video', {
     extend: 'Ext.panel.Panel',
@@ -21,6 +22,8 @@ Ext.define('Ext.ux.desktop.Video', {
     controls: true,
     bodyStyle: 'background-color:#000;color:#fff',
     html: '',
+
+    /* eslint-disable max-len, indent */
     tpl: [
         '<video id="{id}-video" autoPlay="{autoplay}" controls="{controls}" poster="{poster}" start="{start}" loopstart="{loopstart}" loopend="{loopend}" autobuffer="{autobuffer}" loop="{loop}" style="width:100%;height:100%">',
             '<tpl for="src">',
@@ -29,72 +32,86 @@ Ext.define('Ext.ux.desktop.Video', {
             '{html}',
         '</video>'
     ],
+    /* eslint-enable max-len, indent */
 
-    initComponent: function () {
-
+    initComponent: function() {
         var me = this,
-            fallback,
-            size,
-            cfg,
-            el;
+            fallback, cfg, chrome;
 
         if (me.fallbackHTML) {
             fallback = me.fallbackHTML;
-        } else {
+        }
+        else {
             fallback = "Your browser does not support HTML5 Video. ";
 
             if (Ext.isChrome) {
                 fallback += 'Upgrade Chrome.';
-            } else if (Ext.isGecko) {
+            }
+            else if (Ext.isGecko) {
                 fallback += 'Upgrade to Firefox 3.5 or newer.';
-            } else {
-                var chrome = '<a href="http://www.google.com/chrome">Chrome</a>';
+            }
+            else {
+                chrome = '<a href="http://www.google.com/chrome">Chrome</a>';
+
                 fallback += 'Please try <a href="http://www.mozilla.com">Firefox</a>';
 
                 if (Ext.isIE) {
                     fallback += ', ' + chrome +
                         ' or <a href="http://www.apple.com/safari/">Safari</a>.';
-                } else {
+                }
+                else {
                     fallback += ' or ' + chrome + '.';
                 }
             }
         }
+
         me.fallbackHTML = fallback;
 
-        cfg = me.data = Ext.copyTo({
-            tag   : 'video',
-            html: fallback
-        },
-        me, 'id,poster,start,loopstart,loopend,playcount,autobuffer,loop');
+        cfg = me.data =
+            Ext.copyTo(
+                {
+                    tag: 'video',
+                    html: fallback
+                },
+                me,
+                'id,poster,start,loopstart,loopend,playcount,autobuffer,loop'
+            );
 
         // just having the params exist enables them
         if (me.autoplay) {
             cfg.autoplay = 1;
         }
+
         if (me.controls) {
             cfg.controls = 1;
         }
 
         // handle multiple sources
         if (Ext.isArray(me.src)) {
-            cfg.src  = me.src;
-        } else {
-            cfg.src  = [ {src: me.src} ];
+            cfg.src = me.src;
         }
+        else {
+            cfg.src = [{ src: me.src }];
+        }
+
         me.callParent();
     },
 
     afterRender: function() {
-        var me = this;
+        var me = this,
+            el;
+
         me.callParent();
+
         me.video = me.body.getById(me.id + '-video');
         el = me.video.dom;
-        me.supported = (el && el.tagName.toLowerCase() == 'video');
+        me.supported = (el && el.tagName.toLowerCase() === 'video');
+
         if (me.supported) {
             me.video.on('error', me.onVideoError, me);
         }
     },
-    
+
     getFallback: function() {
         return '<h1 style="background-color:#ff4f4f;padding: 10px;">' + this.fallbackHTML + '</h1>';
     },
@@ -107,15 +124,20 @@ Ext.define('Ext.ux.desktop.Video', {
         me.body.createChild(me.getFallback());
     },
 
-    doDestroy: function () {
-        var me = this;
+    doDestroy: function() {
+        var me = this,
+            video = me.video,
+            videoDom;
 
-        var video = me.video;
+        video = me.video;
+
         if (me.supported && video) {
-            var videoDom = video.dom;
+            videoDom = video.dom;
+
             if (videoDom && videoDom.pause) {
                 videoDom.pause();
             }
+
             video.remove();
             me.video = null;
         }

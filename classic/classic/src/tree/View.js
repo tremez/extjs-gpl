@@ -6,17 +6,25 @@ Ext.define('Ext.tree.View', {
     alias: 'widget.treeview',
 
     config: {
+        /**
+         * @cfg selectionModel
+         * @inheritdoc
+         */
         selectionModel: {
             type: 'treemodel'
         }
     },
-    
+
     /**
      * @property {Boolean} isTreeView
      * `true` in this class to identify an object as an instantiated TreeView, or subclass thereof.
      */
     isTreeView: true,
 
+    /**
+     * @cfg loadingCls
+     * @inheritdoc
+     */
     loadingCls: Ext.baseCSSPrefix + 'grid-tree-loading',
     expandedCls: Ext.baseCSSPrefix + 'grid-tree-node-expanded',
     leafCls: Ext.baseCSSPrefix + 'grid-tree-node-leaf',
@@ -30,10 +38,8 @@ Ext.define('Ext.tree.View', {
     // for an ancestor node with this class.
     nodeAnimWrapCls: Ext.baseCSSPrefix + 'tree-animator-wrap',
 
-    ariaRole: 'treegrid',
-
     /**
-     * @cfg {Boolean}
+     * @cfg loadMask
      * @inheritdoc
      */
     loadMask: false,
@@ -46,17 +52,28 @@ Ext.define('Ext.tree.View', {
 
     /**
      * @cfg {Boolean} animate
-     * True to enable animated expand/collapse (defaults to the value of {@link Ext#enableFx Ext.enableFx})
+     * True to enable animated expand/collapse (defaults to the value of
+     * {@link Ext#enableFx Ext.enableFx})
      */
 
     expandDuration: 250,
     collapseDuration: 250,
 
+    /**
+     * @cfg {Boolean} toggleOnDblClick
+     * True to toggle expand or collapse with a double click.
+     */
     toggleOnDblClick: true,
 
+    /**
+     * @cfg stripeRows
+     * @inheritdoc
+     */
     stripeRows: false,
 
-    // treeRowTpl which is inserted into the rowTpl chain before the base rowTpl. Sets tree-specific classes and attributes
+    /* eslint-disable indent */
+    // treeRowTpl which is inserted into the rowTpl chain before the base rowTpl.
+    // Sets tree-specific classes and attributes
     treeRowTpl: [
         '{%',
             'this.processRowValues(values);',
@@ -72,7 +89,7 @@ Ext.define('Ext.tree.View', {
                 // so the old values are overwritten
                 rowValues.rowAttr['data-qtip'] = record.get('qtip') || '';
                 rowValues.rowAttr['data-qtitle'] = record.get('qtitle') || '';
-                
+
                 // aria-level is 1-based
                 rowValues.rowAttr['aria-level'] = record.getDepth() + 1;
 
@@ -88,33 +105,35 @@ Ext.define('Ext.tree.View', {
                         rowValues.rowAttr['aria-expanded'] = false;
                     }
                 }
-                
+
                 if (record.isLoading()) {
                     rowValues.rowClasses.push(view.loadingCls);
                 }
             }
         }
     ],
+    /* eslint-enable indent */
 
     /**
      * @event afteritemexpand
      * Fires after an item has been visually expanded and is visible in the tree.
-     * @param {Ext.data.NodeInterface} node         The node that was expanded
-     * @param {Number} index                        The index of the node
-     * @param {HTMLElement} item                    The HTML element for the node that was expanded
+     * @param {Ext.data.NodeInterface} node The node that was expanded
+     * @param {Number} index The index of the node
+     * @param {HTMLElement} item The HTML element for the node that was expanded
      */
 
     /**
      * @event afteritemcollapse
      * Fires after an item has been visually collapsed and is no longer visible in the tree.
-     * @param {Ext.data.NodeInterface} node         The node that was collapsed
-     * @param {Number} index                        The index of the node
-     * @param {HTMLElement} item                    The HTML element for the node that was collapsed
+     * @param {Ext.data.NodeInterface} node The node that was collapsed
+     * @param {Number} index The index of the node
+     * @param {HTMLElement} item The HTML element for the node that was collapsed
      */
 
     /**
      * @event nodedragover
-     * Fires when a tree node is being targeted for a drag drop, return false to signal drop not allowed.
+     * Fires when a tree node is being targeted for a drag drop, return false to signal
+     * drop not allowed.
      * @param {Ext.data.NodeInterface} targetNode The target node
      * @param {String} position The drop position, "before", "after" or "append",
      * @param {Object} dragData Data relating to the drag operation
@@ -165,22 +184,23 @@ Ext.define('Ext.tree.View', {
 
     refreshPartner: function() {
         var partner = this.lockingPartner;
+
         if (partner) {
             partner.refresh();
         }
     },
 
-    afterRender: function() {		
-        var me = this;		
-		
-        me.callParent();		
-		
-        me.el.on({		
-            scope: me,		
+    afterRender: function() {
+        var me = this;
+
+        me.callParent();
+
+        me.el.on({
+            scope: me,
             delegate: me.expanderSelector,
             mouseover: me.onExpanderMouseOver,
             mouseout: me.onExpanderMouseOut
-        });		
+        });
     },
 
     processUIEvent: function(e) {
@@ -190,6 +210,7 @@ Ext.define('Ext.tree.View', {
         if (e.getTarget('.' + this.nodeAnimWrapCls, this.el)) {
             return false;
         }
+
         return this.callParent([e]);
     },
 
@@ -199,11 +220,13 @@ Ext.define('Ext.tree.View', {
 
     getChecked: function() {
         var checked = [];
-        this.node.cascade(function(rec){
+
+        this.node.cascade(function(rec) {
             if (rec.get('checked')) {
                 checked.push(rec);
             }
         });
+
         return checked;
     },
 
@@ -238,25 +261,28 @@ Ext.define('Ext.tree.View', {
 
     /**
      * @private
-     * Returns the animation wrapper element for the specified parent node, used to wrap the child nodes as
-     * they slide up or down during expand/collapse.
+     * Returns the animation wrapper element for the specified parent node, used to wrap
+     * the child nodes as they slide up or down during expand/collapse.
      *
      * @param parent The parent node to be expanded or collapsed
      *
-     * @param [bubble=true] If the passed parent node does not already have a wrap element created, by default
-     * this function will bubble up to each parent node looking for a valid wrap element to reuse, returning
-     * the first one it finds. This is the appropriate behavior, e.g., for the collapse direction, so that the
-     * entire expanded set of branch nodes can collapse as a single unit.
+     * @param [bubble=true] If the passed parent node does not already have a wrap element created,
+     * by default this function will bubble up to each parent node looking for a valid wrap element
+     * to reuse, returning the first one it finds. This is the appropriate behavior, e.g.,
+     * for the collapse direction, so that the entire expanded set of branch nodes can collapse
+     * as a single unit.
      *
-     * However for expanding each parent node should instead always create its own animation wrap if one
-     * doesn't exist, so that its children can expand independently of any other nodes -- this is crucial
-     * when executing the "expand all" behavior. If multiple nodes attempt to reuse the same ancestor wrap
-     * element concurrently during expansion it will lead to problems as the first animation to complete will
-     * delete the wrap el out from under other running animations. For that reason, when expanding you should
-     * always pass `bubble: false` to be on the safe side.
+     * However for expanding each parent node should instead always create its own animation wrap
+     * if one doesn't exist, so that its children can expand independently of any other nodes --
+     * this is crucial when executing the "expand all" behavior. If multiple nodes attempt to reuse
+     * the same ancestor wrap element concurrently during expansion it will lead to problems
+     * as the first animation to complete will delete the wrap el out from under other running
+     * animations. For that reason, when expanding you should always pass `bubble: false`
+     * to be on the safe side.
      *
-     * If the passed parent has no wrap (or there is no valid ancestor wrap after bubbling), this function
-     * will return null and the calling code should then call {@link #createAnimWrap} if needed.
+     * If the passed parent has no wrap (or there is no valid ancestor wrap after bubbling),
+     * this function will return null and the calling code should then call {@link #createAnimWrap}
+     * if needed.
      *
      * @return {Ext.dom.Element} The wrapping element as created in {@link #createAnimWrap}, or null
      */
@@ -265,17 +291,20 @@ Ext.define('Ext.tree.View', {
             return null;
         }
 
+        // eslint-disable-next-line vars-on-top
         var wraps = this.animWraps,
             wrap = wraps[parent.internalId];
 
         if (bubble !== false) {
             while (!wrap && parent) {
                 parent = parent.parentNode;
+
                 if (parent) {
                     wrap = wraps[parent.internalId];
                 }
             }
         }
+
         return wrap;
     },
 
@@ -305,29 +334,32 @@ Ext.define('Ext.tree.View', {
         childNodes = targetEl.dom.childNodes;
         len = childNodes.length;
 
-        // The relative index is the index in the full flat collection minus the index of the wraps parent
+        // The relative index is the index in the full flat collection
+        // minus the index of the wraps parent
         relativeIndex = index - me.indexInStore(parent) - 1;
 
-        // If we are adding records to the wrap that have a higher relative index then there are currently children
+        // If we are adding records to the wrap that have a higher relative index
+        // then there are currently children
         // it means we have to append the nodes to the wrap
         if (!len || relativeIndex >= len) {
             targetEl.appendChild(result.fragment, true);
         }
-        // If there are already more children then the relative index it means we are adding child nodes of
-        // some expanded node in the anim wrap. In this case we have to insert the nodes in the right location
+        // If there are already more children then the relative index it means we are adding
+        // child nodes of some expanded node in the anim wrap. In this case we have to insert
+        // the nodes in the right location
         else {
             Ext.fly(childNodes[relativeIndex]).insertSibling(children, 'before', true);
         }
 
         // We also have to update the node cache of the DataView
         all.insert(index, children);
+
         return children;
     },
 
     onRemove: function(ds, records, index) {
         var me = this,
             empty, i,
-            fireRemoveEvent = me.hasListeners.remove,
             oldItems;
 
         if (me.viewReady) {
@@ -337,9 +369,9 @@ Ext.define('Ext.tree.View', {
             if (me.bufferedRenderer) {
                 return me.callParent([ds, records, index]);
             }
-            if (fireRemoveEvent) {
-                oldItems = this.all.slice(index, index + records.length);
-            }
+
+            oldItems = this.all.slice(index, index + records.length);
+
             // Nothing left, just refresh the view.
             if (empty) {
                 me.refresh();
@@ -349,13 +381,11 @@ Ext.define('Ext.tree.View', {
                 for (i = records.length - 1, index += i; i >= 0; --i, --index) {
                     me.doRemove(records[i], index);
                 }
+
                 me.refreshSizePending = true;
             }
 
-            // Only fire the event if there's anyone listening
-            if (fireRemoveEvent) {
-                me.fireItemMutationEvent('itemremove', records, index, oldItems, me);
-            }
+            me.fireItemMutationEvent('itemremove', records, index, oldItems, me);
         }
     },
 
@@ -385,6 +415,7 @@ Ext.define('Ext.tree.View', {
         if (me.rendered && me.all.getCount() && me.animate) {
             if (me.getNode(parent)) {
                 animWrap = me.getAnimWrap(parent, false);
+
                 if (!animWrap) {
                     animWrap = me.animWraps[parent.internalId] = me.createAnimWrap(parent);
                     animWrap.animateEl.setHeight(0);
@@ -394,6 +425,7 @@ Ext.define('Ext.tree.View', {
                     // have to remove the nodes from the animWrap.
                     animWrap.targetEl.select(me.itemSelector).destroy();
                 }
+
                 animWrap.expanding = true;
                 animWrap.collapsing = false;
             }
@@ -424,6 +456,7 @@ Ext.define('Ext.tree.View', {
         if (!animWrap) {
             parent.isExpandingOrCollapsing = false;
             me.fireEvent('afteritemexpand', parent, index, node);
+
             return;
         }
 
@@ -435,10 +468,11 @@ Ext.define('Ext.tree.View', {
 
         // Must set element height before this event finishes because animation does not set
         // initial condition until first tick has elapsed.
-        // Which is good because the upcoming layout resumption must read the content height BEFORE it gets squished.
+        // Which is good because the upcoming layout resumption must read the content height
+        // BEFORE it gets squished.
         Ext.on('idle', function() {
-	    animateEl.dom.style.height = '0px';
-        }, null, {single: true});
+            animateEl.dom.style.height = '0px';
+        }, null, { single: true });
 
         animateEl.animate({
             from: {
@@ -460,23 +494,29 @@ Ext.define('Ext.tree.View', {
                         if (!targetEl.contains(activeEl)) {
                             activeEl = null;
                         }
-                        
+
                         animWrap.el.insertSibling(items, 'before', true);
-                        
+
                         if (activeEl) {
                             Ext.fly(activeEl).focus();
                         }
                     }
-                    
+
                     animWrap.el.destroy();
-                    me.animWraps[animWrap.record.internalId] = queue[id] = null;
+                    queue[id] = null;
+
+                    if (!me.destroyed) {
+                        me.animWraps[animWrap.record.internalId] = null;
+                    }
                 }
             },
             callback: function() {
                 parent.isExpandingOrCollapsing = false;
+
                 if (!me.destroyed) {
                     me.refreshSize(true);
                 }
+
                 me.fireEvent('afteritemexpand', parent, index, node);
             }
         });
@@ -491,24 +531,30 @@ Ext.define('Ext.tree.View', {
             if (me.animate) {
                 // Only process if the collapsing node is in the UI.
                 // A node may be collapsed as part of a recursive ancestor collapse, and if it
-                // has already been removed from the UI by virtue of an ancestor being collapsed, we should not do anything.
-                if (parent.isVisible()) {
+                // has already been removed from the UI by virtue of an ancestor being collapsed,
+                // we should not do anything.
+                if (parent.getTreeStore().isVisible(parent)) {
                     animWrap = me.getAnimWrap(parent);
+
                     if (!animWrap) {
-                        animWrap = me.animWraps[parent.internalId] = me.createAnimWrap(parent, index);
+                        animWrap = me.animWraps[parent.internalId] =
+                            me.createAnimWrap(parent, index);
                     }
                     else if (animWrap.expanding) {
                         // If we collapse this node while it is still expanding then we
                         // have to remove the nodes from the animWrap.
                         animWrap.targetEl.select(this.itemSelector).destroy();
                     }
+
                     animWrap.expanding = false;
                     animWrap.collapsing = true;
                     animWrap.callback = callback;
                     animWrap.scope = scope;
                 }
-            } else {
-                // Cache any passed callback for use in the onCollapse post collapse handler non-animated codepath
+            }
+            else {
+                // Cache any passed callback for use in the onCollapse post collapse handler
+                // non-animated codepath
                 me.onCollapseCallback = callback;
                 me.onCollapseScope = scope;
             }
@@ -539,6 +585,7 @@ Ext.define('Ext.tree.View', {
             // Call any collapse callback cached in the onBeforeCollapse handler
             Ext.callback(me.onCollapseCallback, me.onCollapseScope);
             me.onCollapseCallback = me.onCollapseScope = null;
+
             return;
         }
 
@@ -556,14 +603,20 @@ Ext.define('Ext.tree.View', {
                 afteranimate: function() {
                     // In case lastframe did not fire because the animation was stopped.
                     animWrap.el.destroy();
-                    me.animWraps[animWrap.record.internalId] = queue[id] = null;
+                    queue[id] = null;
+
+                    if (!me.destroyed) {
+                        me.animWraps[animWrap.record.internalId] = null;
+                    }
                 }
             },
             callback: function() {
                 parent.isExpandingOrCollapsing = false;
+
                 if (!me.destroyed) {
                     me.refreshSize(true);
                 }
+
                 me.fireEvent('afteritemcollapse', parent, index, node);
 
                 // Call any collapse callback cached in the onBeforeCollapse handler
@@ -609,6 +662,7 @@ Ext.define('Ext.tree.View', {
             Ext.suspendLayouts();
             result = record.expand(deep, callback, scope);
             Ext.resumeLayouts(true);
+
             return result;
         }
     },
@@ -631,6 +685,7 @@ Ext.define('Ext.tree.View', {
             if (!record.isLeaf()) {
                 record.isExpandingOrCollapsing = doAnimate;
             }
+
             return record.collapse(deep, callback, scope);
         }
     },
@@ -647,7 +702,8 @@ Ext.define('Ext.tree.View', {
     toggle: function(record, deep, callback, scope) {
         if (record.isExpanded()) {
             this.collapse(record, deep, callback, scope);
-        } else {
+        }
+        else {
             this.expand(record, deep, callback, scope);
         }
     },
@@ -657,18 +713,20 @@ Ext.define('Ext.tree.View', {
             editingPlugin = me.editingPlugin;
 
         me.callParent([record, item, index, e]);
-        if (me.toggleOnDblClick && record.isExpandable() && !(editingPlugin && editingPlugin.clicksToEdit === 2)) {
+
+        if (me.toggleOnDblClick && record.isExpandable() &&
+            !(editingPlugin && editingPlugin.clicksToEdit === 2)) {
             me.toggle(record);
         }
     },
-    
+
     onCellClick: function(cell, cellIndex, record, row, rowIndex, e) {
         var me = this,
             column = e.position.column;
 
         // We're only interested in clicks in the tree column
         if (column.isTreeColumn) {
-            
+
             // Click on the checkbox and there is a defined data value; toggle it.
             if (e.getTarget(me.checkboxSelector, cell) && record.get('checked') != null) {
                 me.onCheckChange(e);
@@ -683,50 +741,54 @@ Ext.define('Ext.tree.View', {
             else if (e.getTarget(me.expanderSelector, cell) && record.isExpandable()) {
                 // Ensure focus is on the clicked cell so that if this causes a refresh,
                 // focus restoration does not scroll back to the previouslty focused position.
-                // onCellClick is called *befor* cellclick is fired which is what changes focus position.
-                // TODO: connect directly from View's event processing to NavigationModel without relying on events.
+                // onCellClick is called *befor* cellclick is fired which is what changes
+                // focus position.
+                // TODO: connect directly from View's event processing to NavigationModel
+                // without relying on events.
                 me.getNavigationModel().setPosition(e.position);
                 me.toggle(record, e.ctrlKey);
 
-                // So that we know later to stop event propagation by returning false from the NavigationModel
-                // TODO: when NavigationModel is directly hooked up to be called *before* the event sequence
+                // So that we know later to stop event propagation by returning false
+                // from the NavigationModel
+                // TODO: when NavigationModel is directly hooked up to be called *before*
+                // the event sequence
                 // This flag will not be necessary.
                 e.nodeToggled = true;
             }
+
             return me.callParent([cell, cellIndex, record, row, rowIndex, e]);
         }
     },
-    
+
     onCheckChange: function(e) {
         var me = this,
             record = e.record,
             wasChecked = record.get('checked'),
             checked;
-    
+
         // 1 means semi-checked.
         // Toggle of that state checks.
         if (wasChecked === 1) {
             checked = true;
-        } else {
+        }
+        else {
             checked = !wasChecked;
         }
+
         me.setChecked(record, checked, e);
     },
 
     setChecked: function(record, meChecked, e, options) {
         var me = this,
-            checkPropagation = me.checkPropagationFlags[me.ownerGrid.checkPropagation.toLowerCase()],
+            checkPropagation =
+                me.checkPropagationFlags[me.ownerGrid.checkPropagation.toLowerCase()],
             wasChecked = record.data.checked,
             halfCheckedValue = me.ownerGrid.triStateCheckbox ? 1 : false,
-            progagateCheck = (!options || options.propagateCheck !== false) && (checkPropagation & 1),
+            progagateCheck = (!options || options.propagateCheck !== false) &&
+                             (checkPropagation & 1),
             checkParent = (!options || options.checkParent !== false) && (checkPropagation & 2),
-            parentNode,
-            parentChecked,
-            foundCheck,
-            foundClear,
-            childNodes,
             matchedChildCount = 0,
-            len, i;
+            parentNode, parentChecked, foundCheck, foundClear, childNodes, len, i;
 
         if (me.fireEvent('beforecheckchange', record, wasChecked, e) === false) {
             return;
@@ -737,6 +799,7 @@ Ext.define('Ext.tree.View', {
         if (meChecked !== 1 && progagateCheck) {
             childNodes = record.childNodes;
             len = childNodes.length;
+
             for (i = 0; i < len; i++) {
 
                 // We are setting child nodes, so pass the
@@ -758,7 +821,7 @@ Ext.define('Ext.tree.View', {
 
         // If the new valud was not reset due to vetoing from
         // changes propagated to child nodes, then go ahead with the change.
-        if (record.get('data') !== meChecked) {
+        if (record.get('checked') !== meChecked) {
             record.set('checked', meChecked, options);
 
             // Fire checkchange now we know the valus has changed.
@@ -766,7 +829,8 @@ Ext.define('Ext.tree.View', {
 
             // If there's a parent node, and the parent node has a checked data property
             // keep parent up to date with checkedness of its child nodes.
-            if (checkParent && (parentNode = record.parentNode) && (parentChecked = parentNode.data.checked) != null) {
+            if (checkParent && (parentNode = record.parentNode) &&
+                (parentChecked = parentNode.data.checked) != null) {
                 childNodes = parentNode.childNodes;
                 len = childNodes.length;
 
@@ -777,35 +841,44 @@ Ext.define('Ext.tree.View', {
                 // If we're the sole child, the parent is our state.
                 else if (len === 1) {
                     parentChecked = meChecked;
-                } else {
+                }
+                else {
                     foundCheck = foundClear = false;
+
                     for (i = 0; !(foundCheck && foundClear) & i < len; i++) {
                         if (childNodes[i].data.checked === 1) {
                             foundCheck = foundClear = true;
-                        } else if (!childNodes[i].data.checked) {
+                        }
+                        else if (!childNodes[i].data.checked) {
                             foundClear = true;
-                        } else {
+                        }
+                        else {
                             foundCheck = true;
                         }
                     }
-                    parentChecked = foundCheck && foundClear ? halfCheckedValue : (foundCheck ? true : false);
+
+                    parentChecked = foundCheck && foundClear
+                        ? halfCheckedValue
+                        : (foundCheck ? true : false);
                 }
 
-                // We are setting the parent node, so pass the
-                // progagateCheck flag as false to avoid reentry back into this node.
-                me.setChecked(parentNode, parentChecked, e, {
-                    propagateCheck: false
-                });
+                if (parentNode.get('checked') !== parentChecked) {
+                    // We are setting the parent node, so pass the
+                    // progagateCheck flag as false to avoid reentry back into this node.
+                    me.setChecked(parentNode, parentChecked, e, {
+                        propagateCheck: false
+                    });
+                }
             }
         }
     },
 
     onExpanderMouseOver: function(e) {
-        e.getTarget(this.cellSelector, 10, true).addCls(this.expanderIconOverCls);
+        Ext.fly(e.getTarget(this.cellSelector, 10)).addCls(this.expanderIconOverCls);
     },
 
     onExpanderMouseOut: function(e) {
-        e.getTarget(this.cellSelector, 10, true).removeCls(this.expanderIconOverCls);
+        Ext.fly(e.getTarget(this.cellSelector, 10)).removeCls(this.expanderIconOverCls);
     },
 
     getStoreListeners: function() {
@@ -837,7 +910,7 @@ Ext.define('Ext.tree.View', {
             me.rootListeners.destroy();
             me.rootListeners = null;
         }
-        
+
         if (newRoot) {
             me.rootListeners = newRoot.on({
                 beforeexpand: me.onBeforeExpand,
@@ -854,6 +927,7 @@ Ext.define('Ext.tree.View', {
 
     ensureSingleExpand: function(node) {
         var parent = node.parentNode;
+
         if (parent) {
             parent.eachChild(function(child) {
                 if (child !== node && child.isExpanded()) {
@@ -878,13 +952,15 @@ Ext.define('Ext.tree.View', {
             if (ret) {
                 options = store.lastOptions;
                 node = options && options.node;
+
                 // If the root isn't loading, then proceed with the refresh, we'll
                 // add the other nodes as they come in
                 if (node && node !== store.getRoot()) {
                     ret = false;
                 }
             }
+
             return ret;
         }
-     }
+    }
 });

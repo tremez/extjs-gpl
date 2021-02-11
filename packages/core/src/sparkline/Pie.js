@@ -16,17 +16,18 @@ Ext.define('Ext.sparkline.Pie', {
          * @cfg {Number} [offset] Angle in degrees to offset the first slice.
          */
         offset: 0,
-        
+
         /**
          * @cfg {String[]} [sliceColors] An array of CSS colro values to apply to the chart slices.
          */
-        sliceColors: ['#3366cc', '#dc3912', '#ff9900', '#109618', '#66aa00', '#dd4477', '#0099c6', '#990099'],
-        
+        sliceColors: ['#3366cc', '#dc3912', '#ff9900', '#109618', '#66aa00', '#dd4477', '#0099c6',
+                      '#990099'],
+
         /**
          * @cfg {Number} [borderWidth=0] Border width in pixels of line round slices.
          */
         borderWidth: 0,
-        
+
         /**
          * @cfg {String} [borderColor=#000] Border color of line round slices.
          */
@@ -39,14 +40,16 @@ Ext.define('Ext.sparkline.Pie', {
     applyValues: function(newValues) {
         newValues = Ext.Array.map(Ext.Array.from(newValues), Number);
         this.disabled = !(newValues && newValues.length);
-        this.applyConfigChange();
+        this.updateConfigChange();
+
         return newValues;
     },
 
-    onUpdate: function () {
+    onUpdate: function() {
         var me = this,
             values = me.values,
-            total = 0, i;
+            total = 0,
+            i;
 
         me.callParent(arguments);
 
@@ -58,6 +61,7 @@ Ext.define('Ext.sparkline.Pie', {
                 total += values[i];
             }
         }
+
         me.total = total;
         me.radius = Math.floor(Math.min(me.getWidth(), me.getHeight()) / 2);
     },
@@ -65,6 +69,7 @@ Ext.define('Ext.sparkline.Pie', {
     getRegion: function(x, y) {
         var ratio = window.devicePixelRatio || 1,
             shapeid = this.canvas.getShapeAt(x * ratio, y * ratio);
+
         return (shapeid != null && this.shapes[shapeid] != null) ? this.shapes[shapeid] : null;
     },
 
@@ -93,30 +98,36 @@ Ext.define('Ext.sparkline.Pie', {
             circle = 2 * Math.PI,
             values = me.values,
             total = me.total,
-            next = offset ? (2*Math.PI)*(offset/360) : 0,
+            next = offset ? (2 * Math.PI) * (offset / 360) : 0,
             start, end, i, vlen, color,
             sliceColors = this.getSliceColors();
 
         vlen = values.length;
+
         for (i = 0; i < vlen; i++) {
             start = next;
             end = next;
+
             if (total > 0) {  // avoid divide by zero
                 end = next + (circle * (values[i] / total));
             }
+
             if (valuenum === i) {
                 color = sliceColors[i % sliceColors.length];
+
                 if (highlight) {
                     color = me.calcHighlightColor(color);
                 }
 
-                return canvas.drawPieSlice(radius, radius, radius - borderWidth, start, end, null, color);
+                return canvas.drawPieSlice(radius, radius, radius - borderWidth, start, end,
+                                           null, color);
             }
+
             next = end;
         }
     },
 
-    renderGraph: function () {
+    renderGraph: function() {
         var me = this,
             canvas = me.canvas,
             values = me.values,
@@ -129,10 +140,12 @@ Ext.define('Ext.sparkline.Pie', {
         if (!me.callParent()) {
             return;
         }
+
         if (borderWidth) {
             canvas.drawCircle(radius, radius, Math.floor(radius - (borderWidth / 2)),
-                me.getBorderColor(), null, borderWidth).append();
+                              me.getBorderColor(), null, borderWidth).append();
         }
+
         for (i = values.length; i--;) {
             if (values[i]) { // don't render zero values
                 shape = me.renderSlice(i).append();
@@ -142,10 +155,11 @@ Ext.define('Ext.sparkline.Pie', {
         }
 
         // If mouse is over, re-apply the highlight
-        if (me.currentPageXY && me.el.getRegion().contains(me.currentPageXY)) {
+        if (me.currentPageXY && me.canvasRegion.contains(me.currentPageXY)) {
             me.currentRegion = null;
             me.updateDisplay();
         }
+
         canvas.render();
     }
 });

@@ -2,9 +2,9 @@ Ext.define('SimpleTasks.view.tasks.Form', {
     extend: 'Ext.form.Panel',
     xtype: 'taskForm',
     requires: [
-       'Ext.layout.container.HBox',
-       'Ext.form.field.Date',
-       'Ext.ux.TreePicker'
+        'Ext.layout.container.HBox',
+        'Ext.form.field.Date',
+        'Ext.ux.TreePicker'
     ],
     layout: 'hbox',
     cls: 'tasks-new-form',
@@ -26,7 +26,7 @@ Ext.define('SimpleTasks.view.tasks.Form', {
                 xtype: 'treepicker',
                 name: 'list_id',
                 displayField: 'name',
-                store: Ext.create('SimpleTasks.store.Lists', {storeId: 'Lists-TaskForm'}),
+                store: Ext.create('SimpleTasks.store.Lists', { storeId: 'Lists-TaskForm' }),
                 width: 195
             },
             {

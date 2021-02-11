@@ -12,7 +12,17 @@
     .button-home-small:before,
     .button-home-medium:before,
     .button-home-large:before {
-        font-family: FontAwesome;
+        font-family: 'Font Awesome 5 Free';
         content: $fa-var-home;
     }
+}
+
+@if $theme-name == 'theme-material' {
+    .#{$prefix}btn-text.#{$prefix}btn-icon-left {
+        .#{$prefix}btn-icon-el-default-small,
+        .#{$prefix}btn-icon-el-default-medium,
+        .#{$prefix}btn-icon-el-default-large {
+            margin-right: 8px;
+        }
+    } 
 }

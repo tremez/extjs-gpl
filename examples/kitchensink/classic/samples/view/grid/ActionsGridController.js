@@ -4,26 +4,33 @@ Ext.define('KitchenSink.view.grid.ActionsGridController', {
 
     renderChange: function(val) {
         var out = Ext.util.Format.number(val, '0.00');
+
         if (val > 0) {
-            return '<span style="color:' + this.getView().profileInfo.green + ';">' + out + '</span>';
-        } else if (val < 0) {
-            return '<span style="color:' + this.getView().profileInfo.red + ';">' + out + '</span>';
+            return '<span style="color:' + this.getView().profileInfo.gainColor + ';">' + out + '</span>';
         }
+        else if (val < 0) {
+            return '<span style="color:' + this.getView().profileInfo.lossColor + ';">' + out + '</span>';
+        }
+
         return out;
     },
 
     renderPctChange: function(val) {
         var out = Ext.util.Format.number(val, '0.00%');
+
         if (val > 0) {
-            return '<span style="color:' + this.getView().profileInfo.green + ';">' + out + '</span>';
-        } else if (val < 0) {
-            return '<span style="color:' + this.getView().profileInfo.red + ';">' + out + '</span>';
+            return '<span style="color:' + this.getView().profileInfo.gainColor + ';">' + out + '</span>';
         }
+        else if (val < 0) {
+            return '<span style="color:' + this.getView().profileInfo.lossColor + ';">' + out + '</span>';
+        }
+
         return out;
     },
 
     handleBuyAction: function(widget, event) {
         var rec = this.getView().getSelectionModel().getSelection()[0];
+
         if (rec) {
             Ext.example.msg('Buy', 'Buy ' + rec.get('name'));
         }
@@ -31,6 +38,7 @@ Ext.define('KitchenSink.view.grid.ActionsGridController', {
 
     handleSellAction: function(widget, event) {
         var rec = this.getView().getSelectionModel().getSelection()[0];
+
         if (rec) {
             Ext.example.msg('Sell', 'Sell ' + rec.get('name'));
         }
@@ -39,6 +47,7 @@ Ext.define('KitchenSink.view.grid.ActionsGridController', {
     onGridContextMenu: function(view, rec, node, index, e) {
         e.stopEvent();
         this.getContextMenu().show().setLocalXY(e.getXY());
+
         return false;
     },
 
@@ -51,7 +60,8 @@ Ext.define('KitchenSink.view.grid.ActionsGridController', {
         if (selections.length) {
             buyAction.enable();
             sellAction.enable();
-        } else {
+        }
+        else {
             buyAction.disable();
             sellAction.disable();
         }
@@ -59,6 +69,7 @@ Ext.define('KitchenSink.view.grid.ActionsGridController', {
 
     getBuyAction: function() {
         var me = this;
+
         return me.buyAction || (me.buyAction = Ext.create('Ext.Action', {
             iconCls: 'array-grid-buy-col',
             text: 'Buy stock',
@@ -70,6 +81,7 @@ Ext.define('KitchenSink.view.grid.ActionsGridController', {
 
     getSellAction: function() {
         var me = this;
+
         return me.sellAction || (me.sellAction = Ext.create('Ext.Action', {
             iconCls: 'array-grid-sell-col',
             text: 'Sell stock',

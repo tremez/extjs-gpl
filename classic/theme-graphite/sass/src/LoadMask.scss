@@ -1,0 +1,15 @@
+.#{$prefix}mask-msg-text {
+    display: $loadmask-no-display;
+}
+
+.#{$prefix}mask-loading {
+    -webkit-animation: $loadmask-animation;
+    animation:  $loadmask-animation;
+    width: $loadmask-loading-width;
+
+    &:before {
+        content: $loadmask-icon;
+        font: $loadmask-font;
+        color: $loadmask-icon-color;
+    }
+}

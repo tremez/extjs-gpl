@@ -10,7 +10,7 @@ Ext.define('Ext.app.EventBus', {
     requires: [
         'Ext.app.domain.Component'
     ],
-    
+
     constructor: function() {
         var me = this,
             domains = Ext.app.EventDomain.instances;
@@ -58,7 +58,7 @@ Ext.define('Ext.app.EventBus', {
     unlisten: function(controllerId) {
         var domains = Ext.app.EventDomain.instances,
             domain;
-        
+
         for (domain in domains) {
             domains[domain].unlisten(controllerId);
         }

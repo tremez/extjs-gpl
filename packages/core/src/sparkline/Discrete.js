@@ -13,34 +13,39 @@ Ext.define('Ext.sparkline.Discrete', {
     config: {
 
         /**
-         * @cfg {Number} lineHeight Height of each line in pixels - Defaults to 30% of the graph height.
+         * @cfg {Number} lineHeight Height of each line in pixels - Defaults to 30% of the
+         * graph height.
          */
         lineHeight: 'auto',
-        
+
         /**
          * @cfg {String} thresholdColor Colour to use in combination with {@link #thresholdValue}
          */
         thresholdColor: null,
-        
+
         /**
-         * @cfg {Number} thresholdValue Values less than this value will be drawn using {@link #thresholdColor} instead of lineColor
+         * @cfg {Number} thresholdValue Values less than this value will be drawn using
+         * {@link #thresholdColor} instead of lineColor
          */
         thresholdValue: 0,
-        
+
         /**
-         * @cfg {Number} [chartRangeMax] The maximum value to use for the range of Y values of the chart - Defaults to the maximum value supplied.
+         * @cfg {Number} [chartRangeMax] The maximum value to use for the range of Y values
+         * of the chart - Defaults to the maximum value supplied.
          */
         chartRangeMax: null,
-        
+
         /**
-         * @cfg {Number} [chartRangeMin] The minimum value to use for the range of Y values of the chart - Defaults to the minimum value supplied.
+         * @cfg {Number} [chartRangeMin] The minimum value to use for the range of Y values
+         * of the chart - Defaults to the minimum value supplied.
          */
         chartRangeMin: null,
-        
+
         /**
-         * @cfg {Boolean} chartRangeClip If true then the y values supplied to plot will be clipped to fall
-         * between {@link #chartRangeMin} and {@link #chartRangeMax} - By default chartRangeMin/Max just ensure that the chart
-         * spans at least that range of values, but does not constrain it.
+         * @cfg {Boolean} chartRangeClip If true then the y values supplied to plot will be clipped
+         * to fall between {@link #chartRangeMin} and {@link #chartRangeMax} - By default
+         * chartRangeMin/Max just ensure that the chart spans at least that range of values,
+         * but does not constrain it.
          */
         chartRangeClip: false
     },
@@ -51,11 +56,12 @@ Ext.define('Ext.sparkline.Discrete', {
     applyValues: function(newValues) {
         newValues = Ext.Array.map(Ext.Array.from(newValues), Number);
         this.disabled = !(newValues && newValues.length);
-        this.applyConfigChange();
+        this.updateConfigChange();
+
         return newValues;
     },
 
-    onUpdate: function () {
+    onUpdate: function() {
         var me = this,
             values = me.values,
             chartRangeMin = me.getChartRangeMin(),
@@ -71,12 +77,15 @@ Ext.define('Ext.sparkline.Discrete', {
         me.width = me.getWidth();
         me.interval = Math.floor(me.width / values.length);
         me.itemWidth = me.width / values.length;
+
         if (chartRangeMin != null && (chartRangeClip || chartRangeMin < me.min)) {
             me.min = chartRangeMin;
         }
+
         if (chartRangeMax != null && (chartRangeClip || chartRangeMax > me.max)) {
             me.max = chartRangeMax;
         }
+
         if (me.canvas) {
             if (me.getLineHeight() === 'auto') {
                 me.setLineHeight(Math.round(me.getHeight() * 0.3));
@@ -84,11 +93,11 @@ Ext.define('Ext.sparkline.Discrete', {
         }
     },
 
-    getRegion: function (x, y) {
+    getRegion: function(x, y) {
         return Math.floor(x / this.itemWidth);
     },
 
-    getRegionFields: function (region) {
+    getRegionFields: function(region) {
         return {
             isNull: this.values[region] === undefined,
             value: this.values[region],
@@ -96,7 +105,7 @@ Ext.define('Ext.sparkline.Discrete', {
         };
     },
 
-    renderRegion: function (valuenum, highlight) {
+    renderRegion: function(valuenum, highlight) {
         var me = this,
             values = me.values,
             min = me.min,
@@ -113,10 +122,15 @@ Ext.define('Ext.sparkline.Discrete', {
         val = Ext.Number.constrain(values[valuenum], min, max);
         x = valuenum * interval;
         ytop = Math.round(pheight - pheight * ((val - min) / range));
-        color = (thresholdColor && val < me.getThresholdValue()) ? thresholdColor : me.getLineColor();
+
+        color = (thresholdColor && val < me.getThresholdValue())
+            ? thresholdColor
+            : me.getLineColor();
+
         if (highlight) {
             color = me.calcHighlightColor(color);
         }
+
         canvas.drawLine(x, ytop, x, ytop + lineHeight, color).append();
     }
 });

@@ -1,13 +1,12 @@
 /**
- * This class is intended to be extended or created via the {@link Ext.container.Container#layout layout}
- * configuration property.  See {@link Ext.container.Container#layout} for additional details.
+ * This class is intended to be extended or created via the
+ * {@link Ext.container.Container#layout layout} configuration property.
+ * See {@link Ext.container.Container#layout} for additional details.
  */
 Ext.define('Ext.layout.container.Container', {
     extend: 'Ext.layout.Layout',
-
-    alias: 'layout.container',
-
     alternateClassName: 'Ext.layout.ContainerLayout',
+    alias: 'layout.container',
 
     mixins: [
         'Ext.util.ElementContainer'
@@ -18,8 +17,6 @@ Ext.define('Ext.layout.container.Container', {
     ],
 
     type: 'container',
-
-    /* End Definitions */
 
     /**
      * @cfg {String} itemCls
@@ -71,7 +68,7 @@ Ext.define('Ext.layout.container.Container', {
     usesHeight: true,
     usesWidth: true,
 
-    constructor: function () {
+    constructor: function() {
         this.callParent(arguments);
         this.mixins.elementCt.constructor.call(this);
     },
@@ -89,15 +86,16 @@ Ext.define('Ext.layout.container.Container', {
      *  - childItems: the ContextItem[] for each visible item
      *  - targetContext: the ContextItem for the {@link #getTarget} element
      */
-    beginLayout: function (ownerContext) {
+    beginLayout: function(ownerContext) {
         this.callParent(arguments);
 
-        ownerContext.targetContext = ownerContext.paddingContext = ownerContext.getEl('getTarget', this);
+        ownerContext.targetContext = ownerContext.paddingContext =
+            ownerContext.getEl('getTarget', this);
 
         this.cacheChildItems(ownerContext);
     },
 
-    beginLayoutCycle: function (ownerContext, firstCycle) {
+    beginLayoutCycle: function(ownerContext, firstCycle) {
         var me = this;
 
         me.callParent(arguments);
@@ -106,13 +104,14 @@ Ext.define('Ext.layout.container.Container', {
             if (me.usesContainerHeight) {
                 ++ownerContext.consumersContainerHeight;
             }
+
             if (me.usesContainerWidth) {
                 ++ownerContext.consumersContainerWidth;
             }
         }
     },
 
-    cacheChildItems: function (ownerContext) {
+    cacheChildItems: function(ownerContext) {
         var me = this,
             context, childItems, items, length, i;
 
@@ -130,7 +129,7 @@ Ext.define('Ext.layout.container.Container', {
         }
     },
 
-    cacheElements: function () {
+    cacheElements: function() {
         var owner = this.owner;
 
         this.attachChildEls(owner.el, owner); // from ElementContainer mixin
@@ -167,24 +166,28 @@ Ext.define('Ext.layout.container.Container', {
             // itemCls can be a single class or an array
             if (typeof itemCls === 'string') {
                 addClasses = [itemCls];
-            } else {
+            }
+            else {
                 addClasses = itemCls;
                 needsCopy = !!addClasses;
             }
         }
+
         if (ownerItemCls) {
             // Add some extra logic so we don't clone the array unnecessarily
             if (needsCopy) {
                 addClasses = Ext.Array.clone(addClasses);
             }
+
             addClasses = Ext.Array.push(addClasses || [], ownerItemCls);
         }
+
         if (addClasses) {
             item.addCls(addClasses);
         }
     },
 
-    doRenderBody: function (out, renderData) {
+    doRenderBody: function(out, renderData) {
         // Careful! This method is bolted on to the renderTpl so all we get for context is
         // the renderData! The "this" pointer is the renderTpl instance!
 
@@ -192,7 +195,7 @@ Ext.define('Ext.layout.container.Container', {
         this.renderContent(out, renderData);
     },
 
-    doRenderContainer: function (out, renderData) {
+    doRenderContainer: function(out, renderData) {
         // Careful! This method is bolted on to the renderTpl so all we get for context is
         // the renderData! The "this" pointer is the renderTpl instance!
 
@@ -203,7 +206,7 @@ Ext.define('Ext.layout.container.Container', {
         tpl.applyOut(data, out);
     },
 
-    doRenderItems: function (out, renderData) {
+    doRenderItems: function(out, renderData) {
         // Careful! This method is bolted on to the renderTpl so all we get for context is
         // the renderData! The "this" pointer is the renderTpl instance!
 
@@ -214,37 +217,36 @@ Ext.define('Ext.layout.container.Container', {
             Ext.DomHelper.generateMarkup(tree, out);
         }
     },
-    
+
     doRenderTabGuard: function(out, renderData, position) {
         // Careful! This method is bolted on to the renderTpl so all we get for context is
         // the renderData! The "this" pointer is the renderTpl instance!
 
         var cmp = renderData.$comp,
             tabGuardTpl;
-        
+
         // Due to framing, we will be called in two different ways: in the frameTpl or in
         // the renderTpl. The frameTpl version enters via doRenderFramingTabGuard which
         // sets "$skipTabGuards" on the renderTpl's renderData.
         //
         if (cmp.tabGuard && !renderData.$skipTabGuards) {
             tabGuardTpl = cmp.lookupTpl('tabGuardTpl');
-            
+
             if (tabGuardTpl) {
                 renderData.tabGuard = position;
                 renderData.tabGuardEl = cmp.tabGuardElements[position];
-                
+
                 cmp.addChildEl(renderData.tabGuardEl);
                 tabGuardTpl.applyOut(renderData, out);
-                
+
                 delete renderData.tabGuard;
                 delete renderData.tabGuardEl;
             }
         }
     },
 
-    finishRender: function () {
+    finishRender: function() {
         var me = this,
-            owner = me.owner,
             target, items;
 
         me.callParent();
@@ -265,9 +267,11 @@ Ext.define('Ext.layout.container.Container', {
         //<debug>
         if (!this._hasTargetWarning && this.targetCls && !this.getTarget().hasCls(this.targetCls)) {
             this._hasTargetWarning = true;
-            Ext.log.warn('targetCls is missing. This may mean that getTargetEl() is being overridden but not applyTargetCls(). ' + this.owner.id);
+            Ext.log.warn('targetCls is missing. This may mean that getTargetEl() ' +
+                         'is being overridden but not applyTargetCls(). ' + this.owner.id);
         }
         //</debug>
+
         this.owner.afterLayout(this);
     },
 
@@ -283,7 +287,7 @@ Ext.define('Ext.layout.container.Container', {
      * @return {Number} return.height The height
      * @protected
      */
-    getContainerSize : function(ownerContext, inDom) {
+    getContainerSize: function(ownerContext, inDom) {
         // Subtle But Important:
         //
         // We don't want to call getProp/hasProp et.al. unless we in fact need that value
@@ -309,9 +313,11 @@ Ext.define('Ext.layout.container.Container', {
             ++needed;
             width = inDom ? targetContext.getDomProp('width') : targetContext.getProp('width');
             gotWidth = (typeof width === 'number');
+
             if (gotWidth) {
                 ++got;
                 width -= frameInfo.width + padding.width;
+
                 if (width < 0) {
                     width = 0;
                 }
@@ -322,9 +328,11 @@ Ext.define('Ext.layout.container.Container', {
             ++needed;
             height = inDom ? targetContext.getDomProp('height') : targetContext.getProp('height');
             gotHeight = (typeof height === 'number');
+
             if (gotHeight) {
                 ++got;
                 height -= frameInfo.height + padding.height;
+
                 if (height < 0) {
                     height = 0;
                 }
@@ -351,12 +359,16 @@ Ext.define('Ext.layout.container.Container', {
     // Containers that create an innerCt are exempt because this new element
     // preserves the order
     getPositionOffset: function(position) {
+        var offset;
+
         if (!this.createsInnerCt) {
-            var offset = this.owner.itemNodeOffset;
+            offset = this.owner.itemNodeOffset;
+
             if (offset) {
                 position += offset;
             }
         }
+
         return position;
     },
 
@@ -372,7 +384,7 @@ Ext.define('Ext.layout.container.Container', {
         return (items && items.items) || [];
     },
 
-    getRenderData: function () {
+    getRenderData: function() {
         var comp = this.owner;
 
         return {
@@ -401,7 +413,8 @@ Ext.define('Ext.layout.container.Container', {
             if (item.rendered) {
                 if (item.ignoreDomPosition) {
                     --pos;
-                } else if (!this.isValidParent(item, target, pos)) {
+                }
+                else if (!this.isValidParent(item, target, pos)) {
                     continue;
                 }
 
@@ -425,17 +438,18 @@ Ext.define('Ext.layout.container.Container', {
     },
 
     /**
-     * Returns the element into which extra functional DOM elements can be inserted. Defaults to the owner Component's encapsulating element.
+     * Returns the element into which extra functional DOM elements can be inserted.
+     * Defaults to the owner Component's encapsulating element.
      *
-     * May be overridden in Component layout managers which implement a {@link #getRenderTarget component render target} which must only
-     * contain child components.
+     * May be overridden in Component layout managers which implement a
+     * {@link #getRenderTarget component render target} which must only contain child components.
      * @return {Ext.dom.Element}
      */
     getElementTarget: function() {
         return this.getRenderTarget();
     },
 
-    getRenderTpl: function () {
+    getRenderTpl: function() {
         var me = this,
             renderTpl = Ext.XTemplate.getTpl(this, 'renderTpl');
 
@@ -448,7 +462,7 @@ Ext.define('Ext.layout.container.Container', {
         return renderTpl;
     },
 
-    getRenderTree: function () {
+    getRenderTree: function() {
         var result,
             items = this.owner.items,
             itemsGen,
@@ -458,10 +472,11 @@ Ext.define('Ext.layout.container.Container', {
             itemsGen = items.generation;
             result = this.getItemsRenderTree(this.getLayoutItems(), renderCfgs);
         } while (items.generation !== itemsGen);
+
         return result;
     },
 
-    renderChildren: function () {
+    renderChildren: function() {
         var me = this,
             ownerItems = me.owner.items,
             target = me.getRenderTarget(),
@@ -477,8 +492,8 @@ Ext.define('Ext.layout.container.Container', {
         } while (ownerItems.generation !== itemsGen);
     },
 
-    getScrollbarsNeeded: function (width, height, contentWidth, contentHeight) {
-        var scrollbarSize = Ext.getScrollbarSize(),
+    getScrollbarsNeeded: function(width, height, contentWidth, contentHeight) {
+        var scrollbarSize = Ext.scrollbar.size(),
             hasWidth = typeof width === 'number',
             hasHeight = typeof height === 'number',
             needHorz = 0,
@@ -488,6 +503,7 @@ Ext.define('Ext.layout.container.Container', {
         if (!scrollbarSize.width) {
             return 0;
         }
+
         if (hasHeight && height < contentHeight) {
             needVert = 2;
             width -= scrollbarSize.width;
@@ -495,8 +511,10 @@ Ext.define('Ext.layout.container.Container', {
 
         if (hasWidth && width < contentWidth) {
             needHorz = 1;
+
             if (!needVert && hasHeight) {
                 height -= scrollbarSize.height;
+
                 if (height < contentHeight) {
                     needVert = 2;
                 }
@@ -532,7 +550,8 @@ Ext.define('Ext.layout.container.Container', {
             if (item.rendered && item.hidden !== true && !item.floated) {
                 if (item.ignoreDomPosition) {
                     --pos;
-                } else if (!this.isValidParent(item, target, pos)) {
+                }
+                else if (!this.isValidParent(item, target, pos)) {
                     continue;
                 }
 
@@ -543,11 +562,11 @@ Ext.define('Ext.layout.container.Container', {
         return visibleItems;
     },
 
-    getMoveAfterIndex: function (after) {
+    getMoveAfterIndex: function(after) {
         return this.owner.items.indexOf(after) + 1;
     },
 
-    moveItemBefore: function (item, before) {
+    moveItemBefore: function(item, before) {
         var owner = this.owner,
             items = owner.items,
             index = items.indexOf(item),
@@ -558,32 +577,35 @@ Ext.define('Ext.layout.container.Container', {
         }
 
         if (before) {
-            toIndex =  items.indexOf(before);
+            toIndex = items.indexOf(before);
+
             if (index > -1 && index < toIndex) {
                 --toIndex;
             }
-        } else {
+        }
+        else {
             toIndex = items.length;
         }
 
         return owner.insert(toIndex, item);
     },
 
-    setupRenderTpl: function (renderTpl) {
+    setupRenderTpl: function(renderTpl) {
         renderTpl.renderBody = this.doRenderBody;
         renderTpl.renderContainer = this.doRenderContainer;
         renderTpl.renderItems = this.doRenderItems;
         renderTpl.renderTabGuard = this.doRenderTabGuard;
     },
 
-    getContentTarget: function(){
+    getContentTarget: function() {
         return this.owner.getDefaultContentTarget();
     },
 
-    onAdd: function (item) {
+    onAdd: function(item) {
         if (!item.liquidLayout) {
             ++this.activeItemCount;
         }
+
         this.callParent([item]);
     },
 
@@ -591,6 +613,7 @@ Ext.define('Ext.layout.container.Container', {
         if (!item.liquidLayout) {
             --this.activeItemCount;
         }
+
         this.callParent([item, isDestroying]);
     }
 });

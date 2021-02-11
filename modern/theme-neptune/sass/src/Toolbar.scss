@@ -28,3 +28,9 @@
     $min-height: $toolbar-min-height,
     $min-height-big: $toolbar-min-height-big
 );
+
+@if $enable-default-uis {
+    @if $toolbar-footer-ui {
+        @include toolbar-ui(map-merge((ui: footer), $toolbar-footer-ui)...);
+    }
+}

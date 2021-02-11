@@ -1,0 +1,79 @@
+.#{$prefix}tab {
+    .#{$prefix}active-indicator-el {
+        position: absolute;
+        display: none;
+        pointer-events: none;
+        width: 100%;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 0;
+    }
+
+    &.#{$prefix}active .#{$prefix}active-indicator-el {
+        display: block;
+    }
+
+    .#{$prefix}close-icon-el {
+        cursor: pointer;
+        position: absolute;
+        display: none;
+        top: 0;
+        right: 0;
+        z-index: 4; // must have higher z-index than button-el
+    }
+
+    &.#{$prefix}closable .#{$prefix}close-icon-el {
+        display: flex;
+    }
+
+    &.#{$prefix}tab-rotate-left {
+        .#{$prefix}text-el {
+            -ms-writing-mode: tb-lr;
+            -webkit-writing-mode: vertical-lr;
+            writing-mode: vertical-lr;
+            transform: rotate(180deg);
+        }
+
+        .#{$prefix}icon-el {
+            transform: rotate(270deg);
+        }
+
+        .#{$prefix}close-icon-el {
+            left: 0;
+        }
+    }
+
+    &.#{$prefix}tab-rotate-right {
+        .#{$prefix}text-el {
+            -ms-writing-mode: tb-lr;
+            -webkit-writing-mode: vertical-lr;
+            writing-mode: vertical-lr;
+            margin-right: 8px;
+        }
+
+        .#{$prefix}icon-el {
+            transform: rotate(90deg);
+        }
+
+        .#{$prefix}close-icon-el {
+            bottom: 0;
+            top: auto;
+        }
+    }
+
+    &.#{$prefix}tab-position-left.#{$prefix}active {
+        .#{$prefix}active-indicator-el {
+            height: 100%;
+            right: 0;
+            left: inherit;
+        }
+    }
+
+    &.#{$prefix}tab-position-right.#{$prefix}active {
+        .#{$prefix}active-indicator-el {
+            height: 100%;
+            left: 0;
+        }
+    }
+}

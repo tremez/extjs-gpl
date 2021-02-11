@@ -2,7 +2,6 @@
  * @private
  */
 Ext.define('Ext.Evented', {
-
     alternateClassName: 'Ext.EventedBase',
 
     mixins: [
@@ -12,6 +11,11 @@ Ext.define('Ext.Evented', {
     initialized: false,
 
     constructor: function(config) {
+        // Base constructor is overriden for testing
+        //<debug>
+        this.callParent();
+        //</debug>
+
         this.mixins.observable.constructor.call(this, config);
         this.initialized = true;
     },
@@ -21,13 +25,15 @@ Ext.define('Ext.Evented', {
             return;
         }
 
+        /* eslint-disable-next-line vars-on-top */
         var config = data.config,
             eventedConfig = data.eventedConfig,
             name, cfg;
 
         if (config) {
             Ext.applyIf(config, eventedConfig);
-        } else {
+        }
+        else {
             cls.addConfig(eventedConfig);
         }
 
@@ -43,7 +49,7 @@ Ext.define('Ext.Evented', {
          * are mostly useless since there's no listeners
          */
 
-        //TODO: Move this into Observable
+        // TODO: Move this into Observable
         for (name in eventedConfig) {
             if (eventedConfig.hasOwnProperty(name)) {
                 cfg = Ext.Config.get(name);

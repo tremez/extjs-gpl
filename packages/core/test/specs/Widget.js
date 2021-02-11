@@ -1,4 +1,5 @@
-describe("Ext.Widget", function() {
+/* global Foo */
+topSuite("Ext.Widget", ['Ext.app.ViewController', 'Ext.Container'], function() {
     var widget;
 
     function defineWidget(first, config) {
@@ -19,6 +20,7 @@ describe("Ext.Widget", function() {
         if (widget) {
             widget.destroy();
         }
+
         Ext.undefine('spec.Widget');
     });
 
@@ -202,6 +204,7 @@ describe("Ext.Widget", function() {
                         }
                     }
                 });
+
                 widget = ct.down('custom');
 
                 spyOn(controller, 'someFn');
@@ -238,9 +241,9 @@ describe("Ext.Widget", function() {
                             children: [{
                                 reference: 'baz',
                                 listeners: {
-                                    click: 'bazClick'
-                                },
-                                scope: {} // make sure this scope is ignored
+                                    click: 'bazClick',
+                                    scope: {} // make sure this scope is ignored
+                                }
                             }, {
                                 reference: 'jazz',
                                 listeners: {
@@ -320,7 +323,7 @@ describe("Ext.Widget", function() {
             expect(SuperWidget.prototype._elementListeners).toEqual({});
             // SubWidget should have its own cache
             expect(SubWidget.prototype.hasOwnProperty('_elementListeners')).toBe(true);
-            
+
             Ext.destroy(subWidget, superWidget);
         });
 
@@ -362,7 +365,7 @@ describe("Ext.Widget", function() {
             });
             // SubWidget should have its own cache
             expect(SubWidget.prototype.hasOwnProperty('_elementListeners')).toBe(true);
-            
+
             Ext.destroy(subWidget, superWidget);
         });
 
@@ -384,6 +387,7 @@ describe("Ext.Widget", function() {
                 if (superWidget) {
                     superWidget.destroy();
                 }
+
                 if (subWidget) {
                     subWidget.destroy();
                 }
@@ -698,6 +702,7 @@ describe("Ext.Widget", function() {
                 if (superWidget) {
                     superWidget.destroy();
                 }
+
                 if (subWidget) {
                     subWidget.destroy();
                 }
@@ -1008,7 +1013,8 @@ describe("Ext.Widget", function() {
                 if (name === scope) {
                     expect(spy).toHaveBeenCalled();
                     expect(spy.mostRecentCall.object).toBe(scopes[name]);
-                } else {
+                }
+                else {
                     expect(spy).not.toHaveBeenCalled();
                 }
             }
@@ -1855,6 +1861,7 @@ describe("Ext.Widget", function() {
                             foo: handler
                         }
                     }, cfg);
+
                     if (setScope) {
                         cfg.listeners.scope = setScope;
                     }
@@ -3259,7 +3266,7 @@ describe("Ext.Widget", function() {
         });
     });
 
-    (Ext.supports.PointerEvents ? describe : xdescribe)("touchAction", function() {
+    (Ext.supports.TouchAction === 15 ? describe : xdescribe)("touchAction", function() {
         var Widget, widget;
 
         function makeWidgetWithTouchAction(touchAction) {
@@ -3370,7 +3377,7 @@ describe("Ext.Widget", function() {
                 doubleTapZoom: false
             });
 
-            expectTouchAction(widget.element, 'manipulation');
+            expectTouchAction(widget.element, 'pan-x pan-y pinch-zoom');
         });
 
         it("should disable panX and doubleTapZoom", function() {
@@ -3541,33 +3548,244 @@ describe("Ext.Widget", function() {
             expect(widget.element).toHaveCls('baz');
         });
 
-        it("should accept an array of classes", function() {
+        it("should not duplicate the classCls in the classClsList", function() {
+            // This is more of an implementation detail, but it is important because the
+            // classClsList is iterated elsewhere (e.g. border management in auto layout)
             var Foo = Ext.define(null, {
                 extend: 'Ext.Widget',
-                classCls: ['foo', 'bar']
+                classCls: 'foo'
+            });
+
+            var Bar = Ext.define(null, {
+                extend: Foo,
+                classCls: 'bar'
             });
 
             var Baz = Ext.define(null, {
-                extend: Foo,
-                classCls: 'baz'
+                extend: Bar
             });
 
             widget = new Baz();
 
-            expect(widget.element).toHaveCls('foo');
-            expect(widget.element).toHaveCls('bar');
-            expect(widget.element).toHaveCls('baz');
+            // Baz has no classCls, so it inherits classCls from bar via the prototype
+            // We must ensure that classCls 'bar' is not repeated in the classCls list.
+            expect(widget.classClsList).toEqual(['bar', 'foo']);
+        });
 
-            widget.setUi('ui');
+        it("should add a UI reference after initialization", function() {
+            // This is an unusual use case, but Toolable does this with its dock wrapper
+            var Foo = Ext.define(null, {
+                extend: 'Ext.Widget',
+                classCls: 'foo',
+                ui: 'you eye',
+                doDestroy: function() {
+                    this.callParent();
+                    this.childEl.destroy();
+                }
+            });
 
-            expect(widget.element).toHaveCls('foo-ui');
-            expect(widget.element).toHaveCls('bar-ui');
-            expect(widget.element).toHaveCls('baz-ui');
+            widget = new Foo();
+
+            var childEl = widget.childEl = widget.element.append({
+                cls: 'child-el'
+            });
+
+            widget.initUiReference('childEl', 'child');
+
+            expect(childEl).toHaveCls('child-el foo-child foo-you-child foo-eye-child');
+        });
+    });
+
+    describe("instanceCls", function() {
+        it("should augment the classCls with a single instanceCls", function() {
+            var Foo = Ext.define(null, {
+                extend: 'Ext.Widget',
+                classCls: 'foo',
+                template: [{
+                    reference: 'childEl',
+                    cls: 'child-el',
+                    uiCls: 'child'
+                }]
+            });
+
+            var Bar = Ext.define(null, {
+                extend: Foo,
+                classCls: 'bar'
+            });
+
+            widget = new Bar({
+                instanceCls: 'baz',
+                ui: 'you eye'
+            });
+
+            expect(widget).toHaveCls('foo bar baz foo-you bar-you baz-you foo-eye bar-eye baz-eye');
+            expect(widget.childEl).toHaveCls([
+                'child-el', 'foo-child', 'foo-you-child', 'foo-eye-child',
+                'bar-child', 'bar-you-child', 'bar-eye-child',
+                'baz-child', 'baz-you-child', 'baz-eye-child'
+            ]);
+            expect(widget.classClsList.length).toBe(3);
+            expect(Ext.Array.contains(widget.classClsList, 'foo')).toBe(true);
+            expect(Ext.Array.contains(widget.classClsList, 'bar')).toBe(true);
+            expect(Ext.Array.contains(widget.classClsList, 'baz')).toBe(true);
+            // instanceCls should not modify the prototype
+            expect(Bar.prototype.classClsList.length).toBe(2);
+            expect(Ext.Array.contains(Bar.prototype.classClsList, 'foo')).toBe(true);
+            expect(Ext.Array.contains(Bar.prototype.classClsList, 'bar')).toBe(true);
+        });
+
+        it("should augment the classCls with multiple instanceCls", function() {
+            var Foo = Ext.define(null, {
+                extend: 'Ext.Widget',
+                classCls: 'foo',
+                template: [{
+                    reference: 'childEl',
+                    cls: 'child-el',
+                    uiCls: 'child'
+                }]
+            });
+
+            var Bar = Ext.define(null, {
+                extend: Foo,
+                classCls: 'bar'
+            });
+
+            widget = new Bar({
+                instanceCls: ['baz', 'jaz'],
+                ui: 'you eye'
+            });
+
+            expect(widget).toHaveCls('foo bar baz jaz foo-you bar-you baz-you jaz-you foo-eye bar-eye baz-eye jaz-eye');
+            expect(widget.childEl).toHaveCls([
+                'child-el', 'foo-child', 'foo-you-child', 'foo-eye-child',
+                'bar-child', 'bar-you-child', 'bar-eye-child',
+                'baz-child', 'baz-you-child', 'baz-eye-child',
+                'jaz-child', 'jaz-you-child', 'jaz-eye-child'
+            ]);
+            expect(widget.classClsList.length).toBe(4);
+            expect(Ext.Array.contains(widget.classClsList, 'foo')).toBe(true);
+            expect(Ext.Array.contains(widget.classClsList, 'bar')).toBe(true);
+            expect(Ext.Array.contains(widget.classClsList, 'baz')).toBe(true);
+            expect(Ext.Array.contains(widget.classClsList, 'jaz')).toBe(true);
+            // instanceCls should not modify the prototype
+            expect(Bar.prototype.classClsList.length).toBe(2);
+            expect(Ext.Array.contains(Bar.prototype.classClsList, 'foo')).toBe(true);
+            expect(Ext.Array.contains(Bar.prototype.classClsList, 'bar')).toBe(true);
+        });
+
+        it("should reconfigure and remove an old instanceCls", function() {
+            var Foo = Ext.define(null, {
+                extend: 'Ext.Widget',
+                classCls: 'foo',
+                template: [{
+                    reference: 'childEl',
+                    cls: 'child-el',
+                    uiCls: 'child'
+                }]
+            });
+
+            var Bar = Ext.define(null, {
+                extend: Foo,
+                classCls: 'bar'
+            });
+
+            widget = new Bar({
+                instanceCls: 'baz',
+                ui: 'you eye'
+            });
+
+            widget.setInstanceCls('jaz');
+
+            expect(widget).toHaveCls('foo bar jaz foo-you bar-you jaz-you foo-eye bar-eye jaz-eye');
+            expect(widget.childEl).toHaveCls([
+                'child-el', 'foo-child', 'foo-you-child', 'foo-eye-child',
+                'bar-child', 'bar-you-child', 'bar-eye-child',
+                'jaz-child', 'jaz-you-child', 'jaz-eye-child'
+            ]);
+            expect(widget).not.toHaveCls('baz baz-you baz-eye');
+            expect(widget.childEl).not.toHaveCls('baz-child baz-you-child baz-eye-child');
+            expect(widget.classClsList.length).toBe(3);
+            expect(Ext.Array.contains(widget.classClsList, 'foo')).toBe(true);
+            expect(Ext.Array.contains(widget.classClsList, 'bar')).toBe(true);
+            expect(Ext.Array.contains(widget.classClsList, 'jaz')).toBe(true);
+            // instanceCls should not modify the prototype
+            expect(Bar.prototype.classClsList.length).toBe(2);
+            expect(Ext.Array.contains(Bar.prototype.classClsList, 'foo')).toBe(true);
+            expect(Ext.Array.contains(Bar.prototype.classClsList, 'bar')).toBe(true);
+        });
+
+        it("should reconfigure and remove multiple old instanceCls", function() {
+            var Foo = Ext.define(null, {
+                extend: 'Ext.Widget',
+                classCls: 'foo',
+                template: [{
+                    reference: 'childEl',
+                    cls: 'child-el',
+                    uiCls: 'child'
+                }]
+            });
+
+            var Bar = Ext.define(null, {
+                extend: Foo,
+                classCls: 'bar'
+            });
+
+            widget = new Bar({
+                instanceCls: ['baz', 'jaz'],
+                ui: 'you eye'
+            });
+
+            widget.setInstanceCls(['huh', 'wat']);
+
+            expect(widget).toHaveCls('foo bar huh wat foo-you bar-you huh-you wat-you foo-eye bar-eye huh-eye wat-eye');
+            expect(widget.childEl).toHaveCls([
+                'child-el', 'foo-child', 'foo-you-child', 'foo-eye-child',
+                'bar-child', 'bar-you-child', 'bar-eye-child',
+                'huh-child', 'huh-you-child', 'huh-eye-child',
+                'wat-child', 'wat-you-child', 'wat-eye-child'
+            ]);
+            expect(widget).not.toHaveCls('baz baz-you baz-eye jaz jaz-you jaz-eye');
+            expect(widget.childEl).not.toHaveCls([
+                'baz-child', 'baz-you-child', 'baz-eye-child',
+                'jaz-child', 'jaz-you-child', 'jaz-eye-child'
+            ]);
+            expect(widget.classClsList.length).toBe(4);
+            expect(Ext.Array.contains(widget.classClsList, 'foo')).toBe(true);
+            expect(Ext.Array.contains(widget.classClsList, 'bar')).toBe(true);
+            expect(Ext.Array.contains(widget.classClsList, 'huh')).toBe(true);
+            expect(Ext.Array.contains(widget.classClsList, 'wat')).toBe(true);
+            // instanceCls should not modify the prototype
+            expect(Bar.prototype.classClsList.length).toBe(2);
+            expect(Ext.Array.contains(Bar.prototype.classClsList, 'foo')).toBe(true);
+            expect(Ext.Array.contains(Bar.prototype.classClsList, 'bar')).toBe(true);
+        });
+
+        it("should add a UI reference after initialization", function() {
+            // This is an unusual use case, but Toolable does this with its dock wrapper
+            var Foo = Ext.define(null, {
+                extend: 'Ext.Widget',
+                doDestroy: function() {
+                    this.callParent();
+                    this.childEl.destroy();
+                }
+            });
+
+            widget = new Foo({
+                instanceCls: 'foo',
+                ui: 'you eye'
+            });
+
+            var childEl = widget.childEl = widget.element.append({
+                cls: 'child-el'
+            });
+
+            widget.initUiReference('childEl', 'child');
+
+            expect(childEl).toHaveCls('child-el foo-child foo-you-child foo-eye-child');
         });
     });
 
     describe("baseCls", function() {
-
         it("should add the baseCls to the element", function() {
             var Foo = Ext.define(null, {
                 extend: 'Ext.Widget',
@@ -3592,17 +3810,29 @@ describe("Ext.Widget", function() {
             expect(widget.element).toHaveCls('foo-bar');
         });
 
-        it("should default to classCls when baseCls is true", function() {
+        it("should default to classCls when baseCls is unspecified", function() {
             var Foo = Ext.define(null, {
                 extend: 'Ext.Widget',
                 classCls: 'foo'
-                // baseCls defaults to true on the Ext.Widget prototype
             });
 
             widget = new Foo();
 
             expect(widget.element).toHaveCls('foo');
-            expect(widget.getBaseCls()).toBe('foo');
+            expect(widget.baseCls).toBe('foo');
+        });
+
+        it("should default to classCls when baseCls is true", function() {
+            var Foo = Ext.define(null, {
+                extend: 'Ext.Widget',
+                classCls: 'foo',
+                baseCls: true
+            });
+
+            widget = new Foo();
+
+            expect(widget.element).toHaveCls('foo');
+            expect(widget.baseCls).toBe('foo');
         });
 
         it("should not default to classCls when baseCls is a string", function() {
@@ -3616,10 +3846,56 @@ describe("Ext.Widget", function() {
 
             expect(widget.element).toHaveCls('foo');
             expect(widget.element).toHaveCls('bar');
-            expect(widget.getBaseCls()).toBe('bar');
+            expect(widget.baseCls).toBe('bar');
         });
 
-        it("should default to xtype when baseCls is undefined", function() {
+        it("should default to xtype when baseCls is unspecified and there is no classCls", function() {
+            Ext.define('Foo', {
+                extend: 'Ext.Widget',
+                xtype: 'mywidget'
+            });
+
+            widget = new Foo();
+
+            expect(widget.element).toHaveCls('x-mywidget');
+            expect(widget.baseCls).toBe('x-mywidget');
+
+            Ext.undefine('Foo');
+        });
+
+        it("should default to xtype when baseCls is true and there is no classCls", function() {
+            // for compat with version 6
+            Ext.define('Foo', {
+                extend: 'Ext.Widget',
+                xtype: 'mywidget',
+                baseCls: true
+            });
+
+            widget = new Foo();
+
+            expect(widget.element).toHaveCls('x-mywidget');
+            expect(widget.baseCls).toBe('x-mywidget');
+
+            Ext.undefine('Foo');
+        });
+
+        it("should default to classCls when baseCls is null", function() {
+            Ext.define('Foo', {
+                extend: 'Ext.Widget',
+                classCls: 'foo',
+                xtype: 'mywidget',
+                baseCls: null
+            });
+
+            widget = new Foo();
+
+            expect(widget.element).toHaveCls('foo');
+            expect(widget.baseCls).toBe('foo');
+
+            Ext.undefine('Foo');
+        });
+
+        it("should default to classCls when baseCls is undefined", function() {
             Ext.define('Foo', {
                 extend: 'Ext.Widget',
                 classCls: 'foo',
@@ -3630,10 +3906,110 @@ describe("Ext.Widget", function() {
             widget = new Foo();
 
             expect(widget.element).toHaveCls('foo');
-            expect(widget.element).toHaveCls('x-mywidget');
-            expect(widget.getBaseCls()).toBe('x-mywidget');
+            expect(widget.baseCls).toBe('foo');
 
             Ext.undefine('Foo');
+        });
+
+        it("should default to xtype when baseCls is null and there is no classCls", function() {
+            Ext.define('Foo', {
+                extend: 'Ext.Widget',
+                xtype: 'mywidget',
+                baseCls: null
+            });
+
+            widget = new Foo();
+
+            expect(widget.element).toHaveCls('x-mywidget');
+            expect(widget.baseCls).toBe('x-mywidget');
+
+            Ext.undefine('Foo');
+        });
+
+        it("should default to xtype when baseCls is undefined and there is no classCls", function() {
+            Ext.define('Foo', {
+                extend: 'Ext.Widget',
+                xtype: 'mywidget',
+                baseCls: undefined
+            });
+
+            widget = new Foo();
+
+            expect(widget.element).toHaveCls('x-mywidget');
+            expect(widget.baseCls).toBe('x-mywidget');
+
+            Ext.undefine('Foo');
+        });
+
+        it("should throw an error if baseCls is used as an instance config", function() {
+            var Foo = Ext.define(null, {
+                extend: 'Ext.Widget'
+            });
+
+            expect(function() {
+                widget =  new Foo({
+                    baseCls: 'foo'
+                });
+            }).toThrow('baseCls cannot be used as an instance config. It must be specified at class definition time.');
+        });
+
+        it("should throw an error if setBaseCls is called", function() {
+            // in previous versions baseCls was defined in the config block and had a setter
+            var Foo = Ext.define(null, {
+                extend: 'Ext.Widget',
+                baseCls: 'foo'
+            });
+
+            widget = new Foo();
+
+            expect(function() {
+                widget.setBaseCls('bar');
+            }).toThrow('baseCls cannot be reconfigured. It must be specified at class definition time.');
+        });
+
+        it("should throw an error if a subclass defines baseCls inside the config block", function() {
+            expect(function() {
+                Ext.define(null, {
+                    extend: 'Ext.Widget',
+                    config: {
+                        baseCls: 'foo'
+                    }
+                });
+            }).toThrow('baseCls must be declared directly on the class body. Please move it outside of the config block.');
+        });
+
+        it("should have a getter for backward compatibility with versions less than 7", function() {
+            var Foo = Ext.define(null, {
+                extend: 'Ext.Widget',
+                baseCls: 'foo'
+            });
+
+            widget = new Foo();
+
+            expect(widget.baseCls).toBe('foo');
+        });
+
+        it("should add a UI reference after initialization", function() {
+            // This is an unusual use case, but Toolable does this with its dock wrapper
+            var Foo = Ext.define(null, {
+                extend: 'Ext.Widget',
+                baseCls: 'foo',
+                ui: 'you eye',
+                doDestroy: function() {
+                    this.callParent();
+                    this.childEl.destroy();
+                }
+            });
+
+            widget = new Foo();
+
+            var childEl = widget.childEl = widget.element.append({
+                cls: 'child-el'
+            });
+
+            widget.initUiReference('childEl', 'child');
+
+            expect(childEl).toHaveCls('child-el foo-child foo-you-child foo-eye-child');
         });
     });
 
@@ -3703,31 +4079,109 @@ describe("Ext.Widget", function() {
             expect(widget.element).toHaveCls('baz-xyz');
         });
 
-        it("should add multiple uis", function() {
+        it("should add UIs", function() {
             var Foo = Ext.define(null, {
                 extend: 'Ext.Widget',
                 classCls: 'foo'
             });
 
-            var Bar = Ext.define(null, {
-                extend: Foo,
-                classCls: 'bar'
+            widget = new Foo({
+                ui: 'abc def'
             });
 
-            widget = new Bar({
-                ui: 'abc xyz'
+            widget.addUi('def ghi jkl');
+            widget.addUi(['mno', 'pqr']);
+
+            expect(widget.getUi()).toBe('abc def ghi jkl mno pqr');
+
+            expect(widget.element).toHaveCls('foo-abc');
+            expect(widget.element).toHaveCls('foo-def');
+            expect(widget.element).toHaveCls('foo-ghi');
+            expect(widget.element).toHaveCls('foo-jkl');
+            expect(widget.element).toHaveCls('foo-mno');
+            expect(widget.element).toHaveCls('foo-pqr');
+        });
+
+        it("should remove UIs", function() {
+            var Foo = Ext.define(null, {
+                extend: 'Ext.Widget',
+                classCls: 'foo'
+            });
+
+            widget = new Foo({
+                ui: 'abc def ghi jkl mno pqr'
+            });
+
+            widget.removeUi('def jkl');
+            widget.removeUi(['mno', 'pqr']);
+
+            expect(widget.getUi()).toBe('abc ghi');
+
+            expect(widget.element).toHaveCls('foo-abc');
+            expect(widget.element).not.toHaveCls('foo-def');
+            expect(widget.element).toHaveCls('foo-ghi');
+            expect(widget.element).not.toHaveCls('foo-jkl');
+            expect(widget.element).not.toHaveCls('foo-mno');
+            expect(widget.element).not.toHaveCls('foo-pqr');
+        });
+
+        it("should add UIs provided as an Array", function() {
+            var Foo = Ext.define(null, {
+                extend: 'Ext.Widget',
+                classCls: 'foo'
+            });
+
+            widget = new Foo({
+                ui: ['abc', 'def']
             });
 
             expect(widget.element).toHaveCls('foo-abc');
-            expect(widget.element).toHaveCls('bar-abc');
-            expect(widget.element).toHaveCls('foo-xyz');
-            expect(widget.element).toHaveCls('bar-xyz');
+            expect(widget.element).toHaveCls('foo-def');
         });
 
-        it("should remove multiple uis", function() {
+        it("should normalize the UIs to a String", function() {
             var Foo = Ext.define(null, {
                 extend: 'Ext.Widget',
                 classCls: 'foo'
+            });
+
+            widget = new Foo({
+                ui: ['abc', 'def']
+            });
+            expect(widget.getUi()).toBe('abc def');
+
+            widget.setUi('ghi jkl');
+            expect(widget.getUi()).toBe('ghi jkl');
+        });
+    });
+
+    describe("uiCls", function() {
+        it("should add ui classes using baseCls", function() {
+            var Foo = Ext.define(null, {
+                extend: 'Ext.Widget',
+                baseCls: 'foo',
+                ui: 'abc xyz',
+                template: [{
+                    reference: 'bodyElement',
+                    uiCls: 'body-el'
+                }]
+            });
+
+            widget = new Foo();
+
+            expect(widget.bodyElement).toHaveCls('foo-body-el');
+            expect(widget.bodyElement).toHaveCls('foo-abc-body-el');
+            expect(widget.bodyElement).toHaveCls('foo-xyz-body-el');
+        });
+
+        it("should add ui classes using classCls", function() {
+            var Foo = Ext.define(null, {
+                extend: 'Ext.Widget',
+                classCls: 'foo',
+                template: [{
+                    reference: 'bodyElement',
+                    uiCls: 'body-el'
+                }]
             });
 
             var Bar = Ext.define(null, {
@@ -3735,16 +4189,544 @@ describe("Ext.Widget", function() {
                 classCls: 'bar'
             });
 
+            var Baz = Ext.define(null, {
+                extend: Bar,
+                classCls: 'baz'
+            });
+
+            widget = new Baz({
+                ui: 'abc xyz'
+            });
+
+            expect(widget.bodyElement).toHaveCls('foo-body-el');
+            expect(widget.bodyElement).toHaveCls('bar-body-el');
+            expect(widget.bodyElement).toHaveCls('baz-body-el');
+            expect(widget.bodyElement).toHaveCls('foo-abc-body-el');
+            expect(widget.bodyElement).toHaveCls('foo-xyz-body-el');
+            expect(widget.bodyElement).toHaveCls('bar-abc-body-el');
+            expect(widget.bodyElement).toHaveCls('bar-xyz-body-el');
+            expect(widget.bodyElement).toHaveCls('baz-abc-body-el');
+            expect(widget.bodyElement).toHaveCls('baz-xyz-body-el');
+        });
+
+        it("should add ui classes using both classCls and baseCls", function() {
+            var Foo = Ext.define(null, {
+                extend: 'Ext.Widget',
+                classCls: 'foo',
+                template: [{
+                    reference: 'bodyElement',
+                    uiCls: 'body-el'
+                }]
+            });
+
+            var Bar = Ext.define(null, {
+                extend: Foo,
+                classCls: 'bar',
+                baseCls: 'baz'
+            });
+
             widget = new Bar({
                 ui: 'abc xyz'
             });
 
-            widget.setUi(null);
+            expect(widget.bodyElement).toHaveCls('foo-body-el');
+            expect(widget.bodyElement).toHaveCls('bar-body-el');
+            expect(widget.bodyElement).toHaveCls('baz-body-el');
+            expect(widget.bodyElement).toHaveCls('foo-abc-body-el');
+            expect(widget.bodyElement).toHaveCls('foo-xyz-body-el');
+            expect(widget.bodyElement).toHaveCls('bar-abc-body-el');
+            expect(widget.bodyElement).toHaveCls('bar-xyz-body-el');
+            expect(widget.bodyElement).toHaveCls('baz-abc-body-el');
+            expect(widget.bodyElement).toHaveCls('baz-xyz-body-el');
+        });
 
-            expect(widget.element).not.toHaveCls('foo-abc');
-            expect(widget.element).not.toHaveCls('bar-abc');
-            expect(widget.element).not.toHaveCls('foo-xyz');
-            expect(widget.element).not.toHaveCls('bar-xyz');
+        it("should throw an error if uiCls is used without a reference element", function() {
+            var Foo = Ext.define(null, {
+                extend: 'Ext.Widget',
+                classCls: 'foo',
+                template: [{
+                    uiCls: 'body-el'
+                }]
+            });
+
+            expect(function() {
+                widget = new Foo();
+            }).toThrow('Cannot render element with uiCls="body-el". uiCls is only allowed on elements that have a reference name.');
+        });
+
+        it("should not have the uiCls attribute in the rendered dom", function() {
+            var Foo = Ext.define(null, {
+                extend: 'Ext.Widget',
+                classCls: 'foo',
+                template: [{
+                    reference: 'bodyElement',
+                    uiCls: 'body-el'
+                }]
+            });
+
+            widget = new Foo({
+                ui: 'abc'
+            });
+
+            expect(widget.bodyElement.dom.getAttribute('uiCls')).toBe(null);
+        });
+    });
+
+    describe("style", function() {
+        var Widget, widget;
+
+        function createWidget(config) {
+            widget = new Widget(Ext.apply({
+                renderTo: document.body
+            }, config));
+        }
+
+        beforeEach(function() {
+            Widget = Ext.define(null, {
+                extend: 'Ext.Widget'
+            });
+        });
+
+        afterEach(function() {
+            widget.destroy();
+            Widget = widget = null;
+        });
+
+        it("should initialize style using a string", function() {
+            createWidget({
+                style: 'position: absolute; cursor: pointer'
+            });
+
+            expect(widget.element.getStyle('position')).toBe('absolute');
+            expect(widget.element.getStyle('cursor')).toBe('pointer');
+        });
+
+        it("should initialize style using an object", function() {
+            createWidget({
+                style: {
+                    position: 'absolute',
+                    cursor: 'pointer'
+                }
+            });
+
+            expect(widget.element.getStyle('position')).toBe('absolute');
+            expect(widget.element.getStyle('cursor')).toBe('pointer');
+        });
+
+        it("should set style using a string", function() {
+            createWidget();
+
+            widget.setStyle('position: absolute; cursor: pointer');
+
+            expect(widget.element.getStyle('position')).toBe('absolute');
+            expect(widget.element.getStyle('cursor')).toBe('pointer');
+        });
+
+        it("should set style using an object", function() {
+            createWidget();
+
+            widget.setStyle({
+                position: 'absolute',
+                cursor: 'pointer'
+            });
+
+            expect(widget.element.getStyle('position')).toBe('absolute');
+            expect(widget.element.getStyle('cursor')).toBe('pointer');
+        });
+
+        it("should throw an error when getStyle is called", function() {
+            createWidget();
+
+            expect(function() {
+                widget.getStyle();
+            }).toThrow("'style' is a write-only config. To query element styles use the Ext.dom.Element API.");
+        });
+
+        it("should support a style declared on a subclass", function() {
+            Widget = Ext.define(null, {
+                extend: 'Ext.Widget',
+                style: {
+                    borderWidth: '1px'
+                }
+            });
+            createWidget();
+            expect(widget.element.dom.style.borderWidth).toBe('1px');
+        });
+    });
+
+    describe('keyMap', function() {
+        it('should allow keyMap on class', function() {
+            var Ev = Ext.event.Event;
+
+            var log = [];
+
+            var keyMap = {
+                ESC: 'onEscape',
+                A: 'onA',
+                F2: 'onF2',
+                '#123': 'on123', // F12
+                'Alt+#123': 'onAlt123',
+                CONTEXT_MENU: 'onContextMenuAlone',
+                '*+CONTEXT_MENU': 'onAnyContextMenu',
+                1: 'onOne',
+                'Ctrl+1': 'onCtrlOne'
+            };
+
+            var keyCodes = [
+                ['keydown', Ev.ESC],
+                ['keydown', Ev.A],
+                ['keydown', Ev.F2],
+                ['keypress', 123],
+                ['keypress', 'altKey', 123],
+                ['keydown', Ev.CONTEXT_MENU],
+                ['keydown', 'altKey', Ev.CONTEXT_MENU],
+                ['keypress', '1'.charCodeAt(0)],
+                ['keypress', 'ctrlKey', '1'.charCodeAt(0)]
+            ];
+
+            var handlers = {};
+
+            Ext.iterate(keyMap, function(key, value) {
+                handlers[value] = function() {
+                    log.push(value);
+                };
+            });
+
+            var T = Ext.define(null, Ext.apply({
+                extend: 'Ext.Widget',
+
+                keyMap: keyMap
+            }, handlers));
+
+            Ext.each(['first', 'second'], function(which) {
+                widget = new T();
+                widget.render(Ext.getBody());
+
+                var keys = Ext.clone(keyCodes);
+
+                log.length = 0;
+                log.push(which);
+
+                for (var i = 0; i < keys.length; ++i) {
+                    var kc = keys[i];
+
+                    var ke = {
+                        altKey: false,
+                        ctrlKey: false,
+                        metaKey: false,
+                        shiftKey: false,
+                        type: kc.shift(),
+                        keyCode: kc.pop()
+                    };
+
+                    if (ke.type === 'keypress') {
+                        ke.charCode = ke.keyCode;
+                        delete ke.keyCode;
+                    }
+
+                    while (kc.length) {
+                        ke[kc.pop()] = true; // eg 'ctrlKey'
+                    }
+
+                    ke = new Ext.event.Event(ke);
+
+                    widget.onKeyMapEvent(ke);
+                }
+
+                expect(log).toEqual([
+                    which,
+                    'onEscape',
+                    'onA',
+                    'onF2',
+                    'on123',
+                    'onAlt123',
+                    'onContextMenuAlone',
+                    'onAnyContextMenu',
+                    'onAnyContextMenu',
+                    'onOne',
+                    'onCtrlOne'
+                ]);
+
+                widget.destroy();
+            });
+        });
+
+        it('should support group enable/disable', function() {
+            var log = [];
+
+            var T = Ext.define(null, {
+                extend: 'Ext.Widget',
+
+                keyMap: {
+                    'ESC:GRP': 'onEscape'
+                },
+
+                onEscape: function(e) {
+                    log.push('onEscape');
+                }
+            });
+
+            widget = new T();
+            widget.render(Ext.getBody());
+
+            var ke = new Ext.event.Event({
+                type: 'keydown',
+                keyCode: 27
+            });
+
+            widget.onKeyMapEvent(ke);
+            expect(log).toEqual(['onEscape']);
+
+            widget.disableKeyMapGroup('GRP');
+            widget.onKeyMapEvent(ke);
+            expect(log).toEqual(['onEscape']);
+
+            widget.enableKeyMapGroup('GRP');
+            widget.onKeyMapEvent(ke);
+            expect(log).toEqual(['onEscape', 'onEscape']);
+        });
+
+        it('should allow keyMap on class and instance', function() {
+            var log = [];
+
+            var T = Ext.define(null, {
+                extend: 'Ext.Widget',
+
+                keyMap: {
+                    ESC: 'onEscape',
+                    F2: 'onF2'
+                },
+
+                onEscape: function(e) {
+                    log.push('onEscape');
+                },
+
+                onF2: function() {
+                    log.push('F2');
+                }
+            });
+
+            widget = new T({
+                keyMap: {
+                    ESC: function(e) {
+                        log.push('esc');
+                    }
+                }
+            });
+            widget.render(Ext.getBody());
+
+            var ke = new Ext.event.Event({
+                type: 'keydown',
+                keyCode: 27
+            });
+
+            widget.onKeyMapEvent(ke);
+            expect(log).toEqual(['onEscape', 'esc']);
+
+            log.length = 0;
+            widget.destroy();
+
+            widget = new T({
+                keyMap: {
+                    ESC: function(e) {
+                        log.push('esc2');
+                    }
+                }
+            });
+            widget.render(Ext.getBody());
+
+            widget.onKeyMapEvent(ke);
+            expect(log).toEqual(['onEscape', 'esc2']);
+
+            var f2 = new Ext.event.Event({
+                type: 'keydown',
+                keyCode: Ext.event.Event.F2
+            });
+
+            widget.onKeyMapEvent(f2);
+            expect(log).toEqual(['onEscape', 'esc2', 'F2']);
+        });
+    });
+
+    describe('Ext.updateWidget', function() {
+        var creator, instance;
+
+        beforeEach(function() {
+            defineWidget(true, {
+                xtype: 'test-base',
+
+                config: {
+                    foo: null
+                },
+
+                isTestBase: true
+            });
+
+            Ext.define('spec.TestWidget', {
+                extend: 'Ext.Widget',
+                xtype: 'test-config',
+
+                config: {
+                    defaults: null,
+                    foo: null
+                },
+
+                isTestConfig: true,
+
+                createInstance: function(config) {
+                    return Ext.apply({
+                        foo: 'bar'
+                    }, config);
+                }
+            });
+        });
+
+        afterEach(function() {
+            Ext.undefine('spec.TestWidget');
+
+            creator = instance = Ext.destroy(creator, instance);
+        });
+
+        describe('create tests', function() {
+            it('should create a new instance', function() {
+                widget = Ext.updateWidget(null, {
+                    xclass: 'spec.Widget'
+                });
+
+                expect(widget.isTestBase).toBe(true);
+            });
+
+            it('should create new instance passing a string as config', function() {
+                widget = Ext.updateWidget(null, 'test-base');
+
+                expect(widget.isTestBase).toBe(true);
+            });
+
+            it('should create new instance with xclass mismatch', function() {
+                widget = new spec.Widget();
+
+                instance = Ext.updateWidget(widget, {
+                    xclass: 'spec.TestWidget',
+                    foo: 'baz'
+                });
+
+                expect(instance).not.toBe(widget);
+                expect(instance.isTestConfig).toBe(true);
+                expect(instance.getFoo()).toBe('baz');
+            });
+
+            it('should create new instance with type mismatch', function() {
+                widget = new spec.Widget();
+
+                instance = Ext.updateWidget(widget, {
+                    xtype: 'test-config',
+                    foo: 'baz'
+                });
+
+                expect(instance).not.toBe(widget);
+                expect(instance.isTestConfig).toBe(true);
+                expect(instance.getFoo()).toBe('baz');
+            });
+
+            describe('creator', function() {
+                it('should use defaults from creator', function() {
+                    creator = new spec.TestWidget({
+                        defaults: {
+                            foo: 'bar'
+                        }
+                    });
+
+                    widget = Ext.updateWidget(null, {
+                        xtype: 'test-config'
+                    }, creator, null, 'defaults');
+
+                    expect(widget.isTestConfig).toBe(true);
+                    expect(widget.getFoo()).toBe('bar');
+                });
+
+                it('should use defaults from creator but favor own config', function() {
+                    creator = new spec.TestWidget({
+                        defaults: {
+                            foo: 'bar'
+                        }
+                    });
+
+                    widget = Ext.updateWidget(null, {
+                        xtype: 'test-config',
+                        foo: 'baz'
+                    }, creator, null, 'defaults');
+
+                    expect(widget.isTestConfig).toBe(true);
+                    expect(widget.getFoo()).toBe('baz');
+                });
+
+                it('should use a creator method', function() {
+                    creator = new spec.TestWidget();
+                    widget = Ext.updateWidget(null, {
+                        xtype: 'test-config'
+                    }, creator, 'createInstance');
+
+                    expect(widget.isTestConfig).toBe(true);
+                    expect(widget.getFoo()).toBe('bar');
+                });
+
+                it('should use a creator method but favor own config', function() {
+                    creator = new spec.TestWidget();
+                    widget = Ext.updateWidget(null, {
+                        xtype: 'test-config',
+                        foo: 'baz'
+                    }, creator, 'createInstance');
+
+                    expect(widget.isTestConfig).toBe(true);
+                    expect(widget.getFoo()).toBe('baz');
+                });
+            });
+        });
+
+        describe('update tests', function() {
+            it('should update existing instance', function() {
+                widget = new spec.Widget({
+                    foo: 'bar'
+                });
+
+                instance = Ext.updateWidget(widget, {
+                    xclass: 'spec.Widget',
+                    foo: 'baz'
+                });
+
+                expect(instance).toBe(widget);
+                expect(instance.getFoo()).toBe('baz');
+            });
+        });
+
+        describe('destroy tests', function() {
+            it('should destroy old instance', function() {
+                widget = new spec.Widget();
+
+                instance = Ext.updateWidget(widget);
+
+                expect(widget.destroyed).toBe(true);
+                expect(instance).toBeUndefined();
+            });
+
+            it('should not destroy instance passing as config also', function() {
+                widget = new spec.Widget();
+
+                instance = Ext.updateWidget(widget, widget);
+
+                expect(widget.destroyed).toBe(false);
+                expect(instance).toBe(instance);
+            });
+
+            it('should destroy old instance passing an instance as config', function() {
+                widget = new spec.Widget();
+                instance = new spec.Widget();
+
+                var test = Ext.updateWidget(widget, instance);
+
+                expect(widget.destroyed).toBe(true);
+                expect(test).toBe(instance);
+            });
         });
     });
 });

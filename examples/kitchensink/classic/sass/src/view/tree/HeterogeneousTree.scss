@@ -4,8 +4,31 @@
     }
 } @else {
     .heterogeneous-tree-area-info:before {
-        font: 16px/1 FontAwesome;
+        font: 16px/1 'Font Awesome 5 Free';
         content: $fa-var-info-circle;
     }
 }
 
+@if $theme-name == 'theme-material' {
+    .heterogeneous-tree {
+        .#{$prefix}toolbar-default-docked-bottom {
+            background-color: #f5f5f5;
+        }
+
+        .#{$prefix}tree-elbow-plus:before,
+        .#{$prefix}tree-elbow-end-plus:before {
+            content: 'expand_more';
+        }
+
+        .#{$prefix}grid-tree-node-expanded {
+            .#{$prefix}tree-elbow-plus:before,
+            .#{$prefix}tree-elbow-end-plus:before {
+                content: 'expand_less';
+            }
+        }
+
+        .#{$prefix}form-item-label {
+            transform: translateY(8px);
+        }
+    }
+}

@@ -10,7 +10,7 @@ Ext.define('Ext.parse.symbol.Infix', {
 
     defaultProperty: 'priority',
 
-    led: function (left) {
+    led: function(left) {
         var me = this;
 
         me.lhs = left;

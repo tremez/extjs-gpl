@@ -4,17 +4,34 @@ Ext.define('KitchenSink.view.charts.column.Stacked100Controller', {
 
     yearTotal: {},
 
-    onPreview: function() {
+    onDownload: function() {
+        var chart;
+
         if (Ext.isIE8) {
             Ext.Msg.alert('Unsupported Operation', 'This operation requires a newer version of Internet Explorer.');
+
             return;
         }
-        var chart = this.lookupReference('chart');
 
-        chart.preview();
+        chart = this.lookup('chart');
+
+        if (Ext.os.is.Desktop) {
+            chart.download({
+                format: 'pdf',
+                pdf: {
+                    format: 'A5',
+                    orientation: 'landscape',
+                    border: '1cm'
+                },
+                filename: 'Car production by largest manufacturers'
+            });
+        }
+        else {
+            chart.preview();
+        }
     },
 
-    getYearTotal: function (record) {
+    getYearTotal: function(record) {
         var map = this.yearTotal,
             year = record.get('year'),
             total = map[year];
@@ -31,7 +48,7 @@ Ext.define('KitchenSink.view.charts.column.Stacked100Controller', {
         return total;
     },
 
-    onBarTipRender: function (tooltip, record, item) {
+    onBarTipRender: function(tooltip, record, item) {
         var fieldIndex = Ext.Array.indexOf(item.series.getYField(), item.field),
             manufacturer = item.series.getTitle()[fieldIndex],
             percent = record.get(item.field) / this.getYearTotal(record) * 100;
@@ -40,15 +57,15 @@ Ext.define('KitchenSink.view.charts.column.Stacked100Controller', {
             percent.toFixed(1) + '%');
     },
 
-    onGridMonthRender: function (value) {
+    onGridMonthRender: function(value) {
         return value;
     },
 
-    onGridValueRender: function (value) {
+    onGridValueRender: function(value) {
         return value + '%';
     },
 
-    onAxisLabelRender: function (axis, label, layoutContext) {
+    onAxisLabelRender: function(axis, label, layoutContext) {
         // Custom renderer overrides the native axis label renderer.
         // Since we don't want to do anything fancy with the value
         // ourselves except appending a '%' sign, but at the same time

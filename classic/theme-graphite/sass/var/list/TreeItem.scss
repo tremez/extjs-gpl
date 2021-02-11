@@ -1,0 +1,9 @@
+$treelist-row-indicator-selected-color: dynamic(#686868);
+$treelist-row-over-background-color: dynamic(#969595);
+$treelist-row-selected-background-color: dynamic(#686868);
+$treelist-row-selected-over-background-color: dynamic(#686868);
+$treelist-tool-indicator-selected-color: dynamic(#686868);
+$treelist-tool-selected-background-color: dynamic(#686868);
+$treelist-tool-selected-color: dynamic($font-color);
+$treelist-toolstrip-background-color: dynamic($base-color);
+$treelist-toolstrip-background-color: dynamic(contrast-color-by($body-background-color, 3));

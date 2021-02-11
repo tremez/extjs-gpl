@@ -9,7 +9,7 @@ Ext.define('ExecDashboard.Application', {
     name: 'ExecDashboard',
 
     // The tab we want to activate if there is no "#tag" in the URL.
-    defaultToken: '!kpi/clicks',
+    defaultToken: 'kpi/clicks',
 
     views: [
         'ExecDashboard.view.main.Main'

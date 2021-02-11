@@ -9,7 +9,7 @@ Ext.define('KitchenSink.view.drag.GroupController', {
         'Ext.window.Toast'
     ],
 
-    afterRender: function (view) {
+    afterRender: function(view) {
         this.group1Source = this.createSource({
             id: 'group1-source',
             element: view.el.down('.group-source-group1'),
@@ -53,7 +53,7 @@ Ext.define('KitchenSink.view.drag.GroupController', {
         });
     },
 
-    createSource: function (cfg) {
+    createSource: function(cfg) {
         var view = this.getView();
 
         return new Ext.drag.Source(Ext.apply(cfg, {
@@ -68,12 +68,12 @@ Ext.define('KitchenSink.view.drag.GroupController', {
         }));
     },
 
-    createTarget: function (cfg) {
+    createTarget: function(cfg) {
         return new Ext.drag.Target(Ext.apply(cfg, {
             listeners: {
-                drop: function (target, info) {
-                    var s = Ext.String.format('Dropped "{0} on "{1}"', 
-                                    info.source.getId(), target.getId());
+                drop: function(target, info) {
+                    var s = Ext.String.format('Dropped "{0} on "{1}"',
+                                              info.source.getId(), target.getId());
 
                     Ext.toast({
                         html: s,

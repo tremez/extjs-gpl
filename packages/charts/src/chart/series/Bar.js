@@ -82,7 +82,7 @@ Ext.define('Ext.chart.series.Bar', {
          */
         itemInstancing: {
             type: 'rect',
-            fx: {
+            animation: {
                 customDurations: {
                     x: 0,
                     y: 0,
@@ -94,63 +94,74 @@ Ext.define('Ext.chart.series.Bar', {
         }
     },
 
-    getItemForPoint: function (x, y) {
-        if (this.getSprites()) {
-            var me = this,
-                chart = me.getChart(),
-                padding = chart.getInnerPadding(),
-                isRtl = chart.getInherited().rtl;
+    getItemForPoint: function(x, y) {
+        var chart, padding, isRtl;
 
-            // Convert the coordinates because the "items" sprites that draw the bars ignore the chart's InnerPadding.
-            // See also Ext.chart.series.sprite.Bar.getIndexNearPoint(x,y) regarding the series's vertical coordinate system.
+        if (this.getSprites().length) {
+            chart = this.getChart();
+            padding = chart.getInnerPadding();
+            isRtl = chart.getInherited().rtl;
+
+            // Convert the coordinates because the "items" sprites that draw
+            // the bars ignore the chart's InnerPadding.
             arguments[0] = x + (isRtl ? padding.right : -padding.left);
             arguments[1] = y + padding.bottom;
-            return me.callParent(arguments);
+
+            return this.callParent(arguments);
         }
     },
 
-    updateXAxis: function (xAxis) {
+    updateXAxis: function(xAxis) {
         //<debug>
-        if (!this.is3D && xAxis.type !== 'category') {
-            Ext.raise("'bar' series should be used with a 'category' axis. Please refer to the bar series docs.");
+        if (!this.is3D && !xAxis.isCategory) {
+            Ext.raise("'bar' series should be used with a 'category' axis. " +
+                      "Please refer to the bar series docs.");
         }
         //</debug>
-        xAxis.setLabelInSpan(true);
+
+        xAxis.setExpandRangeBy(0.5);
         this.callParent(arguments);
     },
 
-    updateHidden: function (hidden) {
+    updateHidden: function(hidden) {
         this.callParent(arguments);
         this.updateStacked();
     },
 
-    updateStacked: function (stacked) {
+    updateStacked: function(stacked) {
         var me = this,
+            attributes = {},
             sprites = me.getSprites(),
-            ln = sprites.length,
-            visible = [],
-            attributes = {}, i;
+            spriteCount = sprites.length,
+            visibleSprites = [],
+            visibleSpriteCount,
+            i;
 
-        for (i = 0; i < ln; i++) {
+        for (i = 0; i < spriteCount; i++) {
             if (!sprites[i].attr.hidden) {
-                visible.push(sprites[i]);
+                visibleSprites.push(sprites[i]);
             }
         }
-        ln = visible.length;
+
+        visibleSpriteCount = visibleSprites.length;
 
         if (me.getStacked()) {
             attributes.groupCount = 1;
             attributes.groupOffset = 0;
-            for (i = 0; i < ln; i++) {
-                visible[i].setAttributes(attributes);
-            }
-        } else {
-            attributes.groupCount = visible.length;
-            for (i = 0; i < ln; i++) {
-                attributes.groupOffset = i;
-                visible[i].setAttributes(attributes);
+
+            for (i = 0; i < visibleSpriteCount; i++) {
+                visibleSprites[i].setAttributes(attributes);
             }
         }
+        else {
+            attributes.groupCount = visibleSpriteCount;
+
+            for (i = 0; i < visibleSpriteCount; i++) {
+                attributes.groupOffset = i;
+                visibleSprites[i].setAttributes(attributes);
+            }
+        }
+
         me.callParent(arguments);
     }
 });

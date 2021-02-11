@@ -23,7 +23,7 @@ Ext.define('KitchenSink.view.form.FieldReplicator', {
     minHeight: 200,
 
     fieldDefaults: {
-        labelWidth: 70,
+        labelWidth: 80,
         anchor: '100%'
     },
 
@@ -49,13 +49,15 @@ Ext.define('KitchenSink.view.form.FieldReplicator', {
                 ]
             },
             displayField: 'email',
-            plugins: 'fieldreplicator',
+            plugins: {
+                fieldreplicator: true
+            },
             fieldLabel: 'Send To',
             anchor: '0',
             queryMode: 'local',
             selectOnTab: false,
             name: 'to',
-            onReplicate: function () {
+            onReplicate: function() {
                 this.getStore().clearFilter();
             }
         }]

@@ -25,10 +25,10 @@ Ext.define('Ext.ux.TabCloseMenu', {
     showCloseOthers: true,
 
     /**
-     * @cfg {String} closeOthersTabsText
+     * @cfg {String} closeOtherTabsText
      * The text for closing all tabs except the current one.
      */
-    closeOthersTabsText: 'Close Other Tabs',
+    closeOtherTabsText: 'Close Other Tabs',
 
     /**
      * @cfg {Boolean} showCloseAll
@@ -54,13 +54,13 @@ Ext.define('Ext.ux.TabCloseMenu', {
      */
     extraItemsTail: null,
 
-    //public
-    constructor: function (config) {
+    // public
+    constructor: function(config) {
         this.callParent([config]);
         this.mixins.observable.constructor.call(this, config);
     },
 
-    init : function(tabpanel){
+    init: function(tabpanel) {
         this.tabPanel = tabpanel;
         this.tabBar = tabpanel.down("tabbar");
 
@@ -87,7 +87,7 @@ Ext.define('Ext.ux.TabCloseMenu', {
     /**
      * @private
      */
-    onContextMenu : function(event, target){
+    onContextMenu: function(event, target) {
         var me = this,
             menu = me.createMenu(),
             disableAll = true,
@@ -102,11 +102,14 @@ Ext.define('Ext.ux.TabCloseMenu', {
             me.tabPanel.items.each(function(item) {
                 if (item.closable) {
                     disableAll = false;
+
                     if (item !== me.item) {
                         disableOthers = false;
+
                         return false;
                     }
                 }
+
                 return true;
             });
 
@@ -125,11 +128,12 @@ Ext.define('Ext.ux.TabCloseMenu', {
         menu.showAt(event.getXY());
     },
 
-    createMenu : function() {
-        var me = this;
+    createMenu: function() {
+        var me = this,
+            items;
 
         if (!me.menu) {
-            var items = [{
+            items = [{
                 itemId: 'close',
                 text: me.closeTabText,
                 scope: me,
@@ -143,7 +147,7 @@ Ext.define('Ext.ux.TabCloseMenu', {
             if (me.showCloseOthers) {
                 items.push({
                     itemId: 'closeOthers',
-                    text: me.closeOthersTabsText,
+                    text: me.closeOtherTabsText,
                     scope: me,
                     handler: me.onCloseOthers
                 });
@@ -178,36 +182,37 @@ Ext.define('Ext.ux.TabCloseMenu', {
         return me.menu;
     },
 
-    onHideMenu: function () {
+    onHideMenu: function() {
         var me = this;
+
         me.fireEvent('aftermenu', me.menu, me);
     },
 
-    onClose : function(){
+    onClose: function() {
         this.tabPanel.remove(this.item);
     },
 
-    onCloseOthers : function(){
+    onCloseOthers: function() {
         this.doClose(true);
     },
 
-    onCloseAll : function(){
+    onCloseAll: function() {
         this.doClose(false);
     },
 
-    doClose : function(excludeActive){
+    doClose: function(excludeActive) {
         var items = [];
 
-        this.tabPanel.items.each(function(item){
-            if(item.closable){
-                if(!excludeActive || item !== this.item){
+        this.tabPanel.items.each(function(item) {
+            if (item.closable) {
+                if (!excludeActive || item !== this.item) {
                     items.push(item);
                 }
             }
         }, this);
 
         Ext.suspendLayouts();
-        Ext.Array.forEach(items, function(item){
+        Ext.Array.forEach(items, function(item) {
             this.tabPanel.remove(item);
         }, this);
         Ext.resumeLayouts(true);

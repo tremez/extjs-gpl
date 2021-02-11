@@ -1,5 +1,9 @@
-describe('Ext.form.field.Field', function () {
-    var ajaxRequestCfg, ct, action, form;
+topSuite('Ext.form.field.Field',
+    ['Ext.form.field.*', 'Ext.data.validator.*', 'Ext.form.Panel',
+     'Ext.app.ViewController', 'Ext.app.ViewModel'],
+function() {
+    var itNotTouch = jasmine.supportsTouch ? xit : it,
+        ajaxRequestCfg, ct, action, form;
 
     function makeContainer(items) {
         ct = new Ext.container.Container({
@@ -9,9 +13,11 @@ describe('Ext.form.field.Field', function () {
 
     function createAction(config) {
         config = config || {};
+
         if (!config.form) {
             config.form = {};
         }
+
         Ext.applyIf(config.form, {
             isValid: function() { return true; },
             afterAction: Ext.emptyFn,
@@ -19,10 +25,11 @@ describe('Ext.form.field.Field', function () {
             hasUpload: function() { return false; },
             markInvalid: Ext.emptyFn
         });
+
         action = new Ext.form.action.Submit(config);
     }
 
-    afterEach(function () {
+    afterEach(function() {
         Ext.destroy(ct, action, form);
         ct = action = form = ajaxRequestCfg = null;
     });
@@ -49,17 +56,18 @@ describe('Ext.form.field.Field', function () {
                     }
                 ]
             }, cfg || {}));
+
             tf = form.down('textfield');
+
             errorDom = tf.errorEl.dom;
         }
-        
+
         afterEach(function() {
             tip = Ext.destroy(tip);
         });
 
         it("should create a validation error icon to the right of the field", function() {
-            createForm(); 
-            //debugger
+            createForm();
             tf.validate();
             expect(tf.errorEl.dom.firstChild).toBeNull();
             tf.allowBlank = false;
@@ -67,12 +75,12 @@ describe('Ext.form.field.Field', function () {
             expect(tf.errorEl.dom.firstChild).not.toBeNull();
         });
 
-        it("should show a quicktip if mouse over the invalid icon", function() {
+        itNotTouch("should show a quicktip if mouse over the invalid icon", function() {
             createForm(true, {
                 title: 'quicktip'
             });
             tf.validate();
-     
+
             tip = Ext.form.Labelable.tip;
             expect(tip.hidden).toBe(true);
             jasmine.fireMouseEvent(errorDom, 'mouseover');
@@ -140,7 +148,8 @@ describe('Ext.form.field.Field', function () {
                 makeField({
                     renderTo: Ext.getBody(),
                     bind: '{theValue}'
-                })
+                });
+
                 field.getErrors = function() {
                     return [];
                 };
@@ -153,9 +162,11 @@ describe('Ext.form.field.Field', function () {
                 makeField({
                     renderTo: Ext.getBody(),
                     bind: '{theValue}'
-                })
+                });
+
                 field.getErrors = function() {
                     var v = this.getValue();
+
                     return v === 'abc' ? ['Invalid'] : [];
                 };
 
@@ -168,6 +179,7 @@ describe('Ext.form.field.Field', function () {
 
         describe("with records", function() {
             var rec, validator;
+
             beforeEach(function() {
                 Ext.define('Ext.data.validator.Custom', {
                     extend: 'Ext.data.validator.Validator',
@@ -177,16 +189,16 @@ describe('Ext.form.field.Field', function () {
                 validator = Ext.data.validator.Validator.create({
                     type: 'custom'
                 });
-                
+
                 Ext.define('spec.Person', {
                     extend: 'Ext.data.Model',
                     fields: ['name', 'age', 'address'],
-                    validators : {
-                        name : {
-                            type : 'length',
-                            min : 3
+                    validators: {
+                        name: {
+                            type: 'length',
+                            min: 3
                         },
-                        address : validator
+                        address: validator
                     }
                 });
 
@@ -245,7 +257,7 @@ describe('Ext.form.field.Field', function () {
             });
 
             it("should pass value and record to the model validator", function() {
-                spyOn(validator,'validate').andCallThrough();
+                spyOn(validator, 'validate').andCallThrough();
 
                 makeField({
                     renderTo: Ext.getBody(),
@@ -268,25 +280,27 @@ describe('Ext.form.field.Field', function () {
                 Ext.override(field, {
                     getErrors: function() {
                         var result = this.callParent(arguments);
+
                         result.push('Fail');
+
                         return result;
                     }
-                })
+                });
                 field.setValue('');
                 expect(field.getErrors()).toEqual(['Must be present', 'Fail']);
             });
         });
     });
-    
-    describe('getModelData', function () {
+
+    describe('getModelData', function() {
         var form;
 
-        afterEach(function () {
+        afterEach(function() {
             Ext.destroy(form);
             form = null;
         });
 
-        it ('should return filefield data', function () {
+        it('should return filefield data', function() {
             var field1 = new Ext.form.field.Display({
                 name: 'field1',
                 value: 'foo'
@@ -297,14 +311,14 @@ describe('Ext.form.field.Field', function () {
                 value: 'bar'
             });
 
-            expect(field1.getModelData()).toEqual({field1: 'foo'});
-            expect(field2.getModelData()).toEqual({field2: ''});
-            
+            expect(field1.getModelData()).toEqual({ field1: 'foo' });
+            expect(field2.getModelData()).toEqual({ field2: '' });
+
             Ext.destroy(field1, field2);
         });
 
-        describe('in a form with jsonSubmit', function () {
-            it ('should return values for fields in a form regardless of submitValue (not submitting)', function () {
+        describe('in a form with jsonSubmit', function() {
+            it('should return values for fields in a form regardless of submitValue (not submitting)', function() {
                 makeContainer([
                     new Ext.form.field.Base({
                         name: 'field1',
@@ -325,20 +339,20 @@ describe('Ext.form.field.Field', function () {
                     jsonSubmit: true
                 });
 
-                expect(form.getFieldValues()).toEqual({field1: 'foo', field2: '', field3: 'baz'});
+                expect(form.getFieldValues()).toEqual({ field1: 'foo', field2: '', field3: 'baz' });
             });
         });
     });
 
-    describe('getSubmitData', function () {
+    describe('getSubmitData', function() {
         var file;
-        
+
         afterEach(function() {
             Ext.destroy(file);
             file = null;
         });
-        
-        it('should not be able to get the submit data for a filefield by default, non-submission', function () {
+
+        it('should not be able to get the submit data for a filefield by default, non-submission', function() {
             file = new Ext.form.field.File({
                 name: 'foo'
             });
@@ -346,17 +360,17 @@ describe('Ext.form.field.Field', function () {
             expect(file.getSubmitData()).toBe(null);
         });
 
-        it('should be able to get the submit data for a filefield when configured with submitValue: true, non-submission', function () {
+        it('should be able to get the submit data for a filefield when configured with submitValue: true, non-submission', function() {
             file = new Ext.form.field.File({
                 name: 'foo',
                 submitValue: true
             });
 
-            expect(file.getSubmitData()).toEqual({foo: ''});
+            expect(file.getSubmitData()).toEqual({ foo: '' });
         });
 
         // temporarily disabled this spec because it throws errors in several browsers
-        it('should not be able to get the submit data for a filefield on form submission', function () {
+        it('should not be able to get the submit data for a filefield on form submission', function() {
             makeContainer([
                 new Ext.form.field.Base({
                     name: 'field1',
@@ -371,13 +385,13 @@ describe('Ext.form.field.Field', function () {
                 form: new Ext.form.Basic(ct)
             });
 
-            expect(ct.items.getAt(0).getSubmitData()).toEqual({field1: 'foo'});
+            expect(ct.items.getAt(0).getSubmitData()).toEqual({ field1: 'foo' });
             expect(ct.items.getAt(1).getSubmitData()).toBe(null);
         });
     });
 
-    describe('submitValue config', function () {
-        beforeEach(function () {
+    describe('submitValue config', function() {
+        beforeEach(function() {
             spyOn(Ext.Ajax, 'request').andCallFake(function() {
                 // store what was passed to the request call for later inspection
                 expect(arguments.length).toEqual(1);
@@ -385,7 +399,7 @@ describe('Ext.form.field.Field', function () {
             });
         });
 
-        it("should add all of the BasicForm's field values marked as submitValue: true to the ajax call parameters", function () {
+        it("should add all of the BasicForm's field values marked as submitValue: true to the ajax call parameters", function() {
             makeContainer([
                 new Ext.form.field.Base({
                     name: 'field1',
@@ -397,18 +411,18 @@ describe('Ext.form.field.Field', function () {
                     value: 'bar'
                 })
             ]);
-            
+
             form = new Ext.form.Basic(ct, {
                 jsonSubmit: true
             });
-            
+
             createAction({ form: form });
 
             action.run();
-            expect(ajaxRequestCfg.jsonData).toEqual({field1: 'foo', field2: 'bar'});
+            expect(ajaxRequestCfg.jsonData).toEqual({ field1: 'foo', field2: 'bar' });
         });
 
-        it("should not add any of the BasicForm's field values marked as submitValue: false to the ajax call parameters", function () {
+        it("should not add any of the BasicForm's field values marked as submitValue: false to the ajax call parameters", function() {
             makeContainer([
                 new Ext.form.field.Base({
                     name: 'field1',
@@ -425,14 +439,14 @@ describe('Ext.form.field.Field', function () {
             form = new Ext.form.Basic(ct, {
                 jsonSubmit: true
             });
-            
+
             createAction({ form: form });
 
             action.run();
-            expect(ajaxRequestCfg.jsonData).toEqual({field1: 'foo'});
+            expect(ajaxRequestCfg.jsonData).toEqual({ field1: 'foo' });
         });
 
-        it('should not include any displayfields in the form submit', function () {
+        it('should not include any displayfields in the form submit', function() {
             makeContainer([
                 new Ext.form.field.Base({
                     name: 'field1',
@@ -448,14 +462,14 @@ describe('Ext.form.field.Field', function () {
             form = new Ext.form.Basic(ct, {
                 jsonSubmit: true
             });
-            
+
             createAction({ form: form });
 
             action.run();
-            expect(ajaxRequestCfg.jsonData).toEqual({field1: 'foo'});
+            expect(ajaxRequestCfg.jsonData).toEqual({ field1: 'foo' });
         });
 
-        it('should submit any fields with submitValue: true in the form submit', function () {
+        it('should submit any fields with submitValue: true in the form submit', function() {
             makeContainer([
                 new Ext.form.field.Base({
                     name: 'field1',
@@ -475,11 +489,11 @@ describe('Ext.form.field.Field', function () {
             form = new Ext.form.Basic(ct, {
                 jsonSubmit: true
             });
-            
+
             createAction({ form: form });
 
             action.run();
-            expect(ajaxRequestCfg.jsonData).toEqual({field1: 'foo', field3: 'baz'});
+            expect(ajaxRequestCfg.jsonData).toEqual({ field1: 'foo', field3: 'baz' });
         });
     });
 });

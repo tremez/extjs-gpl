@@ -10,12 +10,12 @@ Ext.define('ExecDashboard.view.main.MainController', {
     alias: 'controller.main',
 
     routes: {
-        '!:id': {
+        ':id': {
             action: 'onNavigate',
             before: 'beforeNavigate'
         },
 
-        '!:id/:state': {
+        ':id/:state': {
             action: 'onNavigateDeep',
             before: 'beforeNavigateDeep'
         }
@@ -24,10 +24,6 @@ Ext.define('ExecDashboard.view.main.MainController', {
     listen: {
         controller: {
             '*': {
-                // We delegate all changes of router history to this controller by firing
-                // the "changeroute" event from other controllers.
-                changeroute: 'changeRoute',
-
                 unmatchedroute: 'onUnmatchedRoute'
             }
         }
@@ -65,15 +61,6 @@ Ext.define('ExecDashboard.view.main.MainController', {
         }
     },
 
-    changeRoute: function (controller, route) {
-        // Since we parse
-        if (route.substring(0, 1) !== '!') {
-            route = '!' + route;
-        }
-
-        this.redirectTo(route);
-    },
-
     getTabRoute: function (tab) {
         var route = tab.xtype;
 
@@ -86,11 +73,10 @@ Ext.define('ExecDashboard.view.main.MainController', {
 
     onBadRoute: function () {
         var app = ExecDashboard.app.getApplication();
-        this.changeRoute(this, app.getDefaultToken());
+        this.redirectTo(app.getDefaultToken());
     },
 
     onNavigate: function (id) {
-        //Ext.log('navigate: ' + id);
         var tabs = this.getView();
 
         var tab = tabs.setActiveTab(id);
@@ -98,13 +84,12 @@ Ext.define('ExecDashboard.view.main.MainController', {
             // if we changed active tabs...
             var route = this.getTabRoute(tab);
             if (route && route !== id) {
-                this.changeRoute(this, route);
+                this.redirectTo(route);
             }
         }
     },
 
     onNavigateDeep: function (id, state) {
-        //Ext.log('navigate: ' + id + ' / ' + state);
         var tabs = this.getView();
         var tab = tabs.setActiveTab(id) || tabs.getActiveTab();
 
@@ -113,7 +98,7 @@ Ext.define('ExecDashboard.view.main.MainController', {
 
     onTabChange: function (mainView, newTab) {
         var route = this.getTabRoute(newTab);
-        this.changeRoute(this, route);
+        this.redirectTo(route);
     },
 
     onMenuClick: function (menu, item) {

@@ -5,7 +5,7 @@
 Ext.define('Ext.parse.symbol.InfixRight', {
     extend: 'Ext.parse.symbol.Infix',
 
-    led: function (left) {
+    led: function(left) {
         var me = this;
 
         me.lhs = left;

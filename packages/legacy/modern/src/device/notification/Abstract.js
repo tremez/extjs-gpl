@@ -36,7 +36,7 @@ Ext.define('Ext.device.notification.Abstract', {
      */
     show: function(config) {
         if (!config.message) {
-            throw('[Ext.device.Notification#show] You passed no message');
+            throw ('[Ext.device.Notification#show] You passed no message');
         }
 
         if (!config.buttons) {
@@ -56,7 +56,7 @@ Ext.define('Ext.device.notification.Abstract', {
 
     alert: function(config) {
         if (!config.message) {
-            throw('[Ext.device.Notification#alert] You passed no message');
+            throw ('[Ext.device.Notification#alert] You passed no message');
         }
 
         if (!config.scope) {
@@ -68,7 +68,7 @@ Ext.define('Ext.device.notification.Abstract', {
 
     confirm: function(config) {
         if (!config.message) {
-            throw('[Ext.device.Notification#confirm] You passed no message');
+            throw ('[Ext.device.Notification#confirm] You passed no message');
         }
 
         if (!config.buttons) {
@@ -87,7 +87,7 @@ Ext.define('Ext.device.notification.Abstract', {
     },
     prompt: function(config) {
         if (!config.message) {
-            throw('[Ext.device.Notification#prompt] You passed no message');
+            throw ('[Ext.device.Notification#prompt] You passed no message');
         }
 
         if (!config.buttons) {

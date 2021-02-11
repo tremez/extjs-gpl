@@ -29,6 +29,7 @@ Ext.define('Calendar.util.Remote', {
         while (base.getDay() !== d) {
             base = D.add(base, D.DAY, incr);
         }
+
         return base;
     },
 
@@ -44,11 +45,13 @@ Ext.define('Calendar.util.Remote', {
         Ext.Array.forEach(data, function(event) {
             event.id = ++start;
         });
+
         return data;
     },
 
     generateOutput: function(data, calendarId, ctx) {
         var filtered = this.filter(data, ctx.params.startDate, ctx.params.endDate);
+
         return this.prepare(filtered, calendarId);
     },
 
@@ -58,18 +61,22 @@ Ext.define('Calendar.util.Remote', {
         return Ext.Array.map(data, function(event) {
             event = Ext.apply({}, event);
             event.calendarId = calendarId;
+
             if (event.allDay) {
                 event.startDate = D.localToUtc(event.startDate);
                 event.endDate = D.localToUtc(event.endDate);
             }
+
             event.startDate = D.format(event.startDate, 'C');
             event.endDate = D.format(event.endDate, 'C');
+
             return event;
         });
     },
 
     setDate: function(base, d, h, m) {
         var ret = Ext.Date.clone(base);
+
         if (d !== undefined) {
             ret.setDate(d);
         }
@@ -81,6 +88,7 @@ Ext.define('Calendar.util.Remote', {
         if (m !== undefined) {
             ret.setMinutes(m);
         }
+
         return ret;
     },
 
@@ -89,6 +97,10 @@ Ext.define('Calendar.util.Remote', {
     }
 
 }, function(U) {
+    var D = Ext.Date,
+        N = Ext.Number,
+        places, people, teams1, teams2, workActions, leisure, emptyData,
+        staticData, now, start, end, data;
 
     function halfhour() {
         return Math.random() < 0.5 ? 30 : 0;
@@ -96,6 +108,7 @@ Ext.define('Calendar.util.Remote', {
 
     function getRandom(arr) {
         var n = N.randomInt(0, arr.length - 1);
+
         return arr[n];
     }
 
@@ -181,10 +194,10 @@ Ext.define('Calendar.util.Remote', {
 
         while (current < end) {
             incr = 1;
-            o = null;
 
             if (!D.isWeekend(current)) {
                 r = Math.random();
+
                 if (r > 0.25) {
                     // Morning event
                     if (Math.random() < 0.5) {
@@ -192,7 +205,9 @@ Ext.define('Calendar.util.Remote', {
                         data.push({
                             title: getRandom(workActions) + ' with ' + getRandom(teams1),
                             startDate: U.setDate(current, undefined, n, halfhour()),
-                            endDate: U.setDate(current, undefined, N.randomInt(n + 1, 13), halfhour())
+                            endDate: U.setDate(
+                                current, undefined, N.randomInt(n + 1, 13), halfhour()
+                            )
                         });
                     }
 
@@ -202,10 +217,13 @@ Ext.define('Calendar.util.Remote', {
                         data.push({
                             title: getRandom(workActions) + ' with ' + getRandom(teams1),
                             startDate: U.setDate(current, undefined, n, halfhour()),
-                            endDate: U.setDate(current, undefined, N.randomInt(n + 1, 18), halfhour())
+                            endDate: U.setDate(
+                                current, undefined, N.randomInt(n + 1, 18), halfhour()
+                            )
                         });
                     }
-                } else if (r > 0.2) {
+                }
+                else if (r > 0.2) {
                     incr = D.FRIDAY - current.getDay() + 1;
                     data.push({
                         title: 'In ' + getRandom(places) + ' office',
@@ -216,17 +234,17 @@ Ext.define('Calendar.util.Remote', {
 
                 }
             }
+
             current = D.add(current, D.DAY, incr);
         }
+
         return U.generateIds(data, 3000);
     }
 
     function getStaticPersonalData() {
-        var ret = [], 
+        var ret = [],
             firstCurrent = D.clearTime(D.getFirstDateOfMonth(new Date()), true),
-            lastCurrent = D.clearTime(D.getLastDateOfMonth(firstCurrent), true),
             d;
-
 
         d = U.setHours(U.findNext(firstCurrent, 5), 19, 0);
         ret.push({
@@ -284,6 +302,7 @@ Ext.define('Calendar.util.Remote', {
 
             if (D.isWeekend(current)) {
                 r = Math.random();
+
                 if (current.getDay() === D.SATURDAY && r < 0.1) {
                     data.push({
                         title: 'Weekend away in ' + getRandom(places),
@@ -292,14 +311,16 @@ Ext.define('Calendar.util.Remote', {
                         allDay: true
                     });
                     incr = 2;
-                } else if (r < 0.3) {
+                }
+                else if (r < 0.3) {
                     data.push({
                         title: getRandom(leisure) + ' with ' + getRandom(people),
                         startDate: current,
                         endDate: D.add(current, D.DAY, 1),
                         allDay: true
                     });
-                } else if (r < 0.7) {
+                }
+                else if (r < 0.7) {
                     n = N.randomInt(9, 18);
                     data.push({
                         title: getRandom(leisure) + ' with ' + getRandom(people),
@@ -307,7 +328,8 @@ Ext.define('Calendar.util.Remote', {
                         endDate: U.setDate(current, undefined, N.randomInt(n + 1, 21), halfhour())
                     });
                 }
-            } else {
+            }
+            else {
                 if (Math.random() > 0.7) {
                     data.push({
                         title: 'Dinner with ' + getRandom(people),
@@ -316,6 +338,7 @@ Ext.define('Calendar.util.Remote', {
                     });
                 }
             }
+
             current = D.add(current, D.DAY, incr);
         }
 
@@ -334,7 +357,6 @@ Ext.define('Calendar.util.Remote', {
 
         while (current < end) {
             incr = 1;
-            o = null;
 
             if (!D.isWeekend(current)) {
                 if (current.getDay() === D.TUESDAY || current.getDay() === D.THURSDAY) {
@@ -346,6 +368,7 @@ Ext.define('Calendar.util.Remote', {
                 }
 
                 r = Math.random();
+
                 if (r > 0.6) {
                     n = N.randomInt(11, 15);
                     data.push({
@@ -353,6 +376,7 @@ Ext.define('Calendar.util.Remote', {
                         startDate: U.setDate(current, undefined, n, halfhour()),
                         endDate: U.setDate(current, undefined, N.randomInt(n + 1, 17), halfhour())
                     });
+
                     if (r > 0.9) {
                         ++deliverables;
                         data.push({
@@ -371,27 +395,28 @@ Ext.define('Calendar.util.Remote', {
         return U.generateIds(data, 9000);
     }
 
-    var places = ['London', 'Paris', 'Munich', 'Amsterdam', 'Rome'],
-        people = ['Louis', 'Mitch', 'Ava', 'Shelly', 'Vicki', 'Stefanie', 'Jason', 'Elena', 'Randy', 'Fred', 'Debbie'],
-        teams1 = ['Release', 'QA', 'Development', 'PM', 'R&D'],
-        teams2 = ['Marketing', 'Sales'],
-        clients1 = ['Client A', 'Client B', 'Client C', 'Client D'],
-        clients2 = ['Client E', 'Client F', 'Client G', 'Client H'],
-        workActions = ['Meet', 'Call', 'Review'],
-        leisure = ['Hike', 'Gallery', 'Gaming', 'Theatre', 'Bowling', 'Concert'];
+    places = ['London', 'Paris', 'Munich', 'Amsterdam', 'Rome'];
+    people = ['Louis', 'Mitch', 'Ava', 'Shelly', 'Vicki', 'Stefanie',
+              'Jason', 'Elena', 'Randy', 'Fred', 'Debbie'];
+    teams1 = ['Release', 'QA', 'Development', 'PM', 'R&D'];
+    teams2 = ['Marketing', 'Sales'];
+    workActions = ['Meet', 'Call', 'Review'];
+    leisure = ['Hike', 'Gallery', 'Gaming', 'Theatre', 'Bowling', 'Concert'];
 
-    var emptyData = window.location.search.toLowerCase().indexOf('nodata') > -1,
-        staticData = window.location.search.toLowerCase().indexOf('staticdata') > -1,
-        D = Ext.Date,
-        N = Ext.Number,
-        now = D.clearTime(new Date()),
-        start = D.subtract(D.subtract(now, D.YEAR, 1), D.DAY, 15),
-        end = D.add(D.add(now, D.YEAR, 1), D.DAY, 15),
-        data = {
-            work: emptyData ? [] : (staticData ? getStaticWorkData() : getDynamicWorkData()),
-            personal: emptyData ? [] : (staticData ? getStaticPersonalData() : getDynamicPersonalData()),
-            projectZeus: emptyData ? [] : (staticData ? getStaticProjectData() : getDynamicProjectData())
-        };
+    emptyData = window.location.search.toLowerCase().indexOf('nodata') > -1;
+    staticData = window.location.search.toLowerCase().indexOf('staticdata') > -1;
+    now = D.clearTime(new Date());
+    start = D.subtract(D.subtract(now, D.YEAR, 1), D.DAY, 15);
+    end = D.add(D.add(now, D.YEAR, 1), D.DAY, 15);
+    data = {
+        work: emptyData ? [] : (staticData ? getStaticWorkData() : getDynamicWorkData()),
+        personal: emptyData
+            ? []
+            : (staticData ? getStaticPersonalData() : getDynamicPersonalData()),
+        projectZeus: emptyData
+            ? []
+            : (staticData ? getStaticProjectData() : getDynamicProjectData())
+    };
 
     Ext.ux.ajax.SimManager.register({
         '/Calendars': {

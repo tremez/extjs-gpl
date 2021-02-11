@@ -20,7 +20,7 @@ Ext.define('Post', {
     }, {
         name: "userid",
         convert: undefined
-    },  {
+    }, {
         name: "dateline",
         type: 'date',
         dateFormat: 'timestamp'
@@ -48,17 +48,21 @@ Ext.define('Post', {
 });
 
 Ext.onReady(function() {
+    var store, tree;
+
     Ext.tip.QuickTipManager.init();
 
     function renderTitle(value, p, record) {
-        return value ? Ext.String.format(
-            '<a href="http://sencha.com/forum/showthread.php?t={1}" target="_blank">{0}</a>',
-            value,
-            record.data.threadid
-        ) : '';
+        return value
+            ? Ext.String.format(
+                '<a href="http://sencha.com/forum/showthread.php?t={1}" target="_blank">{0}</a>',
+                value,
+                record.data.threadid
+            )
+            : '';
     }
 
-    var store = Ext.create('Ext.data.TreeStore', {
+    store = Ext.create('Ext.data.TreeStore', {
         model: 'Post',
         proxy: {
             type: 'ajax',
@@ -68,7 +72,7 @@ Ext.onReady(function() {
         lazyFill: false
     });
 
-    var tree = Ext.create('Ext.tree.Panel', {
+    tree = Ext.create('Ext.tree.Panel', {
         title: 'Forum Folder Summary',
         width: 600,
         height: 400,
@@ -81,12 +85,12 @@ Ext.onReady(function() {
         store: store,
         animate: false,
         columns: [{
-            xtype: 'treecolumn', //this is so we know which column will show the tree
+            xtype: 'treecolumn', // this is so we know which column will show the tree
             text: 'Forum',
             flex: 2.5,
             sortable: true,
             dataIndex: 'forumtitle'
-        },{
+        }, {
             text: 'User',
             flex: 1,
             dataIndex: 'username',
@@ -129,13 +133,15 @@ Ext.onReady(function() {
                                 // No loop body here. We are looping only while the visible flag remains false.
                                 // Child nodes are filtered before parents, so we can check them here.
                                 // As soon as we find a visible child, this branch node must be visible.
-                                for (i = 0; i < len && !(visible = children[i].get('visible')); i++);
+                                // eslint-disable-next-line
+                                for (i = 0; i < len && !(visible = children[i].get('visible')); i++) { }
 
                                 return visible;
                             },
                             id: 'titleFilter'
                         });
-                    } catch (e) {
+                    }
+                    catch (e) {
                         field.markInvalid('Invalid regular expression');
                     }
                 },

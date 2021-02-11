@@ -1,5 +1,4 @@
-describe("Ext.data.NodeStore", function() {
-
+topSuite("Ext.data.NodeStore", function() {
     var Model = Ext.define(null, {
         extend: 'Ext.data.TreeModel'
     });
@@ -38,11 +37,13 @@ describe("Ext.data.NodeStore", function() {
 
     function expectIds(expected) {
         var ids = Ext.Array.pluck(store.getRange(), 'id');
+
         expect(ids).toEqual(expected);
     }
 
     describe("folderSort", function() {
         var node;
+
         beforeEach(function() {
             node = makeNode('root', false, [
                 makeNode(2, true),
@@ -239,6 +240,7 @@ describe("Ext.data.NodeStore", function() {
 
         it("should accept a node instance", function() {
             var node = makeNode();
+
             makeStore({
                 node: node
             });
@@ -286,6 +288,7 @@ describe("Ext.data.NodeStore", function() {
             it("should add a child that is appended to the node", function() {
                 makeStore();
                 var node = makeNode();
+
                 store.getNode().appendChild(node);
                 expect(store.getCount()).toBe(1);
                 expect(store.getAt(0)).toBe(node);
@@ -334,6 +337,7 @@ describe("Ext.data.NodeStore", function() {
 
             it("should not cause an error when removing grandchildren of the node", function() {
                 var grandchild = makeNode(2);
+
                 var existing = makeNode(1, false, [grandchild]);
 
                 var node = makeNode('root', false, [

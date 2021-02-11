@@ -1,0 +1,9 @@
+.#{$prefix}toast {
+    .#{$prefix}window-body-default {
+        background-color: $toast-background-color;
+    }
+
+    .#{$prefix}autocontainer-innerCt {
+        color: $toast-text-color;
+    }
+}

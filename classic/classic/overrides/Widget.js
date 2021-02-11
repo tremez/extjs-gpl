@@ -4,7 +4,10 @@
 Ext.define('Ext.overrides.Widget', {
     override: 'Ext.Widget',
 
-    uses: ['Ext.Component'],
+    uses: [
+        'Ext.Component',
+        'Ext.layout.component.Auto'
+    ],
 
     $configStrict: false,
 
@@ -26,12 +29,13 @@ Ext.define('Ext.overrides.Widget', {
     constructor: function(config) {
         var me = this,
             renderTo;
-            
+
         me.callParent([config]);
 
         // initialize the component layout
         me.getComponentLayout();
         renderTo = me.getRenderTo();
+
         if (renderTo) {
             me.render(renderTo);
         }
@@ -45,6 +49,7 @@ Ext.define('Ext.overrides.Widget', {
 
     updateLayout: function() {
         var owner = this.getRefOwner();
+
         if (owner) {
             owner.updateLayout();
         }
@@ -61,9 +66,11 @@ Ext.define('Ext.overrides.Widget', {
         me.callParent();
     },
 
-    finishRender: function () {
+    finishRender: function() {
         this.rendering = false;
+
         this.initBindable();
+        this.initKeyMap();
     },
 
     getAnimationProps: function() {
@@ -118,24 +125,21 @@ Ext.define('Ext.overrides.Widget', {
         return Ext.Component.prototype.getSizeModel.apply(this, arguments);
     },
 
-    onAdded: function (container, pos, instanced) {
+    onAdded: function(container, pos, instanced) {
         var me = this;
 
         me.ownerCt = container;
 
         me.onInheritedAdd(me, instanced);
+
+        // this component is no longer detached from the body
+        me.isDetached = false;
     },
 
     onRemoved: function(destroying) {
-        var me = this;
+        this.onInheritedRemove(destroying);
 
-        if (!destroying) {
-            me.removeBindings();
-        }
-
-        me.onInheritedRemove(destroying);
-
-        me.ownerCt = me.ownerLayout = null;
+        this.ownerCt = this.ownerLayout = null;
     },
 
     parseBox: function(box) {
@@ -145,7 +149,7 @@ Ext.define('Ext.overrides.Widget', {
     removeClsWithUI: function(cls) {
         this.el.removeCls(cls);
     },
-    
+
     render: function(container, position) {
         var me = this,
             element = me.element,
@@ -156,18 +160,22 @@ Ext.define('Ext.overrides.Widget', {
             if (Ext.scopeCss) {
                 element.addCls(proto.rootCls);
             }
+
             element.addCls(proto.borderBoxCls);
         }
 
         if (position) {
             nextSibling = container.childNodes[position];
+
             if (nextSibling) {
                 Ext.fly(container).insertBefore(element, nextSibling);
+
                 return;
             }
         }
 
         Ext.fly(container).appendChild(element);
+        me.finishRender();
     },
 
     setPosition: function(x, y) {
@@ -177,27 +185,28 @@ Ext.define('Ext.overrides.Widget', {
     up: function() {
         return Ext.Component.prototype.up.apply(this, arguments);
     },
-    
+
     isAncestor: function() {
         return Ext.Component.prototype.isAncestor.apply(this, arguments);
     },
-    
+
     onFocusEnter: function() {
         return Ext.Component.prototype.onFocusEnter.apply(this, arguments);
     },
-    
+
     onFocusLeave: function() {
         return Ext.Component.prototype.onFocusLeave.apply(this, arguments);
     },
 
     isLayoutChild: function(candidate) {
         var ownerCt = this.ownerCt;
+
         return ownerCt ? (ownerCt === candidate || ownerCt.isLayoutChild(candidate)) : false;
     },
 
     privates: {
         doAddListener: function(name, fn, scope, options, order, caller, manager) {
-            if (name == 'painted' || name == 'resize') {
+            if (name === 'painted' || name === 'resize') {
                 this.element.doAddListener(name, fn, scope || this, options, order);
             }
 
@@ -205,7 +214,7 @@ Ext.define('Ext.overrides.Widget', {
         },
 
         doRemoveListener: function(name, fn, scope) {
-            if (name == 'painted' || name == 'resize') {
+            if (name === 'painted' || name === 'resize') {
                 this.element.doRemoveListener(name, fn, scope);
             }
 

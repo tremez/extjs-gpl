@@ -1,17 +1,20 @@
-describe('Ext.grid.column.Boolean', function () {
-    var panel, container, store,
+topSuite("Ext.grid.column.Boolean",
+    ['Ext.grid.Grid', 'Ext.data.ArrayStore', 'Ext.layout.Fit',
+     'Ext.app.ViewModel', 'Ext.app.ViewController'],
+function() {
+    var panel, store,
         synchronousLoad = true,
         proxyStoreLoad = Ext.data.ProxyStore.prototype.load,
         loadStore, Controller;
 
     function createGrid(gridCfg, storeCfg) {
         store = new Ext.data.Store(Ext.apply({
-            fields: ['name', 'email', 'phone', {name: 'married', type: 'boolean'}],
+            fields: ['name', 'email', 'phone', { name: 'married', type: 'boolean' }],
             data: [
-                { 'name': 'Lisa',  'email':'lisa@simpsons.com',  'phone':'555-111-1224', married: false },
-                { 'name': 'Bart',  'email':'bart@simpsons.com',  'phone':'555-222-1234', married: false },
-                { 'name': 'Homer', 'email':'homer@simpsons.com', 'phone':'555-222-1244', married: true },
-                { 'name': 'Marge', 'email':'marge@simpsons.com', 'phone':'555-222-1254', married: true }
+                { 'name': 'Lisa',  'email': 'lisa@simpsons.com',  'phone': '555-111-1224', married: false },
+                { 'name': 'Bart',  'email': 'bart@simpsons.com',  'phone': '555-222-1234', married: false },
+                { 'name': 'Homer', 'email': 'homer@simpsons.com', 'phone': '555-222-1244', married: true },
+                { 'name': 'Marge', 'email': 'marge@simpsons.com', 'phone': '555-222-1254', married: true }
             ],
             autoDestroy: true
         }, storeCfg));
@@ -27,8 +30,6 @@ describe('Ext.grid.column.Boolean', function () {
             height: 200,
             width: 400
         }, gridCfg));
-        container = panel.container;
-        panel.onContainerResize(container, { height: container.element.getHeight() });
     }
 
     function getCell(row, column) {
@@ -39,9 +40,11 @@ describe('Ext.grid.column.Boolean', function () {
         // Override so that we can control asynchronous loading
         loadStore = Ext.data.ProxyStore.prototype.load = function() {
             proxyStoreLoad.apply(this, arguments);
+
             if (synchronousLoad) {
                 this.flushLoad.apply(this, arguments);
             }
+
             return this;
         };
 
@@ -63,8 +66,8 @@ describe('Ext.grid.column.Boolean', function () {
         Ext.Factory.controller.instance.clearCache();
     });
 
-    describe('grids', function () {
-        it('should show the correct value in the cell', function () {
+    describe('grids', function() {
+        it('should show the correct value in the cell', function() {
             createGrid({
                 columns: [{
                     header: 'Income', dataIndex: 'married', width: 100, xtype: 'booleancolumn'
@@ -72,13 +75,13 @@ describe('Ext.grid.column.Boolean', function () {
                 renderTo: Ext.getBody()
             });
 
-            expect(getCell(0, 0).el.down('.x-inner-el', true).innerHTML).toBe('False');
-            expect(getCell(1, 0).el.down('.x-inner-el', true).innerHTML).toBe('False');
-            expect(getCell(2, 0).el.down('.x-inner-el', true).innerHTML).toBe('True');
-            expect(getCell(3, 0).el.down('.x-inner-el', true).innerHTML).toBe('True');
+            expect(getCell(0, 0).el.down('.x-body-el', true).innerHTML).toBe('False');
+            expect(getCell(1, 0).el.down('.x-body-el', true).innerHTML).toBe('False');
+            expect(getCell(2, 0).el.down('.x-body-el', true).innerHTML).toBe('True');
+            expect(getCell(3, 0).el.down('.x-body-el', true).innerHTML).toBe('True');
         });
 
-        it('should apply the trueText/falseText correctly', function () {
+        it('should apply the trueText/falseText correctly', function() {
             createGrid({
                 columns: [{
                     header: 'Income', dataIndex: 'married', width: 100, xtype: 'booleancolumn',
@@ -87,13 +90,13 @@ describe('Ext.grid.column.Boolean', function () {
                 renderTo: Ext.getBody()
             });
 
-            expect(getCell(0, 0).el.down('.x-inner-el', true).innerHTML).toBe('Falsch');
-            expect(getCell(1, 0).el.down('.x-inner-el', true).innerHTML).toBe('Falsch');
-            expect(getCell(2, 0).el.down('.x-inner-el', true).innerHTML).toBe('Wahr');
-            expect(getCell(3, 0).el.down('.x-inner-el', true).innerHTML).toBe('Wahr');
+            expect(getCell(0, 0).el.down('.x-body-el', true).innerHTML).toBe('Falsch');
+            expect(getCell(1, 0).el.down('.x-body-el', true).innerHTML).toBe('Falsch');
+            expect(getCell(2, 0).el.down('.x-body-el', true).innerHTML).toBe('Wahr');
+            expect(getCell(3, 0).el.down('.x-body-el', true).innerHTML).toBe('Wahr');
         });
 
-        it('should apply the cell trueText/falseText correctly from a VM', function () {
+        it('should apply the cell trueText/falseText correctly from a VM', function() {
             var vm = new Ext.app.ViewModel({
                 data: {
                     trueText: 'Adevarat',
@@ -116,10 +119,10 @@ describe('Ext.grid.column.Boolean', function () {
             });
 
             vm.notify();
-            expect(getCell(0, 0).el.down('.x-inner-el', true).innerHTML).toBe('Fals');
-            expect(getCell(1, 0).el.down('.x-inner-el', true).innerHTML).toBe('Fals');
-            expect(getCell(2, 0).el.down('.x-inner-el', true).innerHTML).toBe('Adevarat');
-            expect(getCell(3, 0).el.down('.x-inner-el', true).innerHTML).toBe('Adevarat');
+            expect(getCell(0, 0).el.down('.x-body-el', true).innerHTML).toBe('Fals');
+            expect(getCell(1, 0).el.down('.x-body-el', true).innerHTML).toBe('Fals');
+            expect(getCell(2, 0).el.down('.x-body-el', true).innerHTML).toBe('Adevarat');
+            expect(getCell(3, 0).el.down('.x-body-el', true).innerHTML).toBe('Adevarat');
         });
 
     });

@@ -126,13 +126,13 @@ $calendar-days-now-marker-border-color: dynamic(#a94442);
  * @var {number}
  * The width for the time display.
  */
-$calendar-days-time-width: dynamic(4em);
+$calendar-days-time-width: dynamic(48px);
 
 /**
  * @var {number}
  * The width for the time display when in compact mode.
  */
-$calendar-days-compact-time-width: dynamic(2em);
+$calendar-days-compact-time-width: dynamic(24px);
 
 /**
  * @var {number/list}
@@ -186,7 +186,7 @@ $calendar-days-time-text-align: dynamic(right);
  * @var {number}
  * The line height for the am/pm text when used in the time gutter.
  */
-$calendar-days-time-ampm-line-height: dynamic(1em);
+$calendar-days-time-ampm-line-height: dynamic(12px);
 
 /**
  * @var {number}
@@ -205,6 +205,12 @@ $calendar-days-selection-background-color: dynamic($calendar-selection-color);
  * The opacity for a selection.
  */
 $calendar-days-selection-opacity: dynamic(0.3);
+
+/**
+ * @var {color}
+ * The background color for a today.
+ */
+$calendar-today-highlight-background-color: dynamic($calendar-today-background-color);
 
 /**
  * Creates a visual theme for the calendar days view.
@@ -261,19 +267,43 @@ $calendar-days-selection-opacity: dynamic(0.3);
  * @param {number/list} [$now-marker-border-width]
  * The border width for the current time marker.
  *
- * @param {string} [$now-marker-border-style]
+ * @param {String} [$now-marker-border-style]
  * The border style for the current time marker.
  *
  * @param {color} [$now-marker-border-color]
  * The border color for the current time marker.
  *
- * @param {number} [$allday-empty-height]
+ * @param {Number} [$time-width]
+ * The width of the current time
+ *
+ * @param {color} [$time-background-color]
+ * The background color for the current time
+ *
+ * @param {color} [$time-color]
+ * The color for the current time
+ *
+ * @param {String} [$time-font-family]
+ * The font family for the current time
+ *
+ * @param {Number} [$time-font-size]
+ * The font size for the current time
+ *
+ * @param {String} [$time-text-align]
+ * The font alignment for the current time
+ *
+ * @param {Number} [$time-padding]
+ * The padding for the current time
+ *
+ * @param {String} [$time-ampm-line-height]
+ * The line height for the current time
+ *
+ * @param {Number} [$allday-empty-height]
  * The height for the empty all day row to allow creation.
  *
- * @param {color} [$selection-background-color].
+ * @param {color} [$selection-background-color]
  * The background color for a selection.
  *
- * @param {number} [$selection-opacity].
+ * @param {number} [$selection-opacity]
  * The background color for a selection.
  */
 @mixin calendar-days-ui(
@@ -319,6 +349,10 @@ $calendar-days-selection-opacity: dynamic(0.3);
     $selection-opacity: null
 ) {
     $ui-suffix: ui-suffix($ui);
+
+    .#{$prefix}today-cell-highlight-day {
+        background-color: $calendar-today-highlight-background-color;
+    }
 
     .#{$prefix}calendar-days#{$ui-suffix} {
 

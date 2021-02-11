@@ -1,17 +1,17 @@
 /**
  * @class Ext.view.NavigationModel
  * @private
- * This class listens for key events fired from a {@link Ext.view.View DataView}, and moves the currently focused item
- * by adding the class {@link #focusCls}.
+ * This class listens for key events fired from a {@link Ext.view.View DataView}, and moves
+ * the currently focused item by adding the class {@link #focusCls}.
  */
 Ext.define('Ext.view.NavigationModel', {
+    alias: 'view.navigation.default',
+
     mixins: [
         'Ext.util.Observable',
         'Ext.mixin.Factoryable',
         'Ext.util.StoreHolder'
     ],
-
-    alias: 'view.navigation.default',
 
     config: {
         store: null
@@ -50,13 +50,15 @@ Ext.define('Ext.view.NavigationModel', {
             dataSource = view.dataSource,
             listeners;
 
-
         me.initKeyNav(view);
+
         if (!dataSource.isEmptyStore) {
             me.setStore(dataSource);
         }
+
         listeners = me.getViewListeners();
         listeners.destroyable = true;
+
         me.viewListeners = me.viewListeners || [];
         me.viewListeners.push(view.on(listeners));
     },
@@ -72,7 +74,8 @@ Ext.define('Ext.view.NavigationModel', {
             containermousedown: me.onContainerMouseDown,
             itemmousedown: me.onItemMouseDown,
 
-            // We focus on click if the mousedown handler did not focus because it was a translated "touchstart" event.
+            // We focus on click if the mousedown handler did not focus
+            // because it was a translated "touchstart" event.
             itemclick: me.onItemClick,
             itemcontextmenu: me.onItemMouseDown,
             scope: me
@@ -82,9 +85,9 @@ Ext.define('Ext.view.NavigationModel', {
     initKeyNav: function(view) {
         var me = this;
 
-        // Drive the KeyNav off the View's itemkeydown event so that beforeitemkeydown listeners may veto.
-        // By default KeyNav uses defaultEventAction: 'stopEvent', and this is required for movement keys
-        // which by default affect scrolling.
+        // Drive the KeyNav off the View's itemkeydown event so that beforeitemkeydown listeners
+        // may veto. By default KeyNav uses defaultEventAction: 'stopEvent', and this is required
+        // for movement keys which by default affect scrolling.
         me.keyNav = new Ext.util.KeyNav({
             target: view,
             ignoreInputFields: true,
@@ -138,7 +141,7 @@ Ext.define('Ext.view.NavigationModel', {
         // try to focus the lastFocused or first item. This is undesirable.
         // So on mousedown outside of view client area, prevent the default focus behaviour.
         // See Ext.view.Table#onFocusEnter for this being acted upon.
-        if (Ext.getScrollbarSize().width) {
+        if (Ext.scrollbar.width()) {
             if (!view.el.getClientRegion().contains(mousedownEvent.getPoint())) {
                 mousedownEvent.preventDefault();
                 view.lastFocused = 'scrollbar';
@@ -154,10 +157,12 @@ Ext.define('Ext.view.NavigationModel', {
     },
 
     onItemClick: function(view, record, item, index, clickEvent) {
-        // If the mousedown that initiated the click has navigated us to the correct spot, just fire the event
+        // If the mousedown that initiated the click has navigated us to the correct spot,
+        // just fire the event
         if (this.record === record) {
             this.fireNavigateEvent(clickEvent);
-        } else {
+        }
+        else {
             this.setPosition(index, clickEvent);
         }
     },
@@ -172,7 +177,8 @@ Ext.define('Ext.view.NavigationModel', {
 
         if (recordIndex == null || !view.all.getCount()) {
             me.record = me.recordIndex = null;
-        } else {
+        }
+        else {
             if (typeof recordIndex === 'number') {
                 newRecordIndex = Math.max(Math.min(recordIndex, dataSource.getCount() - 1), 0);
                 newRecord = dataSource.getAt(recordIndex);
@@ -200,11 +206,13 @@ Ext.define('Ext.view.NavigationModel', {
 
         // No change; just ensure the correct item is focused and return early.
         // Do not push current position into previous position, do not fire events.
-        // We must check record instances, not indices because of store reloads (combobox remote filtering).
+        // We must check record instances, not indices because of store reloads
+        // (combobox remote filtering).
         // If there's a new record, focus it. Note that the index may be different even though
         // the record is the same (filtering, sorting)
         if (newRecord === me.record) {
             me.recordIndex = newRecordIndex;
+
             return me.focusPosition(newRecordIndex);
         }
 
@@ -220,15 +228,17 @@ Ext.define('Ext.view.NavigationModel', {
 
         // Update our position
         me.recordIndex = newRecordIndex;
-        me.record      = newRecord;
+        me.record = newRecord;
 
         // Prevent navigation if focus has not moved
         preventNavigation = preventNavigation || me.record === me.lastFocused;
 
-        // Maintain lastFocused, so that on non-specific focus of the View, we can focus the correct descendant.
+        // Maintain lastFocused, so that on non-specific focus of the View,
+        // we can focus the correct descendant.
         if (newRecord) {
             me.focusPosition(me.recordIndex);
-        } else if (!preventFocus) {
+        }
+        else if (!preventFocus) {
             me.item = null;
         }
 
@@ -254,15 +264,19 @@ Ext.define('Ext.view.NavigationModel', {
             if (recordIndex.isEntity) {
                 recordIndex = me.view.dataSource.indexOf(recordIndex);
             }
+
             me.item = me.view.all.item(recordIndex);
+
             if (me.item) {
                 me.lastFocused = me.record;
                 me.lastFocusedIndex = me.recordIndex;
                 me.focusItem(me.item);
-            } else {
+            }
+            else {
                 me.record = null;
             }
-        } else {
+        }
+        else {
             me.item = null;
         }
     },
@@ -304,53 +318,62 @@ Ext.define('Ext.view.NavigationModel', {
         if (this.view.dataSource.indexOf(this.lastFocused) === -1) {
             return null;
         }
+
         return this.lastFocused;
     },
 
     onKeyUp: function(keyEvent) {
         var newPosition = this.recordIndex - 1;
+
         if (newPosition < 0) {
             newPosition = this.view.all.getCount() - 1;
         }
+
         this.setPosition(newPosition, keyEvent);
     },
 
     onKeyDown: function(keyEvent) {
         var newPosition = this.recordIndex + 1;
+
         if (newPosition > this.view.all.getCount() - 1) {
             newPosition = 0;
         }
+
         this.setPosition(newPosition, keyEvent);
     },
-    
+
     onKeyRight: function(keyEvent) {
         var newPosition = this.recordIndex + 1;
+
         if (newPosition > this.view.all.getCount() - 1) {
             newPosition = 0;
         }
+
         this.setPosition(newPosition, keyEvent);
     },
-    
+
     onKeyLeft: function(keyEvent) {
         var newPosition = this.recordIndex - 1;
+
         if (newPosition < 0) {
             newPosition = this.view.all.getCount() - 1;
         }
+
         this.setPosition(newPosition, keyEvent);
     },
-    
+
     onKeyPageDown: Ext.emptyFn,
-    
+
     onKeyPageUp: Ext.emptyFn,
-    
+
     onKeyHome: function(keyEvent) {
         this.setPosition(0, keyEvent);
     },
-    
+
     onKeyEnd: function(keyEvent) {
         this.setPosition(this.view.all.getCount() - 1, keyEvent);
     },
-   
+
     onKeySpace: function(keyEvent) {
         this.fireNavigateEvent(keyEvent);
     },
@@ -360,7 +383,8 @@ Ext.define('Ext.view.NavigationModel', {
         // Stop the keydown event so that an ENTER keyup does not get delivered to
         // any element which focus is transferred to in a click handler.
         keyEvent.stopEvent();
-        keyEvent.view.fireEvent('itemclick', keyEvent.view, keyEvent.record, keyEvent.item, keyEvent.recordIndex, keyEvent);
+        keyEvent.view.fireEvent('itemclick', keyEvent.view, keyEvent.record, keyEvent.item,
+                                keyEvent.recordIndex, keyEvent);
     },
 
     onSelectAllKeyPress: function(keyEvent) {
@@ -375,7 +399,7 @@ Ext.define('Ext.view.NavigationModel', {
             keyEvent: keyEvent,
             previousRecordIndex: me.previousRecordIndex,
             previousRecord: me.previousRecord,
-            previousItem: me.previousItem, 
+            previousItem: me.previousItem,
             recordIndex: me.recordIndex,
             record: me.record,
             item: me.item
@@ -385,7 +409,7 @@ Ext.define('Ext.view.NavigationModel', {
     destroy: function() {
         this.setStore(null);
         Ext.destroy(this.viewListeners, this.keyNav);
-        
+
         this.callParent();
     }
 });

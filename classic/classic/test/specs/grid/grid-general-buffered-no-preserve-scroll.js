@@ -1,16 +1,72 @@
-/* global Ext, expect, spyOn, jasmine, xit, MockAjaxManager */
-
-describe("grid-general-buffered-no-preserv-scroll", function() {
+topSuite("grid-general-buffered-no-preserve-scroll",
+    [false, 'Ext.grid.Panel', 'Ext.data.ArrayStore', 'Ext.data.BufferedStore'],
+function() {
     var grid, store,
         synchronousLoad = true,
         proxyStoreLoad = Ext.data.ProxyStore.prototype.load,
+        TestModel = Ext.define(null, {
+            extend: 'Ext.data.Model',
+            fields: [
+                'title', 'forumtitle', 'forumid', 'username', {
+                    name: 'replycount',
+                    type: 'int'
+                }, {
+                    name: 'lastpost',
+                    mapping: 'lastpost',
+                    type: 'date',
+                    dateFormat: 'timestamp'
+                },
+                'lastposter', 'excerpt', 'threadid'
+            ],
+            idProperty: 'threadid'
+        }),
         loadStore = function() {
             proxyStoreLoad.apply(this, arguments);
+
             if (synchronousLoad) {
                 this.flushLoad.apply(this, arguments);
             }
+
             return this;
-        };
+        },
+        view, bufferedRenderer;
+
+    function getData(start, limit) {
+        var end = start + limit,
+            recs = [],
+            i;
+
+        for (i = start; i < end; ++i) {
+            recs.push({
+                threadid: i,
+                title: 'Title' + i
+            });
+        }
+
+        return recs;
+    }
+
+    function satisfyRequests(total) {
+        var requests = Ext.Ajax.mockGetAllRequests(),
+            request, params, data;
+
+        while (requests.length) {
+            request = requests[0];
+
+            params = request.options.params;
+            data = getData(params.start, params.limit);
+
+            Ext.Ajax.mockComplete({
+                status: 200,
+                responseText: Ext.encode({
+                    total: total || 5000,
+                    data: data
+                })
+            });
+
+            requests = Ext.Ajax.mockGetAllRequests();
+        }
+    }
 
     beforeEach(function() {
         // Override so that we can control asynchronous loading
@@ -24,86 +80,7 @@ describe("grid-general-buffered-no-preserv-scroll", function() {
         grid = store = Ext.destroy(grid, store);
     });
 
-    var scrollbarWidth = Ext.getScrollbarSize().width,
-        transformStyleName = 'webkitTransform' in document.documentElement.style ? 'webkitTransform' : 'transform',
-        scrollbarsTakeSpace = !!scrollbarWidth,
-        // Some tests should only be run if the UI shows space-taking scrollbars.
-        // Specifically, those tests which test that the presence or not of a scrollbar in one dimension
-        // affects the presence of a scrollbar in the other dimension.
-        visibleScrollbarsIt = scrollbarsTakeSpace ? it : xit;
-
-        function getViewTop(el) {
-            var dom = Ext.getDom(el),
-                transform;
-
-            if (Ext.supports.CssTransforms && !Ext.isIE9m) {
-                transform = dom.style[transformStyleName];
-                return transform ? parseInt(transform.split(',')[1], 10) : 0;
-            } else {
-                return parseInt(dom.style.top || '0', 10);
-            }
-        }
-
     describe("BufferedStore asynchronous loading timing with rendering and preserveScrollOnReload: false", function() {
-        var view,
-            bufferedRenderer,
-            scroller,
-            scrollSize,
-            scrollEventCount,
-            scrollRequestCount,
-            TestModel = Ext.define(null, {
-                extend: 'Ext.data.Model',
-                fields: [
-                    'title', 'forumtitle', 'forumid', 'username', {
-                        name: 'replycount',
-                        type: 'int'
-                    }, {
-                        name: 'lastpost',
-                        mapping: 'lastpost',
-                        type: 'date',
-                        dateFormat: 'timestamp'
-                    },
-                    'lastposter', 'excerpt', 'threadid'
-                ],
-                idProperty: 'threadid'
-            });
-
-        function getData(start, limit) {
-            var end = start + limit,
-                recs = [],
-                i;
-
-            for (i = start; i < end; ++i) {
-                recs.push({
-                    threadid: i,
-                    title: 'Title' + i
-                });
-            }
-            return recs;
-        }
-
-        function satisfyRequests(total) {
-            var requests = Ext.Ajax.mockGetAllRequests(),
-                request, params, data;
-
-            while (requests.length) {
-                request = requests[0];
-
-                params = request.options.params;
-                data = getData(params.start, params.limit);
-
-                Ext.Ajax.mockComplete({
-                    status: 200,
-                    responseText: Ext.encode({
-                        total: total || 5000,
-                        data: data
-                    })
-                });
-
-                requests = Ext.Ajax.mockGetAllRequests();
-            }
-        }
-
         beforeEach(function() {
             MockAjaxManager.addMethods();
 
@@ -119,12 +96,12 @@ describe("grid-general-buffered-no-preserv-scroll", function() {
                         type: 'json',
                         rootProperty: 'data'
                     }
-                }
+                },
+                asynchronousLoad: false
             });
             store.loadPage(1);
             satisfyRequests();
 
-            scrollEventCount = 0;
             grid = new Ext.grid.Panel({
                 columns: [{
                     text: 'Title',
@@ -136,12 +113,7 @@ describe("grid-general-buffered-no-preserv-scroll", function() {
                 border: false,
                 viewConfig: {
                     preserveScrollOnReload: false,
-                    mouseOverOutBuffer: 0,
-                    listeners: {
-                        scroll: function() {
-                            scrollEventCount++;
-                        }
-                    }
+                    mouseOverOutBuffer: 0
                 },
                 renderTo: document.body,
                 selModel: {
@@ -150,13 +122,9 @@ describe("grid-general-buffered-no-preserv-scroll", function() {
             });
             view = grid.getView();
             bufferedRenderer = view.bufferedRenderer;
-            scroller = view.getScrollable();
-            scrollSize = (bufferedRenderer.viewSize * 2 + store.leadingBufferZone + store.trailingBufferZone) * bufferedRenderer.rowHeight;
 
             // Load inline in the scroll event
             bufferedRenderer.scrollToLoadBuffer = 0;
-            
-            scrollRequestCount = 0;
         });
 
         afterEach(function() {
@@ -165,14 +133,14 @@ describe("grid-general-buffered-no-preserv-scroll", function() {
 
         it("should refresh from page 1 on buffered store reload with preserveScrollOnReload: false", function() {
             var scrollDone,
-                refreshed,
-                startRow, endRow;
+                refreshed;
 
             expect(view.refreshCounter).toBe(1);
 
             bufferedRenderer.scrollTo(1000, {
                 select: true,
-                focus: true,
+                focus: false,   // MUST NOT focus - focus restoration scrolls on refresh
+                                // whcih breaks the test expectations
                 callback: function() {
                     scrollDone = true;
                 }
@@ -180,12 +148,11 @@ describe("grid-general-buffered-no-preserv-scroll", function() {
 
             waitsFor(function() {
                 satisfyRequests();
+
                 return scrollDone;
             }, 'scroll to finish');
 
             runs(function() {
-                startRow = view.all.startIndex;
-                endRow = view.all.endIndex;
                 store.on({
                     refresh: function() {
                         refreshed = true;
@@ -197,6 +164,7 @@ describe("grid-general-buffered-no-preserv-scroll", function() {
 
             waitsFor(function() {
                 satisfyRequests();
+
                 return refreshed;
             }, 'store to reload');
 
@@ -208,4 +176,72 @@ describe("grid-general-buffered-no-preserv-scroll", function() {
         });
     });
 
+    describe("with a non BufferedStore", function() {
+        beforeEach(function() {
+            MockAjaxManager.addMethods();
+
+            store = new Ext.data.Store({
+                model: TestModel,
+                proxy: {
+                    type: 'ajax',
+                    url: 'fakeUrl',
+                    reader: {
+                        type: 'json',
+                        rootProperty: 'data'
+                    }
+                },
+                asynchronousLoad: false
+            });
+            store.load();
+            satisfyRequests();
+
+            grid = new Ext.grid.Panel({
+                columns: [{
+                    text: 'Title',
+                    dataIndex: 'title'
+                }],
+                store: store,
+                width: 600,
+                height: 300,
+                border: false,
+                viewConfig: {
+                    preserveScrollOnReload: false
+                },
+                renderTo: document.body
+            });
+            view = grid.getView();
+            bufferedRenderer = view.bufferedRenderer;
+
+            // Load inline in the scroll event
+            bufferedRenderer.scrollToLoadBuffer = 0;
+        });
+
+        afterEach(function() {
+            MockAjaxManager.removeMethods();
+        });
+
+        it("should scroll to top after reload", function() {
+            var scrollDone = false;
+
+            bufferedRenderer.scrollTo(1000, {
+                select: false,
+                focus: false,   // MUST NOT focus - focus restoration scrolls on refresh
+                                // whcih breaks the test expectations
+                callback: function() {
+                    scrollDone = true;
+                }
+            });
+
+            waitsFor(function() {
+                return scrollDone;
+            }, 'scroll to finish');
+
+            runs(function() {
+                store.reload();
+                satisfyRequests();
+
+                expect(grid.getScrollable().getPosition().y).toBe(0);
+            });
+        });
+    });
 });

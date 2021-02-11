@@ -85,20 +85,20 @@ $tabbar-font-family: dynamic(null);
  * @var {number/list}
  * Tab Bar padding
  */
-$tabbar-padding: dynamic(null);
+$tabbar-padding: dynamic(0);
 
 /**
  * @var {number/list}
  * Tab Bar padding in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$tabbar-padding-big: dynamic(null);
+$tabbar-padding-big: dynamic($tabbar-padding);
 
 //# fashion replaces $tabbar-tab-spacing
 /**
  * @var {number}
  * The space in between horizontally aligned Tab Bar items
  */
-$tabbar-horizontal-spacing: dynamic(.4em);
+$tabbar-horizontal-spacing: dynamic(1px);
 
 //# fashion replaces $tabbar-tab-spacing-big
 /**
@@ -106,7 +106,7 @@ $tabbar-horizontal-spacing: dynamic(.4em);
  * The space in between horizontally aligned Tab Bar items in the
  * {@link Global_CSS#$enable-big big} sizing scheme
  */
-$tabbar-horizontal-spacing-big: dynamic(null);
+$tabbar-horizontal-spacing-big: dynamic($tabbar-horizontal-spacing);
 
 /**
  * @var {number}
@@ -156,13 +156,31 @@ $tabbar-title-font-family: dynamic(null);
  * @var {number}
  * Tab Bar min-height
  */
-$tabbar-min-height: dynamic($toolbar-min-height);
+$tabbar-min-height: dynamic(0);
 
 /**
  * @var {number}
  * Tab Bar min-height in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$tabbar-min-height-big: dynamic($toolbar-min-height-big);
+$tabbar-min-height-big: dynamic(0);
+
+/**
+ * @var {number}
+ * Tab Bar strip height
+ */
+$tabbar-strip-height: dynamic(5px);
+
+/**
+ * @var {number}
+ * Tab Bar strip height in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$tabbar-strip-height-big: dynamic($tabbar-strip-height);
+
+/**
+ * @var {color}
+ * Tab Bar strip background color
+ */
+$tabbar-strip-background-color: dynamic($tab-active-background-color);
 
 /**
  * Creates a visual theme for a Tab Bar.
@@ -180,6 +198,9 @@ $tabbar-min-height-big: dynamic($toolbar-min-height-big);
  * @param {string/list} $background-gradient
  * Tab Bar background-gradient. Can be either the name of a gradient defined by
  * {@link Global_CSS#background-gradient} or a list of color stops.
+ *
+ * @param {color} $color
+ * Tab Bar border-width
  *
  * @param {number/list} $border-width
  * Tab Bar border-width
@@ -252,6 +273,15 @@ $tabbar-min-height-big: dynamic($toolbar-min-height-big);
  *
  * @param {number} $min-height-big
  * Tab Bar min-height in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {number} $strip-height
+ * Tab Bar strip height
+ *
+ * @param {number} $strip-height-big
+ * Tab Bar strip height in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {color} $strip-background-color
+ * Tab Bar strip background color
  */
 @mixin tabbar-ui(
     $ui: null,
@@ -281,36 +311,41 @@ $tabbar-min-height-big: dynamic($toolbar-min-height-big);
     $title-font-size-big: null,
     $title-font-family: null,
     $min-height: null,
-    $min-height-big: null
+    $min-height-big: null,
+    $strip-height: null,
+    $strip-height-big: null,
+    $strip-background-color: null
 ) {
-    @include toolbar-ui(
-        $ui: $ui,
-        $xtype: $xtype,
-        $background-color: $background-color,
-        $background-gradient: $background-gradient,
-        $color: $color,
-        $border-width: $border-width,
-        $border-style: $border-style,
-        $border-color: $border-color,
-        $box-shadow: $box-shadow,
-        $font-weight: $font-weight,
-        $font-size: $font-size,
-        $font-size-big: $font-size-big,
-        $line-height: $line-height,
-        $line-height-big: $line-height-big,
-        $font-family: $font-family,
-        $padding: $padding,
-        $padding-big: $padding-big,
-        $horizontal-spacing: $horizontal-spacing,
-        $horizontal-spacing-big: $horizontal-spacing-big,
-        $vertical-spacing: $vertical-spacing,
-        $vertical-spacing-big: $vertical-spacing-big,
-        $title-color: $title-color,
-        $title-font-weight: $title-font-weight,
-        $title-font-size: $title-font-size,
-        $title-font-size-big: $title-font-size-big,
-        $title-font-family: $title-font-family,
-        $min-height: $min-height,
-        $min-height-big: $min-height-big
-    );
+    $ui-suffix: ui-suffix($ui);
+
+    $arguments: intersect-arguments(tabbar-ui, toolbar-ui);
+
+    @include toolbar-ui($arguments...);
+
+    .#{$prefix}#{$xtype}#{$ui-suffix}-body-el {
+        padding-bottom: $strip-height;
+
+        @if $enable-big {
+            .#{$prefix}big & {
+                padding-bottom: $strip-height-big;
+            }
+        }
+    }
+
+    .#{$prefix}strip-el {
+        background-color: $strip-background-color;
+        height: $strip-height;
+        @if $enable-big {
+            .#{$prefix}big & {
+                height: $strip-height-big;
+            }
+        }
+    }
+
+    .#{$prefix}#{$xtype}#{$ui-suffix} .#{$prefix}boxscroller.#{$prefix}horizontal > .#{$prefix}tool {
+        margin-bottom: $strip-height;
+        .#{$prefix}big & {
+            margin-bottom: $strip-height-big;
+        }
+    }
 }

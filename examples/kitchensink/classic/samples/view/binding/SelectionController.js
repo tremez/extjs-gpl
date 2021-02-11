@@ -8,6 +8,7 @@ Ext.define('KitchenSink.view.binding.SelectionController', {
 
     onSelect: function(selection) {
         var dataview;
+
         if (selection) {
             this.lookup('grid').ensureVisible(selection);
             dataview = this.lookup('dataview');

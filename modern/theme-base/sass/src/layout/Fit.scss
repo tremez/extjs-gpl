@@ -1,23 +1,24 @@
-/**
- * @class Ext.layout.Fit
- */
-
-.x-layout-fit.x-stretched > .x-layout-fit-item {
-    @include st-box();
-    @include st-box-flex(1);
+.#{$prefix}layout-fit {
+    display: flex;
 }
 
-.x-layout-fit {
-    position: relative;
-}
+.#{$prefix}layout-fit-item {
+    flex: 1 1;
 
-.x-layout-fit-item {
-    &.x-sized {
-        @include absolute-position();
+    .#{$prefix}ie11 & {
+        flex-basis: auto;
     }
 
-    &.x-unsized {
-        width: 100%;
-        height: 100%;
+    // When in autoSize: false mode we can absolutely position the items so that percentage
+    // size children of the items are sized correctly in safari.
+    // Works around the following bug: https://bugs.webkit.org/show_bug.cgi?id=137730
+    // The calendar component leverages this technique using height:100% on the
+    // table element to stretch its height inside a fit layout item
+    .#{$prefix}body-sizer-el > * > & {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
     }
 }

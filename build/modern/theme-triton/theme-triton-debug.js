@@ -5,9 +5,19 @@ Ext.define('Ext.theme.neptune.Titlebar', {
     }
 });
 
-Ext.define('Ext.theme.neptune.tip.ToolTip', {
-    override: 'Ext.tip.ToolTip',
-    bodyBorder: false
+Ext.define('Ext.theme.triton.dataview.ListCollapser', {
+    override: 'Ext.dataview.ListCollapser',
+    config: {
+        tool: {
+            weight: -100,
+            zone: 'start'
+        }
+    }
+});
+
+Ext.define('Ext.theme.neptune.panel.Date', {
+    override: 'Ext.panel.Date',
+    border: true
 });
 
 Ext.namespace('Ext.theme.is').Neptune = true;

@@ -2,13 +2,17 @@ Ext.define('KitchenSink.view.d3.heatmap.HeatMapController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.heatmap-heatmap',
 
-    onTooltip: function (component, tooltip, datum, element, event) {
-        var d = datum.data,
-            field = component.getColorAxis().getField(),
-            date = Ext.Date.monthNames[d.date.getMonth()] + ' ' + d.date.getDate();
+    onTooltip: function(component, tooltip, record, element, event) {
+        var xField = component.getXAxis().getField(),
+            yField = component.getYAxis().getField(),
+            colorField = component.getColorAxis().getField(),
+            date = record.get(xField),
+            bucket = record.get(yField),
+            value = record.get(colorField),
+            dateStr = Ext.Date.format(date, 'F j');
 
-        tooltip.setHtml(d[field] + ' customers purchased a total of $'
-            + d.bucket + ' to $' + (d.bucket + 100) + '<br> of goods on ' + date);
+        tooltip.setHtml(value + ' customers purchased a total of $' +
+            bucket + ' to $' + (bucket + 100) + '<br> of goods on ' + dateStr);
     }
 
 });

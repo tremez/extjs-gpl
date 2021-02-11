@@ -6,7 +6,6 @@
  * http://developer.yahoo.net/yui/license.txt
  */
 
-
 /**
  * Defines the interface and base operation of items that that can be
  * dragged or can be drop targets.  It was designed to be extended, overriding
@@ -61,7 +60,7 @@ Ext.define('Ext.dd.DragDrop', {
      * - primaryButtonOnly
      */
     constructor: function(id, sGroup, config) {
-        if(id) {
+        if (id) {
             this.init(id, sGroup, config);
         }
     },
@@ -121,9 +120,9 @@ Ext.define('Ext.dd.DragDrop', {
 
     /**
      * @property {Object} invalidHandleIds
-     * An object who's property names identify the IDs of elements to be considered invalid as drag handles.
-     * A non-null property value identifies the ID as invalid. For example, to prevent
-     * dragging from being initiated on element ID "foo", use:
+     * An object who's property names identify the IDs of elements to be considered invalid
+     * as drag handles. A non-null property value identifies the ID as invalid. For example,
+     * to prevent dragging from being initiated on element ID "foo", use:
      *
      *     {
      *         foo: true
@@ -423,7 +422,7 @@ Ext.define('Ext.dd.DragDrop', {
      * @param {Event} e the mousedown event
      * @private
      */
-    b4MouseDown: function(e) {  },
+    b4MouseDown: function(e) { },
 
     /**
      * Called when a drag/drop obj gets a mousedown
@@ -441,8 +440,7 @@ Ext.define('Ext.dd.DragDrop', {
      * Override the onAvailable method to do what is needed after the initial
      * position was determined.
      */
-    onAvailable: function () {
-    },
+    onAvailable: function() { },
 
     /**
      * @property {Object} defaultPadding
@@ -474,25 +472,28 @@ Ext.define('Ext.dd.DragDrop', {
      *         }
      *     });
      *
-     * @param {String/HTMLElement/Ext.dom.Element} constrainTo The element or element ID to constrain to.
-     * @param {Object/Number} pad (optional) Pad provides a way to specify "padding" of the constraints,
-     * and can be either a number for symmetrical padding (4 would be equal to `{left:4, right:4, top:4, bottom:4}`) or
-     * an object containing the sides to pad. For example: `{right:10, bottom:10}`
-     * @param {Boolean} inContent (optional) Constrain the draggable in the content box of the element (inside padding and borders)
+     * @param {String/HTMLElement/Ext.dom.Element} constrainTo The element or element ID
+     * to constrain to.
+     * @param {Object/Number} pad (optional) Pad provides a way to specify "padding"
+     * of the constraints, and can be either a number for symmetrical padding (4 would be equal to
+     * `{ left: 4, right: 4, top: 4, bottom: 4 }`) or an object containing the sides to pad.
+     * For example: `{ right: 10, bottom: 10 }`
+     * @param {Boolean} inContent (optional) Constrain the draggable in the content box
+     * of the element (inside padding and borders)
      */
-    constrainTo : function(constrainTo, pad, inContent){
+    constrainTo: function(constrainTo, pad, inContent) {
         if (Ext.isNumber(pad)) {
-            pad = {left: pad, right:pad, top:pad, bottom:pad};
+            pad = { left: pad, right: pad, top: pad, bottom: pad };
         }
+
         pad = pad || this.defaultPadding;
+
+        // eslint-disable-next-line vars-on-top
         var ddBox = Ext.get(this.getEl()).getBox(),
             constrainEl = Ext.get(constrainTo),
             s = constrainEl.getScroll(),
-            c,
             constrainDom = constrainEl.dom,
-            xy,
-            topSpace,
-            leftSpace;
+            c, xy, topSpace, leftSpace;
 
         if (constrainDom === document.body) {
             c = {
@@ -501,10 +502,11 @@ Ext.define('Ext.dd.DragDrop', {
                 width: Ext.Element.getViewportWidth(),
                 height: Ext.Element.getViewportHeight()
             };
-        } else {
+        }
+        else {
             xy = constrainEl.getXY();
             c = {
-                x : xy[0],
+                x: xy[0],
                 y: xy[1],
                 width: constrainDom.clientWidth,
                 height: constrainDom.clientHeight
@@ -515,12 +517,16 @@ Ext.define('Ext.dd.DragDrop', {
         leftSpace = ddBox.x - c.x;
 
         this.resetConstraints();
-        this.setXConstraint(leftSpace - (pad.left||0), // left
-            c.width - leftSpace - ddBox.width - (pad.right||0), //right
+
+        this.setXConstraint(
+            leftSpace - (pad.left || 0), // left
+            c.width - leftSpace - ddBox.width - (pad.right || 0), // right
             this.xTickSize
         );
-        this.setYConstraint(topSpace - (pad.top||0), //top
-            c.height - topSpace - ddBox.height - (pad.bottom||0), //bottom
+
+        this.setYConstraint(
+            topSpace - (pad.top || 0), // top
+            c.height - topSpace - ddBox.height - (pad.bottom || 0), // bottom
             this.yTickSize
         );
     },
@@ -625,12 +631,12 @@ Ext.define('Ext.dd.DragDrop', {
 
         // configurable properties:
         //    padding, isTarget, maintainOffset, primaryButtonOnly
-        this.padding           = this.config.padding || [0, 0, 0, 0];
-        this.isTarget          = (this.config.isTarget !== false);
-        this.maintainOffset    = (this.config.maintainOffset);
+        this.padding = this.config.padding || [0, 0, 0, 0];
+        this.isTarget = (this.config.isTarget !== false);
+        this.maintainOffset = (this.config.maintainOffset);
         this.primaryButtonOnly = (this.config.primaryButtonOnly !== false);
     },
-    
+
     /**
      * Executed when the linked element is available
      * @private
@@ -640,7 +646,7 @@ Ext.define('Ext.dd.DragDrop', {
         this.resetConstraints();
         this.onAvailable();
     },
-    
+
     /**
      * Configures the padding for the target zone in px.  Effectively expands
      * (or reduces) the virtual object size for targeting calculations.
@@ -656,9 +662,11 @@ Ext.define('Ext.dd.DragDrop', {
         // this.padding = [iLeft, iRight, iTop, iBot];
         if (!iRight && 0 !== iRight) {
             this.padding = [iTop, iTop, iTop, iTop];
-        } else if (!iBot && 0 !== iBot) {
+        }
+        else if (!iBot && 0 !== iBot) {
             this.padding = [iTop, iRight, iTop, iRight];
-        } else {
+        }
+        else {
             this.padding = [iTop, iRight, iBot, iLeft];
         }
     },
@@ -698,6 +706,7 @@ Ext.define('Ext.dd.DragDrop', {
      */
     setStartPosition: function(pos) {
         var p = pos || Ext.fly(this.getEl()).getXY();
+
         this.deltaSetXY = null;
 
         this.startPageX = p[0];
@@ -750,6 +759,7 @@ Ext.define('Ext.dd.DragDrop', {
         if (typeof id !== "string") {
             id = Ext.id(id);
         }
+
         this.handleElId = id;
         this.DDMInstance.regHandle(this.id, id);
     },
@@ -763,6 +773,7 @@ Ext.define('Ext.dd.DragDrop', {
         if (typeof id !== "string") {
             id = Ext.id(id);
         }
+
         Ext.get(id).on(this.triggerEvent, this.handleMouseDown, this);
         this.setHandleElId(id);
 
@@ -775,13 +786,15 @@ Ext.define('Ext.dd.DragDrop', {
     unreg: function() {
         var me = this,
             el;
-        
+
         if (me._domRef) {
             el = Ext.fly(me.id);
+
             if (el) {
                 el.un(me.triggerEvent, me.handleMouseDown, me);
             }
         }
+
         me._domRef = null;
         me.DDMInstance._remove(me, me.autoGroup);
     },
@@ -807,7 +820,7 @@ Ext.define('Ext.dd.DragDrop', {
      * @param {Ext.dd.DragDrop} oDD the clicked dd object (this dd obj)
      * @private
      */
-    handleMouseDown: function(e, oDD){
+    handleMouseDown: function(e, oDD) {
         var me = this;
 
         if ((me.primaryButtonOnly && e.button) || me.isLocked()) {
@@ -816,7 +829,7 @@ Ext.define('Ext.dd.DragDrop', {
 
         me.DDMInstance.refreshCache(me.groups);
 
-        if (me.hasOuterHandles || me.DDMInstance.isOverTarget(e.getPoint(), me))  {
+        if (me.hasOuterHandles || me.DDMInstance.isOverTarget(e.getPoint(), me)) {
             if (me.clickValidator(e)) {
                 // set the initial element position
                 me.setStartPosition();
@@ -832,9 +845,10 @@ Ext.define('Ext.dd.DragDrop', {
 
     clickValidator: function(e) {
         var target = e.getTarget();
-        return ( this.isValidHandleChild(target) &&
+
+        return (this.isValidHandleChild(target) &&
                     (this.id === this.handleElId ||
-                        this.DDMInstance.handleWasClicked(target, this.id)) );
+                        this.DDMInstance.handleWasClicked(target, this.id)));
     },
 
     /**
@@ -846,6 +860,7 @@ Ext.define('Ext.dd.DragDrop', {
      */
     addInvalidHandleType: function(tagName) {
         var type = tagName.toUpperCase();
+
         this.invalidHandleTypes[type] = type;
     },
 
@@ -859,6 +874,7 @@ Ext.define('Ext.dd.DragDrop', {
         if (typeof id !== "string") {
             id = Ext.id(id);
         }
+
         this.invalidHandleIds[id] = id;
     },
 
@@ -876,6 +892,7 @@ Ext.define('Ext.dd.DragDrop', {
      */
     removeInvalidHandleType: function(tagName) {
         var type = tagName.toUpperCase();
+
         // this.invalidHandleTypes[type] = null;
         delete this.invalidHandleTypes[type];
     },
@@ -888,6 +905,7 @@ Ext.define('Ext.dd.DragDrop', {
         if (typeof id !== "string") {
             id = Ext.id(id);
         }
+
         delete this.invalidHandleIds[id];
     },
 
@@ -918,19 +936,21 @@ Ext.define('Ext.dd.DragDrop', {
         var valid = true,
             nodeName,
             i, len;
+
         // var n = (node.nodeName == "#text") ? node.parentNode : node;
         try {
             nodeName = node.nodeName.toUpperCase();
-        } catch(e) {
+        }
+        catch (e) {
             nodeName = node.nodeName;
         }
+
         valid = valid && !this.invalidHandleTypes[nodeName];
         valid = valid && !this.invalidHandleIds[node.id];
 
-        for (i=0, len=this.invalidHandleClasses.length; valid && i<len; ++i) {
+        for (i = 0, len = this.invalidHandleClasses.length; valid && i < len; ++i) {
             valid = !Ext.fly(node).hasCls(this.invalidHandleClasses[i]);
         }
-
 
         return valid;
 
@@ -942,11 +962,11 @@ Ext.define('Ext.dd.DragDrop', {
      * @private
      */
     setXTicks: function(iStartX, iTickSize) {
-        this.xTicks = [];
-        this.xTickSize = iTickSize;
-
         var tickMap = {},
             i;
+
+        this.xTicks = [];
+        this.xTickSize = iTickSize;
 
         for (i = this.initPageX; i >= this.minX; i = i - iTickSize) {
             if (!tickMap[i]) {
@@ -971,11 +991,11 @@ Ext.define('Ext.dd.DragDrop', {
      * @private
      */
     setYTicks: function(iStartY, iTickSize) {
-        this.yTicks = [];
-        this.yTickSize = iTickSize;
-
         var tickMap = {},
             i;
+
+        this.yTicks = [];
+        this.yTickSize = iTickSize;
 
         for (i = this.initPageY; i >= this.minY; i = i - iTickSize) {
             if (!tickMap[i]) {
@@ -1010,7 +1030,10 @@ Ext.define('Ext.dd.DragDrop', {
 
         this.minX = this.initPageX - iLeft;
         this.maxX = this.initPageX + iRight;
-        if (iTickSize) { this.setXTicks(this.initPageX, iTickSize); }
+
+        if (iTickSize) {
+            this.setXTicks(this.initPageX, iTickSize);
+        }
 
         this.constrainX = true;
     },
@@ -1050,7 +1073,10 @@ Ext.define('Ext.dd.DragDrop', {
 
         this.minY = this.initPageY - iUp;
         this.maxY = this.initPageY + iDown;
-        if (iTickSize) { this.setYTicks(this.initPageY, iTickSize); }
+
+        if (iTickSize) {
+            this.setYTicks(this.initPageY, iTickSize);
+        }
 
         this.constrainY = true;
 
@@ -1061,29 +1087,32 @@ Ext.define('Ext.dd.DragDrop', {
      * @param {Boolean} maintainOffset
      */
     resetConstraints: function() {
+        var dx, dy;
+
         // Maintain offsets if necessary
         if (this.initPageX || this.initPageX === 0) {
             // figure out how much this thing has moved
-            var dx = (this.maintainOffset) ? this.lastPageX - this.initPageX : 0,
-                dy = (this.maintainOffset) ? this.lastPageY - this.initPageY : 0;
+            dx = (this.maintainOffset) ? this.lastPageX - this.initPageX : 0;
+            dy = (this.maintainOffset) ? this.lastPageY - this.initPageY : 0;
 
             this.setInitPosition(dx, dy);
 
         // This is the first time we have detected the element's position
-        } else {
+        }
+        else {
             this.setInitPosition();
         }
 
         if (this.constrainX) {
-            this.setXConstraint( this.leftConstraint,
-                                 this.rightConstraint,
-                                 this.xTickSize        );
+            this.setXConstraint(this.leftConstraint,
+                                this.rightConstraint,
+                                this.xTickSize);
         }
 
         if (this.constrainY) {
-            this.setYConstraint( this.topConstraint,
-                                 this.bottomConstraint,
-                                 this.yTickSize         );
+            this.setYConstraint(this.topConstraint,
+                                this.bottomConstraint,
+                                this.yTickSize);
         }
     },
 
@@ -1097,21 +1126,26 @@ Ext.define('Ext.dd.DragDrop', {
      * @private
      */
     getTick: function(val, tickArray) {
+        var i, len, next, diff1, diff2;
+
         if (!tickArray) {
             // If tick interval is not defined, it is effectively 1 pixel,
             // so we return the value passed to us.
             return val;
-        } else if (tickArray[0] >= val) {
+        }
+        else if (tickArray[0] >= val) {
             // The value is lower than the first tick, so we return the first
             // tick.
             return tickArray[0];
-        } else {
-            var i, len, next, diff1, diff2;
-            for (i=0, len=tickArray.length; i<len; ++i) {
+        }
+        else {
+            for (i = 0, len = tickArray.length; i < len; ++i) {
                 next = i + 1;
+
                 if (tickArray[next] && tickArray[next] >= val) {
                     diff1 = val - tickArray[i];
                     diff2 = tickArray[next] - val;
+
                     return (diff2 > diff1) ? tickArray[i] : tickArray[next];
                 }
             }
@@ -1129,5 +1163,4 @@ Ext.define('Ext.dd.DragDrop', {
     toString: function() {
         return ("DragDrop " + this.id);
     }
-
 });

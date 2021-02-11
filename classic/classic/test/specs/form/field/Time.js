@@ -1,4 +1,4 @@
-describe("Ext.form.field.Time", function() {
+topSuite("Ext.form.field.Time", function() {
     var component, makeComponent;
 
     beforeEach(function() {
@@ -16,18 +16,29 @@ describe("Ext.form.field.Time", function() {
         if (component) {
             component.destroy();
         }
+
         component = makeComponent = null;
     });
 
     function clickTrigger() {
         var trigger = component.getTrigger('picker').getEl(),
             xy = trigger.getXY();
+
         jasmine.fireMouseEvent(trigger.dom, 'click', xy[0], xy[1]);
     }
 
+    describe("alternate class name", function() {
+        it("should have Ext.form.TimeField as the alternate class name", function() {
+            expect(Ext.form.field.Time.prototype.alternateClassName).toEqual(["Ext.form.TimeField", "Ext.form.Time"]);
+        });
+
+        it("should allow the use of Ext.form.TimeField", function() {
+            expect(Ext.form.TimeField).toBeDefined();
+        });
+    });
 
     it("should be registered with xtype 'timefield'", function() {
-        component = Ext.create("Ext.form.field.Time", {name: 'test'});
+        component = Ext.create("Ext.form.field.Time", { name: 'test' });
         expect(component instanceof Ext.form.field.Time).toBe(true);
         expect(Ext.getClass(component).xtype).toBe("timefield");
     });
@@ -44,7 +55,6 @@ describe("Ext.form.field.Time", function() {
         });
 
     });
-
 
     describe("defaults", function() {
         beforeEach(function() {
@@ -85,7 +95,6 @@ describe("Ext.form.field.Time", function() {
         });
     });
 
-
     describe("rendering", function() {
         // Mostly handled by Trigger and Picker tests
 
@@ -99,7 +108,6 @@ describe("Ext.form.field.Time", function() {
             expect(component.getTrigger('picker').el).toHaveCls('x-form-time-trigger');
         });
     });
-
 
     describe("trigger", function() {
         beforeEach(function() {
@@ -124,7 +132,7 @@ describe("Ext.form.field.Time", function() {
     });
 
     describe("setting values", function() {
-        describe("parsing", function(){
+        describe("parsing", function() {
             it("should parse a string value using the format config", function() {
                 makeComponent({
                     format: 'g:iA',
@@ -162,14 +170,14 @@ describe("Ext.form.field.Time", function() {
             });
         });
 
-        describe("setValue", function(){
-            it("should accept a date object", function(){
+        describe("setValue", function() {
+            it("should accept a date object", function() {
                 makeComponent();
                 component.setValue(new Date(2010, 10, 5, 9, 46));
                 expect(component.getValue()).toEqualTime(9, 46);
             });
 
-            it("should accept an array of date objects", function(){
+            it("should accept an array of date objects", function() {
                 makeComponent({
                     multiSelect: true
                 });
@@ -178,7 +186,7 @@ describe("Ext.form.field.Time", function() {
                 expect(component.getValue()[1]).toEqualTime(23, 15);
             });
 
-            it("should accept a string value", function(){
+            it("should accept a string value", function() {
                 makeComponent();
                 component.setValue('9:46 AM');
                 expect(component.getValue()).toEqualTime(9, 46);
@@ -193,7 +201,7 @@ describe("Ext.form.field.Time", function() {
                 expect(component.value[1]).toEqualTime(23, 15);
             });
 
-            it("should accept a date object and snap to increment", function(){
+            it("should accept a date object and snap to increment", function() {
                 makeComponent({
                     snapToIncrement: true
                 });
@@ -201,7 +209,7 @@ describe("Ext.form.field.Time", function() {
                 expect(component.getValue()).toEqualTime(9, 45);
             });
 
-            it("should accept a string value and snap to increment", function(){
+            it("should accept a string value and snap to increment", function() {
                 makeComponent({
                     snapToIncrement: true
                 });
@@ -209,18 +217,18 @@ describe("Ext.form.field.Time", function() {
                 expect(component.getValue()).toEqualTime(9, 45);
             });
 
-            it("should accept a null value", function(){
+            it("should accept a null value", function() {
                 makeComponent();
                 component.setValue(null);
                 expect(component.getValue()).toBeNull();
             });
 
-            it("should set null if an invalid time string is passed", function(){
+            it("should set null if an invalid time string is passed", function() {
                 makeComponent();
                 component.setValue('6:::37');
                 expect(component.getValue()).toBeNull();
             });
-            
+
             it("should ignore the date part when setting the value", function() {
                 makeComponent({
                     minValue: '9:00 AM',
@@ -229,6 +237,7 @@ describe("Ext.form.field.Time", function() {
                 // The date year/month/day will be equal to whenever the spec is run
                 // But the time field defaults all dates to 2008/01/01.
                 var d = new Date();
+
                 d.setHours(12, 0);
                 component.setValue(d);
                 expect(component.isValid()).toBe(true);
@@ -252,7 +261,6 @@ describe("Ext.form.field.Time", function() {
                     makeComponent({
                         increment: 15,
                         format: 'H:i',
-                        increment: 15,
                         allowBlank: false,
                         value: '15:03',
                         renderTo: document.body
@@ -261,12 +269,12 @@ describe("Ext.form.field.Time", function() {
                     component.expand();
                     jasmine.fireMouseEvent(component.getPicker().getNode(component.store.getAt(0)), 'click');
                     expect(component.getValue()).toEqualTime(0, 0);
-                    
+
                 });
             });
 
-            describe("inputEl", function () {
-                it("should accept a model", function(){
+            describe("inputEl", function() {
+                it("should accept a model", function() {
                     makeComponent({
                         minValue: '6:00 AM',
                         maxValue: '8:00 PM',
@@ -276,7 +284,7 @@ describe("Ext.form.field.Time", function() {
                     expect(component.inputEl.getValue()).toBe('6:00 AM');
                 });
 
-                it("should parse a string value to lookup a record in the store", function(){
+                it("should parse a string value to lookup a record in the store", function() {
                     makeComponent({
                         minValue: '6:00 AM',
                         maxValue: '8:00 PM',
@@ -286,7 +294,7 @@ describe("Ext.form.field.Time", function() {
                     expect(component.inputEl.getValue()).toBe('3:00 PM');
                 });
 
-                it("should display same value given to setValue when no lookups in the store", function(){
+                it("should display same value given to setValue when no lookups in the store", function() {
                     makeComponent({
                         minValue: '6:00 AM',
                         maxValue: '8:00 PM',
@@ -295,16 +303,17 @@ describe("Ext.form.field.Time", function() {
                     component.setValue('21');
                     expect(component.inputEl.getValue()).toBe('21');
                 });
-                
-                describe("validating as you type", function(){
+
+                describe("validating as you type", function() {
                     it("should validate date format", function() {
                         var raw, errors;
+
                         makeComponent({
                             renderTo: document.body
                         });
                         component.inputEl.dom.value = 'foo';
                         component.doRawQuery();
-                        
+
                         raw = component.getRawValue();
                         errors = component.getErrors();
 
@@ -314,14 +323,15 @@ describe("Ext.form.field.Time", function() {
 
                     it("should validate minValue", function() {
                         var raw, errors;
+
                         makeComponent({
-                            minValue : '8:00 AM',
-                            minText : 'too early',
+                            minValue: '8:00 AM',
+                            minText: 'too early',
                             renderTo: document.body
                         });
                         component.inputEl.dom.value = 1;
                         component.doRawQuery();
-                        
+
                         raw = component.getRawValue();
                         errors = component.getErrors();
 
@@ -331,14 +341,15 @@ describe("Ext.form.field.Time", function() {
 
                     it("should validate maxValue", function() {
                         var raw, errors;
+
                         makeComponent({
-                            maxValue : '8:00 AM',
-                            maxText : 'too late',
+                            maxValue: '8:00 AM',
+                            maxText: 'too late',
                             renderTo: document.body
                         });
                         component.inputEl.dom.value = 9;
                         component.doRawQuery();
-                        
+
                         raw = component.getRawValue();
                         errors = component.getErrors();
 
@@ -348,9 +359,10 @@ describe("Ext.form.field.Time", function() {
                 });
             });
 
-            describe("change event", function () {
+            describe("change event", function() {
                 it("should not fire the change event when the value stays the same - single value", function() {
                     var spy = jasmine.createSpy();
+
                     makeComponent({
                         renderTo: Ext.getBody(),
                         value: '10:00AM',
@@ -364,6 +376,7 @@ describe("Ext.form.field.Time", function() {
 
                 it("should fire the change event when the value changes - single value", function() {
                     var spy = jasmine.createSpy();
+
                     makeComponent({
                         value: '10:00AM',
                         renderTo: Ext.getBody(),
@@ -379,6 +392,7 @@ describe("Ext.form.field.Time", function() {
 
                 it("should not fire the change event when the value stays the same - multiple values", function() {
                     var spy = jasmine.createSpy();
+
                     makeComponent({
                         multiSelect: true,
                         valueField: 'val',
@@ -394,6 +408,7 @@ describe("Ext.form.field.Time", function() {
 
                 it("should fire the change event when the value changes - multiple values", function() {
                     var spy = jasmine.createSpy();
+
                     makeComponent({
                         multiSelect: true,
                         valueField: 'val',
@@ -414,25 +429,25 @@ describe("Ext.form.field.Time", function() {
             });
         });
     });
-    
-    describe("submit value", function(){
-        it("should use the format as the default", function () {
+
+    describe("submit value", function() {
+        it("should use the format as the default", function() {
             makeComponent({
-                value:new Date(2010, 0, 15, 15, 30),
-                format:'H:i'
+                value: new Date(2010, 0, 15, 15, 30),
+                format: 'H:i'
             });
             expect(component.getSubmitValue()).toBe('15:30');
         });
-        
-        it("should give precedence to submitFormat", function(){
+
+        it("should give precedence to submitFormat", function() {
             makeComponent({
                 value: new Date(2010, 0, 15, 15, 45),
                 submitFormat: 'H:i'
             });
             expect(component.getSubmitValue()).toBe('15:45');
         });
-        
-        it("should still return null if the value isn't a valid date", function(){
+
+        it("should still return null if the value isn't a valid date", function() {
             makeComponent({
                 value: 'wontparse',
                 submitFormat: 'H:i'
@@ -441,26 +456,26 @@ describe("Ext.form.field.Time", function() {
         });
     });
 
-    describe("getModelData", function(){
-        it("should use the format as the default", function(){
+    describe("getModelData", function() {
+        it("should use the format as the default", function() {
             makeComponent({
                 name: 'myname',
                 value: new Date(2010, 0, 15, 15, 45)
             });
             var modelData = component.getModelData();
+
             expect(modelData.myname).toEqualTime(15, 45);
         });
 
-        it("should return null if the value isn't a valid date", function(){
+        it("should return null if the value isn't a valid date", function() {
             makeComponent({
                 name: 'myname',
                 value: 'wontparse',
                 submitFormat: 'H:i'
             });
-            expect(component.getModelData()).toEqual({myname: null});
+            expect(component.getModelData()).toEqual({ myname: null });
         });
     });
-
 
     describe("minValue", function() {
         describe("minValue config", function() {
@@ -469,7 +484,7 @@ describe("Ext.form.field.Time", function() {
                     format: 'g:i.A',
                     minValue: '8:30.AM'
                 });
-                expect(component.minValue).toEqualTime(8,30);
+                expect(component.minValue).toEqualTime(8, 30);
             });
 
             it("should allow times after it to pass validation", function() {
@@ -501,7 +516,7 @@ describe("Ext.form.field.Time", function() {
                 makeComponent({
                     minValue: new Date(2010, 1, 1, 8, 30)
                 });
-                expect(component.minValue).toEqualTime(8,30);
+                expect(component.minValue).toEqualTime(8, 30);
             });
 
             it("should be passed to the time picker object", function() {
@@ -550,13 +565,14 @@ describe("Ext.form.field.Time", function() {
             it("should allow a Date object", function() {
                 makeComponent();
                 component.setMinValue(new Date(2010, 1, 1, 8, 30));
-                expect(component.minValue).toEqualTime(8,30);
+                expect(component.minValue).toEqualTime(8, 30);
             });
 
             it("should call the time picker's setMinValue method", function() {
                 makeComponent();
                 component.expand();
                 var spy = spyOn(component.getPicker(), 'setMinValue');
+
                 component.setMinValue('11:15 AM');
                 expect(spy).toHaveBeenCalled();
                 expect(spy.mostRecentCall.args[0]).toEqualTime(11, 15);
@@ -571,7 +587,7 @@ describe("Ext.form.field.Time", function() {
                     format: 'g:i.A',
                     maxValue: '8:30.PM'
                 });
-                expect(component.maxValue).toEqualTime(20,30);
+                expect(component.maxValue).toEqualTime(20, 30);
             });
 
             it("should allow times before it to pass validation", function() {
@@ -659,6 +675,7 @@ describe("Ext.form.field.Time", function() {
                 makeComponent();
                 component.expand();
                 var spy = spyOn(component.getPicker(), 'setMaxValue');
+
                 component.setMaxValue('11:15 PM');
                 expect(spy).toHaveBeenCalled();
                 expect(spy.mostRecentCall.args[0]).toEqualTime(23, 15);
@@ -672,43 +689,43 @@ describe("Ext.form.field.Time", function() {
                 renderTo: Ext.getBody()
             });
         });
-        
-        it('should format the raw value', function () {
+
+        it('should format the raw value', function() {
             jasmine.focusAndWait(component);
-            
+
             runs(function() {
                 component.setRawValue('123');
 
                 // Programmatic blur fails on IEs. Focus then remove a button
                 Ext.getBody().createChild({ tag: 'button' }).focus().remove();
             });
-            
+
             waitsFor(function() {
                 return !component.hasFocus;
             }, 'the TimeField to blur', 1000);
-            
+
             runs(function() {
                 expect(component.getRawValue()).toEqual('1:23 AM');
             });
         });
 
-        it('should not reset the hours, minutes or seconds', function () {
+        it('should not reset the hours, minutes or seconds', function() {
             var parts, d;
-            
+
             parts = component.initDateParts;
             d = new Date(parts[0], parts[1], parts[2], 13, 22, 42);
 
             jasmine.focusAndWait(component);
-            
+
             runs(function() {
                 component.setValue(d);
                 component.blur();
             });
-            
+
             waitsFor(function() {
                 return !component.hasFocus;
             }, 'the TimeField to blur', 1000);
-            
+
             runs(function() {
                 expect(component.getValue()).toEqual(d);
             });
@@ -716,15 +733,15 @@ describe("Ext.form.field.Time", function() {
     });
 
     describe("validation", function() {
-        it("should return the invalidText if an invalid time string is entered via text", function () {
+        it("should return the invalidText if an invalid time string is entered via text", function() {
             makeComponent();
             component.setRawValue('01:000 AM');
             expect(component.getErrors()[0]).toBe(Ext.String.format(component.invalidText, '01:000 AM'));
         });
     });
 
-    describe('syncSelection', function () {
-        it('should call select on the selection model with the new value record if there are no valid selections and forceSelect is false', function () {
+    describe('syncSelection', function() {
+        it('should call select on the selection model with the new value record if there are no valid selections and forceSelect is false', function() {
             makeComponent({
                 minValue: '7:00 PM',
                 maxValue: '9:15 PM'
@@ -737,7 +754,7 @@ describe("Ext.form.field.Time", function() {
         });
     });
 
-    describe('forceSelection', function () {
+    describe('forceSelection', function() {
         function doTest(value) {
             makeComponent({
                 forceSelection: true,
@@ -747,14 +764,15 @@ describe("Ext.form.field.Time", function() {
             });
         }
 
-        it('should work with a legitimate value', function () {
+        it('should work with a legitimate value', function() {
             var v = '9:00 PM';
+
             doTest(v);
 
             expect(component.selection.data.disp).toBe(v);
         });
 
-        it('should work with an illegitimate value', function () {
+        it('should work with an illegitimate value', function() {
             doTest('9:01 PM');
 
             expect(component.selection).toBe(null);

@@ -9,7 +9,7 @@ Ext.define('Ext.grid.RowEditorButtons', {
     frame: true,
     shrinkWrap: true,
     position: 'bottom',
-    
+
     ariaRole: 'toolbar',
 
     constructor: function(config) {
@@ -85,13 +85,15 @@ Ext.define('Ext.grid.RowEditorButtons', {
         me.removeClsWithUI(me.position);
         me.position = position;
         me.addClsWithUI(position);
+
         // we tried setting the top/bottom value in the stylesheet based on form field
         // height + row editor padding, but that approach does not work when there are
         // larger things inside the editor, e.g. textarea, so we have to measure
         // the row editor height and position the buttons accordingly (see EXTJSIV-9914).
         if (position === 'top') {
             bottom = (rowEditorHeight - rowEditorBody.getBorderWidth('t')) + 'px';
-        } else {
+        }
+        else {
             top = (rowEditorHeight - rowEditorBody.getBorderWidth('b')) + 'px';
         }
 
@@ -102,7 +104,7 @@ Ext.define('Ext.grid.RowEditorButtons', {
     },
 
     privates: {
-        getFramingInfoCls: function(){
+        getFramingInfoCls: function() {
             return this.baseCls + '-' + this.ui + '-' + this.position;
         },
 

@@ -19,6 +19,17 @@ Ext.define('KitchenSink.view.charts.line.Renderer', {
         'Ext.chart.interactions.ItemHighlight'
     ],
 
+    //<example>
+    // Content between example tags is omitted from code preview.
+    otherContent: [{
+        type: 'Controller',
+        path: 'classic/samples/view/charts/line/RendererController.js'
+    }, {
+        type: 'Store',
+        path: 'classic/samples/store/Pie.js'
+    }],
+    //</example>
+
     layout: 'fit',
 
     width: 650,

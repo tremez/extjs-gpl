@@ -7,52 +7,55 @@ Ext.require([
 Ext.define('Employee', {
     extend: 'Ext.data.Model',
     fields: [
-       {name: 'rating', type: 'int'},
-       {name: 'salary', type: 'float'},
-       {name: 'name'},
-       'rowHeight'
+        { name: 'rating', type: 'int' },
+        { name: 'salary', type: 'float' },
+        { name: 'name' },
+        'rowHeight'
     ]
 });
 
-Ext.onReady(function(){
+Ext.onReady(function() {
+    var data, ln, records, i, store;
+
     /**
      * Returns an array of fake data
      * @param {Number} count The number of fake rows to create data for
      * @return {Array} The fake record data, suitable for usage with an ArrayReader
      */
     function createFakeData(count) {
-        var firstNames   = ['Ed', 'Tommy', 'Aaron', 'Abe', 'Jamie', 'Adam', 'Dave', 'David', 'Jay', 'Nicolas', 'Nige'],
-            lastNames    = ['Spencer', 'Maintz', 'Conran', 'Elias', 'Avins', 'Mishcon', 'Kaneda', 'Davis', 'Robinson', 'Ferrero', 'White'],
-            ratings      = [1, 2, 3, 4, 5],
-            salaries     = [100, 400, 900, 1500, 1000000];
+        var firstNames = ['Ed', 'Tommy', 'Aaron', 'Abe', 'Jamie', 'Adam', 'Dave', 'David', 'Jay', 'Nicolas', 'Nige'],
+            lastNames = ['Spencer', 'Maintz', 'Conran', 'Elias', 'Avins', 'Mishcon', 'Kaneda', 'Davis', 'Robinson', 'Ferrero', 'White'],
+            ratings = [1, 2, 3, 4, 5],
+            salaries = [100, 400, 900, 1500, 1000000],
+            data = [],
+            i, ratingId, salaryId, firstNameId, lastNameId, rating, salary, name;
 
-        var data = [];
-        for (var i = 0; i < (count || 25); i++) {
-            var ratingId    = Math.floor(Math.random() * ratings.length),
-                salaryId    = Math.floor(Math.random() * salaries.length),
-                firstNameId = Math.floor(Math.random() * firstNames.length),
-                lastNameId  = Math.floor(Math.random() * lastNames.length),
+        for (i = 0; i < (count || 25); i++) {
+            ratingId = Math.floor(Math.random() * ratings.length);
+            salaryId = Math.floor(Math.random() * salaries.length);
+            firstNameId = Math.floor(Math.random() * firstNames.length);
+            lastNameId = Math.floor(Math.random() * lastNames.length);
 
-                rating      = ratings[ratingId],
-                salary      = salaries[salaryId],
-                name        = Ext.String.format("{0} {1}", firstNames[firstNameId], lastNames[lastNameId]);
+            rating = ratings[ratingId];
+            salary = salaries[salaryId];
+            name = Ext.String.format("{0} {1}", firstNames[firstNameId], lastNames[lastNameId]);
 
             data.push({
                 id: 'rec-' + i,
                 rating: rating,
                 salary: salary,
                 name: name,
-                rowHeight: (i == count - 1) ? 150 : Ext.Number.randomInt(21, 50)
+                rowHeight: (i === count - 1) ? 150 : Ext.Number.randomInt(21, 50)
             });
         }
+
         return data;
     }
 
-    var data = createFakeData(49679),
-        ln = data.length,
-        records = [],
-        i = 0,
-        store;
+    data = createFakeData(49679);
+    ln = data.length;
+    records = [];
+    i = 0;
 
     for (; i < ln; i++) {
         records.push(Ext.create('Employee', data[i]));
@@ -87,31 +90,32 @@ Ext.onReady(function(){
             trackOver: false
         },
         // grid columns
-        columns:[{
+        columns: [{
             xtype: 'rownumberer',
             width: 70,
             sortable: false,
-            
+
             // Only this column causes unpredictable row heights.
             // Hide this column, and we can measure a row and used exact row height.
             variableRowHeight: true,
             xhooks: {
                 defaultRenderer: function(v, meta, record) {
                     meta.tdStyle = 'vertical-align:center;height:' + record.data.rowHeight + 'px';
+
                     return this.callParent(arguments);
                 }
             }
-        },{
+        }, {
             text: 'Name',
-            flex:1 ,
+            flex: 1,
             sortable: true,
             dataIndex: 'name'
-        },{
+        }, {
             text: 'Rating',
             width: 125,
             sortable: true,
             dataIndex: 'rating'
-        },{
+        }, {
             text: 'Salary',
             width: 125,
             sortable: true,

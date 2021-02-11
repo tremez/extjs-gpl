@@ -14,30 +14,25 @@ Ext.define('Admin.view.charts.Charts', {
 
     scrollable: true,
 
-    items: [
-        {
-            xtype: 'chartsareapanel',
-            userCls: 'big-50 small-100 dashboard-item shadow'
-        },
-        {
-            xtype: 'chartspie3dpanel',
-            userCls: 'big-50 small-100 dashboard-item shadow'
-        },
-        {
-            xtype: 'chartspolarpanel',
-            userCls: 'big-50 small-100 dashboard-item shadow'
-        },
-        {
-            xtype: 'chartsstackedpanel',
-            userCls: 'big-50 small-100 dashboard-item shadow'
-        },
-        {
-            xtype: 'chartsbarpanel',
-            userCls: 'big-50 small-100 dashboard-item shadow'
-        },
-        {
-            xtype: 'chartsgaugepanel',
-            userCls: 'big-50 small-100 dashboard-item shadow'
-        }
-    ]
+    defaults: {
+        shadow: true,
+        userCls: 'big-50 small-100 dashboard-item'
+    },
+
+    items: [{
+        xtype: 'chartsareapanel'
+    }, {
+        xtype: 'chartspie3dpanel',
+        cls: 'last-in-row'
+    }, {
+        xtype: 'chartspolarpanel'
+    }, {
+        xtype: 'chartsstackedpanel',
+        cls: 'last-in-row'
+    }, {
+        xtype: 'chartsbarpanel'
+    }, {
+        xtype: 'chartsgaugepanel',
+        cls: 'last-in-row'
+    }]
 });

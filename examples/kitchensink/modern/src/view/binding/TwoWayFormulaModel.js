@@ -3,23 +3,20 @@ Ext.define('KitchenSink.view.binding.TwoWayFormulaModel', {
     alias: 'viewmodel.binding-twowayformula',
 
     formulas: {
-        // The calls to correctFloat here are to preserve the stability
-        // of the values, we don't want precision rounding to cause the
-        // viewmodel to think the data is different.
         celcius: {
             get: function(get) {
-                return Ext.Number.correctFloat(get('kelvin') - 273.15);
+                return get('kelvin') - 273.15;
             },
-            set: function(v) {
-                this.set('kelvin', Ext.Number.correctFloat(v + 273.15));
+            set: function(value) {
+                this.set('kelvin', value + 273.15);
             }
         },
         fahrenheit: {
             get: function(get) {
-                return Ext.Number.correctFloat(get('celcius') * 1.8 + 32);
+                return get('celcius') * 9 / 5 + 32;
             },
-            set: function(v) {
-                this.set('celcius', Ext.Number.correctFloat((v - 32) / 1.8));
+            set: function(value) {
+                this.set('celcius', (value - 32) * 5 / 9);
             }
         }
     },

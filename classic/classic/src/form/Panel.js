@@ -1,14 +1,16 @@
 /**
- * FormPanel provides a standard container for forms. It is essentially a standard {@link Ext.panel.Panel} which
- * automatically creates a {@link Ext.form.Basic BasicForm} for managing any {@link Ext.form.field.Field}
- * objects that are added as descendants of the panel. It also includes conveniences for configuring and
- * working with the BasicForm and the collection of Fields.
+ * FormPanel provides a standard container for forms. It is essentially a standard
+ * {@link Ext.panel.Panel} which automatically creates a {@link Ext.form.Basic BasicForm}
+ * for managing any {@link Ext.form.field.Field} objects that are added as descendants of the panel.
+ * It also includes conveniences for configuring and working with the BasicForm and the collection
+ * of Fields.
  * 
  * # Layout
  * 
- * By default, FormPanel is configured with `{@link Ext.layout.container.Anchor layout:'anchor'}` for
- * the layout of its immediate child items. This can be changed to any of the supported container layouts.
- * The layout of sub-containers is configured in {@link Ext.container.Container#layout the standard way}.
+ * By default, FormPanel is configured with `{@link Ext.layout.container.Anchor layout:'anchor'}`
+ * for the layout of its immediate child items. This can be changed to any of the supported
+ * container layouts. The layout of sub-containers is configured in
+ * {@link Ext.container.Container#layout the standard way}.
  * 
  * # BasicForm
  * 
@@ -16,8 +18,8 @@
  * of the config options supported by the {@link Ext.form.Basic} class, and will pass them along to
  * the internal BasicForm when it is created.
  * 
- * The following events fired by the BasicForm will be re-fired by the FormPanel and can therefore be
- * listened for on the FormPanel itself:
+ * The following events fired by the BasicForm will be re-fired by the FormPanel and can therefore
+ * be listened for on the FormPanel itself:
  * 
  * - {@link Ext.form.Basic#beforeaction beforeaction}
  * - {@link Ext.form.Basic#actionfailed actionfailed}
@@ -27,22 +29,23 @@
  * 
  * # Field Defaults
  * 
- * The {@link #fieldDefaults} config option conveniently allows centralized configuration of default values
- * for all fields added as descendants of the FormPanel. Any config option recognized by implementations
- * of {@link Ext.form.Labelable} may be included in this object. See the {@link #fieldDefaults} documentation
- * for details of how the defaults are applied.
+ * The {@link #fieldDefaults} config option conveniently allows centralized configuration of default
+ * values for all fields added as descendants of the FormPanel. Any config option recognized
+ * by implementations of {@link Ext.form.Labelable} may be included in this object. See the
+ * {@link #fieldDefaults} documentation for details of how the defaults are applied.
  * 
  * # Form Validation
  * 
- * With the default configuration, form fields are validated on-the-fly while the user edits their values.
- * This can be controlled on a per-field basis (or via the {@link #fieldDefaults} config) with the field
- * config properties {@link Ext.form.field.Field#validateOnChange} and {@link Ext.form.field.Base#checkChangeEvents},
- * and the FormPanel's config properties {@link #pollForChanges} and {@link #pollInterval}.
+ * With the default configuration, form fields are validated on-the-fly while the user edits
+ * their values. This can be controlled on a per-field basis (or via the {@link #fieldDefaults}
+ * config) with the field config properties {@link Ext.form.field.Field#validateOnChange} and
+ * {@link Ext.form.field.Base#checkChangeEvents}, and the FormPanel's config properties
+ * {@link #pollForChanges} and {@link #pollInterval}.
  * 
  * Any component within the FormPanel can be configured with `formBind: true`. This will cause that
- * component to be automatically disabled when the form is invalid, and enabled when it is valid. This is most
- * commonly used for Button components to prevent submitting the form in an invalid state, but can be used on
- * any component type.
+ * component to be automatically disabled when the form is invalid, and enabled when it is valid.
+ * This is most commonly used for Button components to prevent submitting the form in an invalid
+ * state, but can be used on any component type.
  * 
  * For more information on form validation see the following:
  * 
@@ -53,8 +56,8 @@
  * 
  * # Form Submission
  * 
- * By default, Ext Forms are submitted through Ajax, using {@link Ext.form.action.Action}. See the documentation for
- * {@link Ext.form.Basic} for details.
+ * By default, Ext Forms are submitted through Ajax, using {@link Ext.form.action.Action}.
+ * See the documentation for {@link Ext.form.Basic} for details.
  *
  * # Example usage
  * 
@@ -114,27 +117,33 @@
  *
  */
 Ext.define('Ext.form.Panel', {
-    extend:'Ext.panel.Panel',
+    extend: 'Ext.panel.Panel',
+    alias: 'widget.form',
+    alternateClassName: ['Ext.FormPanel', 'Ext.form.FormPanel'],
+
+    requires: [
+        'Ext.form.Basic',
+        'Ext.util.TaskRunner'
+    ],
+
     mixins: {
         fieldAncestor: 'Ext.form.FieldAncestor'
     },
-    alias: 'widget.form',
-    alternateClassName: ['Ext.FormPanel', 'Ext.form.FormPanel'],
-    requires: ['Ext.form.Basic', 'Ext.util.TaskRunner'],
 
     /**
      * @cfg {Boolean} pollForChanges
      * If set to `true`, sets up an interval task (using the {@link #pollInterval}) in which the
-     * panel's fields are repeatedly checked for changes in their values. This is in addition to the normal detection
-     * each field does on its own input element, and is not needed in most cases. It does, however, provide a
-     * means to absolutely guarantee detection of all changes including some edge cases in some browsers which
-     * do not fire native events. Defaults to `false`.
+     * panel's fields are repeatedly checked for changes in their values. This is in addition
+     * to the normal detection each field does on its own input element, and is not needed
+     * in most cases. It does, however, provide a means to absolutely guarantee detection
+     * of all changes including some edge cases in some browsers which do not fire native events.
+     * Defaults to `false`.
      */
 
     /**
      * @cfg {Number} pollInterval
-     * Interval in milliseconds at which the form's fields are checked for value changes. Only used if
-     * the {@link #pollForChanges} option is set to `true`. Defaults to 500 milliseconds.
+     * Interval in milliseconds at which the form's fields are checked for value changes. Only used
+     * if the {@link #pollForChanges} option is set to `true`. Defaults to 500 milliseconds.
      */
 
     /**
@@ -144,76 +153,89 @@ Ext.define('Ext.form.Panel', {
     layout: 'anchor',
 
     bodyAriaRole: 'form',
-    
+
     basicFormConfigs: [
         /**
          * @cfg api
-         * @inheritdoc Ext.form.Basic#api
+         * @inheritdoc Ext.form.Basic#cfg!api
          */
-        'api', 
+        'api',
+
         /**
          * @cfg baseParams
-         * @inheritdoc Ext.form.Basic#baseParams
+         * @inheritdoc Ext.form.Basic#cfg!baseParams
          */
-        'baseParams', 
+        'baseParams',
+
         /**
          * @cfg errorReader
-         * @inheritdoc Ext.form.Basic#errorReader
+         * @inheritdoc Ext.form.Basic#cfg!errorReader
          */
-        'errorReader', 
+        'errorReader',
+
         /**
          * @cfg jsonSubmit
-         * @inheritdoc Ext.form.Basic#jsonSubmit
+         * @inheritdoc Ext.form.Basic#cfg!jsonSubmit
          */
         'jsonSubmit',
+
         /**
          * @cfg method
-         * @inheritdoc Ext.form.Basic#method
+         * @inheritdoc Ext.form.Basic#cfg!method
          */
-        'method', 
+        'method',
+
         /**
          * @cfg paramOrder
-         * @inheritdoc Ext.form.Basic#paramOrder
+         * @inheritdoc Ext.form.Basic#cfg!paramOrder
          */
         'paramOrder',
+
         /**
          * @cfg paramsAsHash
-         * @inheritdoc Ext.form.Basic#paramsAsHash
+         * @inheritdoc Ext.form.Basic#cfg!paramsAsHash
          */
         'paramsAsHash',
+
         /**
          * @cfg reader
-         * @inheritdoc Ext.form.Basic#reader
+         * @inheritdoc Ext.form.Basic#cfg!reader
          */
         'reader',
+
         /**
          * @cfg standardSubmit
-         * @inheritdoc Ext.form.Basic#standardSubmit
+         * @inheritdoc Ext.form.Basic#cfg!standardSubmit
          */
         'standardSubmit',
+
         /**
          * @cfg timeout
-         * @inheritdoc Ext.form.Basic#timeout
+         * @inheritdoc Ext.form.Basic#cfg!timeout
          */
         'timeout',
+
         /**
          * @cfg trackResetOnLoad
-         * @inheritdoc Ext.form.Basic#trackResetOnLoad
+         * @inheritdoc Ext.form.Basic#cfg!trackResetOnLoad
          */
         'trackResetOnLoad',
+
         /**
          * @cfg url
-         * @inheritdoc Ext.form.Basic#url
+         * @inheritdoc Ext.form.Basic#cfg!url
          */
         'url',
+
         /**
          * @cfg waitMsgTarget
-         * @inheritdoc Ext.form.Basic#waitMsgTarget
+         * @inheritdoc Ext.form.Basic#cfg!waitMsgTarget
          */
         'waitMsgTarget',
+
         /**
          * @cfg waitTitle
-         * @inheritdoc Ext.form.Basic#waitTitle
+         * @inheritdoc Ext.form.Basic#cfg!waitTitle
          */
         'waitTitle'
     ],
@@ -234,21 +256,25 @@ Ext.define('Ext.form.Panel', {
              * @inheritdoc Ext.form.Basic#beforeaction
              */
             'beforeaction',
+
             /**
              * @event actionfailed
              * @inheritdoc Ext.form.Basic#actionfailed
              */
             'actionfailed',
+
             /**
              * @event actioncomplete
              * @inheritdoc Ext.form.Basic#actioncomplete
              */
             'actioncomplete',
+
             /**
              * @event validitychange
              * @inheritdoc Ext.form.Basic#validitychange
              */
             'validitychange',
+
             /**
              * @event dirtychange
              * @inheritdoc Ext.form.Basic#dirtychange
@@ -284,11 +310,12 @@ Ext.define('Ext.form.Panel', {
             len = props.length,
             i = 0,
             prop;
-            
+
         for (; i < len; ++i) {
             prop = props[i];
             cfg[prop] = this[prop];
         }
+
         return new Ext.form.Basic(this, cfg);
     },
 
@@ -301,9 +328,11 @@ Ext.define('Ext.form.Panel', {
     },
 
     /**
-     * Loads an {@link Ext.data.Model} into this form (internally just calls {@link Ext.form.Basic#loadRecord})
-     * See also {@link Ext.form.Basic#trackResetOnLoad trackResetOnLoad}. The fields in the model are mapped to 
-     * fields in the form by matching either the {@link Ext.form.field.Base#name} or {@link Ext.Component#itemId}.  
+     * Loads an {@link Ext.data.Model} into this form (internally just calls
+     * {@link Ext.form.Basic#loadRecord}).
+     * See also {@link Ext.form.Basic#trackResetOnLoad trackResetOnLoad}. The fields in the model
+     * are mapped to  fields in the form by matching either the {@link Ext.form.field.Base#name}
+     * or {@link Ext.Component#itemId}.  
      * @param {Ext.data.Model} record The record to load
      * @return {Ext.form.Basic} The Ext.form.Basic attached to this FormPanel
      */
@@ -312,16 +341,18 @@ Ext.define('Ext.form.Panel', {
     },
 
     /**
-     * Returns the currently loaded Ext.data.Model instance if one was loaded via {@link #loadRecord}.
+     * Returns the currently loaded Ext.data.Model instance if one was loaded via
+     * {@link #loadRecord}.
      * @return {Ext.data.Model} The loaded instance
      */
     getRecord: function() {
         return this.getForm().getRecord();
     },
-    
+
     /**
-     * Persists the values in this form into the passed {@link Ext.data.Model} object in a beginEdit/endEdit block.
-     * If the record is not specified, it will attempt to update (if it exists) the record provided to {@link #loadRecord}.
+     * Persists the values in this form into the passed {@link Ext.data.Model} object
+     * in a beginEdit/endEdit block. If the record is not specified, it will attempt to update
+     * (if it exists) the record provided to {@link #loadRecord}.
      * @param {Ext.data.Model} [record] The record to edit
      * @return {Ext.form.Basic} The Ext.form.Basic attached to this FormPanel
      */
@@ -330,36 +361,40 @@ Ext.define('Ext.form.Panel', {
     },
 
     /**
-     * Convenience function for fetching the current value of each field in the form. This is the same as calling
-     * {@link Ext.form.Basic#getValues this.getForm().getValues()}.
+     * @method getValues
+     * Convenience function for fetching the current value of each field in the form.
+     * This is the same as calling {@link Ext.form.Basic#getValues this.getForm().getValues()}.
      *
      * @inheritdoc Ext.form.Basic#getValues
      */
     getValues: function(asString, dirtyOnly, includeEmptyText, useDataValues) {
         return this.getForm().getValues(asString, dirtyOnly, includeEmptyText, useDataValues);
     },
-    
+
     /**
+     * @method isDirty
      * Convenience function to check if the form has any dirty fields. This is the same as calling
      * {@link Ext.form.Basic#isDirty this.getForm().isDirty()}.
      *
      * @inheritdoc Ext.form.Basic#isDirty
      */
-    isDirty: function () {
+    isDirty: function() {
         return this.form.isDirty();
     },
-    
+
     /**
+     * @method isValid
      * Convenience function to check if the form has all valid fields. This is the same as calling
      * {@link Ext.form.Basic#isValid this.getForm().isValid()}.
      *
      * @inheritdoc Ext.form.Basic#isValid
      */
-    isValid: function () {
-       return this.form.isValid();
+    isValid: function() {
+        return this.form.isValid();
     },
 
     /**
+     * @method reset
      * Convenience function reset the form. This is the same as calling
      * {@link Ext.form.Basic#reset this.getForm().reset()}.
      *
@@ -368,28 +403,29 @@ Ext.define('Ext.form.Panel', {
     reset: function(resetRecord) {
         return this.form.reset(resetRecord);
     },
-    
+
     /**
+     * @method hasInvalidField
      * Convenience function to check if the form has any invalid fields. This is the same as calling
      * {@link Ext.form.Basic#hasInvalidField this.getForm().hasInvalidField()}.
      *
      * @inheritdoc Ext.form.Basic#hasInvalidField
      */
-    hasInvalidField: function () {
+    hasInvalidField: function() {
         return this.form.hasInvalidField();
     },
 
     doDestroy: function() {
         this.stopPolling();
         this.form.destroy();
-        
+
         this.callParent();
     },
 
     /**
      * This is a proxy for the underlying BasicForm's {@link Ext.form.Basic#load} call.
-     * @param {Object} options The options to pass to the action (see {@link Ext.form.Basic#load} and
-     * {@link Ext.form.Basic#doAction} for details)
+     * @param {Object} options The options to pass to the action (see {@link Ext.form.Basic#load}
+     * and {@link Ext.form.Basic#doAction} for details)
      */
     load: function(options) {
         this.form.load(options);
@@ -397,8 +433,8 @@ Ext.define('Ext.form.Panel', {
 
     /**
      * This is a proxy for the underlying BasicForm's {@link Ext.form.Basic#submit} call.
-     * @param {Object} options The options to pass to the action (see {@link Ext.form.Basic#submit} and
-     * {@link Ext.form.Basic#doAction} for details)
+     * @param {Object} options The options to pass to the action (see {@link Ext.form.Basic#submit}
+     * and {@link Ext.form.Basic#doAction} for details)
      */
     submit: function(options) {
         this.form.submit(options);
@@ -411,13 +447,12 @@ Ext.define('Ext.form.Panel', {
      */
     startPolling: function(interval) {
         this.stopPolling();
-        var task = new Ext.util.TaskRunner(interval);
-        task.start({
-            interval: 0,
+
+        this.pollTask = Ext.util.TaskManager.start({
+            interval: interval,
             run: this.checkChange,
             scope: this
         });
-        this.pollTask = task;
     },
 
     /**
@@ -425,9 +460,10 @@ Ext.define('Ext.form.Panel', {
      */
     stopPolling: function() {
         var task = this.pollTask;
+
         if (task) {
-            task.stopAll();
-            delete this.pollTask;
+            Ext.util.TaskManager.stop(task, true);
+            this.pollTask = null;
         }
     },
 
@@ -438,7 +474,7 @@ Ext.define('Ext.form.Panel', {
     checkChange: function() {
         var fields = this.form.getFields().items,
             f,
-            fLen   = fields.length;
+            fLen = fields.length;
 
         for (f = 0; f < fLen; f++) {
             fields[f].checkChange();

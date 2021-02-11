@@ -37,8 +37,16 @@ Ext.onReady(function() {
         Ext.Date.dayNames = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
         Ext.Date.getShortDayName = function(day) {
-            if (day == 3) return "Mié";
-            if (day == 6) return "Sáb";
+            // eslint-disable-next-line eqeqeq
+            if (day == 3) {
+                return "Mié";
+            }
+
+            // eslint-disable-next-line eqeqeq
+            if (day == 6) {
+                return "Sáb";
+            }
+
             return Ext.Date.dayNames[day].substring(0, 3);
         };
 
@@ -47,11 +55,11 @@ Ext.onReady(function() {
 
         // This will match am or a.m.
         Ext.Date.parseCodes.a = Ext.Date.parseCodes.A = {
-            g:1,
-            c:"if (/(a\\.?m\\.?)/i.test(results[{0}])) {\n"
-                + "if (!h || h == 12) { h = 0; }\n"
-                + "} else { if (!h || h < 12) { h = (h || 0) + 12; }}",
-            s:"(A\\.?M\\.?|P\\.?M\\.?|a\\.?m\\.?|p\\.?m\\.?)",
+            g: 1,
+            c: "if (/(a\\.?m\\.?)/i.test(results[{0}])) {\n" +
+                "if (!h || h == 12) { h = 0; }\n" +
+                "} else { if (!h || h < 12) { h = (h || 0) + 12; }}",
+            s: "(A\\.?M\\.?|P\\.?M\\.?|a\\.?m\\.?|p\\.?m\\.?)",
             calcAtEnd: true
         };
 

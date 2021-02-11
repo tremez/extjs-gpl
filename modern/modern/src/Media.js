@@ -69,10 +69,17 @@ Ext.define('Ext.Media', {
         /**
          * @cfg {Boolean} enableControls
          * Set this to `false` to turn off the native media controls.
-         * Defaults to `false` when you are on Android, as it doesn't support controls.
+         * @accessor
+         * @deprecated 6.5 Please use {@link #controls} instead.
+         */
+        enableControls: true,
+
+        /**
+         * @cfg {Boolean} controls
+         * Set this to `false` to turn off the native media controls.
          * @accessor
          */
-        enableControls: Ext.os.is.Android ? false : true,
+        controls: true,
 
         /**
          * @cfg {Boolean} autoResume
@@ -124,20 +131,20 @@ Ext.define('Ext.Media', {
         muted: false
     },
 
-    constructor: function() {
+    constructor: function(config) {
         this.mediaEvents = {};
-        this.callParent(arguments);
+        this.callParent([config]);
     },
 
     initialize: function() {
         var me = this;
+
         me.callParent();
 
         me.on({
             scope: me,
-
-            show  : me.onActivate,
-            hide: me.onDeactivate
+            show: 'onActivate',
+            hide: 'onDeactivate'
         });
 
         me.addMediaListener({
@@ -217,14 +224,14 @@ Ext.define('Ext.Media', {
     },
 
     /**
-     * Sets the URL of the media element. If the media element already exists, it is update the src attribute of the
-     * element. If it is currently playing, it will start the new video.
+     * Sets the URL of the media element. If the media element already exists, it is update the src
+     * attribute of the element. If it is currently playing, it will start the new video.
      */
     updateUrl: function(newUrl) {
         var dom = this.media.dom;
 
-        //when changing the src, we must call load:
-        //http://developer.apple.com/library/safari/#documentation/AudioVideo/Conceptual/Using_HTML5_Audio_Video/ControllingMediaWithJavaScript/ControllingMediaWithJavaScript.html
+        // when changing the src, we must call load:
+        // http://developer.apple.com/library/safari/#documentation/AudioVideo/Conceptual/Using_HTML5_Audio_Video/ControllingMediaWithJavaScript/ControllingMediaWithJavaScript.html
 
         dom.src = newUrl;
 
@@ -241,11 +248,18 @@ Ext.define('Ext.Media', {
      * Updates the controls of the video element.
      */
     updateEnableControls: function(enableControls) {
-        this.media.dom.controls = enableControls ? 'controls' : false;
+        this.setControls(enableControls);
+    },
+
+    updateControls: function(value) {
+        this.media.set({
+            controls: value ? 'controls' : undefined
+        });
     },
 
     /**
      * Updates the loop setting of the media element.
+     * @param {Boolean} loop
      */
     updateLoop: function(loop) {
         this.media.dom.loop = loop ? 'loop' : false;
@@ -282,7 +296,8 @@ Ext.define('Ext.Media', {
     toggle: function() {
         if (this.isPlaying()) {
             this.pause();
-        } else {
+        }
+        else {
             this.play();
         }
     },
@@ -343,7 +358,7 @@ Ext.define('Ext.Media', {
 
     doDestroy: function() {
         var me = this,
-            dom  = me.media.dom,
+            dom = me.media.dom,
             mediaEvents = me.mediaEvents;
 
         Ext.Object.each(mediaEvents, function(event, fn) {
@@ -351,5 +366,15 @@ Ext.define('Ext.Media', {
         });
 
         me.callParent();
+    },
+
+    deprecated: {
+        '6.5': {
+            configs: {
+                enableControls: {
+                    message: 'Please use "controls" instead.'
+                }
+            }
+        }
     }
 });

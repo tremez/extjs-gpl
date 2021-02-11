@@ -21,8 +21,8 @@ Ext.define('Ext.event.gesture.Rotate', {
      * @member Ext.dom.Element
      * @event rotate
      * Fires continuously when there is rotation (the touch must move for this to be fired).
-     * When listening to this, ensure you know about the {@link Ext.event.Event#angle} and {@link Ext.event.Event#rotation}
-     * properties in the `event` object.
+     * When listening to this, ensure you know about the {@link Ext.event.Event#angle} and
+     * {@link Ext.event.Event#rotation} properties in the `event` object.
      * @param {Ext.event.Event} event The {@link Ext.event.Event} event encapsulating the DOM event.
      * @param {HTMLElement} node The target of the event.
      * @param {Object} options The options object passed to Ext.mixin.Observable.addListener.
@@ -80,7 +80,8 @@ Ext.define('Ext.event.gesture.Rotate', {
 
                 if (Math.abs(nextAngle - lastAngle) < diff) {
                     angle = nextAngle;
-                } else if (Math.abs(previousAngle - lastAngle) < diff) {
+                }
+                else if (Math.abs(previousAngle - lastAngle) < diff) {
                     angle = previousAngle;
                 }
             }
@@ -97,7 +98,8 @@ Ext.define('Ext.event.gesture.Rotate', {
                     angle: angle,
                     rotation: 0
                 });
-            } else {
+            }
+            else {
                 me.fire('rotate', e, {
                     touches: touches,
                     angle: angle,
@@ -130,5 +132,6 @@ Ext.define('Ext.event.gesture.Rotate', {
     }
 }, function(Rotate) {
     var gestures = Ext.manifest.gestures;
+
     Rotate.instance = new Rotate(gestures && gestures.rotate);
 });

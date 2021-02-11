@@ -3,21 +3,14 @@
  */
 
 .#{$prefix}textareafield {
-    &.#{$prefix}label-align-left, &.#{$prefix}label-align-right {
-        @include st-box-align(stretch);
-    }
-
-    .#{$prefix}body-el {
-        @include st-box;
-        @include st-box-orient(vertical);
-    }
-
-    .#{$prefix}input {
-        @include st-box-flex;
-        @include st-box-align(stretch);
-    }
+    min-height: unset;
 
     .#{$prefix}input-el {
         resize: none;
     }
+}
+
+.#{$prefix}ie11 .#{$prefix}textareafield .#{$prefix}input-el {
+    overflow: auto;
+    min-width: 0;
 }

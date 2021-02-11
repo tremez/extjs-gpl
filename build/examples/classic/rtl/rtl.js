@@ -11,13 +11,14 @@ Ext.onReady(function() {
         sentences = [],
         words = text.split(' '),
         edCfg = {
-            xtype: 'textfield'    
+            xtype: 'textfield'
         },
         paragraph;
-        
+
     while (i--) {
         sentences.push(text);
     }
+
     paragraph = sentences.join(' ');
 
     Ext.define('Fubar', {
@@ -26,14 +27,14 @@ Ext.onReady(function() {
     });
 
     // Hide the RTL Button as we already are RTL
-    Ext.ComponentManager.onAvailable('options-toolbar', function(toolbar){
+    Ext.ComponentManager.onAvailable('options-toolbar', function(toolbar) {
 
         var rtlButton = toolbar.down('button');
+
         if (rtlButton) {
             rtlButton.hide();
         }
     });
-
 
     Ext.create('Ext.container.Viewport', {
         layout: 'border',
@@ -46,7 +47,7 @@ Ext.onReady(function() {
             scrollable: true,
             collapsible: true,
             split: true
-        },{
+        }, {
             region: 'west',
             id: 'west-region',
             title: '\u0627\u0644\u0645\u0646\u0637\u0642\u0629 \u0627\u0644\u063a\u0631\u0628\u064a\u0629',
@@ -70,10 +71,12 @@ Ext.onReady(function() {
         }, {
             region: 'center',
             xtype: 'grid',
-            plugins: [new Ext.grid.plugin.RowEditing()],
+            plugins: {
+                rowediting: true
+            },
             title: '\u0645\u0631\u0643\u0632 \u0627\u0644\u0645\u0646\u0637\u0642\u0629',
             columns: [
-                { dataIndex: 'foo', text: words[0], field: edCfg},
+                { dataIndex: 'foo', text: words[0], field: edCfg },
                 { dataIndex: 'bar', text: words[1], field: edCfg },
                 { dataIndex: 'baz', text: words[2], field: edCfg },
                 { dataIndex: 'zork', text: words[3], field: edCfg },

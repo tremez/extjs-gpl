@@ -1,4 +1,4 @@
-require("../extensions/string.js");
+@import "../extensions/string.js";
 // Add in extra CSS Variables if that's your thing
 
 @if ($enable-css-variables) {
@@ -9,6 +9,7 @@ require("../extensions/string.js");
     --base-light-color: export;
     --base-dark-color: export;
     --base-pressed-color: export;
+    --base-focused-color: export;
     --base-invisible-color: export;
     --base-foreground-color: export;
     --accent-color: export;
@@ -22,21 +23,24 @@ require("../extensions/string.js");
     --alert-color: export;
     --alert-pressed-color: export;
     --color: export;
+    --reverse-color: export;
     --highlight-color: export;
     --disabled-color: export;
-    --divider-color: export;
-    --reverse-color: export;
-    --reverse-highlight-color: export;
     --reverse-disabled-color: export;
-    --reverse-divider-color: export;
+    --divider-color: export;
+    --selected-background-color: export;
+    --hovered-background-color: export;
+    --header-background-color: export;
+    --faded-color: export;
     --background-color: export;
     --alt-background-color: export;
     --reverse-background-color: export;
     --reverse-alt-background-color: export;
-    --faded-color: export;
     --overlay-color: export;
     --content-padding: export;
     --listitem-selected-background-color: export;
+    --reverse-border-color: export;
+    --reverse-alt-border-color: export;
   }
 }
 
@@ -122,3 +126,5 @@ html, body {
   font-family: 'Roboto', sans-serif;
   color: $color;
 }
+
+$loading-spinner-color: dynamic(#aaa);

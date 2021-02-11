@@ -18,18 +18,19 @@ Ext.define('Ext.rtl.panel.Bar', {
         2: 90
     },
 
-    onAdded: function (container, pos, instanced) {
+    onAdded: function(container, pos, instanced) {
         var me = this;
 
         if (me.isParentRtl()) {
             me._rotationClasses = me._rtlRotationClasses;
             me._rotationAngles = me._rtlRotationAngles;
         }
+
         this.callParent([container, pos, instanced]);
     },
 
     privates: {
-        getDockName: function () {
+        getDockName: function() {
             var me = this,
                 dock = me.dock;
 

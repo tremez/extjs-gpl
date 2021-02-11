@@ -1,6 +1,11 @@
-describe("Ext.chart.legend.sprite.Item", function () {
-    describe("layoutUpdater", function () {
-        it("should have top-left of the bounding box at (0,0)", function () {
+topSuite("Ext.chart.legend.sprite.Item", ['Ext.draw.Container'], function() {
+    beforeEach(function() {
+        // Silence warnings about Sencha download server
+        spyOn(Ext.log, 'warn');
+    });
+
+    describe("layoutUpdater", function() {
+        it("should have top-left of the bounding box at (0,0)", function() {
             // Should place children sprites so that the composite's bounding box
             // has (0,0) as its top-left corner.
             var sprite, surface, container;
@@ -37,7 +42,7 @@ describe("Ext.chart.legend.sprite.Item", function () {
             Ext.destroy(sprite, surface, container);
         });
 
-        it("should have a properly sized marker", function () {
+        it("should have a properly sized marker", function() {
             // Should have one dimension of the marker's bounding box
             // equal to the value of the marker's 'size' config,
             // and the other dimension equal or less than the value of
@@ -72,6 +77,7 @@ describe("Ext.chart.legend.sprite.Item", function () {
             container.add(surface);
 
             var marker = sprite.getMarker();
+
             var bbox = marker.getBBox();
 
             expect(bbox.width <= size).toBeTruthy();
@@ -81,7 +87,7 @@ describe("Ext.chart.legend.sprite.Item", function () {
             Ext.destroy(sprite, surface, container);
         });
 
-        it("should have properly centered label & marker", function () {
+        it("should have properly centered label & marker", function() {
             // Should have marker and label bounding boxes centered vertically
             // against each other.
             var size = 17,
@@ -113,8 +119,11 @@ describe("Ext.chart.legend.sprite.Item", function () {
             container.add(surface);
 
             var marker = sprite.getMarker();
+
             var label = sprite.getLabel();
+
             var mbb = marker.getBBox();
+
             var lbb = label.getBBox();
 
             expect(mbb.y - lbb.y).toBeCloseTo((lbb.y + lbb.height) - (mbb.y + mbb.height), precision);
@@ -122,7 +131,7 @@ describe("Ext.chart.legend.sprite.Item", function () {
             Ext.destroy(sprite, surface, container);
         });
 
-        it("should have a proper gap between label & marker", function () {
+        it("should have a proper gap between label & marker", function() {
             // Should have a gap between marker and label bounding boxes
             // equal to the value of the 'markerLabelGap' attribute.
             var size = 15,
@@ -154,8 +163,11 @@ describe("Ext.chart.legend.sprite.Item", function () {
             container.add(surface);
 
             var marker = sprite.getMarker();
+
             var label = sprite.getLabel();
+
             var mbb = marker.getBBox();
+
             var lbb = label.getBBox();
 
             expect(lbb.x - (mbb.x + mbb.width)).toBeCloseTo(sprite.attr.markerLabelGap, precision);

@@ -1,7 +1,7 @@
 /* global expect, jasmine, Ext */
 
-describe("Ext.grid.column.Check", function() {
-    var grid, container, store, col;
+topSuite("Ext.grid.column.Check", ['Ext.grid.Grid', 'Ext.data.ArrayStore', 'Ext.layout.Fit'], function() {
+    var grid, store, col;
 
     function getColCfg() {
         return {
@@ -10,7 +10,7 @@ describe("Ext.grid.column.Check", function() {
             dataIndex: 'val'
         };
     }
-    
+
     function makeGrid(columns, data, gridCfg) {
         store = new Ext.data.Store({
             model: spec.CheckColumnModel,
@@ -30,7 +30,7 @@ describe("Ext.grid.column.Check", function() {
         if (!columns) {
             columns = [getColCfg()];
         }
-        
+
         grid = new Ext.grid.Grid(Ext.apply({
             width: 200,
             height: 200,
@@ -38,38 +38,49 @@ describe("Ext.grid.column.Check", function() {
             store: store,
             columns: columns
         }, gridCfg));
-        container = grid.container;
-        grid.onContainerResize(container, { height: container.element.getHeight() });
         col = grid.getColumns()[0];
     }
-    
+
     function clickCheckbox(rowIdx, cellIdx, button, x, y) {
-        var target = getCellCheckbox(rowIdx, cellIdx);
+        var cell = new Ext.grid.Location(grid, {
+                row: rowIdx,
+                column: cellIdx || 0
+            }),
+            target = getCellCheckbox(rowIdx, cellIdx);
+
+        grid.getNavigationModel().setLocation(cell);
 
         if (Ext.supports.TouchEvents) {
             Ext.testHelper.tap(target);
-        } else {
+        }
+ else {
             jasmine.fireMouseEvent(target, 'click', x, y, button);
         }
     }
 
     function getCell(rowIdx, cellIdx) {
-        return grid.query('gridrow')[rowIdx].query('gridcell')[cellIdx || 0].el;
+        return getCellComponent(rowIdx, cellIdx, 'el');
     }
 
-    function getCellComponent(rowIdx, cellIdx) {
-        return grid.query('gridrow')[rowIdx].query('gridcell')[cellIdx || 0];
+    function getCellComponent(rowIdx, cellIdx, member) {
+        var rows = grid.query('gridrow');
+
+        var row = rows[rowIdx];
+
+        var cell = row.cells[cellIdx || 0];
+
+        return member ? cell[member] : cell;
     }
 
     function getCellCheckbox(rowIdx, cellIdx) {
-        var cell = grid.query('gridrow')[rowIdx].query('gridcell')[cellIdx || 0];
-        return cell.checkboxElement;
+        return getCellComponent(rowIdx, cellIdx, 'checkboxElement');
     }
 
     function clickHeader() {
         if (Ext.supports.TouchEvents) {
             Ext.testHelper.tap(col.checkboxElement);
-        } else {
+        }
+ else {
             jasmine.fireMouseEvent(col.checkboxElement, 'click');
         }
     }
@@ -84,14 +95,14 @@ describe("Ext.grid.column.Check", function() {
             fields: ['val']
         });
     });
-    
+
     afterEach(function() {
         Ext.destroy(grid, store);
         col = grid = store = null;
         Ext.undefine('spec.CheckColumnModel');
         Ext.data.Model.schema.clear();
     });
-    
+
     describe("check rendering", function() {
         it("should set the x-checked class on checked items", function() {
             makeGrid();
@@ -100,22 +111,23 @@ describe("Ext.grid.column.Check", function() {
             expect(getCell(2).hasCls('x-checked')).toBe(false);
         });
     });
-    
+
     describe("enable/disable", function() {
         describe("during config", function() {
             it("should not include the disabledCls if the column is not disabled", function() {
                 makeGrid();
                 expect(hasCls(getCell(0), Ext.grid.cell.Check.prototype.disabledCls)).toBe(false);
             });
-        
+
             it("should include the disabledCls if the column is disabled", function() {
                 var cfg = getColCfg();
+
                 cfg.disabled = true;
                 makeGrid([cfg]);
                 expect(hasCls(getCell(0), Ext.grid.cell.Check.prototype.disabledCls)).toBe(true);
             });
         });
-        
+
         describe("after render", function() {
             it("should add the disabledCls if disabling", function() {
                 makeGrid();
@@ -126,9 +138,10 @@ describe("Ext.grid.column.Check", function() {
                 expect(hasCls(getCell(3), Ext.grid.cell.Check.prototype.disabledCls)).toBe(true);
                 expect(hasCls(getCell(4), Ext.grid.cell.Check.prototype.disabledCls)).toBe(true);
             });
-            
+
             it("should remove the disabledCls if enabling", function() {
                 var cfg = getColCfg();
+
                 cfg.disabled = true;
                 makeGrid([cfg]);
                 col.enable();
@@ -140,12 +153,13 @@ describe("Ext.grid.column.Check", function() {
             });
         });
     });
-    
+
     describe("interaction", function() {
         describe("stopSelection", function() {
             describe("stopSelection: false", function() {
                 it("should select when a full row update is required", function() {
                     var cfg = getColCfg();
+
                     cfg.stopSelection = false;
                     // Template column always required a full update
                     makeGrid([cfg, {
@@ -154,24 +168,34 @@ describe("Ext.grid.column.Check", function() {
                         tpl: '{val}'
                     }]);
                     clickCheckbox(0);
-                    expect(grid.isSelected(store.getAt(0))).toBe(true);
+
+                    // Touch taps are delayed by 1ms to allow focus processing to perform navigation
+                    waitsFor(function() {
+                        return grid.isSelected(store.getAt(0)) === true;
+                    });
                 });
 
                 it("should select when a full row update is not required", function() {
                     var cfg = getColCfg();
+
                     cfg.stopSelection = false;
                     // Template column always required a full update
                     makeGrid([cfg, {
                         dataIndex: 'val'
                     }]);
                     clickCheckbox(0);
-                    expect(grid.isSelected(store.getAt(0))).toBe(true);
+
+                    // Touch taps are delayed by 1ms to allow focus processing to perform navigation
+                    waitsFor(function() {
+                        return grid.isSelected(store.getAt(0)) === true;
+                    });
                 });
             });
 
             describe("stopSelection: true", function() {
                 it("should not select when a full row update is required", function() {
                     var cfg = getColCfg();
+
                     cfg.stopSelection = true;
                     // Template column always required a full update
                     makeGrid([cfg, {
@@ -185,6 +209,7 @@ describe("Ext.grid.column.Check", function() {
 
                 it("should not select when a full row update is not required", function() {
                     var cfg = getColCfg();
+
                     cfg.stopSelection = true;
                     // Template column always required a full update
                     makeGrid([cfg, {
@@ -199,6 +224,7 @@ describe("Ext.grid.column.Check", function() {
         describe("events", function() {
             it("should pass the cell, record index, new checked state & record for beforecheckchange", function() {
                 var arg1, arg2, arg3, arg4;
+
                 makeGrid();
                 col.on('beforecheckchange', function(a, b, c, d) {
                     arg1 = a;
@@ -212,9 +238,10 @@ describe("Ext.grid.column.Check", function() {
                 expect(arg3).toBe(false);
                 expect(arg4).toBe(store.getAt(0));
             });
-            
+
             it("should pass the cell, record index, new checked state & record for checkchange", function() {
                 var arg1, arg2, arg3, arg4;
+
                 makeGrid();
                 col.on('checkchange', function(a, b, c, d) {
                     arg1 = a;
@@ -228,9 +255,10 @@ describe("Ext.grid.column.Check", function() {
                 expect(arg3).toBe(true);
                 expect(arg4).toBe(store.getAt(2));
             });
-            
+
             it("should not fire fire checkchange if beforecheckchange returns false", function() {
                 var called = false;
+
                 makeGrid();
                 col.on('checkchange', function(a, b, c) {
                     called = true;
@@ -242,7 +270,7 @@ describe("Ext.grid.column.Check", function() {
                 expect(called).toBe(false);
             });
         });
-        
+
         it("should invert the record value", function() {
             makeGrid();
             clickCheckbox(0);
@@ -250,9 +278,10 @@ describe("Ext.grid.column.Check", function() {
             clickCheckbox(2);
             expect(store.getAt(2).get('val')).toBe(true);
         });
-        
+
         it("should not trigger any changes when disabled", function() {
             var cfg = getColCfg();
+
             cfg.disabled = true;
             makeGrid([cfg]);
             clickCheckbox(0);
@@ -261,7 +290,7 @@ describe("Ext.grid.column.Check", function() {
             expect(store.getAt(2).get('val')).toBe(false);
         });
     });
-    
+
     describe('Header checkbox', function() {
         beforeEach(function() {
             var ready;
@@ -283,6 +312,30 @@ describe("Ext.grid.column.Check", function() {
             waits(100);
         });
 
+        it("should be false by default", function() {
+            grid.destroy();
+            makeGrid([{
+                xtype: 'checkcolumn',
+                text: 'Checked',
+                dataIndex: 'val'
+            }]);
+
+            expect(col.getHeaderCheckbox()).toBe(false);
+        });
+
+        it("should allow sortable false when disabled", function() {
+            grid.destroy();
+            makeGrid([{
+                xtype: 'checkcolumn',
+                headerCheckbox: false,
+                text: 'Checked',
+                dataIndex: 'val',
+                sortable: false
+            }]);
+
+            expect(col.getSortable()).toBe(false);
+        });
+
         it('should toggle all on header checkbox click', function() {
             var headercheckchangeCount = 0;
 
@@ -301,9 +354,10 @@ describe("Ext.grid.column.Check", function() {
             // Header checkbox is updated on a timer for efficiency, so must wait
             waitsFor(function() {
                 expect(headercheckchangeCount).toBe(1);
+
                 return col.el.hasCls(col.checkedCls) === true;
             });
-            
+
             runs(function() {
                 // Test deselecting all
                 clickHeader();
@@ -315,6 +369,7 @@ describe("Ext.grid.column.Check", function() {
             // Header checkbox is updated on a timer for efficiency, so must wait
             waitsFor(function() {
                 expect(headercheckchangeCount).toBe(2);
+
                 return col.el.hasCls(col.checkedCls) === false;
             });
         });
@@ -413,7 +468,7 @@ describe("Ext.grid.column.Check", function() {
             // Nothing should happen.
             // We are expecting the header checkbox state to remain false
             waits(100);
-            
+
             runs(function() {
                 expect(col.el.hasCls(col.checkedCls)).toBe(false);
                 store.getAt(4).set('val', true);

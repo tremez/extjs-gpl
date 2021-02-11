@@ -1,4 +1,4 @@
-describe("Ext.picker.Time", function() {
+topSuite("Ext.picker.Time", function() {
     var component, makeComponent;
 
     beforeEach(function() {
@@ -10,7 +10,7 @@ describe("Ext.picker.Time", function() {
         };
     });
 
-    function componentHasTimes () {
+    function componentHasTimes() {
         return component.rendered && component.all.elements.length;
     }
 
@@ -18,12 +18,9 @@ describe("Ext.picker.Time", function() {
         if (component) {
             component.destroy();
         }
+
         component = makeComponent = null;
     });
-
-
-
-    ///// SPECS /////
 
     it("should extend Ext.BoundList", function() {
         makeComponent();
@@ -56,7 +53,6 @@ describe("Ext.picker.Time", function() {
         });
     });
 
-
     describe("rendering", function() {
         it("should render items", function() {
             makeComponent();
@@ -64,7 +60,7 @@ describe("Ext.picker.Time", function() {
             runs(function() {
                 expect(component.getNodes().length).toEqual(96);
             });
-            
+
         });
 
         it("should render formatted times into the items", function() {
@@ -72,6 +68,7 @@ describe("Ext.picker.Time", function() {
             waitsFor(componentHasTimes);
             runs(function() {
                 var nodes = component.getNodes();
+
                 expect(nodes[0]).hasHTML('12:00 AM');
                 expect(nodes[nodes.length - 1]).hasHTML('11:45 PM');
             });
@@ -88,7 +85,6 @@ describe("Ext.picker.Time", function() {
         });
     });
 
-
     describe("increment", function() {
         it("should set the number of minutes between times in the list", function() {
             makeComponent({
@@ -97,6 +93,7 @@ describe("Ext.picker.Time", function() {
             waitsFor(componentHasTimes);
             runs(function() {
                 var nodes = component.getNodes();
+
                 expect(nodes.length).toEqual(48);
                 expect(nodes[1]).hasHTML('12:30 AM');
                 expect(nodes[nodes.length - 1]).hasHTML('11:30 PM');
@@ -104,21 +101,23 @@ describe("Ext.picker.Time", function() {
         });
     });
 
-
     describe("minValue", function() {
         it("should be used as the minimum time in the list", function() {
             var date = new Date('1/1/2011 06:30:00');
+
             // opera 10.5 awful bug fix !!!
             if (jasmine.browser.isOpera) {
                 date.setSeconds(0);
                 date.setMilliseconds(0);
             }
+
             makeComponent({
                 minValue: date
             });
             waitsFor(componentHasTimes);
             runs(function() {
                 var nodes = component.getNodes();
+
                 expect(nodes[0]).hasHTML('6:30 AM');
             });
         });
@@ -139,11 +138,13 @@ describe("Ext.picker.Time", function() {
                     minValue: new Date('1/1/2011 06:30:00')
                 });
                 var newMinValue = new Date('1/1/2011 08:45:00');
+
                 // opera 10.5 awful bug fix !!!
                 if (jasmine.browser.isOpera) {
                     newMinValue.setSeconds(0);
                     newMinValue.setMilliseconds(0);
                 }
+
                 component.setMinValue(newMinValue);
                 expect(component.getNodes().length).toEqual(61);
                 expect(component.getNode(0)).hasHTML('8:45 AM');
@@ -159,6 +160,7 @@ describe("Ext.picker.Time", function() {
             waitsFor(componentHasTimes);
             runs(function() {
                 var nodes = component.getNodes();
+
                 expect(nodes[nodes.length - 1]).hasHTML('9:30 PM');
             });
         });
@@ -169,6 +171,7 @@ describe("Ext.picker.Time", function() {
                     maxValue: new Date('1/1/2011 21:30:00')
                 });
                 var newMaxValue = new Date('1/1/2011 13:15:00');
+
                 component.setMaxValue(newMaxValue);
                 expect(component.maxValue).toEqual(newMaxValue);
             });
@@ -178,13 +181,13 @@ describe("Ext.picker.Time", function() {
                     maxValue: new Date('1/1/2011 21:30:00')
                 });
                 var newMaxValue = new Date('1/1/2011 13:15:00');
+
                 component.setMaxValue(newMaxValue);
                 var nodes = component.getNodes();
+
                 expect(nodes.length).toEqual(54);
                 expect(nodes[nodes.length - 1]).hasHTML('1:15 PM');
             });
         });
     });
-
-
 });

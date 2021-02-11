@@ -1,44 +1,78 @@
-describe("Ext.util.TaskRunner", function() {
+topSuite("Ext.util.TaskRunner", [
+    'Ext.GlobalEvents'
+], function() {
     var spy, runner, task;
 
     describe("idle event", function() {
+        var calls;
+
+        function onIdle() {
+            var timer = Ext.Timer.firing;
+
+            if (timer && !timer.ours) {
+                var s = timer.creator;
+
+                if (timer.runner) {
+                    Ext.each(timer.runner.fired, function(task) {
+                        s += '\n-----------------------';
+                        s += 'Task:';
+                        s += task.creator;
+                        s += '\n-----------------------';
+                    });
+                }
+
+                expect(s).toBe('not running');
+            }
+            else {
+                expect(new Error().stack).toBe('not called');
+            }
+        }
+
         beforeEach(function() {
-            spy = jasmine.createSpy('idle');
-            
-            Ext.on('idle', spy);
+            Ext.on('idle', onIdle);
+            calls = [];
         });
-        
+
         afterEach(function() {
-            Ext.un('idle', spy);
-            
+            Ext.un('idle', onIdle);
+            calls = null;
+
             if (runner) {
                 runner.destroy();
             }
-            
+
             task = runner = spy = null;
         });
-        
+
         // https://sencha.jira.com/browse/EXTJS-19133
-        it("it should not fire idle event when configured", function() {
+        // IE8 does not allow capturing stack trace so always fails
+        // This test is also fails consistently on tablets
+        (Ext.isIE8 || Ext.isiOS || Ext.isAndroid ? xit : it)("it should not fire idle event when configured", function() {
             runs(function() {
                 runner = new Ext.util.TaskRunner({
                     fireIdleEvent: false
                 });
-                
+
                 task = runner.newTask({
                     fireIdleEvent: false,
                     interval: 10,
                     run: Ext.emptyFn
                 });
-                
+
                 task.start();
+
+                var timer = Ext.Timer.get(runner.timerId);
+
+                if (timer) {
+                    timer.ours = true;
+                }
             });
-            
+
             // This should be enough to trip the event, happens fairly often in IE
             waits(300);
-            
+
             runs(function() {
-                expect(spy).not.toHaveBeenCalled();
+                expect(calls).toEqual([]);
             });
         });
     });
@@ -61,9 +95,10 @@ describe("Ext.util.TaskRunner", function() {
             task = runner.newTask({
                 interval: 10,
                 run: spy,
-                args: ['Foo']
+                args: ['Foo'],
+                repeat: 1
             });
-            
+
             task.start();
 
             waitsFor(function() {
@@ -80,9 +115,10 @@ describe("Ext.util.TaskRunner", function() {
                 interval: 10,
                 run: spy,
                 addCountToArgs: true,
-                args: ['Foo']
+                args: ['Foo'],
+                repeat: 1
             });
-            
+
             task.start();
 
             waitsFor(function() {
@@ -101,10 +137,10 @@ describe("Ext.util.TaskRunner", function() {
                 args: ['Foo'],
                 repeat: 2
             });
-            
+
             task.start();
 
-            waitsFor(function(){
+            waitsFor(function() {
                 return task.stopped;
             });
 

@@ -2,12 +2,12 @@
  * @class Global_CSS
  */
 
-require('icon');
+@import 'icon.js';
 
 /**
  * Generates style rules for an icon element
  *
- * @param {list/string} $glyph
+ * @param {list/string} $icon
  * A unicode character to use as the icon, or a list specifying the character to use
  * followed by font-family and degrees of rotation (90, 180, or 270).
  * All parameters in the list are optional except for glyph.  For example, each of the
@@ -31,6 +31,7 @@ require('icon');
  *     @include font-icon('\0041' FontAwesome 90);
  *
  * @param {color} $color
+ * The color to apply to the element which is containing the icon. See $pseudo-color below
  *
  * @param {number} $size
  * The size of the icon element
@@ -47,12 +48,20 @@ require('icon');
  * Applied to the :before pseudo element so that it does not affect `$size-big` when
  * `$size-big` is specified in `em` units.
  *
+ * @param {booleab} $style-pseudo
+ * Specify as `true` to apply the `$color` and `$size` parameters to the pseudo element
+ * which carries the icon rather than to its encapsulating element.
+ *
  * @private
  */
 @mixin icon(
-    $icon,
-    $font-size,
-    $font-size-big
+    $icon: null,
+    $color: null,
+    $size: null,
+    $size-big: null,
+    $font-size: null,
+    $font-size-big: null,
+    $style-pseudo: false
 ) {
     $args: parseIconArgs($icon);
 
@@ -60,7 +69,40 @@ require('icon');
     $font-family: nth($args, 2);
     $rotation: nth($args, 3);
 
+    @if $font-size == null {
+        $font-size: $size;
+    }
+
+    @if $font-size-big == null {
+        $font-size-big: $size-big;
+    }
+
+    @if not $style-pseudo {
+        color: $color;
+        width: $size;
+        height: $size;
+
+        @if $enable-big {
+            .#{$prefix}big & {
+                width: $size-big;
+                height: $size-big;
+            }
+        }
+    }
+
     &:before {
+        @if $style-pseudo {
+            color: $color;
+            width: $size;
+            height: $size;
+
+            @if $enable-big {
+                .#{$prefix}big & {
+                    width: $size-big;
+                    height: $size-big;
+                }
+            }
+        }
         content: $char;
         font-family: $font-family;
         font-size: $font-size;

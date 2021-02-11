@@ -1,0 +1,9 @@
+@if $theme-name == 'theme-material' {
+    .remote-combo {
+        .#{$prefix}component {
+            p {
+                text-align: justify;
+            }
+        }
+    }
+}

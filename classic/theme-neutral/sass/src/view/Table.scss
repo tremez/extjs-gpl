@@ -7,6 +7,11 @@
     z-index: 1;
 }
 
+// So that we can easily ascertain the default theme grid row height once per app run.
+.#{$prefix}theme-row-height-el {
+    height: $grid-row-height;
+}
+
 .#{$prefix}grid-body {
     background: $grid-body-background-color;
     border-width: $grid-body-border-width;
@@ -48,28 +53,30 @@
         // so setting z-index: 1 will elevate it just above default position
         z-index: 1;
     }
-    
-    // Pseudo-el is positioned *below* the inner grid cell content
-    // but its border will shine through
-    .#{$prefix}grid-cell-inner:before {
-        content: "";
-        position: absolute;
-        z-index: -1;
-        top: $grid-row-cell-focus-border-inset;
-        right: $grid-row-cell-focus-border-inset;
-        bottom: $grid-row-cell-focus-border-inset;
-        left: $grid-row-cell-focus-border-inset;
-        pointer-events: none;
 
-        border: $grid-row-cell-focus-border-width $grid-row-cell-focus-border-style $grid-row-cell-focus-border-color;
-    }
-    
-    @if not is-null($grid-row-cell-focus-color) {
-        color: $grid-row-cell-focus-color;
-    }
-    
-    @if not is-null($grid-row-cell-focus-background-color) {
-        background-color: $grid-row-cell-focus-background-color;
+    .#{$prefix}keyboard-mode & {
+        // Pseudo-el is positioned *below* the inner grid cell content
+        // but its border will shine through
+        .#{$prefix}grid-cell-inner:before {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            top: $grid-row-cell-focus-border-inset;
+            right: $grid-row-cell-focus-border-inset;
+            bottom: $grid-row-cell-focus-border-inset;
+            left: $grid-row-cell-focus-border-inset;
+            pointer-events: none;
+
+            border: $grid-row-cell-focus-border-width $grid-row-cell-focus-border-style $grid-row-cell-focus-border-color;
+        }
+
+        @if not is-null($grid-row-cell-focus-color) {
+            color: $grid-row-cell-focus-color;
+        }
+
+        @if not is-null($grid-row-cell-focus-background-color) {
+            background-color: $grid-row-cell-focus-background-color;
+        }
     }
 }
 

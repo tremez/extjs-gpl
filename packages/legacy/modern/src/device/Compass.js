@@ -42,6 +42,7 @@ Ext.define('Ext.device.Compass', {
 
     constructor: function() {
         var browserEnv = Ext.browser.is;
+
         if (browserEnv.WebView && browserEnv.Cordova) {
             return Ext.create('Ext.device.compass.Cordova');
         }

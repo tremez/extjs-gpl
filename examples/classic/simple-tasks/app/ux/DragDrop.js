@@ -11,7 +11,7 @@ Ext.define('SimpleTasks.ux.DragDrop', {
     requires: [
         'Ext.view.DragZone',
         'SimpleTasks.ux.DropZone'
-    ], 
+    ],
 
     /**
      * @event taskdrop
@@ -32,7 +32,7 @@ Ext.define('SimpleTasks.ux.DragDrop', {
      * @param {String} position                 `"before"` or `"after"` depending on whether the mouse is above or below the midline of the node.
      */
 
-    onViewRender : function(view) {
+    onViewRender: function(view) {
         var me = this;
 
         if (me.enableDrag) {

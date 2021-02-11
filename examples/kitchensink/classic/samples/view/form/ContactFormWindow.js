@@ -1,12 +1,10 @@
 Ext.define('KitchenSink.view.form.ContactFormWindow', {
     extend: 'Ext.window.Window',
     xtype: 'form-contact-window',
-    
+
     reference: 'popupWindow',
-    
+
     title: 'Contact Us',
-    width: 400,
-    height: 500,
     minWidth: 300,
     minHeight: 380,
     layout: 'fit',
@@ -14,7 +12,32 @@ Ext.define('KitchenSink.view.form.ContactFormWindow', {
     modal: true,
     defaultFocus: 'firstName',
     closeAction: 'hide',
-    
+
+    profiles: {
+        classic: {
+            height: 500,
+            firstNamefieldMargin: '0',
+            namefieldMargin: '0 0 0 5'
+        },
+        neptune: {
+            height: 500,
+            firstNamefieldMargin: '0',
+            namefieldMargin: '0 0 0 5'
+        },
+        graphite: {
+            height: 600,
+            firstNamefieldMargin: '0',
+            namefieldMargin: '0 0 0 5'
+        },
+        'classic-material': {
+            height: 700,
+            firstNamefieldMargin: '10 0 0 0',
+            namefieldMargin: '10 0 0 5'
+        }
+    },
+
+    width: 400,
+
     items: [{
         xtype: 'form',
         reference: 'windowForm',
@@ -31,11 +54,11 @@ Ext.define('KitchenSink.view.form.ContactFormWindow', {
             labelWidth: 100,
             labelStyle: 'font-weight:bold'
         },
-        
+
         items: [{
             xtype: 'fieldcontainer',
             fieldLabel: 'Your Name',
-            labelStyle: 'font-weight:bold;padding:0;',
+            labelStyle: 'font-weight:bold; padding:0;',
             layout: 'hbox',
             defaultType: 'textfield',
 
@@ -51,12 +74,14 @@ Ext.define('KitchenSink.view.form.ContactFormWindow', {
                     '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
                 ],
                 fieldLabel: 'First',
-                allowBlank: false
+                allowBlank: false,
+                margin: '${firstNamefieldMargin}'
             }, {
                 width: 30,
                 name: 'middleInitial',
                 fieldLabel: 'MI',
-                margin: '0 0 0 5'
+                cls: 'contact-form-window-middle-name',
+                margin: '${namefieldMargin}'
             }, {
                 flex: 2,
                 name: 'lastName',
@@ -65,7 +90,8 @@ Ext.define('KitchenSink.view.form.ContactFormWindow', {
                 ],
                 fieldLabel: 'Last',
                 allowBlank: false,
-                margin: '0 0 0 5'
+                cls: 'contact-form-window-last-name',
+                margin: '${namefieldMargin}'
             }]
         }, {
             xtype: 'textfield',

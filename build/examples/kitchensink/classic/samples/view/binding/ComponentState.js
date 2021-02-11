@@ -15,7 +15,7 @@ Ext.define('KitchenSink.view.binding.ComponentState', {
         xtype: 'checkbox',
         boxLabel: 'Is Admin',
         reference: 'isAdmin'
-    },{
+    }, {
         xtype: 'textfield',
         fieldLabel: 'Admin Key',
         anchor: '0',

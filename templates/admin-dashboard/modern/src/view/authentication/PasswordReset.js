@@ -3,39 +3,34 @@ Ext.define('Admin.view.authentication.PasswordReset', {
     xtype: 'passwordreset',
 
     requires: [
-        'Ext.field.Text'
+        'Ext.field.Email'
     ],
 
     items: [{
-        xtype:'panel',
-        padding:20,
-
+        xtype: 'panel',
+        bodyPadding: 20,
+        defaults: {
+            margin: '0 0 10 0'
+        },
         items: [{
-            html: 'Forgot Password',
-            padding: '0 0 10 0'
-        },{
-            xtype:'container',
-            defaults: {
-                margin:'0 0 10 0'
-            },
-            items: [{
-                xtype: 'textfield',
-                minWidth: 300,
-                placeHolder: 'example@example.com',
-                ui: 'light'
-            },{
-                xtype: 'button',
-                text: 'Reset Password',
-                iconAlign: 'right',
-                iconCls: 'x-fa fa-angle-right',
-                ui: 'action',
-                width: '100%',
-                handler: function(){
-                    window.location.href = "#dashboard";
-                }
-            },{
-                html: '<a href="#login">Back to Login</a>'
-            }]
+            xtype: 'component',
+            html: 'Forgot Password'
+        }, {
+            xtype: 'emailfield',
+            minWidth: 300,
+            placeholder: 'example@example.com'
+        }, {
+            xtype: 'button',
+            text: 'Reset Password',
+            iconAlign: 'right',
+            iconCls: 'x-fa fa-angle-right',
+            ui: 'action',
+            width: '100%',
+            handler: 'goToDashboard'
+        }, {
+            xtype: 'component',
+            margin: 0,
+            html: '<a href="#login">Back to Login</a>'
         }]
     }]
 });

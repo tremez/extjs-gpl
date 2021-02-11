@@ -3,13 +3,13 @@ Ext.define('KitchenSink.view.tree.TreeListController', {
 
     alias: 'controller.tree-list',
 
-    onToggleConfig: function (menuitem) {
+    onToggleConfig: function(menuitem) {
         var treelist = this.lookupReference('treelist');
 
         treelist.setConfig(menuitem.config, menuitem.checked);
     },
 
-    onToggleMicro: function (button, pressed) {
+    onToggleMicro: function(button, pressed) {
         var treelist = this.lookupReference('treelist'),
             navBtn = this.lookupReference('navBtn'),
             ct = treelist.ownerCt;
@@ -21,7 +21,8 @@ Ext.define('KitchenSink.view.tree.TreeListController', {
             navBtn.disable();
             this.oldWidth = ct.width;
             ct.setWidth(44);
-        } else {
+        }
+        else {
             ct.setWidth(this.oldWidth);
             navBtn.enable();
         }
@@ -39,7 +40,7 @@ Ext.define('KitchenSink.view.tree.TreeListController', {
         }
     },
 
-    onToggleNav: function (button, pressed) {
+    onToggleNav: function(button, pressed) {
         var treelist = this.lookupReference('treelist'),
             ct = this.lookupReference('treelistContainer');
 
@@ -47,22 +48,22 @@ Ext.define('KitchenSink.view.tree.TreeListController', {
         treelist.setUi(pressed ? 'nav' : null);
         treelist.setHighlightPath(pressed);
         ct[pressed ? 'addCls' : 'removeCls']('treelist-with-nav');
-        
+
         if (Ext.isIE8) {
             this.repaintList(treelist);
         }
     },
-    
+
     repaintList: function(treelist, microMode) {
         treelist.getStore().getRoot().cascade(function(node) {
             var item, toolElement;
-            
+
             item = treelist.getItem(node);
-            
+
             if (item && item.isTreeListItem) {
                 if (microMode) {
                     toolElement = item.getToolElement();
-                    
+
                     if (toolElement && toolElement.isVisible(true)) {
                         toolElement.syncRepaint();
                     }

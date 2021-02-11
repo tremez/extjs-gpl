@@ -30,7 +30,8 @@ Ext.onReady(function() {
         Ext.Date.getMonthNumber = function(name) {
             if (name.match(/^(1?\d)\./)) {
                 return -1 + RegExp.$1;
-            } else {
+            }
+            else {
                 return Ext.Date.monthNumbers[name];
             }
         };
@@ -50,13 +51,19 @@ Ext.onReady(function() {
             // Finnish Euro
             dateFormat: 'j.n.Y'
         });
-        
+
         Ext.util.Format.date = function(v, format) {
-            if (!v) return "";
-            if (!(v instanceof Date)) v = new Date(Date.parse(v));
+            if (!v) {
+                return "";
+            }
+
+            if (!(v instanceof Date)) {
+                v = new Date(Date.parse(v));
+            }
+
             return Ext.Date.format(v, format || "j.n.Y");
         };
-        
+
     }
 });
 
@@ -279,10 +286,10 @@ Ext.define("Ext.locale.fi.window.MessageBox", {
         cancel: "Peruuta",
         yes: "Kyllä",
         no: "Ei"
-    }    
+    }
 });
 
 // This is needed until we can refactor all of the locales into individual files
-Ext.define("Ext.locale.fi.Component", {	
+Ext.define("Ext.locale.fi.Component", {
     override: "Ext.Component"
 });

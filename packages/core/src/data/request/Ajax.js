@@ -5,14 +5,13 @@
  */
 Ext.define('Ext.data.request.Ajax', {
     extend: 'Ext.data.request.Base',
-    alias:  'request.ajax',
-    
+    alias: 'request.ajax',
+
     requires: [
         'Ext.data.flash.BinaryXhr'
     ],
 
     statics: {
-
         /**
          * Checks if the response status was successful
          * @param {Number} status The status code
@@ -21,22 +20,34 @@ Ext.define('Ext.data.request.Ajax', {
          * @private
          */
         parseStatus: function(status, response) {
-            var len;
+            var type, len, success, isException;
 
             if (response) {
-                //We have to account for binary response type
-                if (response.responseType === 'arraybuffer') {
+                // We have to account for binary and other response types
+                type = response.responseType;
+
+                if (type === 'arraybuffer') {
                     len = response.byteLength;
-                } else if (response.responseText) {
+                }
+                else if (type === 'blob') {
+                    len = response.response.size;
+                }
+                else if ((type === 'json' || type === 'document') && response.response) {
+                    len = 0;
+                }
+                else if ((type === 'text' || type === '' || !type) && response.responseText) {
                     len = response.responseText.length;
                 }
             }
 
             // see: https://prototype.lighthouseapp.com/projects/8886/tickets/129-ie-mangles-http-response-status-code-204-to-1223
-            status = status == 1223 ? 204 : status;
+            status = status === 1223 ? 204 : status;
 
-            var success = (status >= 200 && status < 300) || status == 304 || (status == 0 && Ext.isNumber(len)),
-                isException = false;
+            isException = false;
+
+            // Status can be 0 for file:/// requests
+            success = (status >= 200 && status < 300) || status === 304 ||
+                      (status === 0 && Ext.isNumber(len));
 
             if (!success) {
                 switch (status) {
@@ -57,44 +68,44 @@ Ext.define('Ext.data.request.Ajax', {
             };
         }
     },
-    
+
     start: function(data) {
         var me = this,
             options = me.options,
             requestOptions = me.requestOptions,
             isXdr = me.isXdr,
-            xhr, headers;
-        
+            xhr;
+
         xhr = me.xhr = me.openRequest(options, requestOptions, me.async, me.username, me.password);
 
         // XDR doesn't support setting any headers
         if (!isXdr) {
-            headers = me.setupHeaders(xhr, options, requestOptions.data, requestOptions.params);
+            me.setupHeaders(xhr, options, requestOptions.data, requestOptions.params);
         }
 
         if (me.async) {
             if (!isXdr) {
-                xhr.onreadystatechange = Ext.Function.bind(me.onStateChange, me);
+                xhr.onreadystatechange = me.bindStateChange();
             }
         }
 
         if (isXdr) {
             me.processXdrRequest(me, xhr);
         }
-        
+
         // Parent will set the timeout if needed
         me.callParent([data]);
-        
+
         // start the request!
         xhr.send(data);
-        
+
         if (!me.async) {
             return me.onComplete();
         }
-        
+
         return me;
     },
-    
+
     /**
      * Aborts an active request.
      */
@@ -116,16 +127,16 @@ Ext.define('Ext.data.request.Ajax', {
                 // http://www.quirksmode.org/blog/archives/2005/09/xmlhttp_notes_a_1.html
                 xhr.onreadystatechange = Ext.emptyFn;
             }
-            
+
             xhr.abort();
-            
+
             me.callParent([force]);
-            
+
             me.onComplete();
             me.cleanup();
         }
     },
-    
+
     /**
      * Cleans up any left over information from the request
      */
@@ -133,7 +144,7 @@ Ext.define('Ext.data.request.Ajax', {
         this.xhr = null;
         delete this.xhr;
     },
-    
+
     isLoading: function() {
         var me = this,
             xhr = me.xhr,
@@ -159,19 +170,19 @@ Ext.define('Ext.data.request.Ajax', {
      * of the parameters and options and return a suitable, open connection.
      * @private
      */
-    openRequest: function(options, requestOptions, async, username, password) {
+    openRequest: function(options, requestOptions, isAsync, username, password) {
         var me = this,
             xhr = me.newRequest(options);
 
         if (username) {
-            xhr.open(requestOptions.method, requestOptions.url, async, username, password);
+            xhr.open(requestOptions.method, requestOptions.url, isAsync, username, password);
         }
         else {
             if (me.isXdr) {
                 xhr.open(requestOptions.method, requestOptions.url);
             }
             else {
-                xhr.open(requestOptions.method, requestOptions.url, async);
+                xhr.open(requestOptions.method, requestOptions.url, isAsync);
             }
         }
 
@@ -184,13 +195,17 @@ Ext.define('Ext.data.request.Ajax', {
                 // support Uint8Array, a mime type override is required so that
                 // the unprocessed binary data can be read from the responseText
                 // (see createResponse())
-                xhr.overrideMimeType('text\/plain; charset=x-user-defined');
+                xhr.overrideMimeType('text/plain; charset=x-user-defined');
             //<debug>
             }
             else if (!Ext.isIE) {
                 Ext.log.warn("Your browser does not support loading binary data using Ajax.");
             //</debug>
             }
+        }
+
+        if (options.responseType) {
+            xhr.responseType = options.responseType;
         }
 
         if (options.withCredentials || me.withCredentials) {
@@ -212,7 +227,6 @@ Ext.define('Ext.data.request.Ajax', {
         if (options.binaryData) {
             // This is a binary data request. Handle submission differently for differnet browsers
             if (window.Uint8Array) {
-                // On browsers that support this, use the native XHR object
                 xhr = me.getXhrInstance();
             }
             else {
@@ -264,7 +278,7 @@ Ext.define('Ext.data.request.Ajax', {
                     }
                 }
             }
-            
+
             headers[type] = contentType;
         }
 
@@ -287,11 +301,11 @@ Ext.define('Ext.data.request.Ajax', {
                 }
             }
         }
-        catch(e) {
+        catch (e) {
             // TODO Request shouldn't fire events from its owner
             me.owner.fireEvent('exception', key, header);
         }
-        
+
         return headers;
     },
 
@@ -306,7 +320,7 @@ Ext.define('Ext.data.request.Ajax', {
         var xdr;
 
         if (Ext.ieVersion >= 8) {
-            xdr = new XDomainRequest();
+            xdr = new XDomainRequest(); // eslint-disable-line no-undef
         }
         else {
             Ext.raise({
@@ -318,32 +332,12 @@ Ext.define('Ext.data.request.Ajax', {
     },
 
     /**
-     * Creates the appropriate XHR transport for this browser.
      * @private
+     * Do not remove this method. This is where Ajax simulator injects request stubs.
      */
-    getXhrInstance: (function() {
-        var options = [function() {
-            return new XMLHttpRequest();
-        }, function() {
-            return new ActiveXObject('MSXML2.XMLHTTP.3.0'); // jshint ignore:line
-        }, function() {
-            return new ActiveXObject('MSXML2.XMLHTTP'); // jshint ignore:line
-        }, function() {
-            return new ActiveXObject('Microsoft.XMLHTTP'); // jshint ignore:line
-        }], i = 0,
-            len = options.length,
-            xhr;
-
-        for (; i < len; ++i) {
-            try {
-                xhr = options[i];
-                xhr();
-                break;
-            } catch(e) {
-            }
-        }
-        return xhr;
-    }()),
+    getXhrInstance: function() {
+        return new XMLHttpRequest();
+    },
 
     processXdrRequest: function(request, xhr) {
         var me = this;
@@ -353,8 +347,8 @@ Ext.define('Ext.data.request.Ajax', {
 
         request.contentType = request.options.contentType || me.defaultXdrContentType;
 
-        xhr.onload = Ext.Function.bind(me.onStateChange, me, [true]);
-        xhr.onerror = xhr.ontimeout = Ext.Function.bind(me.onStateChange, me, [false]);
+        xhr.onload = me.bindStateChange(true);
+        xhr.onerror = xhr.ontimeout = me.bindStateChange(false);
     },
 
     processXdrResponse: function(response, xhr) {
@@ -362,36 +356,41 @@ Ext.define('Ext.data.request.Ajax', {
         response.getAllResponseHeaders = function() {
             return [];
         };
-        
+
         response.getResponseHeader = function() {
             return '';
         };
-        
+
         response.contentType = xhr.contentType || this.defaultXdrContentType;
+    },
+
+    bindStateChange: function(xdrResult) {
+        var me = this;
+
+        return function() {
+            Ext.elevate(function() {
+                me.onStateChange(xdrResult);
+            });
+        };
     },
 
     onStateChange: function(xdrResult) {
         var me = this,
-            xhr = me.xhr,
-            globalEvents = Ext.GlobalEvents;
+            xhr = me.xhr;
 
         // Using CORS with IE doesn't support readyState so we fake it.
-        if ((xhr && xhr.readyState == 4) || me.isXdr) {
+        if ((xhr && xhr.readyState === 4) || me.isXdr) {
             me.clearTimer();
-            
+
             me.onComplete(xdrResult);
-            
+
             me.cleanup();
-            
-            if (globalEvents.hasListeners.idle) {
-                globalEvents.fireEvent('idle');
-            }
         }
     },
-    
+
     /**
      * To be called when the request has come back from the server
-     * @param {Object} request
+     * @param {Object} xdrResult
      * @return {Object} The response
      * @private
      */
@@ -402,14 +401,14 @@ Ext.define('Ext.data.request.Ajax', {
             xhr = me.xhr,
             failure = { success: false, isException: false },
             result, success, response;
-        
+
         if (!xhr || me.destroyed) {
             return me.result = failure;
         }
-        
+
         try {
             result = Ext.data.request.Ajax.parseStatus(xhr.status, xhr);
-            
+
             if (result.success) {
                 // This is quite difficult to reproduce, however if we abort a request
                 // just before it returns from the server, occasionally the status will be
@@ -422,16 +421,16 @@ Ext.define('Ext.data.request.Ajax', {
             // so the request has failed
             result = failure;
         }
-        
+
         success = me.success = me.isXdr ? xdrResult : result.success;
 
         if (success) {
             response = me.createResponse(xhr);
-            
+
             if (owner.hasListeners.requestcomplete) {
                 owner.fireEvent('requestcomplete', owner, response, options);
             }
-            
+
             if (options.success) {
                 Ext.callback(options.success, options.scope, [response, options]);
             }
@@ -443,32 +442,32 @@ Ext.define('Ext.data.request.Ajax', {
             else {
                 response = me.createResponse(xhr);
             }
-            
+
             if (owner.hasListeners.requestexception) {
                 owner.fireEvent('requestexception', owner, response, options);
             }
-            
+
             if (options.failure) {
                 Ext.callback(options.failure, options.scope, [response, options]);
             }
         }
-        
+
         me.result = response;
-        
+
         if (options.callback) {
             Ext.callback(options.callback, options.scope, [options, success, response]);
         }
-        
+
         owner.onRequestComplete(me);
-        
+
         me.callParent([xdrResult]);
-        
+
         return response;
     },
 
     /**
      * Creates the response object
-     * @param {Object} request
+     * @param {Object} xhr
      * @private
      */
     createResponse: function(xhr) {
@@ -477,23 +476,23 @@ Ext.define('Ext.data.request.Ajax', {
             headers = {},
             lines = isXdr ? [] : xhr.getAllResponseHeaders().replace(/\r\n/g, '\n').split('\n'),
             count = lines.length,
-            line, index, key, response, byteArray;
+            line, index, key, response;
 
         while (count--) {
             line = lines[count];
             index = line.indexOf(':');
-            
+
             if (index >= 0) {
                 key = line.substr(0, index).toLowerCase();
-                
-                if (line.charAt(index + 1) == ' ') {
+
+                if (line.charAt(index + 1) === ' ') {
                     ++index;
                 }
-                
+
                 headers[key] = line.substr(index + 1);
             }
         }
-        
+
         response = {
             request: me,
             requestId: me.id,
@@ -515,12 +514,27 @@ Ext.define('Ext.data.request.Ajax', {
             response.responseBytes = me.getByteArray(xhr);
         }
         else {
-            // an error is thrown when trying to access responseText or responseXML
-            // on an xhr object with responseType of 'arraybuffer', so only attempt
-            // to set these properties in the response if we're not dealing with
-            // binary data
-            response.responseText = xhr.responseText;
-            response.responseXML = xhr.responseXML;
+            if (xhr.responseType) {
+                response.responseType = xhr.responseType;
+            }
+
+            if (xhr.responseType === 'blob') {
+                response.responseBlob = xhr.response;
+            }
+            else if (xhr.responseType === 'json') {
+                response.responseJson = xhr.response;
+            }
+            else if (xhr.responseType === 'document') {
+                response.responseXML = xhr.response;
+            }
+            else {
+                // an error is thrown when trying to access responseText or responseXML
+                // on an xhr object with responseType with any value but "text" or "",
+                // so only attempt to set these properties in the response if we're not
+                // dealing with other specified response types
+                response.responseText = xhr.responseText;
+                response.responseXML = xhr.responseXML;
+            }
         }
 
         return response;
@@ -528,10 +542,10 @@ Ext.define('Ext.data.request.Ajax', {
 
     destroy: function() {
         this.xhr = null;
-        
+
         this.callParent();
     },
-    
+
     privates: {
         /**
          * Gets binary data from the xhr response object and returns it as a byte array
@@ -544,7 +558,7 @@ Ext.define('Ext.data.request.Ajax', {
                 responseBody = xhr.responseBody,
                 Cls = Ext.data.flash && Ext.data.flash.BinaryXhr,
                 byteArray, responseText, len, i;
-            
+
             if (xhr instanceof Cls) {
                 // If this was a BinaryXHR request via flash, we already have the bytes ready
                 byteArray = xhr.responseBytes;
@@ -553,6 +567,7 @@ Ext.define('Ext.data.request.Ajax', {
                 // Modern browsers (including IE10) have a native byte array
                 // which can be created by passing the ArrayBuffer (returned as
                 // the xhr.response property) to the Uint8Array constructor.
+                /* eslint-disable-next-line no-undef */
                 byteArray = response ? new Uint8Array(response) : [];
             }
             else if (Ext.isIE9p) {
@@ -561,9 +576,10 @@ Ext.define('Ext.data.request.Ajax', {
                 // In IE9p we can get the bytes by constructing a VBArray
                 // using the responseBody and then converting it to an Array.
                 try {
-                    byteArray = new VBArray(responseBody).toArray(); // jshint ignore:line
+                /* eslint-disable-next-line no-undef */
+                    byteArray = new VBArray(responseBody).toArray();
                 }
-                catch(e) {
+                catch (e) {
                     // If the binary response is empty, the VBArray constructor will
                     // choke on the responseBody.  We can't simply do a null check
                     // on responseBody because responseBody is always falsy when it
@@ -580,8 +596,9 @@ Ext.define('Ext.data.request.Ajax', {
                 if (!this.self.vbScriptInjected) {
                     this.injectVBScript();
                 }
-                
-                getIEByteArray(xhr.responseBody, byteArray = []); // jshint ignore:line
+
+                /* eslint-disable-next-line no-undef */
+                getIEByteArray(xhr.responseBody, byteArray = []);
             }
             else {
                 // in other older browsers make a best-effort attempt to read the
@@ -589,7 +606,7 @@ Ext.define('Ext.data.request.Ajax', {
                 byteArray = [];
                 responseText = xhr.responseText;
                 len = responseText.length;
-                
+
                 for (i = 0; i < len; i++) {
                     // Some characters have an extra byte 0xF7 in the high order
                     // position. Throw away the high order byte and then push the
@@ -597,7 +614,7 @@ Ext.define('Ext.data.request.Ajax', {
                     byteArray.push(responseText.charCodeAt(i) & 0xFF);
                 }
             }
-            
+
             return byteArray;
         },
 
@@ -608,8 +625,10 @@ Ext.define('Ext.data.request.Ajax', {
          */
         injectVBScript: function() {
             var scriptTag = document.createElement('script');
-            
+
             scriptTag.type = 'text/vbscript';
+
+            /* eslint-disable indent */
             scriptTag.text = [
                 'Function getIEByteArray(byteArray, out)',
                     'Dim len, i',
@@ -619,9 +638,10 @@ Ext.define('Ext.data.request.Ajax', {
                     'Next',
                 'End Function'
             ].join('\n');
-            
+            /* eslint-enable indent */
+
             Ext.getHead().dom.appendChild(scriptTag);
-            
+
             this.self.vbScriptInjected = true;
         }
     }

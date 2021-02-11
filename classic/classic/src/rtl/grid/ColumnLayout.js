@@ -1,7 +1,7 @@
 Ext.define('Ext.rtl.grid.ColumnLayout', {
     override: 'Ext.grid.ColumnLayout',
 
-    determineScrollbarWidth: function (ownerContext) {
+    determineScrollbarWidth: function(ownerContext) {
         var me = this,
             view = me.owner.grid.view;
 
@@ -53,8 +53,10 @@ Ext.define('Ext.rtl.grid.ColumnLayout', {
         if (owner.isRootHeader) {
             // https://sencha.jira.com/browse/EXTJSIV-11245
             // Safari keeps scrollbar on the right even in RTL mode, so any element
-            // which must stay in horizontal sync (like the HeaderContainer) needs the first item to have some "before" margin.
-            // The layout system caches the margin because it is assumed to be static, so we have to clear this cache.
+            // which must stay in horizontal sync (like the HeaderContainer) needs the first item
+            // to have some "before" margin.
+            // The layout system caches the margin because it is assumed to be static,
+            // so we have to clear this cache.
             if ((Ext.supports.rtlVertScrollbarOnRight && owner.ownerCt.view.getInherited().rtl) ||
                        (owner.grid.view.bufferedRenderer && Ext.supports.xOriginBug)) {
                 me.padding.right = me.scrollbarWidth;

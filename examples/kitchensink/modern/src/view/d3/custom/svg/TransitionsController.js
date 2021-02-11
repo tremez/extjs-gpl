@@ -11,14 +11,14 @@ Ext.define('KitchenSink.view.d3.custom.svg.TransitionsController', {
         [3, 7, 2, 18]
     ],
 
-    onSceneResize: function (component, scene, size) {
+    onSceneResize: function(component, scene, size) {
         var cx = size.width / 2,
             cy = size.height / 2;
 
         scene.select('g').attr('transform', 'translate(' + cx + ',' + cy + ')');
     },
 
-    onSceneSetup: function (component, scene) {
+    onSceneSetup: function(component, scene) {
         var me = this,
             view = me.getView(),
             width = view.el.getWidth(),
@@ -31,8 +31,13 @@ Ext.define('KitchenSink.view.d3.custom.svg.TransitionsController', {
             coefficients = me.coefficients,
             a, b, k, scale, x, y, i, r, theta, dataset,
             datasetIndex = 0,
-            easings = ['linear', 'bounce', 'circle', 'elastic'],
-            intervalId;
+            easings = [
+                d3.easeLinear,
+                d3.easeBounce,
+                d3.easeCircle,
+                d3.easeElastic
+            ],
+            timer;
 
         me.datasets = [];
 
@@ -61,25 +66,29 @@ Ext.define('KitchenSink.view.d3.custom.svg.TransitionsController', {
             .enter()
                 .append('circle')
                 .attr('r', '5')
-                .style('fill', function (d, i) {
+                .style('fill', function(d, i) {
                     return d3.hsl(i / steps * 360, 1, 0.5);
                 })
                 .call(position);
 
-        intervalId = setInterval(function () {
+        timer = d3.interval(function() {
             if (view.isDestroyed) {
-                clearInterval(intervalId);
+                timer.stop();
+
                 return;
             }
+
             if (datasetIndex < me.datasets.length - 1) {
                 datasetIndex++;
-            } else {
+            }
+            else {
                 datasetIndex = 0;
             }
+
             scene.selectAll('circle').data(me.datasets[datasetIndex])
                 .transition()
                 .duration(1000)
-                .delay(function (d, i) {
+                .delay(function(d, i) {
                     return i * 10;
                 })
                 .ease(easings[Math.floor(Math.random() * easings.length)])
@@ -87,12 +96,12 @@ Ext.define('KitchenSink.view.d3.custom.svg.TransitionsController', {
 
         }, 4000);
 
-        function position() {
-            this
-                .attr('cx', function (d) {
+        function position(selection) {
+            selection
+                .attr('cx', function(d) {
                     return d[0];
                 })
-                .attr('cy', function (d) {
+                .attr('cy', function(d) {
                     return d[1];
                 });
         }

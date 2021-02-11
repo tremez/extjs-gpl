@@ -3,21 +3,23 @@
  * @private
  */
 Ext.define('Ext.ux.colorpick.Slider', {
-    extend     : 'Ext.container.Container',
-    xtype      : 'colorpickerslider',
-    controller : 'colorpick-slidercontroller',
+    extend: 'Ext.container.Container',
+    xtype: 'colorpickerslider',
+    controller: 'colorpick-slidercontroller',
 
     afterRender: function() {
+        var width, dragCt, dragWidth;
+
         this.callParent(arguments);
 
-        var width = this.width,
-            dragCt = this.lookupReference('dragHandleContainer'),
-            dragWidth = dragCt.getWidth();
+        width = this.width;
+        dragCt = this.lookupReference('dragHandleContainer');
+        dragWidth = dragCt.getWidth();
 
         dragCt.el.setStyle('left', ((width - dragWidth) / 2) + 'px');
     },
 
-    baseCls : Ext.baseCSSPrefix + 'colorpicker-slider',
+    baseCls: Ext.baseCSSPrefix + 'colorpicker-slider',
 
     requires: [
         'Ext.ux.colorpick.SliderController'
@@ -25,7 +27,7 @@ Ext.define('Ext.ux.colorpick.Slider', {
 
     referenceHolder: true,
 
-    listeners : {
+    listeners: {
         element: 'el',
         mousedown: 'onMouseDown',
         mouseup: 'onMouseUp',
@@ -37,36 +39,36 @@ Ext.define('Ext.ux.colorpick.Slider', {
     // it in the center; this is what receives the beautiful
     // color gradients for the visual
     items: {
-        xtype     : 'container',
-        cls       : Ext.baseCSSPrefix + 'colorpicker-draghandle-container',
-        reference : 'dragHandleContainer',
-        height    : '100%',
+        xtype: 'container',
+        cls: Ext.baseCSSPrefix + 'colorpicker-draghandle-container',
+        reference: 'dragHandleContainer',
+        height: '100%',
 
         // This is the drag handle; note it's 100%x1 in size to allow full
         // vertical drag travel; the inner div has the bigger image
         items: {
-            xtype     : 'component',
-            cls       : Ext.baseCSSPrefix + 'colorpicker-draghandle-outer',
-            reference : 'dragHandle',
-            width     : '100%',
-            height    : 1,
-            draggable : true,
-            html      : '<div class="' + Ext.baseCSSPrefix + 'colorpicker-draghandle"></div>'
+            xtype: 'component',
+            cls: Ext.baseCSSPrefix + 'colorpicker-draghandle-outer',
+            reference: 'dragHandle',
+            width: '100%',
+            height: 1,
+            draggable: true,
+            html: '<div class="' + Ext.baseCSSPrefix + 'colorpicker-draghandle"></div>'
         }
     },
 
-    // <debug>
+    //<debug>
     // Called via data binding whenever selectedColor.h changes;
-    setHue: function () {
+    setHue: function() {
         Ext.raise('Must implement setHue() in a child class!');
     },
-    // </debug>
+    //</debug>
 
-    getDragHandle: function () {
+    getDragHandle: function() {
         return this.lookupReference('dragHandle');
     },
 
-    getDragContainer: function () {
+    getDragContainer: function() {
         return this.lookupReference('dragHandleContainer');
     }
 });

@@ -33,18 +33,6 @@ $textfield-disabled-input-color: dynamic(null);
 $textfield-input-border-width: dynamic(1px);
 
 /**
- * @var {number/list}
- * Text Field input border width when focused
- */
-$textfield-focused-input-border-width: dynamic(null);
-
-/**
- * @var {number/list}
- * Text Field input border width when invalid
- */
-$textfield-invalid-input-border-width: dynamic(null);
-
-/**
  * @var {string/list}
  * Text Field input border style
  */
@@ -88,6 +76,42 @@ $textfield-invalid-input-border-color: dynamic($alert-color);
 $textfield-disabled-input-border-color: dynamic(null);
 
 /**
+ * @var {number}
+ * Text field input underline width
+ */
+$textfield-input-underline-width: dynamic(null);
+
+/**
+ * @var {number}
+ * Text field input underline width when focused
+ */
+$textfield-focused-input-underline-width: dynamic(null);
+
+/**
+ * @var {number}
+ * Text field input underline width when invalid
+ */
+$textfield-invalid-input-underline-width: dynamic(null);
+
+/**
+ * @var {color}
+ * Text field input underline color
+ */
+$textfield-input-underline-color: dynamic(null);
+
+/**
+ * @var {color}
+ * Text field input underline color when focused
+ */
+$textfield-focused-input-underline-color: dynamic(null);
+
+/**
+ * @var {color}
+ * Text field input underline color when invalid
+ */
+$textfield-invalid-input-underline-color: dynamic(null);
+
+/**
  * @var {color}
  * Text Field input background-color
  */
@@ -112,16 +136,16 @@ $textfield-invalid-input-background-color: dynamic(null);
 $textfield-disabled-input-background-color: dynamic(null);
 
 /**
- * @var {color}
+ * @var {number/list}
  * Text Field input padding
  */
-$textfield-input-padding: dynamic(px-to-em(3px 6px, 13px));
+$textfield-input-padding: dynamic(3px 6px 2px);
 
 /**
- * @var {color}
+ * @var {number/list}
  * Text Field input padding in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$textfield-input-padding-big: dynamic(px-to-em(3px 6px, 15px));
+$textfield-input-padding-big: dynamic(5px 6px);
 
 /**
  * @var {string/number}
@@ -133,25 +157,25 @@ $textfield-input-font-weight: dynamic($font-weight-normal);
  * @var {number}
  * Text Field input font-size
  */
-$textfield-input-font-size: dynamic(1rem);
+$textfield-input-font-size: dynamic($font-size);
 
 /**
  * @var {number}
  * Text Field input font-size in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$textfield-input-font-size-big: dynamic(null);
+$textfield-input-font-size-big: dynamic($font-size-big);
 
 /**
  * @var {number}
  * Text Field input line-height
  */
-$textfield-input-line-height: dynamic(px-to-em(16px, 13px));
+$textfield-input-line-height: dynamic(17px);
 
 /**
  * @var {number}
  * Text Field input line-height in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$textfield-input-line-height-big: dynamic(px-to-em(24px, 15px));
+$textfield-input-line-height-big: dynamic(20px);
 
 /**
  * @var {string}
@@ -166,6 +190,116 @@ $textfield-input-font-family: dynamic($font-family);
 $textfield-placeholder-color: dynamic($neutral-medium-dark-color);
 
 /**
+ * @var {color}
+ * Text Field {@link #placeholder} color when focused
+ */
+$textfield-focused-placeholder-color: dynamic(null);
+
+/**
+ * @var {color}
+ * Text Field {@link #placeholder} color when invalid
+ */
+$textfield-invalid-placeholder-color: dynamic(null);
+
+/**
+ * @var {color}
+ * Text Field {@link #placeholder} color when disabled
+ */
+$textfield-disabled-placeholder-color: dynamic(null);
+
+/**
+ * @var {number}
+ * Text Field body width
+ */
+$textfield-body-width: dynamic(170px);
+
+/**
+ * @var {number}
+ * Text Field body width in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$textfield-body-width-big: dynamic(200px);
+
+/**
+ * @var {map}
+ * Parameters for the "celleditor" textfield UI.
+ * Set to `null` to eliminate the UI from the CSS output.
+ */
+$textfield-celleditor-ui: dynamic((
+    input-padding:
+        top($gridcell-padding or 0) - top($textfield-input-border-width or 0)
+        right($gridcell-padding or 0) - right($textfield-input-border-width or 0)
+        bottom($gridcell-padding or 0) - bottom($textfield-input-border-width or 0)
+        left($gridcell-padding or 0) - left($textfield-input-border-width or 0),
+    input-padding-big:
+        top($gridcell-padding-big or 0) - top($textfield-input-border-width or 0)
+        right($gridcell-padding-big or 0) - right($textfield-input-border-width or 0)
+        bottom($gridcell-padding-big or 0) - bottom($textfield-input-border-width or 0)
+        left($gridcell-padding-big or 0) - left($textfield-input-border-width or 0),
+    input-line-height: $gridcell-line-height,
+    input-line-height-big: $gridcell-line-height-big,
+    input-font-size: $gridcell-font-size,
+    input-font-size-big: $gridcell-font-size-big
+));
+
+/**
+ * @var {number}
+ * The duration for the focus {@link #animateUnderline underline animation}
+ */
+$textfield-animate-underline-duration: dynamic(.45s);
+
+/**
+ * @var {map}
+ * Parameters for the "alt" textfield UI.
+ * Set to `null` to eliminate the UI from the CSS output.
+ */
+$textfield-alt-ui: dynamic((
+    input-background-color: rgba(255, 255, 255, .2),
+    focused-input-background-color: rgba(255, 255, 255, .15),
+    input-color: rgba(255, 255, 255, .6),
+    focused-input-color: rgba(255, 255, 255, .6),
+    input-padding: 7px 7px 7px 0,
+    input-padding-big: 7px 7px 7px 0,
+    input-border-width: 0,
+    placeholder-color: rgba(255, 255, 255, .6),
+    focused-placeholder-color: rgb(255, 255, 255),
+    border-radius: 3px
+));
+
+/**
+ * @var {map}
+ * Parameters for the "faded" textfield UI.
+ * Set to `null` to eliminate the UI from the CSS output.
+ */
+$textfield-faded-ui: dynamic((
+    input-background-color: rgba(0, 0, 0, .1),
+    focused-input-background-color: rgba(0, 0, 0, .15),
+    input-color: rgba(0, 0, 0, .4),
+    focused-input-color: rgba(0, 0, 0, .4),
+    input-padding: 7px 7px 7px 0,
+    input-padding-big: 7px 7px 7px 0,
+    input-border-width: 0,
+    placeholder-color: rgba(0, 0, 0, .4),
+    focused-placeholder-color: #333,
+    border-radius: 3px
+));
+
+/**
+ * @var {map}
+ * Parameters for the "solo" textfield UI.
+ * Set to `null` to eliminate the UI from the CSS output.
+ */
+$textfield-solo-ui: dynamic((
+    input-background-color: #FFFFFF,
+    input-color: rgba(0, 0, 0, .4),
+    focused-input-color: rgba(0, 0, 0, .4),
+    input-padding: 10px 10px 10px 0,
+    input-padding-big: 10px 10px 10px 0,
+    input-border-width: 0,
+    placeholder-color: rgba(0, 0, 0, .4),
+    border-radius: 3px
+));
+
+/**
  * Creates a visual theme for a Text Field
  *
  * @param {string} $ui
@@ -175,8 +309,41 @@ $textfield-placeholder-color: dynamic($neutral-medium-dark-color);
  * @param {String} [$xtype=textfield] (protected) The {@link Ext.Class#xtype} to use
  * in CSS selectors.  For use by UI mixins of derived classes.
  *
+ * @param {color} $background-color
+ * Text Field input background color
+ *
+ * @param {color} $focused-background-color
+ * Focused Text Field background color
+ *
+ * @param {color} $invalid-background-color
+ * Invalid Text Field background color
+ *
+ * @param {color} $disabled-background-color
+ * Disabled Text Field background color
+ *
+ * @param {Number} $disabled-opacity
+ * Text Field disabled opacity
+ *
+ * @param {Number} $required-indicator-font-weight
+ * Required indicator font weight
+ *
+ * @param {Number} $required-indicator-font-size
+ * Required indicator font size
+ *
+ * @param {Number} $required-indicator-line-height
+ * Required indicator line height
+ *
+ * @param {String} $required-indicator-font-family
+ * Required indicator font family
+ *
+ * @param {String} $required-indicator-margin
+ * Required indicator margin
+ *
+ * @param {String} $required-indicator-margin-big
+ * Required indicator margin in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
  * @param {color} $input-color
- * Text Field input color
+ * Text field input color
  *
  * @param {color} $focused-input-color
  * Text Field input color when focused
@@ -189,12 +356,6 @@ $textfield-placeholder-color: dynamic($neutral-medium-dark-color);
  *
  * @param {number/list} $input-border-width
  * Text Field input border width
- *
- * @param {number/list} $focused-input-border-width
- * Text Field input border width when focused
- *
- * @param {number/list} $invalid-input-border-width
- * Text Field input border width when invalid
  *
  * @param {string/list} $input-border-style
  * Text Field input border style
@@ -216,6 +377,24 @@ $textfield-placeholder-color: dynamic($neutral-medium-dark-color);
  *
  * @param {string/list} $disabled-input-border-color
  * Text Field input border color when disabled
+ *
+ * @param {number} $input-underline-width
+ * Text field input underline width
+ *
+ * @param {number} $focused-input-underline-width
+ * Text field input underline width when focused
+ *
+ * @param {number} $invalid-input-underline-width
+ * Text field input underline width when invalid
+ *
+ * @param {color} $input-underline-color
+ * Text field input underline color
+ *
+ * @param {color} $focused-input-underline-color
+ * Text field input underline color when focused
+ *
+ * @param {color} $invalid-input-underline-color
+ * Text field input underline color when invalid
  *
  * @param {color} $input-background-color
  * Text Field input background-color
@@ -255,6 +434,27 @@ $textfield-placeholder-color: dynamic($neutral-medium-dark-color);
  *
  * @param {color} $placeholder-color
  * Text Field {@link #placeholder} color
+ *
+ * @param {color} $focused-placeholder-color
+ * Text Field {@link #placeholder} color when focused
+ *
+ * @param {color} $invalid-placeholder-color
+ * Text Field {@link #placeholder} color when invalid
+ *
+ * @param {color} $disabled-placeholder-color
+ * Text Field {@link #placeholder} color when disabled
+ *
+ * @param {number} $border-radius
+ * The border radius of the text field
+ *
+ * @param {number} $body-width
+ * Text Field body width
+ *
+ * @param {number} $body-width-big
+ * Text Field body width in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {number} $animate-underline-duration
+ * The duration, in seconds, for the focus {@link #animateUnderline underline animation}
  */
 @mixin textfield-ui(
     $ui: null,
@@ -263,22 +463,6 @@ $textfield-placeholder-color: dynamic($neutral-medium-dark-color);
     $focused-background-color: null,
     $invalid-background-color: null,
     $disabled-background-color: null,
-    $label-color: null,
-    $focused-label-color: null,
-    $invalid-label-color: null,
-    $disabled-label-color: null,
-    $label-background-color: null,
-    $focused-label-background-color: null,
-    $invalid-label-background-color: null,
-    $disabled-label-background-color: null,
-    $label-padding: null,
-    $label-padding-big: null,
-    $label-font-weight: null,
-    $label-font-size: null,
-    $label-font-size-big: null,
-    $label-line-height: null,
-    $label-line-height-big: null,
-    $label-font-family: null,
     $disabled-opacity: null,
     $required-indicator-font-weight: null,
     $required-indicator-font-size: null,
@@ -291,8 +475,6 @@ $textfield-placeholder-color: dynamic($neutral-medium-dark-color);
     $invalid-input-color: null,
     $disabled-input-color: null,
     $input-border-width: null,
-    $focused-input-border-width: null,
-    $invalid-input-border-width: null,
     $input-border-style: null,
     $focused-input-border-style: null,
     $invalid-input-border-style: null,
@@ -300,6 +482,12 @@ $textfield-placeholder-color: dynamic($neutral-medium-dark-color);
     $focused-input-border-color: null,
     $invalid-input-border-color: null,
     $disabled-input-border-color: null,
+    $input-underline-width: null,
+    $focused-input-underline-width: null,
+    $invalid-input-underline-width: null,
+    $input-underline-color: null,
+    $focused-input-underline-color: null,
+    $invalid-input-underline-color: null,
     $input-background-color: null,
     $focused-input-background-color: null,
     $invalid-input-background-color: null,
@@ -312,22 +500,47 @@ $textfield-placeholder-color: dynamic($neutral-medium-dark-color);
     $input-line-height: null,
     $input-line-height-big: null,
     $input-font-family: null,
-    $placeholder-color: null
+    $placeholder-color: null,
+    $focused-placeholder-color: null,
+    $invalid-placeholder-color: null,
+    $disabled-placeholder-color: null,
+    $border-radius: null,
+    $body-width: null,
+    $body-width-big: null,
+    $animate-underline-duration: null
 ) {
     $ui-suffix: ui-suffix($ui);
 
     .#{$prefix}#{$xtype}#{$ui-suffix} {
-        .#{$prefix}input {
-            @include font($input-font-weight, $input-font-size, $input-line-height, $input-font-family);
+        background-color: $background-color;
+        @include border-radius($border-radius);
+
+        .#{$prefix}body-wrap-el {
+            width: $body-width;
+
+            @if $enable-big {
+                .#{$prefix}big & {
+                    width: $body-width-big;
+                }
+            }
+        }
+
+        // keep the background-color, color and border rules at the x-input-wrap-el
+        // level to make triggers visually inside the text field input.
+        .#{$prefix}input-wrap-el {
             @include border($input-border-width, $input-border-style, $input-border-color);
+
             background-color: $input-background-color;
+            color: $input-color;
         }
 
         .#{$prefix}input-el {
-            color: $input-color;
-            padding: $input-padding;
-            // input element has to have its own line height or it is not heighted correctly
-            line-height: $input-line-height;
+            @include font($input-font-weight, $input-font-size, $input-line-height, $input-font-family);
+            @include padding($input-padding);
+
+            // IE11 does not respect line-height on input elements. To workaround the issue
+            // we use content-box model and set min-height in addition to line-height
+            min-height: $input-line-height;
 
             @if $enable-big {
                 .#{$prefix}big & {
@@ -351,84 +564,98 @@ $textfield-placeholder-color: dynamic($neutral-medium-dark-color);
             }
         }
 
+        .#{$prefix}underline-el {
+            height: $input-underline-width;
+            background-color: $input-underline-color;
+        }
+
+        &.#{$prefix}animate-underline .#{$prefix}underline-el:before {
+            transition: transform $animate-underline-duration cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
         &.#{$prefix}focused {
-            .#{$prefix}input {
-                @include border($focused-input-border-width, $focused-input-border-style, $focused-input-border-color);
+            background-color: $focused-background-color;
+
+            .#{$prefix}underline-el:before {
+                height: $focused-input-underline-width;
+                background-color: $focused-input-underline-color;
+            }
+
+            .#{$prefix}input-wrap-el {
+                border-style: $focused-input-border-style;
+                border-color: $focused-input-border-color;
                 background-color: $focused-input-background-color;
+                color: $focused-input-color;
             }
 
             .#{$prefix}input-el {
-                color: $focused-input-color;
+                // when using vendor prefixes, the selectors need to be separated into their own
+                // rule for each prefix because when encountering an unsupported vendor prefix,
+                // CSS parsing engines will consider the entire rule invalid.
+                &::-webkit-input-placeholder {
+                    color: $focused-placeholder-color;
+                }
+                &::-moz-placeholder {
+                    color: $focused-placeholder-color;
+                }
+                &:-ms-input-placeholder {
+                    color: $focused-placeholder-color;
+                }
             }
         }
 
         &.#{$prefix}invalid {
-            .#{$prefix}input {
-                @include border($invalid-input-border-width, $invalid-input-border-style, $invalid-input-border-color);
+            background-color: $invalid-background-color;
+
+            .#{$prefix}underline-el:after {
+                height: $invalid-input-underline-width;
+                background-color: $invalid-input-underline-color;
+            }
+
+            .#{$prefix}input-wrap-el {
+                border-style: $invalid-input-border-style;
+                border-color: $invalid-input-border-color;
                 background-color: $invalid-input-background-color;
+                color: $invalid-input-color;
             }
 
             .#{$prefix}input-el {
-                color: $invalid-input-color;
+                // when using vendor prefixes, the selectors need to be separated into their own
+                // rule for each prefix because when encountering an unsupported vendor prefix,
+                // CSS parsing engines will consider the entire rule invalid.
+                &::-webkit-input-placeholder {
+                    color: $invalid-placeholder-color;
+                }
+                &::-moz-placeholder {
+                    color: $invalid-placeholder-color;
+                }
+                &:-ms-input-placeholder {
+                    color: $invalid-placeholder-color;
+                }
             }
         }
 
         &.#{$prefix}disabled {
-            .#{$prefix}input {
+            background-color: $disabled-background-color;
+
+            .#{$prefix}input-wrap-el {
                 background-color: $disabled-input-background-color;
                 border-color: $disabled-input-border-color;
+                color: $disabled-input-color;
             }
 
             .#{$prefix}input-el {
-                color: $disabled-input-color;
-            }
-        }
-
-
-        // When border widths for the various states are not the same (e.g. focused
-        // state in material theme) it can cause the text/triggers to move when changing
-        // states.  The following rules ensure that the text and triggers remain still
-        // while moving between states with potentially different border widths.
-
-        $top-border-width: top($input-border-width) or top($textfield-input-border-width) or 0;
-        $bottom-border-width: bottom($input-border-width) or bottom($textfield-input-border-width) or 0;
-        $focused-top-border-width: top($focused-input-border-width) or top($textfield-focused-input-border-width) or $top-border-width;
-        $focused-bottom-border-width: bottom($focused-input-border-width) or bottom($textfield-focused-input-border-width) or $bottom-border-width;
-        $invalid-top-border-width: top($invalid-input-border-width) or top($textfield-invalid-input-border-width) or $top-border-width;
-        $invalid-bottom-border-width: bottom($invalid-input-border-width) or bottom($textfield-invalid-input-border-width) or $bottom-border-width;
-        $smallest-top-border: min($top-border-width, $focused-top-border-width, $invalid-top-border-width);
-        $smallest-bottom-border: min($bottom-border-width, $focused-bottom-border-width, $invalid-bottom-border-width);
-
-        .#{$prefix}input-el, .#{$prefix}before-el, .#{$prefix}after-el, {
-            @if $top-border-width != $smallest-top-border {
-                margin-top: -($smallest-top-border - $top-border-width);
-            }
-
-            @if $bottom-border-width != $smallest-bottom-border {
-                margin-bottom: $smallest-bottom-border - $bottom-border-width;
-            }
-        }
-
-        &.#{$prefix}focused {
-            .#{$prefix}input-el, .#{$prefix}before-el, .#{$prefix}after-el, {
-                @if $focused-top-border-width != $smallest-top-border {
-                    margin-top: -($smallest-top-border - $focused-top-border-width);
+                // when using vendor prefixes, the selectors need to be separated into their own
+                // rule for each prefix because when encountering an unsupported vendor prefix,
+                // CSS parsing engines will consider the entire rule invalid.
+                &::-webkit-input-placeholder {
+                    color: $disabled-placeholder-color;
                 }
-
-                @if $focused-bottom-border-width != $smallest-bottom-border {
-                    margin-bottom: $smallest-bottom-border - $focused-bottom-border-width;
+                &::-moz-placeholder {
+                    color: $disabled-placeholder-color;
                 }
-            }
-        }
-
-        &.#{$prefix}invalid {
-            .#{$prefix}input-el, .#{$prefix}before-el, .#{$prefix}after-el, {
-                @if $invalid-top-border-width != $smallest-top-border {
-                    margin-top: -($smallest-top-border - $invalid-top-border-width);
-                }
-
-                @if $invalid-bottom-border-width != $smallest-bottom-border {
-                    margin-bottom: $smallest-bottom-border - $invalid-bottom-border-width;
+                &:-ms-input-placeholder {
+                    color: $disabled-placeholder-color;
                 }
             }
         }

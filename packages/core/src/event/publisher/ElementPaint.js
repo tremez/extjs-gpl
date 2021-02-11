@@ -2,7 +2,6 @@
  * @private
  */
 Ext.define('Ext.event.publisher.ElementPaint', {
-
     extend: 'Ext.event.publisher.Publisher',
 
     requires: [
@@ -28,7 +27,8 @@ Ext.define('Ext.event.publisher.ElementPaint', {
 
         if (subscribers[id]) {
             ++subscribers[id];
-        } else {
+        }
+        else {
             subscribers[id] = 1;
 
             me.monitors[id] = new Ext.util.PaintMonitor({
@@ -50,10 +50,26 @@ Ext.define('Ext.event.publisher.ElementPaint', {
             monitors[id].destroy();
             delete monitors[id];
         }
+
+        if (element.activeRead) {
+            Ext.TaskQueue.cancelRead(element.activeRead);
+        }
+    },
+
+    fireElementPainted: function(element) {
+        delete element.activeRead;
+        this.fire(element, 'painted', [element]);
     },
 
     onElementPainted: function(element) {
-        Ext.TaskQueue.requestRead('fire', this, [element, 'painted', [element]]);
+        if (!element.activeRead) {
+            element.activeRead = Ext.TaskQueue.requestRead(
+                'fireElementPainted', this, [element]
+                //<debug>
+                , !!element.$skipResourceCheck // eslint-disable-line comma-style
+                //</debug>
+            );
+        }
     }
 }, function(ElementPaint) {
     ElementPaint.instance = new ElementPaint();

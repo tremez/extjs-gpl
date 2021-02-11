@@ -48,7 +48,8 @@ Ext.define('Ext.promise.Deferred', {
     promise: null,
 
     /**
-     * @property {Ext.promise.Consequence[]} consequences Pending Consequences chained to this Deferred.
+     * @property {Ext.promise.Consequence[]} consequences Pending Consequences chained
+     * to this Deferred.
      *
      * @private
      */
@@ -69,7 +70,8 @@ Ext.define('Ext.promise.Deferred', {
     completionAction: null,
 
     /**
-     * @property {Mixed} completionValue The completion value (i.e. resolution value or rejection error).
+     * @property {Mixed} completionValue The completion value (i.e. resolution value
+     * or rejection error).
      *
      * @private
      */
@@ -192,7 +194,7 @@ Ext.define('Ext.promise.Deferred', {
         if (this.completed) {
             return;
         }
-        
+
         this.complete('reject', reason);
     },
 
@@ -206,11 +208,11 @@ Ext.define('Ext.promise.Deferred', {
     update: function(progress) {
         var consequences = this.consequences,
             consequence, i, len;
-        
+
         if (this.completed) {
             return;
         }
-        
+
         for (i = 0, len = consequences.length; i < len; i++) {
             consequence = consequences[i];
             consequence.update(progress);

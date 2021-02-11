@@ -3,23 +3,23 @@ Ext.define('KitchenSink.view.form.SliderFieldController', {
 
     alias: 'controller.slider-field',
 
-    getForm: function () {
+    getForm: function() {
         return this.getView().getForm();
     },
 
-    onMaxAllClick: function(){
+    onMaxAllClick: function() {
         var view = this.getView();
 
         Ext.suspendLayouts();
 
-        view.items.each(function (c) {
+        view.items.each(function(c) {
             c.setValue(100);
         });
 
         Ext.resumeLayouts(true);
     },
 
-    onSaveClick: function () {
+    onSaveClick: function() {
         var values = this.getForm().getValues(),
             msgTpl = this.getView().lookupTpl('msgTpl'),
             msg = msgTpl.apply(values);
@@ -32,11 +32,11 @@ Ext.define('KitchenSink.view.form.SliderFieldController', {
         });
     },
 
-    onResetClick: function () {
+    onResetClick: function() {
         this.getForm().reset();
     },
 
-    tipText: function (thumb) {
+    tipText: function(thumb) {
         return String(thumb.value) + '%';
-    } 
+    }
 });

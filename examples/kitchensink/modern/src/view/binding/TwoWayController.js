@@ -8,6 +8,7 @@ Ext.define('KitchenSink.view.binding.TwoWayController', {
 
     makeRandomTitle: function() {
         var num = Ext.Number.randomInt(0, 1000);
+
         this.getViewModel().set('title', 'Title ' + num);
     }
 });

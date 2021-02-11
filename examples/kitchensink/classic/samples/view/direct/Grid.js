@@ -8,11 +8,33 @@ Ext.define('KitchenSink.view.direct.Grid', {
     extend: 'Ext.grid.Panel',
     xtype: 'direct-grid',
     controller: 'directgrid',
-    
+
     requires: [
         'KitchenSink.view.direct.GridController'
     ],
-    
+
+    profiles: {
+        classic: {
+            columnWidth: 140,
+            labelWidth: 100,
+            width: 250
+        },
+        neptune: {
+            columnWidth: 140,
+            labelWidth: 100,
+            width: 250
+        },
+        graphite: {
+            columnWidth: 220,
+            labelWidth: 150,
+            width: 370
+        },
+        'classic-material': {
+            columnWidth: 220,
+            labelWidth: 150,
+            width: 370
+        }
+    },
     //<example>
     exampleTitle: 'Grid with Ext Direct back end',
     exampleDescription: [
@@ -20,12 +42,12 @@ Ext.define('KitchenSink.view.direct.Grid', {
         '<p>The data is queried from a virtual "table"; there are two datasets hardcoded',
         'in the example PHP script that handles the requests. Data sorting is also remote</p>'
     ].join(''),
-    
+
     otherContent: [{
-        type: 'ViewController',
+        type: 'Controller',
         path: 'classic/samples/view/direct/GridController.js'
     }, {
-        type: 'Base ViewController',
+        type: 'Base Controller',
         path: 'classic/samples/view/direct/DirectVC.js'
     }, {
         type: 'Server TestAction class',
@@ -39,7 +61,7 @@ Ext.define('KitchenSink.view.direct.Grid', {
     title: 'Company Grid',
     width: 600,
     height: 350,
-    
+
     store: {
         fields: ['name', 'revenue'],
         remoteSort: true,
@@ -55,7 +77,7 @@ Ext.define('KitchenSink.view.direct.Grid', {
             }
         }
     },
-    
+
     columns: [{
         dataIndex: 'name',
         flex: 1,
@@ -63,26 +85,29 @@ Ext.define('KitchenSink.view.direct.Grid', {
     }, {
         dataIndex: 'revenue',
         align: 'right',
-        width: 140,
+        width: '${columnWidth}',
         text: 'Annual revenue',
         renderer: Ext.util.Format.usMoney
     }],
-    
+
     header: {
         items: [{
             xtype: 'combobox',
             fieldLabel: 'Choose table',
+            labelWidth: '${labelWidth}',
             queryMode: 'local',
             displayField: 'desc',
             valueField: 'table',
             forceSelection: true,
             editable: false,
             value: 'companies',
+            width: '${width}',
+            cls: 'company-grid-combo',
             store: {
                 fields: ['table', 'desc'],
                 data: [
                     { table: 'companies', desc: 'Existing companies' },
-                    { table: 'leads',     desc: 'Sales leads' }
+                    { table: 'leads', desc: 'Sales leads' }
                 ]
             },
             listeners: {

@@ -8,5 +8,5 @@ $pivot-grid-config-column-btn-move-icon: 'reorder';
 $pivot-grid-config-column-btn-sort-asc-icon: 'arrow_upward';
 $pivot-grid-config-column-btn-sort-desc-icon: 'arrow_downward';
 
-$pivot-grid-config-column-btn-font-size: px-to-rem(16px, 12px);
-$pivot-grid-config-column-btn-font-size-big: px-to-rem(18px, 14px);
+$pivot-grid-config-column-btn-font-size: dynamic(16px);
+$pivot-grid-config-column-btn-font-size-big: dynamic(18px);

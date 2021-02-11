@@ -8,7 +8,7 @@ Ext.define('Ticket.Application', {
         'Root@Ticket.controller'
     ],
 
-    onBeforeLaunch: function () {
+    onBeforeLaunch: function() {
         // All smoke-and-mirrors with data happens in SimData. This is a fake server that
         // runs in-browser and intercepts the various Ajax requests a real app would make
         // to a real server.

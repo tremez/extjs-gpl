@@ -10,7 +10,7 @@ Ext.define('KitchenSink.view.charts.column.Basic', {
     extend: 'Ext.Panel',
     xtype: 'column-basic',
     controller: 'column-basic',
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     bodyStyle: 'background: transparent !important',
     layout: 'fit',
@@ -19,9 +19,9 @@ Ext.define('KitchenSink.view.charts.column.Basic', {
         path: 'classic/samples/view/charts/column/BasicController.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/Climate.js'
+        path: 'app/store/Climate.js'
     }],
-    // </example>
+    //</example>
     width: 650,
     height: 500,
 
@@ -45,15 +45,16 @@ Ext.define('KitchenSink.view.charts.column.Basic', {
     items: {
         xtype: 'cartesian',
         reference: 'chart',
+        captions: {
+            title: {
+                text: 'Redwood City Climate Data',
+                align: 'left'
+            }
+        },
         store: {
             type: 'climate'
         },
-        insetPadding: {
-            top: 40,
-            bottom: 40,
-            left: 20,
-            right: 40
-        },
+        downloadServerUrl: '//svg.sencha.io',
         interactions: {
             type: 'itemedit',
             tooltip: {
@@ -93,15 +94,6 @@ Ext.define('KitchenSink.view.charts.column.Basic', {
                 display: 'insideEnd',
                 renderer: 'onSeriesLabelRender'
             }
-        },
-        sprites: {
-            type: 'text',
-            text: 'Redwood City Climate Data',
-            fontSize: 22,
-            width: 100,
-            height: 30,
-            x: 40, // the sprite x position
-            y: 20  // the sprite y position
         },
         listeners: {
             afterrender: 'onAfterRender',

@@ -11,6 +11,6 @@ $form-field-border-accent-color: dynamic(mix(#fff, $neutral-medium-dark-color, 4
 $form-field-border-color: dynamic($neutral-medium-dark-color $form-field-border-accent-color $form-field-border-accent-color);
 $form-field-border-width: dynamic(1px);
 $form-field-invalid-border-color: dynamic($error-color);
-$form-field-focus-border-color: dynamic(mix(#fff, #157fcc, 15%));
+$form-field-focus-border-color: dynamic(mix(#fff, $base-color, 15%));
 $form-field-background-image: dynamic('none');
 $form-field-invalid-background-image: dynamic('none');

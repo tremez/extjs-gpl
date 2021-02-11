@@ -18,7 +18,7 @@ Ext.define('Admin.view.profile.Notifications', {
            "<div class='content-wrap'>",
                "<div>",
                    "<h4 class='profilenotifications-username'>{name}<span class='x-fa fa-mobile'></span></h4>",
-                   "<span class='from-now'><span class='x-fa fa-clock-o'></span>3 Hours Ago</span>",
+                   "<span class='from-now'><span class='x-fa fa-clock'></span>3 Hours Ago</span>",
                "</div>",
                "<div class='content'>{content}</div>",
                "<div class='like-comment-btn-wrap'>",

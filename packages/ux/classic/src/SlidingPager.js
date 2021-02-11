@@ -13,17 +13,17 @@ Ext.define('Ext.ux.SlidingPager', {
      * Creates new SlidingPager.
      * @param {Object} config Configuration options
      */
-    constructor : function(config) {
+    constructor: function(config) {
         if (config) {
             Ext.apply(this, config);
         }
     },
 
-    init : function(pbar){
+    init: function(pbar) {
         var idx = pbar.items.indexOf(pbar.child("#inputItem")),
             slider;
 
-        Ext.each(pbar.items.getRange(idx - 2, idx + 2), function(c){
+        Ext.each(pbar.items.getRange(idx - 2, idx + 2), function(c) {
             c.hide();
         });
 
@@ -33,10 +33,12 @@ Ext.define('Ext.ux.SlidingPager', {
             maxValue: 1,
             hideLabel: true,
             tipText: function(thumb) {
-                return Ext.String.format('Page <b>{0}</b> of <b>{1}</b>', thumb.value, thumb.slider.maxValue);
+                return Ext.String.format(
+                    'Page <b>{0}</b> of <b>{1}</b>', thumb.value, thumb.slider.maxValue
+                );
             },
             listeners: {
-                changecomplete: function(s, v){
+                changecomplete: function(s, v) {
                     pbar.store.loadPage(v);
                 }
             }
@@ -45,7 +47,7 @@ Ext.define('Ext.ux.SlidingPager', {
         pbar.insert(idx + 1, slider);
 
         pbar.on({
-            change: function(pb, data){
+            change: function(pb, data) {
                 slider.setMaxValue(data.pageCount);
                 slider.setValue(data.currentPage);
             }

@@ -97,13 +97,13 @@ $pagingtoolbar-padding-big: dynamic(null);
  * @var {string/list}
  * Paging toolbar "previous" icon
  */
-$pagingtoolbar-prev-icon: dynamic($fa-var-angle-left FontAwesome);
+$pagingtoolbar-prev-icon: dynamic($fa-var-angle-left 'Font Awesome 5 Free');
 
 /**
  * @var {string/list}
  * Paging toolbar "next" icon
  */
-$pagingtoolbar-next-icon: dynamic($fa-var-angle-right FontAwesome);
+$pagingtoolbar-next-icon: dynamic($fa-var-angle-right 'Font Awesome 5 Free');
 
 /**
  * Creates a visual theme for a paging toolbar.
@@ -121,6 +121,9 @@ $pagingtoolbar-next-icon: dynamic($fa-var-angle-right FontAwesome);
  * @param {string/list} $background-gradient
  * Paging toolbar background-gradient. Can be either the name of a gradient defined by
  * {@link Global_CSS#background-gradient} or a list of color stops.
+ *
+ * @param {color} $color
+ * Paging toolbar color
  *
  * @param {number/list} $border-width
  * Paging toolbar border-width
@@ -187,25 +190,9 @@ $pagingtoolbar-next-icon: dynamic($fa-var-angle-right FontAwesome);
 ) {
     $ui-suffix: ui-suffix($ui);
 
-    @include toolbar-ui(
-        $ui: $ui,
-        $xtype: $xtype,
-        $background-color: $background-color,
-        $background-gradient: $background-gradient,
-        $color: $color,
-        $border-color: $border-color,
-        $border-width: $border-width,
-        $border-style: $border-style,
-        $box-shadow: $box-shadow,
-        $font-weight: $font-weight,
-        $font-size: $font-size,
-        $font-size-big: $font-size-big,
-        $line-height: $line-height,
-        $line-height-big: $line-height-big,
-        $font-family: $font-family,
-        $padding: $padding,
-        $padding-big: $padding-big
-    );
+    $arguments: intersect-arguments(pagingtoolbar-ui, toolbar-ui);
+
+    @include toolbar-ui($arguments...);
 
     .#{$prefix}#{$xtype}#{$ui-suffix} {
         .#{$prefix}pagingtoolbar-prev {

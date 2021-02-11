@@ -1,5 +1,5 @@
 Ext.define("Ext.locale.it.grid.column.Number", {
     override: "Ext.grid.column.Number",
 
-    format: '0.000,00' 
+    format: '0.000,00'
 });

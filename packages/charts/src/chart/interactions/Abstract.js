@@ -36,14 +36,15 @@ Ext.define('Ext.chart.interactions.Abstract', {
     },
 
     /**
-     * Android device is emerging too many events so if we re-render every frame it will take forever to finish a frame.
+     * Android device is emerging too many events so if we re-render every frame it will
+     * take forever to finish a frame.
      * This throttle technique will limit the timespan between two frames.
      */
     throttleGap: 0,
 
     stopAnimationBeforeSync: false,
 
-    constructor: function (config) {
+    constructor: function(config) {
         var me = this,
             id;
 
@@ -51,40 +52,46 @@ Ext.define('Ext.chart.interactions.Abstract', {
 
         if ('id' in config) {
             id = config.id;
-        } else if ('id' in me.config) {
+        }
+        else if ('id' in me.config) {
             id = me.config.id;
-        } else {
+        }
+        else {
             id = me.getId();
         }
+
         me.setId(id);
 
         me.mixins.observable.constructor.call(me, config);
     },
 
-    updateChart: function (newChart, oldChart) {
+    updateChart: function(newChart, oldChart) {
         var me = this;
 
         if (oldChart === newChart) {
             return;
         }
+
         if (oldChart) {
             oldChart.unregister(me);
             me.removeChartListener(oldChart);
         }
+
         if (newChart) {
             newChart.register(me);
             me.addChartListener();
         }
     },
 
-    updateEnabled: function (enabled) {
+    updateEnabled: function(enabled) {
         var me = this,
             chart = me.getChart();
 
         if (chart) {
             if (enabled) {
                 me.addChartListener();
-            } else {
+            }
+            else {
                 me.removeChartListener(chart);
             }
         }
@@ -104,7 +111,7 @@ Ext.define('Ext.chart.interactions.Abstract', {
      * @param {Event} e
      * @return {Object} the item object or null if none found.
      */
-    getItemForEvent: function (e) {
+    getItemForEvent: function(e) {
         var me = this,
             chart = me.getChart(),
             chartXY = chart.getEventXY(e);
@@ -113,12 +120,13 @@ Ext.define('Ext.chart.interactions.Abstract', {
     },
 
     /**
-     * @protected
      * Find and return all series items corresponding to the given event.
      * @param {Event} e
      * @return {Array} array of matching item objects
+     * @private
+     * @deprecated 6.5.2 This method is deprecated
      */
-    getItemsForEvent: function (e) {
+    getItemsForEvent: function(e) {
         var me = this,
             chart = me.getChart(),
             chartXY = chart.getEventXY(e);
@@ -129,7 +137,7 @@ Ext.define('Ext.chart.interactions.Abstract', {
     /**
      * @private
      */
-    addChartListener: function () {
+    addChartListener: function() {
         var me = this,
             chart = me.getChart(),
             gestures = me.getGestures(),
@@ -142,14 +150,19 @@ Ext.define('Ext.chart.interactions.Abstract', {
         function insertGesture(name, fn) {
             chart.addElementListener(
                 name,
-                // wrap the handler so it does not fire if the event is locked by another interaction
-                me.listeners[name] = function (e) {
-                    var locks = me.getLocks(), result;
+                // wrap the handler so it does not fire if the event is locked
+                // by another interaction
+                me.listeners[name] = function(e) {
+                    var locks = me.getLocks(),
+                        result;
+
                     if (me.getEnabled() && (!(name in locks) || locks[name] === me)) {
                         result = (Ext.isFunction(fn) ? fn : me[fn]).apply(this, arguments);
+
                         if (result === false && e && e.stopPropagation) {
                             e.stopPropagation();
                         }
+
                         return result;
                     }
                 },
@@ -158,18 +171,20 @@ Ext.define('Ext.chart.interactions.Abstract', {
         }
 
         me.listeners = me.listeners || {};
+
         for (gesture in gestures) {
             insertGesture(gesture, gestures[gesture]);
         }
     },
 
-    removeChartListener: function (chart) {
+    removeChartListener: function(chart) {
         var me = this,
             gestures = me.getGestures(),
             gesture;
 
         function removeGesture(name) {
             var fn = me.listeners[name];
+
             if (fn) {
                 chart.removeElementListener(name, fn);
                 delete me.listeners[name];
@@ -183,7 +198,7 @@ Ext.define('Ext.chart.interactions.Abstract', {
         }
     },
 
-    lockEvents: function () {
+    lockEvents: function() {
         var me = this,
             locks = me.getLocks(),
             args = Array.prototype.slice.call(arguments),
@@ -194,7 +209,7 @@ Ext.define('Ext.chart.interactions.Abstract', {
         }
     },
 
-    unlockEvents: function () {
+    unlockEvents: function() {
         var locks = this.getLocks(),
             args = Array.prototype.slice.call(arguments),
             i = args.length;
@@ -204,52 +219,60 @@ Ext.define('Ext.chart.interactions.Abstract', {
         }
     },
 
-    getLocks: function () {
+    getLocks: function() {
         var chart = this.getChart();
+
         return chart.lockedEvents || (chart.lockedEvents = {});
     },
 
-    doSync: function () {
+    doSync: function() {
         var me = this,
             chart = me.getChart();
 
         if (me.syncTimer) {
-            clearTimeout(me.syncTimer);
+            Ext.undefer(me.syncTimer);
             me.syncTimer = null;
         }
+
         if (me.stopAnimationBeforeSync) {
             chart.animationSuspendCount++;
         }
+
         chart.redraw();
+
         if (me.stopAnimationBeforeSync) {
             chart.animationSuspendCount--;
         }
+
         me.syncThrottle = Date.now() + me.throttleGap;
     },
 
-    sync: function () {
+    sync: function() {
         var me = this;
+
         if (me.throttleGap && Ext.frameStartTime < me.syncThrottle) {
             if (me.syncTimer) {
                 return;
             }
-            me.syncTimer = Ext.defer(function () {
+
+            me.syncTimer = Ext.defer(function() {
                 me.doSync();
             }, me.throttleGap);
-        } else {
+        }
+        else {
             me.doSync();
         }
     },
 
-    getItemId: function () {
+    getItemId: function() {
         return this.getId();
     },
 
-    isXType: function (xtype) {
+    isXType: function(xtype) {
         return xtype === 'interaction';
     },
 
-    destroy: function () {
+    destroy: function() {
         var me = this;
 
         me.setChart(null);
@@ -257,7 +280,7 @@ Ext.define('Ext.chart.interactions.Abstract', {
         me.callParent();
     }
 
-}, function () {
+}, function() {
     if (Ext.os.is.Android4) {
         this.prototype.throttleGap = 40;
     }
