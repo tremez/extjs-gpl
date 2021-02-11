@@ -22,6 +22,13 @@ Ext.define('KitchenSink.view.panel.HeaderPosition', {
             icon: null,
             panelMargin: '10 5 0 0',
             framedPanelMargin: '10 0 0 5'
+        },
+        'classic-material': {
+            bodyStyle: 'background: transparent',
+            glyph: 117,
+            icon: null,
+            panelMargin: '10 5 0 0',
+            framedPanelMargin: '10 0 0 5'
         }
     },
     //</example>
@@ -67,6 +74,7 @@ Ext.define('KitchenSink.view.panel.HeaderPosition', {
         title: 'Panel',
         icon: '${icon}',
         glyph: '${glyph}',
+        cls: Ext.baseCSSPrefix + 'shadow',
         html: KitchenSink.DummyText.longText,
 
         bind: {
@@ -79,6 +87,7 @@ Ext.define('KitchenSink.view.panel.HeaderPosition', {
         title: 'Framed Panel',
         icon: '${icon}',
         glyph: '${glyph}',
+        cls: Ext.baseCSSPrefix + 'shadow',
         html: KitchenSink.DummyText.longText,
 
         bind: {

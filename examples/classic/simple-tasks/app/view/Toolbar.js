@@ -68,4 +68,3 @@ Ext.define('SimpleTasks.view.Toolbar', {
     ]
 });
 
-

@@ -29,9 +29,9 @@ Ext.define('Ext.state.Stateful', {
          *
          * To set the state provider for the current page:
          *
-         *    Ext.state.Manager.setProvider(new Ext.state.CookieProvider({
-         *        expires: new Date(new Date().getTime()+(1000*60*60*24*7)), //7 days from now
-         *    }));
+         *     Ext.state.Manager.setProvider(new Ext.state.CookieProvider({
+         *         expires: new Date(new Date().getTime()+(1000*60*60*24*7)), // 7 days from now
+         *     }));
          *
          * A stateful object attempts to save state when one of the events
          * listed in the {@link #stateEvents} configuration fires.
@@ -45,11 +45,12 @@ Ext.define('Ext.state.Stateful', {
          *
          * The Panel class saves its collapsed state in addition to that.
          *
-         * The Grid class saves its column state and store state (sorters and filters and grouper) in addition to its superclass state.
+         * The Grid class saves its column state and store state (sorters and filters and grouper)
+         * in addition to its superclass state.
          *
-         * If there is more application state to be save, the developer must provide an implementation which
-         * first calls the superclass method to inherit the above behaviour, and then injects new properties
-         * into the returned object.
+         * If there is more application state to be save, the developer must provide
+         * an implementation which first calls the superclass method to inherit the above behaviour,
+         * and then injects new properties into the returned object.
          *
          * The value yielded by `getState` is passed to {@link Ext.state.Manager#set}
          * which uses the configured {@link Ext.state.Provider} to save the object
@@ -98,9 +99,10 @@ Ext.define('Ext.state.Stateful', {
     /**
      * @cfg {String[]} stateEvents
      * An array of events that, when fired, should trigger this object to
-     * save its state. Defaults to none. `stateEvents` may be any type
-     * of event supported by this object, including browser or custom events
-     * (e.g., `['click', 'customerchange']`).
+     * save its state. `stateEvents` defaults to the `stateEvents` associated with the
+     * component you are using.  Any events you statically set will be appended to that list.
+     * `stateEvents` may be any type of event supported by this object, including
+     * browser or custom events (e.g., `['click', 'customerchange']`).
      *
      * See `{@link #stateful}` for an explanation of saving and
      * restoring object state.
@@ -114,7 +116,8 @@ Ext.define('Ext.state.Stateful', {
 
     /**
      * @event beforestaterestore
-     * Fires before the state of the object is restored. Return false from an event handler to stop the restore.
+     * Fires before the state of the object is restored. Return false from an event handler to stop
+     * the restore.
      * @param {Ext.state.Stateful} this
      * @param {Object} state The hash of state values returned from the StateProvider. If this
      * event is not vetoed, then the state object is passed to *`applyState`*. By default,
@@ -126,19 +129,20 @@ Ext.define('Ext.state.Stateful', {
      * @event staterestore
      * Fires after the state of the object is restored.
      * @param {Ext.state.Stateful} this
-     * @param {Object} state The hash of state values returned from the StateProvider. This is passed
-     * to *`applyState`*. By default, that simply copies property values into this
+     * @param {Object} state The hash of state values returned from the StateProvider.
+     * This is passed to *`applyState`*. By default, that simply copies property values into this
      * object. The method maybe overridden to provide custom state restoration.
      */
 
     /**
      * @event beforestatesave
-     * Fires before the state of the object is saved to the configured state provider. Return false to stop the save.
+     * Fires before the state of the object is saved to the configured state provider.
+     * Return false to stop the save.
      * @param {Ext.state.Stateful} this
      * @param {Object} state The hash of state values. This is determined by calling
      * *`getState()`* on the object. This method must be provided by the
-     * developer to return whatever representation of state is required, by default, Ext.state.Stateful
-     * has a null implementation.
+     * developer to return whatever representation of state is required, by default,
+     * Ext.state.Stateful has a null implementation.
      */
 
     /**
@@ -147,8 +151,8 @@ Ext.define('Ext.state.Stateful', {
      * @param {Ext.state.Stateful} this
      * @param {Object} state The hash of state values. This is determined by calling
      * *`getState()`* on the object. This method must be provided by the
-     * developer to return whatever representation of state is required, by default, Ext.state.Stateful
-     * has a null implementation.
+     * developer to return whatever representation of state is required, by default,
+     * Ext.state.Stateful has a null implementation.
      */
 
     constructor: function() {
@@ -173,17 +177,17 @@ Ext.define('Ext.state.Stateful', {
      *
      * @param {String/String[]} events The event name or an array of event names.
      */
-    addStateEvents: function (events) {
+    addStateEvents: function(events) {
         var me = this,
             i, event, stateEventsByName,
             eventArray;
 
         if (me.stateful && me.getStateId()) {
-            eventArray =  (typeof events === 'string') ? arguments : events;
+            eventArray = (typeof events === 'string') ? arguments : events;
 
             stateEventsByName = me.stateEventsByName || (me.stateEventsByName = {});
 
-            for (i = eventArray.length; i--; ) {
+            for (i = eventArray.length; i--;) {
                 event = eventArray[i];
 
                 if (event && !stateEventsByName[event]) {
@@ -198,7 +202,7 @@ Ext.define('Ext.state.Stateful', {
      * This method is called when any of the {@link #stateEvents} are fired.
      * @private
      */
-    onStateChange: function(){
+    onStateChange: function() {
         var me = this,
             delay = me.saveDelay,
             statics, runner;
@@ -222,7 +226,8 @@ Ext.define('Ext.state.Stateful', {
             }
 
             me.stateTask.start();
-        } else {
+        }
+        else {
             me.saveState();
         }
     },
@@ -236,13 +241,10 @@ Ext.define('Ext.state.Stateful', {
             id = stateful && me.getStateId(),
             hasListeners = me.hasListeners,
             cfg, configs, plugins,
-            plugin,
-            i, len,
-            state,
-            pluginState;
+            plugin, i, len, state, pluginState;
 
         if (id) {
-            state = me.getState() || {};    //pass along for custom interactions
+            state = me.getState() || {};    // pass along for custom interactions
 
             if (Ext.isObject(stateful)) {
                 configs = me.self.getConfigurator();
@@ -254,7 +256,8 @@ Ext.define('Ext.state.Stateful', {
                             cfg = configs[i]; // if class declared this as a config
                             state[i] = cfg ? me[cfg.get]() : me[i];
                         }
-                    } else {
+                    }
+                    else {
                         delete state[i];
                     }
                 }
@@ -264,18 +267,23 @@ Ext.define('Ext.state.Stateful', {
              * Gather state from those plugins that implement a getState method
              */
             plugins = me.getPlugins() || [];
+
             for (i = 0, len = plugins.length; i < len; i++) {
                 plugin = plugins[i];
+
                 if (plugin && plugin.getState) {
                     pluginState = plugin.getState(state);
-                    if (pluginState && !state[plugin.ptype]) {  //first duplicate plugin wins
+
+                    if (pluginState && !state[plugin.ptype]) {  // first duplicate plugin wins
                         state[plugin.ptype] = pluginState;
                     }
                 }
             }
 
-            if (!hasListeners.beforestatesave || me.fireEvent('beforestatesave', me, state) !== false) {
+            if (!hasListeners.beforestatesave ||
+                me.fireEvent('beforestatesave', me, state) !== false) {
                 Ext.state.Manager.set(id, state);
+
                 if (hasListeners.statesave) {
                     me.fireEvent('statesave', me, state);
                 }
@@ -288,7 +296,7 @@ Ext.define('Ext.state.Stateful', {
      * it should be overridden in subclasses to implement methods for getting the state.
      * @return {Object} The current state
      */
-    getState: function(){
+    getState: function() {
         return null;
     },
 
@@ -311,6 +319,7 @@ Ext.define('Ext.state.Stateful', {
      */
     getStateId: function() {
         var me = this;
+
         return me.stateId || (me.autoGenId ? null : me.id);
     },
 
@@ -318,37 +327,41 @@ Ext.define('Ext.state.Stateful', {
      * Initializes the state of the object upon construction.
      * @private
      */
-    initState: function(){
+    initState: function() {
         var me = this,
             id = me.stateful && me.getStateId(),
             hasListeners = me.hasListeners,
-            state,
-            combinedState,
-            i, len,
-            plugins,
-            plugin,
-            pluginType;
+            state, combinedState, i, len, plugins, plugin, pluginType;
 
         if (id) {
             combinedState = Ext.state.Manager.get(id);
+
             if (combinedState) {
                 state = Ext.apply({}, combinedState);
-                if (!hasListeners.beforestaterestore || me.fireEvent('beforestaterestore', me, combinedState) !== false) {
 
-                    //Notify all plugins FIRST (if interested) in new state
+                if (!hasListeners.beforestaterestore ||
+                    me.fireEvent('beforestaterestore', me, combinedState) !== false) {
+
+                    // Notify all plugins FIRST (if interested) in new state
                     plugins = me.getPlugins() || [];
+
                     for (i = 0, len = plugins.length; i < len; i++) {
                         plugin = plugins[i];
+
                         if (plugin) {
                             pluginType = plugin.ptype;
+
                             if (plugin.applyState) {
                                 plugin.applyState(state[pluginType], combinedState);
                             }
-                            delete state[pluginType];  //clean to prevent unwanted props on the component in final phase
+
+                            // clean to prevent unwanted props on the component in final phase
+                            delete state[pluginType];
                         }
                     }
 
                     me.applyState(state);
+
                     if (hasListeners.staterestore) {
                         me.fireEvent('staterestore', me, combinedState);
                     }
@@ -368,7 +381,7 @@ Ext.define('Ext.state.Stateful', {
      * @param {String} stateName (optional) The name to use for the property in state.
      * @return {Boolean} True if the property was saved, false if not.
      */
-    savePropToState: function (propName, state, stateName) {
+    savePropToState: function(propName, state, stateName) {
         var me = this,
             value = me[propName],
             config = me.initialConfig;
@@ -378,9 +391,11 @@ Ext.define('Ext.state.Stateful', {
                 if (state) {
                     state[stateName || propName] = value;
                 }
+
                 return true;
             }
         }
+
         return false;
     },
 
@@ -391,13 +406,14 @@ Ext.define('Ext.state.Stateful', {
      * @param {Object} state The state object in to which to save the property values.
      * @return {Object} state
      */
-    savePropsToState: function (propNames, state) {
+    savePropsToState: function(propNames, state) {
         var me = this,
             i, n;
 
         if (typeof propNames === 'string') {
             me.savePropToState(propNames, state);
-        } else {
+        }
+        else {
             for (i = 0, n = propNames.length; i < n; ++i) {
                 me.savePropToState(propNames[i], state);
             }
@@ -416,7 +432,7 @@ Ext.define('Ext.state.Stateful', {
             task.destroy();
             this.stateTask = null;
         }
-        
+
         // No callParent() here, it's a mixin.
     }
 });

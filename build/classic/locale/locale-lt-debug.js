@@ -10,9 +10,21 @@ Ext.onReady(function() {
 
         Ext.Date.getShortMonthName = function(month) {
             // Uncommons
-            if (month == 7) return "Rgp";
-            if (month == 8) return "Rgs";
-            if (month == 11) return "Grd";
+            // eslint-disable-next-line eqeqeq
+            if (month == 7) {
+                return "Rgp";
+            }
+
+            // eslint-disable-next-line eqeqeq
+            if (month == 8) {
+                return "Rgs";
+            }
+
+            // eslint-disable-next-line eqeqeq
+            if (month == 11) {
+                return "Grd";
+            }
+
             return Ext.Date.monthNames[month].substring(0, 3);
         };
 
@@ -34,9 +46,18 @@ Ext.onReady(function() {
         Ext.Date.getMonthNumber = function(name) {
 
             // Some uncommons
-            if (name == "Rugpjūtis") return 7;
-            if (name == "Rugsėjis") return 8;
-            if (name == "Gruodis") return 11;
+            if (name === "Rugpjūtis") {
+                return 7;
+            }
+
+            if (name === "Rugsėjis") {
+                return 8;
+            }
+
+            if (name === "Gruodis") {
+                return 11;
+            }
+
             return Ext.Date.monthNumbers[name.substring(0, 1).toUpperCase() + name.substring(1, 3).toLowerCase()];
         };
 
@@ -303,10 +324,10 @@ Ext.define("Ext.locale.lt.window.MessageBox", {
         cancel: "Atsisakyti",
         yes: "Taip",
         no: "Ne"
-    }    
+    }
 });
 
 // This is needed until we can refactor all of the locales into individual files
-Ext.define("Ext.locale.lt.Component", {	
+Ext.define("Ext.locale.lt.Component", {
     override: "Ext.Component"
 });

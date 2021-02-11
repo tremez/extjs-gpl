@@ -3,6 +3,12 @@
  */
 
 /**
+ * @var {color}
+ * Panel background-color
+ */
+$panel-background-color: dynamic(null);
+
+/**
  * @var {color/list}
  * Panel border-color
  */
@@ -19,6 +25,18 @@ $panel-border-width: dynamic(1px);
  * Panel border-style
  */
 $panel-border-style: dynamic(solid);
+
+/**
+ * @var {number/list}
+ * Panel border-radius
+ */
+$panel-border-radius: dynamic(null);
+
+/**
+ * @var {number/list}
+ * Panel border-radius in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$panel-border-radius-big: dynamic($panel-border-radius);
 
 /**
  * @var {color}
@@ -60,13 +78,13 @@ $panel-body-font-weight: dynamic($font-weight-normal);
  * @var {number}
  * Panel body font-size
  */
-$panel-body-font-size: dynamic(1rem);
+$panel-body-font-size: dynamic($font-size);
 
 /**
  * @var {number}
  * Panel body font-size in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$panel-body-font-size-big: dynamic($panel-body-font-size);
+$panel-body-font-size-big: dynamic($font-size-big);
 
 /**
  * @var {number}
@@ -85,7 +103,6 @@ $panel-body-line-height-big: dynamic($panel-body-line-height);
  * Panel body font-family
  */
 $panel-body-font-family: dynamic($font-family);
-
 
 /**
  * @var {number/list}
@@ -146,25 +163,25 @@ $panel-header-font-weight: dynamic($font-weight-bold);
  * @var {number}
  * Panel Header font-size
  */
-$panel-header-font-size: dynamic(1rem);
+$panel-header-font-size: dynamic($font-size);
 
 /**
  * @var {number}
  * Panel Header font-size in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$panel-header-font-size-big: dynamic($panel-header-font-size);
+$panel-header-font-size-big: dynamic($font-size-big);
 
 /**
  * @var {number}
  * Panel Header line-height
  */
-$panel-header-line-height: dynamic(1.23em);
+$panel-header-line-height: dynamic(16px);
 
 /**
  * @var {number}
  * Panel Header line-height in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$panel-header-line-height-big: dynamic(1.6em);
+$panel-header-line-height-big: dynamic(24px);
 
 /**
  * @var {string}
@@ -176,13 +193,31 @@ $panel-header-font-family: dynamic($font-family);
  * @var {number/list}
  * Panel Header padding
  */
-$panel-header-padding: dynamic(.77em);
+$panel-header-padding: dynamic(0 10px);
 
 /**
  * @var {number/list}
  * Panel Header padding in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$panel-header-padding-big: dynamic(.67em);
+$panel-header-padding-big: dynamic(0 15px);
+
+/**
+ * @var {number/list}
+ * Panel Header Title padding
+ */
+$panel-header-title-padding: dynamic(7px 0);
+
+/**
+ * @var {number/list}
+ * Panel Header Title padding in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$panel-header-title-padding-big: dynamic(9px 0);
+
+/**
+ * @var {number}
+ * Panel Header Title opacity.
+ */
+$panel-header-title-opacity: dynamic(null);
 
 /**
  * @var {shadow}
@@ -192,68 +227,270 @@ $panel-header-shadow: dynamic(null);
 
 /**
  * @var {number}
- * Z-Index for the PanelHeader, should be used with shadows to raise header above content
+ * Z-Index for the Panel Header, should be used with shadows to raise header above content
  */
 $panel-header-z-index: dynamic(null);
 
 /**
  * @var {number}
- * Panel Header icon size.  If specified in terms of `em` units, the icon will be sized
- * relative to {@link #$panel-header-icon-font-size}.
+ * Panel Header min-height
  */
-$panel-header-icon-size: dynamic(1em);
+$panel-header-min-height: dynamic(36px);
+
+/**
+ * @var {number}
+ * Panel Header min-height in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$panel-header-min-height-big: dynamic(44px);
+
+/**
+ * @var {color}
+ * Panel Header icon color.
+ */
+$panel-header-icon-color: dynamic(rgba($panel-header-color, .5));
+
+/**
+ * @var {number}
+ * Panel Header icon size
+ */
+$panel-header-icon-size: dynamic($panel-header-line-height);
 
 /**
  * @var {number}
  * Panel Header icon size in the {@link Global_CSS#$enable-big big} sizing scheme
- * If specified in terms of `em` units, the icon will be sized
- * relative to {@link #$panel-header-icon-font-size-big}.
  */
-$panel-header-icon-size-big: dynamic(1em);
+$panel-header-icon-size-big: dynamic($panel-header-line-height-big);
 
 /**
  * @var {number}
  * Panel Header icon font-size.  Used for configuring the size of font icons
  */
-$panel-header-icon-font-size: dynamic($panel-header-line-height);
+$panel-header-icon-font-size: dynamic(null);
 
 /**
  * @var {number}
  * Panel Header icon font-size in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$panel-header-icon-font-size-big: dynamic($panel-header-line-height-big);
+$panel-header-icon-font-size-big: dynamic(null);
 
 /**
  * @var {number}
  * The space between the Panel Header icon and text when the icon is horizontally aligned
  */
-$panel-header-icon-horizontal-spacing: dynamic(.46em);
+$panel-header-icon-horizontal-spacing: dynamic(6px);
 
 /**
  * @var {number}
  * The space between the Panel Header icon and text when the icon is horizontally aligned
  * in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$panel-header-icon-horizontal-spacing-big: dynamic($panel-header-icon-horizontal-spacing);
+$panel-header-icon-horizontal-spacing-big: dynamic(8px);
 
 /**
  * @var {number}
  * The space between the Panel Header icon and text when the icon is vertically aligned
  */
-$panel-header-icon-vertical-spacing: dynamic(.2em);
+$panel-header-icon-vertical-spacing: dynamic(2px);
 
 /**
  * @var {number}
  * The space between the Panel Header icon and text when the icon is vertically aligned
  * in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$panel-header-icon-vertical-spacing-big: dynamic($panel-header-icon-vertical-spacing);
+$panel-header-icon-vertical-spacing-big: dynamic(2px);
 
 /**
  * @var {number}
  * Panel Header icon opacity
  */
-$panel-header-icon-opacity: dynamic(.5);
+$panel-header-icon-opacity: dynamic(null);
+
+/**
+ * @var {color}
+ * Panel Tool color
+ */
+$panel-tool-color: dynamic($panel-header-color);
+
+/**
+ * @var {number}
+ * Panel Tool color when hovered
+ */
+$panel-tool-hovered-color: dynamic(null);
+
+/**
+ * @var {number}
+ * Panel Tool color when pressed
+ */
+$panel-tool-pressed-color: dynamic(null);
+
+/**
+ * @var {number}
+ * Panel Tool color when disabled
+ */
+$panel-tool-disabled-color: dynamic(null);
+
+/**
+ * @var {color}
+ * Panel Tool background-color
+ */
+$panel-tool-background-color: dynamic(null);
+
+/**
+ * @var {number}
+ * Panel Tool background-color when hovered
+ */
+$panel-tool-hovered-background-color: dynamic(null);
+
+/**
+ * @var {number}
+ * Panel Tool background-color when pressed
+ */
+$panel-tool-pressed-background-color: dynamic(null);
+
+/**
+ * @var {number}
+ * Panel Tool background-color when disabled
+ */
+$panel-tool-disabled-background-color: dynamic(null);
+
+/**
+ * @var {number}
+ * Panel Tool opacity
+ */
+$panel-tool-opacity: dynamic(.5);
+
+/**
+ * @var {number}
+ * Panel Tool opacity when hovered
+ */
+$panel-tool-hovered-opacity: dynamic(.6);
+
+/**
+ * @var {number}
+ * Panel Tool opacity when pressed
+ */
+$panel-tool-pressed-opacity: dynamic(.7);
+
+/**
+ * @var {number}
+ * Panel Tool opacity when disabled
+ */
+$panel-tool-disabled-opacity: dynamic(null);
+
+/**
+ * @var {number}
+ * Panel Tool border radius
+ */
+$panel-tool-border-radius: dynamic(null);
+
+/**
+ * @var {number}
+ * Panel Tool border radius in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$panel-tool-border-radius-big: dynamic(null);
+
+/**
+ * @var {number}
+ * Panel Tool size
+ */
+$panel-tool-size: dynamic(null);
+
+/**
+ * @var {number}
+ * Panel Tool size in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$panel-tool-size-big: dynamic(null);
+
+/**
+ * @var {number}
+ * Panel Tool font-size
+ */
+$panel-tool-font-size: dynamic($panel-tool-size);
+
+/**
+ * @var {number}
+ * Panel Tool font-size in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$panel-tool-font-size-big: dynamic($panel-tool-size-big);
+
+/**
+ * @var {number}
+ * The space between Panel Tools
+ */
+$panel-tool-spacing: dynamic(null);
+
+/**
+ * @var {number}
+ * The space between Panel Tools in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$panel-tool-spacing-big: dynamic(null);
+
+/**
+ * @var {string}
+ * Panel Tool cursor
+ */
+$panel-tool-cursor: dynamic(null);
+
+/**
+ * @var {string}
+ * Panel Tool cursor when disabled
+ */
+$panel-tool-disabled-cursor: dynamic(null);
+
+/**
+ * @var {number}
+ * Panel Tool outline width when focused
+ */
+$panel-tool-focused-outline-width: dynamic(null);
+
+/**
+ * @var {string}
+ * Panel Tool outline style when focused
+ */
+$panel-tool-focused-outline-style: dynamic(null);
+
+/**
+ * @var {color}
+ * Panel Tool outline color when focused
+ */
+$panel-tool-focused-outline-color: dynamic($panel-header-color);
+
+/**
+ * @var {number}
+ * Panel Tool outline offset when focused
+ */
+$panel-tool-focused-outline-offset: dynamic(null);
+
+/**
+ * @var {color}
+ * Panel anchor border-color
+ */
+$panel-anchor-border-color: dynamic($panel-border-color);
+
+/**
+ * @var {color}
+ * Panel anchor background-color
+ */
+$panel-anchor-background-color: dynamic($panel-body-background-color);
+
+/**
+ * @var {number}
+ * The height (in all orientations) of the anchor arrow
+ */
+$panel-anchor-height: dynamic(10px);
+
+/**
+ * @var {number}
+ * The width (in all orientations) of the anchor arrow.
+ */
+$panel-anchor-width: dynamic(20px);
+
+/**
+ * @var {number}
+ * The extra spacing beyond the tip of the anchor arrow to prevent the pointer touching
+ * the target;
+ */
+$panel-anchor-margin: dynamic(1px);
 
 /**
  * @var {string}
@@ -262,22 +499,36 @@ $panel-header-icon-opacity: dynamic(.5);
 $panel-manage-borders: dynamic(true);
 
 /**
- * @var {boolean}
- * `true` to include the "light" panel UI
+ * @var {map}
+ * Parameters for the "light" panel UI.
+ * Set to `null` to eliminate the UI from the CSS output.
  */
-$panel-light-ui: dynamic($enable-default-uis);
+$panel-light-ui: dynamic((
+    background-color: $neutral-light-color,
+    border-color: mix($base-light-color, $neutral-light-color, 30%),
+    body-border-color: mix($base-light-color, $neutral-light-color, 30%),
+    header-background-color: mix($base-light-color, $neutral-light-color, 30%),
+    header-border-color: mix($base-light-color, $neutral-light-color, 30%),
+    header-color: #666,
+    header-icon-color: rgba(#666, .5),
+    tool-color: #666,
+    tool-focused-outline-color: $base-color
+));
 
 /**
- * @var {number}
- * The height (in all orientations) of the anchor arrow
+ * @var {map}
+ * Parameters for the "accordion" panel UI.
+ * Set to `null` to eliminate the UI from the CSS output. 
  */
-$panel-anchor-height: dynamic(0.7em);
-
-/**
- * @var {number}
- * The width (in all orientations) of the anchor arrow.
- */
-$panel-anchor-width: dynamic($panel-anchor-height * 2.33);
+$panel-accordion-ui: dynamic((
+    header-background-color: $neutral-light-color,
+    header-border-width: 0,
+    panel-header-padding: 4px 5px,
+    body-padding: 10px,
+    header-color: #111,
+    tool-color: #9e9e9e,
+    body-border-width: 0
+));
 
 /**
  * Creates a visual theme for a Panel.
@@ -285,6 +536,21 @@ $panel-anchor-width: dynamic($panel-anchor-height * 2.33);
  * @param {string} $ui
  * The name of the UI being created. Can not included spaces or special punctuation
  * (used in CSS class names).
+ *
+ * @param {String} [$xtype=panel] (protected) The {@link Ext.Class#xtype} to use
+ * in CSS selectors.  For use by UI mixins of derived classes.
+ *
+ * @param {String} [$header-xtype=panelheader] (protected) The {@link Ext.Class#xtype} to use
+ * in CSS selectors for the header component.  For use by UI mixins of derived classes.
+ *
+ * @param {String} [$title-xtype=paneltitle] (protected) The {@link Ext.Class#xtype} to use
+ * in CSS selectors for the title component.  For use by UI mixins of derived classes.
+ *
+ * @param {String} [$tool-xtype=paneltool] (protected) The {@link Ext.Class#xtype} to use
+ * in CSS selectors for tools.  For use by UI mixins of derived classes.
+ *
+ * @param {color} $background-color
+ * Panel background-color
  *
  * @param {color/list} $border-color
  * Panel border-color
@@ -294,6 +560,12 @@ $panel-anchor-width: dynamic($panel-anchor-height * 2.33);
  *
  * @param {string/list} $border-style
  * Panel border-style
+ *
+ * @param {number/list} $border-radius
+ * Panel border-radius
+ *
+ * @param {number/list} $border-radius-big
+ * Panel border-radius in the {@link Global_CSS#$enable-big big} sizing scheme
  *
  * @param {color} $body-background-color
  * Panel body background-color
@@ -330,6 +602,9 @@ $panel-anchor-width: dynamic($panel-anchor-height * 2.33);
  *
  * @param {number/list} $body-padding
  * Panel body padding
+ *
+ * @param {number/list} $body-padding-big
+ * Panel body padding in the {@link Global_CSS#$enable-big big} sizing scheme
  *
  * @param {color} $header-background-color
  * Panel Header background-color
@@ -374,14 +649,35 @@ $panel-anchor-width: dynamic($panel-anchor-height * 2.33);
  * @param {number/list} $header-padding-big
  * Panel Header padding in the {@link Global_CSS#$enable-big big} sizing scheme
  *
+ * @param {number/list} $header-title-padding
+ * Panel Header Title padding
+ *
+ * @param {number/list} $header-title-padding-big
+ * Panel Header Title padding in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {number} $header-title-opacity
+ * Panel Header Title opacity
+ *
+ * @param {shadow} $header-shadow
+ * Panel Header Shadow
+ *
+ * @param {number} $header-z-index
+ * Z-Index for the Panel Header, should be used with shadows to raise header above content
+ *
+ * @param {number} $header-min-height
+ * Panel Header min-height
+ *
+ * @param {number} $header-min-height-big
+ * Panel Header min-height in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {color} $header-icon-color
+ * Panel Header icon color.
+ *
  * @param {number} $header-icon-size
- * Panel Header icon size.  If specified in terms of `em` units, the icon will be sized
- * relative to {@link #$header-icon-font-size}.
+ * Panel Header icon size
  *
  * @param {number} $header-icon-size-big
  * Panel Header icon size in the {@link Global_CSS#$enable-big big} sizing scheme
- * If specified in terms of `em` units, the icon will be sized
- * relative to {@link #$header-icon-font-size-big}.
  *
  * @param {number} $header-icon-font-size
  * Panel Header icon font-size.  Used for configuring the size of font icons
@@ -407,22 +703,58 @@ $panel-anchor-width: dynamic($panel-anchor-height * 2.33);
  * Panel Header icon opacity
  *
  * @param {color} $tool-color
- * Tool icon color
+ * Panel Tool color
+ *
+ * @param {number} $tool-hovered-color
+ * Panel Tool color when hovered
+ *
+ * @param {number} $tool-pressed-color
+ * Panel Tool color when pressed
+ *
+ * @param {number} $tool-disabled-color
+ * Panel Tool color when disabled
+ *
+ * @param {color} $tool-background-color
+ * Panel Tool background-color
+ *
+ * @param {number} $tool-hovered-background-color
+ * Panel Tool background-color when hovered
+ *
+ * @param {number} $tool-pressed-background-color
+ * Panel Tool background-color when pressed
+ *
+ * @param {number} $tool-disabled-background-color
+ * Panel Tool background-color when disabled
+ *
+ * @param {number} $tool-opacity
+ * Panel Tool opacity
+ *
+ * @param {number} $tool-hovered-opacity
+ * Panel Tool opacity when hovered
+ *
+ * @param {number} $tool-pressed-opacity
+ * Panel Tool opacity when pressed
+ *
+ * @param {number} $tool-disabled-opacity
+ * Panel Tool opacity when disabled
+ *
+ * @param {number} $tool-border-radius
+ * Panel Tool border radius
+ *
+ * @param {number} $tool-border-radius-big
+ * Panel Tool border radius in the {@link Global_CSS#$enable-big big} sizing scheme
  *
  * @param {number} $tool-size
- * Tool icon size.  If specified in terms of `em` units, the icon will be sized
- * relative to {@link #$tool-font-size}.
+ * Panel Tool size
  *
  * @param {number} $tool-size-big
- * Tool icon size in the {@link Global_CSS#$enable-big big} sizing scheme
- * If specified in terms of `em` units, the icon will be sized
- * relative to {@link #$tool-font-size-big}.
+ * Panel Tool size in the {@link Global_CSS#$enable-big big} sizing scheme
  *
  * @param {number} $tool-font-size
- * Tool icon font-size
+ * Panel Tool font-size
  *
  * @param {number} $tool-font-size-big
- * Tool icon font-size in the {@link Global_CSS#$enable-big big} sizing scheme
+ * Panel Tool font-size in the {@link Global_CSS#$enable-big big} sizing scheme
  *
  * @param {number} $tool-spacing
  * The space between Panel Tools
@@ -431,27 +763,54 @@ $panel-anchor-width: dynamic($panel-anchor-height * 2.33);
  * The space between Panel Tools in the {@link Global_CSS#$enable-big big} sizing scheme
  *
  * @param {string} $tool-cursor
- * The cursor to display when the mouse cursor is over a Tool
+ * Panel Tool cursor
  *
- * @param {number} $tool-opacity
- * Tool opacity
+ * @param {string} $tool-disabled-cursor
+ * Panel Tool cursor when disabled
  *
- * @param {number} $tool-opacity-over
- * Tool opacity when hovered
+ * @param {number} $tool-focused-outline-width
+ * Panel Tool outline width when focused
  *
- * @param {number} $tool-opacity-pressed
- * Tool opacity when pressed
+ * @param {string} $tool-focused-outline-style
+ * Panel Tool outline style when focused
+ *
+ * @param {color} $tool-focused-outline-color
+ * Panel Tool outline color when focused
+ *
+ * @param {number} $tool-focused-outline-offset
+ * Panel Tool outline offset when focused
+ *
+ * @param {color} $anchor-border-color
+ * Panel anchor border-color
+ *
+ * @param {color} $anchor-background-color
+ * Panel anchor background-color
+ *
+ * @param {number} $anchor-height
+ * The height (in all orientations) of the anchor arrow
+ *
+ * @param {number} $anchor-width
+ * The width (in all orientations) of the anchor arrow.
+ *
+ * @param {number} $anchor-margin
+ * The extra spacing beyond the tip of the anchor arrow to prevent the pointer touching
+ * the target;
  *
  * @param {string} $manage-borders
  * `true` to include {@link #manageBorders border management} rules
- *
- * @member Ext.Panel
  */
 @mixin panel-ui(
     $ui: null,
+    $xtype: panel,
+    $header-xtype: panelheader,
+    $title-xtype: paneltitle,
+    $tool-xtype: paneltool,
+    $background-color: null,
     $border-color: null,
     $border-width: null,
     $border-style: null,
+    $border-radius: null,
+    $border-radius-big: null,
     $body-background-color: null,
     $body-color: null,
     $body-border-color: null,
@@ -465,7 +824,6 @@ $panel-anchor-width: dynamic($panel-anchor-height * 2.33);
     $body-font-family: null,
     $body-padding: null,
     $body-padding-big: null,
-
     $header-background-color: null,
     $header-background-gradient: null,
     $header-color: null,
@@ -480,8 +838,14 @@ $panel-anchor-width: dynamic($panel-anchor-height * 2.33);
     $header-font-family: null,
     $header-padding: null,
     $header-padding-big: null,
+    $header-title-padding: null,
+    $header-title-padding-big: null,
+    $header-title-opacity: null,
     $header-shadow: null,
     $header-z-index: null,
+    $header-min-height: null,
+    $header-min-height-big: null,
+    $header-icon-color: null,
     $header-icon-size: null,
     $header-icon-size-big: null,
     $header-icon-font-size: null,
@@ -491,8 +855,20 @@ $panel-anchor-width: dynamic($panel-anchor-height * 2.33);
     $header-icon-vertical-spacing: null,
     $header-icon-vertical-spacing-big: null,
     $header-icon-opacity: null,
-
     $tool-color: null,
+    $tool-hovered-color: null,
+    $tool-pressed-color: null,
+    $tool-disabled-color: null,
+    $tool-background-color: null,
+    $tool-hovered-background-color: null,
+    $tool-pressed-background-color: null,
+    $tool-disabled-background-color: null,
+    $tool-opacity: null,
+    $tool-hovered-opacity: null,
+    $tool-pressed-opacity: null,
+    $tool-disabled-opacity: null,
+    $tool-border-radius: null,
+    $tool-border-radius-big: null,
     $tool-size: null,
     $tool-size-big: null,
     $tool-font-size: null,
@@ -500,115 +876,94 @@ $panel-anchor-width: dynamic($panel-anchor-height * 2.33);
     $tool-spacing: null,
     $tool-spacing-big: null,
     $tool-cursor: null,
-    $tool-opacity: null,
-    $tool-opacity-over: null,
-    $tool-opacity-pressed: null,
-
-    $manage-borders: $panel-manage-borders,
-
+    $tool-disabled-cursor: null,
+    $tool-focused-outline-width: null,
+    $tool-focused-outline-style: null,
+    $tool-focused-outline-color: null,
+    $tool-focused-outline-offset: null,
+    $anchor-border-color: null,
+    $anchor-background-color: null,
     $anchor-height: null,
-    $anchor-width: null
+    $anchor-width: null,
+    $anchor-margin: null,
+    $manage-borders: $panel-manage-borders
 ) {
     $ui-suffix: ui-suffix($ui);
 
-    .x-panel#{$ui-suffix} {
-        @if not $manage-borders {
-            @include border($border-width, $border-style, $border-color)
+    .#{$prefix}#{$xtype}#{$ui-suffix} {
+		background-color: $background-color;
+        border-radius: $border-radius;
+
+        @if $enable-big {
+            .#{$prefix}big {
+                border-radius: $border-radius-big;
+            }
         }
 
-        // Only emit anchor rules if the anchor has valid dimensions
-        @if not is-null($anchor-height) and not is-null($anchor-width) {
+        @if not $manage-borders {
+            @include border($border-width, $border-style, $border-color);
+        }
 
-            @if is-null($border-width) {
-                $border-width: 0;
+        @if $anchor-border-color == null {
+            $anchor-border-color: $border-color;
+        }
+
+        @if $anchor-background-color == null {
+            $anchor-background-color: $body-background-color;
+        }
+
+        $anchor-border-width: $border-width;
+
+        > .#{$prefix}anchor-el {
+            // This is read and used as the extra offset between the anchor point
+            // and the target.
+            margin: $anchor-margin;
+
+            .#{$prefix}pointer-el {
+                fill: $anchor-background-color;
+                stroke-width: $anchor-border-width;
+                stroke: $anchor-border-color;
             }
 
-            // The width of adjoining borders to the "arrow" border which is $anchor-height wide.
-            // The opposite border is zero width.
-            $anchor-border-width: $anchor-width / 2;
-
-            .#{$prefix}anchor {
-                border: $anchor-border-width solid transparent;
+            &.#{$prefix}top {
+                width: $anchor-width;
+                height: $anchor-height;
+                top: -$anchor-height;
+                padding-bottom: $border-width;
             }
 
-            .#{$prefix}anchor-top {
-                border-top-width: 0;
-                border-bottom: $anchor-height solid darken($border-color, 5%);
-                @if ($border-width != 0) {
-                    top: calc(-#{$anchor-height or $default-calc-value} + #{$border-width or $panel-border-width or $default-calc-value});
-                } @else {
-                    top: -$anchor-height;
-                }
+            &.#{$prefix}bottom {
+                width: $anchor-width;
+                height: $anchor-height;
+                bottom: -$anchor-height;
+                padding-top: $border-width;
             }
 
-            .#{$prefix}anchor-bottom {
-                border-bottom-width: 0;
-                border-top: $anchor-height solid darken($border-color, 5%);
-                @if ($border-width != 0) {
-                    bottom: calc(-#{$anchor-height or $default-calc-value} + #{$border-width or $panel-border-width or $default-calc-value});
-                } @else {
-                    bottom: -$anchor-height;
-                }
-            }
+            &.#{$prefix}left {
+                height: $anchor-width;
+                width: $anchor-height;
+                left: -$anchor-height;
+                padding-right: $border-width;
 
-            .#{$prefix}anchor-left {
-                border-left-width: 0;
-                border-right: $anchor-height solid darken($border-color, 5%);
-                @if ($border-width != 0) {
-                    left: calc(-#{$anchor-height or $default-calc-value} + #{$border-width or $panel-border-width or $default-calc-value});
-                } @else {
-                    left: -$anchor-height;
-                }
-            }
-
-            .#{$prefix}anchor-right {
-                border-right-width: 0;
-                border-left: $anchor-height solid darken($border-color, 5%);
-                @if ($border-width != 0) {
-                    right: calc(-#{$anchor-height or $default-calc-value} + #{$border-width or $panel-border-width or $default-calc-value});
-                } @else {
-                    right: -$anchor-height;
+                .#{$prefix}pointer-el {
+                    transform-origin: ($anchor-width / 2) ($anchor-width / 2);
                 }
             }
 
-            // If background is a different color, create the overlay triangle.
-            @if $body-background-color != $border-color and $border-width != 0 {
-                .#{$prefix}anchor:after {
-                    border: $anchor-border-width solid transparent;
-                }
+            &.#{$prefix}right {
+                height: $anchor-width;
+                width: $anchor-height;
+                right: -$anchor-height;
+                padding-left: $border-width;
 
-                .#{$prefix}anchor-top:after {
-                    border-top-width: 0;
-                    border-bottom: $anchor-height solid $body-background-color;
-                    left: calc(-#{$anchor-border-width or $default-calc-value} + #{$border-width or $default-calc-value});
-                    top: $border-width;
-                }
-
-                .#{$prefix}anchor-bottom:after {
-                    border-bottom-width: 0;
-                    border-top: $anchor-height solid $body-background-color;
-                    left: calc(-#{$anchor-border-width or $default-calc-value} + #{$border-width or $default-calc-value});
-                    bottom: $border-width;
-                }
-
-                .#{$prefix}anchor-left:after {
-                    border-left-width: 0;
-                    border-right: $anchor-height solid $body-background-color;
-                    top: calc(-#{$anchor-border-width or $default-calc-value} + #{$border-width or $default-calc-value});
-                    left: $border-width;
-                }
-
-                .#{$prefix}anchor-right:after {
-                    border-right-width: 0;
-                    border-left: $anchor-height solid $body-background-color;
-                    top: calc(-#{$anchor-border-width or $default-calc-value} + #{$border-width or $default-calc-value});
-                    right: $border-width;
+                .#{$prefix}pointer-el {
+                    transform-origin: ($anchor-height / 2) ($anchor-height / 2);
                 }
             }
         }
     }
 
-    .x-panel-inner#{$ui-suffix} {
+    .#{$prefix}#{$xtype}#{$ui-suffix}-body-el {
         padding: $body-padding;
         background-color: $body-background-color;
         color: $body-color;
@@ -616,158 +971,103 @@ $panel-anchor-width: dynamic($panel-anchor-height * 2.33);
         @include font($body-font-weight, $body-font-size, $body-line-height, $body-font-family);
 
         @if $enable-big {
-            .x-big & {
-                @if $body-font-size-big != $body-font-size {
-                    font-size: $body-font-size-big;
-                }
-                @if $body-line-height-big != $body-line-height {
-                    line-height: $body-line-height-big;
-                }
-
+            .#{$prefix}big & {
+                font-size: $body-font-size-big;
+                line-height: $body-line-height-big;
                 padding: $body-padding-big;
             }
         }
     }
 
-    .x-panel-header#{$ui-suffix} {
-        @include background-gradient($header-background-color, $header-background-gradient);
+    // When a boxscroller is present we move the body border to the boxscroller element so
+    // that it surrounds the items and tools
+    .#{$prefix}#{$xtype}#{$ui-suffix}-boxscroller {
+        @include border($body-border-width, $body-border-style, $body-border-color);
 
-        color: $header-color;
-        padding: $header-padding;
-        @include font($header-font-weight, $header-font-size, $header-line-height, $header-font-family);
-        @include border($header-border-width, $header-border-style, $header-border-color);
-        box-shadow: $header-shadow;
-        z-index: $header-z-index;
-        @if $header-shadow != null {
-            position: relative;
-        }
-
-        @if $enable-big {
-            .x-big & {
-                padding: $header-padding-big;
-                font-size: $header-font-size-big;
-                line-height: $header-line-height-big;
-            }
-        }
-
-        .x-tool {
-            width: $tool-size;
-            height: $tool-size;
-            line-height: $tool-size;
-            font-size: $tool-font-size;
-            opacity: $tool-opacity;
-            cursor: $tool-cursor;
-            margin-left: $tool-spacing;
-
-            color: $tool-color;
-
-            &:hover {
-                opacity: $tool-opacity-over;
-            }
-
-            &:active {
-                opacity: $tool-opacity-pressed;
-            }
-
-            @if $enable-big {
-                .x-big & {
-                    width: $tool-size-big;
-                    height: $tool-size-big;
-                    line-height: $tool-size-big;
-                    font-size: $tool-font-size-big;
-                }
-            }
-        }
-    }
-
-    .x-panel-title#{$ui-suffix} {
-        .x-panel-title-icon {
-            width: $header-icon-size;
-            height: $header-icon-size;
-            line-height: $header-icon-size;
-            font-size: $header-icon-font-size;
-            opacity: $header-icon-opacity;
-
-            @if $enable-big {
-                .x-big & {
-                    width: $header-icon-size-big;
-                    height: $header-icon-size-big;
-                    line-height: $header-icon-size-big;
-                    font-size: $header-icon-font-size-big;
-                }
-            }
-
-            &.x-panel-title-icon-top {
-                margin-bottom: $header-icon-vertical-spacing;
-
-                @if $enable-big {
-                    .x-big & {
-                        margin-bottom: $header-icon-vertical-spacing-big;
-                    }
-                }
-            }
-
-            &.x-panel-title-icon-right {
-                margin-left: $header-icon-horizontal-spacing;
-
-                @if $enable-big {
-                    .x-big & {
-                        margin-left: $header-icon-horizontal-spacing-big;
-                    }
-                }
-            }
-
-            &.x-panel-title-icon-bottom {
-                margin-top: $header-icon-vertical-spacing;
-
-                @if $enable-big {
-                    .x-big & {
-                        margin-top: $header-icon-vertical-spacing-big;
-                    }
-                }
-            }
-
-            &.x-panel-title-icon-left {
-                margin-right: $header-icon-horizontal-spacing;
-
-                @if $enable-big {
-                    .x-big & {
-                        margin-right: $header-icon-horizontal-spacing-big;
-                    }
-                }
-            }
+        > .#{$prefix}boxscroller-body > .#{$prefix}body-el {
+            border: 0;
         }
     }
 
     @if $manage-borders {
         @include border-management(
-            $parent-cls: panel#{$ui-suffix},
-            $border-width: 1px,
-            $border-color: $border-color
+            $parent-cls: #{$xtype}#{$ui-suffix},
+            $border-width: $border-width,
+            $border-color: $border-color,
+            $border-radius: $border-radius,
+            $border-radius-big $border-radius-big
         );
     }
-}
 
-/**
- * Generates style rules for the "light" panel UI. This mixin is invoked automatically
- * when {@link #$panel-light-ui} is `true`.
- *
- * Can be overridden in derived themes to customize the look and feel of the "light" UI.
- *
- * @member Ext.Button
- * @protected
- */
-@mixin panel-light-ui {
-    $header-bg: mix($base-light-color, $neutral-light-color, 30%);
-    @include panel-ui(
-        $ui: 'light',
-        $header-color: #666,
-        $header-background-color: $header-bg,
-        $border-color: $header-bg,
-        $header-border-color: $header-bg,
-        $body-border-color: $header-bg,
-        $tool-color: #666,
-        $anchor-width: $panel-anchor-width,
-        $anchor-height: $panel-anchor-height
+    @include panelheader-ui(
+        $ui: $ui,
+        $xtype: $header-xtype,
+        $background-color: $header-background-color,
+        $background-gradient: $header-background-gradient,
+        $border-color: $header-border-color,
+        $border-width: $header-border-width,
+        $border-style: $header-border-style,
+        $padding: $header-padding,
+        $padding-big: $header-padding-big,
+        $shadow: $header-shadow,
+        $z-index: $header-z-index,
+        $min-height: $header-min-height,
+        $min-height-big: $header-min-height-big
+    );
+
+    @include paneltitle-ui(
+        $ui: $ui,
+        $xtype: $title-xtype,
+        $color: $header-color,
+        $font-weight: $header-font-weight,
+        $font-size: $header-font-size,
+        $font-size-big: $header-font-size-big,
+        $line-height: $header-line-height,
+        $line-height-big: $header-line-height-big,
+        $font-family: $header-font-family,
+        $padding: $header-title-padding,
+        $padding-big: $header-title-padding-big,
+        $opacity: $header-title-opacity,
+        $icon-color: $header-icon-color,
+        $icon-size: $header-icon-size,
+        $icon-size-big: $header-icon-size-big,
+        $icon-font-size: $header-icon-font-size,
+        $icon-font-size-big: $header-icon-font-size-big,
+        $icon-horizontal-spacing: $header-icon-horizontal-spacing,
+        $icon-horizontal-spacing-big: $header-icon-horizontal-spacing-big,
+        $icon-vertical-spacing: $header-icon-vertical-spacing,
+        $icon-vertical-spacing-big: $header-icon-vertical-spacing-big,
+        $icon-opacity: $header-icon-opacity
+    );
+
+    @include tool-ui(
+        $ui: $ui,
+        $xtype: $tool-xtype,
+        $color: $tool-color,
+        $hovered-color: $tool-hovered-color,
+        $pressed-color: $tool-pressed-color,
+        $disabled-color: $tool-disabled-color,
+        $background-color: $tool-background-color,
+        $hovered-background-color: $tool-hovered-background-color,
+        $pressed-background-color: $tool-pressed-background-color,
+        $disabled-background-color: $tool-disabled-background-color,
+        $opacity: $tool-opacity,
+        $hovered-opacity: $tool-hovered-opacity,
+        $pressed-opacity: $tool-pressed-opacity,
+        $disabled-opacity: $tool-disabled-opacity,
+        $border-radius: $tool-border-radius,
+        $border-radius-big: $tool-border-radius-big,
+        $size: $tool-size,
+        $size-big: $tool-size-big,
+        $font-size: $tool-font-size,
+        $font-size-big: $tool-font-size-big,
+        $spacing: $tool-spacing,
+        $spacing-big: $tool-spacing-big,
+        $cursor: $tool-cursor,
+        $disabled-cursor: $tool-disabled-cursor,
+        $focused-outline-width: $tool-focused-outline-width,
+        $focused-outline-style: $tool-focused-outline-style,
+        $focused-outline-color: $tool-focused-outline-color,
+        $focused-outline-offset: $tool-focused-outline-offset
     );
 }

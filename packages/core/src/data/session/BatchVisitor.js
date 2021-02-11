@@ -8,14 +8,15 @@
 Ext.define('Ext.data.session.BatchVisitor', {
     map: null,
 
-    constructor: function (batch) {
+    constructor: function(batch) {
         this.batch = batch;
     },
 
-    getBatch: function (sort) {
+    getBatch: function(sort) {
         var map = this.map,
             batch = this.batch,
-            bucket, entity, name, operation, proxy;
+            bucket, entity, name, operation, operationType,
+            proxy, batchActions, records, len, i;
 
         if (map) {
             if (!batch) {
@@ -26,15 +27,29 @@ Ext.define('Ext.data.session.BatchVisitor', {
                 bucket = map[name];
                 entity = bucket.entity; // the entity class
                 proxy = entity.getProxy();
+                batchActions = proxy.getBatchActions();
 
                 delete bucket.entity; // so we don't think its an operation
-                for (operation in bucket) {
-                    operation = proxy.createOperation(operation, {
-                        records: bucket[operation]
-                    });
-                    operation.entityType = entity;
 
-                    batch.add(operation);
+                for (operationType in bucket) {
+                    if (batchActions) {
+                        operation = proxy.createOperation(operationType, {
+                            records: bucket[operationType]
+                        });
+                        operation.entityType = entity;
+                        batch.add(operation);
+                    }
+                    else {
+                        records = bucket[operationType];
+
+                        for (i = 0, len = records.length; i < len; ++i) {
+                            operation = proxy.createOperation(operationType, {
+                                records: [records[i]]
+                            });
+                            operation.entityType = entity;
+                            batch.add(operation);
+                        }
+                    }
                 }
             }
         }
@@ -46,10 +61,9 @@ Ext.define('Ext.data.session.BatchVisitor', {
         return batch;
     },
 
-    onDirtyRecord: function (record) {
+    onDirtyRecord: function(record) {
         var me = this,
-            operation = record.phantom ? 'create'
-                : (record.dropped ? 'destroy' : 'update'),
+            operation = record.phantom ? 'create' : (record.dropped ? 'destroy' : 'update'),
             name = record.$className,
             map = (me.map || (me.map = {})),
             bucket = (map[name] || (map[name] = {

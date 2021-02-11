@@ -128,7 +128,7 @@ Ext.define('KitchenSink.data.calendar.Days', {
         '/KitchenSink/CalendarDaysEvents/2': {
             type: 'json',
             data: function(ctx) {
-                return U.generateOutput(data.personal, 2, ctx);   
+                return U.generateOutput(data.personal, 2, ctx);
             }
         }
     });

@@ -10,7 +10,7 @@ Ext.define('Ext.parse.symbol.Paren', {
 
     priority: 80,
 
-    led: function (left) {
+    led: function(left) {
         // Handles function call operator
         var me = this,
             args = [],
@@ -40,15 +40,17 @@ Ext.define('Ext.parse.symbol.Paren', {
         }
 
         parser.advance(')');
+
         return me;
     },
 
-    nud: function () {
+    nud: function() {
         // Handles parenthesized expressions
         var parser = this.parser,
             ret = parser.parseExpression();
 
         parser.advance(")");
+
         return ret;
     }
 });

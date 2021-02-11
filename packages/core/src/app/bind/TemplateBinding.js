@@ -19,7 +19,7 @@ Ext.define('Ext.app.bind.TemplateBinding', {
 
     value: undefined,
 
-    constructor: function (template, owner, callback, scope, options) {
+    constructor: function(template, owner, callback, scope, options) {
         var me = this,
             tpl = new Ext.app.bind.Template(template),
             tokens = tpl.getTokens();
@@ -33,46 +33,58 @@ Ext.define('Ext.app.bind.TemplateBinding', {
         // If we don't have any tokens, then we've just got a static string.
         if (!tpl.isStatic()) {
             me.multiBinding = new Ext.app.bind.Multi(tokens, owner, me.onBindData, me);
-        } else {
+        }
+        else {
             me.isStatic = true;
-            me.onData(tpl.text);
+            me.onData(tpl.getText());
         }
     },
-    
+
     destroy: function() {
         var me = this;
+
         Ext.destroy(me.multiBinding);
         me.tpl = me.multiBinding = null;
+
         me.callParent();
     },
 
-    getFullName: function () {
+    getFullName: function() {
         var multi = this.multiBinding;
-        return this.fullName || (this.fullName = '$' + (multi ? multi.getFullName() : this.callParent()));
+
+        return this.fullName ||
+               (this.fullName = '$' + (multi ? multi.getFullName() : this.callParent()));
     },
 
-    getRawValue: function () {
+    getRawValue: function() {
         return this.value;
     },
 
-    getTemplateScope: function () {
+    getTemplateScope: function() {
         return null;
     },
 
-    isDescendantOf: function () {
+    isAvailable: function() {
+        var multi = this.multiBinding;
+
+        return multi ? multi.isAvailable() : false;
+    },
+
+    isDescendantOf: function() {
         return false;
     },
 
-    isLoading: function () {
+    isLoading: function() {
         var multi = this.multiBinding;
+
         return multi ? multi.isLoading() : false;
     },
-    
+
     onBindData: function(data) {
         this.onData(this.tpl.apply(data, this.getTemplateScope()));
     },
 
-    onData: function (value) {
+    onData: function(value) {
         var me = this,
             lastValue = me.value;
 
@@ -82,26 +94,28 @@ Ext.define('Ext.app.bind.TemplateBinding', {
         }
     },
 
-    react: function () {
+    react: function() {
         this.notify(this.value);
     },
 
-    refresh: function () {
+    refresh: function() {
         var multi = this.multiBinding;
+
         if (multi) {
             multi.refresh();
         }
     },
 
     privates: {
-        sort: function () {
+        sort: function() {
             var multi = this.multiBinding;
+
             if (multi) {
                 this.scheduler.sortItem(multi);
             }
 
             // Schedulable#sort === emptyFn
-            //me.callParent();
+            // me.callParent();
         }
     }
 });

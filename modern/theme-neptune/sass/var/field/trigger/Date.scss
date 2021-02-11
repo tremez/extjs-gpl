@@ -96,13 +96,13 @@ $datetrigger-icon-size-big: dynamic(null);
  * @var {number}
  * Date Trigger icon font-size
  */
-$datetrigger-icon-font-size: dynamic($datetrigger-icon-size);
+$datetrigger-icon-font-size: dynamic(null);
 
 /**
  * @var {number}
  * Date Trigger icon font-size in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$datetrigger-icon-font-size-big: dynamic($datetrigger-icon-size-big);
+$datetrigger-icon-font-size-big: dynamic(null);
 
 /**
  * Creates a visual theme for a Date Trigger.
@@ -186,25 +186,7 @@ $datetrigger-icon-font-size-big: dynamic($datetrigger-icon-size-big);
     $icon-font-size: null,
     $icon-font-size-big: null
 ) {
-    @include trigger-ui(
-        $ui: $ui,
-        $xtype: $xtype,
-        $width: $width,
-        $width-big: $width-big,
-        $background-color: $background-color,
-        $hovered-background-color: $hovered-background-color,
-        $pressed-background-color: $pressed-background-color,
-        $icon: $icon,
-        $icon-color: $icon-color,
-        $hovered-icon-color: $hovered-icon-color,
-        $pressed-icon-color: $pressed-icon-color,
-        $icon-background-color: $icon-background-color,
-        $hovered-icon-background-color: $hovered-icon-background-color,
-        $pressed-icon-background-color: $pressed-icon-background-color,
-        $icon-border-radius: $icon-border-radius,
-        $icon-size: $icon-size,
-        $icon-size-big: $icon-size-big,
-        $icon-font-size: $icon-font-size,
-        $icon-font-size-big: $icon-font-size-big
-    );
+    $arguments: intersect-arguments(datetrigger-ui, trigger-ui);
+
+    @include trigger-ui($arguments...);
 }

@@ -3,6 +3,9 @@
  * Global CSS variables and mixins.
  */
 
+/**
+ * @var {boolean} [$touch-theme-base=true]
+ */
 $touch-theme-base: true;
 
 /**
@@ -10,7 +13,7 @@ $touch-theme-base: true;
  * The font-family to use for font icons throughout the theme.
  * @private
  */
-$font-icon-font-family: dynamic(FontAwesome);
+$font-icon-font-family: dynamic('Font Awesome 5 Free');
 
 //Required by charts
 $font-size: dynamic(15px);
@@ -30,6 +33,7 @@ $base-color: dynamic(#808080);
 $image-extension: dynamic('png');
 
 /**
+ * @var {string} $image-search-path
  * Default search path for images
  */
 $image-search-path: '.' !default;
@@ -42,10 +46,8 @@ $image-search-path: '.' !default;
  */
 $relative-image-path-for-uis: false !default;
 
-
-
 /**
- * @var {boolean} $enable-missing-images
+ * @var {boolean} $include-missing-images
  * True to include files which are not found when compiling your SASS
  */
 $include-missing-images: dynamic(true); //legacy fallback < 6.2
@@ -109,6 +111,12 @@ $shadow-width: dynamic(0);
  * The color of the shadow in the Modern toolkit. Usually with a transparency element, eg: rgba(0, 0, 0, 0.4).
  */
 $shadow-color: dynamic(rgba(0, 0, 0, 0.4));
+
+/**
+ * @var {list}
+ * The box-shadow to use for floated components
+ */
+$shadow: $shadow-x-offset $shadow-y-offset $shadow-blur-radius $shadow-width $shadow-color;
 
 /**
  * @var {boolean}

@@ -1,11 +1,20 @@
-.#{$prefix}selectfield-overlay {
-    .#{$prefix}listitem-body {
-        // Prevent the item from growing larger than the parent
-        min-width: 0;
-    }
+// The ChipView takes the place of the inputElement
+.#{$prefix}selectfield .#{$prefix}chipview {
+    flex: 1 1 auto;
+}
 
-    .#{$prefix}list-label {
-        @include ellipsis();
-        display: block;
+.#{$prefix}selectfield.#{$prefix}multiselect:not(.#{$prefix}combobox) {
+    input.#{$prefix}input-el {
+        // inputElement in a multiSelect Select field, NOT a ComboBox
+        // must be positioned inside the ChipView, but must take available space.
+        // max-width 0 on input el prevent it from taking focus on tab keydown in 
+        // Safari 9.0 or upper
+        // inputElement floats at the end of the chip items
+        // * by means of its theme flexbox order property being 999999
+        order: 999999;
+        padding: 0;
+        // pointer-events: none, is used so that input el does not take any
+        // pointer events when chipview is around.
+        pointer-events: none;
     }
 }

@@ -7,9 +7,9 @@
  *
  * The {@link #cfg-iconCls} config may be used to add a specific class name to the tool element.
  * 
- * The {@link #cfg-callback} config can be used to provide a function that will respond to any click events.
- * In general, this class will not be instantiated directly, rather it will be created by specifying the
- * {@link Ext.panel.Panel#tools} configuration on the Panel itself.
+ * The {@link #cfg-callback} config can be used to provide a function that will respond to any
+ * click events. In general, this class will not be instantiated directly, rather it will be created
+ * by specifying the {@link Ext.panel.Panel#tools} configuration on the Panel itself.
  *
  *     @example
  *     Ext.create('Ext.panel.Panel', {
@@ -63,8 +63,8 @@ Ext.define('Ext.panel.Tool', {
 
     config: {
         /**
-         * @cfg {Number/String} glyph
-         * @inheritdoc Ext.panel.Header#glyph
+         * @cfg glyph
+         * @inheritdoc Ext.panel.Header#cfg-glyph
          */
         glyph: null
     },
@@ -74,10 +74,19 @@ Ext.define('Ext.panel.Tool', {
      * `true` in this class to identify an object as an instantiated Tool, or subclass thereof.
      */
     isTool: true,
-    
+
+    /**
+     * @cfg baseCls
+     * @inheritdoc
+     */
     baseCls: Ext.baseCSSPrefix + 'tool',
+
+    /**
+     * @cfg disabledCls
+     * @inheritdoc
+     */
     disabledCls: Ext.baseCSSPrefix + 'tool-disabled',
-    
+
     /**
      * @cfg
      * @private
@@ -89,14 +98,23 @@ Ext.define('Ext.panel.Tool', {
      */
     toolOverCls: Ext.baseCSSPrefix + 'tool-over',
     /**
-     * @cfg {String} iconCls
+     * @cfg iconCls
      * @inheritdoc Ext.panel.Header#cfg-iconCls
      */
 
+    /**
+     * @cfg childEls
+     * @inheritdoc
+     */
     childEls: [
         'toolEl'
     ],
 
+    /* eslint-disable indent, max-len */
+    /**
+     * @cfg renderTpl
+     * @inheritdoc
+     */
     renderTpl: [
         '<div id="{id}-toolEl" data-ref="toolEl" class="{className} {childElCls}" role="presentation"' +
         '<tpl if="glyph">' +
@@ -109,6 +127,7 @@ Ext.define('Ext.panel.Tool', {
         '</tpl>' +
         '</div>'
     ],
+    /* eslint-enable indent, max-len */
 
     /**
      * @cfg {Ext.Component} toolOwner
@@ -120,12 +139,14 @@ Ext.define('Ext.panel.Tool', {
     toolOwner: null,
 
     /**
-     * @cfg {Function/String} callback A function to execute when the tool is clicked.
-     * @cfg {Ext.Component} callback.owner The logical owner of the tool. In a typical
+     * @cfg {Function/String} callback
+     * A function to execute when the tool is clicked.  The callback is passed the
+     * following params:
+     * @param {Ext.Component} owner The logical owner of the tool. In a typical
      * `Ext.panel.Panel`, this is set to the owning panel. This value comes from the
      * `toolOwner` config.
-     * @cfg {Ext.panel.Tool} callback.tool The tool that is calling.
-     * @cfg {Ext.event.Event} callback.event The click event.
+     * @param {Ext.panel.Tool} callback.tool The tool that is calling
+     * @param {Ext.event.Event} callback.event The click event
      * @since 4.2
      * @controllable
      */
@@ -148,6 +169,7 @@ Ext.define('Ext.panel.Tool', {
      * to the tool.
      */
 
+    /* eslint-disable max-len */
     /**
      * @cfg {String} type
      * The type of tool to render. The following types are available:
@@ -229,16 +251,19 @@ Ext.define('Ext.panel.Tool', {
      * - <img style="vertical-align:sub;margin-right:4px;" width="16" height="16" title="" alt="" src="data:image/gif;base64,R0lGODlhEAAQAIABAF6d0P///yH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS41LWMwMjEgNzkuMTU1NzcyLCAyMDE0LzAxLzEzLTE5OjQ0OjAwICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxNCAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo4RjlFNzQyMDlBQUIxMUU0OEVCNUNFMTgyMDM3Mzc3MSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo4RjlFNzQyMTlBQUIxMUU0OEVCNUNFMTgyMDM3Mzc3MSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjhGOUU3NDFFOUFBQjExRTQ4RUI1Q0UxODIwMzczNzcxIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjhGOUU3NDFGOUFBQjExRTQ4RUI1Q0UxODIwMzczNzcxIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAQAAAQAsAAAAABAAEAAAAiCEHakboM4YbFG+ug7CvPs4feI1llSlhSjptOekgiSXFgA7" /> expand
      * - <img style="vertical-align:sub;margin-right:4px;" width="15" height="15" title="" alt="" src="data:image/gif;base64,R0lGODlhDwAPAIABAF6d0P///yH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS41LWMwMjEgNzkuMTU1NzcyLCAyMDE0LzAxLzEzLTE5OjQ0OjAwICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxNCAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpCQjkxNDlCQjlBQUIxMUU0OEVCNUNFMTgyMDM3Mzc3MSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpCQjkxNDlCQzlBQUIxMUU0OEVCNUNFMTgyMDM3Mzc3MSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjhGOUU3NDIyOUFBQjExRTQ4RUI1Q0UxODIwMzczNzcxIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkJCOTE0OUJBOUFBQjExRTQ4RUI1Q0UxODIwMzczNzcxIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAQAAAQAsAAAAAA8ADwAAAiCEHakL2gtfaHRalCTMR+8PhuJIllEnSl7kXC5mhd26FAA7" /> collapse
      */
+    /* eslint-enable max-len */
 
     /**
      * @cfg {String/Object} tooltip
-     * The tooltip for the tool - can be a string to be used as innerHTML (html tags are accepted) or QuickTips config
+     * The tooltip for the tool - can be a string to be used as innerHTML (html tags are accepted)
+     * or QuickTips config
      * object
      */
 
-     /**
+    /**
      * @cfg {String} tooltipType
-     * The type of tooltip to use. Either 'qtip' (default) for QuickTips or 'title' for title attribute.
+     * The type of tooltip to use. Either 'qtip' (default) for QuickTips or 'title'
+     * for title attribute.
      */
     tooltipType: 'qtip',
 
@@ -247,47 +272,74 @@ Ext.define('Ext.panel.Tool', {
      * Specify as false to allow click event to propagate.
      */
     stopEvent: true,
-    
+
+    /**
+     * @property ariaRole
+     * @inheritdoc
+     */
     ariaRole: 'button',
+
+    /**
+     * @property focusable
+     * @inheritdoc
+     */
     focusable: true,
+
+    /**
+     * @cfg tabIndex
+     * @inheritdoc
+     */
     tabIndex: 0,
-    
+
+    /**
+     * @cfg keyMap
+     * @inheritdoc
+     */
     keyMap: {
         scope: 'this',
         SPACE: 'onClick',
         ENTER: 'onClick'
     },
 
+    /**
+     * @cfg {Boolean} cacheHeight
+     * Set to `false` to use a custom tool height and not the cached tool height.
+     */
     cacheHeight: true,
+
+    /**
+     * @cfg {Boolean} cacheWidth
+     * Set to `false` to use a custom tool width and not the cached tool width.
+     */
     cacheWidth: true,
 
     //<debug>
     _toolTypes: {
-        close:1,
-        collapse:1,
-        down:1,
-        expand:1,
-        gear:1,
-        help:1,
-        left:1,
-        maximize:1,
-        minimize:1,
-        minus:1,
-        //move:1,
-        next:1,
-        pin:1,
-        plus:1,
-        prev:1,
-        print:1,
-        refresh:1,
-        //resize:1,
-        restore:1,
-        right:1,
-        save:1,
-        search:1,
-        toggle:1,
-        unpin:1,
-        up:1
+        close: 1,
+        collapse: 1,
+        down: 1,
+        expand: 1,
+        gear: 1,
+        help: 1,
+        left: 1,
+        maximize: 1,
+        minimize: 1,
+        minus: 1,
+        // move:1,
+        next: 1,
+        pin: 1,
+        plus: 1,
+        prev: 1,
+        print: 1,
+        refresh: 1,
+        // resize:1,
+        restore: 1,
+        right: 1,
+        save: 1,
+        search: 1,
+        toggle: 1,
+        unpin: 1,
+        up: 1
     },
     //</debug>
 
@@ -296,7 +348,8 @@ Ext.define('Ext.panel.Tool', {
 
         //<debug>
         if (me.id && me._toolTypes[me.id]) {
-            Ext.raise('When specifying a tool you should use the type option, the id can conflict now that tool is a Component');
+            Ext.raise('When specifying a tool you should use the type option, ' +
+                      'the id can conflict now that tool is a Component');
         }
         //</debug>
 
@@ -325,16 +378,18 @@ Ext.define('Ext.panel.Tool', {
 
         return data;
     },
-    
+
     calculateClassName: function() {
         var me = this,
             result = me.baseCls + '-tool-el ';
 
         if (me.type) {
             result += me.baseCls + '-img ' + me.baseCls + '-' + me.type;
-        } else if (me.iconCls) {
+        }
+        else if (me.iconCls) {
             result += me.iconCls; // do not add x-tool-img to allow iconCls full sway
         }
+
         return result;
     },
 
@@ -358,6 +413,7 @@ Ext.define('Ext.panel.Tool', {
         });
 
         tip = me.tooltip;
+
         if (tip) {
             me.setTooltip(tip);
         }
@@ -367,7 +423,7 @@ Ext.define('Ext.panel.Tool', {
         qtip: 'data-qtip'
     },
 
-    setTooltip: function (tooltip, type) {
+    setTooltip: function(tooltip, type) {
         var me = this,
             oldTip = me.tooltip,
             oldType = me.tooltipType,
@@ -380,6 +436,7 @@ Ext.define('Ext.panel.Tool', {
         }
 
         me.tooltip = tooltip;
+
         if (type) {
             me.tooltipType = type;
         }
@@ -389,7 +446,8 @@ Ext.define('Ext.panel.Tool', {
                 Ext.tip.QuickTipManager.register(Ext.apply({
                     target: id
                 }, tooltip));
-            } else if (el) {
+            }
+            else if (el) {
                 if (type && oldType && type !== oldType) {
                     attr = me.tipAttrs[oldType] || 'title';
                     el.dom.removeAttribute(attr);
@@ -398,7 +456,7 @@ Ext.define('Ext.panel.Tool', {
                 attr = me.tipAttrs[type || oldType] || 'title';
                 el.dom.setAttribute(attr, tooltip);
             }
-            
+
             if (attr !== 'title' && me.ariaRole && me.ariaRole !== 'presentation') {
                 if (el) {
                     el.dom.setAttribute('aria-label', tooltip);
@@ -418,16 +476,17 @@ Ext.define('Ext.panel.Tool', {
      */
     setType: function(type) {
         var me = this,
-            toolEl = me.toolEl,
             updating = me.updating,
             rendering = me.rendering,
             oldClassName, clear;
 
         if (!updating) {
             oldClassName = me.calculateClassName();
+
             if (!rendering) {
                 me.updating = clear = true;
             }
+
             me.setIconCls(null);
             me.setGlyph(null);
         }
@@ -437,7 +496,8 @@ Ext.define('Ext.panel.Tool', {
         if (clear) {
             me.updateToolCls(oldClassName);
             me.updating = false;
-        } else if (rendering) {
+        }
+        else if (rendering) {
             me.setTypeAfterRender = true;
         }
 
@@ -446,12 +506,11 @@ Ext.define('Ext.panel.Tool', {
 
     /**
      * Sets the icon class. Allows the icon to be changed.
-     * @param {String} type The new icon class. See the {@link #type} config.
+     * @param {String} iconCls The new icon class. See the {@link #type} config.
      * @return {Ext.panel.Tool} this
      */
     setIconCls: function(iconCls) {
         var me = this,
-            toolEl = me.toolEl,
             updating = me.updating,
             oldClassName, clear;
 
@@ -487,10 +546,12 @@ Ext.define('Ext.panel.Tool', {
             if (!glyph.isGlyph) {
                 glyph = new Ext.Glyph(glyph);
             }
+
             if (glyph.isEqual(oldGlyph)) {
                 glyph = undefined;
             }
         }
+
         return glyph;
     },
 
@@ -511,7 +572,8 @@ Ext.define('Ext.panel.Tool', {
             if (glyph) {
                 toolEl.dom.innerHTML = glyph.character;
                 toolEl.setStyle(glyph.getStyle());
-            } else {
+            }
+            else {
                 toolEl.dom.innerHTML = '';
             }
         }
@@ -536,7 +598,7 @@ Ext.define('Ext.panel.Tool', {
                 return false;
             }
 
-            //remove the pressed + over class if it was a pointer event
+            // remove the pressed + over class if it was a pointer event
             if (e.type !== 'keydown') {
                 me.el.removeCls(me.toolPressedCls + ' ' + me.toolOverCls);
             }
@@ -544,13 +606,14 @@ Ext.define('Ext.panel.Tool', {
             if (me.stopEvent !== false) {
                 e.stopEvent();
             }
-            
+
             if (me.handler) {
                 Ext.callback(me.handler, me.scope, [e, target, me.ownerCt, me], 0, me);
-            } else if (me.callback) {
+            }
+            else if (me.callback) {
                 Ext.callback(me.callback, me.scope, [me.toolOwner || me.ownerCt, me, e], 0, me);
             }
-            
+
             // The handler could have destroyed the owner, and the Tool instance as well.
             // This is what happens with Close tools in Panels.
             if (me.destroyed) {
@@ -584,7 +647,7 @@ Ext.define('Ext.panel.Tool', {
             // This is consistent with tool behavior in versions prior to 5.5 where
             // tools were pointer-interactive only.
             e.preventDefault();
-            
+
             if (this.disabled) {
                 return false;
             }
@@ -601,6 +664,7 @@ Ext.define('Ext.panel.Tool', {
             if (this.disabled) {
                 return false;
             }
+
             this.el.addCls(this.toolOverCls);
         },
 
@@ -614,8 +678,7 @@ Ext.define('Ext.panel.Tool', {
         },
 
         updateToolCls: function(oldCls) {
-            var me = this,
-                toolEl = this.toolEl;
+            var toolEl = this.toolEl;
 
             if (toolEl) {
                 toolEl.removeCls(oldCls);

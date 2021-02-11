@@ -1,4 +1,4 @@
-describe("Ext.dom.GarbageCollector", function() {
+topSuite("Ext.dom.GarbageCollector", function() {
     var skipGarbageCollection;
 
     beforeEach(function() {
@@ -22,10 +22,10 @@ describe("Ext.dom.GarbageCollector", function() {
 
         expect(el.clearListeners).toHaveBeenCalled();
         expect(id in Ext.cache).toBe(false);
-        
+
         // Element is already destroyed warning is expected
         spyOn(Ext.Logger, 'warn');
-        
+
         el.destroy();
     });
 

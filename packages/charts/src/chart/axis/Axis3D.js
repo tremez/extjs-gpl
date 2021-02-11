@@ -36,7 +36,7 @@ Ext.define('Ext.chart.axis.Axis3D', {
          */
     },
 
-    onSeriesChange: function (chart) {
+    onSeriesChange: function(chart) {
         var me = this,
             eventName = 'depthchange',
             listenerName = 'onSeriesDepthChange',
@@ -44,6 +44,7 @@ Ext.define('Ext.chart.axis.Axis3D', {
 
         function toggle(action) {
             var boundSeries = me.boundSeries;
+
             for (i = 0; i < boundSeries.length; i++) {
                 series = boundSeries[i];
                 series[action](eventName, listenerName, me);
@@ -59,7 +60,7 @@ Ext.define('Ext.chart.axis.Axis3D', {
         toggle('on');
     },
 
-    onSeriesDepthChange: function (series, depth) {
+    onSeriesDepthChange: function(series, depth) {
         var me = this,
             maxDepth = depth,
             boundSeries = me.boundSeries,
@@ -67,43 +68,48 @@ Ext.define('Ext.chart.axis.Axis3D', {
 
         if (depth > me.getDepth()) {
             maxDepth = depth;
-        } else {
+        }
+        else {
             for (i = 0; i < boundSeries.length; i++) {
                 item = boundSeries[i];
+
                 if (item !== series && item.getDepth) {
                     depth = item.getDepth();
+
                     if (depth > maxDepth) {
                         maxDepth = depth;
                     }
                 }
             }
         }
+
         me.setDepth(maxDepth);
     },
 
-    updateDepth: function (depth) {
+    updateDepth: function(depth) {
         var me = this,
             sprites = me.getSprites(),
-            attr = {depth: depth};
+            attr = { depth: depth };
 
         if (sprites && sprites.length) {
             sprites[0].setAttributes(attr);
         }
+
         if (me.gridSpriteEven && me.gridSpriteOdd) {
             me.gridSpriteEven.getTemplate().setAttributes(attr);
             me.gridSpriteOdd.getTemplate().setAttributes(attr);
         }
     },
 
-    getGridAlignment: function () {
+    getGridAlignment: function() {
         switch (this.getPosition()) {
             case 'left':
             case 'right':
                 return 'horizontal3d';
+
             case 'top':
             case 'bottom':
                 return 'vertical3d';
         }
     }
-
 });

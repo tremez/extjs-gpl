@@ -1,14 +1,17 @@
 /**
- * An updateable progress bar component. The progress bar supports two different modes: manual and automatic.
+ * An updateable progress bar component. The progress bar supports two different modes: manual
+ * and automatic.
  *
- * In manual mode, you are responsible for showing, updating (via {@link #updateProgress}) and clearing the progress bar
- * as needed from your own code. This method is most appropriate when you want to show progress throughout an operation
- * that has predictable points of interest at which you can update the control.
+ * In manual mode, you are responsible for showing, updating (via {@link #updateProgress})
+ * and clearing the progress bar as needed from your own code. This method is most appropriate
+ * when you want to show progress throughout an operation that has predictable points of interest
+ * at which you can update the control.
  *
- * In automatic mode, you simply call {@link #wait} and let the progress bar run indefinitely, only clearing it once the
- * operation is complete. You can optionally have the progress bar wait for a specific amount of time and then clear
- * itself. Automatic mode is most appropriate for timed operations or asynchronous operations in which you have no need
- * for indicating intermediate progress.
+ * In automatic mode, you simply call {@link #wait} and let the progress bar run indefinitely,
+ * only clearing it once the operation is complete. You can optionally have the progress bar
+ * wait for a specific amount of time and then clear itself. Automatic mode is most appropriate
+ * for timed operations or asynchronous operations in which you have no need for indicating
+ * intermediate progress.
  *
  *     @example
  *     var p = Ext.create('Ext.ProgressBar', {
@@ -31,6 +34,7 @@
 Ext.define('Ext.ProgressBar', {
     extend: 'Ext.Component',
     xtype: 'progressbar',
+
     mixins: [
         'Ext.ProgressBase'
     ],
@@ -46,7 +50,8 @@ Ext.define('Ext.ProgressBar', {
 
     /**
      * @cfg {String/HTMLElement/Ext.dom.Element} textEl
-     * The element to render the progress text to (defaults to the progress bar's internal text element)
+     * The element to render the progress text to (defaults to the progress bar's internal
+     * text element)
      */
 
     /**
@@ -84,6 +89,7 @@ Ext.define('Ext.ProgressBar', {
 
     defaultBindProperty: 'value',
 
+    /* eslint-disable indent, max-len */
     renderTpl: [
         '<tpl if="internalText">',
             '<div class="{baseCls}-text {baseCls}-text-back" role="presentation">{text}</div>',
@@ -96,13 +102,14 @@ Ext.define('Ext.ProgressBar', {
             '</tpl>',
         '</div>'
     ],
+    /* eslint-enable indent, max-len */
 
     componentLayout: 'progressbar',
-    
+
     ariaRole: 'progressbar',
     focusable: true,
     tabIndex: 0,
-    
+
     autoEl: {
         'aria-valuemin': '0',
         'aria-valuenow': '0',
@@ -121,9 +128,9 @@ Ext.define('Ext.ProgressBar', {
         var me = this,
             value = me.value || 0,
             data;
-        
+
         data = me.callParent();
-        
+
         return Ext.apply(data, {
             internalText: !me.hasOwnProperty('textEl'),
             text: me.text || Math.round(value * 100) + '%',
@@ -148,12 +155,12 @@ Ext.define('Ext.ProgressBar', {
             me.textEl = me.el.select('.' + me.baseCls + '-text');
         }
     },
-    
+
     afterRender: function() {
         var me = this;
-        
+
         me.callParent(arguments);
-        
+
         if (me.text) {
             me.ariaEl.dom.setAttribute('aria-valuetext', me.text);
         }
@@ -166,24 +173,25 @@ Ext.define('Ext.ProgressBar', {
     /**
      * Updates the progress bar value, and optionally its text.
      * 
-     * If the text argument is not specified, then the {@link #textTpl} will be used to generate the text.
-     * If there is no `textTpl`, any existing text value will be unchanged. To blank out existing text, pass `""`.
+     * If the text argument is not specified, then the {@link #textTpl} will be used to generate
+     * the text. If there is no `textTpl`, any existing text value will be unchanged. To blank out
+     * existing text, pass `""`.
      *
      * Note that even if the progress bar value exceeds 1, it will never automatically reset --
      * you are responsible for determining when the progress is complete and
      * calling {@link #reset} to clear and/or hide the control.
      * @param {Number} [value=0] A floating point value between 0 and 1 (e.g., .5)
      * @param {String} [text=''] The string to display in the progress text element
-     * @param {Boolean} [animate=false] Whether to animate the transition of the progress bar. If this value is not
-     * specified, the default for the class is used
+     * @param {Boolean} [animate=false] Whether to animate the transition of the progress bar.
+     * If this value is not specified, the default for the class is used
      * @return {Ext.ProgressBar} this
      */
     updateProgress: function(value, text, animate) {
-        value = value || 0;
-
         var me = this,
             oldValue = me.value,
             textTpl = me.getTextTpl();
+
+        value = value || 0;
 
         // Ensure value is not undefined.
         me.value = value || (value = 0);
@@ -211,7 +219,7 @@ Ext.define('Ext.ProgressBar', {
         else if (me.text && me.ariaEl.dom) {
             me.ariaEl.dom.removeAttribute('aria-valuetext');
         }
-        
+
         if (me.rendered && !me.destroyed) {
             if (animate === true || (animate !== false && me.animate)) {
                 me.bar.stopAnimation();
@@ -223,21 +231,22 @@ Ext.define('Ext.ProgressBar', {
                         width: (value * 100) + '%'
                     }
                 }, me.animate));
-            } else {
+            }
+            else {
                 me.bar.setStyle('width', (value * 100) + '%');
             }
-            
+
             me.ariaEl.dom.setAttribute('aria-valuenow', Math.round(value * 100));
         }
-        
+
         me.fireEvent('update', me, value, text);
-        
+
         return me;
     },
 
     /**
-     * Updates the progress bar text. If specified, textEl will be updated, otherwise the progress bar itself will
-     * display the updated text.
+     * Updates the progress bar text. If specified, textEl will be updated, otherwise
+     * the progress bar itself will display the updated text.
      * @param {String} [text=''] The string to display in the progress text element
      * @return {Ext.ProgressBar} this
      */
@@ -247,10 +256,10 @@ Ext.define('Ext.ProgressBar', {
         if (!me.autoText) {
             me.text = text;
         }
-        
+
         if (me.rendered) {
             me.textEl.setHtml(text);
-            
+
             if (!me.autoText) {
                 me.ariaEl.dom.setAttribute('aria-valuetext', text);
             }
@@ -258,23 +267,23 @@ Ext.define('Ext.ProgressBar', {
                 me.ariaEl.dom.removeAttribute('aria-valuetext');
             }
         }
-        
+
         return me;
     },
 
-    applyText : function(text) {
+    applyText: function(text) {
         this.updateText(text);
     },
-    
-    getText: function(){
-        return this.text;    
+
+    getText: function() {
+        return this.text;
     },
 
     /**
-     * Initiates an auto-updating progress bar. A duration can be specified, in which case the progress bar will
-     * automatically reset after a fixed amount of time and optionally call a callback function if specified. If no
-     * duration is passed in, then the progress bar will run indefinitely and must be manually cleared by calling
-     * {@link #reset}.
+     * Initiates an auto-updating progress bar. A duration can be specified, in which case
+     * the progress bar will automatically reset after a fixed amount of time and optionally call
+     * a callback function if specified. If no duration is passed in, then the progress bar will run
+     * indefinitely and must be manually cleared by calling {@link #reset}.
      *
      * Example usage:
      *
@@ -282,78 +291,88 @@ Ext.define('Ext.ProgressBar', {
      *        renderTo: 'my-el'
      *     });
      *
-     *     //Wait for 5 seconds, then update the status el (progress bar will auto-reset)
+     *     // Wait for 5 seconds, then update the status el (progress bar will auto-reset)
      *     var p = Ext.create('Ext.ProgressBar', {
      *        renderTo: Ext.getBody(),
      *        width: 300
      *     });
      *
-     *     //Wait for 5 seconds, then update the status el (progress bar will auto-reset)
+     *     // Wait for 5 seconds, then update the status el (progress bar will auto-reset)
      *     p.wait({
-     *        interval: 500, //bar will move fast!
+     *        interval: 500, // bar will move fast!
      *        duration: 50000,
      *        increment: 15,
      *        text: 'Updating...',
      *        scope: this,
-     *        fn: function(){
+     *        fn: function() {
      *           p.updateText('Done!');
      *        }
      *     });
      *
-     *     //Or update indefinitely until some async action completes, then reset manually
+     *     // Or update indefinitely until some async action completes, then reset manually
      *     p.wait();
-     *     myAction.on('complete', function(){
+     *     myAction.on('complete', function() {
      *         p.reset();
      *         p.updateText('Done!');
      *     });
      *
      * @param {Object} config (optional) Configuration options
-     * @param {Number} config.duration The length of time in milliseconds that the progress bar should
-     * run before resetting itself (defaults to undefined, in which case it will run indefinitely
-     * until reset is called)
-     * @param {Number} config.interval The length of time in milliseconds between each progress update
-     * (defaults to 1000 ms)
-     * @param {Boolean} config.animate Whether to animate the transition of the progress bar. If this
-     * value is not specified, the default for the class is used.
-     * @param {Number} config.increment The number of progress update segments to display within the
-     * progress bar (defaults to 10).  If the bar reaches the end and is still updating, it will
+     * @param {Number} config.duration The length of time in milliseconds that the progress bar
+     * should run before resetting itself (defaults to undefined, in which case it will run
+     * indefinitely until reset is called)
+     * @param {Number} config.interval The length of time in milliseconds between each progress
+     * update (defaults to 1000 ms)
+     * @param {Boolean} config.animate Whether to animate the transition of the progress bar.
+     * If this value is not specified, the default for the class is used.
+     * @param {Number} config.increment The number of progress update segments to display within
+     * the progress bar (defaults to 10).  If the bar reaches the end and is still updating, it will
      * automatically wrap back to the beginning.
-     * @param {String} config.text Optional text to display in the progress bar element (defaults to '').
-     * @param {Function} config.fn A callback function to execute after the progress bar finishes auto-
-     * updating.  The function will be called with no arguments.  This function will be ignored if
-     * duration is not specified since in that case the progress bar can only be stopped programmatically,
-     * so any required function should be called by the same code after it resets the progress bar.
-     * @param {Object} config.scope The scope that is passed to the callback function (only applies when
-     * duration and fn are both passed).
+     * @param {String} config.text Optional text to display in the progress bar element
+     * (defaults to '').
+     * @param {Function} config.fn A callback function to execute after the progress bar finishes
+     * auto-updating. The function will be called with no arguments. This function will be ignored
+     * if duration is not specified since in that case the progress bar can only be stopped
+     * programmatically, so any required function should be called by the same code after it resets
+     * the progress bar.
+     * @param {Object} config.scope The scope that is passed to the callback function (only applies
+     * when duration and fn are both passed).
      * @return {Ext.ProgressBar} this
      */
-    wait: function(o) {
-        var me = this, scope;
-            
+    wait: function(config) {
+        var me = this,
+            scope;
+
         if (!me.waitTimer) {
             scope = me;
-            o = o || {};
-            if (o.text != null) {
+            config = config || {};
+
+            if (config.text != null) {
                 me.autoText = false;
             }
-            me.updateText(o.text);
+
+            me.updateText(config.text);
+
             me.waitTimer = Ext.TaskManager.start({
-                run: function(i){
-                    var inc = o.increment || 10;
+                run: function(i) {
+                    var inc = config.increment || 10;
+
                     i -= 1;
-                    me.updateProgress(((((i+inc)%inc)+1)*(100/inc))*0.01, null, o.animate);
+                    me.updateProgress(((((i + inc) % inc) + 1) * (100 / inc)) * 0.01, null,
+                                      config.animate);
                 },
-                interval: o.interval || 1000,
-                duration: o.duration,
-                onStop: function(){
-                    if (o.fn) {
-                        o.fn.apply(o.scope || me);
+                interval: config.interval || 1000,
+                duration: config.duration,
+                onStop: function() {
+                    if (config.fn) {
+                        config.fn.apply(config.scope || me);
                     }
+
                     me.reset();
                 },
                 scope: scope
             });
         }
+
         return me;
     },
 
@@ -361,41 +380,41 @@ Ext.define('Ext.ProgressBar', {
      * Returns true if the progress bar is currently in a {@link #wait} operation
      * @return {Boolean} True if waiting, else false
      */
-    isWaiting: function(){
+    isWaiting: function() {
         return this.waitTimer !== null;
     },
 
     /**
-     * Resets the progress bar value to 0 and text to empty string. If hide = true, the progress bar will also be hidden
-     * (using the {@link #hideMode} property internally).
+     * Resets the progress bar value to 0 and text to empty string. If hide = true,
+     * the progress bar will also be hidden (using the {@link #hideMode} property internally).
      * @param {Boolean} [hide=false] True to hide the progress bar.
      * @return {Ext.ProgressBar} this
      */
-    reset: function(hide){
+    reset: function(hide) {
         var me = this;
-        
+
         me.updateProgress(0);
         me.clearTimer();
-        
+
         if (hide === true) {
             me.hide();
         }
-        
+
         if (me.rendered) {
             me.ariaEl.dom.removeAttribute('aria-valuetext');
         }
-        
+
         return me;
     },
 
     /**
      * @private
      */
-    clearTimer: function(){
+    clearTimer: function() {
         var me = this;
-        
+
         if (me.waitTimer) {
-            me.waitTimer.onStop = null; //prevent recursion
+            me.waitTimer.onStop = null; // prevent recursion
             Ext.TaskManager.stop(me.waitTimer);
             me.waitTimer = null;
         }
@@ -403,22 +422,29 @@ Ext.define('Ext.ProgressBar', {
 
     doDestroy: function() {
         var me = this,
-            bar = me.bar;
-        
+            bar = me.bar,
+            nodes, el, i, len;
+
         me.clearTimer();
-        
+
         if (me.rendered) {
             if (me.textEl.isComposite) {
-                me.textEl.clear();
+                // Clean up Element references created by the layout
+                nodes = me.textEl.slice();
+
+                for (i = 0, len = nodes.length; i < len; i++) {
+                    el = Ext.get(nodes[i]);
+                    el.destroy();
+                }
             }
-            
+
             Ext.destroyMembers(me, 'textEl', 'progressBar');
-            
+
             if (bar && me.animate) {
                 bar.stopAnimation();
             }
         }
-        
+
         me.callParent();
     }
 });

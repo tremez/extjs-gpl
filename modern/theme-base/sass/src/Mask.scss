@@ -13,9 +13,9 @@
     height: 100%;
     z-index: 10;
 
-    @include st-box;
-    @include st-box-align(center);
-    @include st-box-pack(center);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     background: rgba(0,0,0,.3) center center no-repeat;
 
@@ -38,10 +38,10 @@
     }
 
     .x-loading-spinner-outer {
-        @include st-box;
-        @include st-box-orient(vertical);
-        @include st-box-align(center);
-        @include st-box-pack(center);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         width: 100%;
         min-width: 8em;
         height: 8em;
@@ -67,7 +67,7 @@
         color: #333;
         left: 0;
         right: 0;
-        @include st-box-flex(0);
+        flex: 0 0;
     }
 
     &.x-has-message {

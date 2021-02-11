@@ -1,23 +1,7 @@
-/**
- * @class Ext.layout.Card
- */
-
-.x-layout-card {
-    position: relative;
-    overflow: hidden;
-}
-
-.x-layout-card-perspective {
-    -webkit-perspective: 1000px;
-    -ms-perspective: 1000px;
-    perspective: 1000px;
-}
-
-.x-layout-card-item-container {
-    @include absolute-fit;
-}
-
-.x-layout-card-item {
-    @include absolute-position;
-    position: absolute !important;
+.#{$prefix}component.#{$prefix}layout-card-item {
+    // A card item should always fill the width and height of its container regardless
+    // of whether the user configured a height and/or width on the item.
+    position: absolute;
+    height: 100%;
+    width: 100%;
 }

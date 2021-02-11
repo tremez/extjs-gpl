@@ -5,24 +5,40 @@
 Ext.define('KitchenSink.view.drag.Handle', {
     extend: 'Ext.Component',
     xtype: 'drag-handle',
+    controller: 'drag-handle',
 
-    // <example>
-    requires: ['KitchenSink.view.drag.HandleController'],
+    //<example>
     otherContent: [{
         type: 'Controller',
         path: 'modern/src/view/drag/HandleController.js'
     }],
-    // </example>
 
-    controller: 'drag-handle',
-    cls: 'stretch-html',
+    profiles: {
+        defaults: {
+            height: 400,
+            width: 400
+        },
+        phone: {
+            defaults: {
+                height: undefined,
+                width: undefined
+            }
+        }
+    },
+
+    cls: 'demo-solid-background',
+    //</example>
+
+    height: '${height}',
     padding: 5,
-    html: '<div class="handle-handles handle-source">' +
-              '<div class="handle">Drag</div>' +
-          '</div>' +
-          '<div class="handle-repeat handle-source">' +
+    width: '${width}',
+
+    html: '<div class="handle-repeat handle-source">' +
               '<div class="handle">Foo</div>' +
               '<div class="handle">Bar</div>' +
               '<div class="handle">Baz</div>' +
+          '</div>' +
+          '<div class="handle-handles handle-source">' +
+              '<div class="handle">Drag</div>' +
           '</div>'
 });

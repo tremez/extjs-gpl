@@ -51,7 +51,7 @@ Ext.define('Ext.data.identifier.Sequential', {
      * @return {String/Number} The next id. If a {@link #prefix} was specified, returns
      * a String, otherwise returns a Number.
      */
-    generate: function () {
+    generate: function() {
         var me = this,
             seed = me._seed,
             prefix = me._prefix;

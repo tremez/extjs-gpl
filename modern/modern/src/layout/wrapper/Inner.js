@@ -3,8 +3,8 @@
  */
 Ext.define('Ext.layout.wrapper.Inner', {
     config: {
-        sizeState: null,
-        container: null
+        container: null,
+        manageBorders: null
     },
 
     constructor: function(config) {
@@ -12,7 +12,14 @@ Ext.define('Ext.layout.wrapper.Inner', {
     },
 
     getElement: function() {
-        return this.getContainer().bodyElement;
+        var container = this.getContainer();
+
+        // bodySizerElement is a workaround for workaround for the following issues:
+        // https://bugs.webkit.org/show_bug.cgi?id=150445
+        // https://bugs.webkit.org/show_bug.cgi?id=137730
+        // See Ext.Container#autoSize
+        return container.boxScrollerElement || container.bodySizerElement ||
+            container.bodyElement;
     },
 
     setInnerWrapper: Ext.emptyFn,

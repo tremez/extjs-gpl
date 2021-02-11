@@ -22,4 +22,4 @@ Ext.theme.addManifest(
     }
 );
 
-//Ext.theme.addShortcuts();
+// Ext.theme.addShortcuts();

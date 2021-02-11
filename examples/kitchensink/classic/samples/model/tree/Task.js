@@ -13,4 +13,4 @@ Ext.define('KitchenSink.model.tree.Task', {
         name: 'done',
         type: 'boolean'
     }]
-}); 
+});

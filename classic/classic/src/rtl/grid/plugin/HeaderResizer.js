@@ -1,7 +1,7 @@
 Ext.define('Ext.rtl.grid.plugin.HeaderResizer', {
     override: 'Ext.grid.plugin.HeaderResizer',
 
-    onBeforeStart : function(e) {
+    onBeforeStart: function(e) {
         var me = this;
 
         if (this.headerCt.isOppositeRootDirection()) {
@@ -9,17 +9,20 @@ Ext.define('Ext.rtl.grid.plugin.HeaderResizer', {
             me.dragHd = me.activeHd;
 
             if (!!me.dragHd && !me.headerCt.dragging) {
-
                 // Calculate how far off the right marker line the mouse pointer is.
                 // This will be the xDelta during the following drag operation.
                 me.xDelta = me.dragHd.getX() - me.tracker.getXY()[0];
                 this.tracker.constrainTo = this.getConstrainRegion();
+
                 return true;
-            } else {
+            }
+            else {
                 me.headerCt.dragging = false;
+
                 return false;
             }
-        } else {
+        }
+        else {
             return this.callParent(arguments);
         }
     },
@@ -28,39 +31,44 @@ Ext.define('Ext.rtl.grid.plugin.HeaderResizer', {
         if (this.headerCt.isOppositeRootDirection()) {
             offsetX = -offsetX;
         }
+
         this.callParent([offsetX]);
     },
 
     adjustConstrainRegion: function(region, t, r, b, l) {
-        return this.headerCt.isOppositeRootDirection() ?
-            region.adjust(t, -l, b, -r) : this.callParent(arguments);
+        return this.headerCt.isOppositeRootDirection()
+            ? region.adjust(t, -l, b, -r)
+            : this.callParent(arguments);
     },
 
     calculateDragX: function(gridSection) {
         var gridX = gridSection.getX(),
             mouseX = this.tracker.getXY('point')[0];
-        
-        if (this.headerCt.isOppositeRootDirection()) {
-            return mouseX - gridX + this.xDelta;    
-        } else {
-            return this.callParent(arguments);
-        }   
 
+        if (this.headerCt.isOppositeRootDirection()) {
+            return mouseX - gridX + this.xDelta;
+        }
+        else {
+            return this.callParent(arguments);
+        }
     },
 
-    getMovingMarker: function(markerOwner){
+    getMovingMarker: function(markerOwner) {
         if (this.headerCt.isOppositeRootDirection()) {
             return markerOwner.getLhsMarker();
-        } else {
+        }
+        else {
             return markerOwner.getRhsMarker();
         }
     },
 
     setMarkerX: function(marker, x) {
         var headerCt = this.headerCt;
+
         if (headerCt.getInherited().rtl && !headerCt.isOppositeRootDirection()) {
             marker.rtlSetLocalX(x);
-        } else {
+        }
+        else {
             this.callParent(arguments);
         }
     }

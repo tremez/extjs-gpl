@@ -1,6 +1,5 @@
 Ext.define('KitchenSink.view.desktop.Main', {
     extend: 'Ext.Container',
-    xtype: 'mainview',
 
     requires: [
         'KitchenSink.view.ContentPanel',
@@ -8,89 +7,58 @@ Ext.define('KitchenSink.view.desktop.Main', {
         'KitchenSink.view.desktop.NavigationBar'
     ],
 
-    fullscreen: true,
     id: 'mainPanel',
 
     layout: {
         type: 'hbox'
     },
 
-    items: [
-        {
-            id: 'mainNavigationBar',
-            xtype: 'desktopnavigationbar',
-            title: 'Ext JS Kitchen Sink',
-            docked: 'top',
-            items: [
-                {
-                    xtype: 'component',
-                    cls: ['ext', 'ext-sencha'],
-                    style: 'padding-right: 10px'
-                },{
-                    align: 'right',
-                    action: 'material-theme-settings',
-                    iconCls: 'palette',
-                    hidden: true // !Ext.theme.is.Material
-                },
-                {
-                    align: 'right',
-                    action: 'burger',
-                    iconCls: 'menu'
-                }
-            ]
-        },
-        {
-            id: 'cardPanel',
-            flex: 3,
-            layout: {
-                type: 'card'
+    items: [{
+        id: 'mainNavigationBar',
+        xtype: 'desktopnavigationbar',
+        title: 'Ext JS Kitchen Sink',
+        docked: 'top',
+        items: [{
+            xtype: 'component',
+            cls: ['ext', 'ext-sencha'],
+            style: 'padding-right: 10px'
+        }, {
+            align: 'right',
+            id: 'materialThemeMenuButton',
+            hidden: true,
+            menu: {
+                itemId: 'materialThemeMenu'
             },
-            items: [
-                {
-                    xtype: 'breadcrumb',
-                    docked: 'top',
-                    afterItems: [
-                        '->',
-                        {
-                            iconCls: 'x-fa fa-code',
-                            action: 'viewSource'
-                        }
-                    ]
-                },
-                {
-                    xtype: 'contentPanel',
-                    id: 'contentPanel1',
-                    layout: {
-                        type: 'vbox',
-                        pack: 'center',
-                        align: 'center'
-                    },
-                    items: [
-                        {
-                            id: 'icons'
-                        }
-                    ]
-                },
-                {
-                    xtype: 'contentPanel',
-                    id: 'contentPanel2',
-                    layout: {
-                        type: 'vbox',
-                        pack: 'center',
-                        align: 'center'
-                    },
-                    items: [
-                        {
-                            id: 'icons2'
-                        }
-                    ]
-                }
-            ]
+            iconCls: 'palette',
+            arrow: false
+        }, {
+            align: 'right',
+            menu: {
+                itemId: 'burgerButtonMenu'
+            },
+            iconCls: 'menu',
+            arrow: false
+        }]
+    }, {
+        id: 'cardPanel',
+        flex: 3,
+        layout: {
+            type: 'card'
         },
-        {
-            xtype: 'sourceoverlay',
-            id: 'sourceoverlay',
-            flex: 1
-        }
-    ]
+        items: [{
+            xtype: 'breadcrumb',
+            docked: 'top'
+        }, {
+            xtype: 'contentPanel',
+            id: 'contentPanel1',
+            layout: 'center'
+        }, {
+            xtype: 'contentPanel',
+            id: 'contentPanel2',
+            layout: 'center'
+        }]
+    }, {
+        xtype: 'sourceoverlay',
+        width: 450  // flex is not compatible w/stateful width
+    }]
 });

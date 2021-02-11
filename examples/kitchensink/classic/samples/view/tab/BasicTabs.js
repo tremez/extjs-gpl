@@ -5,22 +5,28 @@ Ext.define('KitchenSink.view.tab.BasicTabs', {
     extend: 'Ext.tab.Panel',
     xtype: 'basic-tabs',
     controller: 'tab-view',
-    
+
     //<example>
     requires: [
         'KitchenSink.view.tab.TabController'
     ],
     otherContent: [{
-        type: 'ViewController',
+        type: 'Controller',
         path: 'classic/samples/view/tab/TabController.js'
     }],
     exampleTitle: 'Basic Tabs',
+    cls: Ext.baseCSSPrefix + 'shadow',
     //</example>
-    width: 400,
+    width: 500,
     height: 300,
     defaults: {
         bodyPadding: 10,
         scrollable: true
+    },
+    tabBar: {
+        layout: {
+            pack: 'center'
+        }
     },
     items: [{
         title: 'Active Tab',

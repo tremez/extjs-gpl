@@ -1,26 +1,30 @@
 /**
- * This layout allows you to easily render content into an HTML table. The total number of columns can be specified, and
- * rowspan and colspan can be used to create complex layouts within the table. This class is intended to be extended or
- * created via the `layout: {type: 'table'}` {@link Ext.container.Container#layout} config, and should generally not
- * need to be created directly via the new keyword.
+ * This layout allows you to easily render content into an HTML table. The total number of columns
+ * can be specified, and rowspan and colspan can be used to create complex layouts within the table.
+ * This class is intended to be extended or created via the `layout: {type: 'table'}`
+ * {@link Ext.container.Container#layout} config, and should generally not need to be created
+ * directly via the new keyword.
  *
- * Note that when creating a layout via config, the layout-specific config properties must be passed in via the {@link
- * Ext.container.Container#layout} object which will then be applied internally to the layout. In the case of
- * TableLayout, the only valid layout config properties are {@link #columns} and {@link #tableAttrs}. However, the items
- * added to a TableLayout can supply the following table-specific config properties:
+ * Note that when creating a layout via config, the layout-specific config properties must be passed
+ * in via the {@link Ext.container.Container#layout} object which will then be applied internally
+ * to the layout. In the case of TableLayout, the only valid layout config properties are
+ * {@link #columns} and {@link #tableAttrs}. However, the items added to a TableLayout can supply
+ * the following table-specific config properties:
  *
  *   - **rowspan** Applied to the table cell containing the item.
  *   - **colspan** Applied to the table cell containing the item.
  *   - **cellCls** A CSS class name added to the table cell containing the item.
  *
- * The basic concept of building up a TableLayout is conceptually very similar to building up a standard HTML table. You
- * simply add each panel (or "cell") that you want to include along with any span attributes specified as the special
- * config properties of rowspan and colspan which work exactly like their HTML counterparts. Rather than explicitly
- * creating and nesting rows and columns as you would in HTML, you simply specify the total column count in the
- * layout config and start adding panels in their natural order from left to right, top to bottom. The layout will
- * automatically figure out, based on the column count, rowspans and colspans, how to position each panel within the
- * table. Just like with HTML tables, your rowspans and colspans must add up correctly in your overall layout or you'll
- * end up with missing and/or extra cells! Example usage:
+ * The basic concept of building up a TableLayout is conceptually very similar to building up
+ * a standard HTML table. You simply add each panel (or "cell") that you want to include along
+ * with any span attributes specified as the special config properties of rowspan and colspan
+ * which work exactly like their HTML counterparts. Rather than explicitly creating and nesting rows
+ * and columns as you would in HTML, you simply specify the total column count in the layout config
+ * and start adding panels in their natural order from left to right, top to bottom. The layout will
+ * automatically figure out, based on the column count, rowspans and colspans, how to position each
+ * panel within the table. Just like with HTML tables, your rowspans and colspans must add up
+ * correctly in your overall layout or you'll end up with missing and/or extra cells!
+ * Example usage:
  *
  *     @example
  *     Ext.create('Ext.panel.Panel', {
@@ -52,35 +56,31 @@
  *     });
  */
 Ext.define('Ext.layout.container.Table', {
-
-    /* Begin Definitions */
-
-    alias: ['layout.table'],
     extend: 'Ext.layout.container.Container',
     alternateClassName: 'Ext.layout.TableLayout',
-
-    /* End Definitions */
+    alias: 'layout.table',
 
     /**
      * @cfg {Number} columns
-     * The total number of columns to create in the table for this layout. If not specified, all Components added to
-     * this layout will be rendered into a single row using one column per Component.
+     * The total number of columns to create in the table for this layout. If not specified,
+     * all Components added to this layout will be rendered into a single row using one column
+     * per Component.
      */
 
     type: 'table',
-    
+
     createsInnerCt: true,
 
     targetCls: Ext.baseCSSPrefix + 'table-layout-ct',
     tableCls: Ext.baseCSSPrefix + 'table-layout',
     cellCls: Ext.baseCSSPrefix + 'table-layout-cell',
-    
+
     childEls: [ 'table', 'tbody' ],
 
     /**
      * @cfg {Object} tableAttrs
-     * An object containing properties which are added to the {@link Ext.dom.Helper DomHelper} specification used to
-     * create the layout's `<table>` element. Example:
+     * An object containing properties which are added to the {@link Ext.dom.Helper DomHelper}
+     * specification used to create the layout's `<table>` element. Example:
      *
      *     {
      *         xtype: 'panel',
@@ -99,52 +99,56 @@ Ext.define('Ext.layout.container.Table', {
 
     /**
      * @cfg {Object} trAttrs
-     * An object containing properties which are added to the {@link Ext.dom.Helper DomHelper} specification used to
-     * create the layout's `<tr>` elements.
+     * An object containing properties which are added to the {@link Ext.dom.Helper DomHelper}
+     * specification used to create the layout's `<tr>` elements.
      */
 
     /**
      * @cfg {Object} tdAttrs
-     * An object containing properties which are added to the {@link Ext.dom.Helper DomHelper} specification used to
-     * create the layout's `<td>` elements.
+     * An object containing properties which are added to the {@link Ext.dom.Helper DomHelper}
+     * specification used to create the layout's `<td>` elements.
      */
 
-    getItemSizePolicy: function (item) {
+    getItemSizePolicy: function(item) {
         return this.autoSizePolicy;
     },
-    
-    initInheritedState: function (inheritedState, inheritedStateInner) {
-        inheritedStateInner.inShrinkWrapTable  = true;
+
+    initInheritedState: function(inheritedState, inheritedStateInner) {
+        inheritedStateInner.inShrinkWrapTable = true;
     },
 
     getLayoutItems: function() {
         var me = this,
             result = [],
             items = me.callParent(),
-            len = items.length, 
+            len = items.length,
             item, i;
 
         for (i = 0; i < len; i++) {
             item = items[i];
+
             if (!item.hidden) {
                 result.push(item);
             }
         }
+
         return result;
     },
-    
-    getHiddenItems: function(){
+
+    getHiddenItems: function() {
         var result = [],
             items = this.owner.items.items,
             len = items.length,
             i, item;
-            
+
         for (i = 0; i < len; ++i) {
             item = items[i];
+
             if (item.rendered && item.hidden) {
                 result.push(item);
             }
-        }    
+        }
+
         return result;
     },
 
@@ -176,8 +180,10 @@ Ext.define('Ext.layout.container.Table', {
 
             // If no row present, create and insert one
             trEl = rows[rowIdx];
+
             if (!trEl) {
                 trEl = tbody.insertRow(rowIdx);
+
                 if (me.trAttrs) {
                     trEl.set(me.trAttrs);
                 }
@@ -189,7 +195,8 @@ Ext.define('Ext.layout.container.Table', {
             // Render or move the component into the cell
             if (!item.rendered) {
                 me.renderItem(item, tdEl, 0);
-            } else if (!me.isValidParent(item, tdEl, rowIdx, cellIdx, tbody)) {
+            }
+            else if (!me.isValidParent(item, tdEl, rowIdx, cellIdx, tbody)) {
                 me.moveItem(item, tdEl, 0);
             }
 
@@ -197,9 +204,11 @@ Ext.define('Ext.layout.container.Table', {
             if (me.tdAttrs) {
                 tdEl.set(me.tdAttrs);
             }
+
             if (item.tdAttrs) {
                 tdEl.set(item.tdAttrs);
             }
+
             tdEl.set({
                 colSpan: item.colspan || 1,
                 rowSpan: item.rowspan || 1,
@@ -209,6 +218,7 @@ Ext.define('Ext.layout.container.Table', {
             // If at the end of a row, remove any extra cells
             if (!cells[i + 1] || cells[i + 1].rowIdx !== rowIdx) {
                 cellIdx++;
+
                 while (trEl.cells[cellIdx]) {
                     trEl.deleteCell(cellIdx);
                 }
@@ -217,33 +227,38 @@ Ext.define('Ext.layout.container.Table', {
 
         // Delete any extra rows
         rowIdx++;
+
         while (tbody.rows[rowIdx]) {
             tbody.deleteRow(rowIdx);
         }
-        
+
         // Check if we've removed any cells that contain a component, we need to move
         // them so they don't get cleaned up by the gc
         for (i = 0, len = hiddenItems.length; i < len; ++i) {
             me.ensureInDocument(hiddenItems[i].getEl());
         }
     },
-    
-    ensureInDocument: function(el){
+
+    ensureInDocument: function(el) {
         var dom = el.dom.parentNode;
+
         while (dom) {
             if (dom.tagName.toUpperCase() === 'BODY') {
                 return;
             }
+
             dom = dom.parentNode;
-        } 
-        
-        Ext.getDetachedBody().appendChild(el);
+        }
+
+        Ext.getDetachedBody().appendChild(el, true);
     },
 
-    calculate: function (ownerContext) {
+    calculate: function(ownerContext) {
         if (!ownerContext.hasDomProp('containerChildrenSizeDone')) {
             this.done = false;
-        } else {
+        }
+        else {
+            // eslint-disable-next-line vars-on-top
             var targetContext = ownerContext.targetContext,
                 widthShrinkWrap = ownerContext.widthModel.shrinkWrap,
                 heightShrinkWrap = ownerContext.heightModel.shrinkWrap,
@@ -274,7 +289,7 @@ Ext.define('Ext.layout.container.Table', {
             colIdx = 0,
             cellIdx = 0,
             totalCols = this.columns || Infinity,
-            rowspans = [], //rolling list of active rowspans for each column
+            rowspans = [], // rolling list of active rowspans for each column
             len = items.length,
             item, i, j;
 
@@ -295,7 +310,8 @@ Ext.define('Ext.layout.container.Table', {
                             rowspans[j]--;
                         }
                     }
-                } else {
+                }
+                else {
                     colIdx++;
                 }
             }
@@ -311,6 +327,7 @@ Ext.define('Ext.layout.container.Table', {
                 rowspans[colIdx] = item.rowspan || 1;
                 ++colIdx;
             }
+
             ++cellIdx;
         }
 
@@ -338,26 +355,29 @@ Ext.define('Ext.layout.container.Table', {
                 }
             }, me.tableAttrs),
             tdAttrs = me.tdAttrs,
-            i, len = items.length, item, curCell, tr, rowIdx, cellIdx, cell, cells;
+            len = items.length,
+            item, curCell, tr, rowIdx, cellIdx, cell, cells, i;
 
         // Calculate the correct cell structure for the current items
         cells = me.calculateCells(items);
 
         for (i = 0; i < len; i++) {
             item = items[i];
-            
+
             curCell = cells[i];
             rowIdx = curCell.rowIdx;
             cellIdx = curCell.cellIdx;
 
             // If no row present, create and insert one
             tr = rows[rowIdx];
+
             if (!tr) {
                 tr = rows[rowIdx] = {
                     tag: 'tr',
                     role: 'presentation',
                     cn: []
                 };
+
                 if (me.trAttrs) {
                     Ext.apply(tr, me.trAttrs);
                 }
@@ -368,9 +388,11 @@ Ext.define('Ext.layout.container.Table', {
                 tag: 'td',
                 role: 'presentation'
             };
+
             if (tdAttrs) {
                 Ext.apply(cell, tdAttrs);
             }
+
             Ext.apply(cell, {
                 colSpan: item.colspan || 1,
                 rowSpan: item.rowspan || 1,
@@ -381,6 +403,7 @@ Ext.define('Ext.layout.container.Table', {
             // The DomHelper config of the item is the cell's sole child
             cell.cn = item.getRenderTree();
         }
+
         return result;
     },
 
@@ -389,6 +412,28 @@ Ext.define('Ext.layout.container.Table', {
         if (arguments.length === 3) {
             return this.table.isAncestor(item.el);
         }
+
         return item.el.dom.parentNode === this.tbody.dom.rows[rowIdx].cells[cellIdx];
+    },
+
+    destroy: function() {
+        var targetEl, cells, i, len;
+
+        // Table layout cells will be referenced by child items who will create
+        // Element instances for their container (layout cell). We need to clean up
+        // these Element instances.
+        if (this.owner.rendered) {
+            targetEl = this.getRenderTarget();
+
+            if (targetEl) {
+                cells = targetEl.query('.' + this.cellCls, false);
+
+                for (i = 0, len = cells.length; i < len; i++) {
+                    cells[i].destroy();
+                }
+            }
+        }
+
+        this.callParent();
     }
 });

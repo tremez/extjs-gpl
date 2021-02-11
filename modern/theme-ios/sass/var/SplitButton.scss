@@ -1,0 +1,67 @@
+$enable-inverted-alt-splitButton: dynamic(true);
+$splitButton-background-color: dynamic(transparent);
+$splitButton-border-color: dynamic(null);
+$splitButton-border-width: dynamic(null);
+$splitButton-border-style: dynamic(null);
+$splitButton-border-radius: dynamic(7px);
+$splitButton-color: dynamic($base-color);
+$splitButton-pressed-color: dynamic($base-light-color);
+$splitButton-disabled-color: dynamic($neutral-dark-color);
+$splitButton-font-weight: dynamic($font-weight-normal);
+$splitButton-line-height: dynamic(16px);
+$splitButton-line-height-big: dynamic(20px);
+$splitButton-padding: dynamic(3px 0);
+$splitButton-padding-big: dynamic(5px 0);
+$splitButton-icon-color: dynamic($splitButton-color);
+$splitButton-pressed-icon-color: dynamic($splitButton-pressed-color);
+$splitButton-arrow-icon: dynamic($ios-arrow-down);
+$splitButton-focused-outline-color: dynamic(null);
+$splitButton-focused-outline-style: dynamic(null);
+$splitButton-focused-outline-width: dynamic(null);
+$splitButton-focused-outline-offset: dynamic(null);
+
+$splitButton-confirm-ui: dynamic((
+    color: $ios-green,
+    pressed-color: mix(#fff, $ios-green, 70%)
+));
+
+$splitButton-alt-ui: dynamic((
+    color: #fff,
+    background-color: $ios-blue,
+    pressed-background-color: $splitButton-pressed-color,
+    padding: 3px 10px,
+    padding-big: 5px 15px
+));
+
+$splitButton-decline-ui: dynamic((
+    color: $ios-red,
+    pressed-color: mix(#fff, $ios-red, 70%)
+));
+
+$splitButton-segmented-ui: dynamic((
+    color: $base-color,
+    border-color: $base-color,
+    hovered-border-color: $base-color,
+    background-color: $background-color,
+    hovered-background-color: $background-color,
+    pressed-background-color: $base-color,
+    pressed-color: #fff,
+    border-radius: 4px,
+    padding: 3px 10px,
+    padding-big: 5px 15px
+));
+
+$splitButton-action-ui: dynamic((
+    font-weight: $font-weight-bold
+));
+
+$splitButton-raised-ui: dynamic((
+    color: $base-color,
+    background-color: $background-color,
+    hovered-background-color: $background-color,
+    pressed-background-color: $base-color,
+    pressed-color: #fff,
+    padding: 3px 10px,
+    padding-big: 5px 15px,
+    box-shadow: (2px 2px 5px 0 rgba(0, 0, 0, 0.12), 2px 2px 5px 0 rgba(0, 0, 0, 0.08))
+));

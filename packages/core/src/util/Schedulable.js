@@ -9,15 +9,15 @@ Ext.define('Ext.util.Schedulable', {
 
     scheduled: false,
 
-    constructor: function () {
+    constructor: function() {
         this.getScheduler().add(this);
     },
 
-    destroy: function () {
+    destroy: function() {
         var me = this,
             scheduler = me.getScheduler();
 
-        if (scheduler) {
+        if (scheduler && !scheduler.destroyed) {
             scheduler.remove(me);
         }
 
@@ -27,7 +27,7 @@ Ext.define('Ext.util.Schedulable', {
         me.callParent();
     },
 
-    getFullName: function () {
+    getFullName: function() {
         return this.name || this.id;
     },
 
@@ -36,14 +36,14 @@ Ext.define('Ext.util.Schedulable', {
          * This method returns the `Scheduler` for this item.
          * @return {Ext.util.Scheduler}
          */
-        getScheduler: function () {
+        getScheduler: function() {
             return this.scheduler;
         },
 
         /**
          * Schedules this item with the associated `Ext.util.Scheduler`.
          */
-        schedule: function () {
+        schedule: function() {
             var me = this,
                 scheduler;
 
@@ -61,24 +61,25 @@ Ext.define('Ext.util.Schedulable', {
                 }
             }
         },
-        
+
         /**
          * Unschedules this item with the associated `Ext.util.Scheduler`.
          */
-        unschedule: function () {
+        unschedule: function() {
             var me = this,
                 scheduler;
 
             if (me.scheduled) {
                 scheduler = me.getScheduler();
-                if (scheduler) {
+
+                if (scheduler && !scheduler.destroyed) {
                     scheduler.unscheduleItem(me);
                 }
 
                 me.scheduled = false;
             }
         },
-        
+
         /**
          * @method sort
          * This method should be overridden by items that have dependencies to insert. The
@@ -90,7 +91,7 @@ Ext.define('Ext.util.Schedulable', {
          *
          * This example assumes the item has a "dependencies" array to pass to the scheduler.
          */
-         // Can't use Ext.emptyFn here to avoid setting $private: true on it
+        // Can't use Ext.emptyFn here to avoid setting $private: true on it
         sort: function() {}
     }
 });

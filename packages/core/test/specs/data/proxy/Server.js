@@ -1,22 +1,25 @@
-describe("Ext.data.proxy.Server", function () {
+topSuite("Ext.data.proxy.Server",
+    ['Ext.data.ArrayStore', 'Ext.data.reader.Xml', 'Ext.data.writer.Xml'],
+function() {
     var proxy,
         ServerProxy = Ext.data.proxy.Server,
         reader = new Ext.data.reader.Reader(),
         writer = new Ext.data.writer.Writer();
-    
+
     beforeEach(function() {
-        Ext.ClassManager.enableNamespaceParseCache = false; 
+        Ext.ClassManager.enableNamespaceParseCache = false;
     });
-    
-    afterEach(function(){
-        Ext.ClassManager.enableNamespaceParseCache = true; 
+
+    afterEach(function() {
+        Ext.ClassManager.enableNamespaceParseCache = true;
         Ext.data.Model.schema.clear();
         Ext.undefine('spec.SomeModel');
     });
-    
+
     describe("instantiation", function() {
         var config;
-        beforeEach(function(){
+
+        beforeEach(function() {
             config = {
                 extraParams: {
                     foo: true,
@@ -27,7 +30,7 @@ describe("Ext.data.proxy.Server", function () {
             };
             proxy = new ServerProxy(config);
         });
-                
+
         it("should extend Ext.data.proxy.Proxy", function() {
             expect(proxy.superclass).toEqual(Ext.data.proxy.Proxy.prototype);
         });
@@ -100,6 +103,7 @@ describe("Ext.data.proxy.Server", function () {
                     noCache: false
                 });
                 var request = proxy.buildRequest(new Ext.data.operation.Read());
+
                 expect(request.getUrl()).toBe('foo');
             });
 
@@ -111,6 +115,7 @@ describe("Ext.data.proxy.Server", function () {
                 var request = proxy.buildRequest(new Ext.data.operation.Read({
                     url: 'bar'
                 }));
+
                 expect(request.getUrl()).toBe('bar');
             });
         });
@@ -145,20 +150,20 @@ describe("Ext.data.proxy.Server", function () {
             proxy = new ServerProxy(configWithCacheString);
             expect(proxy.buildUrl(request), 'keep?_cool=bro');
         });
-        
-        describe("url precedence", function(){
-            it("should use the url on the proxy as a default", function(){
+
+        describe("url precedence", function() {
+            it("should use the url on the proxy as a default", function() {
                 proxy = new ServerProxy({
                     url: 'proxy',
                     noCache: false
                 });
                 expect(proxy.buildUrl(new Ext.data.Request())).toBe('proxy');
             });
-            
-            it("should use the specified api by default", function(){
+
+            it("should use the specified api by default", function() {
                 proxy = new ServerProxy({
                     api: {
-                        read: 'read' 
+                        read: 'read'
                     },
                     noCache: false
                 });
@@ -166,8 +171,8 @@ describe("Ext.data.proxy.Server", function () {
                     action: 'read'
                 }))).toBe('read');
             });
-            
-            it("should use the url on the request by default", function(){
+
+            it("should use the url on the request by default", function() {
                 proxy = new ServerProxy({
                     noCache: false
                 });
@@ -176,12 +181,12 @@ describe("Ext.data.proxy.Server", function () {
                     url: 'request'
                 }))).toBe('request');
             });
-            
-            it("should use proxy url if the item in the proxy is undefined", function(){
+
+            it("should use proxy url if the item in the proxy is undefined", function() {
                 proxy = new ServerProxy({
                     url: 'proxy',
                     api: {
-                        read: 'read' 
+                        read: 'read'
                     },
                     noCache: false
                 });
@@ -189,12 +194,12 @@ describe("Ext.data.proxy.Server", function () {
                     action: 'update'
                 }))).toBe('proxy');
             });
-            
-            it("should favour the api over the proxy url", function(){
+
+            it("should favour the api over the proxy url", function() {
                 proxy = new ServerProxy({
                     url: 'proxy',
                     api: {
-                        read: 'read' 
+                        read: 'read'
                     },
                     noCache: false
                 });
@@ -202,8 +207,8 @@ describe("Ext.data.proxy.Server", function () {
                     action: 'read'
                 }))).toBe('read');
             });
-            
-            it("should favour the request url over the proxy", function(){
+
+            it("should favour the request url over the proxy", function() {
                 proxy = new ServerProxy({
                     url: 'proxy',
                     noCache: false
@@ -213,11 +218,11 @@ describe("Ext.data.proxy.Server", function () {
                     url: 'request'
                 }))).toBe('request');
             });
-            
-            it("should favour the request url over the api", function(){
+
+            it("should favour the request url over the api", function() {
                 proxy = new ServerProxy({
                     api: {
-                        read: 'read' 
+                        read: 'read'
                     },
                     noCache: false
                 });
@@ -226,12 +231,12 @@ describe("Ext.data.proxy.Server", function () {
                     url: 'request'
                 }))).toBe('request');
             });
-            
-            it("should favour the request url over proxy & api", function(){
+
+            it("should favour the request url over proxy & api", function() {
                 proxy = new ServerProxy({
                     url: 'proxy',
                     api: {
-                        read: 'read' 
+                        read: 'read'
                     },
                     noCache: false
                 });
@@ -258,7 +263,7 @@ describe("Ext.data.proxy.Server", function () {
 
         function createOperation(config) {
             return new Ext.data.operation.Read(Ext.apply({}, config, {
-                page : 10,
+                page: 10,
                 start: 100,
                 limit: 10,
 
@@ -276,9 +281,9 @@ describe("Ext.data.proxy.Server", function () {
         }
 
         beforeEach(function() {
-            sorters  = [new Ext.util.Sorter({property: 'name', direction: 'ASC'})];
-            filters  = [new Ext.util.Filter({property: 'name', value: 'Ed'})];
-            grouper = new Ext.util.Grouper({property: 'name', direction: 'ASC'});
+            sorters  = [new Ext.util.Sorter({ property: 'name', direction: 'ASC' })];
+            filters  = [new Ext.util.Filter({ property: 'name', value: 'Ed' })];
+            grouper = new Ext.util.Grouper({ property: 'name', direction: 'ASC' });
         });
 
         describe("the page param", function() {
@@ -289,13 +294,13 @@ describe("Ext.data.proxy.Server", function () {
             });
 
             it("should be customizable", function() {
-                params = getParams({pageParam: 'thePage'});
+                params = getParams({ pageParam: 'thePage' });
 
                 expect(params.thePage).toBe(10);
             });
 
             it("should not be sent if undefined", function() {
-                params = getParams({pageParam: undefined});
+                params = getParams({ pageParam: undefined });
 
                 expect(params.page).toBeUndefined();
             });
@@ -309,13 +314,13 @@ describe("Ext.data.proxy.Server", function () {
             });
 
             it("should be customizable", function() {
-                params = getParams({startParam: 'theStart'});
+                params = getParams({ startParam: 'theStart' });
 
                 expect(params.theStart).toBe(100);
             });
 
             it("should not be sent if undefined", function() {
-                params = getParams({startParam: undefined});
+                params = getParams({ startParam: undefined });
 
                 expect(params.start).toBeUndefined();
             });
@@ -337,13 +342,13 @@ describe("Ext.data.proxy.Server", function () {
             });
 
             it("should be customizable", function() {
-                params = getParams({limitParam: 'theLimit'});
+                params = getParams({ limitParam: 'theLimit' });
 
                 expect(params.theLimit).toBe(10);
             });
 
             it("should not be sent if undefined", function() {
-                params = getParams({limitParam: undefined});
+                params = getParams({ limitParam: undefined });
 
                 expect(params.limit).toBeUndefined();
             });
@@ -357,19 +362,19 @@ describe("Ext.data.proxy.Server", function () {
             });
 
             it("should be customizable", function() {
-                params = getParams({groupParam: 'theGroup'});
+                params = getParams({ groupParam: 'theGroup' });
 
                 expect(params.theGroup).toBe('{"property":"name","direction":"ASC"}');
             });
 
             it("should not be sent if undefined", function() {
-                params = getParams({groupParam: undefined});
+                params = getParams({ groupParam: undefined });
 
                 expect(params.group).toBeUndefined();
             });
 
             it("should not be set if there is no group defined", function() {
-                params = getParams({}, {grouper: undefined});
+                params = getParams({}, { grouper: undefined });
 
                 expect(params.group).toBeUndefined();
             });
@@ -387,13 +392,13 @@ describe("Ext.data.proxy.Server", function () {
             });
 
             it("should be customizable", function() {
-                params = getParams({sortParam: 'theSorters'});
+                params = getParams({ sortParam: 'theSorters' });
 
                 expect(params.theSorters).toBe("sorters");
             });
 
             it("should not be sent if undefined", function() {
-                params = getParams({sortParam: undefined});
+                params = getParams({ sortParam: undefined });
 
                 expect(params.sort).toBeUndefined();
             });
@@ -405,7 +410,7 @@ describe("Ext.data.proxy.Server", function () {
             });
 
             it("should not be set if there are no sorters", function() {
-                params = getParams({}, {sorters: []});
+                params = getParams({}, { sorters: [] });
 
                 expect(params.sort).toBeUndefined();
             });
@@ -423,13 +428,13 @@ describe("Ext.data.proxy.Server", function () {
             });
 
             it("should be customizable", function() {
-                params = getParams({filterParam: 'theFilters'});
+                params = getParams({ filterParam: 'theFilters' });
 
                 expect(params.theFilters).toBe("filters");
             });
 
             it("should not be sent if undefined", function() {
-                params = getParams({filterParam: undefined});
+                params = getParams({ filterParam: undefined });
 
                 expect(params.filter).toBeUndefined();
             });
@@ -441,7 +446,7 @@ describe("Ext.data.proxy.Server", function () {
             });
 
             it("should not be set if there are no filters", function() {
-                params = getParams({}, {filters: []});
+                params = getParams({}, { filters: [] });
 
                 expect(params.filter).toBeUndefined();
             });
@@ -449,33 +454,115 @@ describe("Ext.data.proxy.Server", function () {
     });
 
     describe("encoding sorters", function() {
-        it("should provide a default encoded string", function() {
-            var sorter1 = new Ext.util.Sorter({
-                property : "name",
-                direction: "ASC"
+        describe('default encoding', function() {
+            it("should provide a default encoded string", function() {
+                var sorter1 = new Ext.util.Sorter({
+                    property: "name",
+                    direction: "ASC"
+                });
+
+                var sorter2 = new Ext.util.Sorter({
+                    property: "age",
+                    direction: "DESC"
+                });
+
+                proxy = new Ext.data.proxy.Server();
+
+                expect(Ext.decode(proxy.encodeSorters([sorter1, sorter2]))).toEqual([{
+                    property: 'name',
+                    direction: 'ASC'
+                }, {
+                    property: 'age',
+                    direction: 'DESC'
+                }]);
+            });
+        });
+
+        describe('simple encoding', function() {
+            it("should encode a single sorter into the sortParam and sortDirection params", function() {
+                var sorter1 = new Ext.util.Sorter({
+                        property: "name",
+                        direction: "ASC"
+                    }),
+                    operation,
+                    request,
+                    options;
+
+                proxy = new Ext.data.proxy.Ajax({
+                    simpleSortMode: true,
+                    url: '/',
+                    noCache: false
+                });
+                operation = proxy.createOperation('read', {
+                    sorters: [sorter1]
+                });
+                request = proxy.buildRequest(operation);
+                options = Ext.Ajax.setOptions(request.getCurrentConfig());
+
+                expect(options.url).toEqual('/?sort=name&dir=ASC');
             });
 
-            var sorter2 = new Ext.util.Sorter({
-                property : "age",
-                direction: "DESC"
+            it("should encode multiple sorters into the sortParam and sortDirection params", function() {
+                var sorter1 = new Ext.util.Sorter({
+                        property: "name",
+                        direction: "ASC"
+                    }),
+                    sorter2 = new Ext.util.Sorter({
+                        property: "age",
+                        direction: "DESC"
+                    }),
+                    operation,
+                    request,
+                    options;
+
+                proxy = new Ext.data.proxy.Ajax({
+                    simpleSortMode: true,
+                    url: '/',
+                    noCache: false
+                });
+                operation = proxy.createOperation('read', {
+                    sorters: [sorter1, sorter2]
+                });
+                request = proxy.buildRequest(operation);
+                options = Ext.Ajax.setOptions(request.getCurrentConfig());
+
+                expect(options.url).toEqual('/?sort=name&sort=age&dir=ASC&dir=DESC');
             });
 
-            proxy = new Ext.data.proxy.Server();
-            
-            expect(Ext.decode(proxy.encodeSorters([sorter1, sorter2]))).toEqual([{
-                property: 'name',
-                direction: 'ASC'
-            }, {
-                property: 'age',
-                direction: 'DESC'
-            }]);
+            it("should encode multiple sorters into the sortParam when sortParam is the same as directionParam", function() {
+                var sorter1 = new Ext.util.Sorter({
+                        property: "name",
+                        direction: "ASC"
+                    }),
+                    sorter2 = new Ext.util.Sorter({
+                        property: "age",
+                        direction: "DESC"
+                    }),
+                    operation,
+                    request,
+                    options;
+
+                proxy = new Ext.data.proxy.Ajax({
+                    simpleSortMode: true,
+                    directionParam: 'sort',
+                    url: '/',
+                    noCache: false
+                });
+                operation = proxy.createOperation('read', {
+                    sorters: [sorter1, sorter2]
+                });
+                request = proxy.buildRequest(operation);
+                options = Ext.Ajax.setOptions(request.getCurrentConfig());
+
+                expect(options.url).toEqual('/?sort=name%20ASC&sort=age%20DESC');
+            });
         });
     });
 
-    describe("encoding filters", function () {
+    describe("encoding filters", function() {
         var filter1, filter2;
 
-        beforeEach(function () {
+        beforeEach(function() {
             proxy = new Ext.data.proxy.Server();
 
             filter1 = new Ext.util.Filter({
@@ -490,11 +577,11 @@ describe("Ext.data.proxy.Server", function () {
             });
         });
 
-        afterEach(function () {
+        afterEach(function() {
             proxy = filter1 = filter2 = null;
         });
 
-        it('should provide a default encoded string, operator should be excluded by default', function () {
+        it('should provide a default encoded string, operator should be excluded by default', function() {
             expect(Ext.decode(proxy.encodeFilters([filter1, filter2]))).toEqual([{
                 property: 'name',
                 value: 'Ed'
@@ -505,12 +592,13 @@ describe("Ext.data.proxy.Server", function () {
             }]);
         });
 
-        it('should exclude filters with a filterFn', function () {
+        it('should exclude filters with a filterFn', function() {
             var f = new Ext.util.Filter({
-                filterFn: function () {
+                filterFn: function() {
                     return true;
                 }
             });
+
             expect(Ext.decode(proxy.encodeFilters([filter1, f, filter2]))).toEqual([{
                 property: 'name',
                 value: 'Ed'
@@ -521,7 +609,7 @@ describe("Ext.data.proxy.Server", function () {
             }]);
         });
 
-        describe('falsy values', function () {
+        describe('falsy values', function() {
             function doTest(value) {
                 var v = value;
 
@@ -529,7 +617,7 @@ describe("Ext.data.proxy.Server", function () {
                     v = 'an empty string';
                 }
 
-                it('should encode ' + v, function () {
+                it('should encode ' + v, function() {
                     var f = new Ext.util.Filter({
                         property: 'name',
                         value: value
@@ -551,13 +639,47 @@ describe("Ext.data.proxy.Server", function () {
     });
 
     describe("encoding group data", function() {
-        it("should JSON encode the data", function() {
-            var proxy = new Ext.data.proxy.Server(),
-                grouper = new Ext.util.Grouper({property: 'name', direction: 'ASC'});
+        describe('default encoding', function() {
+            it("should JSON encode the data", function() {
+                var proxy = new Ext.data.proxy.Server(),
+                    grouper = new Ext.util.Grouper({ property: 'name', direction: 'ASC' });
 
-            expect(Ext.decode(proxy.encodeSorters([grouper], true))).toEqual({
-                property: 'name',
-                direction: 'ASC'
+                expect(Ext.decode(proxy.encodeSorters([grouper], true))).toEqual({
+                    property: 'name',
+                    direction: 'ASC'
+                });
+            });
+        });
+
+        describe('simpleGroupMode encoding', function() {
+            it("should JSON encode the data", function() {
+                var proxy = new Ext.data.proxy.Server({
+                        simpleGroupMode: true,
+                        url: '/',
+                        noCache: false
+                    }),
+                    operation = proxy.createOperation('read', {
+                        grouper: new Ext.util.Grouper({ property: 'name', direction: 'ASC' })
+                    }),
+                    request = proxy.buildRequest(operation),
+                    options = Ext.Ajax.setOptions(request.getCurrentConfig());
+
+                expect(options.url).toEqual('/?group=name&groupDir=ASC');
+            });
+            it("should encode grouper into the groupParam when groupParam is the same as groupDirectionParam  ", function() {
+                var proxy = new Ext.data.proxy.Server({
+                        simpleGroupMode: true,
+                        groupDirectionParam: 'group',
+                        url: '/',
+                        noCache: false
+                    }),
+                    operation = proxy.createOperation('read', {
+                        grouper: new Ext.util.Grouper({ property: 'name', direction: 'ASC' })
+                    }),
+                    request = proxy.buildRequest(operation),
+                    options = Ext.Ajax.setOptions(request.getCurrentConfig());
+
+                expect(options.url).toEqual('/?group=name%20ASC');
             });
         });
     });
@@ -566,27 +688,27 @@ describe("Ext.data.proxy.Server", function () {
         var config,
             sreader = 'xml',
             defaultReaderType = 'xml',
-            modelName = 'spec.SomeModel', 
+            modelName = 'spec.SomeModel',
             model;
 
-
-        beforeEach(function(){
+        beforeEach(function() {
             model = Ext.define(modelName, {
                 extend: 'Ext.data.Model',
                 fields: ['id']
             });
         });
-        
+
         describe("set the proxy's reader by reader instance", function() {
-            beforeEach(function(){
+            beforeEach(function() {
                 config = {
                     reader: reader
                 };
-                proxy = new ServerProxy(config); 
+                proxy = new ServerProxy(config);
             });
 
             it("should not create a new reader instance", function() {
-                var called = false; 
+                var called = false;
+
                 spyOn(Ext, "createByAlias").andCallFake(function(name) {
                     if (name === 'reader.json') {
                         called = true;
@@ -601,14 +723,14 @@ describe("Ext.data.proxy.Server", function () {
         });
 
         describe("set the proxy's reader by string", function() {
-            beforeEach(function(){
+            beforeEach(function() {
                 config = {
                     reader: sreader,
                     proxy: proxy,
                     model: model,
                     defaultReaderType: defaultReaderType
                 };
-                proxy = new ServerProxy(config); 
+                proxy = new ServerProxy(config);
             });
 
             it("should create a new reader instance", function() {
@@ -625,9 +747,10 @@ describe("Ext.data.proxy.Server", function () {
         var config,
             swriter = 'xml',
             defaultWriterType = 'xml',
-            modelName = 'spec.SomeModel', model;
+            modelName = 'spec.SomeModel',
+            model;
 
-        beforeEach(function(){
+        beforeEach(function() {
             model = Ext.define(modelName, {
                 extend: 'Ext.data.Model',
                 fields: ['id']
@@ -635,15 +758,16 @@ describe("Ext.data.proxy.Server", function () {
         });
 
         describe("set the proxy's writer by writer instance", function() {
-            beforeEach(function(){
+            beforeEach(function() {
                 config = {
                     writer: writer
                 };
-                proxy = new ServerProxy(config); 
+                proxy = new ServerProxy(config);
             });
 
             it("should not create a new writer instance", function() {
                 var called = false;
+
                 spyOn(Ext, "createByAlias").andCallFake(function(name) {
                     if (name === 'writer.json') {
                         called = false;
@@ -658,13 +782,13 @@ describe("Ext.data.proxy.Server", function () {
         });
 
         describe("set the proxy's writer by string", function() {
-            beforeEach(function(){
+            beforeEach(function() {
                 config = {
                     writer: swriter,
                     model: model,
                     defaultWriterType: defaultWriterType
                 };
-                proxy = new ServerProxy(config); 
+                proxy = new ServerProxy(config);
             });
 
             it("should create a new writer instance", function() {
@@ -677,10 +801,10 @@ describe("Ext.data.proxy.Server", function () {
         });
     });
 
-    describe("destroy", function(){
+    describe("destroy", function() {
         var config, spy;
 
-        beforeEach(function(){
+        beforeEach(function() {
             config = {
                 reader: reader,
                 writer: writer
@@ -688,7 +812,7 @@ describe("Ext.data.proxy.Server", function () {
             proxy = new ServerProxy(config);
         });
 
-        it('should destroy reader and writer', function(){
+        it('should destroy reader and writer', function() {
            spy = spyOn(Ext, "destroy");
            proxy.destroy();
            expect(spy).toHaveBeenCalledWith(reader, writer);

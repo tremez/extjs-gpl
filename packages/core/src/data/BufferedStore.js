@@ -1,42 +1,51 @@
 /**
- * A BufferedStore maintains a sparsely populated map of pages corresponding to an extremely large server-side dataset.
+ * A BufferedStore maintains a sparsely populated map of pages corresponding to an extremely large
+ * server-side dataset.
  *
- * Use a BufferedStore when the dataset size is so large that the database and network latency, and client memory requirements
- * preclude caching the entire dataset in a regular {@link Ext.data.Store Store}.
+ * **Note:** Buffered Stores are not available in the modern toolkit. Instead use
+ * `Ext.data.virtual.Store`.
  *
- * When using a BufferedStore *not all of the dataset is present in the client*. Only pages which have been
- * requested by the UI (usually a {@link Ext.grid.Panel GridPanel}) and surrounding pages will be present. Retention
- * of viewed pages in the BufferedStore after they have been scrolled out of view is configurable. See {@link #leadingBufferZone},
- * {@link #trailingBufferZone} and {@link #purgePageCount}.
+ * Use a BufferedStore when the dataset size is so large that the database and network latency,
+ * and client memory requirements preclude caching the entire dataset in a regular
+ * {@link Ext.data.Store Store}.
  *
- * To use a BufferedStore, initiate the loading process by loading the first page. The number of rows rendered are
- * determined automatically, and the range of pages needed to keep the cache primed for scrolling is
- * requested and cached.
+ * When using a BufferedStore *not all of the dataset is present in the client*. Only pages which
+ * have been requested by the UI (usually a {@link Ext.grid.Panel GridPanel}) and surrounding pages
+ * will be present. Retention of viewed pages in the BufferedStore after they have been scrolled
+ * out of view is configurable. See {@link #leadingBufferZone}, {@link #trailingBufferZone} and
+ * {@link #purgePageCount}.
+ *
+ * To use a BufferedStore, initiate the loading process by loading the first page. The number of
+ * rows rendered are determined automatically, and the range of pages needed to keep the cache
+ * primed for scrolling is requested and cached.
  * Example:
  *
  *     myBufferedStore.loadPage(1); // Load page 1
  *
- * A {@link Ext.grid.plugin.BufferedRenderer BufferedRenderer} is instantiated which will monitor the scrolling in the grid, and
- * refresh the view's rows from the page cache as needed. It will also pull new data into the page
- * cache when scrolling of the view draws upon data near either end of the prefetched data.
+ * A {@link Ext.grid.plugin.BufferedRenderer BufferedRenderer} is instantiated which will monitor
+ * the scrolling in the grid, and refresh the view's rows from the page cache as needed. It will
+ * also pull new data into the page cache when scrolling of the view draws upon data near either
+ * end of the prefetched data.
  *
- * The margins which trigger view refreshing from the prefetched data are {@link Ext.grid.plugin.BufferedRenderer#numFromEdge},
- * {@link Ext.grid.plugin.BufferedRenderer#leadingBufferZone} and {@link Ext.grid.plugin.BufferedRenderer#trailingBufferZone}.
+ * The margins which trigger view refreshing from the prefetched data are
+ * {@link Ext.grid.plugin.BufferedRenderer#numFromEdge},
+ * {@link Ext.grid.plugin.BufferedRenderer#leadingBufferZone}, and
+ * {@link Ext.grid.plugin.BufferedRenderer#trailingBufferZone}.
  *
- * The margins which trigger loading more data into the page cache are, {@link #leadingBufferZone} and
- * {@link #trailingBufferZone}.
+ * The margins which trigger loading more data into the page cache are, {@link #leadingBufferZone}
+ * and {@link #trailingBufferZone}.
  *
- * By default, only 5 pages of data (in addition to the pages which over the visible region) are cached in the page cache,
- * with old pages being evicted from the cache as the view moves down through the dataset. This is controlled by the
- * {@link #purgePageCount} setting.
+ * By default, only 5 pages of data (in addition to the pages which over the visible region) are
+ * cached in the page cache, with old pages being evicted from the cache as the view moves down
+ * through the dataset. This is controlled by the {@link #purgePageCount} setting.
  *
  * Setting this value to zero means that no pages are *ever* scrolled out of the page cache, and
- * that eventually the whole dataset may become present in the page cache. This is sometimes desirable
- * as long as datasets do not reach astronomical proportions.
+ * that eventually the whole dataset may become present in the page cache. This is sometimes
+ * desirable as long as datasets do not reach astronomical proportions.
  *
- * Selection state may be maintained across page boundaries by configuring the SelectionModel not to discard
- * records from its collection when those Records cycle out of the Store's primary collection. This is done
- * by configuring the SelectionModel like this:
+ * Selection state may be maintained across page boundaries by configuring the SelectionModel
+ * not to discard records from its collection when those Records cycle out of the Store's primary
+ * collection. This is done by configuring the SelectionModel like this:
  *
  *     selModel: {
  *         pruneRemoved: false
@@ -54,7 +63,7 @@ Ext.define('Ext.data.BufferedStore', {
         'Ext.util.Sorter',
         'Ext.util.Grouper'
     ],
-    
+
     uses: [
         'Ext.util.SorterCollection',
         'Ext.util.FilterCollection',
@@ -63,7 +72,8 @@ Ext.define('Ext.data.BufferedStore', {
 
     /**
      * @property {Boolean} isBufferedStore
-     * `true` in this class to identify an object as an instantiated BufferedStore, or subclass thereof.
+     * `true` in this class to identify an object as an instantiated BufferedStore, or subclass
+     * thereof.
      */
     isBufferedStore: true,
 
@@ -73,51 +83,78 @@ Ext.define('Ext.data.BufferedStore', {
     config: {
         data: 0,
         pageSize: 25,
-        remoteSort: true,
-        remoteFilter: true,
-        sortOnLoad: false,
+
         /**
-        * @cfg {Number} purgePageCount
-        *
-        * The number of pages *in addition to twice the required buffered range* to keep in the prefetch cache before purging least recently used records.
-        *
-        * For example, if the height of the view area and the configured {@link #trailingBufferZone} and {@link #leadingBufferZone} require that there
-        * are three pages in the cache, then a `purgePageCount` of 5 ensures that up to 11 pages can be in the page cache any any one time. This is enough
-        * to allow the user to scroll rapidly between different areas of the dataset without evicting pages which are still needed.
-        *
-        * A value of 0 indicates to never purge the prefetched data.
-        */
+         * @cfg remoteSort
+         * @inheritdoc
+         */
+        remoteSort: true,
+
+        /**
+         * @cfg remoteFilter
+         * @inheritdoc
+         */
+        remoteFilter: true,
+
+        /**
+         * @cfg sortOnLoad
+         * @inheritdoc
+         */
+        sortOnLoad: false,
+
+        /**
+         * @cfg {Number} purgePageCount
+         *
+         * The number of pages *in addition to twice the required buffered range* to keep
+         * in the prefetch cache before purging least recently used records.
+         *
+         * For example, if the height of the view area and the configured
+         * {@link #trailingBufferZone} and {@link #leadingBufferZone} require that there
+         * are three pages in the cache, then a `purgePageCount` of 5 ensures that up to
+         * 11 pages can be in the page cache any any one time. This is enough to allow
+         * the user to scroll rapidly between different areas of the dataset without
+         * evicting pages which are still needed.
+         *
+         * A value of 0 indicates to never purge the prefetched data.
+         */
         purgePageCount: 5,
 
         /**
-        * @cfg {Number} trailingBufferZone
-        * The number of extra records to keep cached on the trailing side of scrolling buffer
-        * as scrolling proceeds. A larger number means fewer replenishments from the server.
-        */
+         * @cfg {Number} trailingBufferZone
+         * The number of extra records to keep cached on the trailing side of scrolling
+         * buffer as scrolling proceeds. A larger number means fewer replenishments from
+         * the server.
+         */
         trailingBufferZone: 25,
 
         /**
-        * @cfg {Number} leadingBufferZone
-        * The number of extra rows to keep cached on the leading side of scrolling buffer
-        * as scrolling proceeds. A larger number means fewer replenishments from the server.
-        */
+         * @cfg {Number} leadingBufferZone
+         * The number of extra rows to keep cached on the leading side of scrolling
+         * buffer as scrolling proceeds. A larger number means fewer replenishments from
+         * the server.
+         */
         leadingBufferZone: 200,
 
         /**
-         * @cfg {Number} defaultViewSize The default view size to use until the {@link #viewSize} has been configured.
+         * @cfg {Number} defaultViewSize
+         * The default view size to use until the
+         * {@link #viewSize} has been configured.
          * @private
          */
-        defaultViewSize: 100,    
+        defaultViewSize: 100,
 
         /**
-         * @cfg {Number} viewSize The view size needed to fill the current view. Defaults to the {@link #defaultViewSize}.
+         * @cfg {Number} viewSize The view size needed to fill the current view. Defaults
+         * to the {@link #defaultViewSize}.
          * This will typically be set by the underlying view.
          * @private
          */
         viewSize: 0,
 
         /**
-         * @inheritdoc
+         * @cfg {Boolean} trackRemoved
+         * The {@link Ext.data.ProxyStore#cfg!trackRemoved trackRemoved} config is not
+         * supported by buffered stores.
          */
         trackRemoved: false
     },
@@ -132,7 +169,8 @@ Ext.define('Ext.data.BufferedStore', {
 
         //<debug>
         if (data && data !== true) {
-            Ext.raise('Cannot load a buffered store with local data - the store is a map of remote data');
+            Ext.raise('Cannot load a buffered store with local data - the store is a map ' +
+                      'of remote data');
         }
         //</debug>
 
@@ -147,6 +185,7 @@ Ext.define('Ext.data.BufferedStore', {
         if (proxy && proxy.setEnablePaging) {
             proxy.setEnablePaging(true);
         }
+
         return proxy;
     },
 
@@ -168,6 +207,7 @@ Ext.define('Ext.data.BufferedStore', {
         if (remoteFilter === false) {
             Ext.raise('Buffered stores are always remotely filtered.');
         }
+
         this.callParent([remoteFilter, oldRemoteFilter]);
     },
 
@@ -175,6 +215,7 @@ Ext.define('Ext.data.BufferedStore', {
         if (remoteSort === false) {
             Ext.raise('Buffered stores are always remotely sorted.');
         }
+
         this.callParent([remoteSort, oldRemoteSort]);
     },
 
@@ -182,6 +223,7 @@ Ext.define('Ext.data.BufferedStore', {
         if (value !== false) {
             Ext.raise('Cannot use trackRemoved with a buffered store.');
         }
+
         this.callParent(arguments);
     },
     //</debug>
@@ -207,7 +249,7 @@ Ext.define('Ext.data.BufferedStore', {
                 maxSize: me.getPurgePageCount(),
                 listeners: {
                     // Whenever PageMap gets cleared, it means we re no longer interested in 
-                    // any outstanding page prefetches, so cancel tham all
+                    // any outstanding page prefetches, so cancel them all
                     clear: me.onPageMapClear,
                     scope: me
                 }
@@ -216,16 +258,19 @@ Ext.define('Ext.data.BufferedStore', {
         // Allow view to veto prune if the old page is still in use by the view
         me.relayEvents(result, ['beforepageremove', 'pageadd', 'pageremove']);
         me.pageRequests = {};
+
         return result;
     },
 
     //<debug>
     add: function() {
-        Ext.raise('add method may not be called on a buffered store - the store is a map of remote data');
+        Ext.raise('add method may not be called on a buffered store - the store is a map ' +
+                  'of remote data');
     },
-    
+
     insert: function() {
-        Ext.raise('insert method may not be called on a buffered store - the store is a map of remote data');
+        Ext.raise('insert method may not be called on a buffered store - the store is a map ' +
+                  'of remote data');
     },
     //</debug>
 
@@ -237,28 +282,34 @@ Ext.define('Ext.data.BufferedStore', {
             if (silent) {
                 me.suspendEvent('clear');
             }
+
             data.clear();
+
             if (silent) {
                 me.resumeEvent('clear');
             }
-        }            
+        }
     },
 
     flushLoad: function() {
         var me = this,
             options = me.pendingLoadOptions;
 
-        // If it gets called programatically, the listener will need cancelling
+        // If it gets called programmatically, the listener will need cancelling
         me.clearLoadTask();
+
         if (!options) {
             return;
         }
 
         // Buffered stores, a load operation means kick off a clean load from page 1
-        me.getData().clear();
-        options.page = 1;
-        options.start = 0;
-        options.limit = me.getViewSize() || me.getDefaultViewSize();
+        // unless it's specified to preserve the options
+        if (!options.preserveOnFlush) {
+            me.getData().clear();
+            options.page = 1;
+            options.start = 0;
+            options.limit = me.getViewSize() || me.getDefaultViewSize();
+        }
 
         // If we're prefetching, the arguments on the callback for getting the range is different
         // So we indicate that we need to fire a special "load" style callback
@@ -266,6 +317,7 @@ Ext.define('Ext.data.BufferedStore', {
 
         // options might be chained, with callback on a prototype; delete won't clear it.
         options.callback = null;
+
         return me.loadToPrefetch(options);
     },
 
@@ -281,7 +333,8 @@ Ext.define('Ext.data.BufferedStore', {
             options = {};
         }
 
-        // Prevent re-entering the load process if we are already in a wait state for a batch of pages.
+        // Prevent re-entering the load process if we are already in a wait state for a batch
+        // of pages.
         if (me.loading || me.fireEvent('beforeload', me, options) === false) {
             return;
         }
@@ -296,15 +349,17 @@ Ext.define('Ext.data.BufferedStore', {
                 endIdx = newCount - 1;
                 startIdx = Math.max(endIdx - oldRequestSize, 0);
             }
+
             if (me.rangeCached(startIdx, endIdx, false)) {
                 me.loadCount = (me.loadCount || 0) + 1;
                 me.loading = false;
                 data.un('pageadd', waitForReload);
                 records = data.getRange(startIdx, endIdx);
-                me.fireEvent('load', me, records, true);
                 me.fireEvent('refresh', me);
+                me.fireEvent('load', me, records, true);
             }
         };
+
         bufferZone = Math.ceil((me.getLeadingBufferZone() + me.getTrailingBufferZone()) / 2);
 
         // Decide what reload means.
@@ -325,7 +380,8 @@ Ext.define('Ext.data.BufferedStore', {
         // Clear page cache
         data.clear(true);
 
-        // So that prefetchPage does not consider the store to be fully loaded if the local count is equal to the total count
+        // So that prefetchPage does not consider the store to be fully loaded if the local count
+        // is equal to the total count
         delete me.totalCount;
 
         // Calculate a page range which encompasses the Store's loaded range plus both buffer zones
@@ -358,7 +414,8 @@ Ext.define('Ext.data.BufferedStore', {
     filter: function() {
         //<debug>
         if (!this.getRemoteFilter()) {
-            Ext.raise('Local filtering may not be used on a buffered store - the store is a map of remote data');
+            Ext.raise('Local filtering may not be used on a buffered store - the store is a map ' +
+                      'of remote data');
         }
         //</debug>
 
@@ -368,18 +425,21 @@ Ext.define('Ext.data.BufferedStore', {
 
     filterBy: function(fn, scope) {
         //<debug>
-        Ext.raise('Local filtering may not be used on a buffered store - the store is a map of remote data');
+        Ext.raise('Local filtering may not be used on a buffered store - the store is a map ' +
+                  'of remote data');
         //</debug>
     },
 
     loadData: function(data, append) {
         //<debug>
-        Ext.raise('LoadData may not be used on a buffered store - the store is a map of remote data');
+        Ext.raise('LoadData may not be used on a buffered store - the store is a map ' +
+                  'of remote data');
         //</debug>
     },
 
     loadPage: function(page, options) {
         var me = this;
+
         options = options || {};
 
         options.page = me.currentPage = page;
@@ -389,7 +449,12 @@ Ext.define('Ext.data.BufferedStore', {
 
         // options might be chained, with callback on a prototype; delete won't clear it.
         options.callback = null;
-        return me.loadToPrefetch(options);
+
+        // Since we're deferring these to flushLoad, we need to preserve the options.
+        // Otherwise, they will be reset.
+        options.preserveOnFlush = true;
+
+        return me.load(options);
     },
 
     clearData: function(isLoad) {
@@ -436,12 +501,14 @@ Ext.define('Ext.data.BufferedStore', {
         if (options.forRender !== false) {
             requiredStart = start === 0 ? 0 : start - 1;
             requiredEnd = end === maxIndex ? end : end + 1;
-        } else {
+        }
+        else {
             requiredStart = start;
             requiredEnd = end;
         }
 
-        // Keep track of range we are being asked for so we can track direction of movement through the dataset
+        // Keep track of range we are being asked for so we can track direction of movement
+        // through the dataset
         me.lastRequestStart = start;
         me.lastRequestEnd = end;
 
@@ -452,35 +519,43 @@ Ext.define('Ext.data.BufferedStore', {
         }
         // At least some of the requested range needs loading from server
         else {
-            // Private event used by the LoadMask class to perform masking when the range required for rendering is not found in the cache
+            // Private event used by the LoadMask class to perform masking when the range
+            // required for rendering is not found in the cache
             me.fireEvent('cachemiss', me, start, end);
 
             requiredStartPage = me.getPageFromRecordIndex(requiredStart);
             requiredEndPage = me.getPageFromRecordIndex(requiredEnd);
 
-            // Add a pageadd listener, and as soon as the requested range is loaded, call onRangeAvailable to call the callback.
+            // Add a pageadd listener, and as soon as the requested range is loaded, call
+            // onRangeAvailable to call the callback.
             pageAddHandler = function(pageMap, page, records) {
-                if (page >= requiredStartPage && page <= requiredEndPage && me.rangeCached(start, end)) {
-                    // Private event used by the LoadMask class to unmask when the range required for rendering has been loaded into the cache
+                if (page >= requiredStartPage && page <= requiredEndPage &&
+                    me.rangeCached(start, end)) {
+                    // Private event used by the LoadMask class to unmask when the range
+                    // required for rendering has been loaded into the cache
                     me.fireEvent('cachefilled', me, start, end);
                     data.un('pageadd', pageAddHandler);
                     me.onRangeAvailable(options);
                 }
             };
+
             data.on('pageadd', pageAddHandler);
 
             // Prioritize the request for the *exact range that the UI is asking for*.
-            // When a page request is in flight, it will not be requested again by checking the me.pageRequests hash,
-            // so the request after this will only request the *remaining* unrequested pages .
+            // When a page request is in flight, it will not be requested again by checking
+            // the me.pageRequests hash, so the request after this will only request the
+            // *remaining* unrequested pages.
             me.prefetchRange(start, end);
 
         }
-        // Load the pages around the requested range required by the leadingBufferZone and trailingBufferZone.
+
+        // Load the pages around the requested range required by the leadingBufferZone
+        // and trailingBufferZone.
         me.primeCache(start, end, start < lastRequestStart ? -1 : 1);
 
         return result;
     },
-    
+
     /**
      * Get the Record with the specified id.
      *
@@ -494,10 +569,12 @@ Ext.define('Ext.data.BufferedStore', {
         var result = this.data.findBy(function(record) {
             return record.getId() === id;
         });
+
         return result;
     },
 
     /**
+     * @method getAt
      * @inheritdoc
      */
     getAt: function(index) {
@@ -522,7 +599,10 @@ Ext.define('Ext.data.BufferedStore', {
         return this.data.getByInternalId(internalId);
     },
 
-    // Inherit docs
+    /**
+     * @method contains
+     * @inheritdoc
+     */
     contains: function(record) {
         return this.indexOf(record) > -1;
     },
@@ -554,24 +634,27 @@ Ext.define('Ext.data.BufferedStore', {
     group: function(grouper, direction) {
         var me = this,
             oldGrouper;
-        
+
         if (grouper && typeof grouper === 'string') {
             oldGrouper = me.grouper;
 
             if (oldGrouper && direction !== undefined) {
                 oldGrouper.setDirection(direction);
-            } else {
+            }
+            else {
                 me.grouper = new Ext.util.Grouper({
-                    property : grouper,
+                    property: grouper,
                     direction: direction || 'ASC',
                     root: 'data'
                 });
             }
-        } else {
-            me.grouper = grouper ? me.getSorters().decodeSorter(grouper, 'Ext.util.Grouper') : null;
+        }
+        else {
+            me.grouper = grouper ? me.getSorters().decodeSorter(grouper, Ext.util.Grouper) : null;
         }
 
         me.getData().clear();
+
         me.loadPage(1, {
             callback: function() {
                 me.fireEvent('groupchange', me, me.getGrouper());
@@ -587,23 +670,25 @@ Ext.define('Ext.data.BufferedStore', {
     getPageFromRecordIndex: function(index) {
         return Math.floor(index / this.getPageSize()) + 1;
     },
-    
+
     calculatePageCacheSize: function(rangeSizeRequested) {
         var me = this,
             purgePageCount = me.getPurgePageCount();
 
         // Calculate the number of pages that the cache will keep before purging  as follows:
-        // TWO full rendering zones (in case of rapid teleporting by dragging the scroller) plus configured purgePageCount.
-        // Ensure we never reduce the count. It always uses the largest requested block as the basis for the calculated size.
+        // TWO full rendering zones (in case of rapid teleporting by dragging the scroller)
+        // plus configured purgePageCount.
+        // Ensure we never reduce the count. It always uses the largest requested block
+        // as the basis for the calculated size.
+        /* eslint-disable-next-line max-len */
         return purgePageCount ? Math.max(me.getData().getMaxSize() || 0, Math.ceil((rangeSizeRequested + me.getTrailingBufferZone() + me.getLeadingBufferZone()) / me.getPageSize()) * 2 + purgePageCount) : 0;
     },
 
+    /* eslint-disable max-len */
     loadToPrefetch: function(options) {
         var me = this,
             prefetchOptions = options,
-            i,
-            records,
-            dataSetSize,
+            i, records, dataSetSize,
 
             // Get the requested record index range in the dataset
             startIdx = options.start,
@@ -614,12 +699,13 @@ Ext.define('Ext.data.BufferedStore', {
             loadEndIdx = Math.min(endIdx, options.start + rangeSizeRequested - 1),
 
             // Calculate a page range which encompasses the requested range plus both buffer zones.
-            // The endPage will be adjusted to be in the dataset size range as soon as the first data block returns.
+            // The endPage will be adjusted to be in the dataset size range as soon as the first
+            // data block returns.
             startPage = me.getPageFromRecordIndex(Math.max(startIdx - me.getTrailingBufferZone(), 0)),
             endPage = me.getPageFromRecordIndex(endIdx + me.getLeadingBufferZone()),
 
             data = me.getData(),
-            callbackFn = function () {
+            callbackFn = function() {
                 // See comments in load() for why we need this.
                 records = records || [];
 
@@ -631,7 +717,7 @@ Ext.define('Ext.data.BufferedStore', {
                     options.callback.call(options.scope || me, records, startIdx || 0, endIdx || 0, options);
                 }
             },
-            fireEventsFn = function () {
+            fireEventsFn = function() {
                 me.loadCount = (me.loadCount || 0) + 1;
                 me.fireEvent('datachanged', me);
                 me.fireEvent('refresh', me);
@@ -652,7 +738,8 @@ Ext.define('Ext.data.BufferedStore', {
                     callbackFn();
                     fireEventsFn();
                 }
-            }, operation;
+            },
+            operation;
 
         //<debug>
         if (isNaN(me.pageSize) || !me.pageSize) {
@@ -666,7 +753,8 @@ Ext.define('Ext.data.BufferedStore', {
 
         if (me.fireEvent('beforeload', me, options) !== false) {
 
-            // So that prefetchPage does not consider the store to be fully loaded if the local count is equal to the total count
+            // So that prefetchPage does not consider the store to be fully loaded if the local
+            // count is equal to the total count
             delete me.totalCount;
 
             me.loading = true;
@@ -685,15 +773,18 @@ Ext.define('Ext.data.BufferedStore', {
             me.on('prefetch', function(store, records, successful, op) {
                 // Capture operation here so it can be used in the loadCallback above
                 operation = op;
+
                 if (successful) {
-                    // If there is data in the dataset, we can go ahead and add the pageadd listener which waits for the visible range
-                    // and we can also issue the requests to fill the surrounding buffer zones.
+                    // If there is data in the dataset, we can go ahead and add the pageadd
+                    // listener which waits for the visible range and we can also issue the
+                    // requests to fill the surrounding buffer zones.
                     if ((dataSetSize = me.getTotalCount())) {
 
                         // Wait for the requested range to become available in the page map
                         data.on('pageadd', waitForRequestedRange);
 
-                        // As soon as we have the size of the dataset, ensure we are not waiting for more than can ever arrive,
+                        // As soon as we have the size of the dataset, ensure we are not waiting
+                        // for more than can ever arrive,
                         loadEndIdx = Math.min(loadEndIdx, dataSetSize - 1);
 
                         // And make sure we never ask for pages beyond the end of the dataset.
@@ -702,7 +793,8 @@ Ext.define('Ext.data.BufferedStore', {
                         for (i = startPage + 1; i <= endPage; ++i) {
                             me.prefetchPage(i, prefetchOptions);
                         }
-                    } else {
+                    }
+                    else {
                         callbackFn();
                         fireEventsFn();
                     }
@@ -713,16 +805,18 @@ Ext.define('Ext.data.BufferedStore', {
                     callbackFn();
                     me.fireEvent('load', me, records, false);
                 }
-            }, null, {single: true});
+            }, null, { single: true });
 
             me.prefetchPage(startPage, prefetchOptions);
         }
     },
+    /* eslint-enable max-len */
 
     // Buffering
     /**
      * Prefetches data into the store using its configured {@link #proxy}.
-     * @param {Object} options (Optional) config object, passed into the Ext.data.operation.Operation object before loading.
+     * @param {Object} options (Optional) config object, passed into the
+     * Ext.data.operation.Operation object before loading.
      * See {@link #method-load}
      */
     prefetch: function(options) {
@@ -734,9 +828,10 @@ Ext.define('Ext.data.BufferedStore', {
 
         // Check pageSize has not been tampered with. That would break page caching
         if (pageSize) {
-            if (me.lastPageSize && pageSize != me.lastPageSize) {
+            if (me.lastPageSize && pageSize !== me.lastPageSize) {
                 Ext.raise("pageSize cannot be dynamically altered");
             }
+
             if (!data.getPageSize()) {
                 data.setPageSize(pageSize);
             }
@@ -761,10 +856,12 @@ Ext.define('Ext.data.BufferedStore', {
         // generation of the data cache (clearing it changes generations)
         // then request it...
         existingPageRequest = me.pageRequests[options.page];
-        if (!existingPageRequest || existingPageRequest.getOperation().pageMapGeneration !== data.pageMapGeneration) {
+
+        if (!existingPageRequest ||
+            existingPageRequest.getOperation().pageMapGeneration !== data.pageMapGeneration) {
             // Copy options into a new object so as not to mutate passed in objects
             options = Ext.apply({
-                action : 'read',
+                action: 'read',
                 filters: me.getFilters().items,
                 sorters: me.getSorters().items,
                 grouper: me.getGrouper(),
@@ -775,11 +872,13 @@ Ext.define('Ext.data.BufferedStore', {
             operation = me.createOperation('read', options);
 
             // Generation # of the page map to which the requested records belong.
-            // If page map is cleared while this request is in flight, the pageMapGeneration will increment and the payload will be rejected
+            // If page map is cleared while this request is in flight, the pageMapGeneration
+            // will increment and the payload will be rejected
             operation.pageMapGeneration = data.pageMapGeneration;
 
             if (me.fireEvent('beforeprefetch', me, operation) !== false) {
                 me.pageRequests[options.page] = operation.execute();
+
                 if (me.getProxy().isSynchronous) {
                     delete me.pageRequests[options.page];
                 }
@@ -814,7 +913,7 @@ Ext.define('Ext.data.BufferedStore', {
 
         // If the page cache gets cleared it's because a full reload is in progress.
         // Setting the loading flag prevents linked Views from displaying the empty text
-        // during a load... we don't know whether ther dataset is empty or not.
+        // during a load... we don't know whether their dataset is empty or not.
         me.loading = true;
         me.totalCount = 0;
 
@@ -839,7 +938,8 @@ Ext.define('Ext.data.BufferedStore', {
     /**
      * Prefetches a page of data.
      * @param {Number} page The page to prefetch
-     * @param {Object} options (Optional) config object, passed into the Ext.data.operation.Operation object before loading.
+     * @param {Object} options (Optional) config object, passed into the
+     * Ext.data.operation.Operation object before loading.
      * See {@link #method-load}
      */
     prefetchPage: function(page, options) {
@@ -855,9 +955,9 @@ Ext.define('Ext.data.BufferedStore', {
 
         // Copy options into a new object so as not to mutate passed in objects
         me.prefetch(Ext.applyIf({
-            page     : page,
-            start    : start,
-            limit    : pageSize
+            page: page,
+            start: start,
+            limit: pageSize
         }, options));
     },
 
@@ -870,7 +970,8 @@ Ext.define('Ext.data.BufferedStore', {
         if (this.destroying || this.destroyed) {
             return;
         }
-        
+
+        /* eslint-disable-next-line vars-on-top */
         var me = this,
             resultSet = operation.getResultSet(),
             records = operation.getRecords(),
@@ -882,11 +983,12 @@ Ext.define('Ext.data.BufferedStore', {
             key, op;
 
         // Only cache the data if the operation was invoked for the current pageMapGeneration.
-        // If the pageMapGeneration has changed since the request was fired off, it will have been cancelled.
+        // If the pageMapGeneration has changed since the request was fired off, it will have been
+        // cancelled.
         if (operation.pageMapGeneration === me.getData().pageMapGeneration) {
-
             if (resultSet) {
                 me.totalCount = resultSet.getTotal();
+
                 if (me.totalCount !== oldTotal) {
                     me.fireEvent('totalcountchange', me.totalCount);
                 }
@@ -908,23 +1010,27 @@ Ext.define('Ext.data.BufferedStore', {
                     if (waitForReload) {
                         for (key in requests) {
                             op = requests[key].getOperation();
+
                             // Created in the same batch, clear the waitForReload so this
                             // won't be run again
                             if (op.waitForReload === waitForReload) {
                                 delete op.waitForReload;
                             }
                         }
+
                         me.getData().un('pageadd', waitForReload);
-                        me.fireEvent('load', me, [], true);
                         me.fireEvent('refresh', me);
+                        me.fireEvent('load', me, [], true);
                     }
-                } else {
+                }
+                else {
                     me.cachePage(records, operation.getPage());
                 }
             }
 
-            //this is a callback that would have been passed to the 'read' function and is optional
-            Ext.callback(operation.getCallback(), operation.getScope() || me, [records, operation, successful]);
+            // this is a callback that would have been passed to the 'read' function and is optional
+            Ext.callback(operation.getCallback(), operation.getScope() || me,
+                         [records, operation, successful]);
         }
     },
 
@@ -937,7 +1043,8 @@ Ext.define('Ext.data.BufferedStore', {
      */
     cachePage: function(records, page) {
         var me = this,
-            len = records.length, i;
+            len = records.length,
+            i;
 
         if (!Ext.isDefined(me.totalCount)) {
             me.totalCount = records.length;
@@ -948,6 +1055,7 @@ Ext.define('Ext.data.BufferedStore', {
         for (i = 0; i < len; i++) {
             records[i].join(me);
         }
+
         me.getData().addPage(page, records);
     },
 
@@ -964,12 +1072,12 @@ Ext.define('Ext.data.BufferedStore', {
         var requiredStart = start,
             requiredEnd = end;
 
-        // If this is for getting data to render, we must wait for a slightly wider range to be cached.
-        // This is to allow grouping features to peek at the two surrounding records
+        // If this is for getting data to render, we must wait for a slightly wider range
+        // to be cached. This is to allow grouping features to peek at the two surrounding records
         // when rendering a *range* of records to see whether the start of the range
         // really is a group start and the end of the range really is a group end.
         if (forRender !== false) {
-            requiredStart = start === 0 ? 0 : start - 1,
+            requiredStart = start === 0 ? 0 : start - 1;
             requiredEnd = end === this.totalCount - 1 ? end : end + 1;
         }
 
@@ -1025,15 +1133,18 @@ Ext.define('Ext.data.BufferedStore', {
                 level: 'warn',
                 msg: 'Start (' + start + ') was greater than end (' + end +
                     ') for the range of records requested (' + start + '-' +
-                    options.prefetchEnd + ')' + (this.storeId ? ' from store "' + this.storeId + '"' : '')
+                    options.prefetchEnd + ')' +
+                    (this.storeId ? ' from store "' + this.storeId + '"' : '')
             });
         }
         //</debug>
 
         range = me.getData().getRange(start, end + 1);
+
         if (options.fireEvent !== false) {
             me.fireEvent('guaranteedrange', range, start, end, options);
         }
+
         if (options.callback) {
             options.callback.call(options.scope || me, range, start, end, options);
         }
@@ -1043,15 +1154,22 @@ Ext.define('Ext.data.BufferedStore', {
      * Guarantee a specific range, this will load the store with a range (that
      * must be the `pageSize` or smaller) and take care of any loading that may
      * be necessary.
-     * @deprecated Use {@link #getRange}
+     * @param {Number} start The starting index. Defaults to zero.
+     * @param {Number} end The ending index. Defaults to the last record. The end index
+     * **is included**.
+     * @param {Function} callback Function to call with the results
+     * @param {Object} [scope] The `this` pointer for the `callback`.
+     * @param {Object} [options] (private)
+     * @deprecated 4.2 Use {@link #getRange}
      */
     guaranteeRange: function(start, end, callback, scope, options) {
-         options = Ext.apply({
-             callback: callback,
-             scope: scope
-         }, options);
-         this.getRange(start, end + 1, options);
-     },
+        options = Ext.apply({
+            callback: callback,
+            scope: scope
+        }, options);
+
+        this.getRange(start, end + 1, options);
+    },
 
     /**
      * Ensures that the specified range of rows is present in the cache.
@@ -1069,8 +1187,8 @@ Ext.define('Ext.data.BufferedStore', {
             endPage = me.getPageFromRecordIndex(end);
 
             // Ensure that the page cache's max size is correct.
-            // Our purgePageCount is the number of additional pages *outside of the required range* which
-            // may be kept in the cache. A purgePageCount of zero means unlimited.
+            // Our purgePageCount is the number of additional pages *outside of the required range*
+            // which may be kept in the cache. A purgePageCount of zero means unlimited.
             data.setMaxSize(me.calculatePageCacheSize(end - start + 1));
 
             // We have the range, but ensure that we have a "buffer" of pages around it.
@@ -1092,25 +1210,29 @@ Ext.define('Ext.data.BufferedStore', {
         // Scrolling up
         if (direction === -1) {
             start = Math.max(start - leadingBufferZone, 0);
-            end   = Math.min(end   + trailingBufferZone, totalCount - 1);
+            end = Math.min(end + trailingBufferZone, totalCount - 1);
         }
         // Scrolling down
         else if (direction === 1) {
             start = Math.max(Math.min(start - trailingBufferZone, totalCount - pageSize), 0);
-            end   = Math.min(end + leadingBufferZone, totalCount - 1);
+            end = Math.min(end + leadingBufferZone, totalCount - 1);
         }
         // Teleporting
         else {
+            /* eslint-disable max-len */
             start = Math.min(Math.max(Math.floor(start - ((leadingBufferZone + trailingBufferZone) / 2)), 0), totalCount - me.pageSize);
-            end =   Math.min(Math.max(Math.ceil (end   + ((leadingBufferZone + trailingBufferZone) / 2)), 0), totalCount - 1);
+            end = Math.min(Math.max(Math.ceil(end + ((leadingBufferZone + trailingBufferZone) / 2)), 0), totalCount - 1);
+            /* eslint-enable max-len */
         }
+
         me.prefetchRange(start, end);
     },
 
     sort: function(field, direction, mode) {
         if (arguments.length === 0) {
             this.clearAndLoad();
-        } else {
+        }
+        else {
             this.getSorters().addSort(field, direction, mode);
         }
     },
@@ -1122,12 +1244,14 @@ Ext.define('Ext.data.BufferedStore', {
         // Only load or sort if there are sorters
         if (sorters.length) {
             me.fireEvent('beforesort', me, sorters);
+
             me.clearAndLoad({
                 callback: function() {
                     me.fireEvent('sort', me, sorters);
                 }
             });
-        } else {
+        }
+        else {
             // Sort event must fire when sorters collection is updated to empty.
             me.fireEvent('sort', me, sorters);
         }
@@ -1135,11 +1259,11 @@ Ext.define('Ext.data.BufferedStore', {
 
     clearAndLoad: function(options) {
         var me = this;
-        
+
         me.clearing = true;
         me.getData().clear();
         me.clearing = false;
-        
+
         me.loadPage(1, options);
     },
 
@@ -1148,7 +1272,7 @@ Ext.define('Ext.data.BufferedStore', {
             return this.indexOf(record) === this.getTotalCount() - 1;
         },
 
-        isMoving: function () {
+        isMoving: function() {
             return false;
         }
     }

@@ -6,8 +6,8 @@ Ext.define('Ext.util.sizemonitor.OverflowChange', {
     extend: 'Ext.util.sizemonitor.Abstract',
 
     constructor: function(config) {
-        this.onExpand = Ext.Function.bind(this.onExpand, this);
-        this.onShrink = Ext.Function.bind(this.onShrink, this);
+        this.onExpand = this.onExpand.bind(this);
+        this.onShrink = this.onShrink.bind(this);
 
         this.callParent(arguments);
     },
@@ -38,24 +38,24 @@ Ext.define('Ext.util.sizemonitor.OverflowChange', {
     bindListeners: function(bind) {
         var method = bind ? 'addEventListener' : 'removeEventListener';
 
-        this.expandMonitor[method](Ext.browser.is.Firefox ? 'underflow' : 'overflowchanged', this.onExpand, true);
-        this.shrinkMonitor[method](Ext.browser.is.Firefox ? 'overflow' : 'overflowchanged', this.onShrink, true);
+        this.expandMonitor[method](Ext.browser.is.Firefox ? 'underflow' : 'overflowchanged',
+                                   this.onExpand, true);
+        this.shrinkMonitor[method](Ext.browser.is.Firefox ? 'overflow' : 'overflowchanged',
+                                   this.onShrink, true);
     },
 
     onExpand: function(e) {
-        if (Ext.browser.is.Webkit && e.horizontalOverflow && e.verticalOverflow) {
-            return;
+        // eslint-disable-next-line max-len
+        if (!(this.destroyed || (Ext.browser.is.Webkit && e.horizontalOverflow && e.verticalOverflow))) {
+            Ext.TaskQueue.requestRead('refresh', this);
         }
-
-        Ext.TaskQueue.requestRead('refresh', this);
     },
 
     onShrink: function(e) {
-        if (Ext.browser.is.Webkit && !e.horizontalOverflow && !e.verticalOverflow) {
-            return;
+        // eslint-disable-next-line max-len
+        if (!(this.destroyed || (Ext.browser.is.Webkit && !e.horizontalOverflow && !e.verticalOverflow))) {
+            Ext.TaskQueue.requestRead('refresh', this);
         }
-
-        Ext.TaskQueue.requestRead('refresh', this);
     },
 
     refreshMonitors: function() {
@@ -63,6 +63,7 @@ Ext.define('Ext.util.sizemonitor.OverflowChange', {
             return;
         }
 
+        // eslint-disable-next-line vars-on-top
         var expandHelper = this.expandHelper,
             shrinkHelper = this.shrinkHelper,
             contentBounds = this.getContentBounds(),
@@ -78,17 +79,17 @@ Ext.define('Ext.util.sizemonitor.OverflowChange', {
 
         if (shrinkHelper && !shrinkHelper.destroyed) {
             style = shrinkHelper.style;
-            style.width = width  + 'px';
+            style.width = width + 'px';
             style.height = height + 'px';
         }
 
         Ext.TaskQueue.requestRead('refresh', this);
     },
-    
+
     destroy: function() {
         // These are closures so Base destructor won't null them
         this.onExpand = this.onShrink = null;
-        
+
         this.callParent();
     }
 });

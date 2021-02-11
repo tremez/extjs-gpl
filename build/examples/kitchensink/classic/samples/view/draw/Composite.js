@@ -23,10 +23,26 @@ Ext.define('KitchenSink.view.draw.Composite', {
 
     layout: 'fit',
     width: 650,
+    cls: 'composite-panel',
+
+    profiles: {
+        classic: {
+            buttonWidth: 200
+        },
+        neptune: {
+            buttonWidth: 200
+        },
+        graphite: {
+            buttonWidth: 300
+        },
+        'classic-material': {
+            buttonWidth: 300
+        }
+    },
 
     tbar: ['->', {
         xtype: 'segmentedbutton',
-        width: 200,
+        width: '${buttonWidth}',
         items: [{
             text: 'Interaction',
             pressed: true

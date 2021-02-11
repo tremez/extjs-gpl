@@ -10,15 +10,16 @@ Ext.define('Ext.device.notification.Simulator', {
      */
     msg: null,
 
-	show: function() {
+    show: function() {
         var config = this.callParent(arguments),
             buttons = [],
             ln = config.buttons.length,
             button, i, callback;
 
-        //buttons
+        // buttons
         for (i = 0; i < ln; i++) {
             button = config.buttons[i];
+
             if (Ext.isString(button)) {
                 button = {
                     text: config.buttons[i],
@@ -38,11 +39,11 @@ Ext.define('Ext.device.notification.Simulator', {
         };
 
         this.msg.show({
-            title  : config.title,
+            title: config.title,
             message: config.message,
-            scope  : this.msg,
+            scope: this.msg,
             buttons: buttons,
-            fn     : callback
+            fn: callback
         });
     },
 
@@ -58,6 +59,7 @@ Ext.define('Ext.device.notification.Simulator', {
 
     confirm: function() {
         var config = this.callParent(arguments);
+
         this.show(config);
     },
 
@@ -67,9 +69,10 @@ Ext.define('Ext.device.notification.Simulator', {
             ln = config.buttons.length,
             button, i, callback;
 
-        //buttons
+        // buttons
         for (i = 0; i < ln; i++) {
             button = config.buttons[i];
+
             if (Ext.isString(button)) {
                 button = {
                     text: config.buttons[i],
@@ -92,39 +95,44 @@ Ext.define('Ext.device.notification.Simulator', {
     },
 
     beep: function(times) {
-        if(!Ext.isNumber(times)) times = 1;
-        var count = 0;
-        var callback = function() {
-            if(count < times) {
-                Ext.defer(function() {
-                    Ext.util.Audio.beep(callback);
-                }, 50);
-            }
-            count++;
-        };
+        if (!Ext.isNumber(times)) {
+            times = 1;
+        }
+
+        var count = 0,
+            callback = function() {
+                if (count < times) {
+                    Ext.defer(function() {
+                        Ext.util.Audio.beep(callback);
+                    }, 50);
+                }
+
+                count++;
+            };
 
         callback();
     },
 
     vibrate: function() {
-        //nice animation to fake vibration
+        // nice animation to fake vibration
         var animation = [
-            "@-webkit-keyframes vibrate{",
-            "    from {",
-            "        -webkit-transform: rotate(-2deg);",
-            "    }",
-            "    to{",
-            "        -webkit-transform: rotate(2deg);",
-            "    }",
-            "}",
+                "@-webkit-keyframes vibrate{",
+                "    from {",
+                "        -webkit-transform: rotate(-2deg);",
+                "    }",
+                "    to{",
+                "        -webkit-transform: rotate(2deg);",
+                "    }",
+                "}",
 
-            "body {",
-            "    -webkit-animation: vibrate 50ms linear 10 alternate;",
-            "}"
-        ];
+                "body {",
+                "    -webkit-animation: vibrate 50ms linear 10 alternate;",
+                "}"
+            ],
 
-        var head = document.getElementsByTagName("head")[0];
-        var cssNode = document.createElement('style');
+            head = document.getElementsByTagName("head")[0],
+            cssNode = document.createElement('style');
+
         cssNode.innerHTML = animation.join('\n');
         head.appendChild(cssNode);
 

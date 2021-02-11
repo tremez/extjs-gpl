@@ -1,10 +1,4 @@
 Ext.define('Neptune.view.combination.BorderLayout', function() {
-    function closeRegion (e, target, header, tool) {
-        var panel = header.ownerCt;
-        newRegions.unshift(panel.initialConfig);
-        header.up('borderLayout').remove(panel);
-    }
-
     var newRegions = [{
             region: 'north',
             title: 'North 2',
@@ -24,7 +18,15 @@ Ext.define('Neptune.view.combination.BorderLayout', function() {
             collapsible: true,
             weight: -110
         }],
-        pbar = Ext.widget({ xtype: 'progressbar' });
+        pbar = Ext.widget({ xtype: 'progressbar' }),
+        cw;
+
+    function closeRegion(e, target, header, tool) {
+        var panel = header.ownerCt;
+
+        newRegions.unshift(panel.initialConfig);
+        header.up('borderLayout').remove(panel);
+    }
 
     pbar.wait({ text: 'Progress text...' });
 
@@ -47,7 +49,7 @@ Ext.define('Neptune.view.combination.BorderLayout', function() {
             height: 100,
             minHeight: 60,
             html: Neptune.DummyText.text
-        },{
+        }, {
             region: 'west',
             collapsible: true,
             title: 'Starts at width 20%',
@@ -93,11 +95,11 @@ Ext.define('Neptune.view.combination.BorderLayout', function() {
                     this.floatParent.down('button#toggleCw').toggle();
                 }
             }),
-            {
-                xtype: 'basicGrid',
-                border: 0,
-                title: null
-            }],
+                    {
+                        xtype: 'basicGrid',
+                        border: 0,
+                        title: null
+                    }],
             lbar: { xtype: 'basicToolbar' },
             bbar: [ 'Text followed by a spacer', ' ', {
                 itemId: 'toggleCw',
@@ -109,16 +111,20 @@ Ext.define('Neptune.view.combination.BorderLayout', function() {
             }, {
                 text: 'Add Region',
                 listeners: {
-                    click: function (button) {
+                    click: function(button) {
+                        var region;
+
                         if (newRegions.length) {
-                            var region = newRegions.pop();
+                            region = newRegions.pop();
+
                             region.tools = [ { type: 'close', handler: closeRegion }];
                             button.up('borderLayout').add(region);
-                        } else {
+                        }
+                        else {
                             Ext.Msg.show({
                                 title: 'All added',
                                 msg: 'Close one of the dynamic regions first',
-                                //minWidth: Ext.Msg.minWidth,
+                                // minWidth: Ext.Msg.minWidth,
                                 buttons: Ext.Msg.OK,
                                 icon: Ext.Msg.ERROR
                             });
@@ -128,15 +134,16 @@ Ext.define('Neptune.view.combination.BorderLayout', function() {
             }, {
                 text: 'Change Titles',
                 listeners: {
-                    click: function (button) {
+                    click: function(button) {
                         var panels = button.up('borderLayout').query('panel');
-                        Ext.each(panels, function (panel) {
+
+                        Ext.each(panels, function(panel) {
                             panel.setTitle(panel.title + '!');
-                        })
+                        });
                     }
                 }
             }]
-        },{
+        }, {
             region: 'east',
             collapsible: true,
             floatable: true,
@@ -151,25 +158,25 @@ Ext.define('Neptune.view.combination.BorderLayout', function() {
                 { xtype: 'smallSplitButton', text: 'New', icon: true }
             ],
             lbar: [{
-                    iconCls: 'btn-add',
-                    tooltip: 'Button 1'
-                },
-                '-',
-                {
-                    iconCls: 'btn-add',
-                    tooltip: {
-                        text: 'Button 2',
-                        anchor: 'left'
-                    }
-                },{
-                    iconCls: 'btn-add'
-                },{
-                    iconCls: 'btn-add'
-                },
-                '-',
-                {
-                    iconCls: 'btn-add'
-                }
+                iconCls: 'btn-add',
+                tooltip: 'Button 1'
+            },
+                   '-',
+                   {
+                       iconCls: 'btn-add',
+                       tooltip: {
+                           text: 'Button 2',
+                           anchor: 'left'
+                       }
+                   }, {
+                       iconCls: 'btn-add'
+                   }, {
+                       iconCls: 'btn-add'
+                   },
+                   '-',
+                   {
+                       iconCls: 'btn-add'
+                   }
             ],
             items: [
                 {
@@ -183,7 +190,7 @@ Ext.define('Neptune.view.combination.BorderLayout', function() {
                     ]
                 }
             ]
-        },{
+        }, {
             region: 'south',
             height: 100,
             split: true,
@@ -192,7 +199,7 @@ Ext.define('Neptune.view.combination.BorderLayout', function() {
             minHeight: 60,
             html: Neptune.DummyText.text,
             weight: -100
-        },{
+        }, {
             region: 'south',
             collapsible: true,
             split: true,
@@ -247,7 +254,7 @@ Ext.define('Neptune.view.combination.BorderLayout', function() {
                 cls: 'south-west-panel',
                 items: [
                     // hack - border: 0 shouldn't be needed
-                    { xtype: 'basicTabPanel', border: 0, defaults: { bodyStyle: 'border: 0'} }
+                    { xtype: 'basicTabPanel', border: 0, defaults: { bodyStyle: 'border: 0' } }
                 ]
             }]
         }]

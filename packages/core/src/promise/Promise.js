@@ -24,13 +24,13 @@
  * ## Basic Usage
  *
  *      this.companyService.loadCompanies().then(
- *          function (records) {
+ *          function(records) {
  *              // Do something with result.
  *          },
- *          function (error) {
+ *          function(error) {
  *              // Do something on failure.
  *          }).
- *      always(function () {
+ *      always(function() {
  *          // Do something whether call succeeded or failed
  *      });
  *
@@ -45,9 +45,10 @@
  *
  * @since 6.0.0
  */
-Ext.define('Ext.promise.Promise', function (ExtPromise) {
+Ext.define('Ext.promise.Promise', function(ExtPromise) {
     var Deferred;
 
+/* eslint-disable indent */
 return {
     requires: [
         'Ext.promise.Deferred'
@@ -63,7 +64,7 @@ return {
          */
         CancellationError: Ext.global.CancellationError || Error,
 
-        _ready: function () {
+        _ready: function() {
             // Our requires are met, so we can cache Ext.promise.Deferred
             Deferred = Ext.promise.Deferred;
         },
@@ -85,14 +86,14 @@ return {
          * @static
          * @private
          */
-        all: function (promisesOrValues) {
+        all: function(promisesOrValues) {
             //<debug>
             if (!(Ext.isArray(promisesOrValues) || ExtPromise.is(promisesOrValues))) {
                 Ext.raise('Invalid parameter: expected an Array or Promise of an Array.');
             }
             //</debug>
 
-            return ExtPromise.when(promisesOrValues).then(function (promisesOrValues) {
+            return ExtPromise.when(promisesOrValues).then(function(promisesOrValues) {
                 var deferred = new Deferred(),
                     remainingToResolve = promisesOrValues.length,
                     results = new Array(remainingToResolve),
@@ -102,8 +103,8 @@ return {
                     deferred.resolve(results);
                 }
                 else {
-                    resolve = function (item, index) {
-                        return ExtPromise.when(item).then (function (value) {
+                    resolve = function(item, index) {
+                        return ExtPromise.when(item).then(function(value) {
                             results[index] = value;
 
                             if (!--remainingToResolve) {
@@ -111,7 +112,7 @@ return {
                             }
 
                             return value;
-                        }, function (reason) {
+                        }, function(reason) {
                             return deferred.reject(reason);
                         });
                     };
@@ -142,9 +143,37 @@ return {
          * @static
          * @private
          */
-        is: function (value) {
+        is: function(value) {
             return value != null && (typeof value === 'object' || Ext.isFunction(value)) &&
                 Ext.isFunction(value.then);
+        },
+
+        /**
+         * Returns a promise that resolves or rejects as soon as one of the promises in the array
+         * resolves or rejects, with the value or reason from that promise.
+         * @param {Ext.promise.Promise[]} promises The promises.
+         * @return {Ext.promise.Promise} The promise to be resolved when the race completes.
+         *
+         * @private
+         * @static
+         * @since 6.5.0
+         */
+        race: function(promises) {
+            var deferred = new Deferred(),
+                len = promises.length,
+                i;
+
+            //<debug>
+            if (!Ext.isArray(promises)) {
+                Ext.raise('Invalid parameter: expected an Array.');
+            }
+            //</debug>
+
+            for (i = 0; i < len; ++i) {
+                deferred.resolve(promises[i]);
+            }
+
+            return deferred.promise;
         },
 
         /**
@@ -152,8 +181,8 @@ return {
          * @static
          * @private
          */
-        rethrowError: function (error) {
-            Ext.asap(function () {
+        rethrowError: function(error) {
+            Ext.asap(function() {
                 throw error;
             });
         },
@@ -168,15 +197,15 @@ return {
          * The public API's to use instead of this method are `{@link Ext.Promise#resolve}`
          * and `{@link Ext.Deferred#resolved}`.
          *
-         * @param {Mixed} promiseOrValue A Promise (or third-party Promise or then()-able)
+         * @param {Mixed} value A Promise (or third-party Promise or then()-able)
          * or value.
          * @return {Ext.Promise} A Promise of the specified Promise or value.
          *
          * @static
          * @private
          */
-        when: function (value) {
-            var deferred = new Ext.promise.Deferred();
+        when: function(value) {
+            var deferred = new Deferred();
 
             deferred.resolve(value);
 
@@ -200,7 +229,7 @@ return {
      *
      * @private
      */
-    constructor: function (owner) {
+    constructor: function(owner) {
         this.owner = owner;
     },
 
@@ -223,7 +252,7 @@ return {
      * @return {Ext.promise.Promise} Promise that is fulfilled with the callback return
      * value or rejected with any error thrown by the callback.
      */
-    then: function (onFulfilled, onRejected, onProgress, scope) {
+    then: function(onFulfilled, onRejected, onProgress, scope) {
         var ref;
 
         if (arguments.length === 1 && Ext.isObject(arguments[0])) {
@@ -236,15 +265,15 @@ return {
 
         if (scope) {
             if (onFulfilled) {
-                onFulfilled = Ext.Function.bind(onFulfilled, scope);
+                onFulfilled = onFulfilled.bind(scope);
             }
-            
+
             if (onRejected) {
-                onRejected = Ext.Function.bind(onRejected, scope);
+                onRejected = onRejected.bind(scope);
             }
-            
+
             if (onProgress) {
-                onProgress = Ext.Function.bind(onProgress, scope);
+                onProgress = onProgress.bind(scope);
             }
         }
 
@@ -262,8 +291,10 @@ return {
      * @param {Function} onRejected Callback to execute to transform a rejection reason.
      * @param {Object} scope Optional scope for the callback.
      * @return {Ext.promise.Promise} Promise of the transformed future value.
+     *
+     * @since 6.5.0
      */
-    otherwise: function (onRejected, scope) {
+    'catch': function(onRejected, scope) {
         var ref;
 
         if (arguments.length === 1 && Ext.isObject(arguments[0])) {
@@ -273,10 +304,18 @@ return {
         }
 
         if (scope != null) {
-            onRejected = Ext.Function.bind(onRejected, scope);
+            onRejected = onRejected.bind(scope);
         }
 
         return this.owner.then(null, onRejected);
+    },
+
+    /**
+     * An alias for the {@link #catch} method. To be used for browsers
+     * where catch cannot be used as a method name.
+     */
+    otherwise: function(onRejected, scope) {
+        return this['catch'].apply(this, arguments);  // eslint-disable-line dot-notation
     },
 
     /**
@@ -293,7 +332,7 @@ return {
      * @return {Ext.promise.Promise} A new "pass-through" Promise that is resolved with
      * the original value or rejected with the original reason.
      */
-    always: function (onCompleted, scope) {
+    always: function(onCompleted, scope) {
         var ref;
 
         if (arguments.length === 1 && Ext.isObject(arguments[0])) {
@@ -303,26 +342,26 @@ return {
         }
 
         if (scope != null) {
-            onCompleted = Ext.Function.bind(onCompleted, scope);
+            onCompleted = onCompleted.bind(scope);
         }
 
-        return this.owner.then(function (value) {
+        return this.owner.then(function(value) {
             try {
                 onCompleted();
             }
             catch (e) {
                 ExtPromise.rethrowError(e);
             }
-            
+
             return value;
-        }, function (reason) {
+        }, function(reason) {
             try {
                 onCompleted();
             }
             catch (e) {
                 ExtPromise.rethrowError(e);
             }
-            
+
             throw reason;
         });
     },
@@ -337,7 +376,7 @@ return {
      *
      * For example:
      *
-     *      promise.then(function () {
+     *      promise.then(function() {
      *          // logic in your callback throws an error and it is interpreted as a
      *          // rejection. throw new Error("Boom!");
      *      });
@@ -347,7 +386,7 @@ return {
      * This problem can be addressed by terminating the Promise chain with the done()
      * method:
      *
-     *      promise.then(function () {
+     *      promise.then(function() {
      *          // logic in your callback throws an error and it is interpreted as a
      *          // rejection. throw new Error("Boom!");
      *      }).done();
@@ -357,7 +396,7 @@ return {
      *
      * The `done()` method ensures that any unhandled rejections are rethrown as Errors.
      */
-    done: function () {
+    done: function() {
         this.owner.then(null, ExtPromise.rethrowError);
     },
 
@@ -372,11 +411,11 @@ return {
      *
      * @param {Error} reason Cancellation reason.
      */
-    cancel: function (reason) {
+    cancel: function(reason) {
         if (reason == null) {
             reason = null;
         }
-        
+
         this.owner.reject(new this.self.CancellationError(reason));
     },
 
@@ -390,22 +429,22 @@ return {
      * @return {Ext.promise.Promise} A new "pass-through" Promise that is resolved with
      * the original value or rejected with the original reason.
      */
-    log: function (identifier) {
+    log: function(identifier) {
         if (identifier == null) {
             identifier = '';
         }
-        
-        return this.owner.then(function (value) {
+
+        return this.owner.then(function(value) {
             Ext.log("" + (identifier || 'Promise') + " resolved with value: " + value);
-            
+
             return value;
-        }, function (reason) {
+        }, function(reason) {
             Ext.log("" + (identifier || 'Promise') + " rejected with reason: " + reason);
-            
+
             throw reason;
         });
     }
-}},
-function (ExtPromise) {
+};
+}, function(ExtPromise) {
     ExtPromise._ready();
 });

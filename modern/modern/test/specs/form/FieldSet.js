@@ -1,4 +1,4 @@
-describe('Ext.form.FieldSet', function() {
+topSuite("Ext.form.FieldSet", ['Ext.field.Text', 'Ext.layout.VBox'], function() {
     var field, panel,
         create = function(config) {
             panel = Ext.create('Ext.form.FieldSet', config || {});

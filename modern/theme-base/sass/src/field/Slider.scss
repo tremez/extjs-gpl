@@ -1,3 +1,14 @@
-.#{$prefix}sliderfield .#{$prefix}slider:not(.#{$prefix}toggleslider) {
-    width: 100%
+.#{$prefix}sliderfield {
+    .#{$prefix}disabled > .#{$prefix}body-wrap-el {
+        // reset the field body opacity because slider component has it's own disabled opacity
+        opacity: 1;
+    }
+
+    .#{$prefix}box-el {
+        flex: 1 1 auto;
+    }
+
+    .#{$prefix}slider {
+        flex: 1 1 auto;
+    }
 }

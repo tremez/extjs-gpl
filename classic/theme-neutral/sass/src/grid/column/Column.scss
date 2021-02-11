@@ -47,30 +47,32 @@
 
 // Compound selector here to increase the specificity
 .#{$prefix}column-header.#{$prefix}column-header-focus {
-    .#{$prefix}column-header-inner:after {
-        content: "";
-        position: absolute;
-        z-index: 5; // focus border must overlay the trigger
-        top: $grid-column-header-focus-border-inset;
-        right: $grid-column-header-focus-border-inset;
-        bottom: $grid-column-header-focus-border-inset;
-        left: $grid-column-header-focus-border-inset;
-        border: $grid-column-header-focus-border-width $grid-column-header-focus-border-style $grid-column-header-focus-border-color;
-        pointer-events: none;
-    }
+    .#{$prefix}keyboard-mode & {
+        .#{$prefix}column-header-inner:after {
+            content: "";
+            position: absolute;
+            z-index: 5; // focus border must overlay the trigger
+            top: $grid-column-header-focus-border-inset;
+            right: $grid-column-header-focus-border-inset;
+            bottom: $grid-column-header-focus-border-inset;
+            left: $grid-column-header-focus-border-inset;
+            border: $grid-column-header-focus-border-width $grid-column-header-focus-border-style $grid-column-header-focus-border-color;
+            pointer-events: none;
+        }
 
-    // For some reason without this rule the inner focus border on grouped column headers
-    // looks 1px higher than it should. This does not apply to column headers outside a group
-    &.#{$prefix}group-sub-header .#{$prefix}column-header-inner:before {
-        bottom: 0px;
-    }
+        // For some reason without this rule the inner focus border on grouped column headers
+        // looks 1px higher than it should. This does not apply to column headers outside a group
+        &.#{$prefix}group-sub-header .#{$prefix}column-header-inner:before {
+            bottom: 0px;
+        }
 
-    @if not is-null($grid-column-header-focus-color) {
-        color: $grid-column-header-focus-color;
-    }
+        @if not is-null($grid-column-header-focus-color) {
+            color: $grid-column-header-focus-color;
+        }
 
-    @if not is-null($grid-column-header-focus-background-color) {
-        @include background-gradient($grid-column-header-focus-background-color, $grid-header-background-gradient);
+        @if not is-null($grid-column-header-focus-background-color) {
+            @include background-gradient($grid-column-header-focus-background-color, $grid-header-background-gradient);
+        }
     }
 }
 

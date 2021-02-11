@@ -12,14 +12,14 @@ Ext.define('Ext.ux.grid.plugin.AutoSelector', {
         store: null
     },
 
-    init: function (grid) {
+    init: function(grid) {
+        var me = this;
+
         //<debug>
         if (!grid.isXType('tablepanel')) {
             Ext.raise('The gridautoselector plugin is designed only for grids and trees');
         }
         //</debug>
-
-        var me = this;
 
         me.grid = grid;
 
@@ -31,14 +31,14 @@ Ext.define('Ext.ux.grid.plugin.AutoSelector', {
         });
     },
 
-    destroy: function () {
+    destroy: function() {
         this.setStore(null);
         this.grid = null;
 
         this.callParent();
     },
 
-    ensureSelection: function () {
+    ensureSelection: function() {
         var grid = this.grid,
             store = grid.getStore(),
             selection;
@@ -52,24 +52,24 @@ Ext.define('Ext.ux.grid.plugin.AutoSelector', {
         }
     },
 
-    watchGrid: function () {
+    watchGrid: function() {
         this.setStore(this.grid.getStore());
         this.ensureSelection();
     },
 
-    updateStore: function (store) {
+    updateStore: function(store) {
         var me = this;
 
         Ext.destroy(me.storeListeners);
 
         me.storeListeners = store && store.on({
-                // We could go from 0 records to 1+ records... now we can select one!
-                add: me.ensureSelection,
-                // We might remove the selected record...
-                remove: me.ensureSelection,
+            // We could go from 0 records to 1+ records... now we can select one!
+            add: me.ensureSelection,
+            // We might remove the selected record...
+            remove: me.ensureSelection,
 
-                destroyable: true,
-                scope: me
-            });
+            destroyable: true,
+            scope: me
+        });
     }
 });

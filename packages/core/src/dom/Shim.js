@@ -10,9 +10,9 @@
  */
 Ext.define('Ext.dom.Shim', {
     extend: 'Ext.dom.Underlay',
-    
+
     cls: Ext.baseCSSPrefix + 'shim',
-    
+
     constructor: function(config) {
         this.callParent([config]);
 
@@ -31,7 +31,7 @@ Ext.define('Ext.dom.Shim', {
         // ensure that the shim is inserted before the shadow in the dom, so that the
         // shadow will be stacked on top of it.
         var shadow = this.shadow;
+
         return (shadow && shadow.el) || this.target;
     }
-
 });

@@ -3,8 +3,8 @@
  *
  * ## Notes
  *
- * - There are quite a few issues with the `<video>` tag on Android devices. On Android 2+, the video will
- * appear and play on first attempt, but any attempt afterwards will not work.
+ * - There are quite a few issues with the `<video>` tag on Android devices. On Android 2+,
+ *   the video will appear and play on first attempt, but any attempt afterwards will not work.
  *
  * ## Useful Properties
  *
@@ -22,14 +22,11 @@
  *
  *     var panel = Ext.create('Ext.Panel', {
  *         fullscreen: true,
+ *         layout: 'fit',
  *         items: [
  *             {
  *                 xtype    : 'video',
- *                 x        : 600,
- *                 y        : 300,
- *                 width    : 175,
- *                 height   : 98,
- *                 url      : "porsche911.mov",
+ *                 url      : 'porsche911.mov',
  *                 posterUrl: 'porsche.png'
  *             }
  *         ]
@@ -54,17 +51,21 @@ Ext.define('Ext.Video', {
         posterUrl: null,
 
         /**
-         * @cfg
-         * @inheritdoc
+         * @cfg {Boolean} [showPosterOnPause=true] When paused, the {@link #posterUrl}
+         * will be shown. If set to `false`, the poster will not be shown when the video
+         * is paused.
+         *
+         * Showing a poster may save on device resources as the `<video>` element is
+         * resource intensive whereas the `<img>` is not as intensive. Not showing a poster
+         * may slow down parts of the application including scrolling as the device is
+         * repainting the screen.
+         *
+         * @since 6.5.0
          */
-        baseCls: Ext.baseCSSPrefix + 'video',
-
-        /**
-         * @cfg {Boolean} controls
-         * Determines if native controls should be shown for this video player.
-         */
-        controls: true
+        showPosterOnPause: false
     },
+
+    baseCls: Ext.baseCSSPrefix + 'video',
 
     template: [{
         /**
@@ -113,7 +114,6 @@ Ext.define('Ext.Video', {
             oldLn = existingSources.length,
             i;
 
-
         for (i = 0; i < oldLn; i++) {
             Ext.fly(existingSources[i]).destroy();
         }
@@ -130,17 +130,13 @@ Ext.define('Ext.Video', {
         }
     },
 
-    updateControls: function(value) {
-        this.media.set({controls:value ? true : undefined});
-    },
-
     onActivate: function() {
-        this.media.setTop(0);
+        this.media.show();
     },
 
     onDeactivate: function() {
         this.pause();
-        this.media.setTop(-2000);
+        this.media.hide();
         this.ghost.show();
     },
 
@@ -154,8 +150,6 @@ Ext.define('Ext.Video', {
             ghost = this.ghost;
 
         media.show();
-        // Browsers which support native video tag display only, move the media down so
-        // we can control the Viewport
         ghost.hide();
         me.play();
     },
@@ -164,10 +158,13 @@ Ext.define('Ext.Video', {
      * @private
      * native video tag display only, move the media down so we can control the Viewport
      */
-    onPause: function() {
-        this.callParent(arguments);
-        if (!this.isInlineVideo) {
-            this.media.setTop(-2000);
+    onPause: function(e) {
+        this.callParent([e]);
+
+        // If the video is seeking, the browser may pause the video before setting
+        // the time to wherever the user clicked on.
+        if (!this.isInlineVideo && !e.target.seeking && this.getShowPosterOnPause()) {
+            this.media.hide();
             this.ghost.show();
         }
     },
@@ -176,9 +173,10 @@ Ext.define('Ext.Video', {
      * @private
      * native video tag display only, move the media down so we can control the Viewport
      */
-    onPlay: function() {
-        this.callParent(arguments);
-        this.media.setTop(0);
+    onPlay: function(e) {
+        this.callParent([e]);
+
+        this.media.show();
     },
 
     /**
@@ -187,6 +185,7 @@ Ext.define('Ext.Video', {
      */
     updatePosterUrl: function(newUrl) {
         var ghost = this.ghost;
+
         if (ghost) {
             ghost.setStyle('background-image', 'url(' + newUrl + ')');
         }

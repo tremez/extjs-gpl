@@ -1,16 +1,18 @@
 /**
- * A Profile represents a range of devices that fall under a common category. For the vast majority of apps that use
- * device profiles, the app defines a Phone profile and a Tablet profile. Doing this enables you to easily customize
- * the experience for the different sized screens offered by those device types.
+ * A Profile represents a range of devices that fall under a common category. For the vast majority
+ * of apps that use device profiles, the app defines a Phone profile and a Tablet profile. Doing
+ * this enables you to easily customize the experience for the different sized screens offered by
+ * those device types.
  *
- * Only one Profile can be active at a time, and each Profile defines a simple {@link #isActive} function that should
- * return either true or false. The first Profile to return true from its isActive function is set as your Application's
+ * Only one Profile can be active at a time, and each Profile defines a simple {@link #isActive}
+ * function that should return either true or false. The first Profile to return true from its
+ * isActive function is set as your Application's
  * {@link Ext.app.Application#currentProfile current profile}.
  *
- * A Profile can define any number of {@link #models}, {@link #views}, {@link #controllers} and {@link #stores} which
- * will be loaded if the Profile is activated. It can also define a {@link #launch} function that will be called after
- * all of its dependencies have been loaded, just before the {@link Ext.app.Application#launch application launch}
- * function is called.
+ * A Profile can define any number of {@link #models}, {@link #views}, {@link #controllers} and
+ * {@link #stores} which will be loaded if the Profile is activated. It can also define
+ * a {@link #launch} function that will be called after all of its dependencies have been loaded,
+ * just before the {@link Ext.app.Application#launch application launch} function is called.
  *
  * ## Sample Usage
  *
@@ -21,7 +23,8 @@
  *         profiles: ['Phone', 'Tablet']
  *     });
  *
- * This will load app/profile/Phone.js and app/profile/Tablet.js. Here's how we might define the Phone profile:
+ * This will load app/profile/Phone.js and app/profile/Tablet.js. Here's how we might define the
+ * Phone profile:
  *
  *     Ext.define('MyApp.profile.Phone', {
  *         extend: 'Ext.app.Profile',
@@ -33,14 +36,15 @@
  *         }
  *     });
  *
- * The isActive function returns true if we detect that we are running on a phone device. If that is the case the
- * Application will set this Profile active and load the 'Main' view specified in the Profile's {@link #views} config.
+ * The isActive function returns true if we detect that we are running on a phone device. If that
+ * is the case the Application will set this Profile active and load the 'Main' view specified
+ * in the Profile's {@link #views} config.
  *
  * ## Class Specializations
  *
- * Because Profiles are specializations of an application, all of the models, views, controllers and stores defined
- * in a Profile are expected to be namespaced under the name of the Profile. Here's an expanded form of the example
- * above:
+ * Because Profiles are specializations of an application, all of the models, views, controllers
+ * and stores defined in a Profile are expected to be namespaced under the name of the Profile.
+ * Here's an expanded form of the example above:
  *
  *     Ext.define('MyApp.profile.Phone', {
  *         extend: 'Ext.app.Profile',
@@ -54,18 +58,23 @@
  *         }
  *     });
  *
- * In this case, the Profile is going to load *app/view/phone/Main.js*, *app/controller/phone/Signup.js* and
- * *app/model/Group.js*. Notice that in each of the first two cases the name of the profile ('phone' in this case) was
- * injected into the class names. In the third case we specified the full Model name (for Group) so the Profile name
- * was not injected.
+ * In this case, the Profile is going to load *app/view/phone/Main.js*,
+ * *app/controller/phone/Signup.js* and *app/model/Group.js*. Notice that in each of the first
+ * two cases the name of the profile ('phone' in this case) was injected into the class names.
+ * In the third case we specified the full Model name (for Group) so the Profile name was not
+ * injected.
  *
- * For a fuller understanding of the ideas behind Profiles and how best to use them in your app, we suggest you read
- * the [device profiles guide](/touch/2.4/core_concepts/device_profiles.html).
+ * For a fuller understanding of the ideas behind Profiles and how best to use them in your app,
+ * we suggest you read the [device profiles guide](/touch/2.4/core_concepts/device_profiles.html).
  * 
  */
 Ext.define('Ext.app.Profile', {
     mixins: [
         'Ext.mixin.Observable'
+    ],
+
+    requires: [
+        'Ext.app.Controller'
     ],
 
     /**
@@ -77,10 +86,10 @@ Ext.define('Ext.app.Profile', {
     /**
      * @cfg {String} [namespace]
      * The namespace that this Profile's classes can be found in. Defaults to the lowercase
-     * Profile {@link #name}, for example a Profile called MyApp.profile.Phone will by default have a 'phone'
-     * namespace, which means that this Profile's additional models, stores, views and controllers will be loaded
-     * from the MyApp.model.phone.*, MyApp.store.phone.*, MyApp.view.phone.* and MyApp.controller.phone.* namespaces
-     * respectively.
+     * Profile {@link #name}, for example a Profile called MyApp.profile.Phone will by default
+     * have a 'phone' namespace, which means that this Profile's additional models, stores, views
+     * and controllers will be loaded from the MyApp.model.phone.*, MyApp.store.phone.*,
+     * MyApp.view.phone.* and MyApp.controller.phone.* namespaces respectively.
      * @accessor
      */
 
@@ -145,7 +154,8 @@ Ext.define('Ext.app.Profile', {
          */
         models: [],
 
-        // @cmd-auto-dependency {aliasPrefix: "view.", profile: true, isKeyedObject:true, blame: "all" }
+        /* eslint-disable-next-line max-len */
+        // @cmd-auto-dependency { aliasPrefix: "view.", profile: true, isKeyedObject:true, blame: "all" }
         /**
          * @cfg {Object/String[]} views
          * This config allows the active profile to define a set of `xtypes` and map them
@@ -213,19 +223,20 @@ Ext.define('Ext.app.Profile', {
     /**
      * Creates a new Profile instance
      */
-    constructor: function (config) {
+    constructor: function(config) {
         this.initConfig(config);
 
         this.mixins.observable.constructor.apply(this, arguments);
     },
 
     /**
-     * Determines whether or not this Profile is active on the device isActive is executed on. Should return true if
-     * this profile is meant to be active on this device, false otherwise. Each Profile should implement this function
-     * (the default implementation just returns false).
-     * @return {Boolean} True if this Profile should be activated on the device it is running on, false otherwise
+     * Determines whether or not this Profile is active on the device isActive is executed on.
+     * Should return true if this profile is meant to be active on this device, false otherwise.
+     * Each Profile should implement this function (the default implementation just returns false).
+     * @return {Boolean} True if this Profile should be activated on the device it is running on,
+     * false otherwise
      */
-    isActive: function () {
+    isActive: function() {
         return false;
     },
 
@@ -236,7 +247,7 @@ Ext.define('Ext.app.Profile', {
      * @protected
      * @since 6.0.1
      */
-    init: function () {
+    init: function() {
         var views = this.getViews(),
             xtype;
 
@@ -249,9 +260,9 @@ Ext.define('Ext.app.Profile', {
 
     /**
      * @method
-     * The launch function is called by the {@link Ext.app.Application Application} if this Profile's {@link #isActive}
-     * function returned true. This is typically the best place to run any profile-specific app launch code. Example
-     * usage:
+     * The launch function is called by the {@link Ext.app.Application Application} if this
+     * Profile's {@link #isActive} function returned true. This is typically the best place to run
+     * any profile-specific app launch code. Example usage:
      *
      *     launch: function() {
      *         Ext.create('MyApp.view.tablet.Main');
@@ -259,7 +270,7 @@ Ext.define('Ext.app.Profile', {
      */
     launch: Ext.emptyFn,
 
-    onClassExtended: function (cls, data, hooks) {
+    onClassExtended: function(cls, data, hooks) {
         var onBeforeClassCreated = hooks.onBeforeCreated;
 
         hooks.onBeforeCreated = function(cls, data) {
@@ -273,12 +284,15 @@ Ext.define('Ext.app.Profile', {
             // Process name and namespace configs here since we need to use the namespace
             // in the dependency calculation
             name = data.name;
+
             if (name) {
                 delete data.name;
-            } else {
+            }
+            else {
                 name = className.split('.');
                 name = name[name.length - 1];
             }
+
             cls._name = name;
 
             cls._namespace = name = (data.namespace || name).toLowerCase();
@@ -288,12 +302,14 @@ Ext.define('Ext.app.Profile', {
 
             Controller.processDependencies(proto, requires, namespace, 'model', data.models, name);
             Controller.processDependencies(proto, requires, namespace, 'store', data.stores, name);
-            Controller.processDependencies(proto, requires, namespace, 'controller', data.controllers, name);
+            Controller.processDependencies(proto, requires, namespace, 'controller',
+                                           data.controllers, name);
 
             if (views) {
                 if (views instanceof Array) {
                     Controller.processDependencies(proto, requires, namespace, 'view', views, name);
-                } else {
+                }
+                else {
                     Ext.app.Profile.processViews(className, views, requires);
                 }
             }
@@ -302,13 +318,13 @@ Ext.define('Ext.app.Profile', {
         };
     },
 
-    getName: function () {
+    getName: function() {
         // This used to be a Config but is now processed in onClassExtended so we provide
         // the getter for compat.
         return this.self._name;
     },
 
-    getNamespace: function () {
+    getNamespace: function() {
         // This used to be a Config but is now processed in onClassExtended so we provide
         // the getter for compat.
         return this.self._namespace;
@@ -316,7 +332,7 @@ Ext.define('Ext.app.Profile', {
 
     privates: {
         statics: {
-            processViews: function (className, views, requires) {
+            processViews: function(className, views, requires) {
                 var body, cls, s, xtype;
 
                 for (xtype in views) {

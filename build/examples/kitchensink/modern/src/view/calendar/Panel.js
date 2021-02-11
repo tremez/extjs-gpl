@@ -6,10 +6,9 @@ Ext.define('KitchenSink.view.calendar.Panel', {
         'Ext.calendar.panel.Panel'
     ],
 
-    shadow: true,
-
     layout: 'fit',
-    items: {
+
+    items: [{
         xtype: 'calendar',
         views: {
             day: {
@@ -18,7 +17,6 @@ Ext.define('KitchenSink.view.calendar.Panel', {
             },
             workweek: {
                 xtype: 'calendar-week',
-                controlStoreRange: false,
                 titleTpl: '{start:date("j M")} - {end:date("j M")}',
                 label: 'Work Week',
                 weight: 15,
@@ -27,7 +25,6 @@ Ext.define('KitchenSink.view.calendar.Panel', {
                 visibleDays: 5
             }
         },
-        timezoneOffset: 0,
         store: {
             autoLoad: true,
             proxy: {
@@ -35,5 +32,5 @@ Ext.define('KitchenSink.view.calendar.Panel', {
                 url: '/KitchenSink/CalendarFull'
             }
         }
-    }
+    }]
 });

@@ -11,8 +11,8 @@
  *
  *     @example
  *     Ext.create('Ext.ux.colorpick.Selector', {
- *         value     : '993300',  // initial selected color
- *         renderTo  : Ext.getBody(),
+ *         value: '993300',  // initial selected color
+ *         renderTo: Ext.getBody(),
  *         listeners: {
  *             change: function (colorselector, color) {
  *                 console.log('New color: ' + color);
@@ -28,7 +28,7 @@ Ext.define('Ext.ux.colorpick.Selector', {
         'Ext.ux.colorpick.Selection'
     ],
 
-    controller : 'colorpick-selectorcontroller',
+    controller: 'colorpick-selectorcontroller',
 
     requires: [
         'Ext.layout.container.HBox',
@@ -44,6 +44,10 @@ Ext.define('Ext.ux.colorpick.Selector', {
         'Ext.ux.colorpick.SliderValue',
         'Ext.ux.colorpick.SliderHue'
     ],
+
+    config: {
+        hexReadOnly: true
+    },
 
     width: 580, // default width and height gives 255x255 color map in Crisp
     height: 337,
@@ -76,15 +80,17 @@ Ext.define('Ext.ux.colorpick.Selector', {
 
     /**
      * @cfg {Boolean} [showPreviousColor]
-     * Whether "previous color" region (in upper right, below the selected color preview) should be shown;
-     * these are relied upon by the {@link Ext.ux.colorpick.Button} and the {@link Ext.ux.colorpick.Field}.
+     * Whether "previous color" region (in upper right, below the selected color preview)
+     * should be shown; these are relied upon by the {@link Ext.ux.colorpick.Button} and
+     * the {@link Ext.ux.colorpick.Field}.
      */
     showPreviousColor: false,
 
     /**
      * @cfg {Boolean} [showOkCancelButtons]
-     * Whether Ok and Cancel buttons (in upper right, below the selected color preview) should be shown;
-     * these are relied upon by the {@link Ext.ux.colorpick.Button} and the {@link Ext.ux.colorpick.Field}.
+     * Whether Ok and Cancel buttons (in upper right, below the selected color preview)
+     * should be shown; these are relied upon by the {@link Ext.ux.colorpick.Button} and
+     * the {@link Ext.ux.colorpick.Field}.
      */
     showOkCancelButtons: false,
 
@@ -113,8 +119,8 @@ Ext.define('Ext.ux.colorpick.Selector', {
         resize: 'onResize'
     },
 
-    constructor: function (config) {
-        var me             = this,
+    constructor: function(config) {
+        var me = this,
             childViewModel = Ext.Factory.viewModel('colorpick-selectormodel');
 
         // Since this component needs to present its value as a thing to which users can
@@ -129,14 +135,14 @@ Ext.define('Ext.ux.colorpick.Selector', {
             me.getPreviewAndButtons(childViewModel, config)
         ];
 
-        me.childViewModel.bind('{selectedColor}', function (color) {
+        me.childViewModel.bind('{selectedColor}', function(color) {
             me.setColor(color);
         });
 
-        me.callParent(arguments);
+        me.callParent([config]);
     },
 
-    updateColor: function (color) {
+    updateColor: function(color) {
         var me = this;
 
         me.mixins.colorselection.updateColor.call(me, color);
@@ -144,55 +150,56 @@ Ext.define('Ext.ux.colorpick.Selector', {
         me.childViewModel.set('selectedColor', color);
     },
 
-    updatePreviousColor: function (color) {
+    updatePreviousColor: function(color) {
         this.childViewModel.set('previousColor', color);
     },
 
     // Splits up view declaration for readability
     // "Map" and HEX/R/G/B fields
-    getMapAndHexRGBFields: function (childViewModel) {
+    getMapAndHexRGBFields: function(childViewModel) {
         var me = this,
             fieldMargin = { top: 0, right: me.fieldPad, bottom: 0, left: 0 },
             fieldWidth = me.fieldWidth;
 
         return {
-            xtype     : 'container',
-            viewModel : childViewModel,
-            cls       : Ext.baseCSSPrefix + 'colorpicker-escape-overflow',
-            flex      : 1,
-            layout    : {
-                type  : 'vbox',
-                align : 'stretch'
+            xtype: 'container',
+            viewModel: childViewModel,
+            cls: Ext.baseCSSPrefix + 'colorpicker-escape-overflow',
+            flex: 1,
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
             },
-            margin : '0 10 0 0',
-            items  : [
+            margin: '0 10 0 0',
+            items: [
                 // "MAP"
                 {
-                    xtype : 'colorpickercolormap',
+                    xtype: 'colorpickercolormap',
                     reference: 'colorMap',
-                    flex  : 1,
-                    bind  : {
+                    flex: 1,
+                    bind: {
                         position: {
-                            bindTo : '{selectedColor}',
-                            deep   : true
+                            bindTo: '{selectedColor}',
+                            deep: true
                         },
                         hue: '{selectedColor.h}'
                     },
-                    listeners : {
+                    listeners: {
                         handledrag: 'onColorMapHandleDrag'
                     }
                 },
                 // HEX/R/G/B FIELDS
                 {
-                    xtype    : 'container',
-                    layout   : 'hbox',
+                    xtype: 'container',
+                    layout: 'hbox',
 
-                    defaults : {
+                    defaults: {
                         labelAlign: 'top',
                         labelSeparator: '',
                         allowBlank: false,
 
-                        onChange: function () { // prevent data binding propagation if bad value
+                        onChange: function() {
+                            // prevent data binding propagation if bad value
                             if (this.isValid()) {
                                 // this is kind of dirty and ideally we would extend these fields
                                 // and override the method, but works for now
@@ -202,39 +209,40 @@ Ext.define('Ext.ux.colorpick.Selector', {
                     },
 
                     items: [{
-                        xtype      : 'textfield',
-                        fieldLabel : 'HEX',
-                        flex       : 1,
-                        bind       : '{hex}',
-                        margin     : fieldMargin,
-                        readOnly   : true
+                        xtype: 'textfield',
+                        fieldLabel: 'HEX',
+                        flex: 1,
+                        bind: '{hex}',
+                        margin: fieldMargin,
+                        regex: /^#[0-9a-f]{6}$/i,
+                        readonly: me.getHexReadOnly()
                     }, {
-                        xtype       : 'numberfield',
-                        fieldLabel  : 'R',
-                        bind        : '{red}',
-                        width       : fieldWidth,
-                        hideTrigger : true,
-                        maxValue    : 255,
-                        minValue    : 0,
-                        margin      : fieldMargin
+                        xtype: 'numberfield',
+                        fieldLabel: 'R',
+                        bind: '{red}',
+                        width: fieldWidth,
+                        hideTrigger: true,
+                        maxValue: 255,
+                        minValue: 0,
+                        margin: fieldMargin
                     }, {
-                        xtype       : 'numberfield',
-                        fieldLabel  : 'G',
-                        bind        : '{green}',
-                        width       : fieldWidth,
-                        hideTrigger : true,
-                        maxValue    : 255,
-                        minValue    : 0,
-                        margin      : fieldMargin
+                        xtype: 'numberfield',
+                        fieldLabel: 'G',
+                        bind: '{green}',
+                        width: fieldWidth,
+                        hideTrigger: true,
+                        maxValue: 255,
+                        minValue: 0,
+                        margin: fieldMargin
                     }, {
-                        xtype       : 'numberfield',
-                        fieldLabel  : 'B',
-                        bind        : '{blue}',
-                        width       : fieldWidth,
-                        hideTrigger : true,
-                        maxValue    : 255,
-                        minValue    : 0,
-                        margin      : 0
+                        xtype: 'numberfield',
+                        fieldLabel: 'B',
+                        bind: '{blue}',
+                        width: fieldWidth,
+                        hideTrigger: true,
+                        maxValue: 255,
+                        minValue: 0,
+                        margin: 0
                     }]
                 }
             ]
@@ -243,24 +251,24 @@ Ext.define('Ext.ux.colorpick.Selector', {
 
     // Splits up view declaration for readability
     // Slider and H field 
-    getSliderAndHField: function (childViewModel) {
+    getSliderAndHField: function(childViewModel) {
         var me = this,
             fieldWidth = me.fieldWidth;
 
         return {
-            xtype     : 'container',
-            viewModel : childViewModel,
-            cls       : Ext.baseCSSPrefix + 'colorpicker-escape-overflow',
-            width     : fieldWidth,
-            layout    : {
-                type  : 'vbox',
-                align : 'stretch'
+            xtype: 'container',
+            viewModel: childViewModel,
+            cls: Ext.baseCSSPrefix + 'colorpicker-escape-overflow',
+            width: fieldWidth,
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
             },
-            items  : [
+            items: [
                 {
                     xtype: 'colorpickersliderhue',
                     reference: 'hueSlider',
-                    flex  : 1,
+                    flex: 1,
                     bind: {
                         hue: '{selectedColor.h}'
                     },
@@ -270,16 +278,16 @@ Ext.define('Ext.ux.colorpick.Selector', {
                     }
                 },
                 {
-                    xtype          : 'numberfield',
-                    fieldLabel     : 'H',
-                    labelAlign     : 'top',
-                    labelSeparator : '',
-                    bind           : '{hue}',
-                    hideTrigger    : true,
-                    maxValue       : 360,
-                    minValue       : 0,
-                    allowBlank     : false,
-                    margin         : 0
+                    xtype: 'numberfield',
+                    fieldLabel: 'H',
+                    labelAlign: 'top',
+                    labelSeparator: '',
+                    bind: '{hue}',
+                    hideTrigger: true,
+                    maxValue: 360,
+                    minValue: 0,
+                    allowBlank: false,
+                    margin: 0
                 }
             ]
         };
@@ -287,48 +295,48 @@ Ext.define('Ext.ux.colorpick.Selector', {
 
     // Splits up view declaration for readability
     // Slider and S field 
-    getSliderAndSField: function (childViewModel) {
+    getSliderAndSField: function(childViewModel) {
         var me = this,
             fieldWidth = me.fieldWidth;
 
         return {
-            xtype     : 'container',
-            viewModel : childViewModel,
-            cls       : Ext.baseCSSPrefix + 'colorpicker-escape-overflow',
-            width     : fieldWidth,
-            layout    : {
-                type  : 'vbox',
-                align : 'stretch'
+            xtype: 'container',
+            viewModel: childViewModel,
+            cls: Ext.baseCSSPrefix + 'colorpicker-escape-overflow',
+            width: fieldWidth,
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
             },
             margin: {
-                right  : me.fieldPad,
-                left   : me.fieldPad
+                right: me.fieldPad,
+                left: me.fieldPad
             },
             items: [
                 {
-                    xtype : 'colorpickerslidersaturation',
+                    xtype: 'colorpickerslidersaturation',
                     reference: 'satSlider',
-                    flex  : 1,
-                    bind  : {
-                        saturation : '{saturation}',
-                        hue        : '{selectedColor.h}'
+                    flex: 1,
+                    bind: {
+                        saturation: '{saturation}',
+                        hue: '{selectedColor.h}'
                     },
                     width: fieldWidth,
-                    listeners : {
+                    listeners: {
                         handledrag: 'onSaturationSliderHandleDrag'
                     }
                 },
                 {
-                    xtype          : 'numberfield',
-                    fieldLabel     : 'S',
-                    labelAlign     : 'top',
-                    labelSeparator : '',
-                    bind           : '{saturation}',
-                    hideTrigger    : true,
-                    maxValue       : 100,
-                    minValue       : 0,
-                    allowBlank     : false,
-                    margin         : 0
+                    xtype: 'numberfield',
+                    fieldLabel: 'S',
+                    labelAlign: 'top',
+                    labelSeparator: '',
+                    bind: '{saturation}',
+                    hideTrigger: true,
+                    maxValue: 100,
+                    minValue: 0,
+                    allowBlank: false,
+                    margin: 0
                 }
             ]
         };
@@ -336,44 +344,44 @@ Ext.define('Ext.ux.colorpick.Selector', {
 
     // Splits up view declaration for readability
     // Slider and V field 
-    getSliderAndVField: function (childViewModel) {
+    getSliderAndVField: function(childViewModel) {
         var me = this,
             fieldWidth = me.fieldWidth;
 
         return {
-            xtype     : 'container',
-            viewModel : childViewModel,
-            cls       : Ext.baseCSSPrefix + 'colorpicker-escape-overflow',
-            width     : fieldWidth,
-            layout    : {
-                type  : 'vbox',
-                align : 'stretch'
+            xtype: 'container',
+            viewModel: childViewModel,
+            cls: Ext.baseCSSPrefix + 'colorpicker-escape-overflow',
+            width: fieldWidth,
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
             },
             items: [
                 {
-                    xtype : 'colorpickerslidervalue',
+                    xtype: 'colorpickerslidervalue',
                     reference: 'valueSlider',
-                    flex  : 1,
-                    bind  : {
-                        value : '{value}',
-                        hue   : '{selectedColor.h}'
+                    flex: 1,
+                    bind: {
+                        value: '{value}',
+                        hue: '{selectedColor.h}'
                     },
                     width: fieldWidth,
-                    listeners : {
+                    listeners: {
                         handledrag: 'onValueSliderHandleDrag'
                     }
                 },
                 {
-                    xtype          : 'numberfield',
-                    fieldLabel     : 'V',
-                    labelAlign     : 'top',
-                    labelSeparator : '',
-                    bind           : '{value}',
-                    hideTrigger    : true,
-                    maxValue       : 100,
-                    minValue       : 0,
-                    allowBlank     : false,
-                    margin         : 0
+                    xtype: 'numberfield',
+                    fieldLabel: 'V',
+                    labelAlign: 'top',
+                    labelSeparator: '',
+                    bind: '{value}',
+                    hideTrigger: true,
+                    maxValue: 100,
+                    minValue: 0,
+                    allowBlank: false,
+                    margin: 0
                 }
             ]
         };
@@ -381,50 +389,50 @@ Ext.define('Ext.ux.colorpick.Selector', {
 
     // Splits up view declaration for readability
     // Slider and A field 
-    getSliderAndAField: function (childViewModel) {
+    getSliderAndAField: function(childViewModel) {
         var me = this,
             fieldWidth = me.fieldWidth;
 
         return {
-            xtype     : 'container',
-            viewModel : childViewModel,
-            cls       : Ext.baseCSSPrefix + 'colorpicker-escape-overflow',
-            width     : fieldWidth,
-            layout    : {
-                type  : 'vbox',
-                align : 'stretch'
+            xtype: 'container',
+            viewModel: childViewModel,
+            cls: Ext.baseCSSPrefix + 'colorpicker-escape-overflow',
+            width: fieldWidth,
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
             },
             margin: {
                 left: me.fieldPad
             },
             items: [
                 {
-                    xtype : 'colorpickerslideralpha',
+                    xtype: 'colorpickerslideralpha',
                     reference: 'alphaSlider',
-                    flex  : 1,
-                    bind  : {
-                        alpha : '{alpha}',
-                        color : {
+                    flex: 1,
+                    bind: {
+                        alpha: '{alpha}',
+                        color: {
                             bindTo: '{selectedColor}',
                             deep: true
                         }
                     },
                     width: fieldWidth,
-                    listeners : {
+                    listeners: {
                         handledrag: 'onAlphaSliderHandleDrag'
                     }
                 },
                 {
-                    xtype          : 'numberfield',
-                    fieldLabel     : 'A',
-                    labelAlign     : 'top',
-                    labelSeparator : '',
-                    bind           : '{alpha}',
-                    hideTrigger    : true,
-                    maxValue       : 100,
-                    minValue       : 0,
-                    allowBlank     : false,
-                    margin         : 0
+                    xtype: 'numberfield',
+                    fieldLabel: 'A',
+                    labelAlign: 'top',
+                    labelSeparator: '',
+                    bind: '{alpha}',
+                    hideTrigger: true,
+                    maxValue: 100,
+                    minValue: 0,
+                    allowBlank: false,
+                    margin: 0
                 }
             ]
         };
@@ -432,15 +440,15 @@ Ext.define('Ext.ux.colorpick.Selector', {
 
     // Splits up view declaration for readability
     // Preview current/previous color squares and OK and Cancel buttons
-    getPreviewAndButtons: function (childViewModel, config) {
+    getPreviewAndButtons: function(childViewModel, config) {
         // selected color preview is always shown
         var items = [{
-            xtype : 'colorpickercolorpreview',
-            flex  : 1,
-            bind  : {
+            xtype: 'colorpickercolorpreview',
+            flex: 1,
+            bind: {
                 color: {
-                    bindTo : '{selectedColor}',
-                    deep   : true
+                    bindTo: '{selectedColor}',
+                    deep: true
                 }
             }
         }];
@@ -448,12 +456,12 @@ Ext.define('Ext.ux.colorpick.Selector', {
         // previous color preview is optional
         if (config.showPreviousColor) {
             items.push({
-                xtype  : 'colorpickercolorpreview',
-                flex   : 1,
-                bind   : {
+                xtype: 'colorpickercolorpreview',
+                flex: 1,
+                bind: {
                     color: {
-                        bindTo : '{previousColor}',
-                        deep   : true
+                        bindTo: '{previousColor}',
+                        deep: true
                     }
                 },
                 listeners: {
@@ -465,28 +473,30 @@ Ext.define('Ext.ux.colorpick.Selector', {
         // Ok/Cancel buttons are optional
         if (config.showOkCancelButtons) {
             items.push({
-                xtype   : 'button',
-                text    : 'OK',
-                margin  : '10 0 0 0',
-                handler : 'onOK'
+                xtype: 'button',
+                text: 'OK',
+                margin: '10 0 0 0',
+                padding: '10 0 10 0',
+                handler: 'onOK'
             },
-            {
-                xtype   : 'button',
-                text    : 'Cancel',
-                margin  : '10 0 0 0',
-                handler : 'onCancel'
-            });
+                       {
+                           xtype: 'button',
+                           text: 'Cancel',
+                           margin: '10 0 0 0',
+                           padding: '10 0 10 0',
+                           handler: 'onCancel'
+                       });
         }
 
         return {
-            xtype     : 'container',
-            viewModel : childViewModel,
-            width     : 70,
-            margin    : '0 0 0 10',
-            items     : items,
-            layout    : {
-                type  : 'vbox',
-                align : 'stretch'
+            xtype: 'container',
+            viewModel: childViewModel,
+            width: 70,
+            margin: '0 0 0 10',
+            items: items,
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
             }
         };
     }

@@ -23,8 +23,8 @@ Ext.define('Admin.view.forms.Wizard', {
             xtype: 'button',
             ui: 'action',
             text: 'Next',
-            margin: '0 8 0 8',
-            itemId: 'next'
+            margin: '0 8',
+            handler: 'onNext'
         },
 
         back: {
@@ -32,106 +32,68 @@ Ext.define('Admin.view.forms.Wizard', {
             ui: 'action',
             text: 'Back',
             margin: '0 0 0 8',
-            itemId: 'back'
+            handler: 'onBack'
         }
     },
 
     cls: 'wizard',
+    controller: 'wizard',
 
-    initialize: function () {
-        var me = this,
-            back, next, items, toolbar;
-
-        me.callParent();
-
-        toolbar = Ext.clone(me.getControlBar());
-        items = toolbar.items || (toolbar.items = []);
-        next = me.getNext();
-        back = me.getBack();
-
-        if (me.getAppendButtons()) {
-            items.push(back, next);
-        } else {
-            items.unshift(back, next);
-        }
-
-        toolbar = me.add(toolbar);
-
-        me.nextBtn = next = toolbar.getComponent('next');
-        me.backBtn = back = toolbar.getComponent('back');
-
-        next.on({
-            tap: me.onNext,
-            scope: me
-        });
-
-        back.on({
-            tap: me.onBack,
-            scope: me
-        });
-
-        this.syncBackNext();
+    applyBack: function (back, oldBack) {
+        return Ext.updateWidget(oldBack, back);
     },
 
-    onBack: function () {
-        var index = this.getItemIndex();
-
-        if (index > 0) {
-            this.setActiveItem(index - 1);
-        }
+    applyControlBar: function (controlBar, oldControlBar) {
+        return Ext.updateWidget(oldControlBar, controlBar);
     },
 
-    // We look at the tabBar since it presents tabs for the items we want to navigate
-    // vs "this.getItem()" which would include the tabBar and the navigation toolbar
-    // we've added
-
-    onNext: function () {
-        var me = this,
-            index = me.getItemIndex(),
-            count = me.getTabBar().getItems().length;
-
-        if (index < count - 1) {
-            me.allowNext = true;
-            me.setActiveItem(index + 1);
-            me.allowNext = false;
-        }
+    applyNext: function (next, oldNext) {
+        return Ext.updateWidget(oldNext, next);
     },
 
-    getItemIndex: function (item) {
-        var tabBar = this.getTabBar(),
-            tabs = tabBar.getItems();
+    updateActiveItem: function (newActiveItem, oldActiveItem) {
+        this.callParent([newActiveItem, oldActiveItem]);
 
-        item = item || this.getActiveItem();
-
-        return tabs.indexOf(item.tab);
+        this.getController().syncBackNext();
     },
 
-    syncBackNext: function () {
-        var me = this,
-            next = me.nextBtn,
-            back = me.backBtn,
-            i, index, items, tab, tabBar;
+    updateBack: function (back) {
+        var idx = 0,
+            controlBar;
 
-        if (next && back) {
-            index = me.getItemIndex();
-            tabBar = me.getTabBar();
-            items = tabBar.getItems();
+        if (back) {
+            controlBar = this.getControlBar();
 
-            back.setDisabled(!index);
-            next.setDisabled(index >= items.length - 1);
+            if (controlBar) {
+                if (this.getAppendButtons()) {
+                    idx = 1;
+                }
 
-            // Disable all tabs beyond the current (progress must use Next button):
-            //
-            for (i = items.length; i-- > 0; ) {
-                tab = items.getAt(i);
-                tab.setDisabled(i > index);
+                controlBar.insert(idx, back);
             }
         }
     },
 
-    updateActiveItem: function () {
-        this.callParent(arguments);
+    updateControlBar: function (controlBar) {
+        if (controlBar) {
+            this.add(controlBar);
+        }
+    },
 
-        this.syncBackNext();
+    updateNext: function (next) {
+        var idx = 1,
+            controlBar;
+
+        if (next) {
+            controlBar = this.getControlBar();
+
+            if (controlBar) {
+                if (this.getAppendButtons()) {
+                    idx = 2;
+                }
+
+                controlBar.insert(idx, next);
+            }
+        }
     }
 });

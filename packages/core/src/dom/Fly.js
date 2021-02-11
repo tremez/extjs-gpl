@@ -32,25 +32,33 @@ Ext.define('Ext.dom.Fly', {
         this.el = this;
     },
 
-    attach: function (dom) {
-        var me = this;
+    attach: function(dom) {
+        var me = this,
+            data;
 
         if (!dom) {
             return me.detach();
         }
-        me.dom = dom;
+
+        // Sometimes we want to attach to the DOM of Ext.Element instance
+        me.dom = Ext.getDom(dom);
 
         // If the element is not being managed by an Ext.Element instance,
-        // we have to assume that the classList/classMap in the data object are out of sync with reality.
+        // we have to assume that the classList/classMap in the data object are out of sync
+        // with reality.
         if (!Ext.cache[dom.id]) {
-            me.getData().isSynchronized = false;
+            data = me.peekData();
+
+            if (data) {
+                data.isSynchronized = false;
+            }
         }
 
         return me;
     },
 
     detach: function() {
-        this.dom = null;
+        return (this.dom = null);
     },
 
     addListener:
@@ -64,7 +72,7 @@ Ext.define('Ext.dom.Fly', {
         //</debug>
         null,
 
-    removeListener: 
+    removeListener:
         //<debug>
         function() {
             Ext.raise(
@@ -117,44 +125,58 @@ Ext.define('Ext.dom.Fly', {
             nodeType, data;
 
         // name the flyweight after the calling method name if possible.
-        named = named || (fn.caller && fn.caller.$name) || '_global';
+        named = named || (fn.caller && (fn.caller.$name || fn.caller.name)) || '_global';
 
         dom = Ext.getDom(dom);
 
         if (dom) {
             nodeType = dom.nodeType;
+
             // check if we have a valid node type or if the el is a window object before
             // proceeding. This allows elements, document fragments, and document/window
             // objects (even those inside iframes) to be wrapped.
             // Note: a window object can be detected by comparing it's window property to
             // itself, but we must use == for the comparison because === will return false
             // in IE8 even though the 2 window objects are the same
+            /* eslint-disable-next-line eqeqeq */
             if (Fly.prototype.validNodeTypes[nodeType] || (!nodeType && (dom.window == dom))) {
                 fly = Ext.cache[dom.id];
 
-                // If there's no Element cached, or the element cached is for another DOM node, return a Fly
+                // If there's no Element cached, or the element cached is for another DOM node,
+                // return a Fly
                 if (!fly || fly.dom !== dom) {
+                    // Since the `flyweights` map is simply an object, it has the `constructor`
+                    // property, just like any object, so to prevent the `Ext.fly` from failing
+                    // when it's called from the `constructor` method, we use the `$constructor`
+                    // as the key.
+                    if (named === 'constructor') {
+                        named = '$constructor';
+                    }
+
                     fly = flyweights[named] || (flyweights[named] = new Fly());
                     fly.dom = dom;
-                    data = fly.getData(true);
+                    data = fly.peekData();
+
                     if (data) {
                         data.isSynchronized = false;
                     }
                 }
             }
         }
+
         return fly;
     };
 
     /**
-     * Returns an HTML div element into which {@link Ext.container.Container#method-remove removed} components
-     * are placed so that their DOM elements are not garbage collected as detached Dom trees.
+     * Returns an HTML div element into which {@link Ext.container.Container#method-remove removed}
+     * components are placed so that their DOM elements are not garbage collected as detached
+     * Dom trees.
      * @return {Ext.dom.Element}
      * @method getDetachedBody
      * @member Ext
      * @private
      */
-    Ext.getDetachedBody = function () {
+    Ext.getDetachedBody = function() {
         if (!detachedBodyEl) {
             Ext.detachedBodyEl = detachedBodyEl = new Fly(document.createElement('div'));
             detachedBodyEl.isDetachedBody = true;

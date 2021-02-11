@@ -1,20 +1,20 @@
 xdescribe("Ext.Element.anim", function() {
     var el,
         todoIt = Ext.isSafari4 ? xit : it;
-    
+
     beforeEach(function() {
         el = Ext.getBody().createChild({
             id: 'testElement'
         });
     });
-    
+
     afterEach(function() {
         el.destroy();
     });
-    
+
     describe("callbacks", function() {
         var callback, called, scope, actualScope;
-        
+
         beforeEach(function() {
             called   = false;
             scope    = {};
@@ -23,7 +23,7 @@ xdescribe("Ext.Element.anim", function() {
                 actualScope = this;
             });
         });
-        
+
         afterEach(function() {
             actualScope = undefined;
         });
@@ -36,24 +36,24 @@ xdescribe("Ext.Element.anim", function() {
                     scope: scope
                 });
             });
-            
+
             todoIt("should run callback", function() {
                 waitsFor(function() { return called; }, 1000, 'Callback to fire');
-                
+
                 runs(function() {
                     expect(called).toBeTruthy();
                 });
             });
-            
+
             todoIt("should run callback in correct scope", function() {
                 waitsFor(function() { return called; }, 1000, 'Callback to fire');
-                
+
                 runs(function() {
                     expect(actualScope).toBe(scope);
                 });
             });
         });
-        
+
         describe("slideOut()", function() {
             beforeEach(function() {
                 el.slideOut('t', {
@@ -62,24 +62,24 @@ xdescribe("Ext.Element.anim", function() {
                     scope: scope
                 });
             });
-            
+
             todoIt("should run callback", function() {
                 waitsFor(function() { return called; }, 1000, 'Callback to fire');
-                
+
                 runs(function() {
                     expect(called).toBeTruthy();
                 });
             });
-            
+
             todoIt("should run callback in correct scope", function() {
                 waitsFor(function() { return called; }, 1000, 'Callback to fire');
-                
+
                 runs(function() {
                     expect(actualScope).toBe(scope);
                 });
             });
         });
-        
+
         describe("puff()", function() {
             beforeEach(function() {
                 el.slideIn('t', {
@@ -88,24 +88,24 @@ xdescribe("Ext.Element.anim", function() {
                     scope: scope
                 });
             });
-            
+
             todoIt("should run callback", function() {
                 waitsFor(function() { return called; }, 1000, 'Callback to fire');
-                
+
                 runs(function() {
                     expect(called).toBeTruthy();
                 });
             });
-            
+
             todoIt("should run callback in correct scope", function() {
                 waitsFor(function() { return called; }, 1000, 'Callback to fire');
-                
+
                 runs(function() {
                     expect(actualScope).toBe(scope);
                 });
             });
         });
-        
+
         describe("switchOff()", function() {
             beforeEach(function() {
                 el.switchOff({
@@ -114,18 +114,18 @@ xdescribe("Ext.Element.anim", function() {
                     scope: scope
                 });
             });
-            
+
             todoIt("should run callback", function() {
                 waitsFor(function() { return called; }, 1000, 'Callback to fire');
-                
+
                 runs(function() {
                     expect(called).toBeTruthy();
                 });
             });
-            
+
             todoIt("should run callback in correct scope", function() {
                 waitsFor(function() { return called; }, 1000, 'Callback to fire');
-                
+
                 runs(function() {
                     expect(actualScope).toBe(scope);
                 });
@@ -140,24 +140,24 @@ xdescribe("Ext.Element.anim", function() {
                     scope: scope
                 });
             });
-            
+
             todoIt("should run callback", function() {
                 waitsFor(function() { return called; }, 1000, 'Callback to fire');
-                
+
                 runs(function() {
                     expect(called).toBeTruthy();
                 });
             });
-            
+
             todoIt("should run callback in correct scope", function() {
                 waitsFor(function() { return called; }, 1000, 'Callback to fire');
-                
+
                 runs(function() {
                     expect(actualScope).toBe(scope);
                 });
             });
         });
-        
+
         describe("ghost()", function() {
             beforeEach(function() {
                 el.ghost('b', {
@@ -166,24 +166,24 @@ xdescribe("Ext.Element.anim", function() {
                     scope: scope
                 });
             });
-            
+
             todoIt("should run callback", function() {
                 waitsFor(function() { return called; }, 1000, 'Callback to fire');
-                
+
                 runs(function() {
                     expect(called).toBeTruthy();
                 });
             });
-            
+
             todoIt("should run callback in correct scope", function() {
                 waitsFor(function() { return called; }, 1000, 'Callback to fire');
-                
+
                 runs(function() {
                     expect(actualScope).toBe(scope);
                 });
             });
         });
-        
+
         describe("highlight()", function() {
             beforeEach(function() {
                 el.highlight('#0000ff', {
@@ -192,24 +192,24 @@ xdescribe("Ext.Element.anim", function() {
                     scope: scope
                 });
             });
-            
+
             todoIt("should run callback", function() {
                 waitsFor(function() { return called; }, 1000, 'Callback to fire');
-                
+
                 runs(function() {
                     expect(called).toBeTruthy();
                 });
             });
-            
+
             todoIt("should run callback in correct scope", function() {
                 waitsFor(function() { return called; }, 1000, 'Callback to fire');
-                
+
                 runs(function() {
                     expect(actualScope).toBe(scope);
                 });
             });
         });
-        
+
         describe("fadeIn()", function() {
             beforeEach(function() {
                 el.fadeIn({
@@ -218,24 +218,24 @@ xdescribe("Ext.Element.anim", function() {
                     scope: scope
                 });
             });
-            
+
             todoIt("should run callback", function() {
                 waitsFor(function() { return called; }, 1000, 'Callback to fire');
-                
+
                 runs(function() {
                     expect(called).toBeTruthy();
                 });
             });
-            
+
             todoIt("should run callback in correct scope", function() {
                 waitsFor(function() { return called; }, 1000, 'Callback to fire');
-                
+
                 runs(function() {
                     expect(actualScope).toBe(scope);
                 });
             });
         });
-        
+
         describe("fadeOut()", function() {
             beforeEach(function() {
                 el.fadeOut({
@@ -244,24 +244,24 @@ xdescribe("Ext.Element.anim", function() {
                     scope: scope
                 });
             });
-            
+
             todoIt("should run callback", function() {
                 waitsFor(function() { return called; }, 1000, 'Callback to fire');
-                
+
                 runs(function() {
                     expect(called).toBeTruthy();
                 });
             });
-            
+
             todoIt("should run callback in correct scope", function() {
                 waitsFor(function() { return called; }, 1000, 'Callback to fire');
-                
+
                 runs(function() {
                     expect(actualScope).toBe(scope);
                 });
             });
         });
-        
+
         describe("scale()", function() {
             beforeEach(function() {
                 el.scale(100, 100, {
@@ -270,24 +270,24 @@ xdescribe("Ext.Element.anim", function() {
                     scope: scope
                 });
             });
-            
+
             todoIt("should run callback", function() {
                 waitsFor(function() { return called; }, 1000, 'Callback to fire');
-                
+
                 runs(function() {
                     expect(called).toBeTruthy();
                 });
             });
-            
+
             todoIt("should run callback in correct scope", function() {
                 waitsFor(function() { return called; }, 1000, 'Callback to fire');
-                
+
                 runs(function() {
                     expect(actualScope).toBe(scope);
                 });
             });
         });
-        
+
         describe("shift()", function() {
             beforeEach(function() {
                 el.shift({
@@ -298,18 +298,18 @@ xdescribe("Ext.Element.anim", function() {
                     scope: scope
                 });
             });
-            
+
             todoIt("should run callback", function() {
                 waitsFor(function() { return called; }, 1000, 'Callback to fire');
-                
+
                 runs(function() {
                     expect(called).toBeTruthy();
                 });
             });
-            
+
             todoIt("should run callback in correct scope", function() {
                 waitsFor(function() { return called; }, 1000, 'Callback to fire');
-                
+
                 runs(function() {
                     expect(actualScope).toBe(scope);
                 });

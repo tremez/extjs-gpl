@@ -4,14 +4,10 @@
 Ext.define('Ext.panel.Header', {
     extend: 'Ext.panel.Bar',
     xtype: 'header',
-    
+
     requires: [
         'Ext.panel.Title',
         'Ext.panel.Tool'
-    ],
-    
-    mixins: [
-        'Ext.util.FocusableContainer'
     ],
 
     /**
@@ -24,6 +20,7 @@ Ext.define('Ext.panel.Header', {
     indicateDrag: false,
     weight: -1,
     shrinkWrap: 3,
+    focusableContainer: true,
 
     // For performance reasons we give the following configs their default values on
     // the class body.  This prevents the updaters from running on initialization in the
@@ -32,7 +29,7 @@ Ext.define('Ext.panel.Header', {
     titleAlign: 'left',
     titlePosition: 0,
     titleRotation: 'default',
-    
+
     autoEl: {
         role: 'presentation'
     },
@@ -73,8 +70,8 @@ Ext.define('Ext.panel.Header', {
          * SDK.  For more information see:
          * 
          *  - [Font Awesome icons](http://fortawesome.github.io/Font-Awesome/cheatsheet/)
-         *  - [Pictos icons](http://docs.sencha.com/extjs/6.0/core_concepts/font_ext.html)
-         *  - [Theming Guide](http://docs.sencha.com/extjs/6.0/core_concepts/theming.html)
+         *  - [Pictos icons](../guides/core_concepts/font_ext.html)
+         *  - [Theming Guide](../guides/core_concepts/theming.html)
          */
         glyph: null,
 
@@ -119,8 +116,8 @@ Ext.define('Ext.panel.Header', {
          * SDK.  For more information see:
          * 
          *  - [Font Awesome icons](http://fortawesome.github.io/Font-Awesome/cheatsheet/)
-         *  - [Pictos icons](http://docs.sencha.com/extjs/6.0/core_concepts/font_ext.html)
-         *  - [Theming Guide](http://docs.sencha.com/extjs/6.0/core_concepts/theming.html)
+         *  - [Pictos icons](../guides/core_concepts/font_ext.html)
+         *  - [Theming Guide](../guides/core_concepts/theming.html)
          */
         iconCls: null,
 
@@ -162,17 +159,20 @@ Ext.define('Ext.panel.Header', {
 
         /**
          * @cfg {Number} [titlePosition=0]
-         * The ordinal position among the header items (tools and other components specified using the {@link #cfg-items} config)
-         * at which the title component is inserted. See {@link Ext.panel.Panel#cfg-header Panel's header config}.
+         * The ordinal position among the header items (tools and other components specified
+         * using the {@link #cfg-items} config) at which the title component is inserted.
+         * See {@link Ext.panel.Panel#cfg-header Panel's header config}.
          *
-         * If not specified, the title is inserted after any {@link #cfg-items}, but *before* any {@link Ext.panel.Panel#tools}.
+         * If not specified, the title is inserted after any {@link #cfg-items}, but *before*
+         * any {@link Ext.panel.Panel#tools}.
          *
-         * Note that if an {@link #icon} or {@link #iconCls} has been configured, then the icon component will be the
-         * first item before all specified tools or {@link #cfg-items}. This configuration does not include the icon.
+         * Note that if an {@link #icon} or {@link #iconCls} has been configured, then the icon
+         * component will be the first item before all specified tools or {@link #cfg-items}.
+         * This configuration does not include the icon.
          * @accessor
          */
         titlePosition: null,
-        
+
         /**
          * @cfg {'default'/0/1/2} [titleRotation='default']
          * @accessor
@@ -254,6 +254,7 @@ Ext.define('Ext.panel.Header', {
         }
 
         me.indicateDragCls = me.headerCls + '-draggable';
+
         if (me.indicateDrag) {
             cls.push(me.indicateDragCls);
         }
@@ -261,10 +262,12 @@ Ext.define('Ext.panel.Header', {
         me.addCls(cls);
 
         me.syncNoBorderCls();
-        
+
         // Add Tools
         Ext.Array.push(items, me.tools);
-        // Clear the tools so we can have only the instances. Intentional mutation of passed in array
+
+        // Clear the tools so we can have only the instances.
+        // Intentional mutation of passed in array.
         // Owning code in Panel uses this array as its public tools property.
         me.tools.length = 0;
         me.callParent();
@@ -283,11 +286,11 @@ Ext.define('Ext.panel.Header', {
      */
     addTool: function(tool) {
         var me = this;
-        
+
         // Even though the defaultType is tool, it may be changed,
         // so let's be safe and forcibly specify tool
         me.add(Ext.ComponentManager.create(tool, 'tool'));
-        
+
         me.checkFocusableTools();
     },
 
@@ -297,6 +300,7 @@ Ext.define('Ext.panel.Header', {
 
         if (me.vertical) {
             frameTR = me.frameTR;
+
             if (frameTR) {
                 // The corners sprite currently requires knowledge of the vertical header's
                 // width to correctly set the background position of the bottom right corner.
@@ -309,6 +313,7 @@ Ext.define('Ext.panel.Header', {
                 frameTR.setStyle('background-position-x', xPos);
             }
         }
+
         this.callParent();
     },
 
@@ -333,16 +338,18 @@ Ext.define('Ext.panel.Header', {
             oldTitle.setConfig(title);
             Ext.resumeLayouts(true);
             title = oldTitle;
-        } else {
+        }
+        else {
             if (isString) {
                 title.xtype = 'title';
             }
+
             title.ui = me.ui;
             configHasRotation = ('rotation' in title);
-            
+
             // Important Panel attribute aria-labelledby depends on title textEl id
             title.id = me.id + '-title';
-            
+
             if (me.isAccordionHeader) {
                 title.ariaRole = 'tab';
                 title.textElRole = null;
@@ -350,7 +357,7 @@ Ext.define('Ext.panel.Header', {
             }
 
             title = Ext.create(title);
-            
+
             // avoid calling the title's rotation updater on initial startup in the default scenario
             if (!configHasRotation && me.vertical && me.titleRotation === 'default') {
                 title.rotation = 1;
@@ -366,10 +373,11 @@ Ext.define('Ext.panel.Header', {
         if (this._titleInItems) {
             --max;
         }
+
         return Math.max(Math.min(position, max), 0);
     },
 
-    beforeLayout: function () {
+    beforeLayout: function() {
         this.callParent();
         this.syncBeforeAfterTitleClasses();
     },
@@ -384,21 +392,21 @@ Ext.define('Ext.panel.Header', {
         if (itemPosition !== undefined) {
             me.insert(itemPosition, me._userItems);
         }
-        
+
         me.checkFocusableTools();
     },
-    
+
     checkFocusableTools: function() {
         var me = this,
             tools = me.tools,
             haveFocusableTool, i, len;
 
         if (me.isAccordionHeader) {
-            me.enableFocusableContainer = false;
-            
+            me.focusableContainer = false;
+
             return;
         }
-        
+
         // We only need to enable FocusableContainer behavior when there are focusable tools.
         // For instance, Windows and Accordion panels can have Close tool that is not focusable,
         // in which case there is no sense in making the header behave like focusable container.
@@ -408,13 +416,12 @@ Ext.define('Ext.panel.Header', {
                 break;
             }
         }
-        
+
         if (haveFocusableTool) {
-            if (!me.initialConfig.hasOwnProperty('enableFocusableContainer') ||
-                me.enableFocusableContainer) {
+            if (!me.initialConfig.hasOwnProperty('focusableContainer') || me.focusableContainer) {
                 me.ariaRole = 'toolbar';
-                me.enableFocusableContainer = true;
-                
+                me.focusableContainer = true;
+
                 if (me.rendered) {
                     me.ariaEl.dom.setAttribute('role', 'toolbar');
                     me.initFocusableContainer(true);
@@ -423,8 +430,8 @@ Ext.define('Ext.panel.Header', {
         }
         else {
             me.ariaRole = 'presentation';
-            me.enableFocusableContainer = false;
-            
+            me.focusableContainer = false;
+
             if (me.rendered) {
                 me.ariaEl.dom.setAttribute('role', 'presentation');
                 me.initFocusableContainer(true);
@@ -436,13 +443,15 @@ Ext.define('Ext.panel.Header', {
      * Gets the tools for this header.
      * @return {Ext.panel.Tool[]} The tools
      */
-    getTools: function(){
+    getTools: function() {
         return this.tools.slice();
     },
 
     onAdd: function(component, index) {
         var tools = this.tools;
+
         this.callParent([component, index]);
+
         if (component.isTool) {
             tools.push(component);
             tools[component.type] = component;
@@ -475,7 +484,7 @@ Ext.define('Ext.panel.Header', {
             if (rotation !== titleRotation) {
                 title.setRotation(rotation);
             }
-            
+
             if (me.rendered) {
                 // remove margins set on items by box layout last time around.
                 // TODO: this will no longer be needed when EXTJS-13359 is fixed
@@ -507,6 +516,7 @@ Ext.define('Ext.panel.Header', {
             this.insert(this.getTitlePosition(), title);
             this._titleInItems = true;
         }
+
         // for backward compat with 4.x, set titleCmp property
         this.titleCmp = title;
     },
@@ -523,18 +533,20 @@ Ext.define('Ext.panel.Header', {
         if (rotation === 'default') {
             rotation = (this.vertical ? 1 : 0);
         }
+
         this.getTitle().setRotation(rotation);
     },
 
     privates: {
-        fireClickEvent: function(type, e){
+        fireClickEvent: function(type, e) {
             var toolCls = '.' + Ext.panel.Tool.prototype.baseCls;
+
             if (!e.getTarget(toolCls)) {
                 this.fireEvent(type, this, e);
             }
         },
 
-        getFramingInfoCls: function(){
+        getFramingInfoCls: function() {
             var me = this,
                 cls = me.callParent(),
                 owner = me.ownerCt;
@@ -542,6 +554,7 @@ Ext.define('Ext.panel.Header', {
             if (!me.expanding && owner && (owner.collapsed || me.isCollapsedExpander)) {
                 cls += '-' + owner.collapsedCls;
             }
+
             return cls + '-' + me.dock;
         },
 
@@ -549,7 +562,7 @@ Ext.define('Ext.panel.Header', {
             this.fireClickEvent('click', e);
         },
 
-        onDblClick: function(e){
+        onDblClick: function(e) {
             this.fireClickEvent('dblclick', e);
         },
 
@@ -566,23 +579,30 @@ Ext.define('Ext.panel.Header', {
             if (!force && (syncGen === itemGeneration)) {
                 return;
             }
+
             me.syncBeforeAfterGen = itemGeneration;
 
             for (i = 0; i < itemCount; ++i) {
                 item = childItems[i];
 
-                afterCls  = item.afterTitleCls  || (item.afterTitleCls  = item.baseCls + '-after-title');
-                beforeCls = item.beforeTitleCls || (item.beforeTitleCls = item.baseCls + '-before-title');
+                afterCls = item.afterTitleCls ||
+                           (item.afterTitleCls = item.baseCls + '-after-title');
+
+                beforeCls = item.beforeTitleCls ||
+                            (item.beforeTitleCls = item.baseCls + '-before-title');
 
                 if (!me.title || i < titlePosition) {
                     if (syncGen) {
                         item.removeCls(afterCls);
                     } // else first time we won't need to remove anything...
+
                     item.addCls(beforeCls);
-                } else if (i > titlePosition) {
+                }
+                else if (i > titlePosition) {
                     if (syncGen) {
                         item.removeCls(beforeCls);
                     }
+
                     item.addCls(afterCls);
                 }
             }
@@ -596,7 +616,8 @@ Ext.define('Ext.panel.Header', {
             // test for border === false is needed because undefined is the same as true
             if (ownerCt ? (ownerCt.border === false && !ownerCt.frame) : me.border === false) {
                 me.addCls(noBorderCls);
-            } else {
+            }
+            else {
                 me.removeCls(noBorderCls);
             }
         }

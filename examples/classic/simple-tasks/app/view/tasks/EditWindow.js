@@ -79,7 +79,7 @@ Ext.define('SimpleTasks.view.tasks.EditWindow', {
                             fieldLabel: 'Task List',
                             labelWidth: 60,
                             displayField: 'name',
-                            store: Ext.create('SimpleTasks.store.Lists', {storeId: 'Lists-TaskEditWindow'}),
+                            store: Ext.create('SimpleTasks.store.Lists', { storeId: 'Lists-TaskEditWindow' }),
                             flex: 1
                         }
                     ]

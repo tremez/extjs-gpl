@@ -15,7 +15,7 @@ Ext.define('Person', {
     }]
 });
 
-Ext.onReady(function(){
+Ext.onReady(function() {
 
     // setup the state provider, all state information will be saved to a cookie
     Ext.state.Manager.setProvider(Ext.create('Ext.state.CookieProvider'));
@@ -33,17 +33,17 @@ Ext.onReady(function(){
             html: [
                 'Between refreshes, the grid below will remember',
                 '<ul>',
-                    '<li>The hidden state of the columns</li>',
-                    '<li>The width of the columns</li>',
-                    '<li>The order of the columns</li>',
-                    '<li>The sort state of the grid</li>',
+                '<li>The hidden state of the columns</li>',
+                '<li>The width of the columns</li>',
+                '<li>The order of the columns</li>',
+                '<li>The sort state of the grid</li>',
                 '</ul>'
             ].join(''),
             dockedItems: [{
                 xtype: 'toolbar',
                 items: [{
                     text: 'Show window',
-                    handler: function(btn){
+                    handler: function(btn) {
                         Ext.create('Ext.window.Window', {
                             width: 300,
                             height: 300,
@@ -57,13 +57,13 @@ Ext.onReady(function(){
                             html: [
                                 'Between refreshes, this window will remember:',
                                 '<ul>',
-                                    '<li>The width and height</li>',
-                                    '<li>The x and y position</li>',
-                                    '<li>The maximized and restore states</li>',
+                                '<li>The width and height</li>',
+                                '<li>The x and y position</li>',
+                                '<li>The maximized and restore states</li>',
                                 '</ul>'
                             ].join(''),
                             listeners: {
-                                destroy: function(){
+                                destroy: function() {
                                     btn.enable();
                                 }
                             }
@@ -84,8 +84,8 @@ Ext.onReady(function(){
             html: [
                 'Between refreshes, this panel will remember:',
                 '<ul>',
-                    '<li>The collapsed state</li>',
-                    '<li>The width</li>',
+                '<li>The collapsed state</li>',
+                '<li>The width</li>',
                 '</ul>'
             ].join('')
         }, {
@@ -124,15 +124,15 @@ Ext.onReady(function(){
             }),
             columns: [{
                 text: 'First Name',
-                width:110,
+                width: 110,
                 dataIndex: 'first'
             }, {
                 text: 'Last Name',
-                width:110,
+                width: 110,
                 dataIndex: 'last'
             }, {
                 text: 'Age',
-                width:60,
+                width: 60,
                 dataIndex: 'age'
             }, {
                 flex: 1,

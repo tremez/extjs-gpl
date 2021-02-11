@@ -15,7 +15,9 @@ Ext.define('Ext.layout.Layout', {
     uses: [ 'Ext.layout.Context' ],
 
     factoryConfig: {
-        type: 'layout'
+        type: 'layout',
+        defaultType: 'autocontainer',
+        instanceProp: 'isLayout'
     },
 
     /**
@@ -33,8 +35,9 @@ Ext.define('Ext.layout.Layout', {
      * items into its layout calculations.  Layouts that handle the size of their children
      * as a group (autocontainer, form) can set this to false for an additional performance
      * optimization.  When `false` the layout system will not recurse into the child
-     * items if {@link Ext.layout.container.Container#activeItemCount} is `0`, which will be the case if all child items
-     * use "liquid" CSS layout, e.g. form fields.  (See Ext.Component#liquidLayout)
+     * items if {@link Ext.layout.container.Container#activeItemCount} is `0`, which will be
+     * the case if all child items use "liquid" CSS layout, e.g. form fields.
+     * (See Ext.Component#liquidLayout)
      */
     needsItemSize: true,
 
@@ -58,7 +61,7 @@ Ext.define('Ext.layout.Layout', {
     $configPrefixed: false,
     $configStrict: false,
 
-    constructor : function(config) {
+    constructor: function(config) {
         var me = this;
 
         me.id = Ext.id(null, me.type + '-');
@@ -99,7 +102,7 @@ Ext.define('Ext.layout.Layout', {
      * component.
      * @method beginLayoutCycle
      */
-    beginLayoutCycle: function (ownerContext) {
+    beginLayoutCycle: function(ownerContext) {
         var me = this,
             context = me.context,
             changed;
@@ -108,6 +111,7 @@ Ext.define('Ext.layout.Layout', {
             if (me.lastWidthModel) {
                 changed = true;
             }
+
             me.lastWidthModel = ownerContext.widthModel;
         }
 
@@ -115,6 +119,7 @@ Ext.define('Ext.layout.Layout', {
             if (me.lastWidthModel) {
                 changed = true;
             }
+
             me.lastHeightModel = ownerContext.heightModel;
         }
 
@@ -196,12 +201,12 @@ Ext.define('Ext.layout.Layout', {
      * @param {Ext.layout.ContextItem} ownerContext The context item for the layout's owner
      * component.
      */
-    finishedLayout: function (ownerContext) {
+    finishedLayout: function(ownerContext) {
         this.lastWidthModel = ownerContext.widthModel;
         this.lastHeightModel = ownerContext.heightModel;
         this.ownerContext = null;
     },
-    
+
     /**
      * This method (if implemented) is called after all layouts are finished, and all have
      * a `lastComponentSize` cached. No further layouts will be run and this method is only
@@ -220,7 +225,7 @@ Ext.define('Ext.layout.Layout', {
      * component.
      * @method notifyOwner
      */
-    
+
     redoLayout: Ext.emptyFn,
     undoLayout: Ext.emptyFn,
 
@@ -247,15 +252,15 @@ Ext.define('Ext.layout.Layout', {
      * for this item.
      * @protected
      */
-    getItemSizePolicy: function (item) {
+    getItemSizePolicy: function(item) {
         return this.autoSizePolicy;
     },
 
-    isItemBoxParent: function (itemContext) {
+    isItemBoxParent: function(itemContext) {
         return false;
     },
 
-    isItemLayoutRoot: function (item) {
+    isItemLayoutRoot: function(item) {
         var sizeModel = item.getSizeModel(),
             width = sizeModel.width,
             height = sizeModel.height;
@@ -270,11 +275,11 @@ Ext.define('Ext.layout.Layout', {
         return !width.shrinkWrap && !height.shrinkWrap;
     },
 
-    isItemShrinkWrap: function (item) {
+    isItemShrinkWrap: function(item) {
         return item.shrinkWrap;
     },
 
-    isRunning: function () {
+    isRunning: function() {
         return !!this.ownerContext;
     },
 
@@ -300,30 +305,35 @@ Ext.define('Ext.layout.Layout', {
      */
     //-----------------------------------------------------
 
-    getItemsRenderTree: function (items, renderCfgs) {
+    getItemsRenderTree: function(items, renderCfgs) {
         var length = items.length,
             i, item, itemConfig, result;
 
         if (length) {
             result = [];
+
             for (i = 0; i < length; ++i) {
                 item = items[i];
 
-                // If we are being asked to move an already rendered Component, we must not recalculate its renderTree
-                // and rerun its render process. The Layout's isValidParent check will ensure that the DOM is moved into place.
+                // If we are being asked to move an already rendered Component, we must not
+                // recalculate its renderTree and rerun its render process.
+                // The Layout's isValidParent check will ensure that the DOM is moved into place.
                 if (!item.rendered) {
 
-                    // If we've already calculated the item's element config, don't calculate it again.
-                    // This may happen if the rendering process mutates the owning Container's items
-                    // collection, and Ext.layout.Container#getRenderTree runs through the collection again.
-                    // Note that the config may be null if a beforerender listener vetoed the operation, so
-                    // we must compare to undefined.
+                    // If we've already calculated the item's element config, don't calculate it
+                    // again. This may happen if the rendering process mutates the owning
+                    // Container's items collection, and Ext.layout.Container#getRenderTree runs
+                    // through the collection again.
+                    // Note that the config may be null if a beforerender listener vetoed
+                    // the operation, so we must compare to undefined.
                     if (renderCfgs && (renderCfgs[item.id] !== undefined)) {
                         itemConfig = renderCfgs[item.id];
-                    } else {
+                    }
+                    else {
                         // Perform layout preprocessing in the bulk render path
                         this.configureItem(item);
                         itemConfig = item.getRenderTree();
+
                         if (renderCfgs) {
                             renderCfgs[item.id] = itemConfig;
                         }
@@ -342,14 +352,15 @@ Ext.define('Ext.layout.Layout', {
 
     finishRender: Ext.emptyFn,
 
-    finishRenderItems: function (target, items) {
+    finishRenderItems: function(target, items) {
         var length = items.length,
             i, item;
 
         for (i = 0; i < length; i++) {
             item = items[i];
 
-            // Only postprocess items which are being rendered. deferredRender may mean that only one has been rendered.
+            // Only postprocess items which are being rendered. deferredRender may mean
+            // that only one has been rendered.
             if (item.rendering) {
 
                 // Tell the item at which index in the Container it is
@@ -358,7 +369,7 @@ Ext.define('Ext.layout.Layout', {
         }
     },
 
-    renderChildren: function () {
+    renderChildren: function() {
         var me = this,
             items = me.getLayoutItems(),
             target = me.getRenderTarget();
@@ -367,11 +378,11 @@ Ext.define('Ext.layout.Layout', {
     },
 
     /**
-     * Iterates over all passed items, ensuring they are rendered.  If the items are already rendered,
-     * also determines if the items are in the proper place in the dom.
+     * Iterates over all passed items, ensuring they are rendered.  If the items
+     * are already rendered, also determines if the items are in the proper place in the dom.
      * @protected
      */
-    renderItems : function(items, target) {
+    renderItems: function(items, target) {
         var me = this,
             ln = items.length,
             i = 0,
@@ -380,19 +391,25 @@ Ext.define('Ext.layout.Layout', {
 
         if (ln) {
             Ext.suspendLayouts();
+
             for (; i < ln; i++, pos++) {
                 item = items[i];
+
                 if (item && !item.rendered) {
                     me.renderItem(item, target, pos);
-                } else if (item.ignoreDomPosition) {
+                }
+                else if (item.ignoreDomPosition) {
                     --pos;
-                } else if (!me.isValidParent(item, target, pos)) {
+                }
+                else if (!me.isValidParent(item, target, pos)) {
                     me.moveItem(item, target, pos);
-                } else {
+                }
+                else {
                     // still need to configure the item, it may have moved in the container.
                     me.configureItem(item);
                 }
             }
+
             Ext.resumeLayouts(true);
         }
     },
@@ -401,7 +418,7 @@ Ext.define('Ext.layout.Layout', {
      * Validates item is in the proper place in the dom.
      * @protected
      */
-    isValidParent : function(item, target, position) {
+    isValidParent: function(item, target, position) {
         var targetDom = (target && target.dom) || target,
             itemDom = this.getItemLayoutEl(item);
 
@@ -409,8 +426,10 @@ Ext.define('Ext.layout.Layout', {
         if (itemDom && targetDom) {
             if (typeof position === 'number') {
                 position = this.getPositionOffset(position);
+
                 return itemDom === targetDom.childNodes[position];
             }
+
             return itemDom.parentNode === targetDom;
         }
 
@@ -432,6 +451,7 @@ Ext.define('Ext.layout.Layout', {
 
         if (parentNode) {
             className = parentNode.className;
+
             if (className && className.indexOf(Ext.baseCSSPrefix + 'resizable-wrap') !== -1) {
                 dom = dom.parentNode;
             }
@@ -439,8 +459,8 @@ Ext.define('Ext.layout.Layout', {
 
         return dom;
     },
-    
-    getPositionOffset: function(position){
+
+    getPositionOffset: function(position) {
         return position;
     },
 
@@ -460,7 +480,7 @@ Ext.define('Ext.layout.Layout', {
      * @param {Number} position The position within the target to render the item to
      * @private
      */
-    renderItem : function(item, target, position) {
+    renderItem: function(item, target, position) {
         var me = this;
 
         if (!item.rendered) {
@@ -474,10 +494,11 @@ Ext.define('Ext.layout.Layout', {
      * Moves Component to the provided target instead.
      * @private
      */
-    moveItem : function(item, target, position) {
-        var activeEl = Ext.Element.getActiveElement(true);
+    moveItem: function(item, target, position) {
+        var activeEl = Ext.fly(document.activeElement);
 
         target = target.dom || target;
+
         if (typeof position === 'number') {
             position = target.childNodes[position];
         }
@@ -492,7 +513,8 @@ Ext.define('Ext.layout.Layout', {
         // Specifically: https://sencha.jira.com/browse/EXTJS-20609
         if (item.el.contains(activeEl)) {
             activeEl.suspendFocusEvents();
-        } else {
+        }
+        else {
             activeEl = null;
         }
 
@@ -509,13 +531,14 @@ Ext.define('Ext.layout.Layout', {
 
     /**
      * This method is called when a child item changes in some way. By default this calls
-     * {@link Ext.Component#updateLayout} on this layout's owner.
+     * {@link Ext.Component#method!updateLayout} on this layout's owner.
      * 
      * @param {Ext.Component} child The child item that has changed.
      * @return {Boolean} True if this layout has handled the content change.
      */
-    onContentChange: function () {
+    onContentChange: function() {
         this.owner.updateLayout();
+
         return true;
     },
 
@@ -523,7 +546,7 @@ Ext.define('Ext.layout.Layout', {
      * A one-time initialization method called just before rendering.
      * @protected
      */
-    initLayout : function() {
+    initLayout: function() {
         this.initialized = true;
     },
 
@@ -531,7 +554,7 @@ Ext.define('Ext.layout.Layout', {
      * @private
      * Sets the layout owner
      */
-    setOwner : function(owner) {
+    setOwner: function(owner) {
         this.owner = owner;
     },
 
@@ -539,16 +562,16 @@ Ext.define('Ext.layout.Layout', {
      * Returns the set of items to layout (empty by default).
      * @protected
      */
-    getLayoutItems : function() {
+    getLayoutItems: function() {
         return [];
     },
 
-    onAdd: function (item) {
+    onAdd: function(item) {
         item.ownerLayout = this;
     },
 
-    onRemove : Ext.emptyFn,
-    onDestroy : Ext.emptyFn,
+    onRemove: Ext.emptyFn,
+    onDestroy: Ext.emptyFn,
 
     /**
      * Removes layout's itemCls and owning Container's itemCls.
@@ -563,9 +586,11 @@ Ext.define('Ext.layout.Layout', {
 
         if (item.rendered) {
             removeClasses = [].concat(me.itemCls || []);
+
             if (owner.itemCls) {
                 removeClasses = Ext.Array.push(removeClasses, owner.itemCls);
             }
+
             if (removeClasses.length) {
                 el.removeCls(removeClasses);
             }
@@ -613,6 +638,7 @@ Ext.define('Ext.layout.Layout', {
 
         if (me.targetCls) {
             target = me.getTarget();
+
             if (target) {
                 target.removeCls(me.targetCls);
             }
@@ -621,20 +647,23 @@ Ext.define('Ext.layout.Layout', {
         if (!me.onDestroy.$emptyFn) {
             me.onDestroy();
         }
-        
+
         me.callParent();
     },
 
-    sortWeightedItems: function (items, reverseProp) {
-        for (var i = 0, length = items.length; i < length; ++i) {
+    sortWeightedItems: function(items, reverseProp) {
+        var i, length;
+
+        for (i = 0, length = items.length; i < length; ++i) {
             items[i].$i = i;
         }
 
-        Ext.Array.sort(items, function (item1, item2) {
+        Ext.Array.sort(items, function(item1, item2) {
             var ret = item2.weight - item1.weight;
 
             if (!ret) {
                 ret = item1.$i - item2.$i;
+
                 if (item1[reverseProp]) {
                     ret = -ret;
                 }
@@ -647,7 +676,7 @@ Ext.define('Ext.layout.Layout', {
             delete items[i].$i;
         }
     }
-}, function () {
+}, function() {
     var Layout = this;
 
     Layout.prototype.sizeModels = Layout.sizeModels = Ext.layout.SizeModel.sizeModels;

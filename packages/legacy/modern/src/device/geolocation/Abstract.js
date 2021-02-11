@@ -76,11 +76,11 @@ Ext.define('Ext.device.geolocation.Abstract', {
             timeout: defaultConfig.timeout
         });
 
-        // <debug>
+        //<debug>
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #getCurrentPosition');
         }
-        // </debug>
+        //</debug>
 
         return config;
     },
@@ -125,11 +125,11 @@ Ext.define('Ext.device.geolocation.Abstract', {
             timeout: defaultConfig.timeout
         });
 
-        // <debug>
+        //<debug>
         if (!config.callback) {
             Ext.Logger.warn('You need to specify a `callback` function for #watchPosition');
         }
-        // </debug>
+        //</debug>
 
         return config;
     },

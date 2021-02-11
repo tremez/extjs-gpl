@@ -15,11 +15,12 @@
  */
 Ext.define('Ext.toolbar.TextItem', {
     extend: 'Ext.toolbar.Item',
+    alias: 'widget.tbtext',
+    alternateClassName: 'Ext.Toolbar.TextItem',
+
     // Toolbar required here because we'll try to decorate it's alternateClassName
     // with this class' alternate name
     requires: ['Ext.toolbar.Toolbar', 'Ext.XTemplate'],
-    alias: 'widget.tbtext',
-    alternateClassName: 'Ext.Toolbar.TextItem',
 
     /**
      * @cfg {String} text
@@ -30,10 +31,10 @@ Ext.define('Ext.toolbar.TextItem', {
     text: '',
 
     baseCls: Ext.baseCSSPrefix + 'toolbar-text',
-    
+
     ariaRole: null,
 
-    beforeRender : function() {
+    beforeRender: function() {
         var text = this.text;
 
         this.callParent();
@@ -49,7 +50,7 @@ Ext.define('Ext.toolbar.TextItem', {
      *
      * @deprecated 5.1.0 Use {@link #update}
      */
-    setText : function(text) {
+    setText: function(text) {
         this.update(text);
     }
 });

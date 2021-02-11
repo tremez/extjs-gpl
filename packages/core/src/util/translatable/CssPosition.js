@@ -6,18 +6,24 @@
 Ext.define('Ext.util.translatable.CssPosition', {
     extend: 'Ext.util.translatable.Dom',
 
+    alias: 'translatable.cssposition', // also configures Factoryable
+
     doTranslate: function(x, y) {
         var domStyle = this.getElement().dom.style;
 
-        if (typeof x == 'number') {
+        if (typeof x === 'number') {
             domStyle.left = x + 'px';
         }
 
-        if (typeof y == 'number') {
+        if (typeof y === 'number') {
             domStyle.top = y + 'px';
         }
+    },
 
-        this.callParent([x, y]);
+    syncPosition: function() {
+        var domStyle = this.getElement().dom.style;
+
+        return [this.x = parseFloat(domStyle.left), this.y = parseFloat(domStyle.top)];
     },
 
     destroy: function() {

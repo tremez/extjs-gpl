@@ -3,18 +3,12 @@
  * @private
  */
 Ext.define('Ext.layout.container.Editor', {
-
-    /* Begin Definitions */
-
-    alias: 'layout.editor',
-
     extend: 'Ext.layout.container.Container',
-
-    /* End Definitions */
+    alias: 'layout.editor',
 
     autoSizeDefault: {
         width: 'field',
-        height: 'field'    
+        height: 'field'
     },
 
     sizePolicies: {
@@ -52,7 +46,7 @@ Ext.define('Ext.layout.container.Editor', {
         }
     },
 
-    getItemSizePolicy: function (item) {
+    getItemSizePolicy: function(item) {
         var me = this,
             autoSize = me.owner.autoSize,
             key = autoSize && autoSize.width,
@@ -72,14 +66,14 @@ Ext.define('Ext.layout.container.Editor', {
             autoSize = owner.autoSize,
             fieldWidth,
             fieldHeight;
-            
+
         if (autoSize === true) {
             autoSize = me.autoSizeDefault;
         }
 
         // Calculate size of both Editor, and its owned Field
         if (autoSize) {
-            fieldWidth  = me.getDimension(owner, autoSize.width,  'getWidth',  owner.width);
+            fieldWidth = me.getDimension(owner, autoSize.width, 'getWidth', owner.width);
             fieldHeight = me.getDimension(owner, autoSize.height, 'getHeight', owner.height);
         }
 
@@ -95,7 +89,7 @@ Ext.define('Ext.layout.container.Editor', {
                                     fieldHeight || owner.field.getHeight());
     },
 
-    getDimension: function(owner, type, getMethod, ownerSize){
+    getDimension: function(owner, type, getMethod, ownerSize) {
         switch (type) {
             // Size to boundEl's dimension
             case 'boundEl':

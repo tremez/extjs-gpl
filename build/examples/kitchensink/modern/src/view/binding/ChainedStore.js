@@ -1,8 +1,12 @@
 Ext.define('KitchenSink.view.binding.ChainedStore', {
     extend: 'Ext.Container',
+    xtype: 'binding-chained-stores',
 
-    // <example>
-    requires: ['Ext.grid.Grid'],
+    viewModel: {
+        type: 'binding-chainedstore'
+    },
+
+    //<example>
     otherContent: [{
         type: 'ViewModel',
         path: 'modern/src/view/binding/ChainedStoreModel.js'
@@ -10,24 +14,33 @@ Ext.define('KitchenSink.view.binding.ChainedStore', {
         type: 'Model',
         path: 'modern/src/model/Person.js'
     }],
-    // </example>
+
+    profiles: {
+        defaults: {
+            height: 600,
+            width: 500
+        },
+        phone: {
+            defaults: {
+                height: undefined,
+                width: undefined
+            }
+        }
+    },
+
+    cls: 'demo-solid-background',
+    //</example>
+
+    height: '${height}',
+    referenceHolder: true,
+    width: '${width}',
 
     layout: {
-        type: 'vbox',
-        align: 'stretch'
+        type: 'vbox'
     },
-    scrollable: true,
-
-    shadow: true,
-    cls: 'demo-solid-background',
-
-    referenceHolder: true,
-
-    viewModel: 'binding-chainedstore',
 
     items: [{
         xtype: 'grid',
-        minHeight: 225,
         flex: 3,
         title: 'All People',
         bind: '{everyone}',
@@ -46,19 +59,18 @@ Ext.define('KitchenSink.view.binding.ChainedStore', {
         }]
     }, {
         xtype: 'grid',
-        minHeight: 300,
         flex: 4,
-        bind: '{ageFiltered}',
-        titleBar: null,
+        bind: {
+            store: '{ageFiltered}',
+            title: 'People aged {minimumAge} or over'
+        },
         items: [{
-            xtype: 'titlebar',
-            docked: 'top',
-            bind: 'People aged {minimumAge} or over'
-        }, {
             xtype: 'singlesliderfield',
             docked: 'top',
             label: 'Minimum Age',
-            bind: '{minimumAge}'
+            bind: '{minimumAge}',
+            margin: '0 10',
+            liveUpdate: true
         }],
         columns: [{
             text: 'First Name',

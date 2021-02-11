@@ -2,46 +2,48 @@
  * Controls the remote calculations example.
  */
 Ext.define('KitchenSink.view.pivot.RemoteCalculationsController', {
-    extend: 'KitchenSink.view.pivot.PivotController',
+    extend: 'Ext.app.ViewController',
 
     alias: 'controller.remotecalculations',
 
-    onPivotDone: function(){
+    onPivotDone: function() {
         var me = this,
             preview = Ext.ComponentQuery.query('#codePreview')[0],
             viewData = preview.down('#codeRemoteData'),
             viewParams = preview.down('#codeRemoteParams'),
             itemData = {
-                xtype:  'codeContent',
+                xtype: 'codeContent',
                 itemId: 'codeRemoteData',
-                title:  'JSON response',
-                html:   this.getJsonResponse()
+                title: 'JSON response',
+                html: this.getJsonResponse()
             },
             itemParams = {
-                xtype:  'codeContent',
+                xtype: 'codeContent',
                 itemId: 'codeRemoteParams',
-                title:  'Ajax params',
-                html:   this.getAjaxParams()
+                title: 'Ajax params',
+                html: this.getAjaxParams()
             };
 
-        if(!viewParams){
+        if (!viewParams) {
             viewParams = preview.add(Ext.clone(itemParams));
 
             me.getView().codePreviewProcessed.push(itemParams);
-        }else{
+        }
+        else {
             viewParams.setHtml(me.getAjaxParams());
         }
 
-        if(!viewData){
+        if (!viewData) {
             viewData = preview.add(Ext.clone(itemData));
 
             me.getView().codePreviewProcessed.push(itemData);
-        }else{
+        }
+        else {
             viewData.setHtml(me.getJsonResponse());
         }
     },
 
-    getJsonResponse: function(){
+    getJsonResponse: function() {
         var simlet = Ext.ux.ajax.SimManager.getSimlet(this.getView().getMatrix().url),
             text;
 
@@ -57,7 +59,7 @@ Ext.define('KitchenSink.view.pivot.RemoteCalculationsController', {
         return '<pre class="prettyprint">' + text + '</pre>';
     },
 
-    getAjaxParams: function(){
+    getAjaxParams: function() {
         var simlet = Ext.ux.ajax.SimManager.getSimlet(this.getView().getMatrix().url),
             text;
 

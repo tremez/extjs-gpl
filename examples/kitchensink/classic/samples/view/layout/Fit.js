@@ -11,18 +11,19 @@ Ext.define('KitchenSink.view.layout.Fit', {
     //</example>
 
     xtype: 'layout-fit',
-    
+
     layout: 'fit',
     width: 500,
     height: 400,
-    
+    cls: Ext.baseCSSPrefix + 'shadow',
+
     bodyPadding: 25,
-    
+
     items: {
         title: 'Inner Panel',
         html: '<p>This panel is fit within its container.</p>',
         bodyPadding: 15,
-        ui: KitchenSink.profileName == 'neptune' ? 'light' : 'default',
+        ui: KitchenSink.profileName === 'neptune' ? 'light' : 'default',
         border: true
     }
 

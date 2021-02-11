@@ -43,17 +43,17 @@ Ext.define('Ext.theme.neptune.layout.component.Dock', {
     },
 
     handleItemBorders: function() {
-        var me     = this,
-            edges  = 0,
-            maskT  = 8,
-            maskR  = 4,
-            maskB  = 2,
-            maskL  = 1,
-            owner  = me.owner,
-            bodyBorder  = owner.bodyBorder,
+        var me = this,
+            edges = 0,
+            maskT = 8,
+            maskR = 4,
+            maskB = 2,
+            maskL = 1,
+            owner = me.owner,
+            bodyBorder = owner.bodyBorder,
             ownerBorder = owner.border,
-            collapsed   = me.collapsed,
-            edgeMasks   = me.edgeMasks,
+            collapsed = me.collapsed,
+            edgeMasks = me.edgeMasks,
             noBorderCls = me.noBorderClassTable,
             dockedItemsGen = owner.dockedItems.generation,
             b, borderCls, docked, edgesTouched, i, ln, item, dock, lastValue, mask,
@@ -66,7 +66,7 @@ Ext.define('Ext.theme.neptune.layout.component.Dock', {
         addCls = [];
         removeCls = [];
 
-        borderCls   = me.getBorderCollapseTable();
+        borderCls = me.getBorderCollapseTable();
         noBorderCls = me.getBorderClassTable ? me.getBorderClassTable() : noBorderCls;
 
         me.initializedBorders = dockedItemsGen;
@@ -78,6 +78,7 @@ Ext.define('Ext.theme.neptune.layout.component.Dock', {
 
         for (i = 0, ln = docked.length; i < ln; i++) {
             item = docked[i];
+
             if (item.ignoreBorderManagement) {
                 // headers in framed panels ignore border management, so we do not want
                 // to set "satisfied" on the edge in question
@@ -92,51 +93,66 @@ Ext.define('Ext.theme.neptune.layout.component.Dock', {
             if (dock !== 'bottom') {
                 if (edges & maskT) { // if (not touching the top edge)
                     b = item.border;
-                } else {
+                }
+                else {
                     b = ownerBorder;
+
                     if (b !== false) {
                         edgesTouched += maskT;
                     }
                 }
+
                 if (b === false) {
                     mask += maskT;
                 }
             }
+
             if (dock !== 'left') {
                 if (edges & maskR) { // if (not touching the right edge)
                     b = item.border;
-                } else {
+                }
+                else {
                     b = ownerBorder;
+
                     if (b !== false) {
                         edgesTouched += maskR;
                     }
                 }
+
                 if (b === false) {
                     mask += maskR;
                 }
             }
+
             if (dock !== 'top') {
                 if (edges & maskB) { // if (not touching the bottom edge)
                     b = item.border;
-                } else {
+                }
+                else {
                     b = ownerBorder;
+
                     if (b !== false) {
                         edgesTouched += maskB;
                     }
                 }
+
                 if (b === false) {
                     mask += maskB;
                 }
             }
+
             if (dock !== 'right') {
                 if (edges & maskL) { // if (not touching the left edge)
                     b = item.border;
-                } else {
+                }
+                else {
                     b = ownerBorder;
+
                     if (b !== false) {
                         edgesTouched += maskL;
                     }
                 }
+
                 if (b === false) {
                     mask += maskL;
                 }
@@ -144,9 +160,11 @@ Ext.define('Ext.theme.neptune.layout.component.Dock', {
 
             if ((lastValue = item.lastBorderMask) !== mask) {
                 item.lastBorderMask = mask;
+
                 if (lastValue) {
                     removeCls[0] = noBorderCls[lastValue];
                 }
+
                 if (mask) {
                     addCls[0] = noBorderCls[mask];
                 }
@@ -154,9 +172,11 @@ Ext.define('Ext.theme.neptune.layout.component.Dock', {
 
             if ((lastValue = item.lastBorderCollapse) !== edgesTouched) {
                 item.lastBorderCollapse = edgesTouched;
+
                 if (lastValue) {
                     removeCls[removeCls.length] = borderCls[lastValue];
                 }
+
                 if (edgesTouched) {
                     addCls[addCls.length] = borderCls[edgesTouched];
                 }
@@ -165,6 +185,7 @@ Ext.define('Ext.theme.neptune.layout.component.Dock', {
             if (removeCls.length) {
                 item.removeCls(removeCls);
             }
+
             if (addCls.length) {
                 item.addCls(addCls);
             }
@@ -181,57 +202,71 @@ Ext.define('Ext.theme.neptune.layout.component.Dock', {
 
         if (edges & maskT) { // if (not touching the top edge)
             b = bodyBorder;
-        } else {
+        }
+        else {
             b = ownerBorder;
+
             if (b !== false) {
                 edgesTouched += maskT;
             }
         }
+
         if (b === false) {
             mask += maskT;
         }
 
         if (edges & maskR) { // if (not touching the right edge)
             b = bodyBorder;
-        } else {
+        }
+        else {
             b = ownerBorder;
+
             if (b !== false) {
                 edgesTouched += maskR;
             }
         }
+
         if (b === false) {
             mask += maskR;
         }
 
         if (edges & maskB) { // if (not touching the bottom edge)
             b = bodyBorder;
-        } else {
+        }
+        else {
             b = ownerBorder;
+
             if (b !== false) {
                 edgesTouched += maskB;
             }
         }
+
         if (b === false) {
             mask += maskB;
         }
 
         if (edges & maskL) { // if (not touching the left edge)
             b = bodyBorder;
-        } else {
+        }
+        else {
             b = ownerBorder;
+
             if (b !== false) {
                 edgesTouched += maskL;
             }
         }
+
         if (b === false) {
             mask += maskL;
         }
 
         if ((lastValue = me.lastBodyBorderMask) !== mask) {
             me.lastBodyBorderMask = mask;
+
             if (lastValue) {
                 removeCls[0] = noBorderCls[lastValue];
             }
+
             if (mask) {
                 addCls[0] = noBorderCls[mask];
             }
@@ -239,9 +274,11 @@ Ext.define('Ext.theme.neptune.layout.component.Dock', {
 
         if ((lastValue = me.lastBodyBorderCollapse) !== edgesTouched) {
             me.lastBodyBorderCollapse = edgesTouched;
+
             if (lastValue) {
                 removeCls[removeCls.length] = borderCls[lastValue];
             }
+
             if (edgesTouched) {
                 addCls[addCls.length] = borderCls[edgesTouched];
             }
@@ -250,12 +287,13 @@ Ext.define('Ext.theme.neptune.layout.component.Dock', {
         if (removeCls.length) {
             owner.removeBodyCls(removeCls);
         }
+
         if (addCls.length) {
             owner.addBodyCls(addCls);
         }
     },
 
-    onRemove: function (item) {
+    onRemove: function(item) {
         var me = this,
             lastBorderMask = item.lastBorderMask,
             lastBorderCollapse = item.lastBorderCollapse;
@@ -265,6 +303,7 @@ Ext.define('Ext.theme.neptune.layout.component.Dock', {
                 item.lastBorderMask = 0;
                 item.removeCls(me.noBorderClassTable[lastBorderMask]);
             }
+
             if (lastBorderCollapse) {
                 item.lastBorderCollapse = 0;
                 item.removeCls(me.getBorderCollapseTable()[lastBorderCollapse]);

@@ -7,28 +7,56 @@ Ext.define('KitchenSink.view.form.CheckboxGroupForm', {
     extend: 'Ext.form.Panel',
     xtype: 'form-checkboxgroup',
     controller: 'form-checkboxgroup',
-    
+
     //<example>
     exampleTitle: 'Checkbox Groups',
     otherContent: [{
-        type: 'ViewController',
+        type: 'Controller',
         path: 'classic/samples/view/form/CheckboxGroupFormController.js'
     }],
     //</example>
-    
+
+    profiles: {
+        classic: {
+            width: 650,
+            labelWidth: 120,
+            openBoldTag: '',
+            closeBoldTag: '',
+            breakTag: '<br/>'
+        },
+        neptune: {
+            width: 650,
+            labelWidth: 120,
+            openBoldTag: '',
+            closeBoldTag: '',
+            breakTag: '<br/>'
+        },
+        graphite: {
+            width: 750,
+            labelWidth: 150,
+            breakTag: '<br/>'
+        },
+        'classic-material': {
+            width: 750,
+            labelWidth: 150,
+            openBoldTag: '<b>',
+            closeBoldTag: '</b>',
+            breakTag: ''
+        }
+    },
     title: 'Checkbox Group Example',
     frame: true,
-    width: 650,
+    width: '${width}',
     bodyPadding: 10,
-    
+
     fieldDefaults: {
-        labelWidth: 120
+        labelWidth: '${labelWidth}'
     },
-    
+
     items: [{
-        /*====================================================================
+        /* ====================================================================
          * Individual checkbox/radio examples
-         *====================================================================*/
+         *==================================================================== */
 
         // Using checkbox/radio groups will generally be more convenient and flexible than
         // using individual checkbox and radio controls, but this shows that you can
@@ -52,7 +80,7 @@ Ext.define('KitchenSink.view.form.CheckboxGroupForm', {
                 name: 'txt-test1',
                 fieldLabel: 'Alignment Test'
             }, {
-                fieldLabel: 'Favorite Animals',
+                fieldLabel: '${openBoldTag} Favorite Animals ${closeBoldTag}',
                 boxLabel: 'Dog',
                 name: 'fav-animal-dog',
                 inputValue: 'dog'
@@ -86,7 +114,7 @@ Ext.define('KitchenSink.view.form.CheckboxGroupForm', {
                 fieldLabel: 'Alignment Test'
             }, {
                 checked: true,
-                fieldLabel: 'Favorite Color',
+                fieldLabel: '${openBoldTag} Favorite Color ${closeBoldTag}',
                 boxLabel: 'Red',
                 name: 'fav-color',
                 inputValue: 'red'
@@ -101,9 +129,9 @@ Ext.define('KitchenSink.view.form.CheckboxGroupForm', {
             }]
         }]
     }, {
-        /*====================================================================
+        /* ====================================================================
          * CheckGroup example
-         *====================================================================*/
+         *==================================================================== */
         xtype: 'fieldset',
         title: 'Checkbox Groups (initially collapsed)',
         layout: 'anchor',
@@ -116,30 +144,30 @@ Ext.define('KitchenSink.view.form.CheckboxGroupForm', {
             xtype: 'textfield',
             name: 'txt-test3',
             fieldLabel: 'Alignment Test'
-        },{
+        }, {
             // Use the default, automatic layout to distribute the controls evenly
             // across a single row
             xtype: 'checkboxgroup',
             fieldLabel: 'Auto Layout',
             cls: 'x-check-group-alt',
             items: [
-                {boxLabel: 'Item 1', name: 'cb-auto-1'},
-                {boxLabel: 'Item 2', name: 'cb-auto-2', checked: true},
-                {boxLabel: 'Item 3', name: 'cb-auto-3'},
-                {boxLabel: 'Item 4', name: 'cb-auto-4'},
-                {boxLabel: 'Item 5', name: 'cb-auto-5'}
+                { boxLabel: 'Item 1', name: 'cb-auto-1' },
+                { boxLabel: 'Item 2', name: 'cb-auto-2', checked: true },
+                { boxLabel: 'Item 3', name: 'cb-auto-3' },
+                { boxLabel: 'Item 4', name: 'cb-auto-4' },
+                { boxLabel: 'Item 5', name: 'cb-auto-5' }
             ]
-        },{
+        }, {
             xtype: 'checkboxgroup',
             fieldLabel: 'Single Column',
             // Put all controls in a single column with width 100%
             columns: 1,
             items: [
-                {boxLabel: 'Item 1', name: 'cb-col-1'},
-                {boxLabel: 'Item 2', name: 'cb-col-2', checked: true},
-                {boxLabel: 'Item 3', name: 'cb-col-3'}
+                { boxLabel: 'Item 1', name: 'cb-col-1' },
+                { boxLabel: 'Item 2', name: 'cb-col-2', checked: true },
+                { boxLabel: 'Item 3', name: 'cb-col-3' }
             ]
-        },{
+        }, {
             xtype: 'checkboxgroup',
             fieldLabel: 'Multi-Column (horizontal)',
             cls: 'x-check-group-alt',
@@ -147,13 +175,13 @@ Ext.define('KitchenSink.view.form.CheckboxGroupForm', {
             // from left to right before starting the next row
             columns: 3,
             items: [
-                {boxLabel: 'Item 1', name: 'cb-horiz-1'},
-                {boxLabel: 'Item 2', name: 'cb-horiz-2', checked: true},
-                {boxLabel: 'Item 3', name: 'cb-horiz-3'},
-                {boxLabel: 'Item 4', name: 'cb-horiz-4'},
-                {boxLabel: 'Item 5', name: 'cb-horiz-5'}
+                { boxLabel: 'Item 1', name: 'cb-horiz-1' },
+                { boxLabel: 'Item 2', name: 'cb-horiz-2', checked: true },
+                { boxLabel: 'Item 3', name: 'cb-horiz-3' },
+                { boxLabel: 'Item 4', name: 'cb-horiz-4' },
+                { boxLabel: 'Item 5', name: 'cb-horiz-5' }
             ]
-        },{
+        }, {
             xtype: 'checkboxgroup',
             fieldLabel: 'Multi-Column (vertical)',
             // Distribute controls across 3 even columns, filling each column
@@ -161,29 +189,29 @@ Ext.define('KitchenSink.view.form.CheckboxGroupForm', {
             columns: 3,
             vertical: true,
             items: [
-                {boxLabel: 'Item 1', name: 'cb-vert-1'},
-                {boxLabel: 'Item 2', name: 'cb-vert-2', checked: true},
-                {boxLabel: 'Item 3', name: 'cb-vert-3'},
-                {boxLabel: 'Item 4', name: 'cb-vert-4'},
-                {boxLabel: 'Item 5', name: 'cb-vert-5'}
+                { boxLabel: 'Item 1', name: 'cb-vert-1' },
+                { boxLabel: 'Item 2', name: 'cb-vert-2', checked: true },
+                { boxLabel: 'Item 3', name: 'cb-vert-3' },
+                { boxLabel: 'Item 4', name: 'cb-vert-4' },
+                { boxLabel: 'Item 5', name: 'cb-vert-5' }
             ]
-        },{
+        }, {
             xtype: 'checkboxgroup',
-            fieldLabel: 'Multi-Column<br />(custom widths)',
+            fieldLabel: 'Multi-Column${breakTag}(custom widths)',
             cls: 'x-check-group-alt',
             // Specify exact column widths (could also include float values for %)
             columns: [100, 100],
             vertical: true,
             items: [
-                {boxLabel: 'Item 1', name: 'cb-custwidth', inputValue: 1},
-                {boxLabel: 'Item 2', name: 'cb-custwidth', inputValue: 2, checked: true},
-                {boxLabel: 'Item 3', name: 'cb-custwidth', inputValue: 3},
-                {boxLabel: 'Item 4', name: 'cb-custwidth', inputValue: 4},
-                {boxLabel: 'Item 5', name: 'cb-custwidth', inputValue: 5}
+                { boxLabel: 'Item 1', name: 'cb-custwidth', inputValue: 1 },
+                { boxLabel: 'Item 2', name: 'cb-custwidth', inputValue: 2, checked: true },
+                { boxLabel: 'Item 3', name: 'cb-custwidth', inputValue: 3 },
+                { boxLabel: 'Item 4', name: 'cb-custwidth', inputValue: 4 },
+                { boxLabel: 'Item 5', name: 'cb-custwidth', inputValue: 5 }
             ]
-        },{
+        }, {
             xtype: 'checkboxgroup',
-            fieldLabel: 'Custom Layout<br />(w/ validation)',
+            fieldLabel: 'Custom Layout${breakTag}(w/ validation)',
             allowBlank: false,
             msgTarget: 'side',
             autoFitErrors: false,
@@ -196,29 +224,29 @@ Ext.define('KitchenSink.view.form.CheckboxGroupForm', {
             layout: 'column',
             defaultType: 'container',
             items: [{
-                columnWidth: .25,
+                columnWidth: 0.25,
                 items: [
-                    {xtype: 'component', html: 'Heading 1', cls:'x-form-check-group-label'},
-                    {xtype: 'checkboxfield', boxLabel: 'Item 1', name: 'cb-cust-1'},
-                    {xtype: 'checkboxfield', boxLabel: 'Item 2', name: 'cb-cust-2'}
+                    { xtype: 'component', html: 'Heading 1', cls: 'x-form-check-group-label' },
+                    { xtype: 'checkboxfield', boxLabel: 'Item 1', name: 'cb-cust-1' },
+                    { xtype: 'checkboxfield', boxLabel: 'Item 2', name: 'cb-cust-2' }
                 ]
-            },{
-                columnWidth: .4,
+            }, {
+                columnWidth: 0.5,
                 items: [
-                    {xtype: 'component', html: 'Heading 2', cls:'x-form-check-group-label'},
-                    {xtype: 'checkboxfield', boxLabel: 'A long item just for fun', name: 'cb-cust-3'}
+                    { xtype: 'component', html: 'Heading 2', cls: 'x-form-check-group-label' },
+                    { xtype: 'checkboxfield', boxLabel: 'A long item just for fun', name: 'cb-cust-3' }
                 ]
-            },{
-                columnWidth: .25,
+            }, {
+                columnWidth: 0.25,
                 items: [
-                    {xtype: 'component', html: 'Heading 3', cls:'x-form-check-group-label'},
-                    {xtype: 'checkboxfield', boxLabel: 'Item 4', name: 'cb-cust-4'},
-                    {xtype: 'checkboxfield', boxLabel: 'Item 5', name: 'cb-cust-5'}
+                    { xtype: 'component', html: 'Heading 3', cls: 'x-form-check-group-label' },
+                    { xtype: 'checkboxfield', boxLabel: 'Item 4', name: 'cb-cust-4' },
+                    { xtype: 'checkboxfield', boxLabel: 'Item 5', name: 'cb-cust-5' }
                 ]
             }]
         }]
     }],
-    
+
     buttons: [{
         text: 'Save',
         handler: 'onSaveFormClick'

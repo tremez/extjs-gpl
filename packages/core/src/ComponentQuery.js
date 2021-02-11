@@ -251,9 +251,17 @@
  * * `first` Filters out all except the first matching item for a selector.
  * * `last` Filters out all except the last matching item for a selector.
  * * `focusable` Filters out all except Components which by definition and configuration are
- *      potentially able to recieve focus, regardless of their current state
- * * `canfocus` Filters out all except Components which are curently able to recieve focus.
+ *      potentially able to receieve focus, and can be focused at this time. Component can be
+ *      focused when it is rendered, visible, and not disabled. Some Components can be focusable
+ *      even when disabled (e.g. Menu items) via their parent Container configuration.
+ *      Containers such as Panels generally are not focusable by themselves but can use
+ *      focus delegation (`defaultFocus` config). Some Containers such as Menus and Windows
+ *      are focusable by default.
+ * * `canfocus` Filters out all except Components which are curently able to receieve focus.
  *      That is, they are defined and configured focusable, and they are also visible and enabled.
+ *      Note that this selector intentionally bypasses some checks done by `focusable` selector
+ *      and works in a subtly different way. It is used internally by the framework and is not
+ *      a replacement for `:focusable` selector.
  * * `nth-child` Filters Components by ordinal position in the selection.
  * * `scrollable` Filters out all except Components which are scrollable.
  * * `visible` Filters out hidden Components. May test deep visibility using `':visible(true)'`
@@ -287,6 +295,8 @@
  *
  *      // Find every 3rd field in a form
  *      form.query('field:nth-child(3n)');
+ *
+ * **Note:** The `nth-child` selector returns 1-based result sets.
  *
  * Pseudo classes can be combined to further filter the results, e.g., in the
  * form example above we can modify the query to exclude hidden fields:
@@ -405,8 +415,9 @@ Ext.define('Ext.ComponentQuery', {
             maxSize: 100
         }),
 
-        // A function source code pattern with a placeholder which accepts an expression which yields a truth value when applied
-        // as a member on each item in the passed array.
+        // A function source code pattern with a placeholder which accepts an expression which
+        // yields a truth value when applied as a member on each item in the passed array.
+        /* eslint-disable indent */
         filterFnPattern = [
             'var r = [],',
                 'i = 0,',
@@ -421,6 +432,7 @@ Ext.define('Ext.ComponentQuery', {
             '}',
             'return r;'
         ].join(''),
+        /* eslint-enable indent */
 
         filterItems = function(items, operation) {
             // Argument list for the operation is [ itemsArray, operationArg1, operationArg2...]
@@ -435,13 +447,15 @@ Ext.define('Ext.ComponentQuery', {
                 length = items.length,
                 candidate,
                 deep = mode !== '>';
-                
+
             for (; i < length; i++) {
                 candidate = items[i];
+
                 if (candidate.getRefItems) {
                     result = result.concat(candidate.getRefItems(deep));
                 }
             }
+
             return result;
         },
 
@@ -450,12 +464,15 @@ Ext.define('Ext.ComponentQuery', {
                 i = 0,
                 length = items.length,
                 candidate;
+
             for (; i < length; i++) {
                 candidate = items[i];
+
                 while (!!(candidate = candidate.getRefOwner())) {
                     result.push(candidate);
                 }
             }
+
             return result;
         },
 
@@ -465,54 +482,61 @@ Ext.define('Ext.ComponentQuery', {
                 return items.slice();
             }
             else {
+                /* eslint-disable-next-line vars-on-top */
                 var result = [],
                     i = 0,
                     length = items.length,
                     candidate;
+
                 for (; i < length; i++) {
                     candidate = items[i];
-                    if (candidate.isXType(xtype, shallow)) {
+
+                    if (!candidate.destroyed && candidate.isXType(xtype, shallow)) {
                         result.push(candidate);
                     }
                 }
+
                 return result;
             }
         },
 
-        // Filters the passed candidate array and returns only items which have the specified property match
+        // Filters the passed candidate array and returns only items which have the specified
+        // property match
         filterByAttribute = function(items, property, operator, compareTo) {
             var result = [],
-                i = 0,
                 length = items.length,
-                mustBeOwnProperty,
-                presenceOnly,
-                candidate, propValue,
-                j, propLen,
-                config;
+                mustBeOwnProperty, presenceOnly, candidate, propValue, config,
+                i, j, propLen;
 
-            // Prefixing property name with an @ means that the property must be in the candidate, not in its prototype
+            // Prefixing property name with an @ means that the property must be in the candidate,
+            // not in its prototype
             if (property.charAt(0) === '@') {
                 mustBeOwnProperty = true;
                 property = property.substr(1);
             }
+
             if (property.charAt(0) === '?') {
                 mustBeOwnProperty = true;
                 presenceOnly = true;
                 property = property.substr(1);
             }
 
-            for (; i < length; i++) {
+            for (i = 0; i < length; i++) {
                 candidate = items[i];
 
                 // If the candidate is a product of the Ext class system, then
                 // use the configurator to call getters to access the property.
                 // CQ can be used to filter raw Objects.
-                config = candidate.self && candidate.self.getConfigurator && candidate.self.$config.configs[property];
+                config = candidate.self && candidate.self.getConfigurator &&
+                         candidate.self.$config.configs[property];
+
                 if (config) {
                     propValue = candidate[config.names.get]();
-                } else if (mustBeOwnProperty && !candidate.hasOwnProperty(property)) {
+                }
+                else if (mustBeOwnProperty && !candidate.hasOwnProperty(property)) {
                     continue;
-                } else {
+                }
+                else {
                     propValue = candidate[property];
                 }
 
@@ -522,12 +546,13 @@ Ext.define('Ext.ComponentQuery', {
                 // implies property is an array, and we must compare value against each element.
                 else if (operator === '~=') {
                     if (propValue) {
-                        //We need an array
+                        // We need an array
                         if (!Ext.isArray(propValue)) {
                             propValue = propValue.split(' ');
                         }
 
                         for (j = 0, propLen = propValue.length; j < propLen; j++) {
+                            /* eslint-disable-next-line max-len */
                             if (queryOperators[operator](Ext.coerce(propValue[j], compareTo), compareTo)) {
                                 result.push(candidate);
                                 break;
@@ -539,14 +564,18 @@ Ext.define('Ext.ComponentQuery', {
                     if (propValue != null && compareTo.test(propValue)) {
                         result.push(candidate);
                     }
-                } else if (!compareTo ? !!candidate[property] : queryOperators[operator](Ext.coerce(propValue, compareTo), compareTo)) {
+                }
+                /* eslint-disable-next-line max-len */
+                else if (!compareTo ? !!propValue : queryOperators[operator](Ext.coerce(propValue, compareTo), compareTo)) {
                     result.push(candidate);
                 }
             }
+
             return result;
         },
 
-        // Filters the passed candidate array and returns only items which have the specified itemId or id
+        // Filters the passed candidate array and returns only items which have the specified
+        // itemId or id
         filterById = function(items, id, idOnly) {
             var result = [],
                 i = 0,
@@ -556,111 +585,128 @@ Ext.define('Ext.ComponentQuery', {
             for (; i < length; i++) {
                 candidate = items[i];
                 check = idOnly ? candidate.id : candidate.getItemId();
+
                 if (check === id) {
                     result.push(candidate);
                 }
             }
+
             return result;
         },
 
-        // Filters the passed candidate array and returns only items which the named pseudo class matcher filters in
+        // Filters the passed candidate array and returns only items which the named pseudo class
+        // matcher filters in
         filterByPseudo = function(items, name, value) {
             return cq.pseudos[name](items, value);
         },
 
         // Determines leading mode
         // > for direct child, and ^ to switch to ownerCt axis
+        /* eslint-disable-next-line no-useless-escape */
         modeRe = /^(\s?([>\^])\s?|\s|$)/,
 
         // Matches a token with possibly (true|false) appended for the "shallow" parameter
+        /* eslint-disable-next-line no-useless-escape */
         tokenRe = /^(#)?((?:\\\.|[\w\-])+|\*)(?:\((true|false)\))?/,
 
         matchers = [{
             // Checks for .xtype with possibly (true|false) appended for the "shallow" parameter
+            /* eslint-disable-next-line no-useless-escape */
             re: /^\.((?:\\\.|[\w\-])+)(?:\((true|false)\))?/,
             method: filterByXType,
             argTransform: function(args) {
                 //<debug>
                 var selector = args[0];
-                Ext.log.warn('"'+ selector +'" ComponentQuery selector style is deprecated,' +
-                             ' use "' + selector.replace(/^\./, '') + '" without the leading dot instead');
+
+                Ext.log.warn('"' + selector + '" ComponentQuery selector style is deprecated,' +
+                             ' use "' + selector.replace(/^\./, '') +
+                             '" without the leading dot instead');
                 //</debug>
-                
+
                 if (args[1] !== undefined) {
                     args[1] = args[1].replace(unescapeRe, '$1');
                 }
-                
+
                 return args.slice(1);
             }
         }, {
             // Allow [@attribute] to check truthy ownProperty
             // Allow [?attribute] to check for presence of ownProperty
             // Allow [$attribute]
-            // Checks for @|?|$ -> word/hyphen chars -> any special attribute selector characters before
-            // the '=', etc. It strips out whitespace.
+            // Checks for @|?|$ -> word/hyphen chars -> any special attribute selector characters
+            // before the '=', etc. It strips out whitespace.
             // For example:
             //     [attribute=value], [attribute^=value], [attribute$=value], [attribute*=value],
             //     [attribute~=value], [attribute%=value], [attribute!=value]
+            /* eslint-disable-next-line max-len, no-useless-escape */
             re: /^(?:\[((?:[@?$])?[\w\-]*)\s*(?:([\^$*~%!\/]?=)\s*(['"])?((?:\\\]|.)*?)\3)?(?!\\)\])/,
             method: filterByAttribute,
             argTransform: function(args) {
-                var selector  = args[0],
-                    property  = args[1],
-                    operator  = args[2],
-                    //quote     = args[3],
+                var selector = args[0],
+                    property = args[1],
+                    operator = args[2],
                     compareTo = args[4],
                     compareRe;
-                
+
                 // Unescape the attribute value matcher first
                 if (compareTo !== undefined) {
                     compareTo = compareTo.replace(unescapeRe, '$1');
 
                     //<debug>
+                    /* eslint-disable-next-line vars-on-top */
                     var format = Ext.String.format,
-                        msg = "ComponentQuery selector '{0}' has an unescaped ({1}) character at the {2} " +
-                              "of the attribute value pattern. Usually that indicates an error " +
-                              "where the opening quote is not followed by the closing quote. " +
-                              "If you need to match a ({1}) character at the {2} of the attribute " +
-                              "value, escape the quote character in your pattern: (\\{1})",
+                        msg = "ComponentQuery selector '{0}' has an unescaped ({1}) character " +
+                              "at the {2} of the attribute value pattern. Usually that indicates " +
+                              "an error where the opening quote is not followed by the closing " +
+                              "quote. If you need to match a ({1}) character at the {2} of the " +
+                              "attribute value, escape the quote character in your pattern: " +
+                              "(\\{1})",
                         match;
-                
-                    if (match = /^(['"]).*?[^'"]$/.exec(compareTo)) { // jshint ignore:line
+
+                    /* eslint-disable-next-line no-cond-assign */
+                    if (match = /^(['"]).*?[^'"]$/.exec(compareTo)) {
                         Ext.log.warn(format(msg, selector, match[1], 'beginning'));
                     }
-                    else if (match = /^[^'"].*?(['"])$/.exec(compareTo)) { // jshint ignore:line
+                    /* eslint-disable-next-line no-cond-assign */
+                    else if (match = /^[^'"].*?(['"])$/.exec(compareTo)) {
                         Ext.log.warn(format(msg, selector, match[1], 'end'));
                     }
                     //</debug>
                 }
-                
+
                 if (operator === '/=') {
                     compareRe = regexCache.get(compareTo);
+
                     if (compareRe) {
                         compareTo = compareRe;
-                    } else {
+                    }
+                    else {
                         compareTo = regexCache.add(compareTo, new RegExp(compareTo));
                     }
                 }
-                
+
                 return [property, operator, compareTo];
             }
         }, {
             // checks for #cmpItemId
+            /* eslint-disable-next-line no-useless-escape */
             re: /^#((?:\\\.|[\w\-])+)/,
             method: filterById
         }, {
             // checks for :<pseudo_class>(<selector>)
+            /* eslint-disable-next-line no-useless-escape */
             re: /^\:([\w\-]+)(?:\(((?:\{[^\}]+\})|(?:(?!\{)[^\s>\/]*?(?!\})))\))?/,
             method: filterByPseudo,
             argTransform: function(args) {
                 if (args[2] !== undefined) {
                     args[2] = args[2].replace(unescapeRe, '$1');
                 }
-                
+
                 return args.slice(1);
             }
         }, {
             // checks for {<member_expression>}
+            /* eslint-disable-next-line no-useless-escape */
             re: /^(?:\{([^\}]+)\})/,
             method: filterFnPattern
         }];
@@ -671,29 +717,29 @@ Ext.define('Ext.ComponentQuery', {
             cfg = cfg || {};
             Ext.apply(this, cfg);
         },
-        
+
         // Executes this Query upon the selected root.
-        // The root provides the initial source of candidate Component matches which are progressively
-        // filtered by iterating through this Query's operations cache.
+        // The root provides the initial source of candidate Component matches which are
+        // progressively filtered by iterating through this Query's operations cache.
         // If no root is provided, all registered Components are searched via the ComponentManager.
         // root may be a Container who's descendant Components are filtered
-        // root may be a Component with an implementation of getRefItems which provides some nested Components such as the
-        // docked items within a Panel.
+        // root may be a Component with an implementation of getRefItems which provides some nested
+        // Components such as the docked items within a Panel.
         // root may be an array of candidate Components to filter using this Query.
         execute: function(root) {
             var operations = this.operations,
                 result = [],
                 op, i, len;
-            
+
             for (i = 0, len = operations.length; i < len; i++) {
                 op = operations[i];
-                
+
                 result = result.concat(this._execute(root, op));
             }
-            
+
             return result;
         },
-        
+
         _execute: function(root, operations) {
             var i = 0,
                 length = operations.length,
@@ -736,10 +782,11 @@ Ext.define('Ext.ComponentQuery', {
 
                 // If this is the last operation, it means our current working
                 // items are the final matched items. Thus return them!
-                if (i === length -1) {
+                if (i === length - 1) {
                     return workingItems;
                 }
             }
+
             return [];
         },
 
@@ -748,50 +795,57 @@ Ext.define('Ext.ComponentQuery', {
                 result = false,
                 len = operations.length,
                 op, i;
-            
+
             if (len === 0) {
                 return true;
             }
-            
+
             for (i = 0; i < len; i++) {
                 op = operations[i];
-                
+
                 result = this._is(component, root, op);
-                
+
                 if (result) {
                     return result;
                 }
             }
-            
+
             return false;
         },
-        
+
         _is: function(component, root, operations) {
             var len = operations.length,
                 active = [component],
                 operation, i, j, mode, items, item;
-                
+
             // Loop backwards, since we're going up the hierarchy
             for (i = len - 1; i >= 0; --i) {
                 operation = operations[i];
                 mode = operation.mode;
+
                 // Traversing hierarchy
                 if (mode) {
                     if (mode === '^') {
                         active = getItems(active, ' ');
-                    } else if (mode === '>') {
+                    }
+                    else if (mode === '>') {
                         items = [];
+
                         for (j = 0, len = active.length; j < len; ++j) {
                             item = active[j].getRefOwner();
+
                             if (item) {
                                 items.push(item);
                             }
                         }
+
                         active = items;
-                    } else {
+                    }
+                    else {
                         active = getAncestors(active);
                     }
-                } else {
+                }
+                else {
                     active = filterItems(active, operation);
                 }
 
@@ -823,21 +877,24 @@ Ext.define('Ext.ComponentQuery', {
                     return false;
                 }
             }
+
             return true;
         },
-        
+
         getMatches: function(components, operations) {
             var len = operations.length,
                 i;
-                
+
             for (i = 0; i < len; ++i) {
                 components = filterItems(components, operations[i]);
+
                 // Performance enhancement, if we have nothing, we can
                 // never add anything new, so jump out
                 if (components.length === 0) {
                     break;
-                }  
+                }
             }
+
             return components;
         },
 
@@ -861,19 +918,21 @@ Ext.define('Ext.ComponentQuery', {
          * Cache of pseudo class filter functions
          */
         pseudos: {
-            not: function(components, selector){
+            not: function(components, selector) {
                 var i = 0,
                     length = components.length,
                     results = [],
                     index = -1,
                     component;
 
-                for(; i < length; ++i) {
+                for (; i < length; ++i) {
                     component = components[i];
+
                     if (!cq.is(component, selector)) {
                         results[++index] = component;
                     }
                 }
+
                 return results;
             },
             first: function(components) {
@@ -882,6 +941,7 @@ Ext.define('Ext.ComponentQuery', {
                 if (components.length > 0) {
                     ret.push(components[0]);
                 }
+
                 return ret;
             },
             last: function(components) {
@@ -891,6 +951,7 @@ Ext.define('Ext.ComponentQuery', {
                 if (len > 0) {
                     ret.push(components[len - 1]);
                 }
+
                 return ret;
             },
             // This filters for components which by definition and configuration are
@@ -928,19 +989,25 @@ Ext.define('Ext.ComponentQuery', {
 
                 return results;
             },
-            "nth-child" : function(c, a) {
+            "nth-child": function(c, a) {
                 var result = [],
-                    m = nthRe.exec(a === "even" && "2n" || a === "odd" && "2n+1" || !nthRe2.test(a) && "n+" + a || a),
-                    f = (m[1] || 1) - 0, len = m[2] - 0,
-                    i, n, nodeIndex;
+                    m, f, i, len, n, nodeIndex;
 
-                for (i = 0; n = c[i]; i++) { // jshint ignore:line
+                m = nthRe.exec(a === "even" && "2n" || a === "odd" && "2n+1" ||
+                               !nthRe2.test(a) && "n+" + a || a);
+                f = (m[1] || 1) - 0;
+                len = m[2] - 0;
+
+                /* eslint-disable-next-line no-cond-assign */
+                for (i = 0; n = c[i]; i++) {
                     nodeIndex = i + 1;
+
                     if (f === 1) {
                         if (len === 0 || nodeIndex === len) {
                             result.push(n);
                         }
-                    } else if ((nodeIndex + len) % f === 0){
+                    }
+                    else if ((nodeIndex + len) % f === 0) {
                         result.push(n);
                     }
                 }
@@ -965,11 +1032,12 @@ Ext.define('Ext.ComponentQuery', {
                 return results;
             },
             visible: function(cmps, deep) {
-                deep = deep === 'true';
                 var len = cmps.length,
                     results = [],
                     i = 0,
                     c;
+
+                deep = deep === 'true';
 
                 for (; i < len; i++) {
                     c = cmps[i];
@@ -1004,82 +1072,91 @@ Ext.define('Ext.ComponentQuery', {
         query: function(selector, root) {
             // An empty query will match every Component
             if (!selector) {
-                return Ext.ComponentManager.all.getArray();
+                return Ext.ComponentManager.getAll();
             }
-            
+
+            /* eslint-disable-next-line vars-on-top */
             var results = [],
-                noDupResults = [], 
-                dupMatcher = {}, 
+                noDupResults = [],
+                dupMatcher = {},
                 query = cq.cache.get(selector),
                 resultsLn, cmp, i;
 
             if (!query) {
                 query = cq.cache.add(selector, cq.parse(selector));
             }
-            
+
             results = query.execute(root);
-            
+
             // multiple selectors, potential to find duplicates
             // lets filter them out.
             if (query.isMultiMatch()) {
                 resultsLn = results.length;
+
                 for (i = 0; i < resultsLn; i++) {
                     cmp = results[i];
+
                     if (!dupMatcher[cmp.id]) {
                         noDupResults.push(cmp);
                         dupMatcher[cmp.id] = true;
                     }
                 }
+
                 results = noDupResults;
             }
+
             return results;
         },
 
         /**
-         * Traverses the tree rooted at the passed root in pre-order mode, calling the passed function on the nodes at each level.
-         * That is the function is called upon each node **before** being called on its children).
+         * Traverses the tree rooted at the passed root in pre-order mode, calling the passed
+         * function on the nodes at each level. That is the function is called upon each node
+         * **before** being called on its children).
          *
-         * For an object to be queryable, it must implement the `getRefItems` method which returns all
-         * immediate child items.
+         * For an object to be queryable, it must implement the `getRefItems` method which returns
+         * all immediate child items.
          *
-         * This method is used at each level down the cascade. Currently {@link Ext.Component Component}s
-         * and {@link Ext.data.TreeModel TreeModel}s are queryable.
+         * This method is used at each level down the cascade. Currently
+         * {@link Ext.Component Component}s and {@link Ext.data.TreeModel TreeModel}s are queryable.
          *
-         * If you have tree-structured data, you can make your nodes queryable, and use ComponentQuery on them.
+         * If you have tree-structured data, you can make your nodes queryable, and use
+         * ComponentQuery on them.
          *
-         * @param {Object} selector A ComponentQuery selector used to filter candidate nodes before calling the function.
-         * An empty string matches any node.
+         * @param {Object} selector A ComponentQuery selector used to filter candidate nodes before
+         * calling the function. An empty string matches any node.
          * @param {String} root The root queryable object to start from.
          * @param {Function} fn The function to call. Return `false` to abort the traverse.
          * @param {Object} fn.node The node being visited.
          * @param {Object} [scope] The context (`this` reference) in which the function is executed.
-         * @param {Array} [extraArgs] A set of arguments to be appended to the function's argument list to pass down extra data known to the caller
-         * **after** the node being visited.
+         * @param {Array} [extraArgs] A set of arguments to be appended to the function's argument
+         * list to pass down extra data known to the caller **after** the node being visited.
          */
         visitPreOrder: function(selector, root, fn, scope, extraArgs) {
             cq._visit(true, selector, root, fn, scope, extraArgs);
         },
 
         /**
-         * Traverses the tree rooted at the passed root in post-order mode, calling the passed function on the nodes at each level.
-         * That is the function is called upon each node **after** being called on its children).
+         * Traverses the tree rooted at the passed root in post-order mode, calling the passed
+         * function on the nodes at each level. That is the function is called upon each node
+         * **after** being called on its children).
          *
-         * For an object to be queryable, it must implement the `getRefItems` method which returns all
-         * immediate child items.
+         * For an object to be queryable, it must implement the `getRefItems` method which returns
+         * all immediate child items.
          *
-         * This method is used at each level down the cascade. Currently {@link Ext.Component Component}s
-         * and {@link Ext.data.TreeModel TreeModel}s are queryable.
+         * This method is used at each level down the cascade. Currently
+         * {@link Ext.Component Component}s and {@link Ext.data.TreeModel TreeModel}s are queryable.
          *
-         * If you have tree-structured data, you can make your nodes queryable, and use ComponentQuery on them.
+         * If you have tree-structured data, you can make your nodes queryable, and use
+         * ComponentQuery on them.
          *
-         * @param {Object} selector A ComponentQuery selector used to filter candidate nodes before calling the function.
-         * An empty string matches any node.
+         * @param {Object} selector A ComponentQuery selector used to filter candidate nodes
+         * before calling the function. An empty string matches any node.
          * @param {String} root The root queryable object to start from.
          * @param {Function} fn The function to call. Return `false` to abort the traverse.
          * @param {Object} fn.node The node being visited.
          * @param {Object} [scope] The context (`this` reference) in which the function is executed.
-         * @param {Array} [extraArgs] A set of arguments to be appended to the function's argument list to pass down extra data known to the caller
-         * **after** the node being visited.
+         * @param {Array} [extraArgs] A set of arguments to be appended to the function's argument
+         * list to pass down extra data known to the caller **after** the node being visited.
          */
         visitPostOrder: function(selector, root, fn, scope, extraArgs) {
             cq._visit(false, selector, root, fn, scope, extraArgs);
@@ -1111,6 +1188,7 @@ Ext.define('Ext.ComponentQuery', {
             if (extraArgs) {
                 Ext.Array.push(callArgs, extraArgs);
             }
+
             if (preOrder) {
                 if (rootMatch) {
                     if (fn.apply(scope || root, callArgs) === false) {
@@ -1118,11 +1196,14 @@ Ext.define('Ext.ComponentQuery', {
                     }
                 }
             }
+
             for (i = 0; i < len; i++) {
+                /* eslint-disable-next-line max-len */
                 if (cq._visit.call(cq, preOrder, selector, children[i], fn, scope, extraArgs) === false) {
                     return false;
                 }
             }
+
             if (!preOrder) {
                 if (rootMatch) {
                     if (fn.apply(scope || root, callArgs) === false) {
@@ -1137,34 +1218,43 @@ Ext.define('Ext.ComponentQuery', {
          * An empty selector will always match.
          *
          * @param {Ext.Component} component The Component to test
-         * @param {String} selector The selector string to test against.
+         * @param {String/Function} selector The selector string to test against.
+         * Or a filter function which returns `true` if the component matches.
          * @param {Ext.Component} [root=null] The root component.
          * @return {Boolean} True if the Component matches the selector.
          * @member Ext.ComponentQuery
          */
         is: function(component, selector, root) {
+            var query;
+
             if (!selector) {
                 return true;
             }
-            
-            var query = cq.cache.get(selector);
-            if (!query) {
-                query = cq.cache.add(selector, cq.parse(selector));
+
+            if (typeof selector === 'function') {
+                return selector(component);
             }
-            
-            return query.is(component, root);
+            else {
+                query = cq.cache.get(selector);
+
+                if (!query) {
+                    query = cq.cache.add(selector, cq.parse(selector));
+                }
+
+                return query.is(component, root);
+            }
         },
 
         parse: function(selector) {
             var operations = [],
                 selectors, sel, i, len;
-            
+
             selectors = Ext.splitAndUnescape(selector, ',');
-            
+
             for (i = 0, len = selectors.length; i < len; i++) {
                 // Trim the whitespace as the parser expects it.
                 sel = Ext.String.trim(selectors[i]);
-                
+
                 // Usually, a dangling comma at the end of a selector means a typo.
                 // In that case, the last sel value will be an empty string; the parser
                 // will silently ignore it which is not good, so we throw an error here.
@@ -1173,7 +1263,7 @@ Ext.define('Ext.ComponentQuery', {
                     Ext.raise('Invalid ComponentQuery selector: ""');
                 }
                 //</debug>
-                
+
                 operations.push(cq._parse(sel));
             }
 
@@ -1183,7 +1273,7 @@ Ext.define('Ext.ComponentQuery', {
                 operations: operations
             });
         },
-        
+
         _parse: function(selector) {
             var operations = [],
                 trim = Ext.String.trim,
@@ -1227,7 +1317,8 @@ Ext.define('Ext.ComponentQuery', {
                     }
 
                     // Now we slice of the part we just converted into an operation
-                    selector = selector.replace(tokenMatch[0], '').replace(stripLeadingSpaceRe, '$1');
+                    selector = selector.replace(tokenMatch[0], '')
+                                       .replace(stripLeadingSpaceRe, '$1');
                 }
 
                 // If the next part of the query is not a space or > or ^, it means we
@@ -1253,20 +1344,26 @@ Ext.define('Ext.ComponentQuery', {
                             else {
                                 args = selectorMatch.slice(1);
                             }
-                            
+
                             operations.push({
                                 method: Ext.isString(matcher.method)
-                                    // Turn a string method into a function by formatting the string with our selector matche expression
-                                    // A new method is created for different match expressions, eg {id=='textfield-1024'}
+                                    // Turn a string method into a function by formatting the
+                                    // string with our selector matche expression
+                                    // A new method is created for different match expressions,
+                                    // eg {id=='textfield-1024'}
                                     // Every expression may be different in different selectors.
+                                    /* eslint-disable-next-line max-len */
                                     ? Ext.functionFactory('items', Ext.String.format.apply(Ext.String, [method].concat(selectorMatch.slice(1))))
                                     : matcher.method,
                                 args: args
                             });
-                            
-                            selector = selector.replace(selectorMatch[0], '').replace(stripLeadingSpaceRe, '$1');
+
+                            selector = selector.replace(selectorMatch[0], '')
+                                               .replace(stripLeadingSpaceRe, '$1');
+
                             break; // Break on match
                         }
+
                         // Exhausted all matches: It's an error
                         if (i === (length - 1)) {
                             Ext.raise('Invalid ComponentQuery selector: "' + arguments[0] + '"');
@@ -1280,14 +1377,14 @@ Ext.define('Ext.ComponentQuery', {
                 // ownerCt axis as the candidate source.
                 if (modeMatch[1]) { // Assignment, and test for truthiness!
                     operations.push({
-                        mode: modeMatch[2]||modeMatch[1]
+                        mode: modeMatch[2] || modeMatch[1]
                     });
-                    
+
                     // When we have consumed the mode character, clean up leading spaces
                     selector = selector.replace(modeMatch[0], '').replace(stripLeadingSpaceRe, '');
                 }
             }
-            
+
             return operations;
         }
     });
@@ -1303,7 +1400,7 @@ Ext.define('Ext.ComponentQuery', {
      * @method all
      * @member Ext
      */
-    Ext.all = function () {
+    Ext.all = function() {
         return cq.query.apply(cq, arguments);
     };
 
@@ -1319,8 +1416,9 @@ Ext.define('Ext.ComponentQuery', {
      * @method first
      * @member Ext
      */
-    Ext.first = function () {
+    Ext.first = function() {
         var matches = cq.query.apply(cq, arguments);
+
         return (matches && matches[0]) || null;
-    }
+    };
 });

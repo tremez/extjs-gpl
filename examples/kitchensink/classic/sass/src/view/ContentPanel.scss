@@ -1,5 +1,49 @@
-#content-panel-body {
-    background-image: url(get-resource-path('images/square.gif', 'toolkit'));
+.x-ie8, .x-ie9 {
+    #content-panel-body {
+        background-image: url(get-resource-path('images/square.gif', 'toolkit'));
+    }
+}
+
+.x-safari #content-panel-body {
+    // iOS safari has some repaint issues while animating causing the background
+    // to disappear. Forcing into hardware mode seems to resolve it.
+    transform: translateZ(0);
+}
+
+.x-chrome, .x-gecko, .x-safari, .x-opera, .x-ie10, .x-ie11, .x-edge {
+    #content-panel-body {
+        background-color: #e9e9e9;
+        // The 1.1px is needed for IE10/11 to render correctly
+        background-image:
+            linear-gradient(00deg, #f4f4f4 1.1px, transparent 0),
+            linear-gradient(90deg, #f4f4f4 1.1px, transparent 0);
+        background-size: 20px 20px;
+    }
+}
+
+@if $theme-name == 'theme-aria' {
+    #content-panel-body {
+        background-image: url(get-resource-path('images/square-dark.gif', 'toolkit')) !important;
+    }
+}
+@if $theme-name == 'theme-graphite' {
+    #content-panel-body {
+        background-image: url(get-resource-path('images/square-dark.gif', 'toolkit')) !important;
+    }
+    .content-panel-body {
+        background: #a1a0a0;
+    }
+}
+
+@if $theme-name == 'theme-material' {
+    .dark-mode {
+        #content-panel-body {
+            background-color: #2d2d2d;
+            background-image:
+            linear-gradient(00deg, #3a3a3a 1.1px, transparent 0),
+            linear-gradient(90deg, #3a3a3a 1.1px, transparent 0);
+        }
+    }
 }
 
 #content-panel-innerCt {
@@ -9,4 +53,3 @@
         margin: auto;
     }
 }
-

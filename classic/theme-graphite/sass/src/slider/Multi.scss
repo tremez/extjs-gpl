@@ -1,0 +1,27 @@
+// IE11 needs color to be set for thumb element itself,
+// setting it for :before pseudo is not working as expected
+// z-index of the pseudo also has to be adjusted
+.#{$prefix}ie10p {
+    .#{$prefix}slider-thumb.#{$prefix}slider-thumb-over {
+        color: $slider-thumb-glyph-color-over;
+        
+        &:before {
+            position: relative;
+            z-index: 100;
+        }
+    }
+}
+
+.#{$prefix}keyboard-mode {
+    .#{$prefix}slider-focus {
+        .#{$prefix}slider-thumb {
+            border-width: $slider-thumb-border-width-focus;
+
+            &.#{$prefix}slider-thumb-over {
+                background-color: $slider-thumb-background-color-focus;
+                border-width: $slider-thumb-border-width-focus-over;
+                border-color: $slider-thumb-border-color-focus-over;
+            }
+        }
+    }
+}

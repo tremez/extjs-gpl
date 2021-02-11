@@ -7,9 +7,9 @@ Ext.application({
     name: 'ResponsiveApp',
 
     extend: 'ResponsiveApp.Application',
-    
+
     autoCreateViewport: 'ResponsiveApp.view.main.Main'
-	
+
     //-------------------------------------------------------------------------
     // Most customizations should be made to ResponsiveApp.Application. If you need to
     // customize this file, doing so below this section reduces the likelihood

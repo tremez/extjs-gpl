@@ -1,5 +1,6 @@
 /**
- * A class which handles submission of data from {@link Ext.form.Basic Form}s and processes the returned response.
+ * A class which handles submission of data from {@link Ext.form.Basic Form}s and processes
+ * the returned response.
  *
  * Instances of this class are only created by a {@link Ext.form.Basic Form} when
  * {@link Ext.form.Basic#submit submit}ting.
@@ -14,7 +15,8 @@
  *
  * # JSON Packets
  *
- * By default, response packets are assumed to be JSON, so a typical response packet may look like this:
+ * By default, response packets are assumed to be JSON, so a typical response packet may look
+ * like this:
  *
  *     {
  *         success: false,
@@ -24,8 +26,9 @@
  *         }
  *     }
  *
- * Other data may be placed into the response for processing by the {@link Ext.form.Basic}'s callback or event handler
- * methods. The object decoded from this JSON is available in the {@link Ext.form.action.Action#result result} property.
+ * Other data may be placed into the response for processing by the {@link Ext.form.Basic}'s
+ * callback or event handler methods. The object decoded from this JSON is available in the
+ * {@link Ext.form.action.Action#result result} property.
  *
  * Alternatively, if an {@link Ext.form.Basic#errorReader errorReader} is specified as an
  * {@link Ext.data.reader.Xml XmlReader}:
@@ -45,21 +48,32 @@
  *     <errors>
  *         <field>
  *             <id>clientCode</id>
- *             <msg><![CDATA[Code not found. <br /><i>This is a test validation message from the server </i>]]></msg>
+ *             <msg>
+ *                 <![CDATA[
+ *                     Code not found. <br />
+ *                     <i>This is a test validation message from the server </i>
+ *                 ]]>
+ *             </msg>
  *         </field>
  *         <field>
  *             <id>portOfLoading</id>
- *             <msg><![CDATA[Port not found. <br /><i>This is a test validation message from the server </i>]]></msg>
+ *             <msg>
+ *                 <![CDATA[
+ *                     Port not found. <br />
+ *                     <i>This is a test validation message from the server </i>
+ *                 ]]>
+ *             </msg>
  *         </field>
  *     </errors>
  *     </message>
  *
- * Other elements may be placed into the response XML for processing by the {@link Ext.form.Basic}'s callback or event
- * handler methods. The XML document is available in the {@link Ext.form.Basic#errorReader errorReader}'s
- * {@link Ext.data.reader.Xml#xmlData xmlData} property.
+ * Other elements may be placed into the response XML for processing by the {@link Ext.form.Basic}'s
+ * callback or event handler methods. The XML document is available in the
+ * {@link Ext.form.Basic#errorReader errorReader}'s {@link Ext.data.reader.Xml#xmlData xmlData}
+ * property.
  */
 Ext.define('Ext.form.action.Submit', {
-    extend:'Ext.form.action.Action',
+    extend: 'Ext.form.action.Action',
     alternateClassName: 'Ext.form.Action.Submit',
     alias: 'formaction.submit',
 
@@ -67,17 +81,19 @@ Ext.define('Ext.form.action.Submit', {
 
     /**
      * @cfg {Boolean} [clientValidation=true]
-     * Determines whether a Form's fields are validated in a final call to {@link Ext.form.Basic#isValid isValid} prior
-     * to submission. Pass false in the Form's submit options to prevent this.
+     * Determines whether a Form's fields are validated in a final call
+     * to {@link Ext.form.Basic#isValid isValid} prior to submission. Pass false in the Form's
+     * submit options to prevent this.
      */
 
-    run : function(){
+    run: function() {
         var me = this,
             form = me.form;
-            
+
         if (me.clientValidation === false || form.isValid()) {
             me.doSubmit();
-        } else {
+        }
+        else {
             // client validation failed
             me.failureType = Ext.form.action.Action.CLIENT_INVALID;
             form.afterAction(me, false);
@@ -106,43 +122,53 @@ Ext.define('Ext.form.action.Submit', {
             formInfo = me.buildForm();
             ajaxOptions.form = formInfo.formEl;
             ajaxOptions.isUpload = true;
-        } else {
+        }
+        else {
             ajaxOptions[paramsProp] = me.getParams(jsonSubmit);
         }
 
         Ext.Ajax.request(ajaxOptions);
+
         if (formInfo) {
             me.cleanup(formInfo);
         }
     },
-    
+
     cleanup: function(formInfo) {
         var formEl = formInfo.formEl,
             uploadEls = formInfo.uploadEls,
             uploadFields = formInfo.uploadFields,
             len = uploadFields.length,
             i, field;
-            
+
         for (i = 0; i < len; ++i) {
             field = uploadFields[i];
+
             if (!field.clearOnSubmit) {
                 field.restoreInput(uploadEls[i]);
-            }    
+            }
         }
-        
+
         if (formEl) {
             Ext.removeNode(formEl);
-        }    
+        }
     },
 
     /**
      * @private
-     * Builds the full set of parameters from the field values plus any additional configured params.
+     * Builds the full set of parameters from the field values plus any additional
+     * configured params.
      */
     getParams: function(useModelValues) {
         var falseVal = false,
             configParams = this.callParent(),
-            fieldParams = this.form.getValues(falseVal, falseVal, this.submitEmptyText !== falseVal, useModelValues, /*isSubmitting*/ true);
+            fieldParams;
+
+        fieldParams = this.form.getValues(
+            falseVal, falseVal, this.submitEmptyText !== falseVal, useModelValues,
+            /* isSubmitting */ true
+        );
+
         return Ext.apply({}, fieldParams, configParams);
     },
 
@@ -167,7 +193,7 @@ Ext.define('Ext.form.action.Submit', {
             uploadEls = [],
             fields = basicForm.getFields().items,
             i,
-            len   = fields.length,
+            len = fields.length,
             field, key, value, v, vLen,
             el;
 
@@ -185,10 +211,12 @@ Ext.define('Ext.form.action.Submit', {
 
                 if (Ext.isArray(value)) {
                     vLen = value.length;
+
                     for (v = 0; v < vLen; v++) {
                         fieldsSpec.push(me.getFieldConfig(key, value[v]));
                     }
-                } else {
+                }
+                else {
                     fieldsSpec.push(me.getFieldConfig(key, value));
                 }
             }
@@ -199,18 +227,18 @@ Ext.define('Ext.form.action.Submit', {
             role: 'presentation',
             action: me.getUrl(),
             method: me.getMethod(),
-            target: me.target ?
-                        (Ext.isString(me.target) ? me.target : Ext.fly(me.target).dom.name) :
-                        '_self',
+            target: me.target
+                ? (Ext.isString(me.target) ? me.target : Ext.fly(me.target).dom.name)
+                : '_self',
             style: 'display:none',
             cn: fieldsSpec
         };
 
-        // <debug>
+        //<debug>
         if (!formSpec.target) {
             Ext.raise('Invalid form target.');
         }
-        // </debug>
+        //</debug>
 
         // Set the proper encoding for file uploads
         if (uploadFields.length) {
@@ -221,8 +249,9 @@ Ext.define('Ext.form.action.Submit', {
         formEl = Ext.DomHelper.append(Ext.getBody(), formSpec);
 
         // Special handling for file upload fields: since browser security measures prevent setting
-        // their values programatically, and prevent carrying their selected values over when cloning,
-        // we have to move the actual field instances out of their components and into the form.
+        // their values programatically, and prevent carrying their selected values over
+        // when cloning, we have to move the actual field instances out of their components
+        // and into the form.
         len = uploadFields.length;
 
         for (i = 0; i < len; ++i) {
@@ -255,15 +284,16 @@ Ext.define('Ext.form.action.Submit', {
             formActive = form && !form.destroying && !form.destroyed,
             success = true,
             result = this.processResponse(response);
-        
+
         if (result !== true && !result.success) {
             if (result.errors && formActive) {
                 form.markInvalid(result.errors);
             }
+
             this.failureType = Ext.form.action.Action.SERVER_INVALID;
             success = false;
         }
-        
+
         if (formActive) {
             form.afterAction(this, success);
         }
@@ -276,34 +306,40 @@ Ext.define('Ext.form.action.Submit', {
         var form = this.form,
             errorReader = form.errorReader,
             rs, errors, i, len, records, result;
-            
+
         if (errorReader) {
             rs = errorReader.read(response);
             records = rs.records;
             errors = [];
+
             if (records) {
-                for(i = 0, len = records.length; i < len; i++) {
+                for (i = 0, len = records.length; i < len; i++) {
                     errors[i] = records[i].data;
                 }
             }
+
             if (errors.length < 1) {
                 errors = null;
             }
+
             result = {
-                success : rs.success,
-                errors : errors
+                success: rs.success,
+                errors: errors
             };
-        } else {
+        }
+        else {
             try {
-                result = Ext.decode(response.responseText);    
-            } catch (e) {
+                result = Ext.decode(response.responseText);
+            }
+            catch (e) {
                 result = {
                     success: false,
                     errors: []
                 };
             }
-            
+
         }
+
         return result;
     }
 });

@@ -6,34 +6,34 @@ Ext.require([
     'Ext.ux.CheckColumn'
 ]);
 
-//we want to setup a model and store instead of using dataUrl
+// we want to setup a model and store instead of using dataUrl
 Ext.define('Task', {
     extend: 'Ext.data.TreeModel',
     fields: [
-        {name: 'task',     type: 'string'},
-        {name: 'user',     type: 'string'},
-        {name: 'duration', type: 'string'},
-        {name: 'done',     type: 'boolean'}
+        { name: 'task', type: 'string' },
+        { name: 'user', type: 'string' },
+        { name: 'duration', type: 'string' },
+        { name: 'done', type: 'boolean' }
     ]
 });
 
 Ext.onReady(function() {
+    var store;
+
     Ext.tip.QuickTipManager.init();
 
-    
-
-    var store = Ext.create('Ext.data.TreeStore', {
+    store = Ext.create('Ext.data.TreeStore', {
         model: 'Task',
         proxy: {
             type: 'ajax',
-            //the store will get the content from the .json file
+            // the store will get the content from the .json file
             url: 'treegrid.json'
         },
         folderSort: true
     });
 
-    //Ext.ux.tree.TreeGrid is no longer a Ux. You can simply use a tree.TreePanel
-    var tree = Ext.create('Ext.tree.Panel', {
+    // Ext.ux.tree.TreeGrid is no longer a Ux. You can simply use a tree.TreePanel
+    Ext.create('Ext.tree.Panel', {
         title: 'Core Team Projects',
         width: 500,
         height: 300,
@@ -44,29 +44,34 @@ Ext.onReady(function() {
         store: store,
         multiSelect: true,
         columns: [{
-            xtype: 'treecolumn', //this is so we know which column will show the tree
+            xtype: 'treecolumn', // this is so we know which column will show the tree
             text: 'Task',
             width: 200,
             sortable: true,
             dataIndex: 'task',
             locked: true
         }, {
-            //we must use the templateheader component so we can use a custom tpl
+        // we must use the templateheader component so we can use a custom tpl
             xtype: 'templatecolumn',
             text: 'Duration',
             width: 150,
             sortable: true,
             dataIndex: 'duration',
             align: 'center',
-            //add in the custom tpl for the rows
+            // add in the custom tpl for the rows
             tpl: Ext.create('Ext.XTemplate', '{duration:this.formatHours}', {
                 formatHours: function(v) {
+                    var min;
+
                     if (v < 1) {
                         return Math.round(v * 60) + ' mins';
-                    } else if (Math.floor(v) !== v) {
-                        var min = v - Math.floor(v);
+                    }
+                    else if (Math.floor(v) !== v) {
+                        min = v - Math.floor(v);
+
                         return Math.floor(v) + 'h ' + Math.round(min * 60) + 'm';
-                    } else {
+                    }
+                    else {
                         return v + ' hour' + (v === 1 ? '' : 's');
                     }
                 }
@@ -91,7 +96,7 @@ Ext.onReady(function() {
             align: 'center',
             icon: '../simple-tasks/resources/images/edit_task.png',
             handler: function(grid, rowIndex, colIndex, actionItem, event, record, row) {
-                Ext.Msg.alert('Editing' + (record.get('done') ? ' completed task' : '') , record.get('task'));
+                Ext.Msg.alert('Editing' + (record.get('done') ? ' completed task' : ''), record.get('task'));
             },
             // Only leaf level tasks may be edited
             isDisabled: function(view, rowIdx, colIdx, item, record) {

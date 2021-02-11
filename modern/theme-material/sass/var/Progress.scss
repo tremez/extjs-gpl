@@ -5,5 +5,5 @@ $progress-background-color: dynamic($base-light-color);
 $progress-bar-background-color: dynamic($base-color);
 $progress-text-front-color: dynamic(#fff);
 $progress-text-back-color: dynamic(#111);
-$progress-text-line-height: dynamic(px-to-em(20px, 12px));
-$progress-text-line-height-big: dynamic(px-to-em(24px, 14px));
+$progress-text-line-height: dynamic(20px);
+$progress-text-line-height-big: dynamic(24px);

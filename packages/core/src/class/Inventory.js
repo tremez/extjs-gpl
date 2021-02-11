@@ -3,7 +3,7 @@
  * @class Ext.Inventory
  * @private
  */
-Ext.Inventory = function () {
+Ext.Inventory = function() {
 // @define Ext.Script
 // @define Ext.Inventory
 // @require Ext.Function
@@ -11,7 +11,7 @@ Ext.Inventory = function () {
 
     me.names = [];
     me.paths = {};
-    
+
     me.alternateToName = {};
     me.aliasToName = {};
     me.nameToAliases = {};
@@ -27,15 +27,15 @@ Ext.Inventory.prototype = {
     dotRe: /\./g,
     wildcardRe: /\*/g,
 
-    addAlias: function (className, alias, update) {
+    addAlias: function(className, alias, update) {
         return this.addMapping(className, alias, this.aliasToName, this.nameToAliases, update);
     },
 
-    addAlternate: function (className, alternate) {
+    addAlternate: function(className, alternate) {
         return this.addMapping(className, alternate, this.alternateToName, this.nameToAlternates);
     },
 
-    addMapping: function (className, alternate, toName, nameTo, update) {
+    addMapping: function(className, alternate, toName, nameTo, update) {
         var name = className.$className || className,
             mappings = name,
             array = this._array1,
@@ -49,6 +49,7 @@ Ext.Inventory.prototype = {
 
         for (cls in mappings) {
             aliases = mappings[cls];
+
             if (Ext.isString(aliases)) {
                 array[0] = aliases;
                 aliases = array;
@@ -56,7 +57,7 @@ Ext.Inventory.prototype = {
 
             length = aliases.length;
             nameMapping = nameTo[cls] || (nameTo[cls] = []);
-            
+
             for (i = 0; i < length; ++i) {
                 if (!(a = aliases[i])) {
                     continue;
@@ -64,7 +65,7 @@ Ext.Inventory.prototype = {
 
                 if (toName[a] !== cls) {
                     //<debug>
-                    if (!update && toName[a]) {
+                    if (!update && toName[a] && ('Ext.Gadget' !== a)) {
                         Ext.log.warn("Overriding existing mapping: '" + a + "' From '" +
                             toName[a] + "' to '" + cls + "'. Is this intentional?");
                     }
@@ -83,11 +84,11 @@ Ext.Inventory.prototype = {
      * @param {String} name
      * @return {Array} aliases
      */
-    getAliasesByName: function (name) {
+    getAliasesByName: function(name) {
         return this.nameToAliases[name] || null;
     },
 
-    getAlternatesByName: function (name) {
+    getAlternatesByName: function(name) {
         return this.nameToAlternates[name] || null;
     },
 
@@ -107,7 +108,7 @@ Ext.Inventory.prototype = {
      * @param {String} alternate
      * @return {String} className
      */
-    getNameByAlternate: function (alternate) {
+    getNameByAlternate: function(alternate) {
         return this.alternateToName[alternate] || '';
     },
 
@@ -132,7 +133,7 @@ Ext.Inventory.prototype = {
      * specified `exclude` object.
      * @return {String[]} An array of class names.
      */
-    getNamesByExpression: function (expression, exclude, accumulate) {
+    getNamesByExpression: function(expression, exclude, accumulate) {
         var me = this,
             aliasToName = me.aliasToName,
             alternateToName = me.alternateToName,
@@ -158,20 +159,24 @@ Ext.Inventory.prototype = {
                     map[name] = 1;
                     names.push(name);
                 }
-            } else {
+            }
+            else {
                 regex = new RegExp('^' + expr.replace(wildcardRe, '(.*?)') + '$');
 
                 for (name in nameToAliases) {
                     if (!(name in map) && !(exclude && (name in exclude))) {
                         if (!(match = regex.test(name))) {
                             n = (list = nameToAliases[name]).length;
+
                             while (!match && n-- > 0) {
                                 match = regex.test(list[n]);
                             }
 
                             list = nameToAlternates[name];
+
                             if (list && !match) {
                                 n = list.length;
+
                                 while (!match && n-- > 0) {
                                     match = regex.test(list[n]);
                                 }
@@ -190,7 +195,7 @@ Ext.Inventory.prototype = {
         return names;
     },
 
-    getPath: function (className) {
+    getPath: function(className) {
         var me = this,
             paths = me.paths,
             ret = '',
@@ -200,12 +205,13 @@ Ext.Inventory.prototype = {
             ret = paths[className];
         }
         else {
-            prefix = me.nameToPrefix[className] || (me.nameToPrefix[className] = me.getPrefix(className));
-            
+            prefix = me.nameToPrefix[className] ||
+                     (me.nameToPrefix[className] = me.getPrefix(className));
+
             if (prefix) {
                 className = className.substring(prefix.length + 1);
                 ret = paths[prefix];
-                
+
                 if (ret) {
                     ret += '/';
                 }
@@ -217,7 +223,7 @@ Ext.Inventory.prototype = {
         return ret;
     },
 
-    getPrefix: function (className) {
+    getPrefix: function(className) {
         if (className in this.paths) {
             return className;
         }
@@ -225,28 +231,27 @@ Ext.Inventory.prototype = {
             return this.nameToPrefix[className];
         }
 
+        /* eslint-disable-next-line vars-on-top */
         var prefixes = this.getPrefixes(),
             length = className.length,
-            items, currChar, currSubstr, prefix, j, jlen;
-        
+            items, currChar, prefix, j, jlen;
+
         // Walk the prefixes backwards so we consider the longest ones first.
         // Prefixes are kept in a sparse array grouped by length so we don't have to
         // iterate over all of them, just the ones we need.
         while (length-- > 0) {
             items = prefixes[length];
-            
+
             if (items) {
                 currChar = className.charAt(length);
-                
+
                 if (currChar !== '.') {
                     continue;
                 }
-                
-                currSubstr = className.substring(0, length);
-                
+
                 for (j = 0, jlen = items.length; j < jlen; j++) {
                     prefix = items[j];
-                    
+
                     if (prefix === className.substring(0, length)) {
                         return prefix;
                     }
@@ -257,7 +262,7 @@ Ext.Inventory.prototype = {
         return '';
     },
 
-    getPrefixes: function () {
+    getPrefixes: function() {
         var me = this,
             prefixes = me.prefixes,
             names, name, nameLength, items, i, len;
@@ -265,13 +270,13 @@ Ext.Inventory.prototype = {
         if (!prefixes) {
             names = me.names.slice(0);
             me.prefixes = prefixes = [];
-            
+
             for (i = 0, len = names.length; i < len; i++) {
                 name = names[i];
                 nameLength = name.length;
-                
+
                 items = prefixes[nameLength] || (prefixes[nameLength] = []);
-                
+
                 items.push(name);
             }
         }
@@ -279,7 +284,7 @@ Ext.Inventory.prototype = {
         return prefixes;
     },
 
-    removeName: function (name) {
+    removeName: function(name) {
         var me = this,
             aliasToName = me.aliasToName,
             alternateToName = me.alternateToName,
@@ -298,23 +303,23 @@ Ext.Inventory.prototype = {
                 // Aliases can be reassigned so if this class is the current mapping of
                 // the alias, remove it. Since there is no chain to restore what was
                 // removed this is not perfect.
-                if (name === (a = aliases[i])) {
+                if (name === aliasToName[a = aliases[i]]) {
                     delete aliasToName[a];
                 }
             }
         }
 
         if (alternates) {
-            for (i = alternates.length; i--; ) {
+            for (i = alternates.length; i--;) {
                 // Like aliases, alternate class names can also be remapped.
-                if (name === (a = alternates[i])) {
+                if (name === alternateToName[a = alternates[i]]) {
                     delete alternateToName[a];
                 }
             }
         }
     },
 
-    resolveName: function (name) {
+    resolveName: function(name) {
         var me = this,
             trueName;
 
@@ -358,14 +363,15 @@ Ext.Inventory.prototype = {
      * @param {Object} [scope] Optional scope to use when calling `receiver` methods.
      * @return {Object} An object with the same methods as `receiver` plus `exclude`.
      */
-    select: function (receiver, scope) {
+    select: function(receiver, scope) {
         var me = this,
             excludes = {},
             ret = {
                 excludes: excludes,
 
-                exclude: function () {
-                    me.getNamesByExpression(arguments, excludes, true);
+                exclude: function() {
+                    me.getNamesByExpression(arguments[0], excludes, true);
+
                     return this;
                 }
             },
@@ -378,12 +384,12 @@ Ext.Inventory.prototype = {
         return ret;
     },
 
-    selectMethod: function (excludes, fn, scope) {
+    selectMethod: function(excludes, fn, scope) {
         var me = this;
 
-        return function (include) {
+        return function(include) {
             var args = Ext.Array.slice(arguments, 1);
-            
+
             args.unshift(me.getNamesByExpression(include, excludes));
 
             return fn.apply(scope, args);
@@ -405,7 +411,7 @@ Ext.Inventory.prototype = {
      * @return {Ext.Inventory} this
      * @method
      */
-    setPath: Ext.Function.flexSetter(function (name, path) {
+    setPath: Ext.Function.flexSetter(function(name, path) {
         var me = this;
 
         me.paths[name] = path;

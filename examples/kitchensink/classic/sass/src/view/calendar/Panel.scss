@@ -1,0 +1,7 @@
+@if $theme-name == 'theme-material'  {
+    .#{$prefix}calendar-days-header-gutter,
+    .#{$prefix}calendar-header-gutter,
+    .#{$prefix}calendar-days-time-ct {
+        background-color: #ffffff !important;
+    }
+}

@@ -1,25 +1,25 @@
 Ext.define('Aria.view.Buttons', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.mysimplebuttons',
-    
+
     requires: [
         'Ext.container.ButtonGroup'
     ],
-    
+
     title: 'Buttons',
-    
+
     defaults: {
         margin: 6
     },
 
     layout: 'vbox',
     defaultType: 'button',
-    
+
     items: [{
         xtype: 'buttongroup',
         title: 'Button group',
         columns: 2,
-        
+
         items: [{
             text: 'Click me',
             handler: function() {
@@ -37,11 +37,11 @@ Ext.define('Aria.view.Buttons', {
                         text: 'Item 2',
                         menu: {
                             plain: true,
-                        
+
                             defaults: {
                                 plain: true
                             },
-                        
+
                             items: [
                                 { text: 'Plain item 1' },
                                 { text: 'Plain item 2' },
@@ -58,7 +58,7 @@ Ext.define('Aria.view.Buttons', {
                 defaults: {
                     xtype: 'menucheckitem'
                 },
-            
+
                 items: [
                     { text: 'Check item 1' },
                     {
@@ -67,7 +67,7 @@ Ext.define('Aria.view.Buttons', {
                             defaults: {
                                 xtype: 'menucheckitem'
                             },
-                        
+
                             items: [
                                 { text: 'Check sub-item 1' },
                                 { text: 'Check sub-item 2' },

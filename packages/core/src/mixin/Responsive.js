@@ -1,8 +1,43 @@
+/* eslint-disable max-len */
 /**
- * This mixin provides its user with a `responsiveConfig` config that allows the class
- * to conditionally control config properties.
+ * This mixin provides classes with a `responsiveConfig` config that allows instances to
+ * conditionally control config properties. This mixin is typically applied to the
+ * `Ext.Component` and `Ext.Widget` classes via the `Ext.Responsive` override:
  *
- * For example:
+ *      Ext.application({
+ *          requires: [
+ *              'Ext.Responsive'
+ *          ],
+ *
+ *          // ...
+ *      });
+ *
+ * Once this mixin is applied, config properties can be declaratively managed based on
+ * current device characteristics (such as viewport width):
+ *
+ *      Ext.create({
+ *          xtype: 'panel',
+ *          title: 'Some Title',
+ *
+ *          layout: {
+ *              type: 'hbox
+ *          },
+ *
+ *          responsiveConfig: {
+ *              'width < 800': {
+ *                  layout: {
+ *                      vertical: true
+ *                  }
+ *              },
+ *              'width >= 800': {
+ *                  layout: {
+ *                      vertical: false
+ *                  }
+ *              }
+ *          }
+ *      });
+ *
+ * To use this mixin on other classes, you can mix it in directly:
  *
  *      Ext.define('ResponsiveClass', {
  *          mixin: [
@@ -18,58 +53,11 @@
  *          }
  *      });
  *
- * For a config to participate as a responsiveConfig it must have a "setter" method. In
- * the below example, a "setRegion" method must exist.
- *
- *      Ext.create({
- *          xtype: 'viewport',
- *          layout: 'border',
- *
- *          items: [{
- *              title: 'Some Title',
- *              plugins: 'responsive',
- *
- *              responsiveConfig: {
- *                  'width < 800': {
- *                      region: 'north'
- *                  },
- *                  'width >= 800': {
- *                      region: 'west'
- *                  }
- *              }
- *          }]
- *      });
- *
- * To use responsiveConfig the class must be defined using the Ext.mixin.Responsive mixin.
- *
- *      Ext.define('App.view.Foo', {
- *          extend: 'Ext.panel.Panel',
- *          xtype: 'foo',
- *          mixins: [
- *               'Ext.mixin.Responsive'
- *          ],
- *          ...
- *      });
- *
- * Otherwise, you will need to use the responsive plugin if the class is not one you authored.
- *
- *      Ext.create('Ext.panel.Panel', {
- *          renderTo: document.body,
- *          plugins: 'responsive',
- *          ...
- *      });
- * 
- *  _Note:_ There is the exception of `Ext.container.Viewport` or other classes using `Ext.plugin.Viewport`.
- *  In those cases, the viewport plugin inherits from `Ext.plugin.Responsive`.
- *
  * For details see `{@link #responsiveConfig}`.
  * @since 5.0.0
  */
-Ext.define('Ext.mixin.Responsive', function (Responsive) { return {
+Ext.define('Ext.mixin.Responsive', function(Responsive) { return { // eslint-disable-line brace-style, max-len
     extend: 'Ext.Mixin',
-    requires: [
-        'Ext.GlobalEvents'
-    ],
 
     mixinConfig: {
         id: 'responsive',
@@ -142,20 +130,30 @@ Ext.define('Ext.mixin.Responsive', function (Responsive) { return {
         responsiveConfig: {
             $value: undefined,
 
-            merge:  function (newValue, oldValue, target, mixinClass) {
+            merge: function(newValue, oldValue, target, mixinClass) {
+                var marker, entry, ret, rule;
+
                 if (!newValue) {
                     return oldValue;
                 }
 
-                var ret = oldValue ? Ext.Object.chain(oldValue) : {},
-                    rule;
+                ret = oldValue ? Ext.Object.chain(oldValue) : {};
+                marker = Responsive.context;
 
                 for (rule in newValue) {
                     if (!mixinClass || !(rule in ret)) {
-                        ret[rule] = {
-                            fn: null, // created on first evaluation of this rule
-                            config: newValue[rule]
-                        };
+                        entry = newValue[rule];
+
+                        // If we are called to merge A to B and then B to C we must not
+                        // keep pushing the fn/config wrapper around things.
+                        if (entry.fn !== marker) {
+                            entry = {
+                                fn: marker, // created on first evaluation of this rule
+                                config: entry
+                            };
+                        }
+
+                        ret[rule] = entry;
                     }
                 }
 
@@ -186,7 +184,7 @@ Ext.define('Ext.mixin.Responsive', function (Responsive) { return {
          *
          *              large: 'width >= 800',
          *
-         *              tuesday: function (context) {
+         *              tuesday: function(context) {
          *                  return (new Date()).getDay() === 2;
          *              }
          *          }
@@ -212,9 +210,9 @@ Ext.define('Ext.mixin.Responsive', function (Responsive) { return {
          * @since 5.0.1
          */
         responsiveFormulas: {
-            $value: 0,
+            $value: null,
 
-            merge: function (newValue, oldValue, target, mixinClass) {
+            merge: function(newValue, oldValue, target, mixinClass) {
                 return this.mergeNew(newValue, oldValue, target, mixinClass);
             }
         }
@@ -223,9 +221,9 @@ Ext.define('Ext.mixin.Responsive', function (Responsive) { return {
     /**
      * This method removes this instance from the Responsive collection.
      */
-    destroy: function () {
+    destroy: function() {
         Responsive.unregister(this);
-        
+
         // No callParent() here, it's a mixin
     },
 
@@ -246,6 +244,11 @@ Ext.define('Ext.mixin.Responsive', function (Responsive) { return {
              * @private
              */
             all: {},
+
+            _configNames: [
+                'responsiveConfig',
+                'responsiveFormulas'
+            ],
 
             /**
              * @property {Object} context
@@ -278,7 +281,7 @@ Ext.define('Ext.mixin.Responsive', function (Responsive) { return {
              * called when the first instance is registered.
              * @private
              */
-            activate: function () {
+            activate: function() {
                 Responsive.active = true;
                 Responsive.updateContext();
                 Ext.on('resize', Responsive.onResize, Responsive);
@@ -289,7 +292,7 @@ Ext.define('Ext.mixin.Responsive', function (Responsive) { return {
              * is destroyed.
              * @private
              */
-            deactivate: function () {
+            deactivate: function() {
                 Responsive.active = false;
                 Ext.un('resize', Responsive.onResize, Responsive);
             },
@@ -299,35 +302,33 @@ Ext.define('Ext.mixin.Responsive', function (Responsive) { return {
              * collection).
              * @private
              */
-            notify: function () {
+            notify: function() {
                 var all = Responsive.all,
                     context = Responsive.context,
-                    globalEvents = Ext.GlobalEvents,
                     timer = Responsive.timer,
                     id;
 
                 if (timer) {
-                    Responsive.timer = null;
-                    Ext.asapCancel(timer);
+                    Responsive.timer = Ext.unasap(timer);
                 }
 
                 Responsive.updateContext();
 
                 Ext.suspendLayouts();
 
-                globalEvents.fireEvent('beforeresponsiveupdate', context);
+                Ext.fireEvent('beforeresponsiveupdate', context);
 
                 for (id in all) {
                     all[id].setupResponsiveContext();
                 }
 
-                globalEvents.fireEvent('beginresponsiveupdate', context);
+                Ext.fireEvent('beginresponsiveupdate', context);
 
                 for (id in all) {
                     all[id].updateResponsiveState();
                 }
 
-                globalEvents.fireEvent('responsiveupdate', context);
+                Ext.fireEvent('responsiveupdate', context);
 
                 Ext.resumeLayouts(true);
             },
@@ -337,7 +338,7 @@ Ext.define('Ext.mixin.Responsive', function (Responsive) { return {
              * call `notify`.
              * @private
              */
-            onResize: function () {
+            onResize: function() {
                 if (!Responsive.timer) {
                     Responsive.timer = Ext.asap(Responsive.onTimer);
                 }
@@ -348,38 +349,12 @@ Ext.define('Ext.mixin.Responsive', function (Responsive) { return {
              * calls `notify`.
              * @private
              */
-            onTimer: function () {
+            onTimer: function() {
                 Responsive.timer = null;
                 Responsive.notify();
             },
 
-            /**
-             * This method is called to update the internal state of a given config since
-             * the config is needed prior to `initConfig` processing the `instanceConfig`.
-             *
-             * @param {Ext.Base} instance The instance to configure.
-             * @param {Object} instanceConfig The config for the instance.
-             * @param {String} name The name of the config to process.
-             * @private
-             * @since 5.0.1
-             */
-            processConfig: function (instance, instanceConfig, name) {
-                var value = instanceConfig && instanceConfig[name],
-                    config = instance.config,
-                    cfg, configurator;
-
-                // Good news is that both configs we have to handle have custom merges
-                // so we just need to get the Ext.Config instance and call it.
-                if (value) {
-                    configurator = instance.self.getConfigurator();
-                    cfg = configurator.configs[name]; // the Ext.Config instance
-
-                    // Update "this.config" which is the storage for this instance.
-                    config[name] = cfg.merge(value, config[name], instance);
-                }
-            },
-
-            register: function (responder) {
+            register: function(responder) {
                 var id = responder.$responsiveId;
 
                 if (!id) {
@@ -393,7 +368,7 @@ Ext.define('Ext.mixin.Responsive', function (Responsive) { return {
                 }
             },
 
-            unregister: function (responder) {
+            unregister: function(responder) {
                 var id = responder.$responsiveId;
 
                 if (id in Responsive.all) {
@@ -411,7 +386,7 @@ Ext.define('Ext.mixin.Responsive', function (Responsive) { return {
              * Updates the `context` object base on the current environment.
              * @private
              */
-            updateContext: function () {
+            updateContext: function() {
                 var El = Ext.Element,
                     width = El.getViewportWidth(),
                     height = El.getViewportHeight(),
@@ -423,6 +398,7 @@ Ext.define('Ext.mixin.Responsive', function (Responsive) { return {
                 context.wide = !context.tall;
 
                 context.landscape = context.portrait = false;
+
                 if (!context.platform) {
                     context.platform = Ext.platformTags;
                 }
@@ -440,7 +416,7 @@ Ext.define('Ext.mixin.Responsive', function (Responsive) { return {
          * @param {Ext.Class} targetClass
          * @private
          */
-        afterClassMixedIn: function (targetClass) {
+        afterClassMixedIn: function(targetClass) {
             var proto = targetClass.prototype,
                 responsiveConfig = proto.responsiveConfig,
                 responsiveFormulas = proto.responsiveFormulas,
@@ -461,29 +437,36 @@ Ext.define('Ext.mixin.Responsive', function (Responsive) { return {
 
                 targetClass.getConfigurator().add(config);
             }
+
+            targetClass.addConfigTransform('transformResponsiveConfig', 10);
         },
 
         // The reason this method exists is so to convince the config system to put the
         // "responsiveConfig" and "responsiveFormulas" in the initList. This needs to be
-        // done so that the initGetter is setup prior to calling transformInstanceConfig
+        // done so that the initGetter is setup prior to calling transformResponsiveConfig
         // when we need to call the getters.
 
-        applyResponsiveConfig: function (rules) {
-            for (var rule in rules) {
+        applyResponsiveConfig: function(rules) {
+            var rule;
+
+            for (rule in rules) {
                 rules[rule].fn = Ext.createRuleFn(rule);
             }
+
             return rules;
         },
 
-        applyResponsiveFormulas: function (formulas) {
-            var ret = {},
-                fn, name;
+        applyResponsiveFormulas: function(formulas) {
+            var fn, name, ret;
 
             if (formulas) {
+                ret = {};
+
                 for (name in formulas) {
                     if (Ext.isString(fn = formulas[name])) {
                         fn = Ext.createRuleFn(fn);
                     }
+
                     ret[name] = fn;
                 }
             }
@@ -496,15 +479,17 @@ Ext.define('Ext.mixin.Responsive', function (Responsive) { return {
          * method relies on the state being captured by the `updateContext` method.
          * @private
          */
-        getResponsiveState: function () {
+        getResponsiveState: function() {
             var context = Responsive.context,
                 rules = this.getResponsiveConfig(),
-                ret = {},
-                entry, rule;
+                entry, ret, rule;
 
             if (rules) {
+                ret = {};
+
                 for (rule in rules) {
                     entry = rules[rule];
+
                     if (entry.fn.call(this, context)) {
                         Ext.merge(ret, entry.config);
                     }
@@ -514,7 +499,7 @@ Ext.define('Ext.mixin.Responsive', function (Responsive) { return {
             return ret;
         },
 
-        setupResponsiveContext: function () {
+        setupResponsiveContext: function() {
             var formulas = this.getResponsiveFormulas(),
                 context = Responsive.context,
                 name;
@@ -531,38 +516,39 @@ Ext.define('Ext.mixin.Responsive', function (Responsive) { return {
          * "instanceConfig". This hook returns the instanceConfig that will actually be
          * processed by the config system.
          * @param {Object} instanceConfig The user-supplied instance config object.
+         * @param {Ext.Configurator} configurator
          * @private
          */
-        transformInstanceConfig: function (instanceConfig) {
+        transformResponsiveConfig: function(instanceConfig, configurator) {
             var me = this,
-                ret;
-
-            Responsive.register(me);
+                ret = instanceConfig,
+                state;
 
             // Since we are called immediately prior to the Configurator looking at the
             // instanceConfig, that incoming value has not yet been merged on to
             // "this.config". We need to call getResponsiveConfig and getResponsiveFormulas
             // and still get all that merged goodness, so we have to do the merge here.
 
-            if (instanceConfig) {
-                Responsive.processConfig(me, instanceConfig, 'responsiveConfig');
-                Responsive.processConfig(me, instanceConfig, 'responsiveFormulas');
-            }
+            // TODO make sure tests cover these on class body
+            // TODO make sure tests cover that we only register() if needed
+            if (configurator.hoistConfigs(me, instanceConfig, Responsive._configNames)) {
+                Responsive.register(me);
 
-            // For updates this is done in bulk prior to updating all of the responsive
-            // objects, but for instantiation, we have to do this for ourselves now.
-            me.setupResponsiveContext();
+                // For updates this is done in bulk prior to updating all of the responsive
+                // objects, but for instantiation, we have to do this for ourselves now.
+                me.setupResponsiveContext();
 
-            // Now we can merge the current responsive state with the incoming config.
-            // The responsiveConfig takes priority.
-            ret = me.getResponsiveState();
+                // Now we can merge the current responsive state with the incoming config.
+                // The responsiveConfig takes priority.
+                state = me.getResponsiveState();
 
-            if (instanceConfig) {
-                ret = Ext.merge({}, instanceConfig, ret);
+                if (state) {
+                    ret = Ext.merge({}, instanceConfig, state);
 
-                // We don't want these to remain since we've already handled them.
-                delete ret.responsiveConfig;
-                delete ret.responsiveFormulas;
+                    // We don't want these to remain since we've already handled them.
+                    delete ret.responsiveConfig;
+                    delete ret.responsiveFormulas;
+                }
             }
 
             return ret;
@@ -573,9 +559,11 @@ Ext.define('Ext.mixin.Responsive', function (Responsive) { return {
          * by `notify` automatically.
          * @private
          */
-        updateResponsiveState: function () {
+        updateResponsiveState: function() {
             var config = this.getResponsiveState();
+
             this.setConfig(config);
         }
     } // private
-}});
+};
+});

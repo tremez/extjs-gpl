@@ -5,11 +5,11 @@
  */
 Ext.application({
     name: 'Aria',
-    
+
     requires: [
         'Ext.window.Toast'
     ],
-    
+
     views: [
         'Buttons',
         'DatePicker',
@@ -25,7 +25,7 @@ Ext.application({
     ],
 
     autoCreateViewport: 'Aria.view.Viewport',
-	
+
     //-------------------------------------------------------------------------
     // Most customizations should be made to Aria.Application. If you need to
     // customize this file, doing so below this section reduces the likelihood
@@ -33,7 +33,7 @@ Ext.application({
     //-------------------------------------------------------------------------
     msg: function(title, format) {
         var s = Ext.String.format.apply(String, Array.prototype.slice.call(arguments, 1));
-        
+
         Ext.toast(s, title);
     }
 });

@@ -8,12 +8,12 @@ Ext.define('KitchenSink.view.calendar.Month', {
         'Ext.calendar.List'
     ],
 
-    // <example>
+    //<example>
     otherContent: [{
         type: 'Store',
         path: 'samples/data/calendar/Month.js'
     }],
-    // </example>
+    //</example>
 
     viewModel: {
         data: {
@@ -30,8 +30,6 @@ Ext.define('KitchenSink.view.calendar.Month', {
             }
         }
     },
-
-    shadow: true,
 
     layout: {
         type: 'hbox',
@@ -50,15 +48,14 @@ Ext.define('KitchenSink.view.calendar.Month', {
         width: 150,
         bodyPadding: 5,
         hidden: Ext.os.is.Phone,
-        items: {
+        items: [{
             xtype: 'calendar-list',
             bind: '{calStore}'
-        }
+        }]
     }, {
         xtype: 'calendar-month',
         flex: 1,
         visibleWeeks: null,
-        timezoneOffset: 0,
         gestureNavigation: false,
         bind: {
             value: '{value}',

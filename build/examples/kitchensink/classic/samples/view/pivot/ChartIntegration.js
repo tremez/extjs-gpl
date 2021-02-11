@@ -17,26 +17,40 @@ Ext.define('KitchenSink.view.pivot.ChartIntegration', {
     otherContent: [{
         type: 'Controller',
         path: 'classic/samples/view/pivot/ChartIntegrationController.js'
-    },{
+    }, {
         type: 'Model',
         path: 'classic/samples/model/pivot/Sale.js'
-    },{
+    }, {
         type: 'Store',
         path: 'classic/samples/store/pivot/Sales.js'
     }],
     profiles: {
         classic: {
-            width: 600
+            width: 600,
+            height: 450,
+            columnLines: true
         },
         neptune: {
-            width: 750
+            width: 750,
+            height: 450,
+            columnLines: true
+        },
+        graphite: {
+            width: 750,
+            height: 600,
+            columnLines: true
+        },
+        'classic-material': {
+            width: 750,
+            height: 600,
+            columnLines: false
         }
     },
     //</example>
 
     title: 'Pivot Grid with chart integration',
     width: '${width}',
-    height: 450,
+    height: '${height}',
     collapsible: true,
     layout: 'border',
 
@@ -44,6 +58,7 @@ Ext.define('KitchenSink.view.pivot.ChartIntegration', {
         xtype: 'pivotgrid',
         region: 'center',
         flex: 1,
+        columnLines: '${columnLines}',
 
         selModel: {
             type: 'cellmodel'
@@ -63,17 +78,23 @@ Ext.define('KitchenSink.view.pivot.ChartIntegration', {
                 flex: 1
             }],
 
-            // Configure the left axis dimensions that will be used to generate the grid rows
+            // Configure the left axis dimensions that will be used to generate
+            // the grid rows
             leftAxis: [{
                 dataIndex: 'person',
                 header: 'Person',
                 flex: 1
             }],
 
-            // Configure the top axis dimensions that will be used to generate the columns.
-            // When columns are generated the aggregate dimensions are also used. If multiple aggregation dimensions
-            // are defined then each top axis result will have in the end a column header with children
-            // columns for each aggregate dimension defined.
+            /**
+             * Configure the top axis dimensions that will be used to generate
+             * the columns.
+             *
+             * When columns are generated the aggregate dimensions are also used.
+             * If multiple aggregation dimensions are defined then each top axis
+             * result will have in the end a column header with children columns
+             * for each aggregate dimension defined.
+             */
             topAxis: [{
                 dataIndex: 'year',
                 header: 'Year'

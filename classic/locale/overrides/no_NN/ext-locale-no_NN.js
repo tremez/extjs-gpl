@@ -264,10 +264,10 @@ Ext.define("Ext.locale.no_NN.window.MessageBox", {
         cancel: "Avbryt",
         yes: "Ja",
         no: "Nei"
-    }    
+    }
 });
 
 // This is needed until we can refactor all of the locales into individual files
-Ext.define("Ext.locale.no_NN.Component", {	
+Ext.define("Ext.locale.no_NN.Component", {
     override: "Ext.Component"
 });

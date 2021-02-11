@@ -27,7 +27,9 @@
  *         height: 250,
  *         width: 375,
  *         store: shows,
- *         plugins: 'gridfilters',
+ *         plugins: {
+ *             gridfilters: true
+ *         },
  *         columns: [{
  *             dataIndex: 'id',
  *             text: 'ID',
@@ -42,7 +44,7 @@
  *             width: 125,
  *             filter: {
  *                 type: 'boolean',
- *                 value: 'true',
+ *                 value: true,
  *                 yesText: 'True',
  *                 noText: 'False'
  *             }
@@ -59,33 +61,47 @@ Ext.define('Ext.grid.filters.filter.Boolean', {
 
     /**
      * @cfg {Boolean} defaultValue
-     * Set this to null if you do not want either option to be checked by default. Defaults to false.
+     * Set this to null if you do not want either option to be checked by default.
+     * Defaults to false.
      */
     defaultValue: false,
 
-    //<locale>
     /**
-     * @cfg {String} yesText
-     * Defaults to 'Yes'.
+     * @cfg {String} [yesText]
+     * The text to display for `true`.
+     * @locale
      */
     yesText: 'Yes',
-    //</locale>
 
-    //<locale>
     /**
-     * @cfg {String} noText
-     * Defaults to 'No'.
+     * @cfg {String} [noText]
+     * The text to display for `false`.
+     * @locale
      */
     noText: 'No',
-    //</locale>
 
     updateBuffer: 0,
+
+    constructor: function(config) {
+        var me = this,
+            filterValue;
+
+        me.callParent([config]);
+
+        if (me.filter) {
+            filterValue = me.filter.getValue();
+
+            if (Ext.isEmpty(filterValue, true) && me.defaultValue !== null) {
+                me.filter.setValue(!!me.defaultValue);
+            }
+        }
+    },
 
     /**
      * @private
      * Template method that is to initialize the filter and install required menu items.
      */
-    createMenu: function (config) {
+    createMenu: function(config) {
         var me = this,
             gId = Ext.id(),
             listeners = {
@@ -107,7 +123,7 @@ Ext.define('Ext.grid.filters.filter.Boolean', {
             text: me.noText,
             filterKey: 0,
             group: gId,
-            checked: !me.defaultValue,
+            checked: !me.defaultValue && me.defaultValue !== null,
             hideOnClick: false,
             listeners: listeners
         }, itemDefaults)]);
@@ -116,7 +132,7 @@ Ext.define('Ext.grid.filters.filter.Boolean', {
     /**
      * @private
      */
-    onClick: function (field) {
+    onClick: function(field) {
         this.setValue(!!field.filterKey);
     },
 
@@ -125,7 +141,7 @@ Ext.define('Ext.grid.filters.filter.Boolean', {
      * Template method that is to set the value of the filter.
      * @param {Object} value The value to set the filter.
      */
-    setValue: function (value) {
+    setValue: function(value) {
         var me = this;
 
         me.filter.setValue(value);
@@ -133,7 +149,8 @@ Ext.define('Ext.grid.filters.filter.Boolean', {
         if (value !== undefined && me.active) {
             me.value = value;
             me.updateStoreFilter();
-        } else {
+        }
+        else {
             me.setActive(true);
         }
     },
@@ -141,4 +158,3 @@ Ext.define('Ext.grid.filters.filter.Boolean', {
     // This is supposed to be just a stub.
     activateMenu: Ext.emptyFn
 });
-

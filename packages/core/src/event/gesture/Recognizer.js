@@ -84,6 +84,7 @@ Ext.define('Ext.event.gesture.Recognizer', {
 
     reset: function() {
         this.isStarted = false;
+
         return false;
     }
 });

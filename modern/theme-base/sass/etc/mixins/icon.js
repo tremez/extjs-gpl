@@ -18,14 +18,17 @@ exports.init = function(runtime) {
 
                     if (item.$isFashionNumber) {
                         newItems[2] = item;
-                    } else {
+                    }
+                    else {
                         newItems[1] = item;
                     }
-                } else if (len > 2) {
+                }
+                else if (len > 2) {
                     newItems[1] = items[1];
                     newItems[2] = items[2];
                 }
-            } else {
+            }
+            else {
                 newItems[0] = glyph;
             }
 

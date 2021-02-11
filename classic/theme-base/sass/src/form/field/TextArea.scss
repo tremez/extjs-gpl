@@ -1,3 +1,9 @@
+
+.#{$prefix}form-textarea-body.#{$prefix}form-text-grow > .#{$prefix}form-trigger-wrap {
+    // expand to fill body height when the field's main element has a height
+    height: 100%;
+}
+
 .#{$prefix}form-textarea {
     overflow: auto;
     resize: none; //Disable browser resizable textarea

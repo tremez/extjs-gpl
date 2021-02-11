@@ -3,7 +3,7 @@
  * notification when the associated form contains validation errors.
  */
 Ext.define('Ext.ux.statusbar.ValidationStatus', {
-    extend: 'Ext.Component', 
+    extend: 'Ext.Component',
     alias: 'plugin.validationstatus',
     requires: ['Ext.util.MixedCollection'],
     /**
@@ -11,42 +11,42 @@ Ext.define('Ext.ux.statusbar.ValidationStatus', {
      * The {@link Ext.ux.statusbar.StatusBar#iconCls iconCls} value to be applied
      * to the status message when there is a validation error.
      */
-    errorIconCls : 'x-status-error',
+    errorIconCls: 'x-status-error',
     /**
      * @cfg {String} errorListCls
      * The css class to be used for the error list when there are validation errors.
      */
-    errorListCls : 'x-status-error-list',
+    errorListCls: 'x-status-error-list',
     /**
      * @cfg {String} validIconCls
      * The {@link Ext.ux.statusbar.StatusBar#iconCls iconCls} value to be applied
      * to the status message when the form validates.
      */
-    validIconCls : 'x-status-valid',
-    
+    validIconCls: 'x-status-valid',
+
     /**
      * @cfg {String} showText
      * The {@link Ext.ux.statusbar.StatusBar#text text} value to be applied when
      * there is a form validation error.
      */
-    showText : 'The form has errors (click for details...)',
+    showText: 'The form has errors (click for details...)',
     /**
      * @cfg {String} hideText
      * The {@link Ext.ux.statusbar.StatusBar#text text} value to display when
      * the error list is displayed.
      */
-    hideText : 'Click again to hide the error list',
+    hideText: 'Click again to hide the error list',
     /**
      * @cfg {String} submitText
      * The {@link Ext.ux.statusbar.StatusBar#text text} value to be applied when
      * the form is being submitted.
      */
-    submitText : 'Saving...',
+    submitText: 'Saving...',
 
     /**
      * @private
      */
-    init : function(sb) {
+    init: function(sb) {
         var me = this;
 
         me.statusBar = sb;
@@ -77,7 +77,8 @@ Ext.define('Ext.ux.statusbar.ValidationStatus', {
 
         if (me.form) {
             // Allow either an id, or a reference to be specified as the form name.
-            me.formPanel = Ext.getCmp(me.form) || me.statusBar.lookupController().lookupReference(me.form);
+            me.formPanel = Ext.getCmp(me.form) ||
+                           me.statusBar.lookupController().lookupReference(me.form);
             me.basicForm = me.formPanel.getForm();
             me.startMonitoring();
             me.basicForm.on({
@@ -96,12 +97,12 @@ Ext.define('Ext.ux.statusbar.ValidationStatus', {
             me.basicForm.on('actioncomplete', startMonitor);
             me.basicForm.on('actionfailed', startMonitor);
         }
-   },
+    },
 
     /**
      * @private
      */
-    startMonitoring : function() {
+    startMonitoring: function() {
         this.basicForm.getFields().each(function(f) {
             f.on('validitychange', this.onFieldValidation, this);
         }, this);
@@ -110,9 +111,9 @@ Ext.define('Ext.ux.statusbar.ValidationStatus', {
     /**
      * @private
      */
-    stopMonitoring : function() {
+    stopMonitoring: function() {
         var form = this.basicForm;
-        
+
         if (!form.destroyed) {
             form.getFields().each(function(f) {
                 f.un('validitychange', this.onFieldValidation, this);
@@ -130,20 +131,25 @@ Ext.define('Ext.ux.statusbar.ValidationStatus', {
     /**
      * @private
      */
-    onFieldValidation : function(f, isValid) {
+    onFieldValidation: function(f, isValid) {
         var me = this,
             msg;
 
         if (!me.monitor) {
             return false;
         }
+
         msg = f.getErrors()[0];
+
         if (msg) {
-            me.errors.add(f.id, {field:f, msg:msg});
-        } else {
+            me.errors.add(f.id, { field: f, msg: msg });
+        }
+        else {
             me.errors.removeAtKey(f.id);
         }
+
         this.updateErrorList();
+
         if (me.errors.getCount() > 0) {
             if (me.statusBar.getText() !== me.showText) {
                 me.statusBar.setStatus({
@@ -151,7 +157,8 @@ Ext.define('Ext.ux.statusbar.ValidationStatus', {
                     iconCls: me.errorIconCls
                 });
             }
-        } else {
+        }
+        else {
             me.statusBar.clearStatus().setIcon(me.validIconCls);
         }
     },
@@ -159,7 +166,7 @@ Ext.define('Ext.ux.statusbar.ValidationStatus', {
     /**
      * @private
      */
-    updateErrorList : function() {
+    updateErrorList: function() {
         var me = this,
             msg,
             msgEl = me.getMsgEl();
@@ -171,9 +178,11 @@ Ext.define('Ext.ux.statusbar.ValidationStatus', {
             });
             msg.push('</ul>');
             msgEl.update(msg.join(''));
-        } else {
+        }
+        else {
             msgEl.update('');
         }
+
         // reset msgEl size
         msgEl.setSize('auto', 'auto');
     },
@@ -181,7 +190,7 @@ Ext.define('Ext.ux.statusbar.ValidationStatus', {
     /**
      * @private
      */
-    getMsgEl : function() {
+    getMsgEl: function() {
         var me = this,
             msgEl = me.msgEl,
             t;
@@ -193,46 +202,56 @@ Ext.define('Ext.ux.statusbar.ValidationStatus', {
             msgEl.hide();
             msgEl.on('click', function(e) {
                 t = e.getTarget('li', 10, true);
+
                 if (t) {
                     Ext.getCmp(t.id.split('x-err-')[1]).focus();
                     me.hideErrors();
                 }
-            }, null, {stopEvent: true}); // prevent anchor click navigation
+            }, null, { stopEvent: true }); // prevent anchor click navigation
         }
+
         return msgEl;
     },
 
     /**
      * @private
      */
-    showErrors : function() {
+    showErrors: function() {
         var me = this;
 
         me.updateErrorList();
-        me.getMsgEl().alignTo(me.statusBar.getEl(), me.listAlign).slideIn('b', {duration: 300, easing: 'easeOut'});
+        me.getMsgEl().alignTo(me.statusBar.getEl(), me.listAlign).slideIn(
+            'b', { duration: 300, easing: 'easeOut' }
+        );
+
         me.statusBar.setText(me.hideText);
-        me.formPanel.body.on('click', me.hideErrors, me, {single:true}); // hide if the user clicks directly into the form
+
+        // hide if the user clicks directly into the form
+        me.formPanel.body.on('click', me.hideErrors, me, { single: true });
     },
 
     /**
      * @private
      */
-    hideErrors : function() {
+    hideErrors: function() {
         var el = this.getMsgEl();
+
         if (el.isVisible()) {
-            el.slideOut('b', {duration: 300, easing: 'easeIn'});
+            el.slideOut('b', { duration: 300, easing: 'easeIn' });
             this.statusBar.setText(this.showText);
         }
+
         this.formPanel.body.un('click', this.hideErrors, this);
     },
 
     /**
      * @private
      */
-    onStatusClick : function() {
+    onStatusClick: function() {
         if (this.getMsgEl().isVisible()) {
             this.hideErrors();
-        } else if (this.errors.getCount() > 0) {
+        }
+        else if (this.errors.getCount() > 0) {
             this.showErrors();
         }
     }

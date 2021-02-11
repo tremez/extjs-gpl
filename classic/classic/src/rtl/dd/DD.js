@@ -14,7 +14,8 @@ Ext.define('Ext.rtl.dd.DD', {
     setLocalXY: function(el, x, y) {
         if (Ext.rootInheritedState.rtl) {
             el.rtlSetLocalXY(x, y);
-        } else {
+        }
+        else {
             el.setLocalXY(x, y);
         }
     }

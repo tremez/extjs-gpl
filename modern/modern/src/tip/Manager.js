@@ -26,16 +26,34 @@
  * - `data-qautoHide`: {@link Ext.tip.ToolTip#autoHide}
  * - `data-qcls`: {@link Ext.tip.ToolTip#cls}
  * - `data-qalign`: {@link Ext.tip.ToolTip#align}
+ * - `data-qalignDelegate`: {@link Ext.tip.ToolTip#alignDelegate}
  * - `data-qanchor`: {@link Ext.tip.ToolTip#anchor}
  * - `data-qanchorToTarget`: {@link Ext.tip.ToolTip#anchorToTarget}
+ * - `data-qallowOver`: {@link Ext.tip.ToolTip#allowOver}
  * - `data-qshowDelay`: {@link Ext.tip.ToolTip#showDelay}
  * - `data-qhideDelay`: {@link Ext.tip.ToolTip#hideDelay}
  * - `data-qdismissDelay`: {@link Ext.tip.ToolTip#dismissDelay}
  * - `data-qtrackMouse`: {@link Ext.tip.ToolTip#trackMouse}
+ * - `data-qoverfow`: Indicates that if the element's text is clipped
+ * using the `text-overflow:ellipsis` style, the shared tip will be shown
+ * containing the `innerHTML`.
  *
  * Example usage:
  *
  *     <div class="foo" data-qtip="Message goes here">Hover me</div>
+ *     <p>
+ *     <div 
+ *      data-qoverflow="true"
+ *      data-qalign="b-t?"
+ *      data-qanchor="true" 
+ *      style="width:100px;text-overflow:ellipsis"
+ *     >
+ *         Hover Me! Lorem ipsum dolor sit amet, duis dicta solet
+ *         et qui. Ut mea soleat mediocritatem, blandit democritum mea ex. His id nostro
+ *         conceptam dissentiet, ignota discere id mea. Qui eu virtute invenire, an per
+ *         ipsum invidunt senserit. Ne legendos expetenda mei. Ad homero percipit liberavisse
+ *         quo, te quando vocibus usu.
+ *     </div>
  */
 Ext.define('Ext.tip.Manager', {
 
@@ -49,7 +67,33 @@ Ext.define('Ext.tip.Manager', {
             anchorToTarget: false,
             anchor: false,
             closeAction: 'hide',
-            quickShowInterval: 0
+            quickShowInterval: 0,
+            maxWidth: '80vw'
+        },
+
+        /**
+         * A configuration object to use when the shared tip instance is triggered by
+         * an text-clipped element tagged with the `data-qoverflow` attribute.
+         * For example, you could change the default 
+         * {@link Ext.tip.ToolTip#dismissDelay dismissDelay} to be longer, to allow long content 
+         * to be read, or set {@link Ext.tip.ToolTip#autoHide autoHide} to false by setting your 
+         * application's {@link Ext.app.Application#quickTips quickTips} config.
+         *
+         *         quickTips: {
+         *             tooltip: {
+         *                 showOnTap: true
+         *             },
+         *             overflowTip: {
+         *                 dismissDelay: 10000
+         *             }
+         *         }
+         *
+         *
+         */
+        overflowTip: {
+            align: 'l-r?',
+            anchor: true,
+            showOnTap: true
         }
     },
 
@@ -59,8 +103,8 @@ Ext.define('Ext.tip.Manager', {
      * available.
      */
     interceptTitles: false,
-    
-    constructor: function (config) {
+
+    constructor: function(config) {
         var me = this,
             tip;
 
@@ -68,6 +112,9 @@ Ext.define('Ext.tip.Manager', {
 
         me._fly = new Ext.dom.Fly();
         me.tip = tip = Ext.create(me.createTooltip());
+        // Prevent auto alignment on config changes since we'll be
+        // doing then in bulk
+        tip.allowRealign = false;
 
         tip.on({
             beforeshow: 'onBeforeShow',
@@ -82,6 +129,10 @@ Ext.define('Ext.tip.Manager', {
             dragend: 'dragEnable',
             dragcancel: 'dragEnable'
         });
+
+        if (!me.self.instance) {
+            me.self.instance = me;
+        }
     },
 
     /**
@@ -89,6 +140,7 @@ Ext.define('Ext.tip.Manager', {
      */
     disable: function() {
         var n = ++this.disabled;
+
         if (n === 1) {
             this.getTooltip().disable();
         }
@@ -99,15 +151,21 @@ Ext.define('Ext.tip.Manager', {
      */
     enable: function() {
         var n = --this.disabled;
+
         if (n === 0) {
             this.getTooltip().enable();
-        } else if (n < 0) {
+        }
+        else if (n < 0) {
             this.disabled = 0;
         }
     },
 
-    destroy: function () {
+    destroy: function() {
         var me = this;
+
+        if (me.self.instance === me) {
+            me.self.instance = null;
+        }
 
         me._fly.detach(); // just in case
         me.globalListeners = me.tip = Ext.destroy(me.tip, me.globalListeners);
@@ -115,7 +173,7 @@ Ext.define('Ext.tip.Manager', {
         me.callParent();
     },
 
-    createTooltip: function () {
+    createTooltip: function() {
         var me = this,
             config = me.getTooltip();
 
@@ -144,12 +202,18 @@ Ext.define('Ext.tip.Manager', {
          */
         _propertyMap: (function() {
             var numFn = function(v) {
-                return parseInt(v, 10);
-            }, boolFn = function(v) {
-                return !!v;
-            }, fn = Ext.identityFn;
+                    return parseInt(v, 10);
+                },
+                boolFn = function(v) {
+                    return !!v;
+                },
+                fn = Ext.identityFn;
 
             return {
+                ui: {
+                    prop: 'data-qui',
+                    parse: fn
+                },
                 html: {
                     prop: 'data-qtip',
                     parse: fn
@@ -174,16 +238,24 @@ Ext.define('Ext.tip.Manager', {
                     prop: 'data-qautoHide',
                     parse: boolFn
                 },
-                cls : {
+                cls: {
                     prop: 'data-qcls',
                     parse: fn
                 },
-                align : {
+                axisLock: {
+                    prop: 'data-axislock',
+                    parse: fn
+                },
+                align: {
                     prop: 'data-qalign',
                     parse: fn
                 },
-                anchor : {
-                    prop: 'data-anchor',
+                alignDelegate: {
+                    prop: 'data-qaligndelegate',
+                    parse: fn
+                },
+                anchor: {
+                    prop: 'data-qanchor',
                     parse: fn
                 },
                 showDelay: {
@@ -206,12 +278,30 @@ Ext.define('Ext.tip.Manager', {
                     prop: 'data-qanchorToTarget',
                     parse: boolFn
                 },
+                allowOver: {
+                    prop: 'data-qallowover',
+                    parse: boolFn
+                },
                 closable: true
             };
         })(),
 
-        delegateQuickTip: function (dom) {
+        applyOverflowTip: function(config) {
+            var phone = Ext.platformTags.phone;
+
+            return Ext.apply({
+                // Less unexpected movement with axisLock
+                // But with limited space, a phone needs to try all other edges.
+                axisLock: !phone,
+
+                // Stop long overflowing text from sprawling.
+                maxWidth: phone ? '80vw' : 400
+            }, config);
+        },
+
+        delegateQuickTip: function(dom) {
             var qtip = this.getTipConfig(dom, 'html');
+
             return !!qtip;
         },
 
@@ -227,7 +317,7 @@ Ext.define('Ext.tip.Manager', {
             }
         },
 
-        getTipConfig: function (dom, property) {
+        getTipConfig: function(dom, property) {
             var me = this,
                 propertyMap = me._propertyMap,
                 tipDefaults = me._tipDefaults,
@@ -251,18 +341,40 @@ Ext.define('Ext.tip.Manager', {
             if (data) {
                 if (property) {
                     ret = data[property];
-                } else {
+                }
+                else {
                     ret = Ext.apply({}, tipDefaults);
                     Ext.apply(ret, data);
                 }
-            } else {
+            }
+            else {
                 if (dom.hasAttribute(textAttr)) {
                     text = dom.getAttribute(textAttr);
+
                     if (!text) {
                         text = me.interceptTitles && dom.title;
+
                         if (text) {
                             dom.setAttribute(textAttr, text);
                             dom.removeAttribute('title');
+                        }
+                    }
+                }
+                else if (dom.hasAttribute('data-qoverflow')) {
+                    text = fly.dom.innerHTML;
+
+                    // If we are not just being called as a delegate selector,
+                    // augment the tipDefaults that we are going to reconfigure with
+                    if (property !== 'html') {
+                        tipDefaults = Ext.apply({}, me.getOverflowTip(), tipDefaults);
+                    }
+
+                    // This is the beforeshow invocation which wants the full config
+                    if (!property) {
+                        // This element has text-overflow:ellipsis AND the overflowing text.
+                        // No overflow found, veto the show by returning false.
+                        if (!me.hasTextOverflow(dom)) {
+                            return false;
                         }
                     }
                 }
@@ -270,14 +382,17 @@ Ext.define('Ext.tip.Manager', {
                 if (text) { // if there is no qtip text there is no tooltip
                     if (property === 'html') {
                         ret = text;
-                    } else if (property) {
+                    }
+                    else if (property) {
                         item = propertyMap[property];
+
                         if (item.prop) {
                             if (dom.hasAttribute(item.prop)) {
                                 ret = item.parse(dom.getAttribute(item.prop));
                             }
                         }
-                    } else {
+                    }
+                    else {
                         ret = data = {
                             html: text
                         };
@@ -286,20 +401,25 @@ Ext.define('Ext.tip.Manager', {
                             if (name !== 'html') {
                                 item = propertyMap[name];
                                 value = null;
+
                                 if (item.prop) {
                                     if (dom.hasAttribute(item.prop)) {
                                         value = item.parse(dom.getAttribute(item.prop));
                                     }
                                 }
+
                                 if (value === null) {
                                     value = tipDefaults[name];
                                 }
+
                                 data[name] = value;
                             }
                         }
                     }
                 }
             }
+
+            // No displaying configs set, now see if it's eligible for an overflow tip
 
             fly.detach();
 
@@ -310,15 +430,30 @@ Ext.define('Ext.tip.Manager', {
             return ret;
         },
 
-        onBeforeShow: function (tip) {
+        onBeforeShow: function(tip) {
             var me = this,
                 dom = tip.currentTarget.dom,
                 data, header;
 
             if (dom) {
                 data = me.getTipConfig(dom);
+
+                // If the config returns false, it means no show.
+                // data-qoverflow tips leave the decision this late to
+                // delay the expensive isStyle() an TextMetrics calls.
+                if (data === false) {
+                    return false;
+                }
+
+                // data could be undefined
+                if (!data) {
+                    return;
+                }
+
+                data.anchorToTarget = !!(data.align || data.anchor);
                 tip.setConfig(data);
                 header = tip.getHeader();
+
                 if (header) {
                     header.setHidden(!data.title && !data.closable);
                 }
@@ -327,7 +462,7 @@ Ext.define('Ext.tip.Manager', {
 
         priorityConfigs: ['showDelay', 'anchor', 'anchorToTarget', 'align', 'trackMouse'],
 
-        onHoverTarget: function (tip, currentTarget) {
+        onHoverTarget: function(tip, currentTarget) {
             var dom = currentTarget.dom,
                 cfg;
 
@@ -336,7 +471,19 @@ Ext.define('Ext.tip.Manager', {
                 this.priorityConfigs.forEach(function(name) {
                     cfg[name] = this.getTipConfig(dom, name);
                 }, this);
+                cfg.anchorToTarget = !!(cfg.align || cfg.anchor);
                 tip.setConfig(cfg);
+            }
+        },
+
+        hasTextOverflow: function(candidate) {
+            var textSize;
+
+            // Filter for only elements with text-overflow:ellipsis
+            if (Ext.fly(candidate).isStyle('text-overflow', 'ellipsis')) {
+                textSize = Ext.util.TextMetrics.measure(candidate, candidate.innerHTML);
+
+                return (textSize.width > Ext.fly(candidate).getViewRegion().width);
             }
         }
     }

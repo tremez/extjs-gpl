@@ -1,4 +1,4 @@
-/*!
+/* !
 * Ext JS Library
 * Copyright(c) 2006-2014 Sencha Inc.
 * licensing@sencha.com
@@ -8,7 +8,9 @@
 Ext.define('Desktop.BogusMenuModule', {
     extend: 'Desktop.BogusModule',
 
-    init : function() {
+    init: function() {
+        var windowIndex = window.windowIndex || 0,
+            i;
 
         this.launcher = {
             text: 'More items',
@@ -21,11 +23,11 @@ Ext.define('Desktop.BogusMenuModule', {
             }
         };
 
-        for (var i = 0; i < 5; ++i) {
+        for (i = 0; i < 5; ++i) {
             this.launcher.menu.items.push({
-                text: 'Window '+(++windowIndex),
-                iconCls:'bogus',
-                handler : this.createWindow,
+                text: 'Window ' + (++windowIndex),
+                iconCls: 'bogus',
+                handler: this.createWindow,
                 scope: this,
                 windowId: windowIndex
             });

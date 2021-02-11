@@ -11,7 +11,8 @@ Ext.define('Ext.event.gesture.Tap', {
     config: {
         /**
          * @cfg {Number} moveDistance
-         * The maximimum distance in pixels a touchstart event can travel and still be considered a tap event.
+         * The maximimum distance in pixels a touchstart event can travel and still be considered
+         * a tap event.
          */
 
         moveDistance: 8
@@ -57,9 +58,11 @@ Ext.define('Ext.event.gesture.Tap', {
 
     reset: function() {
         this.startPoint = null;
+
         return this.callParent();
     }
 }, function(Tap) {
     var gestures = Ext.manifest.gestures;
+
     Tap.instance = new Tap(gestures && gestures.tap);
 });

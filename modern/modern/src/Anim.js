@@ -1,13 +1,14 @@
 /**
- * Ext.Anim is used to execute simple animations defined in {@link Ext.anims}. The {@link #run} method can take any of the
- * properties defined below.
+ * Ext.Anim is used to execute simple animations defined in {@link Ext.anims}. The {@link #run}
+ * method can take any of the properties defined below.
  *
  *     Ext.Anim.run(this, 'fade', {
  *         out: false,
  *         autoClear: true
  *     });
  *
- * When using {@link Ext.Anim#run}, ensure you require {@link Ext.Anim} in your application. Either do this using {@link Ext#require}:
+ * When using {@link Ext.Anim#run}, ensure you require {@link Ext.Anim} in your application.
+ * Either do this using {@link Ext#require}:
  *
  *     Ext.requires('Ext.Anim');
  *
@@ -43,15 +44,15 @@ Ext.define('Ext.Anim', {
     defaultConfig: {
         /**
          * @cfg {Object} from
-         * An object of CSS values which the animation begins with. If you define a CSS property here, you must also
-         * define it in the {@link #to} config.
+         * An object of CSS values which the animation begins with. If you define a CSS property
+         * here, you must also define it in the {@link #to} config.
          */
         from: {},
 
         /**
          * @cfg {Object} to
-         * An object of CSS values which the animation ends with. If you define a CSS property here, you must also
-         * define it in the {@link #from} config.
+         * An object of CSS values which the animation ends with. If you define a CSS property
+         * here, you must also define it in the {@link #from} config.
          */
         to: {},
 
@@ -68,13 +69,15 @@ Ext.define('Ext.Anim', {
 
         /**
          * @cfg {String} easing
-         * Valid values are 'ease', 'linear', ease-in', 'ease-out', 'ease-in-out', or a cubic-bezier curve as defined by CSS.
+         * Valid values are 'ease', 'linear', ease-in', 'ease-out', 'ease-in-out', or a
+         * cubic-bezier curve as defined by CSS.
          */
         easing: 'ease-in-out',
 
         /**
          * @cfg {Boolean} autoClear
-         * `true` to remove all custom CSS defined in the {@link #to} config when the animation is over.
+         * `true` to remove all custom CSS defined in the {@link #to} config when the animation
+         * is over.
          */
         autoClear: true,
 
@@ -92,8 +95,8 @@ Ext.define('Ext.Anim', {
 
         /**
          * @cfg {Boolean} reverse
-         * `true` to reverse the animation direction. For example, if the animation direction was set to 'left', it would
-         * then use 'right'.
+         * `true` to reverse the animation direction. For example, if the animation direction was
+         * set to 'left', it would then use 'right'.
          */
         reverse: false
     },
@@ -157,14 +160,14 @@ Ext.define('Ext.Anim', {
      * @ignore
      */
     run: function(el, config) {
+        var me = this,
+            style, property, after;
+
         el = Ext.get(el);
         config = config || {};
 
-
-        var me = this,
-            style = el.dom.style,
-            property,
-            after = config.after;
+        style = el.dom.style;
+        after = config.after;
 
         if (me.running[el.id]) {
             me.onTransitionEnd(null, el, {
@@ -180,22 +183,28 @@ Ext.define('Ext.Anim', {
                 if (!config.to.hasOwnProperty(property)) {
                     continue;
                 }
+
                 style[property] = config.to[property];
             }
+
             this.onTransitionEnd(null, el, {
                 config: config,
                 after: after
             });
+
             return me;
         }
 
         el.un('transitionend', me.onTransitionEnd, me);
 
         style.webkitTransitionDuration = '0ms';
+        style.transitionDuration = '0ms';
+
         for (property in config.from) {
             if (!config.from.hasOwnProperty(property)) {
                 continue;
             }
+
             style[property] = config.from[property];
         }
 
@@ -217,6 +226,10 @@ Ext.define('Ext.Anim', {
             style.webkitTransitionDuration = config.duration + 'ms';
             style.webkitTransitionProperty = 'all';
             style.webkitTransitionTimingFunction = config.easing;
+            // for IE
+            style.transitionDuration = config.duration + 'ms';
+            style.transitionProperty = 'all';
+            style.transitionTimingFunction = config.easing;
 
             // Bind our listener that fires after the animation ends
             el.on('transitionend', me.onTransitionEnd, me, {
@@ -229,31 +242,35 @@ Ext.define('Ext.Anim', {
                 if (!config.to.hasOwnProperty(property)) {
                     continue;
                 }
+
                 style[property] = config.to[property];
             }
         }, config.delay || 5);
 
         me.running[el.id] = config;
+
         return me;
     },
 
     onTransitionEnd: function(ev, el, o) {
+        var me = this,
+            config = o.config,
+            style, property;
+
         el = Ext.get(el);
 
         if (this.running[el.id] === undefined) {
             return;
         }
 
-        var style = el.dom.style,
-            config = o.config,
-            me = this,
-            property;
+        style = el.dom.style;
 
         if (config.autoClear) {
             for (property in config.to) {
                 if (!config.to.hasOwnProperty(property) || config[property] === false) {
                     continue;
                 }
+
                 style[property] = '';
             }
         }
@@ -261,6 +278,9 @@ Ext.define('Ext.Anim', {
         style.webkitTransitionDuration = null;
         style.webkitTransitionProperty = null;
         style.webkitTransitionTimingFunction = null;
+        style.transitionDuration = '';
+        style.transitionProperty = '';
+        style.transitionTimingFunction = '';
 
         if (config.is3d) {
             el.parent().setStyle({
@@ -284,7 +304,8 @@ Ext.define('Ext.Anim', {
     Ext.Anim.seed = 1000;
 
     /**
-     * Used to run an animation on a specific element. Use the config argument to customize the animation.
+     * Used to run an animation on a specific element. Use the config argument to customize
+     * the animation.
      * @param {Ext.Element/HTMLElement} el The element to animate.
      * @param {String} anim The animation type, defined in {@link Ext.anims}.
      * @param {Object} config The config object for the animation.
@@ -293,7 +314,8 @@ Ext.define('Ext.Anim', {
     Ext.Anim.run = function(el, anim, config) {
         if (el.isComponent) {
             el = el.element;
-        } else {
+        }
+        else {
             el = Ext.get(el);
         }
 
@@ -307,11 +329,13 @@ Ext.define('Ext.Anim', {
                 if (config.before && anim.before) {
                     config.before = Ext.createInterceptor(config.before, anim.before, anim.scope);
                 }
+
                 if (config.after && anim.after) {
                     config.after = Ext.createInterceptor(config.after, anim.after, anim.scope);
                 }
+
                 config = Ext.apply({}, config, anim);
-                anim = anim.type;
+                anim = anim.type || 'raw';
             }
 
             if (!Ext.anims[anim]) {
@@ -344,12 +368,13 @@ Ext.define('Ext.Anim', {
             before: function(el) {
                 var fromOpacity = 1,
                     toOpacity = 1,
-                    curZ = el.getStyle('z-index') == 'auto' ? 0 : el.getStyle('z-index'),
+                    curZ = el.getStyle('z-index') === 'auto' ? 0 : el.getStyle('z-index'),
                     zIndex = curZ;
 
                 if (this.out) {
                     toOpacity = 0;
-                } else {
+                }
+                else {
                     zIndex = Math.abs(curZ) + 1;
                     fromOpacity = 0;
                 }
@@ -376,7 +401,7 @@ Ext.define('Ext.Anim', {
             'z-index': false,
 
             before: function(el) {
-                var currentZIndex = el.getStyle('z-index') == 'auto' ? 0 : el.getStyle('z-index'),
+                var currentZIndex = el.getStyle('z-index') === 'auto' ? 0 : el.getStyle('z-index'),
                     currentOpacity = el.getStyle('opacity'),
                     zIndex = currentZIndex + 1,
                     out = this.out,
@@ -388,7 +413,7 @@ Ext.define('Ext.Anim', {
                     elH = el.getHeight(),
                     elW = el.getWidth();
 
-                if (direction == 'left' || direction == 'right') {
+                if (direction === 'left' || direction === 'right') {
                     if (out) {
                         toX = -elW;
                     }
@@ -396,7 +421,7 @@ Ext.define('Ext.Anim', {
                         fromX = elW;
                     }
                 }
-                else if (direction == 'up' || direction == 'down') {
+                else if (direction === 'up' || direction === 'down') {
                     if (out) {
                         toY = -elH;
                     }
@@ -405,7 +430,7 @@ Ext.define('Ext.Anim', {
                     }
                 }
 
-                if (direction == 'right' || direction == 'down') {
+                if (direction === 'right' || direction === 'down') {
                     toY *= -1;
                     toX *= -1;
                     fromY *= -1;
@@ -446,7 +471,7 @@ Ext.define('Ext.Anim', {
                     toScale = 1,
                     fromOpacity = 1,
                     toOpacity = 1,
-                    curZ = el.getStyle('z-index') == 'auto' ? 0 : el.getStyle('z-index'),
+                    curZ = el.getStyle('z-index') === 'auto' ? 0 : el.getStyle('z-index'),
                     fromZ = curZ,
                     toZ = curZ;
 
@@ -460,7 +485,8 @@ Ext.define('Ext.Anim', {
                     if (this.scaleOnExit) {
                         toScale = 0.01;
                         toOpacity = 0;
-                    } else {
+                    }
+                    else {
                         toOpacity = 0.8;
                     }
                 }
@@ -487,7 +513,7 @@ Ext.define('Ext.Anim', {
         flip: new Ext.Anim({
             is3d: true,
             direction: 'left',
-            before: function(el) {
+            before: function() {
                 var rotateProp = 'Y',
                     fromScale = 1,
                     toScale = 1,
@@ -503,21 +529,23 @@ Ext.define('Ext.Anim', {
                     fromScale = 0.8;
                 }
 
-                if (this.direction == 'up' || this.direction == 'down') {
+                if (this.direction === 'up' || this.direction === 'down') {
                     rotateProp = 'X';
                 }
 
-                if (this.direction == 'right' || this.direction == 'left') {
+                if (this.direction === 'right' || this.direction === 'left') {
                     toRotate *= -1;
                     fromRotate *= -1;
                 }
 
                 this.from = {
-                    '-webkit-transform': 'rotate' + rotateProp + '(' + fromRotate + 'deg) scale(' + fromScale + ')',
+                    '-webkit-transform': 'rotate' + rotateProp + '(' + fromRotate + 'deg) scale(' +
+                        fromScale + ')',
                     '-webkit-backface-visibility': 'hidden'
                 };
                 this.to = {
-                    '-webkit-transform': 'rotate' + rotateProp + '(' + toRotate + 'deg) scale(' + toScale + ')',
+                    '-webkit-transform': 'rotate' + rotateProp + '(' + toRotate + 'deg) scale(' +
+                        toScale + ')',
                     '-webkit-backface-visibility': 'hidden'
                 };
             }
@@ -543,36 +571,40 @@ Ext.define('Ext.Anim', {
                     fromTranslate = ' translateX(0)',
                     toTranslate = '';
 
-                if (this.direction == 'left' || this.direction == 'right') {
+                if (this.direction === 'left' || this.direction === 'right') {
                     if (this.out) {
                         origin = '100% 100%';
                         toZ = elW;
                         toRotate = -90;
-                    } else {
+                    }
+                    else {
                         origin = '0% 0%';
                         fromZ = elW;
                         fromRotate = 90;
                     }
-                } else if (this.direction == 'up' || this.direction == 'down') {
+                }
+                else if (this.direction === 'up' || this.direction === 'down') {
                     rotateProp = 'X';
+
                     if (this.out) {
                         origin = '100% 100%';
                         toZ = elH;
                         toRotate = 90;
-                    } else {
+                    }
+                    else {
                         origin = '0% 0%';
                         fromZ = elH;
                         fromRotate = -90;
                     }
                 }
 
-                if (this.direction == 'down' || this.direction == 'right') {
+                if (this.direction === 'down' || this.direction === 'right') {
                     fromRotate *= -1;
                     toRotate *= -1;
-                    origin = (origin == '0% 0%') ? '100% 100%': '0% 0%';
+                    origin = (origin === '0% 0%') ? '100% 100%' : '0% 0%';
                 }
 
-                if (this.style == 'inner') {
+                if (this.style === 'inner') {
                     fromZ *= -1;
                     toZ *= -1;
                     fromRotate *= -1;
@@ -581,29 +613,32 @@ Ext.define('Ext.Anim', {
                     if (!this.out) {
                         toTranslate = ' translateX(0px)';
                         origin = '0% 50%';
-                    } else {
+                    }
+                    else {
                         toTranslate = fromTranslate;
                         origin = '100% 50%';
                     }
                 }
 
                 this.from = {
-                    '-webkit-transform': 'rotate' + rotateProp + '(' + fromRotate + 'deg)' + (showTranslateZ ? ' translateZ(' + fromZ + 'px)': '') + fromTranslate,
+                    '-webkit-transform': 'rotate' + rotateProp + '(' + fromRotate + 'deg)' +
+                        (showTranslateZ ? ' translateZ(' + fromZ + 'px)' : '') + fromTranslate,
                     '-webkit-transform-origin': origin
                 };
                 this.to = {
-                    '-webkit-transform': 'rotate' + rotateProp + '(' + toRotate + 'deg) translateZ(' + toZ + 'px)' + toTranslate,
+                    '-webkit-transform': 'rotate' + rotateProp + '(' + toRotate +
+                        'deg) translateZ(' + toZ + 'px)' + toTranslate,
                     '-webkit-transform-origin': origin
                 };
             },
             duration: 250
         }),
 
-
         /**
          * Wipe Animation.
-         * Because of the amount of calculations involved, this animation is best used on small display
-         * changes or specifically for phone environments. Does not currently accept any parameters.
+         * Because of the amount of calculations involved, this animation is best used on small
+         * display changes or specifically for phone environments. Does not currently accept any
+         * parameters.
          */
         wipe: new Ext.Anim({
             before: function(el) {
@@ -613,7 +648,9 @@ Ext.define('Ext.Anim', {
 
                 if (!this.out) {
                     zIndex = curZ + 1;
-                    mask = '-webkit-gradient(linear, left bottom, right bottom, from(transparent), to(#000), color-stop(66%, #000), color-stop(33%, transparent))';
+                    mask = '-webkit-gradient(linear, left bottom, right bottom, ' +
+                        'from(transparent), to(#000), color-stop(66%, #000), color-stop(33%, ' +
+                        'transparent))';
 
                     this.from = {
                         '-webkit-mask-image': mask,
@@ -630,6 +667,14 @@ Ext.define('Ext.Anim', {
                 }
             },
             duration: 500
+        }),
+
+        /**
+         * Raw Animation.
+         * Best used when the other types do not suite your needs. Set `from` and `to` as needed.
+         */
+        raw: new Ext.Anim({
+            duration: 250
         })
     };
 });

@@ -9,8 +9,8 @@
  * During the drop operation a data object is passed to a participating DropZone's drop 
  * handlers.  The drag data object has the following properties:
  *
- * - **copy:** {@link Boolean} <br> The value of {@link #copy}.  Or `true` if {@link #allowCopy} is true
- * **and** the control key was pressed as the drag operation began.
+ * - **copy:** {@link Boolean} <br> The value of {@link #copy}.  Or `true` if {@link #allowCopy}
+ * is true **and** the control key was pressed as the drag operation began.
  * 
  * - **view:** {@link Ext.tree.View TreeView} <br> The source tree view from which the 
  * drag originated
@@ -58,8 +58,9 @@
  *         renderTo: document.body,
  *         viewConfig: {
  *             plugins: {
- *                 ptype: 'treeviewdragdrop',
- *                 dragText: 'Drag and drop to reorganize'
+ *                 treeviewdragdrop: {
+ *                     dragText: 'Drag and drop to reorganize'
+ *                 }
  *             }
  *         }
  *     });
@@ -172,7 +173,7 @@ Ext.define('Ext.tree.plugin.TreeViewDragDrop', {
      * @param {String} dropPosition `"before"` or `"after"` depending on whether the 
      * cursor is above or below the mid-line of the node.
      */
-    
+
     /**
      * @cfg {Boolean} [copy=false]
      * Set as `true` to copy the records from the source grid to the destination drop 
@@ -183,7 +184,7 @@ Ext.define('Ext.tree.plugin.TreeViewDragDrop', {
      * 
      * See {@link #allowCopy} to allow only control-drag operations to copy records.
      */
-    
+
     /**
      * @cfg {Boolean} [allowCopy=false]
      * Set as `true` to allow the user to hold down the control key at the start of the 
@@ -196,9 +197,8 @@ Ext.define('Ext.tree.plugin.TreeViewDragDrop', {
      * See {@link #copy} to enable the copying of all dragged records.
      */
 
-    //<locale>
     /**
-     * @cfg
+     * @cfg {String} dragText
      * The text to show while dragging.
      *
      * Two placeholders can be used in the text:
@@ -208,14 +208,14 @@ Ext.define('Ext.tree.plugin.TreeViewDragDrop', {
      * 
      * **NOTE:** The node's {@link Ext.tree.Panel#cfg-displayField text} will be shown 
      * when a single node is dragged unless `dragText` is a simple text string.
+     * @locale
      */
-    dragText : '{0} selected node{1}',
-    //</locale>
+    dragText: '{0} selected node{1}',
 
     /**
      * @cfg {Boolean} allowParentInserts
-     * Allow inserting a dragged node between an expanded parent node and its first child that will become a sibling of
-     * the parent when dropped.
+     * Allow inserting a dragged node between an expanded parent node and its first child
+     * that will become a sibling of the parent when dropped.
      */
     allowParentInserts: false,
 
@@ -233,14 +233,15 @@ Ext.define('Ext.tree.plugin.TreeViewDragDrop', {
 
     /**
      * @cfg {String} [ddGroup=TreeDD]
-     * A named drag drop group to which this object belongs. If a group is specified, then both the DragZones and
-     * DropZone used by this plugin will only interact with other drag drop objects in the same group.
+     * A named drag drop group to which this object belongs. If a group is specified, then both
+     * the DragZones and DropZone used by this plugin will only interact with other drag drop
+     * objects in the same group.
      */
-    ddGroup : "TreeDD",
-    
+    ddGroup: "TreeDD",
+
     /**
-     * True to register this container with the Scrollmanager for auto scrolling during drag operations.
-     * A {@link Ext.dd.ScrollManager} configuration may also be passed.
+     * True to register this container with the Scrollmanager for auto scrolling during
+     * drag operations. A {@link Ext.dd.ScrollManager} configuration may also be passed.
      * @cfg {Object/Boolean} containerScroll
      */
     containerScroll: false,
@@ -249,29 +250,30 @@ Ext.define('Ext.tree.plugin.TreeViewDragDrop', {
      * @cfg {String} [dragGroup]
      * The ddGroup to which the {@link #property-dragZone DragZone} will belong.
      *
-     * This defines which other DropZones the DragZone will interact with. Drag/DropZones only interact with other
-     * Drag/DropZones which are members of the same ddGroup.
+     * This defines which other DropZones the DragZone will interact with. Drag/DropZones
+     * only interact with other Drag/DropZones which are members of the same ddGroup.
      */
 
     /**
      * @cfg {String} [dropGroup]
      * The ddGroup to which the {@link #property-dropZone DropZone} will belong.
      *
-     * This defines which other DragZones the DropZone will interact with. Drag/DropZones only interact with other
-     * Drag/DropZones which are members of the same {@link #ddGroup}.
+     * This defines which other DragZones the DropZone will interact with. Drag/DropZones
+     * only interact with other Drag/DropZones which are members of the same {@link #ddGroup}.
      */
 
     /**
      * @cfg {Boolean} [sortOnDrop=false]
-     * Configure as `true` to sort the target node into the current tree sort order after the dropped node is added.
+     * Configure as `true` to sort the target node into the current tree sort order after
+     * the dropped node is added.
      */
 
     /**
      * @cfg {Number} [expandDelay=1000]
-     * The delay in milliseconds to wait before expanding a target tree node while dragging a droppable node over the
-     * target.
+     * The delay in milliseconds to wait before expanding a target tree node while dragging
+     * a droppable node over the target.
      */
-    expandDelay : 1000,
+    expandDelay: 1000,
 
     /**
      * @cfg {Boolean} enableDrop
@@ -287,8 +289,9 @@ Ext.define('Ext.tree.plugin.TreeViewDragDrop', {
 
     /**
      * @cfg {String} [nodeHighlightColor=c3daf9]
-     * The color to use when visually highlighting the dragged or dropped node (default value is light blue).
-     * The color must be a 6 digit hex value, without a preceding '#'. See also {@link #nodeHighlightOnDrop} and
+     * The color to use when visually highlighting the dragged or dropped node (default value
+     * is light blue). The color must be a 6 digit hex value, without a preceding '#'.
+     * See also {@link #nodeHighlightOnDrop} and
      * {@link #nodeHighlightOnRepair}.
      */
     nodeHighlightColor: 'c3daf9',
@@ -316,26 +319,30 @@ Ext.define('Ext.tree.plugin.TreeViewDragDrop', {
 
     /**
      * @cfg {Object} [dragZone]
-     * A config object to apply to the creation of the {@link #property-dragZone DragZone} which handles for drag start gestures.
+     * A config object to apply to the creation of the {@link #property-dragZone DragZone}
+     * which handles for drag start gestures.
      *
      * Template methods of the DragZone may be overridden using this config.
      */
 
     /**
      * @cfg {Object} [dropZone]
-     * A config object to apply to the creation of the {@link #property-dropZone DropZone} which handles mouseover and drop gestures.
+     * A config object to apply to the creation of the {@link #property-dropZone DropZone}
+     * which handles mouseover and drop gestures.
      *
      * Template methods of the DropZone may be overridden using this config.
      */
 
     /**
      * @property {Ext.view.DragZone} dragZone
-     * An {@link Ext.view.DragZone DragZone} which handles mousedown and dragging of records from the grid.
+     * An {@link Ext.view.DragZone DragZone} which handles mousedown and dragging of records
+     * from the grid.
      */
 
     /**
      * @property {Ext.grid.ViewDropZone} dropZone
-     * An {@link Ext.grid.ViewDropZone DropZone} which handles mouseover and dropping records in any grid which shares the same {@link #dropGroup}.
+     * An {@link Ext.grid.ViewDropZone DropZone} which handles mouseover and dropping records
+     * in any grid which shares the same {@link #dropGroup}.
      */
 
     init: function(view) {
@@ -351,6 +358,7 @@ Ext.define('Ext.tree.plugin.TreeViewDragDrop', {
 
     destroy: function() {
         var me = this;
+
         me.dragZone = me.dropZone = Ext.destroy(me.dragZone, me.dropZone);
         me.callParent();
     },
@@ -361,11 +369,12 @@ Ext.define('Ext.tree.plugin.TreeViewDragDrop', {
             scrollEl;
 
         ownerGrid.relayEvents(view, ['beforedrop', 'drop']);
-        
+
         if (me.enableDrag) {
             if (me.containerScroll) {
                 scrollEl = view.getEl();
             }
+
             me.dragZone = new Ext.tree.ViewDragZone(Ext.apply({
                 view: view,
                 ddGroup: me.dragGroup || me.ddGroup,
@@ -392,7 +401,8 @@ Ext.define('Ext.tree.plugin.TreeViewDragDrop', {
             }, me.dropZone));
         }
     }
-}, function(){
+}, function() {
     var proto = this.prototype;
+
     proto.nodeHighlightOnDrop = proto.nodeHighlightOnRepair = Ext.enableFx;
 });

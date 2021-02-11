@@ -91,7 +91,7 @@ $spinuptrigger-icon-border-radius: dynamic(null);
  * @var {number}
  * Spin Up Trigger icon size
  */
-$spinuptrigger-icon-size: dynamic(px-to-em(11px, 13px));
+$spinuptrigger-icon-size: dynamic(11px);
 
 /**
  * @var {number}
@@ -103,7 +103,7 @@ $spinuptrigger-icon-size-big: dynamic(null);
  * @var {number}
  * Spin Up Trigger icon font-size
  */
-$spinuptrigger-icon-font-size: dynamic(px-to-em(16px, 13px));
+$spinuptrigger-icon-font-size: dynamic(16px);
 
 /**
  * @var {number}
@@ -199,27 +199,9 @@ $spinuptrigger-icon-font-size-big: dynamic($spinuptrigger-icon-size-big);
 ) {
     $ui-suffix: ui-suffix($ui);
 
-    @include trigger-ui(
-        $ui: $ui,
-        $xtype: $xtype,
-        $width: $width,
-        $width-big: $width-big,
-        $background-color: $background-color,
-        $hovered-background-color: $hovered-background-color,
-        $pressed-background-color: $pressed-background-color,
-        $icon: $icon,
-        $icon-color: $icon-color,
-        $hovered-icon-color: $hovered-icon-color,
-        $pressed-icon-color: $pressed-icon-color,
-        $icon-background-color: $icon-background-color,
-        $hovered-icon-background-color: $hovered-icon-background-color,
-        $pressed-icon-background-color: $pressed-icon-background-color,
-        $icon-border-radius: $icon-border-radius,
-        $icon-size: $icon-size,
-        $icon-size-big: $icon-size-big,
-        $icon-font-size: $icon-font-size,
-        $icon-font-size-big: $icon-font-size-big
-    );
+    $arguments: intersect-arguments(spinuptrigger-ui, trigger-ui);
+
+    @include trigger-ui($arguments...);
 
     .#{$prefix}#{$xtype}#{$ui-suffix} {
         .#{$prefix}icon-el {

@@ -4,18 +4,19 @@
  * This class is used only by the grid's HeaderContainer docked child.
  *
  * It adds the ability to shrink the vertical size of the inner container element back if a grouped
- * column header has all its child columns dragged out, and the whole HeaderContainer needs to shrink back down.
+ * column header has all its child columns dragged out, and the whole HeaderContainer needs
+ * to shrink back down.
  *
- * Also, after every layout, after all headers have attained their 'stretchmax' height, it goes through and calls
- * `setPadding` on the columns so that they lay out correctly.
+ * Also, after every layout, after all headers have attained their 'stretchmax' height,
+ * it goes through and calls `setPadding` on the columns so that they lay out correctly.
  */
 Ext.define('Ext.grid.ColumnLayout', {
     extend: 'Ext.layout.container.HBox',
     alias: 'layout.gridcolumn',
-    type : 'gridcolumn',
+    type: 'gridcolumn',
 
     requires: [
-        'Ext.panel.Table'  
+        'Ext.panel.Table'
     ],
 
     firstHeaderCls: Ext.baseCSSPrefix + 'column-header-first',
@@ -25,11 +26,11 @@ Ext.define('Ext.grid.ColumnLayout', {
         this.callParent();
 
         if (this.scrollbarWidth === undefined) {
-            this.self.prototype.scrollbarWidth = Ext.getScrollbarSize().width;
+            this.self.prototype.scrollbarWidth = Ext.scrollbar.width();
         }
     },
 
-    beginLayout: function (ownerContext) {
+    beginLayout: function(ownerContext) {
         var me = this,
             owner = me.owner,
             firstCls = me.firstHeaderCls,
@@ -67,13 +68,13 @@ Ext.define('Ext.grid.ColumnLayout', {
         // Start this at 0 and for the root headerCt call determineScrollbarWidth to get
         // it set properly. Typically that amounts to a "delete" to expose the system's
         // scrollbar width stored on our prototype.
-
         me.scrollbarWidth = 0;
 
         if (owner.isRootHeader && !owner.grid.isLocked) {
             // In a locking grid, the scrollbar is only managed on the normal side.
             me.determineScrollbarWidth(ownerContext);
         }
+
         if (!me.scrollbarWidth) {
             // By default Mac OS X has overlay scrollbars that do not take space, but also
             // the RTL override may have set this to 0... so make sure we don't try to
@@ -82,7 +83,7 @@ Ext.define('Ext.grid.ColumnLayout', {
         }
     },
 
-    moveItemBefore: function (item, before) {
+    moveItemBefore: function(item, before) {
         var prevOwner = item.ownerCt,
             nextSibling = before && before.nextSibling();
 
@@ -106,10 +107,11 @@ Ext.define('Ext.grid.ColumnLayout', {
                 before = nextSibling;
             }
         }
+
         return this.callParent([item, before]);
     },
 
-    determineScrollbarWidth: function (ownerContext) {
+    determineScrollbarWidth: function(ownerContext) {
         var me = this,
             owner = me.owner,
             grid = owner.grid,
@@ -139,7 +141,7 @@ Ext.define('Ext.grid.ColumnLayout', {
         // browser bugs and may set me.scrollbarWidth to 0 or a negative value.
     },
 
-    calculate: function (ownerContext) {
+    calculate: function(ownerContext) {
         var me = this,
             owner = me.owner,
             grid = owner.grid,
@@ -162,12 +164,14 @@ Ext.define('Ext.grid.ColumnLayout', {
                 if (me.convertWidthsToFlexes(ownerContext)) {
                     me.cacheFlexes(ownerContext);
                     me.done = false;
+
                     ownerContext.invalidate({
                         state: {
                             reflexed: true,
                             scrollbarAdjustment: me.getScrollbarAdjustment(ownerContext)
                         }
                     });
+
                     return;
                 }
             }
@@ -203,9 +207,11 @@ Ext.define('Ext.grid.ColumnLayout', {
                     // Since we start with the assumption that we will need the scrollbar,
                     // we now need to wait to see if our guess was correct.
                     viewOverflowY = viewContext.getProp('viewOverflowY');
+
                     if (viewOverflowY === undefined) {
                         // The TableLayout has not determined this yet, so park it.
                         me.done = false;
+
                         return;
                     }
 
@@ -220,7 +226,9 @@ Ext.define('Ext.grid.ColumnLayout', {
                             lockingPartnerContext.invalidate();
                             lockingPartnerContext.headerContext.invalidate();
                         }
+
                         viewContext.invalidate();
+
                         ownerContext.invalidate({
                             state: {
                                 // Pass a 0 adjustment on into our next life. If this is
@@ -234,8 +242,8 @@ Ext.define('Ext.grid.ColumnLayout', {
                     }
                 }
                 // else {
-                    // We originally assumed we would need the scrollbar and since we do
-                    // not now, we must be on the second pass, so we can move on...
+                // We originally assumed we would need the scrollbar and since we do
+                // not now, we must be on the second pass, so we can move on...
                 // }
             }
         }
@@ -243,6 +251,7 @@ Ext.define('Ext.grid.ColumnLayout', {
 
     finishedLayout: function(ownerContext) {
         this.callParent([ ownerContext ]);
+
         if (this.owner.ariaRole === 'rowgroup') {
             this.innerCt.dom.setAttribute('role', 'row');
         }
@@ -281,7 +290,7 @@ Ext.define('Ext.grid.ColumnLayout', {
         return totalWidth !== ownerContext.props.width;
     },
 
-    getScrollbarAdjustment: function (ownerContext) {
+    getScrollbarAdjustment: function(ownerContext) {
         var me = this,
             state = ownerContext.state,
             grid = me.owner.grid,
@@ -308,7 +317,7 @@ Ext.define('Ext.grid.ColumnLayout', {
      * @private
      * Local getContainerSize implementation accounts for vertical scrollbar in the view.
      */
-    getContainerSize: function (ownerContext) {
+    getContainerSize: function(ownerContext) {
         var me = this,
             got, needed, padding, gotWidth, gotHeight, width, height, result;
 
@@ -318,7 +327,8 @@ Ext.define('Ext.grid.ColumnLayout', {
             if (result.gotWidth) {
                 result.width -= me.getScrollbarAdjustment(ownerContext);
             }
-        } else {
+        }
+        else {
             padding = ownerContext.paddingContext.getPaddingInfo();
             got = needed = 0;
 
@@ -328,9 +338,11 @@ Ext.define('Ext.grid.ColumnLayout', {
                 ++needed;
                 width = ownerContext.getProp('innerWidth');
                 gotWidth = (typeof width === 'number');
+
                 if (gotWidth) {
                     ++got;
                     width -= padding.width;
+
                     if (width < 0) {
                         width = 0;
                     }
@@ -341,9 +353,11 @@ Ext.define('Ext.grid.ColumnLayout', {
                 ++needed;
                 height = ownerContext.getProp('innerHeight');
                 gotHeight = (typeof height === 'number');
+
                 if (gotHeight) {
                     ++got;
                     height -= padding.height;
+
                     if (height < 0) {
                         height = 0;
                     }
@@ -370,11 +384,16 @@ Ext.define('Ext.grid.ColumnLayout', {
             cw = ownerContext.peek('contentWidth'),
             adjustment = 0;
 
-        // Pass negative "reservedSpace", so that the innerCt gets *extra* size to accommodate the view's vertical scrollbar
+        // Pass negative "reservedSpace", so that the innerCt gets *extra* size
+        // to accommodate the view's vertical scrollbar
         if (cw != null && owner.isRootHeader) {
             adjustment = -ownerContext.state.scrollbarAdjustment;
         }
 
         return me.callParent([ownerContext, adjustment]);
+    },
+
+    roundFlex: function(width) {
+        return Math.round(width);
     }
 });

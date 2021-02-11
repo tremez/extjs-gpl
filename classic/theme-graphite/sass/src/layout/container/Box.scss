@@ -1,0 +1,42 @@
+.#{$prefix}form-fieldcontainer > .#{$prefix}form-item-body > .#{$prefix}box-layout-ct > .#{$prefix}box-inner {
+    min-height: $fieldcontainer-min-height;
+}
+
+.#{$prefix}box-scroller-menu-default.#{$prefix}box-scroller-top, 
+.#{$prefix}box-scroller-menu-default.#{$prefix}box-scroller-bottom {
+    margin: $box-scroller-menu-arrow-margin;
+    left: $box-scroller-menu-arrow-left;
+    width: $box-scroller-menu-arrow-width;
+    height: $box-scroller-menu-arrow-height;
+    color: $box-scroller-menu-arrow-base-text-color;
+    padding-top: $box-scroller-menu-arrow-padding;
+    background-color: $box-scroller-menu-arrow-base-color;
+    opacity: $box-scroller-menu-arrow-base-opacity;
+
+    &:before {
+        opacity: $box-scroller-menu-arrow-base-icon-opacity;
+    }
+
+    &.#{$prefix}box-scroller-hover {
+        background-color: $box-scroller-menu-arrow-hover-background;
+        color: $box-scroller-menu-arrow-base-color;
+        
+        &:before {
+            opacity: $box-scroller-menu-arrow-hover-opacity
+        }
+
+        &.#{$prefix}box-scroller-pressed:before {
+            opacity: $box-scroller-menu-arrow-base-opacity;
+        }
+    }
+
+    &.#{$prefix}box-scroller-disabled {
+        background-color: $box-scroller-menu-arrow-base-color;
+        color: $box-scroller-menu-arrow-base-text-color;
+
+        &:before, 
+        &.#{$prefix}box-scroller-pressed:before {
+            opacity: $box-scroller-menu-arrow-base-icon-opacity;
+        }
+    }
+}

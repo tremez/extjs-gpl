@@ -1,4 +1,4 @@
-describe("Ext.selection.TreeModel", function() {
+topSuite("Ext.selection.TreeModel", ['Ext.tree.Panel', 'Ext.grid.Panel'], function() {
     var tree, data, selModel, col;
 
     function makeTree(cfg, root) {
@@ -67,13 +67,14 @@ describe("Ext.selection.TreeModel", function() {
         // https://sencha.jira.com/browse/EXTJS-16149
         it('should not veto a navigation event when using a locking treegrid', function() {
             var row = 0;
+
             tree = new Ext.tree.Panel({
                 width: 800,
                 height: 600,
                 renderTo: Ext.getBody(),
                 root: data,
                 columns: [{
-                    xtype: 'treecolumn', //this is so we know which column will show the tree
+                    xtype: 'treecolumn', // this is so we know which column will show the tree
                     text: 'Text',
                     width: 200,
                     sortable: true,
@@ -90,7 +91,7 @@ describe("Ext.selection.TreeModel", function() {
                 }
             });
             selModel = tree.getSelectionModel();
-            jasmine.fireMouseEvent(tree.view.lockedView.getCellByPosition({row:1,column:0}), 'click');
+            jasmine.fireMouseEvent(tree.view.lockedView.getCellByPosition({ row: 1, column: 0 }, true), 'click');
             expect(selModel.isSelected(1)).toBe(true);
         });
     });
@@ -99,6 +100,7 @@ describe("Ext.selection.TreeModel", function() {
         it("should deselect when the selected node is removed", function() {
             makeTree();
             var node = byId('node3_2');
+
             selModel.select(node);
             node.remove();
             expect(selModel.isSelected(node)).toBe(false);
@@ -107,6 +109,7 @@ describe("Ext.selection.TreeModel", function() {
         it("should deselect when the selected node is a child of the removed node", function() {
             makeTree();
             var node = byId('node2_1');
+
             selModel.select(node);
             node.parentNode.remove();
             expect(selModel.isSelected(node)).toBe(false);
@@ -115,10 +118,11 @@ describe("Ext.selection.TreeModel", function() {
         it("should remove collapsed children", function() {
             makeTree();
             var node = byId('node2_1');
+
             selModel.select(node);
             node.parentNode.collapse();
             node.parentNode.remove();
-            expect(selModel.isSelected(node)).toBe(false);   
+            expect(selModel.isSelected(node)).toBe(false);
         });
 
         it("should deselect a deep child of the removed node", function() {
@@ -145,6 +149,7 @@ describe("Ext.selection.TreeModel", function() {
                 }]
             });
             var node = byId('node5');
+
             selModel.select(node);
             byId('node1').remove();
             expect(selModel.isSelected(node)).toBe(false);
@@ -174,6 +179,7 @@ describe("Ext.selection.TreeModel", function() {
                 }]
             });
             var node = byId('node4');
+
             selModel.select(node);
             byId('node2').remove();
             expect(selModel.isSelected(node)).toBe(false);
@@ -222,6 +228,7 @@ describe("Ext.selection.TreeModel", function() {
 
         describe("with selectOnExpanderClick: false", function() {
             var node, row, view;
+
             beforeEach(function() {
                 makeTree({
                     selectOnExpanderClick: false
@@ -236,18 +243,19 @@ describe("Ext.selection.TreeModel", function() {
             });
 
             it("should not select when clicking on the expander", function() {
-                click(Ext.fly(row).down(view.expanderSelector));
+                click(row.querySelector(view.expanderSelector));
                 expect(selModel.isSelected(node)).toBe(false);
             });
 
             it("should select when clicking on another part of the row", function() {
-                click(Ext.fly(row).down('.' + col.iconCls));
+                click(row.querySelector('.' + col.iconCls));
                 expect(selModel.isSelected(node)).toBe(true);
             });
         });
 
         describe("with selectOnExpanderClick: true", function() {
             var node, row, view;
+
             beforeEach(function() {
                 makeTree({
                     selectOnExpanderClick: true
@@ -262,12 +270,12 @@ describe("Ext.selection.TreeModel", function() {
             });
 
             it("should select when clicking on the expander", function() {
-                click(Ext.fly(row).down(view.expanderSelector));
+                click(row.querySelector(view.expanderSelector));
                 expect(selModel.isSelected(node)).toBe(true);
             });
 
             it("should select when clicking on another part of the row", function() {
-                click(Ext.fly(row).down('.' + col.iconCls));
+                click(row.querySelector('.' + col.iconCls));
                 expect(selModel.isSelected(node)).toBe(true);
             });
         });

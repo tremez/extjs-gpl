@@ -11,6 +11,7 @@ Ext.define('KitchenSink.view.tab.SideNavigationTabs', {
         type: 'Styles',
         path: 'classic/sass/src/view/tab/NavigationTabs.scss'
     }],
+    cls: Ext.baseCSSPrefix + 'shadow',
     //</example>
 
     height: 400,

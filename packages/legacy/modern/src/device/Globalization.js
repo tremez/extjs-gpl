@@ -18,6 +18,7 @@ Ext.define('Ext.device.Globalization', {
 
     constructor: function() {
         var browserEnv = Ext.browser.is;
+
         if (browserEnv.WebView) {
             if (browserEnv.Cordova) {
                 return Ext.create('Ext.device.globalization.Cordova');

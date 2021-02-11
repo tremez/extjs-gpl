@@ -10,13 +10,13 @@ Ext.define('Ext.parse.symbol.Constant', {
 
     defaultProperty: 'value',
 
-    constructor: function (id, config) {
+    constructor: function(id, config) {
         this.callParent([ id, config ]);
 
         this._value = this.value;
     },
 
-    nud: function () {
+    nud: function() {
         var me = this;
 
         // The value property gets smashed by the parser so restore it.

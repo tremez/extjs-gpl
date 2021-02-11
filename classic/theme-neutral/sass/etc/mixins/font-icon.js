@@ -19,30 +19,38 @@ exports.init = function(runtime) {
                     if (item.$isFashionNumber) {
                         if (item.unit) {
                             newItems[1] = item;
-                        } else {
+                        }
+                        else {
                             newItems[3] = item;
                         }
-                    } else {
+                    }
+                    else {
                         newItems[2] = item;
                     }
-                } else if (len === 3) {
+                }
+                else if (len === 3) {
                     if (items[1].$isFashionNumber) {
                         newItems[1] = items[1];
+
                         if (items[2].$isFashionNumber) {
                             newItems[3] = items[2];
-                        } else {
+                        }
+                        else {
                             newItems[2] = items[2];
                         }
-                    } else {
+                    }
+                    else {
                         newItems[2] = items[1];
                         newItems[3] = items[2];
                     }
-                } else {
+                }
+                else {
                     newItems[1] = items[1];
                     newItems[2] = items[2];
                     newItems[3] = items[3];
                 }
-            } else {
+            }
+            else {
                 newItems[0] = glyph;
             }
 

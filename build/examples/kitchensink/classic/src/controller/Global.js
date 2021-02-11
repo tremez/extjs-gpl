@@ -41,7 +41,7 @@ Ext.define('KitchenSink.controller.Global', {
                 autoCreate: true
             }
         },
-        routes  : {
+        routes: {
             ':id': {
                 action: 'handleRoute',
                 before: 'beforeHandleRoute'
@@ -54,9 +54,10 @@ Ext.define('KitchenSink.controller.Global', {
             node = Ext.StoreMgr.get('navigation').getNodeById(id);
 
         if (node) {
-            //resume action
+            // resume action
             action.resume();
-        } else {
+        }
+        else {
             Ext.Msg.alert(
                 'Route Failure',
                 'The view for ' + id + ' could not be found. You will be taken to the application\'s start',
@@ -65,7 +66,7 @@ Ext.define('KitchenSink.controller.Global', {
                 }
             );
 
-            //stop action
+            // stop action
             action.stop();
         }
     },
@@ -87,7 +88,8 @@ Ext.define('KitchenSink.controller.Global', {
         if (node.isLeaf()) {
             if (thumbnails.ownerCt) {
                 contentPanel.remove(thumbnails, false); // remove thumbnail view without destroying
-            } else {
+            }
+            else {
                 contentPanel.removeAll(true);
             }
 
@@ -109,13 +111,16 @@ Ext.define('KitchenSink.controller.Global', {
                 cmp.show();
                 Ext.suspendLayouts();
             }
-        } else {
+        }
+        else {
             thumbnailsStore = me.getThumbnailsStore();
             thumbnailsStore.removeAll();
             thumbnailsStore.add(node.childNodes);
+
             if (!thumbnails.ownerCt) {
                 contentPanel.removeAll(true);
             }
+
             contentPanel.body.removeCls('kitchensink-example');
             contentPanel.add(thumbnails);
             codePreview.removeAll();
@@ -128,6 +133,7 @@ Ext.define('KitchenSink.controller.Global', {
 
         codePreview.removeCls(['in-tier-pro', 'in-tier-premium']);
         tier = node.get('tier');
+
         if (tier === 'pro' || tier === 'premium') {
             codePreview.addCls('in-tier-' + tier);
         }
@@ -139,19 +145,23 @@ Ext.define('KitchenSink.controller.Global', {
                 navigationTree.ensureVisible(0, {
                     focus: true
                 });
-            } else {
+            }
+            else {
                 if (node.parentNode && !node.parentNode.isExpanded()) {
                     node.parentNode.expand();
                 }
+
                 navigationTree.ensureVisible(node, {
                     focus: true,
                     select: true
                 });
             }
-        } else if (navigationBreadcrumb) {
+        }
+        else if (navigationBreadcrumb) {
             navigationBreadcrumb.setSelection(node);
             navigationBreadcrumb.child(':last').focus();
         }
+
         Ext.resumeLayouts(true);
     },
 
@@ -167,12 +177,13 @@ Ext.define('KitchenSink.controller.Global', {
         document.title = document.title.split(' - ')[0] + ' - ' + text;
     },
 
-    setupPreview: function (clsProto) {
+    setupPreview: function(clsProto) {
         var me = this,
             preview = me.getCodePreview(),
             otherContent = clsProto.otherContent,
             resources = [],
-            codePreviewProcessed = clsProto.codePreviewProcessed;
+            codePreviewProcessed = clsProto.codePreviewProcessed,
+            clone;
 
         if (!preview) {
             return;
@@ -195,10 +206,8 @@ Ext.define('KitchenSink.controller.Global', {
                 resource.xtype = 'codeContent';
                 resource.rtl = false;
                 resource.title = resource.type;
-                //resource.tabConfig = {
-                //    tooltip: resource.path
-                //};
-                var clone = Ext.apply({}, resource);
+                clone = Ext.apply({}, resource);
+
                 codePreviewProcessed.push(clone);
                 resource.loader = {
                     url: resource.path,
@@ -209,7 +218,8 @@ Ext.define('KitchenSink.controller.Global', {
                     profileInfo: clsProto.profileInfo
                 };
             });
-        } else {
+        }
+        else {
             resources = codePreviewProcessed;
         }
 
@@ -232,14 +242,17 @@ Ext.define('KitchenSink.controller.Global', {
 
     renderCodeMarkup: function(loader, response) {
         var code = this.processText(response.responseText, loader.profileInfo);
+
         // Passed in from the block above, we keep the proto cloned copy.
         loader.resource.html = code;
         loader.getTarget().setHtml(code);
+        // eslint-disable-next-line
         prettyPrint();
+
         return true;
     },
 
-    processText: function (text, profileInfo) {
+    processText: function(text, profileInfo) {
         var lines = text.split('\n'),
             removing = false,
             keepLines = [],
@@ -248,7 +261,7 @@ Ext.define('KitchenSink.controller.Global', {
             profileInfoRe = this.profileInfoRe,
             profilePropRe = this.profilePropRe,
             profilePropsRe = this.profilePropsRe,
-            encodeTheme = function (text, match) {
+            encodeTheme = function(text, match) {
                 return Ext.encode(profileInfo[match]);
             },
             emptyLineRe = this.emptyLineRe,
@@ -261,9 +274,11 @@ Ext.define('KitchenSink.controller.Global', {
                 if (exampleRe.test(line)) {
                     removing = false;
                 }
-            } else if (exampleRe.test(line)) {
+            }
+            else if (exampleRe.test(line)) {
                 removing = true;
-            } else {
+            }
+            else {
                 // Replace "this.profileInfo.foo" with the value of "foo" properly encoded
                 // for JavaScript (otherwise strings would not be quoted).
                 line = line.replace(profileInfoRe, encodeTheme);
@@ -272,6 +287,7 @@ Ext.define('KitchenSink.controller.Global', {
 
                 if (emptyLineRe.test(line)) {
                     line = '';
+
                     if (line === previous) {
                         continue; // collapse multiple blank lines down to one
                     }
@@ -283,41 +299,42 @@ Ext.define('KitchenSink.controller.Global', {
 
         code = keepLines.join('\n');
         code = Ext.htmlEncode(code);
+
         return '<pre class="prettyprint">' + code + '</pre>';
     },
 
-    onSetRegion: function (tool) {
-        var panel = tool.toolOwner;
+    onSetRegion: function(tool) {
+        var panel = tool.toolOwner,
 
-        var regionMenu = panel.regionMenu || (panel.regionMenu =
+            regionMenu = panel.regionMenu || (panel.regionMenu =
             Ext.widget({
                 xtype: 'menu',
                 items: [{
                     text: 'North',
                     checked: panel.region === 'north',
                     group: 'mainregion',
-                    handler: function () {
+                    handler: function() {
                         panel.setBorderRegion('north');
                     }
-                },{
+                }, {
                     text: 'South',
                     checked: panel.region === 'south',
                     group: 'mainregion',
-                    handler: function () {
+                    handler: function() {
                         panel.setBorderRegion('south');
                     }
-                },{
+                }, {
                     text: 'East',
                     checked: panel.region === 'east',
                     group: 'mainregion',
-                    handler: function () {
+                    handler: function() {
                         panel.setBorderRegion('east');
                     }
-                },{
+                }, {
                     text: 'West',
                     checked: panel.region === 'west',
                     group: 'mainregion',
-                    handler: function () {
+                    handler: function() {
                         panel.setBorderRegion('west');
                     }
                 }]
@@ -348,32 +365,54 @@ Ext.define('KitchenSink.controller.Global', {
         this.getViewport().getViewModel().set('selectedView', node);
     },
 
-    onMaximizeClick: function(){
-        var preview = this.getCodePreview(),
+    onMaximizeClick: function() {
+        var me = this,
+            viewport = me.getViewport(),
+            preview = me.getCodePreview(),
             activeView = preview.activeView,
-            w = new Ext.window.Window({
+            w = me.previewWindow;
+
+        if (w) {
+            if (activeView) {
+                // Reuse window. Add code previews.
+                Ext.suspendLayouts();
+                me.codePreviewTabPanel.add(activeView.codePreviewProcessed);
+                Ext.resumeLayouts();
+            }
+        }
+        else {
+            w = me.previewWindow = new Ext.window.Window({
                 rtl: false,
-                maximized: true,
+                shadow: false,
+                resizable: false,
+                draggable: false,
                 title: 'Code Preview',
                 closable: true,
                 layout: 'fit',
                 defaultFocus: 'tab',
-                items: {
+                closeAction: 'hide',
+                x: 0,
+                y: 0,
+                width: viewport.width,
+                height: viewport.height,
+                items: me.codePreviewTabPanel = Ext.create({
                     xtype: 'codePreview',
+                    ptype: 'lazyitems',
                     activeTab: activeView ? preview.items.indexOf(preview.getActiveTab()) : 0,
                     tools: [],
                     showTitle: false,
                     items: activeView ? activeView.codePreviewProcessed : []
-                },
+                }),
                 doClose: function() {
                     w.hide(preview, function() {
-                        w.destroy();
+                        me.codePreviewTabPanel.removeAll(false);
                     });
                 },
                 onFocusLeave: function() {
-                    this.close();
+                    w.close();
                 }
             });
+        }
 
         w.show(preview);
     }

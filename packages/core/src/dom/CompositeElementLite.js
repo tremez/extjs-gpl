@@ -1,9 +1,9 @@
 /**
- * This class encapsulates a *collection* of DOM elements, providing methods to filter members, or to perform collective
- * actions upon the whole set.
+ * This class encapsulates a *collection* of DOM elements, providing methods to filter members,
+ * or to perform collective actions upon the whole set.
  *
- * Although they are not listed, this class supports all of the methods of {@link Ext.dom.Element}. The
- * methods from these classes will be performed on all the elements in this collection.
+ * Although they are not listed, this class supports all of the methods of {@link Ext.dom.Element}.
+ * The methods from these classes will be performed on all the elements in this collection.
  *
  * Example:
  *
@@ -26,7 +26,8 @@ Ext.define('Ext.dom.CompositeElementLite', {
 
     /**
      * @property {Boolean} isComposite
-     * `true` in this class to identify an object as an instantiated CompositeElement, or subclass thereof.
+     * `true` in this class to identify an object as an instantiated CompositeElement,
+     * or subclass thereof.
      */
     isComposite: true,
 
@@ -41,6 +42,7 @@ Ext.define('Ext.dom.CompositeElementLite', {
 
     /**
      * @cfg bubbleEvents
+     * @hide
      */
 
     /**
@@ -68,7 +70,7 @@ Ext.define('Ext.dom.CompositeElementLite', {
                 prototype = this.prototype;
 
             Ext.Object.each(Element.prototype, function(name, member) {
-                if (typeof member === 'function' && !prototype[name]){
+                if (typeof member === 'function' && !prototype[name]) {
                     prototype[name] = function() {
                         return this.invoke(name, arguments);
                     };
@@ -77,17 +79,19 @@ Ext.define('Ext.dom.CompositeElementLite', {
         }
     },
 
-    constructor: function(elements, /* private */ skipValidation) {
+    constructor: function(elements, skipValidation) {
         /**
          * @property {HTMLElement[]} elements
+         * @param skipValidation (private)
          * @readonly
          * The Array of DOM elements which this CompositeElement encapsulates.
          *
-         * This will not *usually* be accessed in developers' code, but developers wishing to augment the capabilities
-         * of the CompositeElementLite class may use it when adding methods to the class.
+         * This will not *usually* be accessed in developers' code, but developers wishing
+         * to augment the capabilities of the CompositeElementLite class may use it when adding
+         * methods to the class.
          *
-         * For example to add the `nextAll` method to the class to **add** all following siblings of selected elements,
-         * the code would be
+         * For example to add the `nextAll` method to the class to **add** all following siblings
+         * of selected elements, the code would be
          *
          *     Ext.override(Ext.dom.CompositeElementLite, {
          *         nextAll: function() {
@@ -112,7 +116,8 @@ Ext.define('Ext.dom.CompositeElementLite', {
             // critical pieces such as Ext.dom.Element.select(), this allows us to 
             // skip all the transformElement() and getDom()/Ext.get() calls.
             this.elements = elements || [];
-        } else {
+        }
+        else {
             this.elements = [];
             this.add(elements);
         }
@@ -124,6 +129,7 @@ Ext.define('Ext.dom.CompositeElementLite', {
     getElement: function(el) {
         // Set the shared flyweight dom property to the current element
         var fly = this._fly || (this._fly = new Ext.dom.Fly());
+
         return fly.attach(el);
     },
 
@@ -144,8 +150,8 @@ Ext.define('Ext.dom.CompositeElementLite', {
 
     /**
      * Adds elements to this Composite object.
-     * @param {HTMLElement[]/Ext.dom.CompositeElementLite} els Either an Array of DOM elements to add, or another Composite
-     * object who's elements should be added.
+     * @param {HTMLElement[]/Ext.dom.CompositeElementLite} els Either an Array of DOM elements
+     * to add, or another Composite object who's elements should be added.
      * @param {HTMLElement/String} [root] The root element of the query or id of the root.
      * @return {Ext.dom.CompositeElementLite} This Composite object.
      */
@@ -157,7 +163,7 @@ Ext.define('Ext.dom.CompositeElementLite', {
             return this;
         }
 
-        if (typeof els == "string") {
+        if (typeof els === "string") {
             els = Ext.fly(root || document).query(els);
         }
         else if (els.isComposite) {
@@ -184,6 +190,7 @@ Ext.define('Ext.dom.CompositeElementLite', {
             // make sure we are using the correct prototype, since Fly overrides a 
             // couple of Element methods
             prototype = (me.isLite ? Ext.dom.Fly : Ext.dom.Element).prototype;
+
             for (i = 0; i < ln; i++) {
                 element = elements[i];
 
@@ -192,6 +199,7 @@ Ext.define('Ext.dom.CompositeElementLite', {
                 }
             }
         }
+
         return me;
     },
 
@@ -225,7 +233,8 @@ Ext.define('Ext.dom.CompositeElementLite', {
      * Calls the passed function for each element in this composite.
      * @param {Function} fn The function to call.
      * @param {Ext.dom.Element} fn.el The current Element in the iteration. **This is the flyweight
-     * (shared) Ext.dom.Element instance, so if you require a a reference to the dom node, use el.dom.**
+     * (shared) Ext.dom.Element instance, so if you require a a reference to the dom node,
+     * use el.dom.**
      * @param {Ext.dom.CompositeElementLite} fn.c This Composite object.
      * @param {Number} fn.index The zero-based index in the iteration.
      * @param {Object} [scope] The scope (this reference) in which the function is executed.
@@ -234,32 +243,37 @@ Ext.define('Ext.dom.CompositeElementLite', {
      */
     each: function(fn, scope) {
         var me = this,
-                els = me.elements,
-                len = els.length,
-                i, e;
+            els = me.elements,
+            len = els.length,
+            i, e;
 
         for (i = 0; i < len; i++) {
             e = els[i];
+
             if (e) {
                 e = this.getElement(e);
+
                 if (fn.call(scope || e, e, me, i) === false) {
                     break;
                 }
             }
         }
+
         return me;
     },
 
     /**
      * Clears this Composite and adds the elements passed.
-     * @param {HTMLElement[]/Ext.dom.CompositeElementLite} els Either an array of DOM elements, or another Composite from which
-     * to fill this Composite.
+     * @param {HTMLElement[]/Ext.dom.CompositeElementLite} els Either an array of DOM elements,
+     * or another Composite from which to fill this Composite.
      * @return {Ext.dom.CompositeElementLite} this
      */
     fill: function(els) {
         var me = this;
+
         me.elements = [];
         me.add(els);
+
         return me;
     },
 
@@ -269,34 +283,35 @@ Ext.define('Ext.dom.CompositeElementLite', {
 
     /**
      * Filters this composite to only elements that match the passed selector.
-     * @param {String/Function} selector A string CSS selector or a comparison function. The comparison function will be
-     * called with the following arguments:
+     * @param {String/Function} selector A string CSS selector or a comparison function.
+     * The comparison function will be called with the following arguments:
      * @param {Ext.dom.Element} selector.el The current DOM element.
      * @param {Number} selector.index The current index within the collection.
      * @return {Ext.dom.CompositeElementLite} this
      */
     filter: function(selector) {
-        var me  = this,
+        var me = this,
             els = me.elements,
             len = els.length,
             out = [],
             i = 0,
-            isFunc = typeof selector == 'function',
-            add,
-            el;
+            isFunc = typeof selector === 'function',
+            add, el;
 
         for (; i < len; i++) {
             el = els[i];
             add = false;
+
             if (el) {
                 el = me.getElement(el);
 
                 if (isFunc) {
                     add = selector.call(el, el, me, i) !== false;
-                } else {
+                }
+                else {
                     add = el.is(selector);
                 }
-                
+
                 if (add) {
                     out.push(me.transformElement(el));
                 }
@@ -304,14 +319,16 @@ Ext.define('Ext.dom.CompositeElementLite', {
         }
 
         me.elements = out;
+
         return me;
     },
 
     /**
      * Find the index of the passed element within the composite collection.
-     * @param {String/HTMLElement/Ext.dom.Element/Number} el The id of an element, or an Ext.dom.Element, or an HtmlElement
-     * to find within the composite collection.
-     * @return {Number} The index of the passed Ext.dom.Element in the composite collection, or -1 if not found.
+     * @param {String/HTMLElement/Ext.dom.Element/Number} el The id of an element, or an
+     * Ext.dom.Element, or an HtmlElement to find within the composite collection.
+     * @return {Number} The index of the passed Ext.dom.Element in the composite collection,
+     * or -1 if not found.
      */
     indexOf: function(el) {
         return Ext.Array.indexOf(this.elements, this.transformElement(el));
@@ -319,24 +336,28 @@ Ext.define('Ext.dom.CompositeElementLite', {
 
     /**
      * Replaces the specified element with the passed element.
-     * @param {String/HTMLElement/Ext.dom.Element/Number} el The id of an element, the Element itself, the index of the
-     * element in this composite to replace.
+     * @param {String/HTMLElement/Ext.dom.Element/Number} el The id of an element, the Element
+     * itself, the index of the element in this composite to replace.
      * @param {String/Ext.dom.Element} replacement The id of an element or the Element itself.
      * @param {Boolean} [domReplace] `true` to remove and replace the element in the document too.
      * @return {Ext.dom.CompositeElementLite} this
      */
     replaceElement: function(el, replacement, domReplace) {
         var index = !isNaN(el) ? el : this.indexOf(el),
-                d;
+            d;
+
         if (index > -1) {
             replacement = Ext.getDom(replacement);
+
             if (domReplace) {
                 d = this.elements[index];
                 d.parentNode.insertBefore(replacement, d);
                 Ext.removeNode(d);
             }
+
             Ext.Array.splice(this.elements, index, 1, replacement);
         }
+
         return this;
     },
 
@@ -345,15 +366,16 @@ Ext.define('Ext.dom.CompositeElementLite', {
      * @param {Boolean} [removeDom] True to also remove the elements from the document.
      */
     clear: function(removeDom) {
-        var me  = this,
+        var me = this,
             els = me.elements,
             i = els.length - 1;
-        
+
         if (removeDom) {
             for (; i >= 0; i--) {
                 Ext.removeNode(els[i]);
             }
         }
+
         this.elements = [];
     },
 
@@ -366,6 +388,7 @@ Ext.define('Ext.dom.CompositeElementLite', {
             els = Ext.dom.Element.selectorFunction(els, root);
         }
 
+        /* eslint-disable-next-line vars-on-top */
         var yels = this.elements,
             eLen = els.length,
             e;
@@ -395,40 +418,41 @@ Ext.define('Ext.dom.CompositeElementLite', {
 
     /**
      * Returns `true` if this composite contains the passed element
-     * @param {String/HTMLElement/Ext.dom.Element/Number} el The id of an element, or an Ext.Element, or an HtmlElement to
-     * find within the composite collection.
+     * @param {String/HTMLElement/Ext.dom.Element/Number} el The id of an element,
+     * or an Ext.Element, or an HtmlElement to find within the composite collection.
      * @return {Boolean}
      */
     contains: function(el) {
-        return this.indexOf(el) != -1;
+        return this.indexOf(el) !== -1;
     },
 
     /**
      * Removes the specified element(s).
-     * @param {String/HTMLElement/Ext.dom.Element/Number} el The id of an element, the Element itself, the index of the
-     * element in this composite or an array of any of those.
+     * @param {String/HTMLElement/Ext.dom.Element/Number} keys The id of an element, the Element
+     * itself, the index of the element in this composite or an array of any of those.
      * @param {Boolean} [removeDom] `true` to also remove the element from the document
      * @return {Ext.dom.CompositeElementLite} this
      */
     removeElement: function(keys, removeDom) {
+        var me = this,
+            elements = me.elements,
+            val, el, k, kLen;
+
         keys = [].concat(keys);
 
-        var me       = this,
-            elements = me.elements,
-            kLen     = keys.length,
-            val, el, k;
-
-        for (k = 0; k < kLen; k++) {
+        for (k = 0, kLen = keys.length; k < kLen; k++) {
             val = keys[k];
 
             if ((el = (elements[val] || elements[val = me.indexOf(val)]))) {
                 if (removeDom) {
                     if (el.dom) {
                         el.destroy();
-                    } else {
+                    }
+                    else {
                         Ext.removeNode(el);
                     }
                 }
+
                 Ext.Array.erase(elements, val, 1);
             }
         }
@@ -437,8 +461,7 @@ Ext.define('Ext.dom.CompositeElementLite', {
     },
 
     destroy: function() {
-        // TOUCH-4761: ensure Element#destroy() gets called and not Base#destroy()
-        return this.invoke('destroy', arguments);
+        this.invoke('destroy', arguments);
         this.callParent();
     }
 

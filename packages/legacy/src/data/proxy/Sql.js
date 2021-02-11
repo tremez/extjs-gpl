@@ -79,12 +79,15 @@ Ext.define('Ext.data.proxy.Sql', {
 
         if (model) {
             me.uniqueIdStrategy = model.identifier.isUnique;
+
             if (!me.getTable()) {
                 modelName = model.entityName;
                 me.setTable(modelName.slice(modelName.lastIndexOf('.') + 1));
             }
+
             me.columns = columns = me.getPersistedModelColumns(model);
             me.quotedColumns = quoted = [];
+
             for (i = 0, len = columns.length; i < len; ++i) {
                 quoted.push('"' + columns[i] + '"');
             }
@@ -97,7 +100,7 @@ Ext.define('Ext.data.proxy.Sql', {
         operation.setException(error);
     },
 
-    create: function (operation) {
+    create: function(operation) {
         var me = this,
             records = operation.getRecords(),
             result, error;
@@ -105,7 +108,7 @@ Ext.define('Ext.data.proxy.Sql', {
         operation.setStarted();
 
         me.executeTransaction(function(transaction) {
-            me.insertRecords(records, transaction, function (resultSet, statementError) {
+            me.insertRecords(records, transaction, function(resultSet, statementError) {
                 result = resultSet;
                 error = statementError;
             });
@@ -114,7 +117,8 @@ Ext.define('Ext.data.proxy.Sql', {
         }, function() {
             if (error) {
                 operation.setException(statementError);
-            } else {
+            }
+            else {
                 operation.process(result);
             }
         });
@@ -129,7 +133,8 @@ Ext.define('Ext.data.proxy.Sql', {
 
         if (record && !record.phantom) {
             id = record.getId();
-        } else {
+        }
+        else {
             id = operation.getId();
         }
 
@@ -137,8 +142,9 @@ Ext.define('Ext.data.proxy.Sql', {
             params = {
                 idOnly: true,
                 id: id
-            }
-        } else {
+            };
+        }
+        else {
             params = {
                 page: operation.getPage(),
                 start: operation.getStart(),
@@ -151,7 +157,7 @@ Ext.define('Ext.data.proxy.Sql', {
         operation.setStarted();
 
         me.executeTransaction(function(transaction) {
-            me.selectRecords(transaction, params, function (resultSet, statementError) {
+            me.selectRecords(transaction, params, function(resultSet, statementError) {
                 result = resultSet;
                 error = statementError;
             });
@@ -160,7 +166,8 @@ Ext.define('Ext.data.proxy.Sql', {
         }, function() {
             if (error) {
                 operation.setException(statementError);
-            } else {
+            }
+            else {
                 operation.process(result);
             }
         });
@@ -174,7 +181,7 @@ Ext.define('Ext.data.proxy.Sql', {
         operation.setStarted();
 
         me.executeTransaction(function(transaction) {
-            me.updateRecords(transaction, records, function (resultSet, statementError) {
+            me.updateRecords(transaction, records, function(resultSet, statementError) {
                 result = resultSet;
                 error = statementError;
             });
@@ -183,7 +190,8 @@ Ext.define('Ext.data.proxy.Sql', {
         }, function() {
             if (error) {
                 operation.setException(statementError);
-            } else {
+            }
+            else {
                 operation.process(result);
             }
         });
@@ -206,20 +214,24 @@ Ext.define('Ext.data.proxy.Sql', {
         }, function() {
             if (error) {
                 operation.setException(error);
-            } else {
+            }
+            else {
                 operation.process(result);
             }
         });
     },
 
-    createTable: function (transaction) {
+    createTable: function(transaction) {
         var me = this;
+
         if (!transaction) {
             me.executeTransaction(function(transaction) {
                 me.createTable(transaction);
             });
+
             return;
         }
+
         me.executeStatement(transaction, 'CREATE TABLE IF NOT EXISTS "' + me.getTable() + '" (' + me.getSchemaString() + ')', function() {
             me.tableExists = true;
         });
@@ -237,14 +249,16 @@ Ext.define('Ext.data.proxy.Sql', {
 
         completeIf = function(transaction) {
             ++executed;
+
             if (executed === totalRecords) {
                 callback.call(me, new Ext.data.ResultSet({
                     success: !errors
                 }), errors);
             }
         };
+
         placeholders = Ext.String.repeat('?', columns.length, ',');
-        sql =  'INSERT INTO "' + me.getTable() + '" (' + me.quotedColumns.join(',') + ') VALUES (' + placeholders + ')';
+        sql = 'INSERT INTO "' + me.getTable() + '" (' + me.quotedColumns.join(',') + ') VALUES (' + placeholders + ')';
 
         for (i = 0; i < len; ++i) {
             record = records[i];
@@ -257,11 +271,13 @@ Ext.define('Ext.data.proxy.Sql', {
                     if (!uniqueIdStrategy) {
                         record.setId(resultSet.insertId, setOptions);
                     }
+
                     completeIf();
                 }, function(transaction, error) {
                     if (!errors) {
                         errors = [];
                     }
+
                     errors.push(error);
                     completeIf();
                 });
@@ -283,18 +299,22 @@ Ext.define('Ext.data.proxy.Sql', {
         if (params.idOnly) {
             sql += filterStatement + '"' + idProperty + '" = ?';
             values.push(params);
-        } else {
+        }
+        else {
             filters = params.filters;
             len = filters && filters.length;
+
             if (len) {
                 for (i = 0; i < len; i++) {
                     filter = filters[i];
                     property = filter.getProperty();
                     value = me.toSqlValue(filter.getValue(), Model.getField(property));
                     operator = filter.getOperator();
+
                     if (property !== null) {
                         operator = operator || '=';
                         placeholder = '?';
+
                         if (operator === 'like' || (operator === '=' && filter.getAnyMatch())) {
                             operator = 'LIKE';
                             value = '%' + value + '%';
@@ -304,11 +324,14 @@ Ext.define('Ext.data.proxy.Sql', {
                             if (operator === 'notin') {
                                 operator = 'not in';
                             }
+
                             placeholder = '(' + Ext.String.repeat('?', value.length, ',') + ')';
                             values = values.concat(value);
-                        } else {
+                        }
+                        else {
                             values.push(value);
                         }
+
                         sql += filterStatement + '"' + property + '" ' + operator + ' ' + placeholder;
                         filterStatement = ' AND ';
                     }
@@ -317,10 +340,12 @@ Ext.define('Ext.data.proxy.Sql', {
 
             sorters = params.sorters;
             len = sorters && sorters.length;
+
             if (len) {
                 for (i = 0; i < len; i++) {
                     sorter = sorters[i];
                     property = sorter.getProperty();
+
                     if (property !== null) {
                         sql += sortStatement + '"' + property + '" ' + sorter.getDirection();
                         sortStatement = ', ';
@@ -345,11 +370,13 @@ Ext.define('Ext.data.proxy.Sql', {
             for (i = 0, len = count; i < len; ++i) {
                 raw = rows.item(i);
                 data = {};
+
                 for (j = 0; j < fieldsLen; ++j) {
                     field = fields[j];
                     name = field.name;
                     data[name] = me.fromSqlValue(raw[name], field);
                 }
+
                 records.push(new Model(data));
             }
 
@@ -368,7 +395,7 @@ Ext.define('Ext.data.proxy.Sql', {
         });
     },
 
-    updateRecords: function (transaction, records, callback) {
+    updateRecords: function(transaction, records, callback) {
         var me = this,
             columns = me.columns,
             quotedColumns = me.quotedColumns,
@@ -380,6 +407,7 @@ Ext.define('Ext.data.proxy.Sql', {
 
         completeIf = function(transaction) {
             ++executed;
+
             if (executed === totalRecords) {
                 callback.call(me, new Ext.data.ResultSet({
                     success: !errors
@@ -407,6 +435,7 @@ Ext.define('Ext.data.proxy.Sql', {
                     if (!errors) {
                         errors = [];
                     }
+
                     errors.push(error);
                     completeIf();
                 });
@@ -414,7 +443,7 @@ Ext.define('Ext.data.proxy.Sql', {
         }
     },
 
-    destroyRecords: function (transaction, records, callback) {
+    destroyRecords: function(transaction, records, callback) {
         var me = this,
             table = me.getTable(),
             idProperty = me.getModel().idProperty,
@@ -432,11 +461,11 @@ Ext.define('Ext.data.proxy.Sql', {
 
         sql = 'DELETE FROM "' + me.getTable() + '" WHERE ' + ids.join(' OR ');
 
-        me.executeStatement(transaction, sql, values, function (transaction, resultSet) {
+        me.executeStatement(transaction, sql, values, function(transaction, resultSet) {
             callback.call(me, new Ext.data.ResultSet({
                 success: true
             }));
-        }, function (transaction, error) {
+        }, function(transaction, error) {
             callback.call(me, new Ext.data.ResultSet({
                 success: false
             }), error);
@@ -450,7 +479,7 @@ Ext.define('Ext.data.proxy.Sql', {
      * @return {Object} An object literal of name/value keys to be written to the server.
      * By default this method returns the data property on the record.
      */
-    getRecordData: function (record) {
+    getRecordData: function(record) {
         var me = this,
             fields = record.fields,
             idProperty = record.idProperty,
@@ -462,11 +491,14 @@ Ext.define('Ext.data.proxy.Sql', {
 
         for (i = 0; i < len; ++i) {
             field = fields[i];
+
             if (field.persist !== false) {
                 name = field.name;
+
                 if (name === idProperty && !uniqueIdStrategy) {
                     continue;
                 }
+
                 data[name] = me.toSqlValue(recordData[name], field);
             }
         }
@@ -482,6 +514,7 @@ Ext.define('Ext.data.proxy.Sql', {
         for (i = 0; i < len; i++) {
             column = columns[i];
             value = data[column];
+
             if (value !== undefined) {
                 values.push(value);
             }
@@ -509,10 +542,12 @@ Ext.define('Ext.data.proxy.Sql', {
                 if (uniqueIdStrategy) {
                     type = me.convertToSqlType(type);
                     schema.unshift('"' + idProperty + '" ' + type);
-                } else {
+                }
+                else {
                     schema.unshift('"' + idProperty + '" INTEGER PRIMARY KEY AUTOINCREMENT');
                 }
-            } else {
+            }
+            else {
                 type = me.convertToSqlType(type);
                 schema.push('"' + name + '" ' + type);
             }
@@ -553,6 +588,7 @@ Ext.define('Ext.data.proxy.Sql', {
     privates: {
         executeStatement: function(transaction, sql, values, success, failure) {
             var me = this;
+
             transaction.executeSql(sql, values, success ? function() {
                 success.apply(me, arguments);
             } : null, failure ? function() {
@@ -569,6 +605,7 @@ Ext.define('Ext.data.proxy.Sql', {
                 if (autoCreateTable && !me.tableExists) {
                     me.createTable(transaction);
                 }
+
                 runner.apply(me, arguments);
             } : null, failure ? function() {
                 failure.apply(me, arguments);
@@ -580,9 +617,11 @@ Ext.define('Ext.data.proxy.Sql', {
         fromSqlValue: function(value, field) {
             if (field.isDateField) {
                 value = value ? new Date(value) : null;
-            } else if (field.isBooleanField) {
+            }
+            else if (field.isBooleanField) {
                 value = value === 1;
             }
+
             return value;
         },
 
@@ -606,15 +645,18 @@ Ext.define('Ext.data.proxy.Sql', {
                     columns.push(field.name);
                 }
             }
+
             return columns;
         },
 
         toSqlValue: function(value, field) {
             if (field.isDateField) {
                 value = value ? value.getTime() : null;
-            } else if (field.isBooleanField) {
+            }
+            else if (field.isBooleanField) {
                 value = value ? 1 : 0;
             }
+
             return value;
         }
     }

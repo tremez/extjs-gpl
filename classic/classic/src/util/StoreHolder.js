@@ -16,7 +16,7 @@ Ext.define('Ext.util.StoreHolder', {
 
     /**
      * @property {Boolean} [autoDestroyBoundStore] This property allows the object
-     * to destroy bound stores that have {@link #Ext.data.AbstractStore#autoDestroy}
+     * to destroy bound stores that have {@link Ext.data.AbstractStore#autoDestroy}
      * option set to `true`. 
      */
     autoDestroyBoundStore: false,
@@ -25,15 +25,19 @@ Ext.define('Ext.util.StoreHolder', {
      * Binds a store to this instance.
      * @param {Ext.data.AbstractStore/String} [store] The store to bind or ID of the store.
      * When no store given (or when `null` or `undefined` passed), unbinds the existing store.
+     * @param initial
+     * @param propertyName
      */
     bindStore: function(store, initial, propertyName) {
+        var me = this,
+            oldStore;
+
         // Private params
         // @param {Boolean} [initial=false] True to not remove listeners from existing store.
-        // @param {String} [propertyName="store"] The property in this object under which to cache the passed Store.
+        // @param {String} [propertyName="store"] The property in this object under which
+        // to cache the passed Store.
         propertyName = propertyName || 'store';
-
-        var me = this,
-            oldStore = initial ? null : me[propertyName];
+        oldStore = initial ? null : me[propertyName];
 
         if (store !== oldStore) {
             if (oldStore) {
@@ -46,7 +50,8 @@ Ext.define('Ext.util.StoreHolder', {
                 // autoDestroy is only intended for when it is unbound from a component,
                 // and the store could have been already destroyed upstream
                 if (!oldStore.destroyed) {
-                    if (me.autoDestroyBoundStore && propertyName === 'store' && oldStore.autoDestroy) {
+                    if (me.autoDestroyBoundStore && propertyName === 'store' &&
+                        oldStore.autoDestroy) {
                         oldStore.destroy();
                     }
                     else {
@@ -58,7 +63,7 @@ Ext.define('Ext.util.StoreHolder', {
             if (store) {
                 me[propertyName] = store = Ext.data.StoreManager.lookup(store);
                 me.bindStoreListeners(store);
-                
+
                 if (!me.onBindStore.$emptyFn) {
                     me.onBindStore(store, oldStore, initial);
                 }
@@ -79,7 +84,7 @@ Ext.define('Ext.util.StoreHolder', {
      * Gets the current store instance.
      * @return {Ext.data.AbstractStore} The store, null if one does not exist.
      */
-    getStore: function () {
+    getStore: function() {
         return this.store;
     },
 
@@ -88,7 +93,7 @@ Ext.define('Ext.util.StoreHolder', {
      * @param store
      * @since 5.0.0
      */
-    setStore: function (store) {
+    setStore: function(store) {
         this.bindStore(store);
     },
 
@@ -102,6 +107,7 @@ Ext.define('Ext.util.StoreHolder', {
     unbindStoreListeners: function(store) {
         // Can be overridden in the subclass for more complex removal
         var listeners = this.storeListeners;
+
         if (listeners) {
             store.un(listeners);
         }
@@ -120,9 +126,11 @@ Ext.define('Ext.util.StoreHolder', {
 
         if (listeners) {
             listeners = Ext.apply({}, listeners);
+
             if (!listeners.scope) {
                 listeners.scope = this;
             }
+
             this.storeListeners = listeners;
             store.on(listeners);
         }
@@ -132,7 +140,8 @@ Ext.define('Ext.util.StoreHolder', {
      * @method
      * Gets the listeners to bind to a new store.
      * @protected
-     * @param {Ext.data.Store} store The Store which is being bound to for which a listeners object should be returned.
+     * @param {Ext.data.Store} store The Store which is being bound to for which a listeners object
+     * should be returned.
      * @return {Object} The listeners to be bound to the store in object literal form. The scope
      * may be omitted, it is assumed to be the current instance.
      */

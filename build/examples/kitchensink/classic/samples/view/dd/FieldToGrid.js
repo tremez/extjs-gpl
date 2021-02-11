@@ -21,13 +21,13 @@ Ext.define('KitchenSink.view.dd.FieldToGrid', {
     ],
 
     width: 700,
-    height: 450,
+    height: 550,
     layout: {
         type: 'vbox',
         align: 'stretch'
     },
     signTpl: '<span style="' +
-            'color:{value:sign(\'${red}\',\'${green}\')}"' +
+        'color:{value:sign(\'${lossColor}\',\'${gainColor}\')}"' +
         '>{text}</span>',
 
     //<example>
@@ -36,23 +36,43 @@ Ext.define('KitchenSink.view.dd.FieldToGrid', {
         path: 'classic/samples/view/dd/FieldToGridController.js'
     }, {
         type: 'Model',
-        path: 'classic/samples/model/Company.js'
-    },{
+        path: 'app/model/Company.js'
+    }, {
         type: 'Data',
         path: 'classic/samples/data/DataSets.js'
     }],
     profiles: {
         classic: {
+            priceWidth: 75,
+            pricechangeWidth: 80,
             percentChangeColumnWidth: 75,
             lastUpdatedColumnWidth: 85,
-            green: 'green',
-            red: 'red'
+            gainColor: 'green',
+            lossColor: 'red'
         },
         neptune: {
+            priceWidth: 75,
+            pricechangeWidth: 80,
             percentChangeColumnWidth: 100,
             lastUpdatedColumnWidth: 115,
-            green: '#73b51e',
-            red: '#cf4c35'
+            gainColor: '#73b51e',
+            lossColor: '#cf4c35'
+        },
+        graphite: {
+            priceWidth: 100,
+            pricechangeWidth: 110,
+            percentChangeColumnWidth: 120,
+            lastUpdatedColumnWidth: 150,
+            gainColor: 'unset',
+            lossColor: 'unset'
+        },
+        'classic-material': {
+            priceWidth: 100,
+            pricechangeWidth: 110,
+            percentChangeColumnWidth: 120,
+            lastUpdatedColumnWidth: 150,
+            gainColor: '#4caf50',
+            lossColor: '#f44336'
         }
     },
     //</example>
@@ -67,32 +87,33 @@ Ext.define('KitchenSink.view.dd.FieldToGrid', {
             type: 'companies'
         },
         plugins: {
-            ptype: 'ux-cellfielddropzone',
-            ddGroup: 'dd-field-to-grid',
-            onCellDrop: 'onCellDrop'
+            'ux-cellfielddropzone': {
+                ddGroup: 'dd-field-to-grid',
+                onCellDrop: 'onCellDrop'
+            }
         },
 
         columns: [{
-            id:'company',
+            id: 'company',
             header: 'Company',
             sortable: true,
             dataIndex: 'name',
             flex: 1
         }, {
             header: 'Price',
-            width: 75,
+            width: '${priceWidth}',
             sortable: true,
             formatter: 'usMoney',
             dataIndex: 'price'
         }, {
             header: 'Change',
-            dataIndex: 'change',
-            width: 80,
+            dataIndex: 'priceChange',
+            width: '${pricechangeWidth}',
             sortable: true,
             renderer: 'renderChange'
         }, {
             header: '% Change',
-            dataIndex: 'pctChange',
+            dataIndex: 'priceChangePct',
             width: '${percentChangeColumnWidth}',
             sortable: true,
             renderer: 'renderPercent'
@@ -101,15 +122,16 @@ Ext.define('KitchenSink.view.dd.FieldToGrid', {
             width: '${lastUpdatedColumnWidth}',
             sortable: true,
             formatter: 'date("m/d/Y")',
-            dataIndex: 'lastChange'
+            dataIndex: 'priceLastChange'
         }]
     }, {
         title: 'Source Form',
         margin: '10 0 0 0',
         bodyPadding: 5,
         plugins: {
-            ptype: 'ux-panelfielddragzone',
-            ddGroup: 'dd-field-to-grid'
+            'ux-panelfielddragzone': {
+                ddGroup: 'dd-field-to-grid'
+            }
         },
         defaults: {
             labelWidth: 150
@@ -118,11 +140,11 @@ Ext.define('KitchenSink.view.dd.FieldToGrid', {
             xtype: 'textfield',
             fieldLabel: 'Drag this text',
             value: 'test'
-        },{
+        }, {
             xtype: 'numberfield',
             fieldLabel: 'Drag this number',
             value: 3.14
-        },{
+        }, {
             xtype: 'datefield',
             fieldLabel: 'Drag this date',
             value: new Date(2016, 4, 20)

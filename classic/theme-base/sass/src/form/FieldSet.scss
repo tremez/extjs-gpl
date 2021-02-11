@@ -2,6 +2,11 @@
     display: block; /* preserve margins in IE */
     position: relative;
     overflow: hidden;
+    
+    // Safari has a bug where fieldset legend is not displayed
+    .#{$prefix}safari:not(.#{$prefix}safari10m) & {
+        overflow: visible;
+    }
 }
 
 .#{$prefix}fieldset-header {

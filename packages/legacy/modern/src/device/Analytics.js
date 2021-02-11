@@ -6,7 +6,7 @@
  * @mixins Ext.device.analytics.Abstract
  */
 Ext.define('Ext.device.Analytics', {
-    alternateClassName:'Ext.ux.device.Analytics',
+    alternateClassName: 'Ext.ux.device.Analytics',
     singleton: true,
 
     requires: [
@@ -16,9 +16,11 @@ Ext.define('Ext.device.Analytics', {
 
     constructor: function() {
         var browserEnv = Ext.browser.is;
+
         if (browserEnv.WebView && browserEnv.Cordova) {
             return Ext.create('Ext.device.analytics.Cordova');
-        } else {
+        }
+        else {
             return Ext.create('Ext.device.analytics.Abstract');
         }
     }

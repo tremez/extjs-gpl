@@ -12,6 +12,7 @@ Ext.define('KitchenSink.view.button.SegmentedButtons', {
     layout: 'form',
     width: '${width}',
     defaultType: 'fieldcontainer',
+    cls: 'segmented-buttons',
 
     //<example>
     otherContent: [{
@@ -27,6 +28,9 @@ Ext.define('KitchenSink.view.button.SegmentedButtons', {
         },
         'neptune-touch': {
             width: 585
+        },
+        'classic-material': {
+            width: 585
         }
     },
     //</example>
@@ -34,6 +38,7 @@ Ext.define('KitchenSink.view.button.SegmentedButtons', {
     items: [{
         xtype: 'checkbox',
         boxLabel: 'Disabled',
+        cls: 'segmented-btn-disable',
         margin: '0 0 0 10',
         listeners: {
             change: 'toggleDisabled'

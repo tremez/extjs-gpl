@@ -3,7 +3,7 @@ Ext.define('KitchenSink.view.grid.MultipleSortingController', {
 
     alias: 'controller.multi-sort-grid',
 
-    updateSort: function () {
+    updateSort: function() {
         var store = this.getView().store,
             details = [],
             vm = this.getViewModel();

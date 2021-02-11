@@ -11,12 +11,13 @@ Ext.define('Ext.draw.gradient.Gradient', {
 
     config: {
         /**
+         * @cfg {Object[]} stops
          * Defines the stops of the gradient.
          */
         stops: []
     },
 
-    applyStops: function (newStops) {
+    applyStops: function(newStops) {
         var stops = [],
             ln = newStops.length,
             i, stop, color;
@@ -24,27 +25,32 @@ Ext.define('Ext.draw.gradient.Gradient', {
         for (i = 0; i < ln; i++) {
             stop = newStops[i];
             color = stop.color;
+
             if (!(color && color.isColor)) {
                 color = Ext.util.Color.fly(color || Ext.util.Color.NONE);
             }
+
             stops.push({
+                // eslint-disable-next-line max-len
                 offset: Math.min(1, Math.max(0, 'offset' in stop ? stop.offset : stop.position || 0)),
                 color: color.toString()
             });
         }
-        stops.sort(function (a, b) {
+
+        stops.sort(function(a, b) {
             return a.offset - b.offset;
         });
+
         return stops;
     },
 
-    onClassExtended: function (subClass, member) {
+    onClassExtended: function(subClass, member) {
         if (!member.alias && member.type) {
             member.alias = 'gradient.' + member.type;
         }
     },
 
-    constructor: function (config) {
+    constructor: function(config) {
         this.initConfig(config);
     },
 
@@ -57,5 +63,4 @@ Ext.define('Ext.draw.gradient.Gradient', {
      * @return {CanvasGradient/Ext.draw.engine.SvgContext.Gradient/Ext.util.Color.NONE}
      */
     generateGradient: Ext.emptyFn
-
 });

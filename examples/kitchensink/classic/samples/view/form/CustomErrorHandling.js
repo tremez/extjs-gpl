@@ -17,34 +17,56 @@ Ext.define('KitchenSink.view.form.CustomErrorHandling', {
     extend: 'Ext.form.Panel',
     xtype: 'form-customerrors',
     controller: 'form-customerrors',
-    
+
     //<example>
     requires: [
         'KitchenSink.view.form.CustomErrorHandlingController'
     ],
-    
+
     exampleTitle: 'Custom Error Handling',
     otherContent: [{
-        type: 'ViewController',
+        type: 'Controller',
         path: 'classic/samples/view/form/CustomErrorHandlingController.js'
     }],
     //</example>
-    
+    profiles: {
+        classic: {
+            width: 350,
+            labelWidth: 110,
+            constrainPosition: false
+        },
+        neptune: {
+            width: 350,
+            labelWidth: 110,
+            constrainPosition: false
+        },
+        graphite: {
+            width: 450,
+            labelWidth: 150,
+            constrainPosition: false
+        },
+        'classic-material': {
+            width: 450,
+            labelWidth: 150,
+            constrainPosition: true
+        }
+    },
+
     frame: true,
-    width: 350,
+    width: '${width}',
     bodyPadding: 10,
     bodyBorder: true,
+
     title: 'Account Registration',
 
     defaults: {
         anchor: '100%'
     },
-    
+
     fieldDefaults: {
-        labelWidth: 110,
-        labelAlign: 'left',
+        labelWidth: '${labelWidth}',
         msgTarget: 'none',
-        invalidCls: '' //unset the invalidCls so individual fields do not get styled as invalid
+        invalidCls: '' // unset the invalidCls so individual fields do not get styled as invalid
     },
 
     /*
@@ -75,36 +97,37 @@ Ext.define('KitchenSink.view.form.CustomErrorHandling', {
             flex: 1,
             validText: 'Form is valid',
             invalidText: 'Form has errors',
-            
+
             tipTpl: [
                 '<ul class="' + Ext.baseCSSPrefix + 'list-plain">',
-                    '<tpl for=".">',
-                        '<li><span class="field-name">{name}</span>: ',
-                            '<span class="error">{error}</span>',
-                        '</li>',
-                    '</tpl>',
+                '<tpl for=".">',
+                '<li><span class="field-name">{name}</span>: ',
+                '<span class="error">{error}</span>',
+                '</li>',
+                '</tpl>',
                 '</ul>'
             ],
 
             setErrors: function(errors) {
                 var me = this,
                     tpl = me.tipTpl,
-                    tip = me.tip;
-                
+                    tip = me.tip,
+                    position = Ext.theme.name === 'Graphite' ? 'left-top' : 'top';
+
                 if (!me.tipTpl.isTemplate) {
                     tpl = me.tipTpl = new Ext.XTemplate(tpl);
                 }
-                
+
                 if (!tip) {
                     tip = me.tip = Ext.widget('tooltip', {
                         target: me.el,
                         title: 'Error Details:',
                         minWidth: 200,
                         autoHide: false,
-                        anchor: 'top',
+                        anchor: position,
                         mouseOffset: [-11, -2],
                         closable: true,
-                        constrainPosition: false,
+                        constrainPosition: '${constrainPosition}',
                         cls: 'errors-tip'
                     });
                 }
@@ -139,7 +162,7 @@ Ext.define('KitchenSink.view.form.CustomErrorHandling', {
             }
         }]
     }],
-    
+
     items: [{
         xtype: 'textfield',
         name: 'username',
@@ -166,18 +189,19 @@ Ext.define('KitchenSink.view.form.CustomErrorHandling', {
         fieldLabel: 'Repeat Password',
         inputType: 'password',
         allowBlank: false,
-        
+
         /*
          * Custom validator implementation - checks that the value matches what was entered into
          * the password1 field.
          */
         validator: function(value) {
             var password1 = this.previousSibling('[name=password1]');
-            return (value === password1.getValue()) ? true : 'Passwords do not match.'
+
+            return (value === password1.getValue()) ? true : 'Passwords do not match.';
         }
     },
 
-    /*
+        /*
      * Terms of Use acceptance checkbox. Two things are special about this:
      * 1) The boxLabel contains a HTML link to the Terms of Use page; a special
      *    click listener opens this page in a modal Ext window for convenient viewing,
@@ -187,62 +211,64 @@ Ext.define('KitchenSink.view.form.CustomErrorHandling', {
      *    unless the user has checked the box. Ext does not have this type of validation
      *    built in for checkboxes, so we add a custom getErrors method implementation.
      */
-    {
-        xtype: 'checkboxfield',
-        name: 'acceptTerms',
-        reference: 'acceptTerms',
-        fieldLabel: 'Terms of Use',
-        hideLabel: true,
-        margin: '15 0 0 0',
-        boxLabel: 'I have read and accept the <a href="#" class="terms">Terms of Use</a>.',
+            {
+                xtype: 'checkboxfield',
+                name: 'acceptTerms',
+                reference: 'acceptTerms',
+                fieldLabel: 'Terms of Use',
+                hideLabel: true,
+                margin: '15 0 0 0',
+                boxLabel: 'I have read and accept the <a href="#" class="terms">Terms of Use</a>.',
 
-        // Listener to open the Terms of Use page link in a modal window
-        // Note that the listener method itself is defined in the ViewController
-        listeners: {
-            click: {
-                element: 'boxLabelEl',
-                fn: 'onTermsOfUseElementClick'
-            }
-        },
+                // Listener to open the Terms of Use page link in a modal window
+                // Note that the listener method itself is defined in the ViewController
+                listeners: {
+                    click: {
+                        element: 'boxLabelEl',
+                        fn: 'onTermsOfUseElementClick'
+                    }
+                },
 
-        // Custom validation logic - requires the checkbox to be checked
-        getErrors: function() {
-            return this.getValue() ? [] : ['You must accept the Terms of Use'];
-        }
-    }, {
-        // The window is added to the form's children array to be handled
-        // by the form's ViewController. In a more complicated case we would
-        // probably want the window to have its own ViewController.
-        xtype: 'window',
-        reference: 'termsOfUseWindow',
-        closeAction: 'hide',
-        title: 'Terms of Use',
-        modal: true,
-        width: 700,
-        height: 400,
-        bodyPadding: '10 20',
-        scrollable: true,
+                // Custom validation logic - requires the checkbox to be checked
+                getErrors: function() {
+                    return this.getValue() ? [] : ['You must accept the Terms of Use'];
+                }
+            }, {
+                // The window is added to the form's children array to be handled
+                // by the form's ViewController. In a more complicated case we would
+                // probably want the window to have its own ViewController.
+                xtype: 'window',
+                reference: 'termsOfUseWindow',
+                closeAction: 'hide',
+                title: 'Terms of Use',
+                modal: true,
+                width: 700,
+                height: 400,
+                bodyPadding: '10 20',
+                scrollable: true,
 
-        // Wall of text
-        loader: {
-            url: 'data/form/terms-of-use.html',
-            autoLoad: true
-        },
-    
-        buttons: [{
-            text: 'Decline',
-            handler: 'declineTermsOfUse'
-        }, {
-            text: 'Accept',
-            handler: 'acceptTermsOfUse'
-        }]
-    }],
+                // Wall of text
+                loader: {
+                    url: 'data/form/terms-of-use.html',
+                    autoLoad: true
+                },
+
+                buttons: [{
+                    text: 'Decline',
+                    handler: 'declineTermsOfUse'
+                }, {
+                    text: 'Accept',
+                    handler: 'acceptTermsOfUse'
+                }]
+            }],
 
     doDestroy: function() {
         var error = this.lookupReference('formErrorState');
+
         if (error) {
             Ext.destroy(error.tip);
         }
+
         this.callParent();
     }
 });

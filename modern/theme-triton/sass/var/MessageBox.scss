@@ -1,4 +1,4 @@
-$messagebox-title-background-color: dynamic($base-color);
-$messagebox-border-radius: dynamic(null);
-$messagebox-border-width: dynamic(2px);
-$messagebox-footer-background-color: dynamic($neutral-highlight-color);
+$messagebox-header-padding: dynamic(null);
+$messagebox-header-padding-big: dynamic(null);
+$messagebox-body-padding: dynamic(20px 15px);
+$messagebox-body-padding-big: dynamic(25px 15px);

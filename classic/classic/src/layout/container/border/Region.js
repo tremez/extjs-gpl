@@ -13,7 +13,7 @@ Ext.define('Ext.layout.container.border.Region', {
      * called when that component is owned by a `border` layout.
      * @private
      */
-    initBorderRegion: function () {
+    initBorderRegion: function() {
         var me = this;
 
         if (!me._borderRegionInited) {
@@ -28,11 +28,11 @@ Ext.define('Ext.layout.container.border.Region', {
             // not a concern. Secondly, if this method were on the prototype it would
             // impact all components.
             Ext.override(me, {
-                getState: function () {
+                getState: function() {
                     var state = me.callParent();
 
-                    // Now that border regions can have dynamic region/weight, these need to be saved
-                    // to state:
+                    // Now that border regions can have dynamic region/weight,
+                    // these need to be saved to state:
                     state = me.addPropertyToState(state, 'region');
                     state = me.addPropertyToState(state, 'weight');
 
@@ -48,8 +48,9 @@ Ext.define('Ext.layout.container.border.Region', {
      * @return {Ext.container.Container} The owning border container or `null`.
      * @private
      */
-    getOwningBorderContainer: function () {
+    getOwningBorderContainer: function() {
         var layout = this.getOwningBorderLayout();
+
         return layout && layout.owner;
     },
 
@@ -59,9 +60,10 @@ Ext.define('Ext.layout.container.border.Region', {
      * @return {Ext.layout.container.Border} The owning border layout or `null`.
      * @private
      */
-    getOwningBorderLayout: function () {
+    getOwningBorderLayout: function() {
         // the ownerLayot (if set) may or may not be a border layout
         var layout = this.ownerLayout;
+
         return (layout && layout.isBorderLayout) ? layout : null;
     },
 
@@ -72,7 +74,7 @@ Ext.define('Ext.layout.container.border.Region', {
      * `"west"`).
      * @return {String} The previous value of the `region` property.
      */
-    setRegion: function (region) {
+    setRegion: function(region) {
         var me = this,
             borderLayout,
             old = me.region;
@@ -87,7 +89,9 @@ Ext.define('Ext.layout.container.border.Region', {
 
         if (region !== old) {
             borderLayout = me.getOwningBorderLayout();
+
             if (borderLayout) {
+                // eslint-disable-next-line vars-on-top, one-var
                 var regionFlags = borderLayout.regionFlags[region],
                     placeholder = me.placeholder,
                     splitter = me.splitter,
@@ -99,6 +103,7 @@ Ext.define('Ext.layout.container.border.Region', {
                 if (me.fireEventArgs('beforechangeregion', [me, region]) === false) {
                     return old;
                 }
+
                 Ext.suspendLayouts();
 
                 me.region = region;
@@ -115,15 +120,19 @@ Ext.define('Ext.layout.container.border.Region', {
 
                     items = owner.items;
                     index = items.indexOf(me);
+
                     if (index >= 0) {
                         delta = regionMeta[region].splitterDelta;
+
                         if (items.getAt(index + delta) !== splitter) {
                             // splitter is not where we expect it, so move it there
                             items.remove(splitter);
                             index = items.indexOf(me);  // could have changed
+
                             if (delta > 0) {
                                 ++index;
                             }
+
                             // else, insert at index and splitter will be before the item
                             items.insert(index, splitter);
 
@@ -133,6 +142,7 @@ Ext.define('Ext.layout.container.border.Region', {
                         }
                     }
                 }
+
                 if (placeholder) {
                     // The collapsed item is potentially remembering wrong things (for
                     // example, if it was collapsed as a West region and changed to be
@@ -154,7 +164,8 @@ Ext.define('Ext.layout.container.border.Region', {
                 Ext.resumeLayouts(true);
 
                 me.fireEventArgs('changeregion', [me, old]);
-            } else {
+            }
+            else {
                 me.region = region; // maybe not added yet
             }
         }
@@ -168,7 +179,7 @@ Ext.define('Ext.layout.container.border.Region', {
      * @param {Number} weight The new `weight` value.
      * @return {Number} The previous value of the `weight` property.
      */
-    setWeight: function (weight) {
+    setWeight: function(weight) {
         var me = this,
             ownerCt = me.getOwningBorderContainer(),
             placeholder = me.placeholder,
@@ -177,20 +188,22 @@ Ext.define('Ext.layout.container.border.Region', {
         if (weight !== old) {
             if (me.fireEventArgs('beforechangeweight', [me, weight]) !== false) {
                 me.weight = weight;
+
                 if (placeholder) {
                     placeholder.weight = weight;
                 }
+
                 if (ownerCt) {
                     ownerCt.updateLayout();
                 }
+
                 me.fireEventArgs('changeweight', [me, old]);
             }
         }
 
         return old;
     }
-},
-function (Component) {
+}, function(Component) {
     var proto = Component.prototype;
 
     // Aliases for v4 compat

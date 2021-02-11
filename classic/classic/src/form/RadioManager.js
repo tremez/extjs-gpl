@@ -15,7 +15,7 @@ Ext.define('Ext.form.RadioManager', {
     getWithValue: function(name, value, formId) {
         return this.filterBy(function(item) {
             return item.name === name &&
-                   item.inputValue == value && // jshint ignore:line
+                   item.inputValue == value && // eslint-disable-line eqeqeq
                    item.getFormId() === formId;
         });
     },

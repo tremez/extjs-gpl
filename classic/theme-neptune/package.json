@@ -1,56 +1,46 @@
 {
-    /**
-     * The namespace of this package.
-     *
-     * As a general rule, all classes that belong to this package should be under this namespace
-     * if multiple namespaces are part of this package, set this to "".
-     */
-    "namespace": "Ext",
-
-    "name": "theme-neptune",
-    "type": "theme",
-    "extend": "theme-neutral",
-    "alternateName": [
-        "ext-theme-neptune"
-    ],
-
-    "framework": "ext",
-    "toolkit": "classic",
-    //"requires": [
-    //    ...
-    //],
-
-    "creator": "Sencha",
-    "summary": "Ext JS Neptune Theme",
-    "detailedDescription": "The Neptune Theme provides a clean style for Ext JS classic toolkit",
-
-    "version": "6.2.0.981",
-    "compatVersion": "6.0.0",
-    "format": "1",
-
-    "output": "${workspace.subpkg.prefix}/${package.name}",
-    "local": true,
-
-    "sass": {
+    "name": "@extjs/ext-classic-theme-neptune",
+    "ext-react-name": "@extjs/ext-react-classic-theme-neptune",
+    "ext-name": "@extjs/ext-classic-theme-neptune",
+    "SenchaExtName": "@sencha/ext-classic-theme-neptune",
+    "SenchaExtReactName": "@sencha/ext-react-classic-theme-neptune",
+    "version": "7.0.0.168",
+    "sencha": {
+        "name": "theme-neptune",
         "namespace": "Ext",
-
-        "etc": "${package.dir}/sass/etc/all.scss",
-
-        "var": "${package.dir}/sass/var",
-
-        "src": "${package.dir}/sass/src"
-    },
-
-    "classpath": "${package.dir}/src",
-
-    "overrides": "${package.dir}/overrides",
-
-    "slicer": {
-        "js": [
-            {
-                "path": "${package.dir}/sass/example/custom.js",
-                "isWidgetManifest": true
-            }
-        ]
+        "type": "theme",
+        "extend": "theme-neutral",
+        "alternateName": [
+            "ext-theme-neptune"
+        ],
+        "framework": "ext",
+        "toolkit": "classic",
+        "creator": "Sencha",
+        "summary": "Ext JS Neptune Theme",
+        "detailedDescription": "The Neptune Theme provides a clean style for Ext JS classic toolkit",
+        "version": "7.0.0.168",
+        "compatVersion": "7.0.0",
+        "format": "1",
+        "output": "${workspace.subpkg.prefix}/${package.name}",
+        "local": true,
+        "sass": {
+            "namespace": "Ext",
+            "etc": "${package.dir}/sass/etc/all.scss",
+            "var": "${package.dir}/sass/var",
+            "src": "${package.dir}/sass/src"
+        },
+        "classpath": "${package.dir}/src",
+        "overrides": "${package.dir}/overrides",
+        "slicer": {
+            "js": [
+                {
+                    "path": "${package.dir}/sass/example/custom.js",
+                    "isWidgetManifest": true
+                }
+            ]
+        },
+        "properties": {
+            "skip.pkg": 1
+        }
     }
 }

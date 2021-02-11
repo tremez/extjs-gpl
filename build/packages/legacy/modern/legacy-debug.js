@@ -565,11 +565,11 @@ Ext.define('Ext.device.accelerometer.Abstract', {
         frequency: 10000
     },
     getCurrentAcceleration: function(config) {
-        // <debug>
+        //<debug>
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #getCurrentAcceleration');
         }
-        // </debug>
+        //</debug>
         return config;
     },
     watchAcceleration: function(config) {
@@ -577,11 +577,11 @@ Ext.define('Ext.device.accelerometer.Abstract', {
         config = Ext.applyIf(config, {
             frequency: defaultConfig.frequency
         });
-        // <debug>
+        //<debug>
         if (!config.callback) {
             Ext.Logger.warn('You need to specify a `callback` function for #watchAcceleration');
         }
-        // </debug>
+        //</debug>
         return config;
     },
     clearWatch: Ext.emptyFn
@@ -804,7 +804,7 @@ Ext.define('Ext.device.communicator.Default', {
             for (name in callbacks) {
                 if (callbacks.hasOwnProperty(name)) {
                     callback = callbacks[name];
-                    if (typeof callback == 'function') {
+                    if (typeof callback === 'function') {
                         args[name] = this.getCallbackId(callback, scope);
                     }
                 }
@@ -1273,11 +1273,11 @@ Ext.define('Ext.device.Camera', {
  */
 Ext.define('Ext.device.capture.Cordova', {
     captureAudio: function(config) {
-        // <debug>
+        //<debug>
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #captureAudio');
         }
-        // </debug>
+        //</debug>
         var options = {
                 limit: config.limit,
                 duration: config.maximumDuration
@@ -1285,11 +1285,11 @@ Ext.define('Ext.device.capture.Cordova', {
         navigator.device.capture.captureAudio(config.success, config.failure, options);
     },
     captureVideo: function(config) {
-        // <debug>
+        //<debug>
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #captureVideo');
         }
-        // </debug>
+        //</debug>
         var options = {
                 limit: config.limit,
                 duration: config.maximumDuration
@@ -1399,19 +1399,19 @@ Ext.define('Ext.device.compass.Abstract', {
         frequency: 100
     },
     getHeadingAvailable: function(config) {
-        // <debug>
+        //<debug>
         if (!config.callback) {
             Ext.Logger.warn('You need to specify a `callback` function for #getHeadingAvailable');
         }
-        // </debug>
+        //</debug>
         return config;
     },
     getCurrentHeading: function(config) {
-        // <debug>
+        //<debug>
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #getCurrentHeading');
         }
-        // </debug>
+        //</debug>
         return config;
     },
     watchHeading: function(config) {
@@ -1419,11 +1419,11 @@ Ext.define('Ext.device.compass.Abstract', {
         config = Ext.applyIf(config, {
             frequency: defaultConfig.frequency
         });
-        // <debug>
+        //<debug>
         if (!config.callback) {
             Ext.Logger.warn('You need to specify a `callback` function for #watchHeading');
         }
-        // </debug>
+        //</debug>
         return config;
     },
     clearWatch: Ext.emptyFn
@@ -2229,8 +2229,8 @@ Ext.define('Ext.device.filesystem.HTML5', {
             Ext.Logger.error('Ext.device.filesystem#requestFileSystem: You must specify a `success` callback.');
             return null;
         }
-        var me = this;
-        var successCallback = function(fs) {
+        var me = this,
+            successCallback = function(fs) {
                 var fileSystem = Ext.create('Ext.device.filesystem.FileSystem', fs);
                 config.success.call(config.scope || me, fileSystem);
             };
@@ -2501,8 +2501,8 @@ Ext.define('Ext.device.filesystem.HTML5', {
              * @param {FileError} config.failure.error
              */
             getEntry: function(config) {
-                var me = this;
-                var callback = config.success;
+                var me = this,
+                    callback = config.success;
                 if ((config.options && config.options.create) && this.path) {
                     var folders = this.path.split("/");
                     if (folders[0] == '.' || folders[0] == '') {
@@ -2608,9 +2608,9 @@ Ext.define('Ext.device.filesystem.HTML5', {
                     Ext.Logger.error('Ext.device.filesystem.DirectoryEntry#getFile: You must specify a `path` of the file.');
                     return null;
                 }
-                var me = this;
-                var fullPath = this.path + config.path;
-                var fileEntry = Ext.create('Ext.device.filesystem.FileEntry', fullPath, this.fileSystem);
+                var me = this,
+                    fullPath = this.path + config.path,
+                    fileEntry = Ext.create('Ext.device.filesystem.FileEntry', fullPath, this.fileSystem);
                 fileEntry.getEntry({
                     success: function() {
                         config.success.call(config.scope || me, fileEntry);
@@ -2628,9 +2628,9 @@ Ext.define('Ext.device.filesystem.HTML5', {
                     Ext.Logger.error('Ext.device.filesystem.DirectoryEntry#getFile: You must specify a `path` of the file.');
                     return null;
                 }
-                var me = this;
-                var fullPath = this.path + config.path;
-                var directoryEntry = Ext.create('Ext.device.filesystem.DirectoryEntry', fullPath, this.fileSystem);
+                var me = this,
+                    fullPath = this.path + config.path,
+                    directoryEntry = Ext.create('Ext.device.filesystem.DirectoryEntry', fullPath, this.fileSystem);
                 directoryEntry.getEntry({
                     success: function() {
                         config.success.call(config.scope || me, directoryEntry);
@@ -2694,8 +2694,8 @@ Ext.define('Ext.device.filesystem.HTML5', {
              *
              */
             getEntry: function(config) {
-                var me = this;
-                var originalConfig = Ext.applyIf({}, config);
+                var me = this,
+                    originalConfig = Ext.applyIf({}, config);
                 if (this.fileSystem) {
                     var failure = function(evt) {
                             if ((config.options && config.options.create) && Ext.isString(this.path)) {
@@ -2977,7 +2977,7 @@ Ext.define('Ext.device.filesystem.HTML5', {
                     return null;
                 }
                 var me = this;
-                //noinspection JSValidateTypes
+                // noinspection JSValidateTypes
                 this.getEntry({
                     success: function(fileEntry) {
                         fileEntry.createWriter(function(writer) {
@@ -3355,11 +3355,11 @@ Ext.define('Ext.device.geolocation.Abstract', {
             allowHighAccuracy: defaultConfig.allowHighAccuracy,
             timeout: defaultConfig.timeout
         });
-        // <debug>
+        //<debug>
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #getCurrentPosition');
         }
-        // </debug>
+        //</debug>
         return config;
     },
     /**
@@ -3400,11 +3400,11 @@ Ext.define('Ext.device.geolocation.Abstract', {
             allowHighAccuracy: defaultConfig.allowHighAccuracy,
             timeout: defaultConfig.timeout
         });
-        // <debug>
+        //<debug>
         if (!config.callback) {
             Ext.Logger.warn('You need to specify a `callback` function for #watchPosition');
         }
-        // </debug>
+        //</debug>
         return config;
     },
     /**
@@ -3573,19 +3573,19 @@ Ext.define('Ext.device.globalization.Abstract', {
         currencyCode: "USD"
     },
     getPreferredLanguage: function(config) {
-        // <debug>
+        //<debug>
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #getPreferredLanguage');
         }
-        // </debug>
+        //</debug>
         return config;
     },
     getLocaleName: function(config) {
-        // <debug>
+        //<debug>
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #getLocaleName');
         }
-        // </debug>
+        //</debug>
         return config;
     },
     dateToString: function(config) {
@@ -3595,11 +3595,11 @@ Ext.define('Ext.device.globalization.Abstract', {
             formatLength: defaultConfig.formatLength,
             selector: defaultConfig.selector
         });
-        // <debug>
+        //<debug>
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #dateToString');
         }
-        // </debug>
+        //</debug>
         return config;
     },
     stringToDate: function(config) {
@@ -3609,11 +3609,11 @@ Ext.define('Ext.device.globalization.Abstract', {
             formatLength: defaultConfig.formatLength,
             selector: defaultConfig.selector
         });
-        // <debug>
+        //<debug>
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #stringToDate');
         }
-        // </debug>
+        //</debug>
         return config;
     },
     getDatePattern: function(config) {
@@ -3622,11 +3622,11 @@ Ext.define('Ext.device.globalization.Abstract', {
             formatLength: defaultConfig.formatLength,
             selector: defaultConfig.selector
         });
-        // <debug>
+        //<debug>
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #getDatePattern');
         }
-        // </debug>
+        //</debug>
         return config;
     },
     getDateNames: function(config) {
@@ -3635,30 +3635,30 @@ Ext.define('Ext.device.globalization.Abstract', {
             type: defaultConfig.dateType,
             items: defaultConfig.items
         });
-        // <debug>
+        //<debug>
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #getDateNames');
         }
-        // </debug>
+        //</debug>
         return config;
     },
     isDayLightSavingsTime: function(config) {
         config = Ext.applyIf(config, {
             date: new Date()
         });
-        // <debug>
+        //<debug>
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #isDayLightSavingsTime');
         }
-        // </debug>
+        //</debug>
         return config;
     },
     getFirstDayOfWeek: function(config) {
-        // <debug>
+        //<debug>
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #getFirstDayOfWeek');
         }
-        // </debug>
+        //</debug>
         return config;
     },
     numberToString: function(config) {
@@ -3667,14 +3667,14 @@ Ext.define('Ext.device.globalization.Abstract', {
             number: defaultConfig.number,
             type: defaultConfig.numberType
         });
-        // <debug>
+        //<debug>
         if (!config.number) {
             Ext.Logger.warn('You need to specify a `number` for #numberToString');
         }
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #numberToString');
         }
-        // </debug>
+        //</debug>
         return config;
     },
     stringToNumber: function(config) {
@@ -3682,14 +3682,14 @@ Ext.define('Ext.device.globalization.Abstract', {
         config = Ext.applyIf(config, {
             type: defaultConfig.numberType
         });
-        // <debug>
+        //<debug>
         if (!config.number) {
             Ext.Logger.warn('You need to specify a `string` for #stringToNumber');
         }
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #stringToNumber');
         }
-        // </debug>
+        //</debug>
         return config;
     },
     getNumberPattern: function(config) {
@@ -3700,7 +3700,7 @@ Ext.define('Ext.device.globalization.Abstract', {
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #getNumberPattern');
         }
-        // </debug>
+        //</debug>
         return config;
     },
     getCurrencyPattern: function(config) {
@@ -3711,7 +3711,7 @@ Ext.define('Ext.device.globalization.Abstract', {
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #getCurrency');
         }
-        // </debug>
+        //</debug>
         return config;
     }
 });
@@ -4045,7 +4045,7 @@ Ext.define('Ext.device.notification.Cordova', {
         config = this.callParent(arguments);
         var buttons = config.buttons,
             ln = config.buttons.length;
-        if (ln && typeof buttons[0] != "string") {
+        if (ln && typeof buttons[0] !== "string") {
             var newButtons = [],
                 i;
             for (i = 0; i < ln; i++) {
@@ -4069,7 +4069,7 @@ Ext.define('Ext.device.notification.Cordova', {
         config = this.callParent(arguments);
         var buttons = config.buttons,
             ln = config.buttons.length;
-        if (ln && typeof buttons[0] != "string") {
+        if (ln && typeof buttons[0] !== "string") {
             var newButtons = [],
                 i;
             for (i = 0; i < ln; i++) {
@@ -4110,7 +4110,7 @@ Ext.define('Ext.device.notification.Simulator', {
             buttons = [],
             ln = config.buttons.length,
             button, i, callback;
-        //buttons
+        // buttons
         for (i = 0; i < ln; i++) {
             button = config.buttons[i];
             if (Ext.isString(button)) {
@@ -4155,7 +4155,7 @@ Ext.define('Ext.device.notification.Simulator', {
             buttons = [],
             ln = config.buttons.length,
             button, i, callback;
-        //buttons
+        // buttons
         for (i = 0; i < ln; i++) {
             button = config.buttons[i];
             if (Ext.isString(button)) {
@@ -4178,12 +4178,11 @@ Ext.define('Ext.device.notification.Simulator', {
         this.msg.prompt(config.title, config.message, callback, this.msg, config.multiLine, config.value, config.prompt);
     },
     beep: function(times) {
-        if (!Ext.isNumber(times))  {
+        if (!Ext.isNumber(times)) {
             times = 1;
         }
-        
-        var count = 0;
-        var callback = function() {
+        var count = 0,
+            callback = function() {
                 if (count < times) {
                     Ext.defer(function() {
                         Ext.util.Audio.beep(callback);
@@ -4194,7 +4193,7 @@ Ext.define('Ext.device.notification.Simulator', {
         callback();
     },
     vibrate: function() {
-        //nice animation to fake vibration
+        // nice animation to fake vibration
         var animation = [
                 "@-webkit-keyframes vibrate{",
                 "    from {",
@@ -4207,9 +4206,9 @@ Ext.define('Ext.device.notification.Simulator', {
                 "body {",
                 "    -webkit-animation: vibrate 50ms linear 10 alternate;",
                 "}"
-            ];
-        var head = document.getElementsByTagName("head")[0];
-        var cssNode = document.createElement('style');
+            ],
+            head = document.getElementsByTagName("head")[0],
+            cssNode = document.createElement('style');
         cssNode.innerHTML = animation.join('\n');
         head.appendChild(cssNode);
         Ext.defer(function() {
@@ -4497,7 +4496,7 @@ Ext.define('Ext.device.push.Cordova', {
     },
     setPushConfig: function(config) {
         var methodName = Ext.id(null, 'callback');
-        //Cordova's PushPlugin needs a static method to call when notifications are received
+        // Cordova's PushPlugin needs a static method to call when notifications are received
         Ext.device.push.Cordova.callbacks[methodName] = config.callbacks.received;
         return {
             "badge": (config.callbacks.type === Ext.device.Push.BADGE) ? "true" : "false",
@@ -4686,9 +4685,9 @@ Ext.define('Ext.device.storage.HTML5.Database', {
         if (this.db) {
             return this.db.version;
         }
-        // <debug>
+        //<debug>
         Ext.Logger.warn('Database has not been opened before calling function #getVersion');
-        // </debug>
+        //</debug>
         return null;
     },
     /**
@@ -4698,9 +4697,9 @@ Ext.define('Ext.device.storage.HTML5.Database', {
      */
     transaction: function(sql, success, failure) {
         if (!this.db) {
-            // <debug>
+            //<debug>
             Ext.Logger.warn('Database has not been opened before calling function #transaction');
-            // </debug>
+            //</debug>
             return;
         }
         if (!Ext.isArray(sql)) {

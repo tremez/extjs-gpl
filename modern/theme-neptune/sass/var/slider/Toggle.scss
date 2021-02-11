@@ -6,13 +6,13 @@
  * @var {number}
  * The width of the toggle slider
  */
-$toggleslider-width: dynamic(2rem);
+$toggleslider-width: dynamic(26px);
 
 /**
  * @var {number}
  * The width of the toggle slider in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$toggleslider-width-big: dynamic(3rem);
+$toggleslider-width-big: dynamic(45px);
 
 /**
  * @var {number}
@@ -154,6 +154,9 @@ $toggleslider-thumb-inset: dynamic(null);
  * @param {number} $disabled-opacity
  * Opacity of the toggle slider when disabled
  *
+ * @param {number} $thumb-inset
+ * Inset of thumb
+ *
  * @member Ext.field.Toggle
  */
 @mixin toggleslider-ui(
@@ -180,29 +183,11 @@ $toggleslider-thumb-inset: dynamic(null);
     $disabled-opacity: null,
     $thumb-inset: null
 ) {
-
-    @include slider-ui(
-        $ui: $ui,
-        $xtype: $xtype,
-
-        $track-height: $track-height,
-        $track-height-big: $track-height-big,
-        $track-background-color: $track-background-color,
-        $track-border-width: $track-border-width,
-        $track-border-style: $track-border-style,
-        $track-border-color: $track-border-color,
-        $track-border-radius: null,
-        $track-border-radius-big: null,
-
-        $fill-background-color: $fill-background-color,
-        $disabled-fill-background-color: $disabled-fill-background-color,
-        $fill-border-color: $fill-border-color,
-        $disabled-fill-border-color: $disabled-fill-border-color,
-
-        $disabled-opacity: $disabled-opacity
-    );
-
     $ui-suffix: ui-suffix($ui);
+
+    $arguments: intersect-arguments(toggleslider-ui, slider-ui);
+
+    @include slider-ui($arguments...);
 
     .#{$prefix}#{$xtype}#{$ui-suffix} {
         width: $width;

@@ -13,12 +13,12 @@ Ext.define('Neptune.view.window.Windows', {
         { xtype: 'windowWithButtons', x: 350, y: 60, width: 300, height: 200 },
         { xtype: 'button', text: 'Show a Message Box', handler: function() {
             Ext.Msg.show({
-                 title:'Really?',
-                 msg: 'Are you sure you want to do that?',
-                 buttons: Ext.Msg.YESNOCANCEL,
-                 icon: Ext.Msg.QUESTION
+                title: 'Really?',
+                msg: 'Are you sure you want to do that?',
+                buttons: Ext.Msg.YESNOCANCEL,
+                icon: Ext.Msg.QUESTION
             });
-        }}
+        } }
     ],
 
     afterRender: function() {

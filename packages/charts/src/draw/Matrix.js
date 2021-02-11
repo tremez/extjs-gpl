@@ -112,7 +112,8 @@ Ext.define('Ext.draw.Matrix', {
     statics: {
         /**
          * @static
-         * Return the affine matrix that transform two points (x0, y0) and (x1, y1) to (x0p, y0p) and (x1p, y1p)
+         * Return the affine matrix that transform two points (x0, y0) and (x1, y1) to (x0p, y0p)
+         * and (x1p, y1p)
          * @param {Number} x0
          * @param {Number} y0
          * @param {Number} x1
@@ -122,7 +123,7 @@ Ext.define('Ext.draw.Matrix', {
          * @param {Number} x1p
          * @param {Number} y1p
          */
-        createAffineMatrixFromTwoPair: function (x0, y0, x1, y1, x0p, y0p, x1p, y1p) {
+        createAffineMatrixFromTwoPair: function(x0, y0, x1, y1, x0p, y0p, x1p, y1p) {
             var dx = x1 - x0,
                 dy = y1 - y0,
                 dxp = x1p - x0p,
@@ -138,7 +139,8 @@ Ext.define('Ext.draw.Matrix', {
 
         /**
          * @static
-         * Return the affine matrix that transform two points (x0, y0) and (x1, y1) to (x0p, y0p) and (x1p, y1p)
+         * Return the affine matrix that transform two points (x0, y0) and (x1, y1) to (x0p, y0p)
+         * and (x1p, y1p)
          * @param {Number} x0
          * @param {Number} y0
          * @param {Number} x1
@@ -148,10 +150,12 @@ Ext.define('Ext.draw.Matrix', {
          * @param {Number} x1p
          * @param {Number} y1p
          */
-        createPanZoomFromTwoPair: function (x0, y0, x1, y1, x0p, y0p, x1p, y1p) {
+        createPanZoomFromTwoPair: function(x0, y0, x1, y1, x0p, y0p, x1p, y1p) {
             if (arguments.length === 2) {
                 return this.createPanZoomFromTwoPair.apply(this, x0.concat(y0));
             }
+
+            // eslint-disable-next-line vars-on-top
             var dx = x1 - x0,
                 dy = y1 - y0,
                 cx = (x0 + x1) * 0.5,
@@ -171,26 +175,30 @@ Ext.define('Ext.draw.Matrix', {
          * @method
          * @static
          * Create a flyweight to wrap the given array.
-         * The flyweight will directly refer the object and the elements can be changed by other methods.
+         * The flyweight will directly refer the object and the elements can be changed
+         * by other methods.
          *
          * Do not hold the instance of flyweight matrix.
          *
          * @param {Array} elements
          * @return {Ext.draw.Matrix}
          */
-        fly: (function () {
+        fly: (function() {
             var flyMatrix = null,
-                simplefly = function (elements) {
+                simplefly = function(elements) {
                     flyMatrix.elements = elements;
+
                     return flyMatrix;
                 };
 
-            return function (elements) {
+            return function(elements) {
                 if (!flyMatrix) {
                     flyMatrix = new Ext.draw.Matrix();
                 }
+
                 flyMatrix.elements = elements;
                 Ext.draw.Matrix.fly = simplefly;
+
                 return flyMatrix;
             };
         })(),
@@ -201,10 +209,11 @@ Ext.define('Ext.draw.Matrix', {
          * @param {Mixed} mat
          * @return {Ext.draw.Matrix}
          */
-        create: function (mat) {
+        create: function(mat) {
             if (mat instanceof this) {
                 return mat;
             }
+
             return new this(mat);
         }
     },
@@ -219,12 +228,14 @@ Ext.define('Ext.draw.Matrix', {
      * @param {Number} dx Offset of x
      * @param {Number} dy Offset of y
      */
-    constructor: function (xx, xy, yx, yy, dx, dy) {
+    constructor: function(xx, xy, yx, yy, dx, dy) {
         if (xx && xx.length === 6) {
             this.elements = xx.slice();
-        } else if (xx !== undefined) {
+        }
+        else if (xx !== undefined) {
             this.elements = [xx, xy, yx, yy, dx, dy];
-        } else {
+        }
+        else {
             this.elements = [1, 0, 0, 1, 0, 0];
         }
     },
@@ -242,7 +253,7 @@ Ext.define('Ext.draw.Matrix', {
      * @param {Number} dy Offset of y.
      * @return {Ext.draw.Matrix} this
      */
-    prepend: function (xx, xy, yx, yy, dx, dy) {
+    prepend: function(xx, xy, yx, yy, dx, dy) {
         var elements = this.elements,
             xx0 = elements[0],
             xy0 = elements[1],
@@ -257,6 +268,7 @@ Ext.define('Ext.draw.Matrix', {
         elements[3] = xy * yx0 + yy * yy0;
         elements[4] = xx * dx0 + yx * dy0 + dx;
         elements[5] = xy * dx0 + yy * dy0 + dy;
+
         return this;
     },
 
@@ -267,7 +279,7 @@ Ext.define('Ext.draw.Matrix', {
      * @param {Ext.draw.Matrix} matrix
      * @return {Ext.draw.Matrix} this
      */
-    prependMatrix: function (matrix) {
+    prependMatrix: function(matrix) {
         return this.prepend.apply(this, matrix.elements);
     },
 
@@ -284,7 +296,7 @@ Ext.define('Ext.draw.Matrix', {
      * @param {Number} dy Offset of y.
      * @return {Ext.draw.Matrix} this
      */
-    append: function (xx, xy, yx, yy, dx, dy) {
+    append: function(xx, xy, yx, yy, dx, dy) {
         var elements = this.elements,
             xx0 = elements[0],
             xy0 = elements[1],
@@ -299,6 +311,7 @@ Ext.define('Ext.draw.Matrix', {
         elements[3] = yx * xy0 + yy * yy0;
         elements[4] = dx * xx0 + dy * yx0 + dx0;
         elements[5] = dx * xy0 + dy * yy0 + dy0;
+
         return this;
     },
 
@@ -310,7 +323,7 @@ Ext.define('Ext.draw.Matrix', {
      * @param {Ext.draw.Matrix} matrix
      * @return {Ext.draw.Matrix} this
      */
-    appendMatrix: function (matrix) {
+    appendMatrix: function(matrix) {
         return this.append.apply(this, matrix.elements);
     },
 
@@ -324,7 +337,7 @@ Ext.define('Ext.draw.Matrix', {
      * @param {Number} dy
      * @return {Ext.draw.Matrix} this
      */
-    set: function (xx, xy, yx, yy, dx, dy) {
+    set: function(xx, xy, yx, yy, dx, dy) {
         var elements = this.elements;
 
         elements[0] = xx;
@@ -345,7 +358,7 @@ Ext.define('Ext.draw.Matrix', {
      *
      * @return {Ext.draw.Matrix}
      */
-    inverse: function (target) {
+    inverse: function(target) {
         var elements = this.elements,
             a = elements[0],
             b = elements[1],
@@ -359,10 +372,13 @@ Ext.define('Ext.draw.Matrix', {
         b *= rDim;
         c *= rDim;
         d *= rDim;
+
         if (target) {
             target.set(d, -b, -c, a, c * f - d * e, b * e - a * f);
+
             return target;
-        } else {
+        }
+        else {
             return new Ext.draw.Matrix(d, -b, -c, a, c * f - d * e, b * e - a * f);
         }
     },
@@ -375,10 +391,11 @@ Ext.define('Ext.draw.Matrix', {
      * @param {Boolean} [prepend] If `true`, this will transformation be prepended to the matrix.
      * @return {Ext.draw.Matrix} this
      */
-    translate: function (x, y, prepend) {
+    translate: function(x, y, prepend) {
         if (prepend) {
             return this.prepend(1, 0, 0, 1, x, y);
-        } else {
+        }
+        else {
             return this.append(1, 0, 0, 1, x, y);
         }
     },
@@ -393,23 +410,26 @@ Ext.define('Ext.draw.Matrix', {
      * @param {Boolean} [prepend] If `true`, this will transformation be prepended to the matrix.
      * @return {Ext.draw.Matrix} this
      */
-    scale: function (sx, sy, scx, scy, prepend) {
+    scale: function(sx, sy, scx, scy, prepend) {
         var me = this;
 
         // null or undefined
         if (sy == null) {
             sy = sx;
         }
+
         if (scx === undefined) {
             scx = 0;
         }
+
         if (scy === undefined) {
             scy = 0;
         }
 
         if (prepend) {
             return me.prepend(sx, 0, 0, sy, scx - scx * sx, scy - scy * sy);
-        } else {
+        }
+        else {
             return me.append(sx, 0, 0, sy, scx - scx * sx, scy - scy * sy);
         }
     },
@@ -423,7 +443,7 @@ Ext.define('Ext.draw.Matrix', {
      * @param {Boolean} [prepend] If `true`, this will transformation be prepended to the matrix.
      * @return {Ext.draw.Matrix} this
      */
-    rotate: function (angle, rcx, rcy, prepend) {
+    rotate: function(angle, rcx, rcy, prepend) {
         var me = this,
             cos = Math.cos(angle),
             sin = Math.sin(angle);
@@ -438,7 +458,8 @@ Ext.define('Ext.draw.Matrix', {
                 rcx - cos * rcx + rcy * sin,
                 rcy - cos * rcy - rcx * sin
             );
-        } else {
+        }
+        else {
             return me.append(
                 cos, sin,
                 -sin, cos,
@@ -456,14 +477,16 @@ Ext.define('Ext.draw.Matrix', {
      * @param {Boolean} [prepend] If `true`, this will transformation be prepended to the matrix.
      * @return {Ext.draw.Matrix} this
      */
-    rotateFromVector: function (x, y, prepend) {
+    rotateFromVector: function(x, y, prepend) {
         var me = this,
             d = Math.sqrt(x * x + y * y),
             cos = x / d,
             sin = y / d;
+
         if (prepend) {
             return me.prepend(cos, sin, -sin, cos, 0, 0);
-        } else {
+        }
+        else {
             return me.append(cos, sin, -sin, cos, 0, 0);
         }
     },
@@ -472,7 +495,7 @@ Ext.define('Ext.draw.Matrix', {
      * Clone this matrix.
      * @return {Ext.draw.Matrix}
      */
-    clone: function () {
+    clone: function() {
         return new Ext.draw.Matrix(this.elements);
     },
 
@@ -480,7 +503,7 @@ Ext.define('Ext.draw.Matrix', {
      * Horizontally flip the matrix
      * @return {Ext.draw.Matrix} this
      */
-    flipX: function () {
+    flipX: function() {
         return this.append(-1, 0, 0, 1, 0, 0);
     },
 
@@ -488,7 +511,7 @@ Ext.define('Ext.draw.Matrix', {
      * Vertically flip the matrix
      * @return {Ext.draw.Matrix} this
      */
-    flipY: function () {
+    flipY: function() {
         return this.append(1, 0, 0, -1, 0, 0);
     },
 
@@ -497,7 +520,7 @@ Ext.define('Ext.draw.Matrix', {
      * @param {Number} angle
      * @return {Ext.draw.Matrix} this
      */
-    skewX: function (angle) {
+    skewX: function(angle) {
         return this.append(1, 0, Math.tan(angle), 1, 0, 0);
     },
 
@@ -506,7 +529,7 @@ Ext.define('Ext.draw.Matrix', {
      * @param {Number} angle
      * @return {Ext.draw.Matrix} this
      */
-    skewY: function (angle) {
+    skewY: function(angle) {
         return this.append(1, Math.tan(angle), 0, 1, 0, 0);
     },
 
@@ -515,7 +538,7 @@ Ext.define('Ext.draw.Matrix', {
      * @param factor The horizontal shear factor.
      * @return {Ext.draw.Matrix} this
      */
-    shearX: function (factor) {
+    shearX: function(factor) {
         return this.append(1, 0, factor, 1, 0, 0);
     },
 
@@ -524,7 +547,7 @@ Ext.define('Ext.draw.Matrix', {
      * @param factor The vertical shear factor.
      * @return {Ext.draw.Matrix} this
      */
-    shearY: function (factor) {
+    shearY: function(factor) {
         return this.append(1, factor, 0, 1, 0, 0);
     },
 
@@ -532,16 +555,18 @@ Ext.define('Ext.draw.Matrix', {
      * Reset the matrix to identical.
      * @return {Ext.draw.Matrix} this
      */
-    reset: function () {
+    reset: function() {
         return this.set(1, 0, 0, 1, 0, 0);
     },
 
+    /* eslint-disable max-len */
     /**
      * @private
      * Split Matrix to `{{devicePixelRatio,c,0},{b,devicePixelRatio,0},{0,0,1}}.{{xx,0,dx},{0,yy,dy},{0,0,1}}`
      * @return {Object} Object with b,c,d=devicePixelRatio,xx,yy,dx,dy
      */
-    precisionCompensate: function (devicePixelRatio, comp) {
+    precisionCompensate: function(devicePixelRatio, comp) {
+        /* eslint-enable max-len */
         var elements = this.elements,
             x2x = elements[0],
             x2y = elements[1],
@@ -565,7 +590,7 @@ Ext.define('Ext.draw.Matrix', {
      * Split Matrix to `{{1,c,0},{b,d,0},{0,0,1}}.{{xx,0,dx},{0,xx,dy},{0,0,1}}`
      * @return {Object} Object with b,c,d,xx,yy=xx,dx,dy
      */
-    precisionCompensateRect: function (devicePixelRatio, comp) {
+    precisionCompensateRect: function(devicePixelRatio, comp) {
         var elements = this.elements,
             x2x = elements[0],
             x2y = elements[1],
@@ -590,8 +615,9 @@ Ext.define('Ext.draw.Matrix', {
      * @param {Number} y
      * @return {Number} x component of the result.
      */
-    x: function (x, y) {
+    x: function(x, y) {
         var elements = this.elements;
+
         return x * elements[0] + y * elements[2] + elements[4];
     },
 
@@ -601,7 +627,7 @@ Ext.define('Ext.draw.Matrix', {
      * @param {Number} y
      * @return {Number} y component of the result.
      */
-    y: function (x, y) {
+    y: function(x, y) {
         var elements = this.elements;
 
         return x * elements[1] + y * elements[3] + elements[5];
@@ -613,7 +639,7 @@ Ext.define('Ext.draw.Matrix', {
      * @param {Number} j
      * @return {String}
      */
-    get: function (i, j) {
+    get: function(i, j) {
         return +this.elements[i + j * 2].toFixed(4);
     },
 
@@ -622,17 +648,19 @@ Ext.define('Ext.draw.Matrix', {
      * @param {Array} point
      * @return {Array}
      */
-    transformPoint: function (point) {
+    transformPoint: function(point) {
         var elements = this.elements,
             x, y;
 
         if (point.isPoint) {
             x = point.x;
             y = point.y;
-        } else {
+        }
+        else {
             x = point[0];
             y = point[1];
         }
+
         return [
             x * elements[0] + y * elements[2] + elements[4],
             x * elements[1] + y * elements[3] + elements[5]
@@ -647,7 +675,7 @@ Ext.define('Ext.draw.Matrix', {
      *
      * @return {Object} Object with x, y, width and height.
      */
-    transformBBox: function (bbox, radius, target) {
+    transformBBox: function(bbox, radius, target) {
         var elements = this.elements,
             l = bbox.x,
             t = bbox.y,
@@ -670,7 +698,8 @@ Ext.define('Ext.draw.Matrix', {
             ];
             w = Math.abs(w0 * xx) + Math.abs(h0 * yx) + Math.abs(scales[0] * radius);
             h = Math.abs(w0 * xy) + Math.abs(h0 * yy) + Math.abs(scales[1] * radius);
-        } else {
+        }
+        else {
             w = Math.abs(w0 * xx) + Math.abs(h0 * yx);
             h = Math.abs(w0 * xy) + Math.abs(h0 * yy);
         }
@@ -694,10 +723,14 @@ Ext.define('Ext.draw.Matrix', {
      * @param {Array} list
      * @return {Array} list
      */
-    transformList: function (list) {
+    transformList: function(list) {
         var elements = this.elements,
-            xx = elements[0], yx = elements[2], dx = elements[4],
-            xy = elements[1], yy = elements[3], dy = elements[5],
+            xx = elements[0],
+            yx = elements[2],
+            dx = elements[4],
+            xy = elements[1],
+            yy = elements[3],
+            dy = elements[5],
             ln = list.length,
             p, i;
 
@@ -708,6 +741,7 @@ Ext.define('Ext.draw.Matrix', {
                 p[0] * xy + p[1] * yy + dy
             ];
         }
+
         return list;
     },
 
@@ -715,7 +749,7 @@ Ext.define('Ext.draw.Matrix', {
      * Determines whether this matrix is an identity matrix (no transform).
      * @return {Boolean}
      */
-    isIdentity: function () {
+    isIdentity: function() {
         var elements = this.elements;
 
         return elements[0] === 1 &&
@@ -731,7 +765,7 @@ Ext.define('Ext.draw.Matrix', {
      * @param {Ext.draw.Matrix} matrix A maxtrix or array of its elements.
      * @return {Boolean}
      */
-    isEqual: function (matrix) {
+    isEqual: function(matrix) {
         var elements = matrix && matrix.isMatrix ? matrix.elements : matrix,
             myElements = this.elements;
 
@@ -744,13 +778,12 @@ Ext.define('Ext.draw.Matrix', {
     },
 
     /**
-     * @deprecated
-     * @since 6.0.1
+     * @deprecated 6.0.1 This method is deprecated.
      * Determines if this matrix has the same values as another matrix.
      * @param {Ext.draw.Matrix} matrix
      * @return {Boolean}
      */
-    equals: function (matrix) {
+    equals: function(matrix) {
         return this.isEqual(matrix);
     },
 
@@ -758,8 +791,9 @@ Ext.define('Ext.draw.Matrix', {
      * Create an array of elements by horizontal order (xx,yx,dx,yx,yy,dy).
      * @return {Array}
      */
-    toArray: function () {
+    toArray: function() {
         var elements = this.elements;
+
         return [elements[0], elements[2], elements[4], elements[1], elements[3], elements[5]];
     },
 
@@ -767,7 +801,7 @@ Ext.define('Ext.draw.Matrix', {
      * Create an array of elements by vertical order (xx,xy,yx,yy,dx,dy).
      * @return {Array|String}
      */
-    toVerticalArray: function () {
+    toVerticalArray: function() {
         return this.elements.slice();
     },
 
@@ -776,9 +810,11 @@ Ext.define('Ext.draw.Matrix', {
      * The numbers are rounded to keep only 4 decimals.
      * @return {Array}
      */
-    toString: function () {
+    toString: function() {
         var me = this;
-        return [me.get(0, 0), me.get(0, 1), me.get(1, 0), me.get(1, 1), me.get(2, 0), me.get(2, 1)].join(',');
+
+        return [me.get(0, 0), me.get(0, 1), me.get(1, 0), me.get(1, 1), me.get(2, 0),
+                me.get(2, 1)].join(',');
     },
 
     /**
@@ -786,8 +822,9 @@ Ext.define('Ext.draw.Matrix', {
      * @param {Object} ctx
      * @return {Ext.draw.Matrix} this
      */
-    toContext: function (ctx) {
+    toContext: function(ctx) {
         ctx.transform.apply(ctx, this.elements);
+
         return this;
     },
 
@@ -795,8 +832,9 @@ Ext.define('Ext.draw.Matrix', {
      * Return a string that can be used as transform attribute in SVG.
      * @return {String}
      */
-    toSvg: function () {
+    toSvg: function() {
         var elements = this.elements;
+
         // The reason why we cannot use `.join` is the `1e5` form is not accepted in svg.
         return "matrix(" +
             elements[0].toFixed(9) + ',' +
@@ -812,8 +850,9 @@ Ext.define('Ext.draw.Matrix', {
      * Get the x scale of the matrix.
      * @return {Number}
      */
-    getScaleX: function () {
+    getScaleX: function() {
         var elements = this.elements;
+
         return Math.sqrt(elements[0] * elements[0] + elements[2] * elements[2]);
     },
 
@@ -821,8 +860,9 @@ Ext.define('Ext.draw.Matrix', {
      * Get the y scale of the matrix.
      * @return {Number}
      */
-    getScaleY: function () {
+    getScaleY: function() {
         var elements = this.elements;
+
         return Math.sqrt(elements[1] * elements[1] + elements[3] * elements[3]);
     },
 
@@ -830,7 +870,7 @@ Ext.define('Ext.draw.Matrix', {
      * Get x-to-x component of the matrix
      * @return {Number}
      */
-    getXX: function () {
+    getXX: function() {
         return this.elements[0];
     },
 
@@ -838,7 +878,7 @@ Ext.define('Ext.draw.Matrix', {
      * Get x-to-y component of the matrix.
      * @return {Number}
      */
-    getXY: function () {
+    getXY: function() {
         return this.elements[1];
     },
 
@@ -846,7 +886,7 @@ Ext.define('Ext.draw.Matrix', {
      * Get y-to-x component of the matrix.
      * @return {Number}
      */
-    getYX: function () {
+    getYX: function() {
         return this.elements[2];
     },
 
@@ -854,7 +894,7 @@ Ext.define('Ext.draw.Matrix', {
      * Get y-to-y component of the matrix.
      * @return {Number}
      */
-    getYY: function () {
+    getYY: function() {
         return this.elements[3];
     },
 
@@ -862,7 +902,7 @@ Ext.define('Ext.draw.Matrix', {
      * Get offset x component of the matrix.
      * @return {Number}
      */
-    getDX: function () {
+    getDX: function() {
         return this.elements[4];
     },
 
@@ -870,7 +910,7 @@ Ext.define('Ext.draw.Matrix', {
      * Get offset y component of the matrix.
      * @return {Number}
      */
-    getDY: function () {
+    getDY: function() {
         return this.elements[5];
     },
 
@@ -879,7 +919,7 @@ Ext.define('Ext.draw.Matrix', {
      * assuming it was produced by applying transformations in that order.
      * @return {Object}
      */
-    split: function () {
+    split: function() {
         var el = this.elements,
             xx = el[0],
             xy = el[1],
@@ -888,19 +928,20 @@ Ext.define('Ext.draw.Matrix', {
                 translateX: el[4],
                 translateY: el[5]
             };
+
         out.rotate = out.rotation = Math.atan2(xy, xx);
         out.scaleX = xx / Math.cos(out.rotate);
         out.scaleY = yy / xx * out.scaleX;
 
         return out;
     }
-}, function () {
+}, function() {
     function registerName(properties, name, i) {
         properties[name] = {
-            get: function () {
+            get: function() {
                 return this.elements[i];
             },
-            set: function (val) {
+            set: function(val) {
                 this.elements[i] = val;
             }
         };
@@ -908,9 +949,11 @@ Ext.define('Ext.draw.Matrix', {
 
     // Compatibility with SVGMatrix.
     if (Object.defineProperties) {
-        var properties = {};
+        var properties = {}; // eslint-disable-line vars-on-top
+
         /**
-         * @property {Number} a Get x-to-x component of the matrix. Avoid using it for performance consideration.
+         * @property {Number} a Get x-to-x component of the matrix. Avoid using it for performance
+         * consideration.
          * Use {@link #getXX} instead.
          */
         registerName(properties, 'a', 0);

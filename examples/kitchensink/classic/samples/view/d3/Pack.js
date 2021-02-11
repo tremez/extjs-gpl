@@ -17,15 +17,27 @@ Ext.define('KitchenSink.view.d3.Pack', {
         'KitchenSink.view.d3.TreeViewModel',
         'Ext.d3.hierarchy.Pack'
     ],
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     otherContent: [
         {
             type: 'Controller',
             path: 'classic/samples/view/d3/PackController.js'
+        },
+        {
+            type: 'Model',
+            path: 'app/model/Tree.js'
+        },
+        {
+            type: 'View Model',
+            path: 'classic/samples/view/d3/TreeViewModel.js'
+        },
+        {
+            type: 'Data',
+            path: 'data/tree/tree.json'
         }
     ],
-    // </example>
+    //</example>
 
     width: 930,
     height: 900,

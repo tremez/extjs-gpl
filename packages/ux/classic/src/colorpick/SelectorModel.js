@@ -2,8 +2,8 @@
  * View Model that holds the "selectedColor" of the color picker container.
  */
 Ext.define('Ext.ux.colorpick.SelectorModel', {
-    extend : 'Ext.app.ViewModel',
-    alias  : 'viewmodel.colorpick-selectormodel',
+    extend: 'Ext.app.ViewModel',
+    alias: 'viewmodel.colorpick-selectormodel',
 
     requires: [
         'Ext.ux.colorpick.ColorUtils'
@@ -11,40 +11,42 @@ Ext.define('Ext.ux.colorpick.SelectorModel', {
 
     data: {
         selectedColor: {
-            r : 255,  // red
-            g : 255,  // green
-            b : 255,  // blue
-            h : 0,    // hue,
-            s : 1,    // saturation
-            v : 1,    // value
-            a : 1     // alpha (opacity)
+            r: 255,  // red
+            g: 255,  // green
+            b: 255,  // blue
+            h: 0,    // hue,
+            s: 1,    // saturation
+            v: 1,    // value
+            a: 1     // alpha (opacity)
         },
         previousColor: {
-            r : 0,    // red
-            g : 0,    // green
-            b : 0,    // blue
-            h : 0,    // hue,
-            s : 1,    // saturation
-            v : 1,    // value
-            a : 1     // alpha (opacity)
+            r: 0,    // red
+            g: 0,    // green
+            b: 0,    // blue
+            h: 0,    // hue,
+            s: 1,    // saturation
+            v: 1,    // value
+            a: 1     // alpha (opacity)
         }
     },
 
     formulas: {
         // Hexadecimal representation of the color
         hex: {
-            get: function (get) {
+            get: function(get) {
                 var r = get('selectedColor.r').toString(16),
                     g = get('selectedColor.g').toString(16),
                     b = get('selectedColor.b').toString(16),
                     result;
 
                 result = Ext.ux.colorpick.ColorUtils.rgb2hex(r, g, b);
+
                 return '#' + result;
             },
 
-            set: function (hex) {
-                var rgb = Ext.ux.colorpick.ColorUtils.hex2rgb(hex);
+            set: function(hex) {
+                var rgb = Ext.ux.colorpick.ColorUtils.parseColor(hex);
+
                 this.changeRGB(rgb);
             }
         },
@@ -95,7 +97,7 @@ Ext.define('Ext.ux.colorpick.SelectorModel', {
 
         // "S" in HSV
         saturation: {
-            get : function(get) {
+            get: function(get) {
                 return get('selectedColor.s') * 100;
             },
 
@@ -108,6 +110,7 @@ Ext.define('Ext.ux.colorpick.SelectorModel', {
         value: {
             get: function(get) {
                 var v = get('selectedColor.v');
+
                 return v * 100;
             },
 
@@ -119,6 +122,7 @@ Ext.define('Ext.ux.colorpick.SelectorModel', {
         alpha: {
             get: function(data) {
                 var a = data('selectedColor.a');
+
                 return a * 100;
             },
 
@@ -130,10 +134,12 @@ Ext.define('Ext.ux.colorpick.SelectorModel', {
         }
     }, // formulas
 
-    changeHSV: function (hsv) {
+    changeHSV: function(hsv) {
+        var rgb;
+
         Ext.applyIf(hsv, this.data.selectedColor);
 
-        var rgb = Ext.ux.colorpick.ColorUtils.hsv2rgb(hsv.h, hsv.s, hsv.v);
+        rgb = Ext.ux.colorpick.ColorUtils.hsv2rgb(hsv.h, hsv.s, hsv.v);
 
         hsv.r = rgb.r;
         hsv.g = rgb.g;
@@ -142,10 +148,12 @@ Ext.define('Ext.ux.colorpick.SelectorModel', {
         this.set('selectedColor', hsv);
     },
 
-    changeRGB: function (rgb) {
+    changeRGB: function(rgb) {
+        var hsv;
+
         Ext.applyIf(rgb, this.data.selectedColor);
 
-        var hsv = Ext.ux.colorpick.ColorUtils.rgb2hsv(rgb.r, rgb.g, rgb.b);
+        hsv = Ext.ux.colorpick.ColorUtils.rgb2hsv(rgb.r, rgb.g, rgb.b);
 
         rgb.h = hsv.h;
         rgb.s = hsv.s;

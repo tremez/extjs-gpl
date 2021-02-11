@@ -18,7 +18,7 @@ Ext.define('Ext.draw.overrides.hittest.sprite.Instancing', {
      * @return {Object} return.instance The attributes of the instance.
      * @return {Number} return.index The index of the instance.
      */
-    hitTest: function (point, options) {
+    hitTest: function(point, options) {
         var me = this,
             template = me.getTemplate(),
             originalAttr = template.attr,
@@ -34,19 +34,21 @@ Ext.define('Ext.draw.overrides.hittest.sprite.Instancing', {
         for (; i < ln; i++) {
             template.attr = instances[i];
             result = template.hitTest(point, options);
+
             if (result) {
                 result.isInstance = true;
                 result.template = result.sprite;
                 result.sprite = this;
                 result.instance = instances[i];
                 result.index = i;
+
                 return result;
             }
         }
 
         template.attr = originalAttr;
+
         return result;
     }
-
 
 });

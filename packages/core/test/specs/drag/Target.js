@@ -1,4 +1,4 @@
-describe("Ext.drag.Target", function() {
+topSuite("Ext.drag.Target", ['Ext.drag.*', 'Ext.dom.Element'], function() {
     var helper = Ext.testHelper,
         touchId = 0,
         cursorTrack, source, target,
@@ -12,7 +12,7 @@ describe("Ext.drag.Target", function() {
         if (typeof x !== 'number') {
             x = 5;
         }
-        
+
         if (typeof y !== 'number') {
             y = 5;
         }
@@ -33,7 +33,7 @@ describe("Ext.drag.Target", function() {
         if (typeof x !== 'number') {
             x = 50;
         }
-        
+
         if (typeof y !== 'number') {
             y = 50;
         }
@@ -52,23 +52,29 @@ describe("Ext.drag.Target", function() {
 
     function makeSource(cfg) {
         cfg = cfg || {};
+
         if (!cfg.element) {
             if (!dragEl) {
                 makeDragEl();
             }
+
             cfg.element = dragEl;
         }
+
         source = new Ext.drag.Source(cfg);
     }
 
     function makeTarget(cfg, Type) {
         cfg = cfg || {};
+
         if (!cfg.element) {
             if (!dropEl) {
                 makeDropEl();
             }
+
             cfg.element = dropEl;
         }
+
         Type = Type || Ext.drag.Target;
         target = new Type(cfg);
     }
@@ -96,6 +102,7 @@ describe("Ext.drag.Target", function() {
     function startDrag(x, y, target) {
         runs(function() {
             var xy = source.getElement().getXY();
+
             x = x || xy[0];
             y = y || xy[1];
 
@@ -144,6 +151,7 @@ describe("Ext.drag.Target", function() {
 
     function getCenter(el) {
         var xy = el.getXY();
+
         return [xy[0] + (el.getWidth() / 2), xy[1] + (el.getHeight() / 2)];
     }
 
@@ -152,6 +160,7 @@ describe("Ext.drag.Target", function() {
             if (!Ext.isArray(spies)) {
                 spies = [spies];
             }
+
             Ext.Array.forEach(spies, function(spy) {
                 expect(spy.callCount).toBe(n);
             });
@@ -180,6 +189,7 @@ describe("Ext.drag.Target", function() {
     function expectXY(x, y) {
         var info = source.getInfo(),
             el = (info && info.proxy.element) || source.getElement();
+
         expect(el.getXY()).toEqual([x, y]);
     }
 
@@ -357,6 +367,7 @@ describe("Ext.drag.Target", function() {
                     moveBy(50, 50);
                     runs(function() {
                         var info = spy.mostRecentCall.dragInfo;
+
                         expect(spy.mostRecentCall.args[0] instanceof Ext.drag.Info).toBe(true);
                         expect(info.target).toBe(target);
                         expect(info.source).toBe(source);
@@ -407,6 +418,7 @@ describe("Ext.drag.Target", function() {
                         moveBy(50, 50);
                         runs(function() {
                             var info = spy.mostRecentCall.dragInfo;
+
                             expect(spy.mostRecentCall.args[0] instanceof Ext.drag.Info).toBe(true);
                             expect(info.target).toBe(target);
                             expect(info.source).toBe(source);
@@ -456,6 +468,7 @@ describe("Ext.drag.Target", function() {
                         moveBy(50, 50);
                         runs(function() {
                             var info = spy.mostRecentCall.dragInfo;
+
                             expect(spy.mostRecentCall.args[0] instanceof Ext.drag.Info).toBe(true);
                             expect(info.target).toBe(target);
                             expect(info.source).toBe(source);
@@ -507,6 +520,7 @@ describe("Ext.drag.Target", function() {
                         moveBy(50, 50);
                         runs(function() {
                             var info = spy.mostRecentCall.dragInfo;
+
                             expect(spy.mostRecentCall.args[0] instanceof Ext.drag.Info).toBe(true);
                             expect(info.target).toBe(target);
                             expect(info.source).toBe(source);
@@ -562,6 +576,7 @@ describe("Ext.drag.Target", function() {
                     moveBy(50, 50);
                     runs(function() {
                         var info = spy.mostRecentCall.dragInfo;
+
                         expect(spy.mostRecentCall.args[0] instanceof Ext.drag.Info).toBe(true);
                         expect(info.target).toBe(target);
                         expect(info.source).toBe(source);
@@ -612,6 +627,7 @@ describe("Ext.drag.Target", function() {
                         moveBy(50, 50);
                         runs(function() {
                             var info = spy.mostRecentCall.dragInfo;
+
                             expect(spy.mostRecentCall.args[0] instanceof Ext.drag.Info).toBe(true);
                             expect(info.target).toBe(target);
                             expect(info.source).toBe(source);
@@ -661,6 +677,7 @@ describe("Ext.drag.Target", function() {
                         moveBy(50, 50);
                         runs(function() {
                             var info = spy.mostRecentCall.dragInfo;
+
                             expect(spy.mostRecentCall.args[0] instanceof Ext.drag.Info).toBe(true);
                             expect(info.target).toBe(target);
                             expect(info.source).toBe(source);
@@ -712,6 +729,7 @@ describe("Ext.drag.Target", function() {
                         moveBy(50, 50);
                         runs(function() {
                             var info = spy.mostRecentCall.dragInfo;
+
                             expect(spy.mostRecentCall.args[0] instanceof Ext.drag.Info).toBe(true);
                             expect(info.target).toBe(target);
                             expect(info.source).toBe(source);
@@ -770,6 +788,7 @@ describe("Ext.drag.Target", function() {
                     moveBy(100, 100);
                     runs(function() {
                         var info = spy.mostRecentCall.dragInfo;
+
                         expect(spy.mostRecentCall.args[0] instanceof Ext.drag.Info).toBe(true);
                         expect(info.target).toBe(target);
                         expect(info.source).toBe(source);
@@ -830,6 +849,7 @@ describe("Ext.drag.Target", function() {
                         moveBy(100, 100);
                         runs(function() {
                             var info = spy.mostRecentCall.dragInfo;
+
                             expect(spy.mostRecentCall.args[0] instanceof Ext.drag.Info).toBe(true);
                             expect(info.target).toBe(target);
                             expect(info.source).toBe(source);
@@ -889,6 +909,7 @@ describe("Ext.drag.Target", function() {
                         moveBy(100, 100);
                         runs(function() {
                             var info = spy.mostRecentCall.dragInfo;
+
                             expect(spy.mostRecentCall.args[0] instanceof Ext.drag.Info).toBe(true);
                             expect(info.target).toBe(target);
                             expect(info.source).toBe(source);
@@ -950,6 +971,7 @@ describe("Ext.drag.Target", function() {
                         moveBy(100, 100);
                         runs(function() {
                             var info = spy.mostRecentCall.dragInfo;
+
                             expect(spy.mostRecentCall.args[0] instanceof Ext.drag.Info).toBe(true);
                             expect(info.target).toBe(target);
                             expect(info.source).toBe(source);
@@ -997,6 +1019,7 @@ describe("Ext.drag.Target", function() {
                     endDrag();
                     runs(function() {
                         var info = spy.mostRecentCall.dragInfo;
+
                         expect(spy.mostRecentCall.args[0] instanceof Ext.drag.Info).toBe(true);
                         expect(info.target).toBe(target);
                         expect(info.source).toBe(source);
@@ -1078,6 +1101,7 @@ describe("Ext.drag.Target", function() {
                     endDrag();
                     runs(function() {
                         var info = spy.mostRecentCall.dragInfo;
+
                         expect(spy.mostRecentCall.args[0] instanceof Ext.drag.Info).toBe(true);
                         expect(info.target).toBe(target);
                         expect(info.source).toBe(source);
@@ -1096,6 +1120,7 @@ describe("Ext.drag.Target", function() {
                     target.beforeDrop = function() {
                         return false;
                     };
+
                     startDrag();
                     moveBy(50, 50);
                     endDrag();
@@ -1208,6 +1233,7 @@ describe("Ext.drag.Target", function() {
                     moveBy(50, 50);
                     runs(function() {
                         var info = spy.mostRecentCall.dragInfo;
+
                         expect(spy.mostRecentCall.args[0]).toBe(target);
                         expect(info.source).toBe(source);
                         expect(info.target).toBe(target);
@@ -1258,6 +1284,7 @@ describe("Ext.drag.Target", function() {
                         moveBy(50, 50);
                         runs(function() {
                             var info = spy.mostRecentCall.dragInfo;
+
                             expect(spy.mostRecentCall.args[0]).toBe(target);
                             expect(info.source).toBe(source);
                             expect(info.target).toBe(target);
@@ -1307,6 +1334,7 @@ describe("Ext.drag.Target", function() {
                         moveBy(50, 50);
                         runs(function() {
                             var info = spy.mostRecentCall.dragInfo;
+
                             expect(spy.mostRecentCall.args[0]).toBe(target);
                             expect(info.source).toBe(source);
                             expect(info.target).toBe(target);
@@ -1358,6 +1386,7 @@ describe("Ext.drag.Target", function() {
                         moveBy(50, 50);
                         runs(function() {
                             var info = spy.mostRecentCall.dragInfo;
+
                             expect(spy.mostRecentCall.args[0]).toBe(target);
                             expect(info.source).toBe(source);
                             expect(info.target).toBe(target);
@@ -1412,6 +1441,7 @@ describe("Ext.drag.Target", function() {
                     moveBy(50, 50);
                     runs(function() {
                         var info = spy.mostRecentCall.dragInfo;
+
                         expect(spy.mostRecentCall.args[0]).toBe(target);
                         expect(info.source).toBe(source);
                         expect(info.target).toBe(target);
@@ -1462,6 +1492,7 @@ describe("Ext.drag.Target", function() {
                         moveBy(50, 50);
                         runs(function() {
                             var info = spy.mostRecentCall.dragInfo;
+
                             expect(spy.mostRecentCall.args[0]).toBe(target);
                             expect(info.source).toBe(source);
                             expect(info.target).toBe(target);
@@ -1511,6 +1542,7 @@ describe("Ext.drag.Target", function() {
                         moveBy(50, 50);
                         runs(function() {
                             var info = spy.mostRecentCall.dragInfo;
+
                             expect(spy.mostRecentCall.args[0]).toBe(target);
                             expect(info.source).toBe(source);
                             expect(info.target).toBe(target);
@@ -1562,6 +1594,7 @@ describe("Ext.drag.Target", function() {
                         moveBy(50, 50);
                         runs(function() {
                             var info = spy.mostRecentCall.dragInfo;
+
                             expect(spy.mostRecentCall.args[0]).toBe(target);
                             expect(info.source).toBe(source);
                             expect(info.target).toBe(target);
@@ -1619,6 +1652,7 @@ describe("Ext.drag.Target", function() {
                     moveBy(100, 100);
                     runs(function() {
                         var info = spy.mostRecentCall.dragInfo;
+
                         expect(spy.mostRecentCall.args[0]).toBe(target);
                         expect(info.source).toBe(source);
                         expect(info.target).toBe(target);
@@ -1679,6 +1713,7 @@ describe("Ext.drag.Target", function() {
                         moveBy(100, 100);
                         runs(function() {
                             var info = spy.mostRecentCall.dragInfo;
+
                             expect(spy.mostRecentCall.args[0]).toBe(target);
                             expect(info.source).toBe(source);
                             expect(info.target).toBe(target);
@@ -1738,6 +1773,7 @@ describe("Ext.drag.Target", function() {
                         moveBy(100, 100);
                         runs(function() {
                             var info = spy.mostRecentCall.dragInfo;
+
                             expect(spy.mostRecentCall.args[0]).toBe(target);
                             expect(info.source).toBe(source);
                             expect(info.target).toBe(target);
@@ -1799,6 +1835,7 @@ describe("Ext.drag.Target", function() {
                         moveBy(100, 100);
                         runs(function() {
                             var info = spy.mostRecentCall.dragInfo;
+
                             expect(spy.mostRecentCall.args[0]).toBe(target);
                             expect(info.source).toBe(source);
                             expect(info.target).toBe(target);
@@ -1847,6 +1884,7 @@ describe("Ext.drag.Target", function() {
                     endDrag();
                     runs(function() {
                         var info = spy.mostRecentCall.dragInfo;
+
                         expect(spy.mostRecentCall.args[0]).toBe(target);
                         expect(info.source).toBe(source);
                         expect(info.target).toBe(target);
@@ -1943,6 +1981,7 @@ describe("Ext.drag.Target", function() {
                     endDrag();
                     runs(function() {
                         var info = spy.mostRecentCall.dragInfo;
+
                         expect(spy.mostRecentCall.args[0]).toBe(target);
                         expect(info.source).toBe(source);
                         expect(info.target).toBe(target);
@@ -2504,25 +2543,6 @@ describe("Ext.drag.Target", function() {
 
     describe("interaction", function() {
         it("should be reachable when the element is also a source with handles", function() {
-            function startHandleDrag(handle) {
-                runs(function() {
-                    // Start a drag in the middle of a handle
-                    var center = getCenter(handle);
-
-                    start({
-                        id: touchId,
-                        x: center[0],
-                        y: center[1]
-                    }, handle);
-                });
-                waitsForAnimation();
-
-            }
-
-            function endHandleDrag(handle) {
-                endDrag(null, null, handle);
-            }
-
             var spy = jasmine.createSpy();
 
             dragEl = dropEl = makeEl({
@@ -2557,6 +2577,7 @@ describe("Ext.drag.Target", function() {
                                 border: '1px solid green'
                             }
                         });
+
                         return this.element;
                     }
                 }
@@ -2567,10 +2588,11 @@ describe("Ext.drag.Target", function() {
                 }
             });
 
-            var handle = dragEl.down('.foo');
-            startHandleDrag(handle);
-            moveBy(100, 100, handle);
-            endHandleDrag(handle);
+            var handle = Ext.fly(dragEl.down('.foo', true));
+
+            startDrag(null, null, handle);
+            moveBy(100, 100);
+            endDrag(null, null, handle);
             runsExpectCallCount(spy, 1);
         });
     });

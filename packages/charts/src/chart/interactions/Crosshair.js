@@ -1,6 +1,6 @@
 /**
- * The Crosshair interaction allows the user to get precise values for a specific point on the chart.
- * The values are obtained by single-touch dragging on the chart.
+ * The Crosshair interaction allows the user to get precise values for a specific point
+ * on the chart. The values are obtained by single-touch dragging on the chart.
  *
  *     @example
  *     Ext.create('Ext.Container', {
@@ -101,7 +101,8 @@ Ext.define('Ext.chart.interactions.Crosshair', {
     config: {
         /**
          * @cfg {Object} axes
-         * Specifies label text and label rect configs on per axis basis or as a single config for all axes.
+         * Specifies label text and label rect configs on per axis basis or as a single config
+         * for all axes.
          *
          *     {
          *         type: 'crosshair',
@@ -138,10 +139,10 @@ Ext.define('Ext.chart.interactions.Crosshair', {
          * - `rect` will use the 'white' fillStyle.
          */
         axes: {
-            top: {label: {}, rect: {}},
-            right: {label: {}, rect: {}},
-            bottom: {label: {}, rect: {}},
-            left: {label: {}, rect: {}}
+            top: { label: {}, rect: {} },
+            right: { label: {}, rect: {} },
+            bottom: { label: {}, rect: {} },
+            left: { label: {}, rect: {} }
         },
 
         /**
@@ -178,34 +179,40 @@ Ext.define('Ext.chart.interactions.Crosshair', {
         gesture: 'drag'
     },
 
-    applyAxes: function (axesConfig, oldAxesConfig) {
+    applyAxes: function(axesConfig, oldAxesConfig) {
         return Ext.merge(oldAxesConfig || {}, axesConfig);
     },
 
-    applyLines: function (linesConfig, oldLinesConfig) {
+    applyLines: function(linesConfig, oldLinesConfig) {
         return Ext.merge(oldLinesConfig || {}, linesConfig);
     },
 
-    updateChart: function (chart) {
+    updateChart: function(chart) {
         if (chart && !chart.isCartesian) {
             Ext.raise("Crosshair interaction can only be used on cartesian charts.");
         }
+
         this.callParent(arguments);
     },
 
-    getGestures: function () {
+    getGestures: function() {
         var me = this,
-            gestures = {};
-        gestures[me.getGesture()] = 'onGesture';
-        gestures[me.getGesture() + 'start'] = 'onGestureStart';
-        gestures[me.getGesture() + 'end'] = 'onGestureEnd';
+            gestures = {},
+            gesture = me.getGesture();
+
+        gestures[gesture] = 'onGesture';
+        gestures[gesture + 'start'] = 'onGestureStart';
+        gestures[gesture + 'end'] = 'onGestureEnd';
+        gestures[gesture + 'cancel'] = 'onGestureCancel';
+
         return gestures;
     },
 
-    onGestureStart: function (e) {
+    onGestureStart: function(e) {
         var me = this,
             chart = me.getChart(),
-            axesTheme = chart.getTheme().getAxis(), axisTheme,
+            axesTheme = chart.getTheme().getAxis(),
+            axisTheme,
             surface = chart.getSurface('overlay'),
             rect = chart.getInnerRect(),
             chartWidth = rect[2],
@@ -218,8 +225,7 @@ Ext.define('Ext.chart.interactions.Crosshair', {
             linesConfig = me.getLines(),
             axis, axisSurface, axisRect, axisWidth, axisHeight, axisPosition, axisAlignment,
             axisLabel, axisLabelConfig, crosshairLabelConfig, tickPadding,
-            axisSprite, attr, axisThickness, lineWidth, halfLineWidth,
-            title, titleBBox, titlePadding,
+            axisSprite, attr, lineWidth, halfLineWidth, title, titleBBox,
             horizontalLineCfg, verticalLineCfg,
             i;
 
@@ -240,6 +246,7 @@ Ext.define('Ext.chart.interactions.Crosshair', {
                 height: chartHeight
             }, linesConfig.vertical);
             me.axesLabels = me.axesLabels || {};
+
             for (i = 0; i < axes.length; i++) {
                 axis = axes[i];
                 axisSurface = axis.getSurface();
@@ -252,20 +259,21 @@ Ext.define('Ext.chart.interactions.Crosshair', {
                 title = axis.getTitle();
                 titleBBox = title && title.attr.text !== '' && title.getBBox();
                 attr = axisSprite.attr;
-                axisThickness = axisSprite.thickness;
                 lineWidth = attr.axisLine ? attr.lineWidth : 0;
                 halfLineWidth = lineWidth / 2;
                 tickPadding = Math.max(attr.majorTickSize, attr.minorTickSize) + lineWidth;
 
-                axisLabel = me.axesLabels[axisPosition] = axisSurface.add({type: 'composite'});
+                axisLabel = me.axesLabels[axisPosition] = axisSurface.add({ type: 'composite' });
 
-                axisLabel.labelRect = axisLabel.add(Ext.apply({
+                axisLabel.labelRect = axisLabel.addSprite(Ext.apply({
                     type: 'rect',
                     fillStyle: 'white',
                     x: axisPosition === 'right' ? lineWidth : 0,
                     y: axisPosition === 'bottom' ? lineWidth : 0,
-                    width: axisWidth - lineWidth - (axisAlignment === 'vertical' && titleBBox ? titleBBox.width : 0),
-                    height: axisHeight - lineWidth - (axisAlignment === 'horizontal' && titleBBox ? titleBBox.height : 0),
+                    width: axisWidth - lineWidth -
+                           (axisAlignment === 'vertical' && titleBBox ? titleBBox.width : 0),
+                    height: axisHeight - lineWidth -
+                            (axisAlignment === 'horizontal' && titleBBox ? titleBBox.height : 0),
                     translationX: axisPosition === 'left' && titleBBox ? titleBBox.width : 0,
                     translationY: axisPosition === 'top' && titleBBox ? titleBBox.height : 0
                 }, axesConfig.rect || axesConfig[axisPosition].rect));
@@ -273,6 +281,7 @@ Ext.define('Ext.chart.interactions.Crosshair', {
                 if (axisAlignment === 'vertical' && !verticalLineCfg.strokeStyle) {
                     verticalLineCfg.strokeStyle = attr.strokeStyle;
                 }
+
                 if (axisAlignment === 'horizontal' && !horizontalLineCfg.strokeStyle) {
                     horizontalLineCfg.strokeStyle = attr.strokeStyle;
                 }
@@ -280,46 +289,34 @@ Ext.define('Ext.chart.interactions.Crosshair', {
                 axisTheme = Ext.merge({}, axesTheme.defaults, axesTheme[axisPosition]);
                 axisLabelConfig = Ext.apply({}, axis.config.label, axisTheme.label);
                 crosshairLabelConfig = axesConfig.label || axesConfig[axisPosition].label;
-                axisLabel.labelText = axisLabel.add(Ext.apply(axisLabelConfig, crosshairLabelConfig, {
-                    type: 'text',
-                    x: (function () {
-                        switch (axisPosition) {
-                            case 'left':
-                                titlePadding = titleBBox ? titleBBox.x + titleBBox.width : 0;
-                                return titlePadding + (axisWidth - titlePadding - tickPadding) / 2 - halfLineWidth;
-                            case 'right':
-                                titlePadding = titleBBox ? axisWidth - titleBBox.x : 0;
-                                return tickPadding + (axisWidth - tickPadding - titlePadding) / 2 + halfLineWidth;
-                            default:
-                                return 0;
-                        }
-                    })(),
-                    y: (function () {
-                        switch (axisPosition) {
-                            case 'top':
-                                titlePadding = titleBBox ? titleBBox.y + titleBBox.height: 0;
-                                return titlePadding + (axisHeight - titlePadding - tickPadding) / 2 - halfLineWidth;
-                            case 'bottom':
-                                titlePadding = titleBBox ? axisHeight - titleBBox.y : 0;
-                                return tickPadding + (axisHeight - tickPadding - titlePadding) / 2 + halfLineWidth;
-                            default:
-                                return 0;
-                        }
-                    })()
-                }));
+
+                axisLabel.labelText = axisLabel.addSprite(
+                    Ext.apply(axisLabelConfig, crosshairLabelConfig, {
+                        type: 'text',
+                        x: me.calculateLabelTextPoint(false, axisPosition, tickPadding, titleBBox,
+                                                      axisWidth, halfLineWidth),
+                        y: me.calculateLabelTextPoint(true, axisPosition, tickPadding, titleBBox,
+                                                      axisHeight, halfLineWidth)
+                    })
+                );
             }
+
             me.horizontalLine = surface.add(horizontalLineCfg);
             me.verticalLine = surface.add(verticalLineCfg);
+
             return false;
         }
 
     },
 
-    onGesture: function (e) {
+    onGesture: function(e) {
         var me = this;
+
         if (me.getLocks()[me.getGesture()] !== me) {
             return;
         }
+
+        // eslint-disable-next-line vars-on-top, one-var
         var chart = me.getChart(),
             surface = chart.getSurface('overlay'),
             rect = Ext.Array.slice(chart.getInnerRect()),
@@ -342,14 +339,18 @@ Ext.define('Ext.chart.interactions.Crosshair', {
 
         if (x < 0) {
             x = 0;
-        } else if (x > chartWidth) {
+        }
+        else if (x > chartWidth) {
             x = chartWidth;
         }
+
         if (y < 0) {
             y = 0;
-        } else if (y > chartHeight) {
+        }
+        else if (y > chartHeight) {
             y = chartHeight;
         }
+
         x += px;
         y += py;
 
@@ -370,38 +371,45 @@ Ext.define('Ext.chart.interactions.Crosshair', {
                     yy = axisMatrix.getYY();
                     dy = axisMatrix.getDY();
                     yValue = (y - dy - py) / yy;
+
                     if (axis.getLayout() instanceof Ext.chart.axis.layout.Discrete) {
                         y = Math.round(yValue) * yy + dy + py;
                         yValue = axisSegmenter.from(Math.round(yValue));
                         yValue = axisSprite.attr.data[yValue];
-                    } else {
+                    }
+                    else {
                         yValue = axisSegmenter.from(yValue);
                     }
+
                     text = axisSegmenter.renderer(yValue, axisLayoutContext);
 
-                    axisLabel.setAttributes({translationY: y - py});
-                    axisLabel.labelText.setAttributes({text: text});
+                    axisLabel.setAttributes({ translationY: y - py });
+                    axisLabel.labelText.setAttributes({ text: text });
                     labelBBox = axisLabel.labelText.getBBox();
                     axisLabel.labelRect.setAttributes({
                         height: labelBBox.height + textPadding,
                         y: -(labelBBox.height + textPadding) / 2
                     });
                     axisSurface.renderFrame();
-                } else {
+                }
+                else {
                     xx = axisMatrix.getXX();
                     dx = axisMatrix.getDX();
                     xValue = (x - dx - px) / xx;
+
                     if (axis.getLayout() instanceof Ext.chart.axis.layout.Discrete) {
                         x = Math.round(xValue) * xx + dx + px;
                         xValue = axisSegmenter.from(Math.round(xValue));
                         xValue = axisSprite.attr.data[xValue];
-                    } else {
+                    }
+                    else {
                         xValue = axisSegmenter.from(xValue);
                     }
+
                     text = axisSegmenter.renderer(xValue, axisLayoutContext);
 
-                    axisLabel.setAttributes({translationX: x - px});
-                    axisLabel.labelText.setAttributes({text: text});
+                    axisLabel.setAttributes({ translationX: x - px });
+                    axisLabel.labelText.setAttributes({ text: text });
                     labelBBox = axisLabel.labelText.getBBox();
                     axisLabel.labelRect.setAttributes({
                         width: labelBBox.width + textPadding,
@@ -411,16 +419,18 @@ Ext.define('Ext.chart.interactions.Crosshair', {
                 }
             }
         }
-        me.horizontalLine.setAttributes({y: y, strokeStyle: axisSprite.attr.strokeStyle});
-        me.verticalLine.setAttributes({x: x, strokeStyle: axisSprite.attr.strokeStyle});
+
+        me.horizontalLine.setAttributes({ y: y, strokeStyle: axisSprite.attr.strokeStyle });
+        me.verticalLine.setAttributes({ x: x, strokeStyle: axisSprite.attr.strokeStyle });
         surface.renderFrame();
+
         return false;
     },
 
-    onGestureEnd: function (e) {
+    onGestureEnd: function(e) {
         var me = this,
             chart = me.getChart(),
-            surface =  chart.getSurface('overlay'),
+            surface = chart.getSurface('overlay'),
             axes = chart.getAxes(),
             axis, axisPosition, axisSurface, axisLabel,
             i;
@@ -433,15 +443,66 @@ Ext.define('Ext.chart.interactions.Crosshair', {
             axisPosition = axis.getPosition();
             axisSurface = axis.getSurface();
             axisLabel = me.axesLabels[axisPosition];
+
             if (axisLabel) {
                 delete me.axesLabels[axisPosition];
                 axisSurface.remove(axisLabel);
             }
+
             axisSurface.renderFrame();
         }
 
         surface.renderFrame();
         me.unlockEvents(me.getGesture());
-    }
+    },
 
+    onGestureCancel: function(e) {
+        this.onGestureEnd(e);
+    },
+
+    privates: {
+        vertMap: {
+            top: 'start',
+            bottom: 'end'
+        },
+
+        horzMap: {
+            left: 'start',
+            right: 'end'
+        },
+
+        calculateLabelTextPoint: function(
+            vertical, position, tickPadding, titleBBox, axisSize, halfLineWidth
+        ) {
+            var titlePadding, sizeProp, pointProp;
+
+            if (vertical) {
+                pointProp = 'y';
+                sizeProp = 'height';
+                position = this.vertMap[position];
+            }
+            else {
+                pointProp = 'x';
+                sizeProp = 'width';
+                position = this.horzMap[position];
+            }
+
+            switch (position) {
+                case 'start':
+                    titlePadding = titleBBox ? titleBBox[pointProp] + titleBBox[sizeProp] : 0;
+
+                    return titlePadding + (axisSize - titlePadding - tickPadding) / 2 -
+                           halfLineWidth;
+
+                case 'end':
+                    titlePadding = titleBBox ? axisSize - titleBBox[pointProp] : 0;
+
+                    return tickPadding + (axisSize - tickPadding - titlePadding) / 2 +
+                           halfLineWidth;
+
+                default:
+                    return 0;
+            }
+        }
+    }
 });

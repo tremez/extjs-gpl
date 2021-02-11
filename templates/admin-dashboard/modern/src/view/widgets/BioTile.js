@@ -53,15 +53,10 @@ Ext.define('Admin.view.widgets.BioTile', {
     items: [{
         xtype: 'container',
         layout: 'vbox',
-        width: '100%',
-        height: '100%',
-
         items: [{
             xtype: 'image',
             reference: 'banner',
             userCls: 'bio-banner',
-            width: '100%',
-            height: '100%',
             flex: 1,
             html: '&#160;'
         }, {
@@ -69,7 +64,6 @@ Ext.define('Admin.view.widgets.BioTile', {
             reference: 'bottomContainer',
             layout: 'vbox',
             flex: 1,
-
             items: [{
                 xtype: 'component',
                 reference: 'description',
@@ -77,7 +71,7 @@ Ext.define('Admin.view.widgets.BioTile', {
                 flex: 1
             }]
         }]
-    },{
+    }, {
         xtype: 'image',
         reference: 'image',
         left: '50%',
@@ -103,9 +97,7 @@ Ext.define('Admin.view.widgets.BioTile', {
         var container = this.lookup('bottomContainer'),
             items = container.getItems(),
             was = (items.length > 1) ? items.getAt(1) : null,
-            now;
-
-        now = Ext.factory(footer, null, was);
+            now = Ext.factory(footer, null, was);
 
         if (now !== was) {
             if (now) {
@@ -116,16 +108,15 @@ Ext.define('Admin.view.widgets.BioTile', {
 
     privates: {
         configureImage: function (ref, config) {
-            var image = this.lookup(ref),
-                obj = config;
+            var image = this.lookup(ref);
 
             if (typeof config === 'string') {
-                obj = {
+                config = {
                     src: config
                 };
             }
 
-            image.setConfig(obj);
+            image.setConfig(config);
         }
     }
 });

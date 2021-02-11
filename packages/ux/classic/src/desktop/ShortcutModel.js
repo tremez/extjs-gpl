@@ -1,4 +1,4 @@
-/*!
+/*
  * Ext JS Library
  * Copyright(c) 2006-2014 Sencha Inc.
  * licensing@sencha.com

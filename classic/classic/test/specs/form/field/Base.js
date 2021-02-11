@@ -1,12 +1,12 @@
-describe("Ext.form.field.Base", function() {
+topSuite("Ext.form.field.Base", ['Ext.button.Button'], function() {
     var c, makeField;
-    
+
     function createField(cfg) {
         cfg = Ext.apply({
             ariaRole: 'foo',
-            renderTo: Ext.getBody(),
+            renderTo: Ext.getBody()
         }, cfg);
-        
+
         return c = new Ext.form.field.Base(cfg);
     }
 
@@ -419,8 +419,47 @@ describe("Ext.form.field.Base", function() {
                 });
             });
         });
+
+        describe("validateOnBlur", function() {
+            var button;
+
+            beforeEach(function() {
+                makeDisableField({
+                    allowBlank: false
+                });
+
+                button = new Ext.button.Button({
+                    renderTo: document.body,
+                    text: 'foo'
+                });
+
+                focusAndWait(c);
+            });
+
+            afterEach(function() {
+                button = Ext.destroy(button);
+            });
+
+            it("should validate on blur by default", function() {
+                focusAndWait(button);
+
+                runs(function() {
+                    expect(spy).toHaveBeenCalled();
+                });
+            });
+
+            it("should not validate when validateOnBlur is false", function() {
+                c.validateOnBlur = false;
+
+                focusAndWait(button);
+
+                runs(function() {
+                    expect(spy).not.toHaveBeenCalled();
+                });
+            });
+        });
     });
-    
+
     describe("errors", function() {
         describe("enabling/disabling", function() {
             beforeEach(function() {
@@ -432,21 +471,21 @@ describe("Ext.form.field.Base", function() {
                     }
                 });
             });
-            
-            it("should remove any active errors during a disable", function(){
+
+            it("should remove any active errors during a disable", function() {
                 c.validate();
                 c.disable();
                 expect(c.hasActiveError()).toBe(false);
             });
-            
-            it("should should revalidate when enabled if invalid when disabled", function(){
+
+            it("should should revalidate when enabled if invalid when disabled", function() {
                 c.validate();
                 c.disable();
                 c.enable();
                 expect(c.hasActiveError()).toBe(true);
             });
-            
-            it("should should not revalidate when enabled if clearInvalid is called", function(){
+
+            it("should should not revalidate when enabled if clearInvalid is called", function() {
                 c.validate();
                 c.disable();
                 c.clearInvalid();
@@ -455,119 +494,119 @@ describe("Ext.form.field.Base", function() {
             });
         });
     });
-    
+
     describe("ARIA", function() {
         describe("ariaEl", function() {
             it("should be inputEl", function() {
                 createField();
-                
+
                 expect(c.ariaEl).toBe(c.inputEl);
             });
         });
-        
+
         describe("attributes", function() {
             describe("in general", function() {
                 it("should not be applied when !ariaRole", function() {
                     createField({ ariaRole: undefined });
-                    
+
                     expect(c.ariaEl.dom.hasAttribute('role')).toBe(false);
                 });
-                
+
                 it("should be applied when ariaRole is defined", function() {
                     createField();
-                    
+
                     expect(c).toHaveAttr('role', 'foo');
                 });
             });
-            
+
             describe("aria-hidden", function() {
                 it("should be false when visible", function() {
                     createField();
-                    
+
                     expect(c).toHaveAttr('aria-hidden', 'false');
                 });
-                
+
                 it("should be true when hidden", function() {
                     createField({ hidden: true });
-                    
+
                     expect(c).toHaveAttr('aria-hidden', 'true');
                 });
             });
-            
+
             describe("aria-disabled", function() {
                 it("should be false when enabled", function() {
                     createField();
-                    
+
                     expect(c).toHaveAttr('aria-disabled', 'false');
                 });
-                
+
                 it("should be true when disabled", function() {
                     createField({ disabled: true });
-                    
+
                     expect(c).toHaveAttr('aria-disabled', 'true');
                 });
             });
-            
+
             describe("aria-readonly", function() {
                 it("should be false by default", function() {
                     createField();
-                    
+
                     expect(c).toHaveAttr('aria-readonly', 'false');
                 });
-                
+
                 it("should be true when readOnly", function() {
                     createField({ readOnly: true });
-                    
+
                     expect(c).toHaveAttr('aria-readonly', 'true');
                 });
             });
-            
+
             describe("aria-invalid", function() {
                 it("should be false by default", function() {
                     createField();
-                    
+
                     expect(c).toHaveAttr('aria-invalid', 'false');
                 });
             });
-            
+
             describe("aria-label", function() {
                 it("should not exist by default", function() {
                     createField();
-                    
+
                     expect(c).not.toHaveAttr('aria-label');
                 });
-                
+
                 it("should be rendered when set", function() {
                     createField({ ariaLabel: 'foo' });
-                    
+
                     expect(c).toHaveAttr('aria-label', 'foo');
                 });
             });
-            
+
             describe("aria-describedby", function() {
                 it("should point to ariaStatusEl by default", function() {
                     createField();
-                    
+
                     expect(c).toHaveAttr('aria-describedby', c.id + '-ariaStatusEl');
                 });
-                
+
                 it("should point to ariaStatusEl and ariaHelpEl with ariaHelp", function() {
                     createField({ ariaHelp: 'foo bar' });
-                    
+
                     expect(c).toHaveAttr('aria-describedby', c.id + '-ariaStatusEl ' + c.id + '-ariaHelpEl');
                 });
-                
+
                 it("should not be overridden when defined via config", function() {
                     createField({
                         ariaAttributes: {
                             'aria-describedby': 'throbbe'
                         }
                     });
-                    
+
                     expect(c).toHaveAttr('aria-describedby', 'throbbe');
                 });
             });
-            
+
             describe("via config", function() {
                 it("should set aria-foo", function() {
                     createField({
@@ -575,45 +614,45 @@ describe("Ext.form.field.Base", function() {
                             'aria-foo': 'bar'
                         }
                     });
-                    
+
                     expect(c).toHaveAttr('aria-foo', 'bar');
                 });
             });
         });
-        
+
         describe("state", function() {
             beforeEach(function() {
                 createField();
             });
-            
+
             describe("aria-readonly", function() {
                 beforeEach(function() {
                     c.setReadOnly(true);
                 });
-                
+
                 it("should change to true", function() {
                     expect(c).toHaveAttr('aria-readonly', 'true');
                 });
-                
+
                 it("should change to false", function() {
                     c.setReadOnly(false);
-                    
+
                     expect(c).toHaveAttr('aria-readonly', 'false');
                 });
             });
-            
+
             describe("aria-invalid", function() {
                 beforeEach(function() {
                     c.markInvalid(['foo']);
                 });
-                
+
                 it("should change to true", function() {
                     expect(c).toHaveAttr('aria-invalid', 'true');
                 });
-                
+
                 it("should change to false", function() {
                     c.clearInvalid();
-                    
+
                     expect(c).toHaveAttr('aria-invalid', 'false');
                 });
             });

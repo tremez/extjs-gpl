@@ -16,7 +16,7 @@ Ext.define('KitchenSink.view.d3.TreeMap', {
         'Ext.d3.hierarchy.TreeMap'
     ],
 
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     otherContent: [
         {
@@ -25,7 +25,7 @@ Ext.define('KitchenSink.view.d3.TreeMap', {
         },
         {
             type: 'Model',
-            path: 'classic/samples/model/Stock.js'
+            path: 'app/model/Stock.js'
         },
         {
             type: 'View Model',
@@ -33,21 +33,38 @@ Ext.define('KitchenSink.view.d3.TreeMap', {
         },
         {
             type: 'Data',
-            path: 'data/tree/tree.json'
+            path: 'data/tree/stocks.json'
         }
     ],
-    // </example>
+    //</example>
 
-    width: 930,
+    width: '${width}',
     height: 600,
+
+    profiles: {
+        classic: {
+            width: 930,
+            companyPanelWidth: 215
+        },
+        neptune: {
+            width: 930,
+            companyPanelWidth: 215
+        },
+        graphite: {
+            width: 1000,
+            companyPanelWidth: 300
+        },
+        'classic-material': {
+            width: 1000,
+            companyPanelWidth: 300
+        }
+    },
 
     layout: 'border',
 
     viewModel: {
         type: 'stocks'
     },
-
-    session: true,
 
     items: [
         {
@@ -58,10 +75,10 @@ Ext.define('KitchenSink.view.d3.TreeMap', {
             splitterResize: false,
             collapsible: true,
             minWidth: 100,
-            width: 215,
-            rootVisible: false,
+            width: '${companyPanelWidth}',
             useArrows: true,
             displayField: 'name',
+            rootVisible: false,
             bind: {
                 store: '{store}',
                 selection: '{selection}',
@@ -91,6 +108,7 @@ Ext.define('KitchenSink.view.d3.TreeMap', {
             items: {
                 xtype: 'd3-treemap',
                 reference: 'treemap',
+                rootVisible: false,
                 interactions: {
                     type: 'panzoom',
                     zoom: {
@@ -101,10 +119,9 @@ Ext.define('KitchenSink.view.d3.TreeMap', {
                     store: '{store}',
                     selection: '{selection}'
                 },
-                rootVisible: false,
-                nodeValue: function (node) {
-                    return node.data.cap;
-                },
+                nodeValue: 'cap',
+                noParentValue: true,
+                scaleLabels: true,
                 colorAxis: {
                     scale: {
                         type: 'linear',
@@ -112,8 +129,10 @@ Ext.define('KitchenSink.view.d3.TreeMap', {
                         range: ['#E45649', '#ECECEC', '#50A14F']
                     },
                     field: 'change',
-                    processor: function (axis, scale, node, field) {
-                        return node.isLeaf() ? scale(node.data[field]) : '#ececec';
+                    processor: function(axis, scale, node, field) {
+                        var record = node.data;
+
+                        return record.isLeaf() ? scale(record.get(field)) : '#ececec';
                     }
                 }
             }

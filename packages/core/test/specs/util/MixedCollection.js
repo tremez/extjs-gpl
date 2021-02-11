@@ -1,20 +1,24 @@
-describe("Ext.util.MixedCollection", function() {
-    var mc;
+topSuite("Ext.util.MixedCollection", function() {
+    var mc,
+        fakeScope = {
+            id: "fakeScope",
+            fakeScope: true
+        };
 
     it("should get the correct count", function() {
         mc = new Ext.util.MixedCollection();
 
-        mc.addAll([{id: 1}, {id: 2}]);
+        mc.addAll([{ id: 1 }, { id: 2 }]);
 
         expect(mc.getCount()).toEqual(2);
     });
-    
+
     describe("adding with separate key", function() {
         it("should find using a linear search if the key is not found", function() {
             mc = new Ext.util.MixedCollection();
 
-            var item1 = {id: 1, data: 'first item'},
-                item2 = {id: 2, data: 'second item'};
+            var item1 = { id: 1, data: 'first item' },
+                item2 = { id: 2, data: 'second item' };
 
             mc.add("item1Key", item1);
             mc.add("item2Key", item2);
@@ -31,8 +35,8 @@ describe("Ext.util.MixedCollection", function() {
         it("should provide a default getKey implementation", function() {
             mc = new Ext.util.MixedCollection();
 
-            var item1 = {id: 1, data: 'first item'},
-                item2 = {id: 2, data: 'second item'};
+            var item1 = { id: 1, data: 'first item' },
+                item2 = { id: 2, data: 'second item' };
 
             mc.add(item1);
             mc.add(item2);
@@ -46,8 +50,8 @@ describe("Ext.util.MixedCollection", function() {
                 return item.myKey;
             });
 
-            var item1 = {myKey: 'a', data: 'first item'},
-                item2 = {myKey: 'b', data: 'second item'};
+            var item1 = { myKey: 'a', data: 'first item' },
+                item2 = { myKey: 'b', data: 'second item' };
 
             mc.add(item1);
             mc.add(item2);
@@ -66,9 +70,9 @@ describe("Ext.util.MixedCollection", function() {
             fn = jasmine.createSpy('fn');
             callCount = 0;
 
-            item1 = {id: 1, name: 'first'};
-            item2 = {id: 2, name: 'second'};
-            item3 = {id: 3, name: 'third'};
+            item1 = { id: 1, name: 'first' };
+            item2 = { id: 2, name: 'second' };
+            item3 = { id: 3, name: 'third' };
 
             mc.addAll([item1, item2, item3]);
         });
@@ -134,7 +138,7 @@ describe("Ext.util.MixedCollection", function() {
         it("should add an array of items", function() {
             expect(mc.length).toEqual(0);
 
-            mc.addAll([{id: 1}, {id: 2}]);
+            mc.addAll([{ id: 1 }, { id: 2 }]);
 
             expect(mc.length).toEqual(2);
         });
@@ -146,78 +150,78 @@ describe("Ext.util.MixedCollection", function() {
                 executed = true;
             });
 
-            mc.add({id: 1});
+            mc.add({ id: 1 });
 
             expect(executed).toBe(true);
         });
-        
-        describe("falsy values", function(){
-            it("should be able to add a 0", function(){
+
+        describe("falsy values", function() {
+            it("should be able to add a 0", function() {
                 mc.add('mykey', 0);
                 expect(mc.containsKey('mykey')).toBe(true);
-                expect(mc.get('mykey')).toBe(0);    
+                expect(mc.get('mykey')).toBe(0);
             });
-            
-            it("should be able to add an empty string", function(){
+
+            it("should be able to add an empty string", function() {
                 mc.add('mykey', '');
                 expect(mc.containsKey('mykey')).toBe(true);
-                expect(mc.get('mykey')).toBe('');    
+                expect(mc.get('mykey')).toBe('');
             });
-            
-            it("should be able to add null", function(){
+
+            it("should be able to add null", function() {
                 mc.add('mykey', null);
                 expect(mc.containsKey('mykey')).toBe(true);
-                expect(mc.get('mykey')).toBeNull();    
+                expect(mc.get('mykey')).toBeNull();
             });
-            
-            it("should be able to add undefined", function(){
+
+            it("should be able to add undefined", function() {
                 mc.add('mykey', undefined);
                 expect(mc.containsKey('mykey')).toBe(true);
-                expect(mc.get('mykey')).toBeUndefined();    
-            });  
+                expect(mc.get('mykey')).toBeUndefined();
+            });
         });
     });
 
     describe("removing items", function() {
-        var item1 = {id: 1, name: 'one'},
-            item2 = {id: 2, name: 'two'},
-            item3 = {id: 3, name: 'three'},
-            item4 = {id: 4, name: 'four'},
-            item5 = {id: 5, name: 'five'},
-            item6 = {id: 6, name: 'six'},
-            item7 = {id: 7, name: 'seven'},
-            item8 = {id: 8, name: 'eeight'},
-            item9 = {id: 9, name: 'nine'};
+        var item1 = { id: 1, name: 'one' },
+            item2 = { id: 2, name: 'two' },
+            item3 = { id: 3, name: 'three' },
+            item4 = { id: 4, name: 'four' },
+            item5 = { id: 5, name: 'five' },
+            item6 = { id: 6, name: 'six' },
+            item7 = { id: 7, name: 'seven' },
+            item8 = { id: 8, name: 'eeight' },
+            item9 = { id: 9, name: 'nine' };
 
         beforeEach(function() {
             mc = new Ext.util.MixedCollection();
 
             mc.addAll([
-                item1, 
-                item2, 
-                item3, 
-                item4, 
-                item5, 
-                item6, 
-                item7, 
-                item8, 
+                item1,
+                item2,
+                item3,
+                item4,
+                item5,
+                item6,
+                item7,
+                item8,
                 item9
             ]);
         });
-        
+
         describe("remove", function() {
             it("should remove a single item", function() {
                 mc.remove(item1);
 
                 expect(mc.getCount()).toEqual(8);
             });
-            
-            it("should return the removed item", function(){
+
+            it("should return the removed item", function() {
                 expect(mc.remove(item1)).toBe(item1);
             });
-            
-            it("should return false if no item was found", function(){
-                expect(mc.remove({})).toBe(false);    
+
+            it("should return false if no item was found", function() {
+                expect(mc.remove({})).toBe(false);
             });
 
             it("should fire the remove event", function() {
@@ -235,20 +239,20 @@ describe("Ext.util.MixedCollection", function() {
                 expect(eventKey).toBe(1);
             });
         });
-        
+
         describe("removeAt", function() {
             it("should remove a single item", function() {
                 mc.removeAt(1);
 
                 expect(mc.getCount()).toEqual(8);
             });
-            
-            it("should return the removed item", function(){
+
+            it("should return the removed item", function() {
                 expect(mc.removeAt(1)).toBe(item2);
             });
-            
-            it("should return false if no item was found", function(){
-                expect(mc.removeAt(9)).toBe(false);    
+
+            it("should return false if no item was found", function() {
+                expect(mc.removeAt(9)).toBe(false);
             });
 
             describe("event", function() {
@@ -266,10 +270,11 @@ describe("Ext.util.MixedCollection", function() {
                     expect(eventO).toBe(item2);
                     expect(eventKey).toBe(2);
                 });
-                
-                it("should update the collection during a remove", function(){
+
+                it("should update the collection during a remove", function() {
                     var count, item;
-                    mc.on('remove', function(){
+
+                    mc.on('remove', function() {
                         count = mc.getCount();
                         item = mc.getByKey(1);
                     });
@@ -279,34 +284,34 @@ describe("Ext.util.MixedCollection", function() {
                 });
             });
         });
-        
-        describe("bulkRemove", function(){
-            it("should limit the length to that of the collection", function(){
+
+        describe("bulkRemove", function() {
+            it("should limit the length to that of the collection", function() {
                 mc.removeRange(4, 100);
                 expect(mc.getCount()).toBe(4);
             });
-                
-            it("should remove the correct items", function(){
+
+            it("should remove the correct items", function() {
                 mc.removeRange(3, 2);
                 expect(mc.getCount()).toBe(7);
                 expect(mc.getAt(2)).toBe(item3);
                 expect(mc.getAt(3)).toBe(item6);
-            });    
+            });
         });
-        
+
         describe("removeAtKey", function() {
             it("should remove a single item", function() {
                 mc.removeAtKey(1);
 
                 expect(mc.getCount()).toEqual(8);
             });
-            
-            it("should return the removed item", function(){
+
+            it("should return the removed item", function() {
                 expect(mc.removeAtKey(1)).toBe(item1);
             });
-            
-            it("should return false if no item was found", function(){
-                expect(mc.removeAtKey(10)).toBe(false);    
+
+            it("should return false if no item was found", function() {
+                expect(mc.removeAtKey(10)).toBe(false);
             });
 
             it("should fire the remove event", function() {
@@ -324,34 +329,36 @@ describe("Ext.util.MixedCollection", function() {
                 expect(eventKey).toBe(2);
             });
         });
-        
-        describe("removeAll", function(){
-            it("should remove all items", function(){
-                mc.removeAll();  
-                expect(mc.getCount()).toBe(0);  
+
+        describe("removeAll", function() {
+            it("should remove all items", function() {
+                mc.removeAll();
+                expect(mc.getCount()).toBe(0);
             });
-            
-            it("should the passed items", function(){
-                mc.removeAll([item2]);  
-                expect(mc.getCount()).toBe(8);  
+
+            it("should the passed items", function() {
+                mc.removeAll([item2]);
+                expect(mc.getCount()).toBe(8);
             });
-            
-            it("should fire the remove event with no passed items", function(){
+
+            it("should fire the remove event with no passed items", function() {
                 var called = 0;
-                mc.on('remove', function(){
+
+                mc.on('remove', function() {
                     ++called;
                 });
-                mc.removeAll();  
-                expect(called).toBe(9);  
+                mc.removeAll();
+                expect(called).toBe(9);
             });
-            
-            it("should fire the remove event when passing items", function(){
+
+            it("should fire the remove event when passing items", function() {
                 var called = 0;
-                mc.on('remove', function(){
+
+                mc.on('remove', function() {
                     ++called;
                 });
-                mc.removeAll([item2]);  
-                expect(called).toBe(1);  
+                mc.removeAll([item2]);
+                expect(called).toBe(1);
             });
         });
     });
@@ -360,7 +367,7 @@ describe("Ext.util.MixedCollection", function() {
         beforeEach(function() {
             mc = new Ext.util.MixedCollection();
 
-            mc.addAll([{id: 1}, {id: 2}]);
+            mc.addAll([{ id: 1 }, { id: 2 }]);
         });
 
         it("should remove all items", function() {
@@ -387,15 +394,15 @@ describe("Ext.util.MixedCollection", function() {
     describe("determining insertion index in a sorted MixedCollection", function() {
 
         // Items to sort into name order
-        var item1 = {id: 2, name: 'Michael'},
-            item2 = {id: 3, name: 'Yanto'},
-            item3 = {id: 1, name: 'Bill'},
+        var item1 = { id: 2, name: 'Michael' },
+            item2 = { id: 3, name: 'Yanto' },
+            item3 = { id: 1, name: 'Bill' },
 
             // Items to find insertion indices for
-            item4 = {id: 4, name: 'Albert'}, // Insert index 0 when ASC, 3 when DESC
-            item5 = {id: 5, name: 'Fred'},   // Insert index 1 when ASC, 2 when DESC
-            item6 = {id: 6, name: 'Robert'}, // Insert index 2 when ASC, 1 when DESC
-            item7 = {id: 7, name: 'Zebedee'};// Insert index 3 when ASC, 0 when DESC
+            item4 = { id: 4, name: 'Albert' }, // Insert index 0 when ASC, 3 when DESC
+            item5 = { id: 5, name: 'Fred' },   // Insert index 1 when ASC, 2 when DESC
+            item6 = { id: 6, name: 'Robert' }, // Insert index 2 when ASC, 1 when DESC
+            item7 = { id: 7, name: 'Zebedee' };// Insert index 3 when ASC, 0 when DESC
 
         beforeEach(function() {
             mc = new Ext.util.MixedCollection();
@@ -424,29 +431,29 @@ describe("Ext.util.MixedCollection", function() {
     });
 
     describe("an existing MixedCollection", function() {
-        var item1 = {id: 1, name: 'first'},
-            item2 = {id: 2, name: 'second'},
-            item3 = {id: 3, name: 'third'},
-            item4 = {id: 4, name: 'fourth'},
-            item5 = {id: 5, name: 'fifth'},
-            item6 = {id: 6, name: 'sixth'},
-            item7 = {id: 7, name: 'seventh'},
-            item8 = {id: 8, name: 'eighth'},
-            item9 = {id: 9, name: 'ninth'};
+        var item1 = { id: 1, name: 'first' },
+            item2 = { id: 2, name: 'second' },
+            item3 = { id: 3, name: 'third' },
+            item4 = { id: 4, name: 'fourth' },
+            item5 = { id: 5, name: 'fifth' },
+            item6 = { id: 6, name: 'sixth' },
+            item7 = { id: 7, name: 'seventh' },
+            item8 = { id: 8, name: 'eighth' },
+            item9 = { id: 9, name: 'ninth' };
 
         beforeEach(function() {
             mc = new Ext.util.MixedCollection();
 
             mc.addAll([item1, item2, item3]);
         });
-        
-        describe("updateKey", function(){
+
+        describe("updateKey", function() {
             it("should do nothing if the old key doesn't exist", function() {
                 mc.updateKey('foo', 'bar');
                 expect(mc.getByKey('bar')).toBeUndefined();
             });
 
-            it("should update the key for the item", function(){
+            it("should update the key for the item", function() {
                 mc.updateKey(1, 20);
                 expect(mc.getByKey(1)).toBeUndefined();
                 expect(mc.getByKey(20)).toBe(item1);
@@ -455,7 +462,7 @@ describe("Ext.util.MixedCollection", function() {
                 expect(mc.indexMap[1]).toBe(undefined);
             });
 
-            it("should update the key for the item when the indexMap needs rebuilding", function(){
+            it("should update the key for the item when the indexMap needs rebuilding", function() {
                 mc.insert(0, 'first', 'new');
                 mc.updateKey(1, 20);
                 expect(mc.getByKey(1)).toBeUndefined();
@@ -494,31 +501,31 @@ describe("Ext.util.MixedCollection", function() {
 
                 expect(mc.items[0]).toEqual(item4);
             });
-            
-            describe("falsy values", function(){
-                it("should be able to insert a 0", function(){
+
+            describe("falsy values", function() {
+                it("should be able to insert a 0", function() {
                     mc.insert(0, 'mykey', 0);
                     expect(mc.containsKey('mykey')).toBe(true);
-                    expect(mc.get('mykey')).toBe(0);    
+                    expect(mc.get('mykey')).toBe(0);
                 });
-            
-                it("should be able to insert an empty string", function(){
+
+                it("should be able to insert an empty string", function() {
                     mc.insert(0, 'mykey', '');
                     expect(mc.containsKey('mykey')).toBe(true);
-                    expect(mc.get('mykey')).toBe('');    
+                    expect(mc.get('mykey')).toBe('');
                 });
-            
-                it("should be able to insert null", function(){
+
+                it("should be able to insert null", function() {
                     mc.insert(0, 'mykey', null);
                     expect(mc.containsKey('mykey')).toBe(true);
-                    expect(mc.get('mykey')).toBeNull();    
+                    expect(mc.get('mykey')).toBeNull();
                 });
-            
-                it("should be able to insert undefined", function(){
+
+                it("should be able to insert undefined", function() {
                     mc.insert(0, 'mykey', undefined);
                     expect(mc.containsKey('mykey')).toBe(true);
-                    expect(mc.get('mykey')).toBeUndefined();    
-                });  
+                    expect(mc.get('mykey')).toBeUndefined();
+                });
             });
         });
 
@@ -559,15 +566,16 @@ describe("Ext.util.MixedCollection", function() {
                 expect(mc2.items[1]).toEqual(item2);
                 expect(mc2.items[2]).toEqual(item3);
             });
-            
-            it("should keep the getKey fn", function(){
-                var fn = function(o){
-                    return o.id;    
-                }, mc1 = new Ext.util.MixedCollection({
-                    getKey: fn
-                });
-                
-                var mc2 = mc1.clone();
+
+            it("should keep the getKey fn", function() {
+                var fn = function(o) {
+                        return o.id;
+                    },
+                    mc1 = new Ext.util.MixedCollection({
+                        getKey: fn
+                    }),
+                    mc2 = mc1.clone();
+
                 expect(mc2.getKey).toBe(fn);
                 mc1 = mc2 = null;
             });
@@ -607,7 +615,7 @@ describe("Ext.util.MixedCollection", function() {
             });
 
             it("should get an item by key", function() {
-                var item5 = {id: 'a', name: 'fifth item'};
+                var item5 = { id: 'a', name: 'fifth item' };
 
                 mc.add(item5);
 
@@ -619,8 +627,8 @@ describe("Ext.util.MixedCollection", function() {
             });
 
             describe("when getting a range", function() {
-                
-                var fill = function(){
+
+                var fill = function() {
                     mc.clear();
                     mc.addAll([
                         item1,
@@ -632,9 +640,9 @@ describe("Ext.util.MixedCollection", function() {
                         item7,
                         item8,
                         item9
-                    ]);    
+                    ]);
                 };
-                
+
                 it("should honor the start and limit params", function() {
                     fill();
                     var items = mc.getRange(1, 2);
@@ -664,32 +672,36 @@ describe("Ext.util.MixedCollection", function() {
                     expect(items[1]).toEqual(item3);
                     expect(items[7]).toEqual(item9);
                 });
-                
-                it("should normalize the start value if < 0", function(){
+
+                it("should normalize the start value if < 0", function() {
                     fill();
                     var items = mc.getRange(-3, 2);
+
                     expect(items.length).toBe(3);
                     expect(items[0]).toEqual(item1);
                 });
-                
-                it("should normalize the end value the collection max", function(){
+
+                it("should normalize the end value the collection max", function() {
                     fill();
                     var items = mc.getRange(6, 200);
+
                     expect(items.length).toBe(3);
                     expect(items[0]).toBe(item7);
                 });
-                
-                it("should return empty if start > length", function(){
+
+                it("should return empty if start > length", function() {
                     fill();
                     var items = mc.getRange(10, 15);
+
                     expect(items.length).toBe(0);
                 });
-                
-                it("should return in reverse order when start > end", function(){
+
+                it("should return in reverse order when start > end", function() {
                     fill();
                     var items = mc.getRange(6, 3);
+
                     expect(items.length).toBe(4);
-                    expect(items[0]).toBe(item7);    
+                    expect(items[0]).toBe(item7);
                 });
             });
         });
@@ -697,7 +709,7 @@ describe("Ext.util.MixedCollection", function() {
         describe("finding items", function() {
             it("should find an item using a passed function", function() {
                 var matched = mc.findBy(function(item) {
-                    return item.name == 'third';
+                    return item.name === 'third';
                 });
 
                 expect(matched).toEqual(item3);
@@ -711,7 +723,7 @@ describe("Ext.util.MixedCollection", function() {
 
             it("should find an item's index by a function", function() {
                 var matched = mc.findIndexBy(function(item) {
-                    return item.name == 'second';
+                    return item.name === 'second';
                 });
 
                 expect(matched).toEqual(1);
@@ -724,7 +736,7 @@ describe("Ext.util.MixedCollection", function() {
             });
 
             it("should not contain items that have not been added", function() {
-                expect(mc.contains({some: 'object'})).toBe(false);
+                expect(mc.contains({ some: 'object' })).toBe(false);
             });
 
             it("should contain an item by key", function() {
@@ -746,18 +758,18 @@ describe("Ext.util.MixedCollection", function() {
             });
 
             mc.addAll([
-                {id: 1, name: 'Ed',     code: 'C', modifier: 10},
-                {id: 2, name: 'Abe',    code: 'A', modifier: 100},
-                {id: 3, name: 'Edward', code: 'B', modifier: 5}
+                { id: 1, name: 'Ed',     code: 'C', modifier: 10 },
+                { id: 2, name: 'Abe',    code: 'A', modifier: 100 },
+                { id: 3, name: 'Edward', code: 'B', modifier: 5 }
             ]);
 
             filter = new Ext.util.Filter({
                 filterFn: function(item) {
-                    return item.name.charAt(0) == 'E';
+                    return item.name.charAt(0) === 'E';
                 }
             });
         });
-        
+
         describe("copying", function() {
             it("should return a new MixedCollection", function() {
                 filtered = mc.filter('name', 'Ed');
@@ -765,29 +777,27 @@ describe("Ext.util.MixedCollection", function() {
                 expect(filtered instanceof Ext.util.MixedCollection).toBe(true);
                 expect(filtered).not.toEqual(mc);
             });
-            
-            it("should keep the getKey function when using filter", function(){
-                var fn = function(o){
-                    return o.id;    
-                }, mc1 = new Ext.util.MixedCollection({
-                    getKey: fn
-                });
 
-                var mc2 = mc1.filter('name', 'Ed');
+            it("should keep the getKey function when using filter", function() {
+                var fn = function(o) { return o.id; },
+                    mc1 = new Ext.util.MixedCollection({
+                        getKey: fn
+                    }),
+                    mc2 = mc1.filter('name', 'Ed');
+
                 expect(mc2.getKey).toBe(fn);
                 mc1 = mc2 = null;
             });
-            
-            it("should keep the getKey function when using filterBy", function(){
-                var fn = function(o){
-                    return o.id;    
-                }, mc1 = new Ext.util.MixedCollection({
-                    getKey: fn
-                });
 
-                var mc2 = mc1.filterBy(function(){
-                    return true;
-                });
+            it("should keep the getKey function when using filterBy", function() {
+                var fn = function(o) { return o.id; },
+                    mc1 = new Ext.util.MixedCollection({
+                        getKey: fn
+                    }),
+                    mc2 = mc1.filterBy(function() {
+                        return true;
+                    });
+
                 expect(mc2.getKey).toBe(fn);
                 mc1 = mc2 = null;
             });
@@ -798,7 +808,7 @@ describe("Ext.util.MixedCollection", function() {
                 filtered = mc.filter('name', 'Edward');
 
                 expect(filtered.items[0].name).toEqual('Edward');
-                expect(filtered.length).toEqual(1);                
+                expect(filtered.length).toEqual(1);
             });
 
             it("should use anyMatch by default", function() {
@@ -830,9 +840,9 @@ describe("Ext.util.MixedCollection", function() {
             });
 
             mc.addAll([
-                {id: 1, name: 'Ed',     code: 'C', modifier: 10},
-                {id: 2, name: 'Abe',    code: 'A', modifier: 100},
-                {id: 3, name: 'Edward', code: 'B', modifier: 5}
+                { id: 1, name: 'Ed',     code: 'C', modifier: 10 },
+                { id: 2, name: 'Abe',    code: 'A', modifier: 100 },
+                { id: 3, name: 'Edward', code: 'B', modifier: 5 }
             ]);
         });
 
@@ -896,10 +906,10 @@ describe("Ext.util.MixedCollection", function() {
                 mc = new Ext.util.MixedCollection();
 
                 mc.addAll([
-                    {amount: 10, name: 'Cool things'},
-                    {amount: 20, name: 'Other cool things'},
-                    {amount: 30, name: 'Other cool things'},
-                    {amount: 40, name: 'Other cool things'}
+                    { amount: 10, name: 'Cool things' },
+                    { amount: 20, name: 'Other cool things' },
+                    { amount: 30, name: 'Other cool things' },
+                    { amount: 40, name: 'Other cool things' }
                 ]);
             });
 
@@ -921,8 +931,8 @@ describe("Ext.util.MixedCollection", function() {
                 mc = new Ext.util.MixedCollection();
 
                 mc.addAll([
-                    {data: {amount: 10, name: 'Cool things'}},
-                    {data: {amount: 20, name: 'Other cool things'}}
+                    { data: { amount: 10, name: 'Cool things' } },
+                    { data: { amount: 20, name: 'Other cool things' } }
                 ]);
             });
 
@@ -938,9 +948,9 @@ describe("Ext.util.MixedCollection", function() {
                 mc = new Ext.util.MixedCollection();
 
                 mc.addAll([
-                    {amount: 10, name: 'Ed'},
-                    {amount: 20, name: 'Abe'},
-                    {amount: 20, name: 'Ed'}
+                    { amount: 10, name: 'Ed' },
+                    { amount: 20, name: 'Abe' },
+                    { amount: 20, name: 'Ed' }
                 ]);
             });
 
@@ -956,9 +966,9 @@ describe("Ext.util.MixedCollection", function() {
                 mc = new Ext.util.MixedCollection();
 
                 mc.addAll([
-                    {data: {amount: 10, name: 'Ed'}},
-                    {data: {amount: 20, name: 'Abe'}},
-                    {data: {amount: 20, name: 'Ed'}}
+                    { data: { amount: 10, name: 'Ed' } },
+                    { data: { amount: 20, name: 'Abe' } },
+                    { data: { amount: 20, name: 'Ed' } }
                 ]);
             });
 
@@ -977,9 +987,9 @@ describe("Ext.util.MixedCollection", function() {
             });
 
             mc.addAll([
-                {id: 1, name: 'Ed',     code: 'C', modifier: 10},
-                {id: 2, name: 'Abe',    code: 'A', modifier: 100},
-                {id: 3, name: 'Edward', code: 'B', modifier: 5}
+                { id: 1, name: 'Ed',     code: 'C', modifier: 10 },
+                { id: 2, name: 'Abe',    code: 'A', modifier: 100 },
+                { id: 3, name: 'Edward', code: 'B', modifier: 5 }
             ]);
         });
 
@@ -1009,7 +1019,7 @@ describe("Ext.util.MixedCollection", function() {
             expect(executed).toBe(true);
         });
     });
-    
+
     describe('adding a MixedCollection to a MixedCollection', function() {
         it('Should add a MixedCollection as a single new item', function() {
             var mc1 = new Ext.util.MixedCollection(false, function(object) {

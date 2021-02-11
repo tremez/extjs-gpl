@@ -19,13 +19,13 @@ Ext.define('KitchenSink.view.tree.FilteredTree', {
     exampleTitle: 'Filtered TreeGrid.',
     otherContent: [{
         type: 'Store',
-        path: 'classic/samples/store/Posts.js'
-    },{
+        path: 'app/store/Posts.js'
+    }, {
         type: 'Model',
-        path: 'classic/samples/model/tree/Post.js'
-    },{
+        path: 'app/model/tree/Post.js'
+    }, {
         type: 'Data',
-        path: 'classic/samples/data/Posts.js'
+        path: 'app/data/Posts.js'
     }],
     //</example>
     store: 'Posts',
@@ -35,12 +35,14 @@ Ext.define('KitchenSink.view.tree.FilteredTree', {
     title: 'Filtered Tree',
     width: 650,
     height: 400,
-    plugins: 'gridfilters',
+    plugins: {
+        gridfilters: true
+    },
     emptyText: 'No Matching Records',
     reserveScrollbar: true,
     useArrows: true,
     columns: [{
-        xtype: 'treecolumn', //this is so we know which column will show the tree
+        xtype: 'treecolumn', // this is so we know which column will show the tree
         text: 'Forum',
         flex: 2.5,
         sortable: true,
@@ -54,12 +56,14 @@ Ext.define('KitchenSink.view.tree.FilteredTree', {
         text: 'Title',
         flex: 2,
         dataIndex: 'title',
-        renderer: function (value, p, record) {
-            return value ? Ext.String.format(
-                '<a href="http://sencha.com/forum/showthread.php?t={1}" target="_blank">{0}</a>',
-                value,
-                record.data.threadid
-            ) : '';
+        renderer: function(value, p, record) {
+            return value
+                ? Ext.String.format(
+                    '<a href="http://sencha.com/forum/showthread.php?t={1}" target="_blank">{0}</a>',
+                    value,
+                    record.data.threadid
+                )
+                : '';
         },
         filter: {
             type: 'string',
@@ -80,6 +84,7 @@ Ext.define('KitchenSink.view.tree.FilteredTree', {
                 me.up('treepanel').store.on({
                     filterchange: function(store) {
                         var leafCount = 0;
+
                         store.getRoot().visitPostOrder('', function(node) {
                             if (node.isLeaf() && node.get('visible')) {
                                 leafCount++;

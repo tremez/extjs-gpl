@@ -8,16 +8,16 @@ Ext.define('KitchenSink.view.charts.bar3d.Stacked', {
     xtype: 'bar-stacked-3d',
     controller: 'bar-stacked-3d',
 
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     otherContent: [{
         type: 'Controller',
         path: 'classic/samples/view/charts/bar3d/StackedController.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/Browsers.js'
+        path: 'app/store/Browsers.js'
     }],
-    // </example>
+    //</example>
 
     width: 650,
     bodyStyle: 'background: transparent;',
@@ -35,34 +35,21 @@ Ext.define('KitchenSink.view.charts.bar3d.Stacked', {
         legend: {
             docked: 'right'
         },
-        store: {type: 'browsers'},
-        insetPadding: 40,
+        store: { type: 'browsers' },
         flipXY: true,
-        animation: Ext.isIE8 ? false : {
-            easing: 'backOut',
-            duration: 500
+        animation: Ext.isIE8
+            ? false
+            : {
+                easing: 'backOut',
+                duration: 500
+            },
+        captions: {
+            title: 'Bar Charts - Stacked Bars',
+            credits: {
+                text: 'Data: Browser Stats 2012\nSource: http://www.w3schools.com/',
+                align: 'left'
+            }
         },
-        sprites: [{
-            type: 'text',
-            text: 'Bar Charts - Stacked Bars',
-            fontSize: 22,
-            width: 100,
-            height: 30,
-            x: 40, // the sprite x position
-            y: 20  // the sprite y position
-        }, {
-            type: 'text',
-            text: 'Data: Browser Stats 2012',
-            fontSize: 10,
-            x: 12,
-            y: 480
-        }, {
-            type: 'text',
-            text: 'Source: http://www.w3schools.com/',
-            fontSize: 10,
-            x: 12,
-            y: 495
-        }],
         axes: [{
             type: 'numeric3d',
             position: 'bottom',
@@ -91,7 +78,7 @@ Ext.define('KitchenSink.view.charts.bar3d.Stacked', {
         xtype: 'gridpanel',
         style: 'margin-top: 10px;',
         height: 150,
-        columns : {
+        columns: {
             defaults: {
                 sortable: false,
                 menuDisabled: true,
@@ -105,6 +92,6 @@ Ext.define('KitchenSink.view.charts.bar3d.Stacked', {
                 { text: 'Safari', dataIndex: 'data4' }
             ]
         },
-        store: {type: 'browsers'}
+        store: { type: 'browsers' }
     }]
 });

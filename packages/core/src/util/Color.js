@@ -7,7 +7,7 @@ Ext.define('Ext.util.Color', {
     statics: {
         colorToHexRe: /(.*?)rgb\((\d+),\s*(\d+),\s*(\d+)\)/,
         rgbToHexRe: /\s*rgb\((\d+),\s*(\d+),\s*(\d+)\)/,
-        rgbaToHexRe: /\s*rgba\((\d+),\s*(\d+),\s*(\d+),\s*([\.\d]+)\)/,
+        rgbaToHexRe: /\s*rgba\((\d+),\s*(\d+),\s*(\d+),\s*([.\d]+)\)/,
         hexRe: /\s*#([0-9a-fA-F][0-9a-fA-F]?)([0-9a-fA-F][0-9a-fA-F]?)([0-9a-fA-F][0-9a-fA-F]?)\s*/,
 
         // Note that 'none' ia an invalid color string.
@@ -32,23 +32,27 @@ Ext.define('Ext.util.Color', {
      * @param {Number} blue Blue component (0..255)
      * @param {Number} [alpha=1] (optional) Alpha component (0..1)
      */
-    constructor: function (red, green, blue, alpha) {
+    constructor: function(red, green, blue, alpha) {
         this.setRGB(red, green, blue, alpha);
     },
 
     clone: function() {
         var me = this;
+
         return new this.self(me.r, me.g, me.b, me.a);
     },
 
-    setRGB: function (red, green, blue, alpha) {
+    setRGB: function(red, green, blue, alpha) {
         var me = this;
+
         me.r = Math.min(255, Math.max(0, red));
         me.g = Math.min(255, Math.max(0, green));
         me.b = Math.min(255, Math.max(0, blue));
+
         if (alpha === undefined) {
             me.a = 1;
-        } else {
+        }
+        else {
             me.a = Math.min(1, Math.max(0, alpha));
         }
     },
@@ -73,7 +77,7 @@ Ext.define('Ext.util.Color', {
      *
      * @return {Number}
      */
-    getGrayscale: function () {
+    getGrayscale: function() {
         // http://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale
         return this.r * 0.3 + this.g * 0.59 + this.b * 0.11;
     },
@@ -82,7 +86,7 @@ Ext.define('Ext.util.Color', {
      * Get the equivalent HSL components of the color.
      * @return {Number[]}
      */
-    getHSL: function () {
+    getHSL: function() {
         var me = this,
             r = me.r / 255,
             g = me.g / 255,
@@ -97,16 +101,21 @@ Ext.define('Ext.util.Color', {
         // min==max means achromatic (hue is undefined)
         if (min !== max) {
             s = (l <= 0.5) ? delta / (max + min) : delta / (2 - max - min);
+
             if (r === max) {
                 h = 60 * (g - b) / delta;
-            } else if (g === max) {
+            }
+            else if (g === max) {
                 h = 120 + 60 * (b - r) / delta;
-            } else {
+            }
+            else {
                 h = 240 + 60 * (r - g) / delta;
             }
+
             if (h < 0) {
                 h += 360;
             }
+
             if (h >= 360) {
                 h -= 360;
             }
@@ -132,18 +141,23 @@ Ext.define('Ext.util.Color', {
             v = max;
 
         // min == max means achromatic (hue is undefined)
-        if (min != max) {
+        if (min != max) { // eslint-disable-line eqeqeq
             s = v ? C / v : 0;
+
             if (r === max) {
                 h = 60 * (g - b) / C;
-            } else if (g === max) {
+            }
+            else if (g === max) {
                 h = 60 * (b - r) / C + 120;
-            } else {
+            }
+            else {
                 h = 60 * (r - g) / C + 240;
             }
+
             if (h < 0) {
                 h += 360;
             }
+
             if (h >= 360) {
                 h -= 360;
             }
@@ -160,19 +174,20 @@ Ext.define('Ext.util.Color', {
      * @param {Number} l Lightness component [0..1]
      * @return {Ext.util.Color}
      */
-    setHSL: function (h, s, l) {
+    setHSL: function(h, s, l) {
         var me = this,
             abs = Math.abs,
             c, x, m;
 
-        h = (h % 360 + 360 ) % 360;
+        h = (h % 360 + 360) % 360;
         s = s > 1 ? 1 : s < 0 ? 0 : s;
         l = l > 1 ? 1 : l < 0 ? 0 : l;
 
         if (s === 0 || h === null) {
             l *= 255;
             me.setRGB(l, l, l);
-        } else {
+        }
+        else {
             // http://en.wikipedia.org/wiki/HSL_and_HSV#From_HSL
             h /= 60;
             c = s * (1 - abs(2 * l - 1));  // chroma
@@ -204,6 +219,7 @@ Ext.define('Ext.util.Color', {
                     break;
             }
         }
+
         return me;
     },
 
@@ -215,18 +231,19 @@ Ext.define('Ext.util.Color', {
      * @param {Number} v Value component [0..1]
      * @return {Ext.util.Color}
      */
-    setHSV: function (h, s, v) {
+    setHSV: function(h, s, v) {
         var me = this,
             c, x, m;
 
-        h = (h % 360 + 360 ) % 360;
+        h = (h % 360 + 360) % 360;
         s = s > 1 ? 1 : s < 0 ? 0 : s;
         v = v > 1 ? 1 : v < 0 ? 0 : v;
 
         if (s === 0 || h === null) {
             v *= 255;
             me.setRGB(v, v, v);
-        } else {
+        }
+        else {
             // http://en.wikipedia.org/wiki/HSL_and_HSV#From_HSV
             h /= 60;
             c = v * s;                          // chroma
@@ -258,6 +275,7 @@ Ext.define('Ext.util.Color', {
                     break;
             }
         }
+
         return me;
     },
 
@@ -266,9 +284,11 @@ Ext.define('Ext.util.Color', {
      * @param {Number} [factor=0.2] Lighter factor (0..1).
      * @return {Ext.util.Color}
      */
-    createLighter: function (factor) {
+    createLighter: function(factor) {
         var color = this.clone();
+
         color.lighten(factor);
+
         return color;
     },
 
@@ -277,10 +297,14 @@ Ext.define('Ext.util.Color', {
      * @param {Number} [factor=0.2] Lighten factor (0..1).
      */
     lighten: function(factor) {
+        var hsl;
+
         if (!factor && factor !== 0) {
             factor = this.lightnessFactor;
         }
-        var hsl = this.getHSL();
+
+        hsl = this.getHSL();
+
         this.setHSL(hsl[0], hsl[1], Ext.Number.constrain(hsl[2] + factor, 0, 1));
     },
 
@@ -289,9 +313,11 @@ Ext.define('Ext.util.Color', {
      * @param {Number} [factor=0.2] Darker factor (0..1).
      * @return {Ext.util.Color}
      */
-    createDarker: function (factor) {
+    createDarker: function(factor) {
         var color = this.clone();
+
         color.darken(factor);
+
         return color;
     },
 
@@ -303,6 +329,7 @@ Ext.define('Ext.util.Color', {
         if (!factor && factor !== 0) {
             factor = this.lightnessFactor;
         }
+
         return this.lighten(-factor);
     },
 
@@ -312,19 +339,23 @@ Ext.define('Ext.util.Color', {
      * 
      * @return {String}
      */
-    toString: function () {
+    toString: function() {
         var me = this,
-            round = Math.round;
+            round = Math.round,
+            r, g, b;
 
         if (me.a === 1) {
-            var r = round(me.r).toString(16),
-                g = round(me.g).toString(16),
-                b = round(me.b).toString(16);
+            r = round(me.r).toString(16);
+            g = round(me.g).toString(16);
+            b = round(me.b).toString(16);
+
             r = (r.length === 1) ? '0' + r : r;
             g = (g.length === 1) ? '0' + g : g;
             b = (b.length === 1) ? '0' + b : b;
+
             return ['#', r, g, b].join('');
-        } else {
+        }
+        else {
             return 'rgba(' + [
                 round(me.r),
                 round(me.g),
@@ -343,7 +374,7 @@ Ext.define('Ext.util.Color', {
      * Get this color in hexadecimal format.
      * @return {String} The color in hexadecimal format.
      */
-    toHex: function (color) {
+    toHex: function(color) {
         var r = this.r,
             g = this.g,
             b = this.b,
@@ -364,24 +395,28 @@ Ext.define('Ext.util.Color', {
      *
      * If the string is not recognized, setFromString returns rgba(0,0,0,0).
      *
-     * @param {String} Color Color as string.
+     * @param {String} str Color as string.
      * @return this
      */
-    setFromString: function (str) {
-        var values, r, g, b, a = 1,
+    setFromString: function(str) {
+        var values, r, g, b,
+            a = 1,
             parse = parseInt;
 
         if (str === Ext.util.Color.NONE) {
             this.r = this.g = this.b = this.a = 0;
+
             return this;
         }
 
         if ((str.length === 4 || str.length === 7) && str.substr(0, 1) === '#') {
             values = str.match(Ext.util.Color.hexRe);
+
             if (values) {
                 r = parse(values[1], 16) >> 0;
                 g = parse(values[2], 16) >> 0;
                 b = parse(values[3], 16) >> 0;
+
                 if (str.length === 4) {
                     r += (r * 16);
                     g += (g * 16);
@@ -393,26 +428,31 @@ Ext.define('Ext.util.Color', {
             r = +values[1];
             g = +values[2];
             b = +values[3];
-        } else if ((values = str.match(Ext.util.Color.rgbaToHexRe))) {
+        }
+        else if ((values = str.match(Ext.util.Color.rgbaToHexRe))) {
             r = +values[1];
             g = +values[2];
             b = +values[3];
             a = +values[4];
-        } else {
+        }
+        else {
             if (Ext.util.Color.ColorList.hasOwnProperty(str.toLowerCase())) {
                 return this.setFromString(Ext.util.Color.ColorList[str.toLowerCase()]);
             }
         }
+
         if (typeof r === 'undefined') {
             return this;
         }
+
         this.r = r;
         this.g = g;
         this.b = b;
         this.a = a;
+
         return this;
     }
-}, function () {
+}, function() {
     var flyColor = new this();
 
     this.addStatics({
@@ -429,7 +469,7 @@ Ext.define('Ext.util.Color', {
          * @return {Ext.util.Color}
          * @static
          */
-        fly: function (red, green, blue, alpha) {
+        fly: function(red, green, blue, alpha) {
             switch (arguments.length) {
                 case 1:
                     flyColor.setFromString(red);
@@ -441,6 +481,7 @@ Ext.define('Ext.util.Color', {
                 default:
                     return null;
             }
+
             return flyColor;
         },
 
@@ -597,7 +638,7 @@ Ext.define('Ext.util.Color', {
          * @return {Ext.util.Color}
          * @static
          */
-        fromHSL: function (h, s, l) {
+        fromHSL: function(h, s, l) {
             return (new this(0, 0, 0, 0)).setHSL(h, s, l);
         },
 
@@ -610,7 +651,7 @@ Ext.define('Ext.util.Color', {
          * @return {Ext.util.Color}
          * @static
          */
-        fromHSV: function (h, s, v) {
+        fromHSV: function(h, s, v) {
             return (new this(0, 0, 0, 0)).setHSL(h, s, v);
         },
 
@@ -630,7 +671,7 @@ Ext.define('Ext.util.Color', {
          * @return {Ext.util.Color}
          * @static
          */
-        fromString: function (color) {
+        fromString: function(color) {
             return (new this(0, 0, 0, 0)).setFromString(color);
         },
 
@@ -654,24 +695,29 @@ Ext.define('Ext.util.Color', {
          *     // Returns black when no arguments given.
          *     Ext.util.Color.create();
          *
-         * @param {Ext.util.Color/String/Number[]/Number} [red] Red component (0..255),
+         * @param {Array} arg
+         * @param {Ext.util.Color/String/Number[]/Number} [arg.red] Red component (0..255),
          * CSS color string or array of all components.
-         * @param {Number} [green] Green component (0..255)
-         * @param {Number} [blue] Blue component (0..255)
-         * @param {Number} [alpha=1] Alpha component (0..1)
+         * @param {Number} [arg.green] Green component (0..255)
+         * @param {Number} [arg.blue] Blue component (0..255)
+         * @param {Number} [arg.alpha=1] Alpha component (0..1)
          * @return {Ext.util.Color}
          * @static
          */
-        create: function (arg) {
+        create: function(arg) {
             if (arg instanceof this) {
                 return arg;
-            } else if (Ext.isArray(arg)) {
+            }
+            else if (Ext.isArray(arg)) {
                 return new Ext.util.Color(arg[0], arg[1], arg[2], arg[3]);
-            } else if (Ext.isString(arg)) {
+            }
+            else if (Ext.isString(arg)) {
                 return Ext.util.Color.fromString(arg);
-            } else if (arguments.length > 2) {
+            }
+            else if (arguments.length > 2) {
                 return new Ext.util.Color(arguments[0], arguments[1], arguments[2], arguments[3]);
-            } else {
+            }
+            else {
                 return new Ext.util.Color(0, 0, 0, 0);
             }
         }

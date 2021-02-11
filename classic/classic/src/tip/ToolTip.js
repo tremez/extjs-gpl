@@ -76,7 +76,8 @@
  *         listeners: {
  *             // Change content dynamically depending on which element triggered the show.
  *             beforeshow: function updateTipBody(tip) {
- *                 tip.update('Over company "' + view.getRecord(tip.triggerElement).get('company') + '"');
+ *                 tip.update('Over company "' + view.getRecord(tip.triggerElement).get('company') +
+ *                            '"');
  *             }
  *         }
  *     });
@@ -93,8 +94,8 @@
  *
  * # Showing/Hiding
  *
- * The following configuration properties allow control over how and when the ToolTip is automatically
- * shown and hidden:
+ * The following configuration properties allow control over how and when the ToolTip
+ * is automatically shown and hidden:
  *
  * - {@link #autoHide}
  * - {@link #showDelay}
@@ -115,11 +116,13 @@ Ext.define('Ext.tip.ToolTip', {
      * Element to each trigger a separate show event, this property is set to
      * the DOM element which triggered the show.
      */
+
     /**
      * @cfg {HTMLElement/Ext.dom.Element/String} target
      * The target element or string id to monitor for mouseover events to trigger
      * showing this ToolTip.
      */
+
     /**
      * @cfg {Boolean} [autoHide=true]
      * True to automatically hide the tooltip after the
@@ -134,22 +137,25 @@ Ext.define('Ext.tip.ToolTip', {
      * Delay in milliseconds before the tooltip displays after the mouse enters the target element.
      */
     showDelay: 500,
+
     /**
      * @cfg {Number} hideDelay
-     * Delay in milliseconds after the mouse exits the target element but before the tooltip actually hides.
-     * Set to 0 for the tooltip to hide immediately.
+     * Delay in milliseconds after the mouse exits the target element but before the tooltip
+     * actually hides. Set to 0 for the tooltip to hide immediately.
      */
     hideDelay: 200,
+
     /**
      * @cfg {Number} dismissDelay
-     * Delay in milliseconds before the tooltip automatically hides. To disable automatic hiding, set
-     * dismissDelay = 0.
+     * Delay in milliseconds before the tooltip automatically hides. To disable automatic hiding,
+     * set dismissDelay = 0.
      */
     dismissDelay: 5000,
+
     /**
      * @cfg {Number[]} [targetOffset=[0, 0]]
-     * When {@link #anchorToTarget} is being used to position this tip relative to its target element,
-     * this may be used as an extra XY offset from the target element.
+     * When {@link #anchorToTarget} is being used to position this tip relative to its target
+     * element, this may be used as an extra XY offset from the target element.
      */
 
     /**
@@ -157,11 +163,13 @@ Ext.define('Ext.tip.ToolTip', {
      * An XY offset from the mouse position where the tooltip should be shown.
      */
     mouseOffset: [15, 18],
+
     /**
      * @cfg {Boolean} trackMouse
      * True to have the tooltip follow the mouse as it moves over the target element.
      */
     trackMouse: false,
+
     /**
      * @cfg {String} anchor
      * If specified, indicates that the tip should be anchored to a
@@ -170,32 +178,34 @@ Ext.define('Ext.tip.ToolTip', {
      * {@link #constrainPosition} is enabled, this will be used as a preferred value
      * only and may be flipped as needed.
      */
+
     /**
      * @cfg {Boolean} anchorToTarget
-     * True to anchor the tooltip to the target element, false to anchor it relative to the mouse coordinates.
-     * When `anchorToTarget` is true, use `{@link #defaultAlign}` to control tooltip alignment to the
-     * target element.  When `anchorToTarget` is false, use `{@link #anchor}` instead to control alignment.
+     * True to anchor the tooltip to the target element, false to anchor it relative to the mouse
+     * coordinates. When `anchorToTarget` is true, use `{@link #defaultAlign}` to control tooltip
+     * alignment to the target element. When `anchorToTarget` is false, use `{@link #anchor}`
+     * instead to control alignment.
      */
     anchorToTarget: true,
 
     /**
      * @cfg {String} delegate
      *
-     * A {@link Ext.DomQuery DomQuery} simple selector which allows selection of individual elements within the
-     * `{@link #target}` element to trigger showing and hiding the ToolTip as the mouse moves within the
-     * target. See {@link Ext.dom.Query} for information about simple selectors.
+     * A {@link Ext.DomQuery DomQuery} simple selector which allows selection of individual elements
+     * within the `{@link #target}` element to trigger showing and hiding the ToolTip as the mouse
+     * moves within the target. See {@link Ext.dom.Query} for information about simple selectors.
      *
      * When specified, the child element of the target which caused a show event is placed into the
      * `{@link #triggerElement}` property before the ToolTip is shown.
      *
-     * This may be useful when a Component has regular, repeating elements in it, each of which need a
-     * ToolTip which contains information specific to that element.
+     * This may be useful when a Component has regular, repeating elements in it, each of which need
+     * a ToolTip which contains information specific to that element.
      *
      * See the delegate example in class documentation of {@link Ext.tip.ToolTip}.
      */
 
     /**
-     * @cfg {Boollean} [showOnTap=false]
+     * @cfg {Boolean} [showOnTap=false]
      * On touch platforms, if {@link #showOnTap} is `true`, a tap on the target shows the tip.
      * In this case any {@link #showDelay} is ignored.
      *
@@ -247,13 +257,7 @@ Ext.define('Ext.tip.ToolTip', {
      *   halfway down the right edge of the target item. This allows more flexibility
      *   and also describes which two edges are considered adjacent when positioning a tip pointer. 
      *
-     * By default, tooltips are constrained to the viewport, but if {@link #constrain}
-     * is configured as `false`, the position parameter also supports the "?"
-     * character. If "?" is passed at the end of the position string, the element will
-     * attempt to align as specified, but the position will be adjusted to constrain to
-     * the viewport if necessary. Note that the element being aligned might be swapped to
-     * align to a different position than that specified in order to enforce the viewport
-     * constraints. Following are all of the supported anchor positions:
+     * Following are all of the supported predefined anchor positions:
      *
      *      Value  Description
      *      -----  -----------------------------
@@ -266,6 +270,12 @@ Ext.define('Ext.tip.ToolTip', {
      *      bl     The bottom left corner
      *      b      The center of the bottom edge
      *      br     The bottom right corner
+     *
+     * You can put a '?' at the end of the alignment string to constrain the positioned element
+     * to the {@link Ext.Viewport Viewport}. The element will attempt to align as specified,
+     * but the position will be adjusted to constrain to the viewport if necessary. Note that
+     * the element being aligned might be swapped to align to a different position than that
+     * specified in order to enforce the viewport constraints.
      *
      * Example Usage:
      *
@@ -280,7 +290,7 @@ Ext.define('Ext.tip.ToolTip', {
      *
      *     // align the 25% point on the bottom edge of this tooltip
      *     // with the 75% point on the top edge of its target.
-     *     defaultAlign: 'b25-c75'
+     *     defaultAlign: 'b25-t75'
      */
     defaultAlign: 'bl-tl',
 
@@ -300,6 +310,7 @@ Ext.define('Ext.tip.ToolTip', {
 
     onRender: function(ct, position) {
         var me = this;
+
         me.callParent(arguments);
 
         //<debug>
@@ -308,6 +319,7 @@ Ext.define('Ext.tip.ToolTip', {
             me.el.dom.setAttribute('data-sticky', true);
         }
         //</debug>
+
         me.anchorEl = me.el.createChild({
             role: 'presentation',
             cls: Ext.baseCSSPrefix + 'tip-anchor'
@@ -319,11 +331,13 @@ Ext.define('Ext.tip.ToolTip', {
         if (!this.currentTarget.dom && this.target) {
             return this.showBy(this.target);
         }
+
         this.callParent();
     },
 
     /**
-     * Binds this ToolTip to the specified element. The tooltip will be displayed when the mouse moves over the element.
+     * Binds this ToolTip to the specified element. The tooltip will be displayed when the mouse
+     * moves over the element.
      * @param {String/HTMLElement/Ext.dom.Element} target The Element, HTMLElement, or
      * ID of an element to bind to
      */
@@ -347,7 +361,8 @@ Ext.define('Ext.tip.ToolTip', {
             };
 
             me.targetListeners = target.on(listeners);
-        } else {
+        }
+        else {
             me.target = null;
         }
     },
@@ -362,6 +377,7 @@ Ext.define('Ext.tip.ToolTip', {
         // Always update pointerEvent, so that if there's a delayed show
         // scheduled, it gets the latest pointer to align to.
         me.pointerEvent = e;
+
         if (me.isVisible() && me.currentTarget.contains(e.target)) {
             // If they move the mouse, restart the dismiss delay
             if (dismissDelay && me.autoHide !== false) {
@@ -369,8 +385,8 @@ Ext.define('Ext.tip.ToolTip', {
                 me.dismissTimer = Ext.defer(me.hide, dismissDelay, me);
             }
 
-            if (me.trackMouse)  {
-               me.doAlignment(me.getAlignRegion());
+            if (me.trackMouse) {
+                me.doAlignment(me.getAlignRegion());
             }
         }
     },
@@ -390,7 +406,11 @@ Ext.define('Ext.tip.ToolTip', {
         if (!me.anchorSize) {
             anchorEl.addCls(Ext.baseCSSPrefix + 'tip-anchor-top');
             anchorEl.show();
-            me.anchorSize = new Ext.util.Offset(anchorEl.getWidth(), anchorEl.getHeight());
+
+            me.anchorSize = new Ext.util.Offset(
+                anchorEl.getWidth(false, true), anchorEl.getHeight(false, true)
+            );
+
             anchorEl.removeCls(Ext.baseCSSPrefix + 'tip-anchor-top');
             anchorEl.hide();
         }
@@ -404,19 +424,29 @@ Ext.define('Ext.tip.ToolTip', {
         // element, so we should show offset from the mouse.
         // If we are being shown programatically, use 0, 0
         else {
-            target = me.pointerEvent ? me.pointerEvent.getPoint().adjust(-mouseOffset[1], mouseOffset[0], mouseOffset[1], -mouseOffset[0]) : new Ext.util.Point();
+            target = me.pointerEvent
+                ? me.pointerEvent.getPoint().adjust(
+                    -Math.abs(mouseOffset[1]), Math.abs(mouseOffset[0]),
+                    Math.abs(mouseOffset[1]), -Math.abs(mouseOffset[0])
+                )
+                : new Ext.util.Point();
+
             if (!me.anchor) {
                 overlap = true;
+
                 if (mouseOffset[0] > 0) {
                     if (mouseOffset[1] > 0) {
                         align = 'tl-br';
-                    } else {
+                    }
+                    else {
                         align = 'bl-tr';
                     }
-                } else {
+                }
+                else {
                     if (mouseOffset[1] > 0) {
                         align = 'tr-bl';
-                    } else {
+                    }
+                    else {
                         align = 'br-tl';
                     }
                 }
@@ -429,8 +459,10 @@ Ext.define('Ext.tip.ToolTip', {
             target: target,
             overlap: overlap,
             offset: me.targetOffset,
-            inside: me.constrainPosition ? Ext.getBody().getRegion().adjust(5, -5, -5, 5) : null
-        }
+            inside: me.constrainPosition
+                ? (me.constrainTo || Ext.getBody().getRegion().adjust(5, -5, -5, 5))
+                : null
+        };
 
         if (me.anchor) {
             alignSpec.anchorSize = me.anchorSize;
@@ -439,12 +471,12 @@ Ext.define('Ext.tip.ToolTip', {
         return me.getRegion().alignTo(alignSpec);
     },
 
-    fadeOut: function () {
+    fadeOut: function() {
         var me = this;
 
         me.el.fadeOut({
             duration: me.fadeOutDuration,
-            callback: function () {
+            callback: function() {
                 me.hide();
                 me.el.setOpacity('');
             }
@@ -456,22 +488,25 @@ Ext.define('Ext.tip.ToolTip', {
      */
     getAnchorAlign: function() {
         switch (this.anchor) {
-        case 'top':
-            return 'tl-bl';
-        case 'left':
-            return 'tl-tr';
-        case 'right':
-            return 'tr-tl';
-        default:
-            return this.defaultAlign;
+            case 'top':
+                return 'tl-bl';
+
+            case 'left':
+                return 'tl-tr';
+
+            case 'right':
+                return 'tr-tl';
+
+            default:
+                return this.defaultAlign;
         }
     },
 
     onTargetTap: function(e) {
         // On hybrid mouse/touch systems, we want to show the tip on touch, but
         // we don't want to show it if this is coming from a click event, because
-        // the mouse is already hovered.
-        if (this.showOnTap && e.pointerType !== 'mouse') {
+        // the mouse is already hovered. Tap occasionally hides - eg: pickers, menus.
+        if (this.showOnTap && e.pointerType !== 'mouse' && Ext.fly(e.target).isVisible(true)) {
             this.onTargetOver(e);
         }
     },
@@ -496,9 +531,11 @@ Ext.define('Ext.tip.ToolTip', {
             if (currentTarget.contains(e.target)) {
                 return;
             }
+
             newTarget = e.getTarget(delegate);
-            // Move inside a delegate with no currentTarget
-            if (newTarget && Ext.fly(newTarget).contains(e.fromElement)) {
+
+            // Mouseovers while within a target do nothing
+            if (newTarget && e.getRelatedTarget(delegate) === newTarget) {
                 return;
             }
         }
@@ -535,7 +572,8 @@ Ext.define('Ext.tip.ToolTip', {
         // If we are showing on tap, show immediately
         if (event.pointerType !== 'mouse') {
             this.showFromDelay();
-        } else {
+        }
+        else {
             this.delayShow();
         }
     },
@@ -547,11 +585,17 @@ Ext.define('Ext.tip.ToolTip', {
         var me = this;
 
         me.clearTimer('hide');
+
         if (me.hidden && !me.showTimer) {
             if (me.delegate && Ext.Date.getElapsed(me.lastHidden) < me.quickShowInterval) {
                 me.showFromDelay();
-            } else {
-                me.showTimer = Ext.defer(me.showFromDelay, me.pointerEvent.pointerType !== 'mouse' ? 0 : me.showDelay, me);
+            }
+            else {
+                me.showTimer = Ext.defer(
+                    me.showFromDelay,
+                    me.pointerEvent.pointerType !== 'mouse' ? 0 : me.showDelay,
+                    me
+                );
             }
         }
         else if (!me.hidden && me.autoHide !== false) {
@@ -559,16 +603,18 @@ Ext.define('Ext.tip.ToolTip', {
         }
     },
 
-    showFromDelay: function () {
+    showFromDelay: function() {
         var me = this;
 
         // Need to check this here since onDisable only gets called after render, which
         // the show call below may trigger
         if (!me.disabled) {
             me.fireEvent('hovertarget', me, me.currentTarget, me.currentTarget.dom);
+
             if (me.isVisible()) {
-                me.handleAfterShow();
-            } else {
+                me.realignToTarget();
+            }
+            else {
                 me.triggerElement = me.currentTarget.dom;
                 me.fromDelayShow = true;
                 me.show();
@@ -593,6 +639,7 @@ Ext.define('Ext.tip.ToolTip', {
         if (me.showTimer) {
             me.clearTimer('show');
         }
+
         if (me.isVisible() && me.autoHide) {
             me.delayHide();
         }
@@ -621,42 +668,71 @@ Ext.define('Ext.tip.ToolTip', {
 
         me.clearTimer('dismiss');
         me.lastHidden = new Date();
+
         if (me.anchorEl) {
             me.anchorEl.hide();
         }
+
         me.callParent(arguments);
+
         me.triggerElement = null;
     },
 
     /**
      * Ensures this tooltip at the current event target XY position.
      */
-    afterShow: function () {
+    afterShow: function() {
         this.callParent();
-        this.handleAfterShow();
+        this.realignToTarget();
     },
 
-    handleAfterShow: function() {
+    /**
+     * Realign this tooltip to the {@link #cfg-target}.
+     *
+     * @since 6.2.1
+     */
+    realignToTarget: function() {
         var me = this;
+
         me.clearTimers();
 
         if (!me.calledFromShowAt) {
             me.doAlignment(me.getAlignRegion());
         }
+
         if (me.dismissDelay && me.autoHide !== false) {
             me.dismissTimer = Ext.defer(me.hide, me.dismissDelay, me);
         }
     },
 
     /**
-     * Shows this ToolTip aligned to the passed Component or element according to the {@link #anchor} config.
-     * @param {Ext.Component/Ext.dom.Element} target The {@link Ext.Component} or {@link Ext.dom.Element} to show this ToolTip by.
+     * Shows this ToolTip aligned to the passed Component or element or event according to the
+     * {@link #anchor} config.
+     * @param {Ext.Component/Ext.event.Event/Ext.dom.Element} target The {@link Ext.Component}
+     * or {@link Ext.dom.Element}, or (Ext.event.Event} to show this ToolTip by.
      */
     showBy: function(target) {
-        this.align = this.defaultAlign;
-        this.currentTarget.attach(Ext.getDom(target.el || target));
-        this.triggerElement = this.currentTarget.dom;
-        this.show();
+        var me = this;
+
+        me.align = me.defaultAlign;
+
+        if (target.isEvent) {
+            me.currentTarget.attach(target.target);
+            me.pointerEvent = target;
+        }
+        else {
+            me.currentTarget.attach(Ext.getDom(target.el || target));
+            me.triggerElement = me.currentTarget.dom;
+        }
+
+        if (me.isVisible()) {
+            me.realignToTarget();
+        }
+        else {
+            me.show();
+        }
+
+        return me;
     },
 
     _timerNames: {},
@@ -664,14 +740,14 @@ Ext.define('Ext.tip.ToolTip', {
     /**
      * @private
      */
-    clearTimer: function (name) {
+    clearTimer: function(name) {
         var me = this,
             names = me._timerNames,
             propName = names[name] || (names[name] = name + 'Timer'),
             timer = me[propName];
 
         if (timer) {
-            clearTimeout(timer);
+            Ext.undefer(timer);
             me[propName] = null;
 
             // We were going to show against the target, but now not.
@@ -686,31 +762,58 @@ Ext.define('Ext.tip.ToolTip', {
      */
     clearTimers: function() {
         var me = this;
+
         me.clearTimer('show');
         me.clearTimer('dismiss');
         me.clearTimer('hide');
+        me.clearTimer('enable');
     },
-    
+
     onShow: function() {
         var me = this;
+
         me.callParent();
-        me.mon(Ext.getDoc(), 'mousedown', me.onDocMouseDown, me);
+
+        me.mousedownListener = Ext.on({
+            mousedown: 'onDocMouseDown',
+            scope: me,
+            destroyable: true
+        });
     },
 
     onHide: function() {
         var me = this;
+
         me.callParent();
-        me.mun(Ext.getDoc(), 'mousedown', me.onDocMouseDown, me);
+
+        Ext.destroy(me.mousedownListener);
     },
 
     /**
      * @private
      */
     onDocMouseDown: function(e) {
-        var me = this;
-        if (!me.closable && !e.within(me.el.dom)) {
-            me.disable();
-            Ext.defer(me.doEnable, 100, me);
+        var me = this,
+            delegate = me.delegate;
+
+        if (e.within(me.el.dom)) {
+            // A real touch event inside the tip is the equivalent of
+            // mousing over the tip to keep it visible, so cancel the
+            // dismiss timer.
+            if (e.pointerType !== 'mouse' && me.allowOver) {
+                me.clearTimer('dismiss');
+            }
+        }
+        // Only respond to the mousedown if it's not on this tip, and it's not on a target.
+        // If it's on a target, onTargetTap will handle it.
+        else if (!me.closable) {
+            if (e.within(me.target) && (!delegate || e.getTarget(delegate))) {
+                me.delayHide();
+            }
+            else {
+                me.disable();
+                me.enableTimer = Ext.defer(me.enable, 100, me);
+            }
         }
     },
 
@@ -731,16 +834,23 @@ Ext.define('Ext.tip.ToolTip', {
 
     doDestroy: function() {
         var me = this;
-        
+
         me.clearTimers();
-        Ext.getDoc().un('mousedown', me.onDocMouseDown, me);
-        
-        Ext.destroy(me.anchorEl);
-        
+
+        me.destroyMembers('mousedownListener', 'anchorEl');
+
         me.callParent();
     },
 
     privates: {
+        /**
+         * Implementation for universal apps so that the Tooltip interface they are using works
+         * when common code uses the ToolTip API.
+         */
+        getTrackMouse: function() {
+            return this.trackMouse;
+        },
+
         clipTo: function(clippingEl, sides) {
         // Override because we also need to clip the anchor
             var clippingRegion;
@@ -748,7 +858,9 @@ Ext.define('Ext.tip.ToolTip', {
             // Allow a Region to be passed
             if (clippingEl.isRegion) {
                 clippingRegion = clippingEl;
-            } else {
+            }
+            else {
+                // eslint-disable-next-line max-len
                 clippingRegion = (clippingEl.isComponent ? clippingEl.el : Ext.fly(clippingEl)).getConstrainRegion();
             }
 

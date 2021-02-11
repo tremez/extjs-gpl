@@ -1,26 +1,26 @@
-describe('Ext.Toolbar', function() {
+topSuite("Ext.Toolbar", function() {
     var toolbar;
-    
+
     function createToolbar(config) {
         config = Ext.apply({
-            
+
         }, config);
 
         toolbar = Ext.create('Ext.Toolbar', config);
-    };
+    }
 
     afterEach(function() {
         if (toolbar) {
             toolbar.destroy();
         }
-        
+
         toolbar = null;
     });
 
     // deprecated
     describe('deprecated configurations + methods', function() {
 
-    }); 
+    });
     // end deprecated
 
     // configs
@@ -29,7 +29,7 @@ describe('Ext.Toolbar', function() {
             describe("configuration", function() {
                 describe("with string", function() {
                     beforeEach(function() {
-                        createToolbar({title:'test'});
+                        createToolbar({ title: 'test' });
                     });
 
                     it("should create a title instance", function() {
@@ -61,7 +61,7 @@ describe('Ext.Toolbar', function() {
             });
 
             describe("method", function() {
-                
+
             });
         });
     });

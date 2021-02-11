@@ -8,7 +8,7 @@ Ext.define('Ext.chart.series.sprite.Radar', {
     alias: 'sprite.radar',
     extend: 'Ext.chart.series.sprite.Polar',
 
-    getDataPointXY: function (index) {
+    getDataPointXY: function(index) {
         var me = this,
             attr = me.attr,
             centerX = attr.centerX,
@@ -25,7 +25,8 @@ Ext.define('Ext.chart.series.sprite.Radar', {
 
         if (attr.rangeY) {
             maxY = attr.rangeY[1];
-        } else {
+        }
+        else {
             maxY = attr.dataMaxY;
         }
 
@@ -41,7 +42,7 @@ Ext.define('Ext.chart.series.sprite.Radar', {
         return [x, y];
     },
 
-    render: function (surface, ctx) {
+    render: function(surface, ctx) {
         var me = this,
             attr = me.attr,
             dataX = attr.dataX,
@@ -51,18 +52,22 @@ Ext.define('Ext.chart.series.sprite.Radar', {
             i, x, y, xy;
 
         ctx.beginPath();
+
         for (i = 0; i < length; i++) {
             xy = me.getDataPointXY(i);
             x = xy[0];
             y = xy[1];
+
             if (i === 0) {
                 ctx.moveTo(x, y);
             }
+
             ctx.lineTo(x, y);
             markerCfg.translationX = surfaceMatrix.x(x, y);
             markerCfg.translationY = surfaceMatrix.y(x, y);
             me.putMarker('markers', markerCfg, i, true);
         }
+
         ctx.closePath();
         ctx.fillStroke(attr);
     }

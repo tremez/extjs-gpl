@@ -2,13 +2,12 @@
  * This base class is used to handle data preparation (e.g., sorting, filtering and
  * group summary).
  */
-Ext.define('Ext.ux.ajax.DataSimlet', function () {
-
-    function makeSortFn (def, cmp) {
+Ext.define('Ext.ux.ajax.DataSimlet', function() {
+    function makeSortFn(def, cmp) {
         var order = def.direction,
             sign = (order && order.toUpperCase() === 'DESC') ? -1 : 1;
 
-        return function (leftRec, rightRec) {
+        return function(leftRec, rightRec) {
             var lhs = leftRec[def.property],
                 rhs = rightRec[def.property],
                 c = (lhs < rhs) ? -1 : ((rhs < lhs) ? 1 : 0);
@@ -21,17 +20,20 @@ Ext.define('Ext.ux.ajax.DataSimlet', function () {
         };
     }
 
-    function makeSortFns (defs, cmp) {
-        for (var sortFn = cmp, i = defs && defs.length; i; ) {
+    function makeSortFns(defs, cmp) {
+        var sortFn, i;
+
+        for (sortFn = cmp, i = defs && defs.length; i;) {
             sortFn = makeSortFn(defs[--i], sortFn);
         }
+
         return sortFn;
     }
 
     return {
         extend: 'Ext.ux.ajax.Simlet',
 
-        buildNodes: function (node, path) {
+        buildNodes: function(node, path) {
             var me = this,
                 nodeData = {
                     data: []
@@ -56,13 +58,13 @@ Ext.define('Ext.ux.ajax.DataSimlet', function () {
             }
         },
 
-        deleteRecord : function(pos) {
-            if(this.data && typeof this.data !== 'function') {
-                Ext.Array.removeAt(this.data,pos); 
+        deleteRecord: function(pos) {
+            if (this.data && typeof this.data !== 'function') {
+                Ext.Array.removeAt(this.data, pos);
             }
         },
 
-        fixTree: function (ctx, tree) {
+        fixTree: function(ctx, tree) {
             var me = this,
                 node = ctx.params.node,
                 nodes;
@@ -73,6 +75,7 @@ Ext.define('Ext.ux.ajax.DataSimlet', function () {
             }
 
             node = nodes[node];
+
             if (node) {
                 if (me.node) {
                     me.node.sortedData = me.sortedData;
@@ -83,24 +86,26 @@ Ext.define('Ext.ux.ajax.DataSimlet', function () {
                 me.data = node.data;
                 me.sortedData = node.sortedData;
                 me.currentOrder = node.currentOrder;
-            } else {
+            }
+            else {
                 me.data = null;
             }
         },
 
-        getData: function (ctx) {
+        getData: function(ctx) {
             var me = this,
                 params = ctx.params,
-                order = (params.filter || '') + (params.group || '') + '-' + (params.sort || '') + '-' + (params.dir || ''),
+                order = (params.filter || '') + (params.group || '') + '-' + (params.sort || '') +
+                        '-' + (params.dir || ''),
                 tree = me.tree,
-                dynamicData,
-                data, fields, sortFn;
+                dynamicData, data, fields, sortFn, filters;
 
             if (tree) {
                 me.fixTree(ctx, tree);
             }
 
             data = me.data;
+
             if (typeof data === 'function') {
                 dynamicData = true;
                 data = data.call(this, ctx);
@@ -111,7 +116,7 @@ Ext.define('Ext.ux.ajax.DataSimlet', function () {
                 return data || [];
             }
 
-            if (!dynamicData && order == me.currentOrder) {
+            if (!dynamicData && order === me.currentOrder) {
                 return me.sortedData;
             }
 
@@ -119,19 +124,26 @@ Ext.define('Ext.ux.ajax.DataSimlet', function () {
             ctx.groupSpec = params.group && Ext.decode(params.group);
 
             fields = params.sort;
+
             if (params.dir) {
                 fields = [{ direction: params.dir, property: fields }];
-            } else {
+            }
+            else if (params.sort) {
                 fields = Ext.decode(params.sort);
+            }
+            else {
+                fields = null;
             }
 
             if (ctx.filterSpec) {
-                var filters = new Ext.util.FilterCollection();
+                filters = new Ext.util.FilterCollection();
+
                 filters.add(this.processFilters(ctx.filterSpec));
                 data = Ext.Array.filter(data, filters.getFilterFn());
             }
 
             sortFn = makeSortFns((ctx.sortSpec = fields));
+
             if (ctx.groupSpec) {
                 sortFn = makeSortFns([ctx.groupSpec], sortFn);
             }
@@ -139,6 +151,7 @@ Ext.define('Ext.ux.ajax.DataSimlet', function () {
             // If a straight Ajax request, data may not be an array.
             // If an Array, preserve 'physical' order of raw data...
             data = Ext.isArray(data) ? data.slice(0) : data;
+
             if (sortFn) {
                 Ext.Array.sort(data, sortFn);
             }
@@ -148,10 +161,10 @@ Ext.define('Ext.ux.ajax.DataSimlet', function () {
 
             return data;
         },
-        
+
         processFilters: Ext.identityFn,
 
-        getPage: function (ctx, data) {
+        getPage: function(ctx, data) {
             var ret = data,
                 length = data.length,
                 start = ctx.params.start || 0,
@@ -164,11 +177,11 @@ Ext.define('Ext.ux.ajax.DataSimlet', function () {
             return ret;
         },
 
-        getGroupSummary: function (groupField, rows, ctx) {
+        getGroupSummary: function(groupField, rows, ctx) {
             return rows[0];
         },
 
-        getSummary: function (ctx, data, page) {
+        getSummary: function(ctx, data, page) {
             var me = this,
                 groupField = ctx.groupSpec.property,
                 accum,
@@ -177,12 +190,12 @@ Ext.define('Ext.ux.ajax.DataSimlet', function () {
                 fieldValue,
                 lastFieldValue;
 
-            Ext.each(page, function (rec) {
+            Ext.each(page, function(rec) {
                 fieldValue = rec[groupField];
                 todo[fieldValue] = true;
             });
 
-            function flush () {
+            function flush() {
                 if (accum) {
                     summary.push(me.getGroupSummary(groupField, accum, ctx));
                     accum = null;
@@ -191,7 +204,7 @@ Ext.define('Ext.ux.ajax.DataSimlet', function () {
 
             // data is ordered primarily by the groupField, so one pass can pick up all
             // the summaries one at a time.
-            Ext.each(data, function (rec) {
+            Ext.each(data, function(rec) {
                 fieldValue = rec[groupField];
 
                 if (lastFieldValue !== fieldValue) {
@@ -207,7 +220,8 @@ Ext.define('Ext.ux.ajax.DataSimlet', function () {
 
                 if (accum) {
                     accum.push(rec);
-                } else {
+                }
+                else {
                     accum = [rec];
                 }
 

@@ -5,17 +5,39 @@ Ext.define('KitchenSink.view.grid.CheckboxSelection', {
     //<example>
     otherContent: [{
         type: 'Store',
-        path: 'classic/samples/store/Companies.js'
+        path: 'app/store/Companies.js'
     }, {
         type: 'Model',
-        path: 'classic/samples/model/Company.js'
+        path: 'app/model/Company.js'
     }],
     profiles: {
         classic: {
-            width: 700
+            width: 700,
+            priceWidth: 100,
+            pricechangeWidth: 100,
+            percentChangeColumnWidth: 100,
+            lastUpdatedColumnWidth: 120
         },
         neptune: {
-            width: 750
+            width: 750,
+            priceWidth: 100,
+            pricechangeWidth: 100,
+            percentChangeColumnWidth: 100,
+            lastUpdatedColumnWidth: 120
+        },
+        graphite: {
+            width: 950,
+            priceWidth: 100,
+            pricechangeWidth: 110,
+            percentChangeColumnWidth: 120,
+            lastUpdatedColumnWidth: 170
+        },
+        'classic-material': {
+            width: 950,
+            priceWidth: 150,
+            pricechangeWidth: 150,
+            percentChangeColumnWidth: 150,
+            lastUpdatedColumnWidth: 170
         }
     },
     //</example>
@@ -24,7 +46,7 @@ Ext.define('KitchenSink.view.grid.CheckboxSelection', {
     width: '${width}',
     height: 700,
     frame: true,
-    
+
     layout: {
         type: 'vbox',
         align: 'stretch'
@@ -34,67 +56,70 @@ Ext.define('KitchenSink.view.grid.CheckboxSelection', {
         xtype: 'grid',
         flex: 0.5,
         title: 'checkOnly: false',
-        
+
         store: 'Companies',
         columnLines: true,
         selType: 'checkboxmodel',
-    
+
         columns: [{
             text: "Company",
             dataIndex: 'name',
-    
             flex: 1
         }, {
             text: "Price",
             dataIndex: 'price',
-    
+            width: '${priceWidth}',
             formatter: 'usMoney'
         }, {
             text: "Change",
-            dataIndex: 'change'
+            width: '${pricechangeWidth}',
+            dataIndex: 'priceChange'
         }, {
             text: "% Change",
-            dataIndex: 'pctChange'
+            width: '${percentChangeColumnWidth}',
+            dataIndex: 'priceChangePct'
         }, {
             text: "Last Updated",
-            dataIndex: 'lastChange',
-    
-            width: 120,
+            width: '${lastUpdatedColumnWidth}',
+            dataIndex: 'priceLastChange',
+
             formatter: 'date("m/d/Y")'
         }]
     }, {
         xtype: 'grid',
         flex: 0.5,
         title: 'checkOnly: true',
-        
+
         store: 'Companies',
         columnLines: true,
         selModel: {
             type: 'checkboxmodel',
             checkOnly: true
         },
-    
+
         columns: [{
             text: "Company",
             dataIndex: 'name',
-    
             flex: 1
         }, {
             text: "Price",
+            width: '${priceWidth}',
             dataIndex: 'price',
-    
+
             formatter: 'usMoney'
         }, {
             text: "Change",
-            dataIndex: 'change'
+            width: '${pricechangeWidth}',
+            dataIndex: 'priceChange'
         }, {
             text: "% Change",
-            dataIndex: 'pctChange'
+            width: '${percentChangeColumnWidth}',
+            dataIndex: 'priceChangePct'
         }, {
             text: "Last Updated",
-            dataIndex: 'lastChange',
-    
-            width: 120,
+            width: '${lastUpdatedColumnWidth}',
+            dataIndex: 'priceLastChange',
+
             formatter: 'date("m/d/Y")'
         }]
     }]

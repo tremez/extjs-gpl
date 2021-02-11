@@ -1,18 +1,20 @@
 /**
- * This is a layout that enables anchoring of contained elements relative to the container's dimensions.
- * If the container is resized, all anchored items are automatically rerendered according to their
- * `{@link #anchor}` rules.
+ * This is a layout that enables anchoring of contained elements relative to the container's
+ * dimensions. If the container is resized, all anchored items are automatically rerendered
+ * according to their `{@link #anchor}` rules.
  *
- * This class is intended to be extended or created via the {@link Ext.container.Container#layout layout}: 'anchor'
- * config, and should generally not need to be created directly via the new keyword.
+ * This class is intended to be extended or created via the
+ * {@link Ext.container.Container#layout layout}: 'anchor' config, and should generally not need
+ * to be created directly via the new keyword.
  * 
  * AnchorLayout does not have any direct config options (other than inherited ones). By default,
- * AnchorLayout will calculate anchor measurements based on the size of the container itself. However, the
- * container using the AnchorLayout can supply an anchoring-specific config property of `anchorSize`.
+ * AnchorLayout will calculate anchor measurements based on the size of the container itself.
+ * However, the container using the AnchorLayout can supply an anchoring-specific config property
+ * of `anchorSize`.
  *
- * If anchorSize is specifed, the layout will use it as a virtual container for the purposes of calculating
- * anchor measurements based on it instead, allowing the container to be sized independently of the anchoring
- * logic if necessary.
+ * If anchorSize is specifed, the layout will use it as a virtual container for the purposes
+ * of calculating anchor measurements based on it instead, allowing the container to be sized
+ * independently of the anchoring logic if necessary.
  *
  *     @example
  *     Ext.create('Ext.Panel', {
@@ -41,14 +43,9 @@
  *     });
  */
 Ext.define('Ext.layout.container.Anchor', {
-
-    /* Begin Definitions */
-
-    alias: 'layout.anchor',
     extend: 'Ext.layout.container.Auto',
     alternateClassName: 'Ext.layout.AnchorLayout',
-
-    /* End Definitions */
+    alias: 'layout.anchor',
 
     type: 'anchor',
 
@@ -59,14 +56,14 @@ Ext.define('Ext.layout.container.Anchor', {
      * by an {@link Ext.layout.container.Anchor Anchor Layout}.
      *
      * This value is what tells the layout how an item should be anchored to the container. `items`
-     * added to an AnchorLayout accept an anchoring-specific config property of **anchor** which is a string
-     * containing two values: the horizontal anchor value and the vertical anchor value (for example, '100% 50%').
-     * The following types of anchor values are supported:
+     * added to an AnchorLayout accept an anchoring-specific config property of **anchor**
+     * which is a string containing two values: the horizontal anchor value and the vertical anchor
+     * value (for example, '100% 50%'). The following types of anchor values are supported:
      *
      * - **Percentage** : Any value between 1 and 100, expressed as a percentage.
      *
-     *   The first anchor is the percentage width that the item should take up within the container, and the
-     *   second is the percentage height.  For example:
+     *   The first anchor is the percentage width that the item should take up within the container,
+     *   and the second is the percentage height.  For example:
      *
      *       // two values specified
      *       anchor: '100% 50%' // render item complete width of the container and
@@ -76,8 +73,8 @@ Ext.define('Ext.layout.container.Anchor', {
      *
      * - **Offsets** : Any positive or negative integer value.
      *
-     *   This is a raw adjustment where the first anchor is the offset from the right edge of the container,
-     *   and the second is the offset from the bottom edge. For example:
+     *   This is a raw adjustment where the first anchor is the offset from the right edge
+     *   of the container, and the second is the offset from the bottom edge. For example:
      *
      *       // two values specified
      *       anchor: '-50 -100' // render item the complete width of the container
@@ -89,20 +86,21 @@ Ext.define('Ext.layout.container.Anchor', {
      *
      * - **Sides** : Valid values are `right` (or `r`) and `bottom` (or `b`).
      *
-     *   Either the container must have a fixed size or an anchorSize config value defined at render time in
-     *   order for these to have any effect.
+     *   Either the container must have a fixed size or an anchorSize config value defined
+     *   at render time in order for these to have any effect.
      *   
      * - **Mixed** :
      *
-     *   Anchor values can also be mixed as needed.  For example, to render the width offset from the container
-     *   right edge by 50 pixels and 75% of the container's height use:
+     *   Anchor values can also be mixed as needed.  For example, to render the width offset
+     *   from the container right edge by 50 pixels and 75% of the container's height use:
      *   
      *       anchor:   '-50 75%'
      */
 
     /**
      * @cfg {String} defaultAnchor
-     * Default anchor for all child **container** items applied if no anchor or specific width is set on the child item.
+     * Default anchor for all child **container** items applied if no anchor or specific width
+     * is set on the child item.
      */
     defaultAnchor: '100%',
 
@@ -116,7 +114,7 @@ Ext.define('Ext.layout.container.Anchor', {
     // non-shrink-wrapping dimension(s).
     setsItemSize: true,
 
-    beginLayoutCycle: function (ownerContext) {
+    beginLayoutCycle: function(ownerContext) {
         var me = this,
             dimensions = 0,
             anchorSpec, childContext, childItems, i, length;
@@ -132,10 +130,11 @@ Ext.define('Ext.layout.container.Anchor', {
 
             if (anchorSpec) {
                 if (childContext.widthModel.calculated && anchorSpec.right) {
-                    dimensions |= 1; // jshint ignore:line
+                    dimensions |= 1;
                 }
+
                 if (childContext.heightModel.calculated && anchorSpec.bottom) {
-                    dimensions |= 2; // jshint ignore:line
+                    dimensions |= 2;
                 }
 
                 if (dimensions === 3) { // if (both dimensions in play)
@@ -151,7 +150,7 @@ Ext.define('Ext.layout.container.Anchor', {
         //</debug>
     },
 
-    calculateItems: function (ownerContext, containerSize) {
+    calculateItems: function(ownerContext, containerSize) {
         var me = this,
             childItems = ownerContext.childItems,
             length = childItems.length,
@@ -159,7 +158,7 @@ Ext.define('Ext.layout.container.Anchor', {
             gotWidth = containerSize.gotWidth,
             ownerHeight = containerSize.height,
             ownerWidth = containerSize.width,
-            knownDimensions = (gotWidth ? 1 : 0) | (gotHeight ? 2 : 0), // jshint ignore:line
+            knownDimensions = (gotWidth ? 1 : 0) | (gotHeight ? 2 : 0),
             anchorDimensions = ownerContext.anchorDimensions,
             anchorSpec, childContext, childMargins, height, i, width;
 
@@ -193,11 +192,11 @@ Ext.define('Ext.layout.container.Anchor', {
         }
 
         // If all required dimensions are known, we're done
-        return (knownDimensions & anchorDimensions) === anchorDimensions; // jshint ignore:line
+        return (knownDimensions & anchorDimensions) === anchorDimensions;
     },
 
     //<debug>
-    sanityCheck: function (ownerContext) {
+    sanityCheck: function(ownerContext) {
         var shrinkWrapWidth = ownerContext.widthModel.shrinkWrap,
             shrinkWrapHeight = ownerContext.heightModel.shrinkWrap,
             children = ownerContext.childItems,
@@ -214,7 +213,7 @@ Ext.define('Ext.layout.container.Anchor', {
                     if (shrinkWrapWidth) {
                         Ext.log({
                             level: 'warn',
-                            msg: 'Right anchor on '+comp.id+' in shrinkWrap width container'
+                            msg: 'Right anchor on ' + comp.id + ' in shrinkWrap width container'
                         });
                     }
                 }
@@ -223,7 +222,7 @@ Ext.define('Ext.layout.container.Anchor', {
                     if (shrinkWrapHeight) {
                         Ext.log({
                             level: 'warn',
-                            msg: 'Bottom anchor on '+comp.id+' in shrinkWrap height container'
+                            msg: 'Bottom anchor on ' + comp.id + ' in shrinkWrap height container'
                         });
                     }
                 }
@@ -236,17 +235,17 @@ Ext.define('Ext.layout.container.Anchor', {
      * @private
      */
     anchorFactory: {
-        offset: function (delta) {
+        offset: function(delta) {
             return function(v) {
                 return v + delta;
             };
         },
-        ratio: function (ratio) {
+        ratio: function(ratio) {
             return function(v) {
                 return Math.floor(v * ratio);
             };
         },
-        standard: function (diff) {
+        standard: function(diff) {
             return function(v) {
                 return v - diff;
             };
@@ -254,21 +253,25 @@ Ext.define('Ext.layout.container.Anchor', {
     },
 
     parseAnchor: function(a, start, cstart) {
-        if (a && a !== 'none') {
-            var factory = this.anchorFactory,
-                delta;
+        var factory = this.anchorFactory,
+            delta;
 
+        if (a && a !== 'none') {
             if (this.parseAnchorRE.test(a)) {
                 return factory.standard(cstart - start);
-            }    
+            }
+
             if (a.indexOf('%') !== -1) {
                 return factory.ratio(parseFloat(a.replace('%', '')) * 0.01);
-            }    
+            }
+
             delta = parseInt(a, 10);
+
             if (!isNaN(delta)) {
                 return factory.offset(delta);
             }
         }
+
         return null;
     },
 
@@ -289,7 +292,7 @@ Ext.define('Ext.layout.container.Anchor', {
     configureItem: function(item) {
         var me = this,
             owner = me.owner,
-            anchor= item.anchor,
+            anchor = item.anchor,
             anchorsArray,
             anchorWidth,
             anchorHeight;
@@ -303,17 +306,20 @@ Ext.define('Ext.layout.container.Anchor', {
         /**
          * @cfg {Number/Object} anchorSize
          * Defines the anchoring size of container.
-         * Either a number to define the width of the container or an object with `width` and `height` fields.
+         * Either a number to define the width of the container or an object
+         * with `width` and `height` fields.
          * @member Ext.container.Container
          */ 
         if (owner.anchorSize) {
             if (typeof owner.anchorSize === 'number') {
                 anchorWidth = owner.anchorSize;
-            } else {
+            }
+            else {
                 anchorWidth = owner.anchorSize.width;
                 anchorHeight = owner.anchorSize.height;
             }
-        } else {
+        }
+        else {
             anchorWidth = owner.initialConfig.width;
             anchorHeight = owner.initialConfig.height;
         }
@@ -357,7 +363,7 @@ Ext.define('Ext.layout.container.Anchor', {
         }
     },
 
-    getItemSizePolicy: function (item) {
+    getItemSizePolicy: function(item) {
         var anchorSpec = item.anchorSpec,
             key = '$',
             policy = this.sizePolicy,
@@ -365,9 +371,11 @@ Ext.define('Ext.layout.container.Anchor', {
 
         if (anchorSpec) {
             sizeModel = this.owner.getSizeModel();
+
             if (anchorSpec.right && !sizeModel.width.shrinkWrap) {
                 policy = policy.r;
             }
+
             if (anchorSpec.bottom && !sizeModel.height.shrinkWrap) {
                 key = 'b';
             }

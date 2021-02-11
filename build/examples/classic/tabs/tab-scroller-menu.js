@@ -6,10 +6,12 @@ Ext.require([
 ]);
 
 Ext.onReady(function() {
+    var win, tabLimit, tabPanel;
+
     // enable the tabTip config below
     Ext.tip.QuickTipManager.init();
 
-    var win = Ext.widget('window', {
+    win = Ext.widget('window', {
         constrain: true,
         height: 400,
         width: 600,
@@ -20,11 +22,12 @@ Ext.onReady(function() {
             xtype: 'tabpanel',
             activeTab: 0,
             itemId: 'tabPanel',
-            plugins: [{
-                ptype: 'tabscrollermenu',
-                maxText  : 15,
-                pageSize : 5
-            }],
+            plugins: {
+                tabscrollermenu: {
+                    maxText: 15,
+                    pageSize: 5
+                }
+            },
             items: [{
                 title: 'First tab',
                 html: 'Creating more tabs...'
@@ -35,13 +38,14 @@ Ext.onReady(function() {
     win.show();
 
     // Add a bunch of tabs dynamically
-    var tabLimit = 12,
-        tabPanel = win.getComponent('tabPanel');
+    tabLimit = 12;
+    tabPanel = win.getComponent('tabPanel');
 
-    Ext.defer(function (num) {
+    Ext.defer(function(num) {
         var i,
             title,
             tabs = [];
+
         for (i = 1; i <= tabLimit; i++) {
             title = 'Tab # ' + i;
             tabs.push({
@@ -51,6 +55,7 @@ Ext.onReady(function() {
                 closable: true
             });
         }
+
         tabPanel.add(tabs);
         tabPanel.getComponent(0).body.update('Done!');
     }, 100);

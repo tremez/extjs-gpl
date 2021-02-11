@@ -2,8 +2,7 @@ Ext.define("Ext.locale.it.form.field.HtmlEditor", {
     override: "Ext.form.field.HtmlEditor",
 
     createLinkText: 'Inserire un URL per il link:'
-},
-function() {
+}, function() {
     Ext.apply(Ext.form.field.HtmlEditor.prototype, {
         buttonTips: {
             bold: {
@@ -22,7 +21,7 @@ function() {
                 cls: Ext.baseCSSPrefix + 'html-editor-tip'
             },
             increasefontsize: {
-                title: 'Ingrandisci testo', 
+                title: 'Ingrandisci testo',
                 text: 'Aumenta la dimensione del carattere.',
                 cls: Ext.baseCSSPrefix + 'html-editor-tip'
             },
@@ -37,17 +36,17 @@ function() {
                 cls: Ext.baseCSSPrefix + 'html-editor-tip'
             },
             forecolor: {
-                title: 'Colore carattere', 
+                title: 'Colore carattere',
                 text: 'Modifica il colore del testo selezionato.',
                 cls: Ext.baseCSSPrefix + 'html-editor-tip'
             },
             justifyleft: {
-                title: 'Allinea a sinistra', 
+                title: 'Allinea a sinistra',
                 text: 'Allinea il testo a sinistra.',
                 cls: Ext.baseCSSPrefix + 'html-editor-tip'
             },
             justifycenter: {
-                title: 'Centra', 
+                title: 'Centra',
                 text: 'Centra il testo.',
                 cls: Ext.baseCSSPrefix + 'html-editor-tip'
             },
@@ -57,7 +56,7 @@ function() {
                 cls: Ext.baseCSSPrefix + 'html-editor-tip'
             },
             insertunorderedlist: {
-                title: 'Elenco puntato', 
+                title: 'Elenco puntato',
                 text: 'Inserisci un elenco puntato.',
                 cls: Ext.baseCSSPrefix + 'html-editor-tip'
             },

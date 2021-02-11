@@ -25,6 +25,7 @@ Ext.define('Neptune.view.form.widget.Checkboxes', {
                 defaultMargins: '0 3'
             };
         }
+
         this.callParent(arguments);
     }
 });

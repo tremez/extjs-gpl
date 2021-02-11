@@ -4,7 +4,6 @@
      */
     "name": "KitchenSink",
     "framework": "ext",
-
     /**
      * Comma-separated string with the paths of directories or files to search. Any classes
      * declared in these locations will be available in your class "requires" or in calls
@@ -18,7 +17,6 @@
         "${app.dir}/${toolkit.name}/src",
         "${app.dir}/${toolkit.name}/samples"
     ],
-
     /**
      * Sass configuration properties.
      */
@@ -32,31 +30,26 @@
          * "KitchenSink.view.Foo" to "sass/src/KitchenSink/view/Foo.scss".
          */
         "namespace": "KitchenSink",
-
         "src": [
             "${app.dir}/sass/src",
             "${app.dir}/${toolkit.name}/sass/src",
             "${app.dir}/${theme.name}/sass/src"
         ],
-
         "var": [
             "${app.dir}/sass/var",
             "${app.dir}/${toolkit.name}/sass/var",
             "${app.dir}/${theme.name}/sass/var"
         ],
-
         "etc": [
             "${app.dir}/sass/etc/all.scss",
             "${app.dir}/${toolkit.name}/sass/etc/all.scss"
         ]
     },
-
     /**
      * The file path to this application's front HTML document. This is relative
      * to this app.json file.
      */
     "indexHtmlPath": "index.html",
-
     /**
      * The absolute URL to this application in development environment, i.e: the URL to run
      * this application on your web browser, e.g: "http://localhost/KitchenSink/index.html".
@@ -67,7 +60,6 @@
      * invoke "sencha app resolve".
      */
     "url": null,
-
     /**
      * List of all JavaScript assets in the right execution order.
      *
@@ -109,16 +101,15 @@
      *      }
      */
     "js": [
-    	{
+        {
             "path": "lib/prettify/prettify.js",
             "includeInBundle": true
-    	},
+        },
         {
             "path": "app.js",
             "bundle": true
         }
     ],
-
     /**
      * List of all CSS assets in the right inclusion order.
      *
@@ -151,14 +142,15 @@
         {
             "path": "${build.out.css.dir}/KitchenSink-all.css",
             "bundle": true,
-            "exclude": ["fashion"]
+            "exclude": [
+                "fashion"
+            ]
         },
         {
             "path": "../resources/Sencha-Examples/style.css",
             "remote": true
         }
     ],
-
     /**
      * Used to automatically generate cache.manifest (HTML 5 application cache manifest) file when you build
      */
@@ -180,7 +172,6 @@
          */
         "fallback": []
     },
-
     /**
      * Extra resources to be copied along when build
      */
@@ -195,6 +186,14 @@
         },
         {
             "path": "${toolkit.name}/src",
+            "mode": "relative"
+        },
+        {
+            "path": "app",
+            "mode": "relative"
+        },
+        {
+            "path": "packages",
             "mode": "relative"
         },
         {
@@ -225,7 +224,6 @@
             "path": "${build.id}/resources"
         }
     ],
-
     /**
      * File / directory name matchers to ignore when copying to the builds, must be valid regular expressions
      */
@@ -233,13 +231,11 @@
         "^\\.svn$",
         "^\\.git$"
     ],
-
     /**
      * Directory path to store all previous production builds. Note that the content generated inside this directory
      * must be kept intact for proper generation of deltas between updates
      */
     "archivePath": "archive",
-
     /**
      * Additional resources used during theme slicing operations
      */
@@ -251,14 +247,14 @@
             }
         ]
     },
-
     /**
      * override objects for setting build environment specific
      * settings.
      */
     "production": {
         "compressor": {
-            "type": "yui"
+            "type": "cmd",
+            "wrapLines": 100
         },
         "output": {
             "appCache": {
@@ -269,10 +265,7 @@
             "enable": false
         }
     },
-
-    "testing": {
-    },
-
+    "testing": {},
     "development": {
         "fashion": {
             "inliner": {
@@ -280,7 +273,6 @@
             }
         }
     },
-
     /**
      * Controls the name of the manifest file used by the microloader for
      * dev mode
@@ -288,7 +280,6 @@
     "bootstrap": {
         "manifest": "${build.id}.json"
     },
-
     /**
      *  Controls the output directory for build resources.  May be set with
      *  either a string:
@@ -325,7 +316,10 @@
         "base": "${ext.dir}/build/examples/kitchensink",
         "page": "index.html",
         "manifest": "${build.id}.json",
-        "js": "${build.id}/app.js",
+        "js": {
+            "path": "${build.id}/app.js",
+            "version": "ES6"
+        },
         "framework": "${build.id}/framework.js",
         "resources": {
             "path": "./${build.id}/resources",
@@ -341,14 +335,12 @@
             "enable": false
         }
     },
-
     "overrides": [
         "${app.dir}/overrides",
         "${app.dir}/locale/${app.locale}",
         "${app.dir}/${toolkit.name}/overrides",
         "${app.dir}/${toolkit.name}/locale/${app.locale}"
     ],
-
     "requires": [
         "font-awesome",
         "ux",
@@ -358,9 +350,9 @@
         "charts",
         "d3",
         "calendar",
-        "pivot-d3"
+        "pivot-d3",
+        "package-loader"
     ],
-
     "classic": {
         "js": [
             {
@@ -377,18 +369,23 @@
             "font-ext"
         ]
     },
-
     "modern": {
         "slicer": null,
         "requires": [
-            "google"
+            "locale",
+            "package-loader",
+            "froala-editor",
+            "pivot-locale"
+        ],
+        "uses": [
+            "kitchensink-google"
         ],
         "locales": [
-            "en"
+            "en",
+            "fr"
         ]
     },
-
-   "builds": {
+    "builds": {
         "classic": {
             "toolkit": "classic",
             "theme": "theme-classic"
@@ -417,7 +414,29 @@
             "toolkit": "classic",
             "theme": "theme-triton"
         },
-
+        "aria": {
+            "toolkit": "classic",
+            "theme": "theme-aria"
+        },
+        "graphite": {
+            "toolkit": "classic",
+            "theme": "theme-graphite"
+        },
+        "classic-material": {
+            "toolkit": "classic",
+            "css": [
+                {
+                    "path": "lib/prettify/prettify-dark.css"
+                }
+            ],
+            "material": {
+                "toolbar": {
+                    "color": "#1976d2",
+                    "dynamic": true
+                }
+            },
+            "theme": "theme-material"
+        },
         "modern-triton": {
             "toolkit": "modern",
             "theme": "theme-triton"
@@ -428,7 +447,12 @@
         },
         "material": {
             "toolkit": "modern",
-            "material" : {
+            "css": [
+                {
+                    "path": "lib/prettify/prettify-dark.css"
+                }
+            ],
+            "material": {
                 "toolbar": {
                     "color": "#1976d2",
                     "dynamic": true
@@ -441,18 +465,24 @@
             "theme": "theme-ios"
         }
     },
-
-//    "fashion": {
-//        "inliner": {
-//            "enable": false,
-//            "report": true,
-//            "excludes": [
-//                ".*OpenSans.*",
-//                ".*font.?awesome.*"
-//            ]
-//        }
-//    }
-
+    //    "fashion": {
+    //        "inliner": {
+    //            "enable": false,
+    //            "report": true,
+    //            "excludes": [
+    //                ".*OpenSans.*",
+    //                ".*font.?awesome.*"
+    //            ]
+    //        }
+    //    }
+    "properties": {
+        "app.packages.dir": "${app.dir}/packages"
+    },
+    "mashup": {
+        "map": {
+            "options": "?v=3&sensor=false"
+        }
+    },
     /**
      * Uniquely generated id for this application, used as prefix for localStorage keys.
      * Normally you should never change this value.

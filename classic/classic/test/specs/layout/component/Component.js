@@ -1,4 +1,4 @@
-describe("Ext.layout.component.Component", function() {
+topSuite("Ext.layout.component.Component", ['Ext.Window'], function() {
     var c;
 
     afterEach(function() {
@@ -30,8 +30,11 @@ describe("Ext.layout.component.Component", function() {
                     flex: 1
                 }]
             });
+
             var child = c.items.first();
+
             expect(child.getWidth()).toBe(150);
+
             // Changing the html of the docked item will never change the size
             // of "child", so child will run as a top level layout. Ensure that
             // we retain the width previously calculated.
@@ -63,13 +66,57 @@ describe("Ext.layout.component.Component", function() {
                     flex: 1
                 }]
             });
+
             var child = c.items.first();
+
             expect(child.getHeight()).toBe(150);
+
             // Changing the html of the docked item will never change the size
             // of "child", so child will run as a top level layout. Ensure that
             // we retain the height previously calculated.
             child.getDockedItems()[0].setHtml('Foo<br>bar');
             expect(child.getHeight()).toBe(150);
+        });
+    });
+
+    describe("framed windows with percentage dimensions", function() {
+        function makeWindow(cfg) {
+            cfg = Ext.apply({
+                autoShow: true,
+                header: false
+            }, cfg);
+
+            c = new Ext.window.Window(cfg);
+        }
+
+        it("should accept percentage width and height", function() {
+            makeWindow({
+                width: "50%",
+                height: "50%"
+            });
+
+            expect(c.getWidth()).toBe(Ext.Element.getViewportWidth() / 2);
+            expect(c.getHeight()).toBe(Ext.Element.getViewportHeight() / 2);
+        });
+
+        it("should accept percentage width and configured height", function() {
+            makeWindow({
+                width: "50%",
+                height: 200
+            });
+
+            expect(c.getWidth()).toBe(Ext.Element.getViewportWidth() / 2);
+            expect(c.getHeight()).toBe(200);
+        });
+
+        it("should accept percentage height and configured width", function() {
+            makeWindow({
+                width: 200,
+                height: "50%"
+            });
+
+            expect(c.getWidth()).toBe(200);
+            expect(c.getHeight()).toBe(Ext.Element.getViewportHeight() / 2);
         });
     });
 });

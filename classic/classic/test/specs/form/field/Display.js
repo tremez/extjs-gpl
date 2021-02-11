@@ -1,23 +1,31 @@
-describe("Ext.form.field.Display", function() {
+topSuite("Ext.form.field.Display", ['Ext.app.ViewController'], function() {
     var component;
 
-    function makeComponent (config) {
+    function makeComponent(config) {
         config = Ext.apply({
             name: 'fieldname',
             renderTo: Ext.getBody()
         }, config);
-        
-        return component = new Ext.form.field.Display(config);
-    };
+
+        component = new Ext.form.field.Display(config);
+    }
 
     afterEach(function() {
-        Ext.destroy(component);
-        
-        component = null;
+        component = Ext.destroy(component);
+    });
+
+    describe("alternate class name", function() {
+        it("should have Ext.form.DisplayField as the alternate class name", function() {
+            expect(Ext.form.field.Display.prototype.alternateClassName).toEqual(["Ext.form.DisplayField", "Ext.form.Display"]);
+        });
+
+        it("should allow the use of Ext.form.DisplayField", function() {
+            expect(Ext.form.DisplayField).toBeDefined();
+        });
     });
 
     it("should be registered as xtype 'displayfield'", function() {
-        component = Ext.create("Ext.form.field.Display", {name: 'test'});
+        component = Ext.create("Ext.form.field.Display", { name: 'test' });
         expect(component instanceof Ext.form.field.Display).toBe(true);
         expect(Ext.getClass(component).xtype).toBe("displayfield");
     });
@@ -40,7 +48,7 @@ describe("Ext.form.field.Display", function() {
         // NOTE this doesn't test the label, error icon, etc. just the parts specific to Display.
 
         beforeEach(function() {
-            makeComponent({value: 'foo'});
+            makeComponent({ value: 'foo' });
         });
 
         describe("bodyEl", function() {
@@ -97,68 +105,70 @@ describe("Ext.form.field.Display", function() {
     describe("value getters", function() {
         describe("getValue", function() {
             it("should return the field's value", function() {
-                makeComponent({value: 'the field value'});
+                makeComponent({ value: 'the field value' });
                 expect(component.getValue()).toEqual('the field value');
             });
 
             it("should return the same value when htmlEncode is true", function() {
-                makeComponent({value: '<p>the field value</p>', htmlEncode: true});
+                makeComponent({ value: '<p>the field value</p>', htmlEncode: true });
                 expect(component.getValue()).toEqual('<p>the field value</p>');
             });
 
             it("should keep an array value", function() {
                 var arr = [];
-                makeComponent({value: arr});
+
+                makeComponent({ value: arr });
                 expect(component.getValue()).toBe(arr);
             });
 
             it("should keep an object value", function() {
                 var o = {};
-                makeComponent({value: o});
+
+                makeComponent({ value: o });
                 expect(component.getValue()).toBe(o);
-            })
+            });
 
             it("should keep a numeric value", function() {
-                makeComponent({value: 50});
+                makeComponent({ value: 50 });
                 expect(component.getValue()).toBe(50);
             });
 
             it("should keep a boolean value", function() {
-                makeComponent({value: true});
+                makeComponent({ value: true });
                 expect(component.getValue()).toBe(true);
             });
 
             it("should keep false", function() {
-                makeComponent({value: false});
+                makeComponent({ value: false });
                 expect(component.getValue()).toBe(false);
             });
 
             it("should keep 0", function() {
-                makeComponent({value: 0});
+                makeComponent({ value: 0 });
                 expect(component.getValue()).toBe(0);
             });
         });
         describe("getRawValue", function() {
             it("should return the field's value", function() {
-                makeComponent({value: 'the field value'});
+                makeComponent({ value: 'the field value' });
                 expect(component.getRawValue()).toEqual('the field value');
             });
 
             it("should return the same value when htmlEncode is true", function() {
-                makeComponent({value: '<p>the field value</p>', htmlEncode: true});
+                makeComponent({ value: '<p>the field value</p>', htmlEncode: true });
                 expect(component.getRawValue()).toEqual('<p>the field value</p>');
             });
         });
         describe("getSubmitData", function() {
             it("should return null", function() {
-                makeComponent({value: 'the field value'});
+                makeComponent({ value: 'the field value' });
                 expect(component.getSubmitData()).toBeNull();
             });
         });
         describe("getModelData", function() {
             it("should return the value", function() {
-                makeComponent({value: 'the field value', name: 'myfield'});
-                expect(component.getModelData()).toEqual({myfield: 'the field value'});
+                makeComponent({ value: 'the field value', name: 'myfield' });
+                expect(component.getModelData()).toEqual({ myfield: 'the field value' });
             });
         });
     });
@@ -166,19 +176,19 @@ describe("Ext.form.field.Display", function() {
     describe("setting value", function() {
         describe("setRawValue", function() {
             it("should set the inputEl's innerHTML to the specified value", function() {
-                makeComponent({value: 'the field value'});
+                makeComponent({ value: 'the field value' });
                 component.setRawValue('the new value');
                 expect(component.inputEl.dom).hasHTML('the new value');
             });
 
             it("should not html-encode the value by default", function() {
-                makeComponent({value: 'the field value'});
+                makeComponent({ value: 'the field value' });
                 component.setRawValue('<p>the new value</p>');
                 expect(component.inputEl.dom).hasHTML('<p>the new value</p>');
             });
 
             it("should html-encode the value when htmlEncode config is true", function() {
-                makeComponent({value: 'the field value', htmlEncode: true});
+                makeComponent({ value: 'the field value', htmlEncode: true });
                 component.setRawValue('<p>the new value</p>');
                 expect(component.inputEl.dom).hasHTML('&lt;p&gt;the new value&lt;/p&gt;');
             });
@@ -186,19 +196,19 @@ describe("Ext.form.field.Display", function() {
 
         describe("setValue", function() {
             it("should set the inputEl's innerHTML to the specified value", function() {
-                makeComponent({value: 'the field value'});
+                makeComponent({ value: 'the field value' });
                 component.setValue('the new value');
                 expect(component.inputEl.dom).hasHTML('the new value');
             });
 
             it("should not html-encode the value by default", function() {
-                makeComponent({value: 'the field value'});
+                makeComponent({ value: 'the field value' });
                 component.setValue('<p>the new value</p>');
                 expect(component.inputEl.dom).hasHTML('<p>the new value</p>');
             });
 
             it("should html-encode the value when htmlEncode config is true", function() {
-                makeComponent({value: 'the field value', htmlEncode: true});
+                makeComponent({ value: 'the field value', htmlEncode: true });
                 component.setValue('<p>the new value</p>');
                 expect(component.inputEl.dom).hasHTML('&lt;p&gt;the new value&lt;/p&gt;');
             });
@@ -216,7 +226,7 @@ describe("Ext.form.field.Display", function() {
                 });
                 expect(component.inputEl.dom).hasHTML('false');
             });
-            
+
             it("should accept setting an array value", function() {
                 makeComponent({
                     value: [1, 2, 3, 4],
@@ -226,7 +236,7 @@ describe("Ext.form.field.Display", function() {
                 });
                 expect(component.inputEl.dom).hasHTML('1,2,3,4');
             });
-            
+
             it("should accept setting an object value", function() {
                 makeComponent({
                     value: {
@@ -243,78 +253,100 @@ describe("Ext.form.field.Display", function() {
         });
 
     });
-    
-    describe("renderer", function(){
-        it("should set the innerHTML to the value specified by the renderer", function(){
+
+    describe("renderer", function() {
+        it("should set the innerHTML to the value specified by the renderer", function() {
             makeComponent({
                 value: 'foo',
-                renderer: function(v){
+                renderer: function(v) {
                     return v + 'bar';
                 }
             });
             expect(component.inputEl.dom).hasHTML('foobar');
-        });    
-        
-        it("should not change the raw value", function(){
+        });
+
+        it("should not change the raw value", function() {
             makeComponent({
                 value: 'foo',
-                renderer: function(v){
+                renderer: function(v) {
                     return v + 'bar';
                 }
             });
             expect(component.rawValue).toBe('foo');
         });
-        
-        it("should default the scope to the field", function(){
+
+        it("should default the scope to the field", function() {
             var scope;
+
             makeComponent({
                 value: 'foo',
-                renderer: function(v){
+                renderer: function(v) {
                     scope = this;
                 }
             });
             expect(scope).toBe(component);
         });
-        
-        it("should use the passed scope", function(){
+
+        it("should use the passed scope", function() {
             var o = {},
                 scope;
-                
+
             makeComponent({
                 value: 'foo',
                 scope: o,
-                renderer: function(v){
+                renderer: function(v) {
                     scope = this;
                 }
             });
             expect(scope).toBe(o);
         });
-        
-        it("should pass the raw value and the field to the renderer", function(){
+
+        it("should pass the raw value and the field to the renderer", function() {
             var arg1,
                 arg2;
-                
+
             makeComponent({
                 value: 'foo',
-                renderer: function(a, b){
+                renderer: function(a, b) {
                     arg1 = a;
                     arg2 = b;
                 }
             });
-            
+
             expect(arg1).toBe('foo');
             expect(arg2).toBe(component);
         });
-        
+
         it("should pass an empty string to the renderer if the value is undefined", function() {
             var arg1;
+
             makeComponent({
                 value: undefined,
                 renderer: function(a) {
                     arg1 = a;
                 }
-            });    
+            });
             expect(arg1).toBe('');
+        });
+
+        it("should be able to resolve to a controller", function() {
+            var controller = new Ext.app.ViewController();
+
+            controller.doIt = function() {
+                return 'ok';
+            };
+
+            var ct = new Ext.container.Container({
+                controller: controller,
+                renderTo: Ext.getBody(),
+                items: {
+                    xtype: 'displayfield',
+                    renderer: 'doIt'
+                }
+            });
+
+            expect(ct.items.first().inputEl.dom).hasHTML('ok');
+            ct.destroy();
         });
     });
 
@@ -336,6 +368,7 @@ describe("Ext.form.field.Display", function() {
                 value: 'foo'
             });
             var height = component.getHeight();
+
             component.destroy();
             makeComponent({
                 value: 'foo<br>bar<br>baz'

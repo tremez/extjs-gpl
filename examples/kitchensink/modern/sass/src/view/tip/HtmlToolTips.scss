@@ -1,0 +1,31 @@
+.qtip-item > * {
+    font-size: 15px;
+    padding: 10px 20px;
+}
+
+.qtip-item {
+    color: #FFF;
+    cursor: default;
+    margin: 0 20px 20px;
+    text-align: center;
+
+    &.color1  {
+        background-color: #E91E63;
+    }
+
+    &.color2 {
+        background-color: #2196F3;
+    }
+
+    &.color3 {
+        background-color: #FF5722;
+    }
+
+    &.color4 {
+        background-color: #607D8B;
+    }
+
+    &:first-child {
+        margin-top: 20px;
+    }
+}

@@ -2,7 +2,7 @@
  * Base class for Range Map
  */
 Ext.define('Ext.sparkline.RangeMap', {
-    constructor: function (map) {
+    constructor: function(map) {
         var key,
             range,
             rangelist = [];
@@ -16,20 +16,23 @@ Ext.define('Ext.sparkline.RangeMap', {
                 rangelist.push(range);
             }
         }
+
         this.map = map;
         this.rangelist = rangelist || false;
     },
 
-    get: function (value) {
+    get: function(value) {
         var rangelist = this.rangelist,
             i, range, result;
 
         if ((result = this.map[value]) !== undefined) {
             return result;
         }
+
         if (rangelist) {
             for (i = rangelist.length; i--;) {
                 range = rangelist[i];
+
                 if (range[0] <= value && range[1] >= value) {
                     return range[2];
                 }

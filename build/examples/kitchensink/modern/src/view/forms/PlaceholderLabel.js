@@ -1,6 +1,6 @@
 Ext.define('KitchenSink.view.forms.PlaceholderLabel', {
     extend: 'Ext.form.Panel',
-    xtype: 'placeholderlabel',
+    xtype: 'form-placeholder',
 
     requires: [
         'Ext.form.FieldSet',
@@ -8,34 +8,38 @@ Ext.define('KitchenSink.view.forms.PlaceholderLabel', {
         'Ext.field.TextArea'
     ],
 
-    shadow: true,
-    cls: 'demo-solid-background',
-    items: {
-        xtype: 'fieldset',
+    //<example>
+    profiles: {
         defaults: {
-            labelAlign: 'top'
+            width: 300
         },
-        items: [
-            {
-                xtype: 'textfield',
-                label: 'Title',
-                labelAlign: 'placeholder'
-            },
-            {
-                xtype: 'textfield',
-                label: 'Price',
-                labelAlign: 'placeholder'
-            },
-            {
-                xtype: 'textfield',
-                label: 'Specific Location (optional)',
-                labelAlign: 'placeholder'
-            },
-            {
-                xtype: 'textareafield',
-                label: 'Description',
-                labelAlign: 'placeholder'
+        phone: {
+            defaults: {
+                width: undefined
             }
-        ]
-    }
+        }
+    },
+    //</example>
+
+    bodyPadding: 20,
+    scrollable: 'y',
+    width: '${width}',
+    autoSize: true,
+
+    defaults: {
+        labelAlign: 'placeholder',
+        xtype: 'textfield'
+    },
+
+    items: [{
+        label: 'Title'
+    }, {
+        label: 'Price'
+    }, {
+        label: 'Specific Location (optional)',
+        value: 'KS'
+    }, {
+        xtype: 'textareafield',
+        label: 'Description'
+    }]
 });

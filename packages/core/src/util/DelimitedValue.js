@@ -64,20 +64,21 @@ Ext.define('Ext.util.DelimitedValue', {
      * or `{@link #lineBreak}` characters.
      */
     quote: '"',
-    
-    parseREs: {},
-    quoteREs: {},
 
     lineBreakRe: /\r?\n/g,
     // match line break at end of input
     lastLineBreakRe: /(\r?\n|\r)$/,
 
-    constructor: function (config) {
+    constructor: function(config) {
         if (config) {
             Ext.apply(this, config);
         }
+
+        this.parseREs = {};
+        this.quoteREs = {};
     },
 
+    /* eslint-disable max-len */
     /**
      * Decodes a string of encoded values into an array of rows. Each row is an array of
      * strings.
@@ -101,57 +102,64 @@ Ext.define('Ext.util.DelimitedValue', {
      * @param {String} [delimiter] The column delimiter to use if the default value
      * of {@link #cfg-delimiter delimiter} is not desired.
      *
+     * @param {String} [quoteChar] The character used to quote fields. Defaults to
+     * double quote ("). Pass `null` to suppress field quoting.
+     *
      * @return {String[][]} An array of rows where each row is an array of Strings.
      */
-    decode: function (input, delimiter) {
+    decode: function(input, delimiter, quoteChar) {
+    /* eslint-enable max-len */
         if (!input) {
             return [];
         }
-        
+
+        // eslint-disable-next-line vars-on-top
         var me = this,
             // Check to see if the column delimiter is defined. If not,
             // then default to comma.
-            delim = delimiter || me.delimiter,
             row = [],
             result = [row],
-            quote = me.quote,
+            quote = quoteChar !== undefined ? quoteChar : me.quote,
             quoteREs = me.quoteREs,
             parseREs = me.parseREs,
-            input = input.replace(me.lastLineBreakRe, ''),
+            parseRE, dblQuoteRE, arrMatches, strMatchedDelimiter, strMatchedValue;
 
-            // Create a regular expression to parse the CSV values unless we already have
-            // one for this delimiter.
-            parseRE = parseREs[delim] ||
-                (parseREs[delim] = new RegExp(
-                    // Delimiters.
-                    "(\\" + delim + "|\\r?\\n|\\r|^)" +
+        delimiter = delimiter || me.delimiter;
+        // Create a regular expression to parse the CSV values unless we already have
+        // one for this delimiter/quoteChar.
+        parseRE = parseREs[delimiter] || new RegExp(
+            // Delimiters.
+            '(\\' + delimiter + '|\\r?\\n|\\r|^)' +
 
-                    // Quoted fields.
-                    "(?:\\" + quote + "([^\\" + quote + "]*(?:\\" + quote + "\\" + quote +
-                            "[^\\" + quote + "]*)*)\\" + quote + "|" +
+                // (Optionally) Quoted fields.
+                '(?:\\' + quote + '([^\\' + quote + ']*(?:\\' + quote + '\\' + quote +
+                    '[^\\' + quote + ']*)*)\\' + quote + '|' +
 
-                    // Standard fields.
-                    "([^\"\\" + delim + "\\r\\n]*))",
-                "gi")),
+                // Standard fields.
+                '([^\\' + delimiter + '\\r\\n]*))',
+            'gi');
 
-            dblQuoteRE = quoteREs[quote] ||
-                (quoteREs[quote] = new RegExp('\\' + quote + '\\' + quote, 'g')),
-
-            arrMatches, strMatchedDelimiter, strMatchedValue;
+        dblQuoteRE = quoteREs[quote] ||
+            (quoteREs[quote] = new RegExp('\\' + quote + '\\' + quote, 'g'));
 
         // Keep looping over the regular expression matches
         // until we can no longer find a match.
-        while (arrMatches = parseRE.exec(input)) {
+        while ((arrMatches = parseRE.exec(input))) {
             strMatchedDelimiter = arrMatches[1];
 
             // Check to see if the given delimiter has a length
             // (is not the start of string) and if it matches
             // field delimiter. If id does not, then we know
             // that this delimiter is a row delimiter.
-            if (strMatchedDelimiter.length && strMatchedDelimiter !== delim) {
+            if (strMatchedDelimiter.length && strMatchedDelimiter !== delimiter) {
                 // Since we have reached a new row of data,
                 // add an empty row to our data array.
                 result.push(row = []);
+            }
+
+            // we need to account for the first value being empty
+            if (!arrMatches.index && arrMatches[0].charAt(0) === delimiter) {
+                row.push('');
             }
 
             // Now that we have our delimiter out of the way,
@@ -160,8 +168,9 @@ Ext.define('Ext.util.DelimitedValue', {
             if (arrMatches[2]) {
                 // We found a quoted value. When we capture
                 // this value, unescape any double quotes.
-                strMatchedValue = arrMatches[2].replace(dblQuoteRE, '"');
-            } else {
+                strMatchedValue = arrMatches[2].replace(dblQuoteRE, quote);
+            }
+            else {
                 // We found a non-quoted value.
                 strMatchedValue = arrMatches[3];
             }
@@ -172,6 +181,7 @@ Ext.define('Ext.util.DelimitedValue', {
         return result;
     },
 
+    /* eslint-disable max-len */
     /**
      * Converts a two-dimensional array into an encoded string.
      *
@@ -191,14 +201,18 @@ Ext.define('Ext.util.DelimitedValue', {
      * @param {String} [delimiter] The column delimiter to use if the default value
      * of {@link #cfg-delimiter delimiter} is not desired.
      *
+     * @param {String} [quoteChar] The character used to quote fields. Defaults to
+     * double quote ("). Pass `null` to suppress field quoting.
+     *
      * @return {String} A string in which data items are separated by {@link #delimiter}
      * characters, and rows are separated by {@link #lineBreak} characters.
      */
-    encode: function (input, delimiter) {
+    encode: function(input, delimiter, quoteChar) {
+        /* eslint-enable max-len */
         var me = this,
             delim = delimiter || me.delimiter,
             dateFormat = me.dateFormat,
-            quote = me.quote,
+            quote = quoteChar !== undefined ? quoteChar : me.quote,
             twoQuotes = quote + quote,
             rowIndex = input.length,
             lineBreakRe = me.lineBreakRe,
@@ -215,16 +229,19 @@ Ext.define('Ext.util.DelimitedValue', {
 
                 if (col == null) { // == null || === undefined
                     col = '';
-                } else if (typeof col === 'string') {
-                    if (col) {
+                }
+                else if (typeof col === 'string') {
+                    if (col && quote !== null) {
                         // If the value contains quotes, double them up, and wrap with quotes
                         if (col.indexOf(quote) > -1) {
                             col = quote + col.split(quote).join(twoQuotes) + quote;
-                        } else if (col.indexOf(delim) > -1 || lineBreakRe.test(col)) {
+                        }
+                        else if (col.indexOf(delim) > -1 || lineBreakRe.test(col)) {
                             col = quote + col + quote;
                         }
                     }
-                } else if (Ext.isDate(col)) {
+                }
+                else if (Ext.isDate(col)) {
                     col = Ext.Date.format(col, dateFormat);
                 }
                 //<debug>

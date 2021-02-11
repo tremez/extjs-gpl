@@ -5,6 +5,6 @@ Ext.define('KitchenSink.model.User', {
     hasMany: 'Order',
     proxy: {
         type: 'ajax',
-        url : 'data/userData.json'
+        url: 'data/userData.json'
     }
 });

@@ -1,5 +1,4 @@
-describe("Ext.ProgressBarWidget", function() {
-
+topSuite("Ext.ProgressBarWidget", function() {
     var c;
 
     function makeProgress(config) {
@@ -29,6 +28,5 @@ describe("Ext.ProgressBarWidget", function() {
             c.setValue(null);
             expect(c.getValue()).toBe(0);
         });
-    }); 
-
+    });
 });

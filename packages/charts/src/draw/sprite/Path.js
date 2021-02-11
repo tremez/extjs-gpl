@@ -18,7 +18,8 @@
  *     });
  * 
  * ### Drawing with SVG Paths
- * You may use special SVG Path syntax to "describe" the drawing path.  Here are the SVG path commands:
+ * You may use special SVG Path syntax to "describe" the drawing path.
+ * Here are the SVG path commands:
  * 
  * + M = moveto
  * + L = lineto
@@ -53,10 +54,11 @@ Ext.define('Ext.draw.sprite.Path', {
                 /**
                  * @cfg {String} path The SVG based path string used by the sprite.
                  */
-                path: function (n, o) {
+                path: function(n, o) {
                     if (!(n instanceof Ext.draw.Path)) {
                         n = new Ext.draw.Path(n);
                     }
+
                     return n;
                 }
             },
@@ -67,13 +69,15 @@ Ext.define('Ext.draw.sprite.Path', {
                 path: 'bbox'
             },
             updaters: {
-                path: function (attr) {
+                path: function(attr) {
                     var path = attr.path;
+
                     if (!path || path.bindAttr !== attr) {
                         path = new Ext.draw.Path();
                         path.bindAttr = attr;
                         attr.path = path;
                     }
+
                     path.clear();
                     this.updatePath(path, attr);
                     this.scheduleUpdater(attr, 'bbox', ['path']);
@@ -82,40 +86,48 @@ Ext.define('Ext.draw.sprite.Path', {
         }
     },
 
-    updatePlainBBox: function (plain) {
+    updatePlainBBox: function(plain) {
         if (this.attr.path) {
             this.attr.path.getDimension(plain);
         }
     },
 
-    updateTransformedBBox: function (transform) {
+    updateTransformedBBox: function(transform) {
         if (this.attr.path) {
             this.attr.path.getDimensionWithTransform(this.attr.matrix, transform);
         }
     },
 
-    render: function (surface, ctx) {
+    render: function(surface, ctx) {
         var mat = this.attr.matrix,
             attr = this.attr;
 
         if (!attr.path || attr.path.params.length === 0) {
             return;
         }
+
         mat.toContext(ctx);
         ctx.appendPath(attr.path);
         ctx.fillStroke(attr);
 
         //<debug>
+        // eslint-disable-next-line vars-on-top
         var debug = attr.debug || this.statics().debug || Ext.draw.sprite.Sprite.debug;
+
         if (debug) {
-            debug.bbox && this.renderBBox(surface, ctx);
-            debug.xray && this.renderXRay(surface, ctx);
+            if (debug.bbox) {
+                this.renderBBox(surface, ctx);
+            }
+
+            if (debug.xray) {
+                this.renderXRay(surface, ctx);
+            }
         }
         //</debug>
     },
 
     //<debug>
-    renderXRay: function (surface, ctx) {
+    renderXRay: function(surface, ctx) {
         var attr = this.attr,
             mat = attr.matrix,
             imat = attr.inverseMatrix,
@@ -129,6 +141,7 @@ Ext.define('Ext.draw.sprite.Path', {
 
         mat.toContext(ctx);
         ctx.beginPath();
+
         for (i = 0, j = 0; i < ln; i++) {
             switch (commands[i]) {
                 case 'M':
@@ -136,11 +149,13 @@ Ext.define('Ext.draw.sprite.Path', {
                     ctx.rect(params[j] - size, params[j + 1] - size, size * 2, size * 2);
                     j += 2;
                     break;
+
                 case 'L':
                     ctx.moveTo(params[j] - size, params[j + 1] - size);
                     ctx.rect(params[j] - size, params[j + 1] - size, size * 2, size * 2);
                     j += 2;
                     break;
+
                 case 'C':
                     ctx.moveTo(params[j] + size, params[j + 1]);
                     ctx.arc(params[j], params[j + 1], size, 0, twoPi, true);
@@ -155,6 +170,7 @@ Ext.define('Ext.draw.sprite.Path', {
                 default:
             }
         }
+
         imat.toContext(ctx);
         ctx.strokeStyle = 'black';
         ctx.strokeOpacity = 1;
@@ -163,16 +179,19 @@ Ext.define('Ext.draw.sprite.Path', {
 
         mat.toContext(ctx);
         ctx.beginPath();
+
         for (i = 0, j = 0; i < ln; i++) {
             switch (commands[i]) {
                 case 'M':
                     ctx.moveTo(params[j], params[j + 1]);
                     j += 2;
                     break;
+
                 case 'L':
                     ctx.moveTo(params[j], params[j + 1]);
                     j += 2;
                     break;
+
                 case 'C':
                     ctx.lineTo(params[j], params[j + 1]);
                     j += 2;
@@ -184,6 +203,7 @@ Ext.define('Ext.draw.sprite.Path', {
                 default:
             }
         }
+
         imat.toContext(ctx);
         ctx.lineWidth = 0.5;
         ctx.stroke();
@@ -196,5 +216,5 @@ Ext.define('Ext.draw.sprite.Path', {
      * @param {Object} attr The attribute object. Note: DO NOT use the `sprite.attr` instead of this
      * if you want to work with instancing.
      */
-    updatePath: function (path, attr) {}
+    updatePath: function(path, attr) {}
 });

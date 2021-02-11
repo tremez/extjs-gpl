@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /**
  * A helper class for the native JavaScript Error object that adds a few useful capabilities for handling
  * errors in an application. When you use Ext.Error to {@link #raise} an error from within any class that
@@ -68,6 +69,8 @@
  *
  * @class Ext.Error
  */
+/* eslint-enable max-len */
+/* eslint-disable indent */
 (function() {
 // @define Ext.lang.Error
 // @define Ext.Error
@@ -83,7 +86,8 @@
             if (msg) {
                 method += '(): ';
                 method += msg;
-            } else {
+            }
+            else {
                 method += '()';
             }
         }
@@ -91,16 +95,16 @@
         if (cls) {
             method = method ? (cls + '.' + method) : cls;
         }
-        
+
         return method || msg || '';
     }
 
     Ext.Error = function(config) {
+        var error = new Error();
+
         if (Ext.isString(config)) {
             config = { msg: config };
         }
-
-        var error = new Error();
 
         Ext.apply(error, config);
 
@@ -115,10 +119,11 @@
     Ext.apply(Ext.Error, {
         /**
          * @property {Boolean} ignore
-         * Static flag that can be used to globally disable error reporting to the browser if set to true
-         * (defaults to false). Note that if you ignore Ext errors it's likely that some other code may fail
-         * and throw a native JavaScript error thereafter, so use with caution. In most cases it will probably
-         * be preferable to supply a custom error {@link #handle handling} function instead.
+         * Static flag that can be used to globally disable error reporting to the browser if set
+         * to true (defaults to false). Note that if you ignore Ext errors it's likely that some
+         * other code may fail and throw a native JavaScript error thereafter, so use with caution.
+         * In most cases it will probably be preferable to supply a custom error
+         * {@link #handle handling} function instead.
          *
          * Example usage:
          *
@@ -136,22 +141,25 @@
          * @deprecated 6.0.0 Use {@link Ext#raise} instead.
          */
         raise: function(err) {
-            err = err || {};
-            if (Ext.isString(err)) {
-                err = { msg: err };
-            }
-
             var me = this,
                 method = me.raise.caller,
                 msg, name;
 
+            err = err || {};
+
+            if (Ext.isString(err)) {
+                err = { msg: err };
+            }
+
             if (method === Ext.raise) {
                 method = method.caller;
             }
+
             if (method) {
                 if (!err.sourceMethod && (name = method.$name)) {
                     err.sourceMethod = name;
                 }
+
                 if (!err.sourceClass && (name = method.$owner) && (name = name.$className)) {
                     err.sourceClass = name;
                 }
@@ -174,9 +182,10 @@
         },
 
         /**
-         * Globally handle any Ext errors that may be raised, optionally providing custom logic to
-         * handle different errors individually. Return true from the function to bypass throwing the
-         * error to the browser, otherwise the error will be thrown and execution will halt.
+         * Globally handle any Ext errors that may be raised, optionally providing custom logic
+         * to handle different errors individually. Return true from the function to bypass 
+         * throwing the error to the browser, otherwise the error will be thrown and execution
+         * will halt.
          *
          * Example usage:
          *
@@ -188,12 +197,12 @@
          *         // any non-true return value (including none) will cause the error to be thrown
          *     }
          *
-         * @param {Object} err The error being raised. It will contain any attributes that were originally
-         * raised with it, plus properties about the method and class from which the error originated
-         * (if raised from a class that uses the Class System).
+         * @param {Object} err The error being raised. It will contain any attributes that were
+         * originally raised with it, plus properties about the method and class from which
+         * the error originated (if raised from a class that uses the Class System).
          * @static
          */
-        handle: function () {
+        handle: function() {
             return this.ignore;
         }
     });
@@ -206,20 +215,21 @@
  * @return {Function} The generated function.
  * @private
  */
-Ext.deprecated = function (suggestion) {
+Ext.deprecated = function(suggestion) {
     //<debug>
     if (!suggestion) {
         suggestion = '';
     }
 
-    function fail () {
+    function fail() {
         Ext.raise('The method "' + fail.$owner.$className + '.' + fail.$name +
                   '" has been removed. ' + suggestion);
     }
 
     return fail;
     //</debug>
-    return Ext.emptyFn;
+
+    return Ext.emptyFn; // eslint-disable-line no-unreachable
 };
 
 /**
@@ -255,7 +265,7 @@ Ext.deprecated = function (suggestion) {
  * @method raise
  * @member Ext
  */
-Ext.raise = function () {
+Ext.raise = function() {
     Ext.Error.raise.apply(Ext.Error, arguments);
 };
 
@@ -265,11 +275,12 @@ Ext.raise = function () {
  * to the status bar so that users don't miss it.
  */
 //<debug>
-(function () {
-    if (typeof window === 'undefined') {
+(function(skipNotify) {
+    if (skipNotify || typeof window === 'undefined') {
         return; // build system or some such environment...
     }
 
+    // eslint-disable-next-line vars-on-top
     var last = 0,
         // This method is called to notify the user of the current error status.
         notify = function() {
@@ -280,25 +291,34 @@ Ext.raise = function () {
             // Put log counters to the status bar (for most browsers):
             if (n && last !== n) {
                 msg = [];
+
                 if (cnt.error) {
                     msg.push('Errors: ' + cnt.error);
                 }
+
                 if (cnt.warn) {
                     msg.push('Warnings: ' + cnt.warn);
                 }
+
                 if (cnt.info) {
                     msg.push('Info: ' + cnt.info);
                 }
+
                 if (cnt.log) {
                     msg.push('Log: ' + cnt.log);
                 }
+
                 window.status = '*** ' + msg.join(' -- ');
                 last = n;
             }
         };
 
+    // Allow unit tests to skip this when checking for dangling timers
+    notify.$skipTimerCheck = true;
+
     // window.onerror sounds ideal but it prevents the built-in error dialog from doing
-    // its (better) thing.
+    // its (better) thing. We deliberately use setInterval() here instead of going with
+    // Ext.interval() to keep it basic and simple.
     setInterval(notify, 1000);
-}());
+}(!!window.__UNIT_TESTING__));
 //</debug>

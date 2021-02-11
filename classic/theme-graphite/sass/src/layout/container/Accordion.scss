@@ -1,0 +1,3 @@
+.#{$prefix}keyboard-mode .#{$prefix}accordion-hd-over .#{$prefix}panel-header-title.#{$prefix}title-focus {
+    outline: $accordion-header-focus-over-outline-width $accordion-header-focus-over-outline-style $accordion-header-focus-over-outline-color;
+}

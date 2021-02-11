@@ -1,8 +1,8 @@
 /**
  * @private
- * Base class for Box Layout overflow handlers. These specialized classes are invoked when a Box Layout
- * (either an HBox or a VBox) has child items that are either too wide (for HBox) or too tall (for VBox)
- * for its container.
+ * Base class for Box Layout overflow handlers. These specialized classes are invoked
+ * when a Box Layout (either an HBox or a VBox) has child items that are either too wide
+ * (for HBox) or too tall (for VBox) for its container.
  */
 Ext.define('Ext.layout.container.boxOverflow.None', {
     alternateClassName: 'Ext.layout.boxOverflow.None',
@@ -23,7 +23,7 @@ Ext.define('Ext.layout.container.boxOverflow.None', {
 
     $configPrefixed: false,
     $configStrict: false,
-    
+
     constructor: function(config) {
         this.initConfig(config);
     },
@@ -51,22 +51,23 @@ Ext.define('Ext.layout.container.boxOverflow.None', {
                 // TODO: If we need to use the code below then we will need to pass along
                 // the new targetSize as state and use it calculate somehow...
                 //
-                //if (overflow.recalculate) {
+                // if (overflow.recalculate) {
                 //    ownerContext.invalidate({
                 //        state: {
                 //            overflow: overflow
                 //        }
                 //    });
-                //}
+                // }
             }
-        } else {
+        }
+        else {
             me.clearOverflow();
         }
     },
 
     completeLayout: Ext.emptyFn,
 
-    finishedLayout: function (ownerContext) {
+    finishedLayout: function(ownerContext) {
         var me = this,
             owner = me.layout.owner,
             hiddens,
@@ -76,6 +77,7 @@ Ext.define('Ext.layout.container.boxOverflow.None', {
         if (owner.hasListeners.overflowchange) {
             hiddens = owner.query('>[hidden]');
             hiddenCount = hiddens.length;
+
             if (hiddenCount !== me.lastHiddenCount) {
                 owner.fireEvent('overflowchange', me.lastHiddenCount, hiddenCount, hiddens);
                 me.lastHiddenCount = hiddenCount;
@@ -95,20 +97,25 @@ Ext.define('Ext.layout.container.boxOverflow.None', {
         return this.layout.owner.getComponent(item);
     },
 
-    getOwnerType: function(owner){
+    getOwnerType: function(owner) {
         var type;
+
         if (owner.isToolbar) {
             type = 'toolbar';
-        } else if (owner.isTabBar) {
+        }
+        else if (owner.isTabBar) {
             type = 'tab-bar';
-        } else if (owner.isMenu) {
+        }
+        else if (owner.isMenu) {
             type = 'menu';
-        } else if (owner.isBreadcrumb) {
+        }
+        else if (owner.isBreadcrumb) {
             type = 'breadcrumb';
-        } else {
+        }
+        else {
             type = owner.getXType();
         }
-        
+
         return type;
     },
 

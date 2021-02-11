@@ -4,6 +4,8 @@
  * A collection of useful static methods to deal with function callbacks.
  * @singleton
  */
+
+/* eslint-disable indent */
 Ext.Function = (function() {
 // @define Ext.lang.Function
 // @define Ext.Function
@@ -15,18 +17,30 @@ Ext.Function = (function() {
         animFrameNoArgs = [],
         idSource = 0,
         animFrameMap = {},
+        slice = Array.prototype.slice,
         win = window,
         global = Ext.global,
-        hasImmediate = !!(global.setImmediate && global.clearImmediate),
+        // We disable setImmediate in unit tests because it derails internal Jasmine queue
+        hasImmediate = !Ext.disableImmediate && !!(global.setImmediate && global.clearImmediate),
         requestAnimFrame = win.requestAnimationFrame || win.webkitRequestAnimationFrame ||
             win.mozRequestAnimationFrame || win.oRequestAnimationFrame ||
             function(callback) {
                 var currTime = Ext.now(),
                     timeToCall = Math.max(0, 16 - (currTime - lastTime)),
-                    id = win.setTimeout(function() {
+                    timerFn = function() {
                         callback(currTime + timeToCall);
-                    }, timeToCall);
+                    },
+                    id;
+
+                //<debug>
+                timerFn.$origFn = callback.$origFn || callback;
+                timerFn.$skipTimerCheck = timerFn.$origFn.$skipTimerCheck;
+                //</debug>
+
+                id = win.setTimeout(timerFn, timeToCall);
+
                 lastTime = currTime + timeToCall;
+
                 return id;
             },
         fireHandlers = function() {
@@ -34,15 +48,35 @@ Ext.Function = (function() {
                 id, i, handler;
 
             animFrameId = null;
+
+            //<debug>
+            var timer; // eslint-disable-line vars-on-top
+            //</debug>
+
             // Fire all animation frame handlers in one go
             for (i = 0; i < len; i++) {
                 handler = animFrameHandlers[i];
                 id = handler[3];
-                
+
                 // Check if this timer has been canceled; its map entry is going to be removed
                 if (animFrameMap[id]) {
-                    handler[0].apply(handler[1] || global, handler[2] || animFrameNoArgs);
                     delete animFrameMap[id];
+
+                    //<debug>
+                    timer = Ext.Timer.get(id, 'raf');
+
+                    if (timer) {
+                        timer.tick();
+                    }
+                    //</debug>
+
+                    handler[0].apply(handler[1] || global, handler[2] || animFrameNoArgs);
+
+                    //<debug>
+                    if (timer) {
+                        timer.tock();
+                    }
+                    //</debug>
                 }
             }
 
@@ -51,13 +85,13 @@ Ext.Function = (function() {
             animFrameHandlers = animFrameHandlers.slice(len);
         },
         fireElevatedHandlers = function() {
-            Ext.elevateFunction(fireHandlers);
+            Ext.elevate(fireHandlers);
         },
 
     ExtFunction = {
         /**
-         * A very commonly used method throughout the framework. It acts as a wrapper around another method
-         * which originally accepts 2 arguments for `name` and `value`.
+         * A very commonly used method throughout the framework. It acts as a wrapper around
+         * another method which originally accepts 2 arguments for `name` and `value`.
          * The wrapped function then allows "flexible" value setting of either:
          *
          * - `name` and `value` as 2 arguments
@@ -100,12 +134,14 @@ Ext.Function = (function() {
                         if (Ext.enumerables) {
                             for (i = Ext.enumerables.length; i--;) {
                                 k = Ext.enumerables[i];
+
                                 if (name.hasOwnProperty(k)) {
                                     setter.call(this, k, name[k]);
                                 }
                             }
                         }
-                    } else {
+                    }
+                    else {
                         setter.call(this, name, value);
                     }
                 }
@@ -121,36 +157,43 @@ Ext.Function = (function() {
          *
          * {@link Ext#bind Ext.bind} is alias for {@link Ext.Function#bind Ext.Function.bind}
          * 
-         * **NOTE:** This method is deprecated. Use the standard `bind` method of JavaScript
-         * `Function` instead:
+         * **NOTE:** This method is similar to the native `bind()` method. The major difference
+         * is in the way the parameters are passed. This method expects an array of parameters,
+         * and if supplied, it does not automatically pass forward parameters from the bound
+         * function:
          * 
-         *      function foo () {
-         *          ...
+         *      function foo (a, b, c) {
+         *          console.log(a, b, c);
          *      }
          *      
-         *      var fn = foo.bind(this);
+         *      var nativeFn = foo.bind(this, 1, 2);
+         *      var extFn = Ext.Function.bind(foo, this, [1, 2]);
+         *
+         *      nativeFn(3); // 1, 2, 3
+         *      extFn(3); // 1, 2, undefined
          *
          * This method is unavailable natively on IE8 and IE/Quirks but Ext JS provides a
          * "polyfill" to emulate the important features of the standard `bind` method. In
          * particular, the polyfill only provides binding of "this" and optional arguments.
          * 
          * @param {Function} fn The function to delegate.
-         * @param {Object} scope (optional) The scope (`this` reference) in which the function is executed.
-         * **If omitted, defaults to the default global environment object (usually the browser window).**
-         * @param {Array} args (optional) Overrides arguments for the call. (Defaults to the arguments passed by the caller)
-         * @param {Boolean/Number} appendArgs (optional) if True args are appended to call args instead of overriding,
-         * if a number the args are inserted at the specified position.
-         * @return {Function} The new function.
+         * @param {Object} [scope] The scope (`this` reference) in which the function
+         * is executed.
+         * **If omitted, defaults to the global environment object (usually the browser `window`).**
+         * @param {Array} [args] Overrides arguments for the call. (Defaults to
+         * the arguments passed by the caller).
+         * @param {Boolean/Number} [appendArgs] if `true` the `args` are appended to the
+         * arguments passed to the returned wrapper (by default these arguments are ignored).
+         * If a number then the `args` are inserted at the specified position.
+         * @return {Function} The bound wrapper function.
          */
         bind: function(fn, scope, args, appendArgs) {
-            if (arguments.length === 2) {
-                return function() {
-                    return fn.apply(scope, arguments);
-                };
+            // Function.prototype.bind is polyfilled in IE8, otherwise native
+            if (arguments.length <= 2) {
+                return fn.bind(scope);
             }
 
-            var method = fn,
-                slice = Array.prototype.slice;
+            var method = fn; // eslint-disable-line vars-on-top
 
             return function() {
                 var callArgs = args || arguments;
@@ -180,16 +223,18 @@ Ext.Function = (function() {
          * captured `callback`.
          * @since 5.0.0
          */
-        bindCallback: function (callback, scope, args, delay, caller) {
-            return function () {
-                var a = Ext.Array.slice(arguments);
+        bindCallback: function(callback, scope, args, delay, caller) {
+            return function() {
+                var a = slice.call(arguments);
+
                 return Ext.callback(callback, scope, args ? args.concat(a) : a, delay, caller);
             };
         },
 
         /**
-         * Create a new function from the provided `fn`, the arguments of which are pre-set to `args`.
-         * New arguments passed to the newly created callback when it's invoked are appended after the pre-set ones.
+         * Create a new function from the provided `fn`, the arguments of which are pre-set
+         * to `args`. New arguments passed to the newly created callback when it's invoked
+         * are appended after the pre-set ones.
          * This is especially useful when creating callbacks.
          *
          * For example:
@@ -207,21 +252,25 @@ Ext.Function = (function() {
          *
          * @param {Function} fn The original function.
          * @param {Array} args The arguments to pass to new callback.
-         * @param {Object} scope (optional) The scope (`this` reference) in which the function is executed.
+         * @param {Object} scope (optional) The scope (`this` reference) in which the function
+         * is executed.
          * @return {Function} The new callback function.
          */
         pass: function(fn, args, scope) {
             if (!Ext.isArray(args)) {
                 if (Ext.isIterable(args)) {
                     args = Ext.Array.clone(args);
-                } else {
+                }
+                else {
                     args = args !== undefined ? [args] : [];
                 }
             }
 
             return function() {
                 var fnArgs = args.slice();
+
                 fnArgs.push.apply(fnArgs, arguments);
+
                 return fn.apply(scope || this, fnArgs);
             };
         },
@@ -248,15 +297,26 @@ Ext.Function = (function() {
          * @return {Function} cloneFn
          */
         clone: function(method) {
-            return function() {
+            var newMethod, prop;
+
+            newMethod = function() {
                 return method.apply(this, arguments);
             };
+
+            for (prop in method) {
+                if (method.hasOwnProperty(prop)) {
+                    newMethod[prop] = method[prop];
+                }
+            }
+
+            return newMethod;
         },
 
         /**
-         * Creates an interceptor function. The passed function is called before the original one. If it returns false,
-         * the original one is not called. The resulting function returns the results of the original function.
-         * The passed function is called with the parameters of the original function. Example usage:
+         * Creates an interceptor function. The passed function is called before the original one.
+         * If it returns false, the original one is not called. The resulting function returns
+         * the results of the original function. The passed function is called with the parameters
+         * of the original function. Example usage:
          *
          *     var sayHi = function(name){
          *         alert('Hi, ' + name);
@@ -275,23 +335,27 @@ Ext.Function = (function() {
          *
          * @param {Function} origFn The original function.
          * @param {Function} newFn The function to call before the original.
-         * @param {Object} [scope] The scope (`this` reference) in which the passed function is executed.
-         * **If omitted, defaults to the scope in which the original function is called or the browser window.**
-         * @param {Object} [returnValue=null] The value to return if the passed function return `false`.
+         * @param {Object} [scope] The scope (`this` reference) in which the passed function
+         * is executed. **If omitted, defaults to the scope in which the original function
+         * is called or the browser window.**
+         * @param {Object} [returnValue=null] The value to return if the passed function return
+         * `false`.
          * @return {Function} The new function.
          */
         createInterceptor: function(origFn, newFn, scope, returnValue) {
             if (!Ext.isFunction(newFn)) {
                 return origFn;
-            } else {
+            }
+            else {
                 returnValue = Ext.isDefined(returnValue) ? returnValue : null;
-                
+
                 return function() {
                     var me = this,
                         args = arguments;
 
-                    return (newFn.apply(scope || me || global, args) !== false) ?
-                                origFn.apply(me || global, args) : returnValue;
+                    return (newFn.apply(scope || me || global, args) !== false)
+                        ? origFn.apply(me || global, args)
+                        : returnValue;
                 };
             }
         },
@@ -299,38 +363,65 @@ Ext.Function = (function() {
         /**
          * Creates a delegate (callback) which, when called, executes after a specific delay.
          *
-         * @param {Function} fn The function which will be called on a delay when the returned function is called.
-         * Optionally, a replacement (or additional) argument list may be specified.
+         * @param {Function} fn The function which will be called on a delay when the returned
+         * function is called. Optionally, a replacement (or additional) argument list
+         * may be specified.
          * @param {Number} delay The number of milliseconds to defer execution by whenever called.
-         * @param {Object} scope (optional) The scope (`this` reference) used by the function at execution time.
-         * @param {Array} args (optional) Override arguments for the call. (Defaults to the arguments passed by the caller)
-         * @param {Boolean/Number} appendArgs (optional) if True args are appended to call args instead of overriding,
-         * if a number the args are inserted at the specified position.
-         * @return {Function} A function which, when called, executes the original function after the specified delay.
+         * @param {Object} scope (optional) The scope (`this` reference) used by the function
+         * at execution time.
+         * @param {Array} args (optional) Override arguments for the call.
+         * (Defaults to the arguments passed by the caller)
+         * @param {Boolean/Number} appendArgs (optional) if True args are appended to call args
+         * instead of overriding, if a number the args are inserted at the specified position.
+         * @return {Function} A function which, when called, executes the original function
+         * after the specified delay.
          */
         createDelayed: function(fn, delay, scope, args, appendArgs) {
+            var boundFn = fn;
+
             if (scope || args) {
-                fn = Ext.Function.bind(fn, scope, args, appendArgs);
+                boundFn = Ext.Function.bind(fn, scope, args, appendArgs);
             }
 
             return function() {
                 var me = this,
-                    args = Array.prototype.slice.call(arguments);
+                    args = slice.call(arguments),
+                    timerFn, timerId;
 
-                setTimeout(function() {
-                    if (Ext.elevateFunction) {
-                        Ext.elevateFunction(fn, me, args);
-                    } else {
-                        fn.apply(me, args);
-                    }
-                }, delay);
+                //<debug>
+                var timer; // eslint-disable-line vars-on-top, one-var
+                //</debug>
+
+                timerFn = function() {
+                    Ext.elevate(boundFn, me, args
+                                //<debug>
+                                , timer // eslint-disable-line comma-style
+                                //</debug>
+                    );
+                };
+
+                timerId = setTimeout(timerFn, delay);
+
+                //<debug>
+                timerFn.$origFn = fn.$origFn || fn;
+                timerFn.$skipTimerCheck = timerFn.$origFn.$skipTimerCheck;
+
+                timer = Ext.Timer.created('timeout', timerId, {
+                    type: 'createDelayed',
+                    fn: fn,
+                    timerFn: timerFn
+                });
+                //</debug>
             };
         },
 
         /**
-         * Calls this function after the number of milliseconds specified, optionally in a specific scope. Example usage:
+         * Calls function `fn` after the number of milliseconds specified, optionally with
+         * a specific `scope` (`this` pointer).
          *
-         *     var sayHi = function(name){
+         * Example usage:
+         *
+         *     var sayHi = function(name) {
          *         alert('Hi, ' + name);
          *     }
          *
@@ -338,70 +429,138 @@ Ext.Function = (function() {
          *     sayHi('Fred');
          *
          *     // executes after 2 seconds:
-         *     Ext.Function.defer(sayHi, 2000, this, ['Fred']);
+         *     Ext.defer(sayHi, 2000, this, ['Fred']);
          *
-         *     // this syntax is sometimes useful for deferring
-         *     // execution of an anonymous function:
-         *     Ext.Function.defer(function(){
+         * The following syntax is useful for scheduling anonymous functions:
+         *
+         *     Ext.defer(function() {
          *         alert('Anonymous');
          *     }, 100);
          *
-         * {@link Ext#defer Ext.defer} is alias for {@link Ext.Function#defer Ext.Function.defer}
+         * NOTE: The `Ext.Function.defer()` method is an alias for `Ext.defer()`.
          *
          * @param {Function} fn The function to defer.
          * @param {Number} millis The number of milliseconds for the `setTimeout` call
          * (if less than or equal to 0 the function is executed immediately).
-         * @param {Object} scope (optional) The scope (`this` reference) in which the function is executed.
-         * **If omitted, defaults to the browser window.**
-         * @param {Array} [args] Overrides arguments for the call. Defaults to the arguments passed by the caller.
-         * @param {Boolean/Number} [appendArgs=false] If `true` args are appended to call args instead of overriding,
-         * or, if a number, then the args are inserted at the specified position.
-         * @return {Number} The timeout id that can be used with `clearTimeout`.
+         * @param {Object} scope (optional) The scope (`this` reference) in which the function
+         * is executed. **If omitted, defaults to the browser window.**
+         * @param {Array} [args] Overrides arguments for the call. Defaults to the arguments passed
+         * by the caller.
+         * @param {Boolean/Number} [appendArgs=false] If `true` args are appended to call args
+         * instead of overriding, or, if a number, then the args are inserted at the specified
+         * position.
+         * @return {Number} The timeout id that can be used with `Ext.undefer`.
          */
         defer: function(fn, millis, scope, args, appendArgs) {
-            fn = Ext.Function.bind(fn, scope, args, appendArgs);
-            if (millis > 0) {
-                return setTimeout(function () {
-                    if (Ext.elevateFunction) {
-                        Ext.elevateFunction(fn);
-                    } else {
-                        fn();
-                    }
-                }, millis);
+            var timerId = 0,
+                timerFn, boundFn;
+
+            //<debug>
+            var timer; // eslint-disable-line vars-on-top, one-var
+            //</debug>
+
+            if (!scope && !args && !appendArgs) {
+                boundFn = fn;
             }
-            fn();
-            return 0;
+            else {
+                boundFn = Ext.Function.bind(fn, scope, args, appendArgs);
+            }
+
+            if (millis > 0) {
+                timerFn = function() {
+                    Ext.elevate(boundFn
+                                //<debug>
+                                , null, null, timer // eslint-disable-line comma-style
+                                //</debug>
+                    );
+                };
+
+                timerId = setTimeout(timerFn, millis);
+
+                //<debug>
+                timerFn.$origFn = fn.$origFn || fn;
+                timerFn.$skipTimerCheck = timerFn.$origFn.$skipTimerCheck;
+
+                timer = Ext.Timer.created('timeout', timerId, {
+                    type: 'defer',
+                    fn: fn,
+                    timerFn: timerFn
+                });
+                //</debug>
+            }
+            else {
+                boundFn();
+            }
+
+            return timerId;
         },
 
         /**
-         * Calls this function repeatedly at a given interval, optionally in a specific scope.
+         * Calls the function `fn` repeatedly at a given interval, optionally with a
+         * specific `scope` (`this` pointer).
          *
-         * {@link Ext#defer Ext.defer} is alias for {@link Ext.Function#defer Ext.Function.defer}
+         *     var sayHi = function(name) {
+         *         console.log('Hi, ' + name);
+         *     }
+         *
+         *     // executes every 2 seconds:
+         *     var timerId = Ext.interval(sayHi, 2000, this, ['Fred']);
+         *
+         * The timer is stopped by:
+         *
+         *     Ext.uninterval(timerId);
+         *
+         * NOTE: The `Ext.Function.interval()` method is an alias for `Ext.interval()`.
          *
          * @param {Function} fn The function to defer.
          * @param {Number} millis The number of milliseconds for the `setInterval` call
-         * @param {Object} scope (optional) The scope (`this` reference) in which the function is executed.
-         * **If omitted, defaults to the browser window.**
-         * @param {Array} [args] Overrides arguments for the call. Defaults to the arguments passed by the caller.
-         * @param {Boolean/Number} [appendArgs=false] If `true` args are appended to call args instead of overriding,
-         * or, if a number, then the args are inserted at the specified position.
-         * @return {Number} The interval id that can be used with `clearInterval`.
+         * @param {Object} scope (optional) The scope (`this` reference) in which the function
+         * is executed. **If omitted, defaults to the browser window.**
+         * @param {Array} [args] Overrides arguments for the call. Defaults to the arguments
+         * passed by the caller.
+         * @param {Boolean/Number} [appendArgs=false] If `true` args are appended to call args
+         * instead of overriding, or, if a number, then the args are inserted at the specified
+         * position.
+         * @return {Number} The interval id that can be used with `Ext.uninterval`.
          */
         interval: function(fn, millis, scope, args, appendArgs) {
-            fn = Ext.Function.bind(fn, scope, args, appendArgs);
-            return setInterval(function () {
-                if (Ext.elevateFunction) {
-                    Ext.elevateFunction(fn);
-                } else {
-                    fn();
-                }
-            }, millis);
+            var timerFn, timerId, boundFn;
+
+            //<debug>
+            var timer; // eslint-disable-line vars-on-top, one-var
+            //</debug>
+
+            boundFn = Ext.Function.bind(fn, scope, args, appendArgs);
+
+            timerFn = function() {
+                Ext.elevate(boundFn
+                            //<debug>
+                            , null, null, timer // eslint-disable-line comma-style
+                            //</debug>
+                );
+            };
+
+            timerId = setInterval(timerFn, millis);
+
+            //<debug>
+            timerFn.$origFn = boundFn.$origFn || fn;
+            timerFn.$skipTimerCheck = timerFn.$origFn.$skipTimerCheck;
+
+            timer = Ext.Timer.created('interval', timerId, {
+                type: 'interval',
+                fn: fn,
+                timerFn: timerFn
+            });
+            //</debug>
+
+            return timerId;
         },
 
         /**
          * Create a combined function call sequence of the original function + the passed function.
          * The resulting function returns the results of the original function.
-         * The passed function is called with the parameters of the original function. Example usage:
+         * The passed function is called with the parameters of the original function.
+         * Example usage:
          *
          *     var sayHi = function(name){
          *         alert('Hi, ' + name);
@@ -417,9 +576,9 @@ Ext.Function = (function() {
          *
          * @param {Function} originalFn The original function.
          * @param {Function} newFn The function to sequence.
-         * @param {Object} [scope] The scope (`this` reference) in which the passed function is executed.
-         * If omitted, defaults to the scope in which the original function is called or the
-         * default global environment object (usually the browser window).
+         * @param {Object} [scope] The scope (`this` reference) in which the passed function
+         * is executed. If omitted, defaults to the scope in which the original function is called
+         * or the default global environment object (usually the browser window).
          * @return {Function} The new function.
          */
         createSequence: function(originalFn, newFn, scope) {
@@ -429,7 +588,9 @@ Ext.Function = (function() {
             else {
                 return function() {
                     var result = originalFn.apply(this, arguments);
+
                     newFn.apply(scope || this, arguments);
+
                     return result;
                 };
             }
@@ -442,33 +603,54 @@ Ext.Function = (function() {
          * timeout period will begin again.
          *
          * @param {Function} fn The function to invoke on a buffered timer.
-         * @param {Number} buffer The number of milliseconds by which to buffer the invocation of the
-         * function.
+         * @param {Number} buffer The number of milliseconds by which to buffer the invocation
+         * of the function.
          * @param {Object} [scope] The scope (`this` reference) in which.
-         * the passed function is executed. If omitted, defaults to the scope specified by the caller.
+         * the passed function is executed. If omitted, defaults to the scope specified
+         * by the caller.
          * @param {Array} [args] Override arguments for the call. Defaults to the arguments
          * passed by the caller.
-         * @return {Function} A function which invokes the passed function after buffering for the specified time.
+         * @return {Function} A function which invokes the passed function after buffering
+         * for the specified time.
          */
         createBuffered: function(fn, buffer, scope, args) {
-            var timerId;
+            var timerId,
+                result = function() {
+                    var callArgs = args || slice.call(arguments, 0),
+                        me = scope || this,
+                        timerFn;
 
-            return function() {
-                var callArgs = args || Array.prototype.slice.call(arguments, 0),
-                    me = scope || this;
+                    //<debug>
+                    var timer; // eslint-disable-line vars-on-top, one-var
+                    //</debug>
 
-                if (timerId) {
-                    clearTimeout(timerId);
-                }
-
-                timerId = setTimeout(function(){
-                    if (Ext.elevateFunction) {
-                        Ext.elevateFunction(fn, me, callArgs);
-                    } else {
-                        fn.apply(me, callArgs);
+                    if (timerId) {
+                        Ext.undefer(timerId);
                     }
-                }, buffer);
-            };
+
+                    timerFn = function() {
+                        Ext.elevate(fn, me, callArgs
+                                    //<debug>
+                                    , timer // eslint-disable-line comma-style
+                                    //</debug>
+                        );
+                    };
+
+                    result.timer = timerId = setTimeout(timerFn, buffer);
+
+                    //<debug>
+                    timerFn.$origFn = fn.$origFn || fn;
+                    timerFn.$skipTimerCheck = timerFn.$origFn.$skipTimerCheck;
+
+                    timer = Ext.Timer.created('timeout', timerId, {
+                        type: 'createBuffered',
+                        fn: fn,
+                        timerFn: timerFn
+                    });
+                    //</debug>
+                };
+
+            return result;
         },
 
         /**
@@ -476,7 +658,8 @@ Ext.Function = (function() {
         * animation frame
          * @private
          * @param {Function} fn The function to call.
-         * @param {Object} [scope] The scope (`this` reference) in which the function is executed. Defaults to the window object.
+         * @param {Object} [scope] The scope (`this` reference) in which the function is executed.
+         * Defaults to the window object.
          * @param {Array} [args] The argument list to pass to the function.
          * @param {Number} [queueStrategy=3] A bit flag that indicates how multiple calls to
          * the returned function within the same animation frame should be handled.
@@ -488,12 +671,13 @@ Ext.Function = (function() {
          * @return {Function}
          */
         createAnimationFrame: function(fn, scope, args, queueStrategy) {
-            var timerId;
+            var boundFn, timerId;
 
             queueStrategy = queueStrategy || 3;
 
-            return function() {
-                var callArgs = args || Array.prototype.slice.call(arguments, 0);
+            boundFn = function() {
+                var timerFn,
+                    callArgs = args || slice.call(arguments, 0);
 
                 scope = scope || this;
 
@@ -502,37 +686,55 @@ Ext.Function = (function() {
                 }
 
                 if ((queueStrategy & 1) || !timerId) {
-                    timerId = ExtFunction.requestAnimationFrame(function() {
-                        timerId = null;
+                    timerFn = function() {
+                        timerId = boundFn.timerId = null;
                         fn.apply(scope, callArgs);
-                    });
+                    };
+
+                    //<debug>
+                    timerFn.$origFn = fn.$origFn || fn;
+                    timerFn.$skipTimerCheck = timerFn.$origFn.$skipTimerCheck;
+                    //</debug>
+
+                    timerId = boundFn.timerId = ExtFunction.requestAnimationFrame(timerFn);
                 }
             };
+
+            return boundFn;
         },
 
         /**
          * @private
          * Schedules the passed function to be called on the next animation frame.
          * @param {Function} fn The function to call.
-         * @param {Object} [scope] The scope (`this` reference) in which the function is executed. Defaults to the window object.
+         * @param {Object} [scope] The scope (`this` reference) in which the function is executed.
+         * Defaults to the window object.
          * @param {Mixed[]} [args] The argument list to pass to the function.
          *
          * @return {Number} Timer id for the new animation frame to use when canceling it.
          */
         requestAnimationFrame: function(fn, scope, args) {
             var id = ++idSource,  // Ids start at 1
-                handler = Array.prototype.slice.call(arguments, 0);
+                handler = slice.call(arguments, 0);
 
             handler[3] = id;
             animFrameMap[id] = 1; // A flag to indicate that the timer exists
-            
+
+            //<debug>
+            Ext.Timer.created('raf', id, {
+                type: 'raf',
+                fn: fn
+            });
+            //</debug>
+
             // We might be in fireHandlers at this moment but this new entry will not
             // be executed until the next frame
             animFrameHandlers.push(handler);
 
             if (!animFrameId) {
-                animFrameId = requestAnimFrame(Ext.elevateFunction ? fireElevatedHandlers : fireHandlers);
+                animFrameId = requestAnimFrame(fireElevatedHandlers);
             }
+
             return id;
         },
 
@@ -541,6 +743,10 @@ Ext.Function = (function() {
             // the might be in use at the moment (when cancelAnimationFrame is called).
             // Just remove the handler id from the map so it will not be executed
             delete animFrameMap[id];
+
+            //<debug>
+            Ext.Timer.cancel('raf', id);
+            //</debug>
         },
 
         /**
@@ -552,59 +758,75 @@ Ext.Function = (function() {
          * a handler of a mouse move event when the processing is expensive.
          *
          * @param {Function} fn The function to execute at a regular time interval.
-         * @param {Number} interval The interval in milliseconds on which the passed function is executed.
+         * @param {Number} interval The interval in milliseconds on which the passed function
+         * is executed.
          * @param {Object} [scope] The scope (`this` reference) in which
-         * the passed function is executed. If omitted, defaults to the scope specified by the caller.
-         * @return {Function} A function which invokes the passed function at the specified interval.
+         * the passed function is executed. If omitted, defaults to the scope specified
+         * by the caller.
+         * @return {Function} A function which invokes the passed function at the specified
+         * interval.
          */
         createThrottled: function(fn, interval, scope) {
             var lastCallTime = 0,
                 elapsed,
                 lastArgs,
-                timer,
+                timerId,
                 execute = function() {
-                    if (Ext.elevateFunction) {
-                        Ext.elevateFunction(fn, scope, lastArgs);
-                    } else {
-                        fn.apply(scope, lastArgs);
-                    }
+                    fn.apply(scope, lastArgs);
+
                     lastCallTime = Ext.now();
-                    timer = null;
+                    lastArgs = timerId = null;
                 };
+
+            //<debug>
+            execute.$origFn = fn.$origFn || fn;
+            execute.$skipTimerCheck = execute.$origFn.$skipTimerCheck;
+            //</debug>
 
             return function() {
                 // Use scope of last call unless the creator specified a scope
                 if (!scope) {
                     scope = this;
                 }
-                elapsed = Ext.now() - lastCallTime;
-                lastArgs = arguments;
 
-                // If this is the first invocation, or the throttle interval has been reached, clear any
-                // pending invocation, and call the target function now.
+                elapsed = Ext.now() - lastCallTime;
+                lastArgs = Ext.Array.slice(arguments);
+
+                // If this is the first invocation, or the throttle interval has been reached,
+                // clear any pending invocation, and call the target function now.
                 if (elapsed >= interval) {
-                    clearTimeout(timer);
+                    Ext.undefer(timerId);
                     execute();
                 }
-                // Throttle interval has not yet been reached. Only set the timer to fire if not already set.
-                else if (!timer) {
-                    timer = Ext.defer(execute, interval - elapsed);
+                // Throttle interval has not yet been reached. Only set the timer to fire
+                // if not already set.
+                else if (!timerId) {
+                    timerId = Ext.defer(execute, interval - elapsed);
                 }
             };
         },
 
         /**
-         * Wraps the passed function in a barrier function which will call the passed function after the passed number of invocations.
-         * @param {Number} count The number of invocations which will result in the calling of the passed function.
+         * Wraps the passed function in a barrier function which will call the passed function
+         * after the passed number of invocations.
+         * @param {Number} count The number of invocations which will result in the calling
+         * of the passed function.
          * @param {Function} fn The function to call after the required number of invocations.
          * @param {Object} scope The scope (`this` reference) in which the function will be called.
          */    
         createBarrier: function(count, fn, scope) {
-            return function() {
+            var barrierFn = function() {
                 if (!--count) {
                     fn.apply(scope, arguments);
                 }
             };
+
+            //<debug>
+            barrierFn.$origFn = fn.$origFn || fn;
+            barrierFn.$skipTimerCheck = barrierFn.$origFn.$skipTimerCheck;
+            //</debug>
+
+            return barrierFn;
         },
 
         /**
@@ -633,7 +855,8 @@ Ext.Function = (function() {
          * be called with the same arguments as the original method.  The
          * return value of this function will be the return value of the
          * new method.
-         * @param {Object} [scope] The scope to execute the interceptor function. Defaults to the object.
+         * @param {Object} [scope] The scope to execute the interceptor function.
+         * Defaults to the object.
          * @return {Function} The new function just created.
          */
         interceptBefore: function(object, methodName, fn, scope) {
@@ -641,6 +864,7 @@ Ext.Function = (function() {
 
             return (object[methodName] = function() {
                 var ret = fn.apply(scope || this, arguments);
+
                 method.apply(this, arguments);
 
                 return ret;
@@ -671,7 +895,8 @@ Ext.Function = (function() {
          * be called with the same arguments as the original method.  The
          * return value of this function will be the return value of the
          * new method.
-         * @param {Object} [scope] The scope to execute the interceptor function. Defaults to the object.
+         * @param {Object} [scope] The scope to execute the interceptor function.
+         * Defaults to the object.
          * @return {Function} The new function just created.
          */
         interceptAfter: function(object, methodName, fn, scope) {
@@ -679,45 +904,47 @@ Ext.Function = (function() {
 
             return (object[methodName] = function() {
                 method.apply(this, arguments);
+
                 return fn.apply(scope || this, arguments);
             });
         },
-        
+
         interceptAfterOnce: function(object, methodName, fn, scope) {
             var origMethod = object[methodName],
                 newMethod;
-            
+
             newMethod = function() {
                 var ret;
-                
+
                 if (origMethod) {
                     origMethod.apply(this, arguments);
                 }
-                
+
                 ret = fn.apply(scope || this, arguments);
-                
+
                 object[methodName] = origMethod;
                 object = methodName = fn = scope = origMethod = newMethod = null;
-                
+
                 return ret;
             };
-            
+
             object[methodName] = newMethod;
-            
+
             return newMethod;
         },
 
-        makeCallback: function (callback, scope) {
+        makeCallback: function(callback, scope) {
             //<debug>
             if (!scope[callback]) {
                 if (scope.$className) {
                     Ext.raise('No method "' + callback + '" on ' + scope.$className);
                 }
+
                 Ext.raise('No method "' + callback + '"');
             }
             //</debug>
 
-            return function () {
+            return function() {
                 return scope[callback].apply(scope, arguments);
             };
         },
@@ -756,7 +983,7 @@ Ext.Function = (function() {
          *          return factorial(n) / factorial(n - k);
          *      }
          *
-         *      permutation = Ext.Function.memoize(permutation, null, function (n, k) {
+         *      permutation = Ext.Function.memoize(permutation, null, function(n, k) {
          *          n + '-' + k;
          *      });
          *
@@ -779,7 +1006,7 @@ Ext.Function = (function() {
             var memo = {},
                 isFunc = hashFn && Ext.isFunction(hashFn);
 
-            return function (value) {
+            return function(value) {
                 var key = isFunc ? hashFn.apply(scope, arguments) : value;
 
                 if (!(key in memo)) {
@@ -788,7 +1015,29 @@ Ext.Function = (function() {
 
                 return memo[key];
             };
+        },
+
+        //<debug>
+        _stripCommentRe: /(\/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+\/)|(\/\/.*)/g,
+        //</debug>
+
+        toCode: function(fn) {
+            var s = fn ? fn.toString() : '';
+
+            //<debug>
+            s = s.replace(ExtFunction._stripCommentRe, '');
+            //</debug>
+
+            return s;
         }
+
+        //<debug>
+        // This is useful for unit testing so we can force handlers which have been deferred
+        // to the next animation frame to run immediately
+        , fireElevatedHandlers: function() { // eslint-disable-line comma-style
+            fireElevatedHandlers();
+        }
+        //</debug>
     }; // ExtFunction
 
     /**
@@ -804,54 +1053,124 @@ Ext.Function = (function() {
      * @param {Function} fn Callback function.
      * @param {Object} [scope] The scope for the callback (`this` pointer).
      * @param {Mixed[]} [parameters] Additional parameters to pass to `fn`.
-     * @return {Number} A cancelation id for `{@link Ext#asapCancel}`.
+     * @return {Number} A cancellation id for `{@link Ext#unasap}`.
      */
-    Ext.asap = hasImmediate ?
-            function (fn, scope, parameters) {
-                if (scope != null || parameters != null) {
-                    fn = ExtFunction.bind(fn, scope, parameters);
-                }
-                return setImmediate(function () {
-                    if (Ext.elevateFunction) {
-                        Ext.elevateFunction(fn);
-                    } else {
-                        fn();
-                    }
-                });
-            } :
-            function (fn, scope, parameters) {
-                if (scope != null || parameters != null) {
-                    fn = ExtFunction.bind(fn, scope, parameters);
-                }
-                return setTimeout(function () {
-                    if (Ext.elevateFunction) {
-                        Ext.elevateFunction(fn);
-                    } else {
-                        fn();
-                    }
-                }, 0, true);
-            },
+    Ext.asap = hasImmediate
+        ? function(fn, scope, parameters) {
+            var boundFn = fn,
+                timerFn, timerId;
+
+            //<debug>
+            var timer; // eslint-disable-line vars-on-top, one-var
+            //</debug>
+
+            if (scope != null || parameters != null) {
+                boundFn = ExtFunction.bind(fn, scope, parameters);
+            }
+
+            timerFn = function() {
+                Ext.elevate(boundFn
+                            //<debug>
+                            , null, null, timer // eslint-disable-line comma-style
+                            //</debug>
+                );
+            };
+
+            timerId = setImmediate(timerFn);
+
+            //<debug>
+            timerFn.$origFn = fn.$origFn || fn;
+            timerFn.$skipTimerCheck = timerFn.$origFn.$skipTimerCheck;
+
+            timer = Ext.Timer.created('asap', timerId, {
+                type: 'asap',
+                fn: fn,
+                timerFn: timerFn
+            });
+            //</debug>
+
+            return timerId;
+        }
+        : function(fn, scope, parameters) {
+            var boundFn = fn,
+                timerFn, timerId;
+
+            //<debug>
+            var timer; // eslint-disable-line vars-on-top, one-var
+            //</debug>
+
+            if (scope != null || parameters != null) {
+                boundFn = ExtFunction.bind(fn, scope, parameters);
+            }
+
+            timerFn = function() {
+                Ext.elevate(boundFn
+                            //<debug>
+                            , null, null, timer // eslint-disable-line comma-style
+                            //</debug>
+                );
+            };
+
+            timerId = setTimeout(timerFn, 0, true);
+
+            //<debug>
+            timerFn.$origFn = fn.$origFn || fn;
+            timerFn.$skipTimerCheck = timerFn.$origFn.$skipTimerCheck;
+
+            timer = Ext.Timer.created('timeout', timerId, {
+                type: 'asap',
+                fn: fn,
+                timerFn: timerFn
+            });
+            //</debug>
+
+            return timerId;
+        };
+
+    /**
+     * @member Ext
+     * @method unasap
+     * Cancels a previously scheduled call to `{@link Ext#asap}`.
+     *
+     *      var timerId = Ext.asap(me.method, me);
+     *      ...
+     *
+     *      if (nevermind) {
+     *          Ext.unasap(timerId);
+     *      }
+     *
+     * This method always returns `null` to enable simple cleanup:
+     *
+     *      timerId = Ext.unasap(timerId);  // safe even if !timerId
+     *
+     * @param {Number} id The id returned by `{@link Ext#asap}`.
+     * @return {Object} Always returns `null`.
+     */
+    Ext.unasap = hasImmediate
+        ? function(id) {
+            if (id) {
+                clearImmediate(id);
+                //<debug>
+                Ext.Timer.cancel('asap', id);
+                //</debug>
+            }
+
+            return null;
+        }
+        : function(id) {
+            return Ext.undefer(id);
+        };
 
     /**
      * @member Ext
      * @method asapCancel
      * Cancels a previously scheduled call to `{@link Ext#asap}`.
-     *
-     *      var asapId = Ext.asap(me.method, me);
-     *      ...
-     *
-     *      if (nevermind) {
-     *          Ext.apasCancel(asapId);
-     *      }
-     *
      * @param {Number} id The id returned by `{@link Ext#asap}`.
+     * @deprecated 6.5.1 Use `Ext.unasap` instead.
      */
-    Ext.asapCancel = hasImmediate ?
-        function(id) {
-            clearImmediate(id);
-        } : function(id) {
-            clearTimeout(id);
-        };
+    Ext.asapCancel = function(id) {
+        return Ext.unasap(id);
+    };
 
     /**
      * @method defer
@@ -861,11 +1180,71 @@ Ext.Function = (function() {
     Ext.defer = ExtFunction.defer;
 
     /**
+     * @member Ext
+     * @method undefer
+     * Cancels a previously scheduled call to `{@link Ext#defer}`.
+     *
+     *      var timerId = Ext.defer(me.method, me);
+     *      ...
+     *
+     *      if (nevermind) {
+     *          Ext.undefer(timerId);
+     *      }
+     *
+     * This method always returns `null` to enable simple cleanup:
+     *
+     *      timerId = Ext.undefer(timerId);  // safe even if !timerId
+     *
+     * @param {Number} id The id returned by `{@link Ext#defer}`.
+     */
+    Ext.undefer = function(id) {
+        if (id) {
+            clearTimeout(id);
+
+            //<debug>
+            Ext.Timer.cancel('timeout', id);
+            //</debug>
+        }
+
+        return null;
+    };
+
+    /**
      * @method interval
      * @member Ext
      * @inheritdoc Ext.Function#interval
      */
     Ext.interval = ExtFunction.interval;
+
+    /**
+     * @member Ext
+     * @method uninterval
+     * Cancels a previously scheduled call to `{@link Ext#interval}`.
+     *
+     *      var timerId = Ext.interval(me.method, me);
+     *      ...
+     *
+     *      if (nevermind) {
+     *          Ext.uninterval(timerId);
+     *      }
+     *
+     * This method always returns `null` to enable simple cleanup:
+     *
+     *      timerId = Ext.uninterval(timerId);  // safe even if !timerId
+     *
+     * @param {Number} id The id returned by `{@link Ext#interval}`.
+     */
+    Ext.uninterval = function(id) {
+        if (id) {
+            clearInterval(id);
+
+            //<debug>
+            Ext.Timer.cancel('interval', id);
+            //</debug>
+        }
+
+        return null;
+    };
 
     /**
      * @method pass
@@ -881,7 +1260,13 @@ Ext.Function = (function() {
      */
     Ext.bind = ExtFunction.bind;
 
-    Ext.deferCallback = ExtFunction.requestAnimationFrame;
+    Ext.raf = function() {
+        return ExtFunction.requestAnimationFrame.apply(ExtFunction, arguments);
+    };
+
+    Ext.unraf = function(id) {
+        ExtFunction.cancelAnimationFrame(id);
+    };
 
     return ExtFunction;
 })();

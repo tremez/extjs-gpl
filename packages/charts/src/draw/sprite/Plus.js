@@ -44,11 +44,14 @@ Ext.define('Ext.draw.sprite.Plus', {
         }
     },
 
-    updatePath: function (path, attr) {
+    updatePath: function(path, attr) {
         var s = attr.size / 1.3,
             x = attr.x - attr.lineWidth / 2,
             y = attr.y;
-        path.fromSvgString('M'.concat(x - s / 2, ',', y - s / 2, 'l', [0, -s, s, 0, 0, s, s, 0, 0, s, -s, 0, 0, s, -s, 0, 0, -s, -s, 0, 0, -s, 'z']));
-    }
 
+        path.fromSvgString(
+            'M'.concat(x - s / 2, ',', y - s / 2, 'l', [0, -s, s, 0, 0, s, s, 0, 0, s, -s, 0, 0,
+                                                        s, -s, 0, 0, -s, -s, 0, 0, -s, 'z'])
+        );
+    }
 });

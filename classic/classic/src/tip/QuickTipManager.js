@@ -91,9 +91,11 @@
  * @singleton
  */
 Ext.define('Ext.tip.QuickTipManager', {
-    requires: ['Ext.tip.QuickTip'],
     singleton: true,
     alternateClassName: 'Ext.QuickTips',
+
+    requires: ['Ext.tip.QuickTip'],
+
     disabled: false,
 
     /**
@@ -105,31 +107,35 @@ Ext.define('Ext.tip.QuickTipManager', {
      * be changed by supplying an xtype property or a className property in this object.
      * All other properties on this object are configuration for the created component.
      */
-    init : function (autoRender, config) {
+    init: function(autoRender, config) {
         var me = this;
 
         if (!me.tip) {
             if (!Ext.isReady) {
-                Ext.onInternalReady(function(){
+                Ext.onInternalReady(function() {
                     Ext.tip.QuickTipManager.init(autoRender, config);
                 });
+
                 return false;
             }
 
+            // eslint-disable-next-line vars-on-top, one-var
             var tipConfig = Ext.apply({
-                //<debug>
-                // tell the spec runner to ignore this element when checking if the dom is clean 
-                sticky: true,
-                //</debug>
-                disabled: me.disabled,
-                id: 'ext-quicktips-tip'
-            }, config),
+                    //<debug>
+                    // tell the spec runner to ignore this element when checking if the dom is clean
+                    sticky: true,
+                    //</debug>
+
+                    disabled: me.disabled,
+                    id: 'ext-quicktips-tip'
+                }, config),
                 className = tipConfig.className,
                 xtype = tipConfig.xtype;
 
             if (className) {
                 delete tipConfig.className;
-            } else if (xtype) {
+            }
+            else if (xtype) {
                 className = 'widget.' + xtype;
                 delete tipConfig.xtype;
             }
@@ -149,7 +155,7 @@ Ext.define('Ext.tip.QuickTipManager', {
             }
 
             me.tip = Ext.create(className || 'Ext.tip.QuickTip', tipConfig);
-            
+
             // Prevent the tip from being accidentally destroyed.
             // It should stick around pretty much forever.
             me.tip.destroy = Ext.emptyFn;
@@ -166,21 +172,21 @@ Ext.define('Ext.tip.QuickTipManager', {
      */
     destroy: function() {
         var tip = this.tip;
-        
+
         // The tip should only be destroyed by the Manager
         if (tip) {
             delete tip.destroy;
             tip.destroy();
             this.tip = null;
         }
-        
+
         Ext.quickTipsActive = false;
 
         // Don't callparent here, we're a singleton
     },
 
     // Protected method called by the dd classes
-    ddDisable : function() {
+    ddDisable: function() {
         var me = this,
             tip = me.tip;
 
@@ -191,7 +197,7 @@ Ext.define('Ext.tip.QuickTipManager', {
     },
 
     // Protected method called by the dd classes
-    ddEnable : function() {
+    ddEnable: function() {
         var me = this,
             tip = me.tip;
 
@@ -204,26 +210,28 @@ Ext.define('Ext.tip.QuickTipManager', {
     /**
      * Enables quick tips globally.
      */
-    enable : function(){
+    enable: function() {
         var me = this,
             tip = me.tip;
 
         if (tip) {
             tip.enable();
         }
+
         me.disabled = false;
     },
 
     /**
      * Disables quick tips globally.
      */
-    disable : function(){
+    disable: function() {
         var me = this,
             tip = me.tip;
 
-        if(tip){
+        if (tip) {
             tip.disable();
         }
+
         me.disabled = true;
     },
 
@@ -231,7 +239,7 @@ Ext.define('Ext.tip.QuickTipManager', {
      * Returns true if quick tips are enabled, else false.
      * @return {Boolean}
      */
-    isEnabled : function(){
+    isEnabled: function() {
         var tip = this.tip;
 
         return tip !== undefined && !tip.disabled;
@@ -242,14 +250,15 @@ Ext.define('Ext.tip.QuickTipManager', {
      * from all registered elements.
      * @return {Ext.tip.QuickTip}
      */
-    getQuickTip : function(){
+    getQuickTip: function() {
         return this.tip;
     },
 
     /**
-     * @inheritdoc Ext.tip.QuickTip#register
+     * @method register
+     * @inheritdoc Ext.tip.QuickTip#method-register
      */
-    register : function(){
+    register: function() {
         var tip = this.tip;
 
         tip.register.apply(tip, arguments);
@@ -260,17 +269,18 @@ Ext.define('Ext.tip.QuickTipManager', {
      * @param {String/HTMLElement/Ext.dom.Element} el The element from which the quick tip
      * is to be removed or ID of the element.
      */
-    unregister : function(){
+    unregister: function() {
         var tip = this.tip;
 
         tip.unregister.apply(tip, arguments);
     },
 
     /**
-     * Alias of {@link #register}.
-     * @inheritdoc Ext.tip.QuickTipManager#register
+     * @method tips
+     * Alias of {@link #method-register register}.
+     * @inheritdoc Ext.tip.QuickTipManager#method-register
      */
-    tips : function(){
+    tips: function() {
         var tip = this.tip;
 
         tip.register.apply(tip, arguments);

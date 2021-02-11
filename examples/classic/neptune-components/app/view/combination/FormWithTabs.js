@@ -18,24 +18,24 @@ Ext.define('Neptune.view.combination.FormWithTabs', {
 
         items: [{
             xtype: 'container',
-            layout:'hbox',
-            items:[{
+            layout: 'hbox',
+            items: [{
                 xtype: 'container',
                 flex: 1,
-                border:false,
+                border: false,
                 layout: 'anchor',
                 defaultType: 'textfield',
                 items: [{
                     fieldLabel: 'First Name',
                     allowBlank: false,
                     name: 'first',
-                    anchor:'95%'
+                    anchor: '95%'
                 }, {
                     fieldLabel: 'Company',
                     name: 'company',
-                    anchor:'95%'
+                    anchor: '95%'
                 }]
-            },{
+            }, {
                 xtype: 'container',
                 flex: 1,
                 layout: 'anchor',
@@ -44,25 +44,25 @@ Ext.define('Neptune.view.combination.FormWithTabs', {
                     fieldLabel: 'Last Name',
                     allowBlank: false,
                     name: 'last',
-                    anchor:'95%'
-                },{
+                    anchor: '95%'
+                }, {
                     fieldLabel: 'Email',
                     allowBlank: false,
                     name: 'email',
-                    vtype:'email',
-                    anchor:'95%'
+                    vtype: 'email',
+                    anchor: '95%'
                 }]
             }]
-        },{
-            xtype:'tabpanel',
-            plain:true,
+        }, {
+            xtype: 'tabpanel',
+            plain: true,
             activeTab: 0,
-            height:235,
-            defaults:{
+            height: 235,
+            defaults: {
                 bodyPadding: 10
             },
-            items:[{
-                title:'Personal Details',
+            items: [{
+                title: 'Personal Details',
                 defaults: {
                     width: 230
                 },
@@ -72,21 +72,21 @@ Ext.define('Neptune.view.combination.FormWithTabs', {
                     fieldLabel: 'First Name',
                     name: 'first',
                     value: 'Jamie'
-                },{
+                }, {
                     fieldLabel: 'Last Name',
                     name: 'last',
                     value: 'Avins'
-                },{
+                }, {
                     fieldLabel: 'Company',
                     name: 'company',
                     value: 'Ext JS'
                 }, {
                     fieldLabel: 'Email',
                     name: 'email',
-                    vtype:'email'
+                    vtype: 'email'
                 }]
-            },{
-                title:'Phone Numbers',
+            }, {
+                title: 'Phone Numbers',
                 defaults: {
                     width: 230
                 },
@@ -96,17 +96,17 @@ Ext.define('Neptune.view.combination.FormWithTabs', {
                     fieldLabel: 'Home',
                     name: 'home',
                     value: '(888) 555-1212'
-                },{
+                }, {
                     fieldLabel: 'Business',
                     name: 'business'
-                },{
+                }, {
                     fieldLabel: 'Mobile',
                     name: 'mobile'
-                },{
+                }, {
                     fieldLabel: 'Fax',
                     name: 'fax'
                 }]
-            },{
+            }, {
                 cls: 'x-plain',
                 title: 'Biography',
                 layout: 'fit',

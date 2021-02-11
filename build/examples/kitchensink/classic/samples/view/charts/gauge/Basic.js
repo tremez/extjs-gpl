@@ -9,7 +9,7 @@ Ext.define('KitchenSink.view.charts.gauge.Basic', {
         type: 'gauge-basic'
     },
 
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     bodyStyle: 'background: transparent !important',
     layout: {
@@ -20,8 +20,23 @@ Ext.define('KitchenSink.view.charts.gauge.Basic', {
         type: 'Controller',
         path: 'classic/samples/view/charts/gauge/BasicController.js'
     }],
-    // </example>
+    //</example>
     width: 650,
+
+    profiles: {
+        classic: {
+            insetPadding: 20
+        },
+        neptune: {
+            insetPadding: 20
+        },
+        graphite: {
+            insetPadding: 25
+        },
+        'classic-material': {
+            insetPadding: 25
+        }
+    },
 
     tbar: [
         '->',
@@ -44,13 +59,14 @@ Ext.define('KitchenSink.view.charts.gauge.Basic', {
                 xtype: 'polar',
                 height: 240,
                 width: 300,
-                insetPadding: 30,
-                sprites: {
-                    type: 'text',
-                    text: 'Basic',
-                    x: 30,
-                    y: 30,
-                    fontSize: 17
+                captions: {
+                    title: {
+                        text: 'Basic',
+                        style: {
+                            fontWeight: '300',
+                            fontSize: 18
+                        }
+                    }
                 },
                 series: {
                     type: 'gauge',
@@ -63,7 +79,16 @@ Ext.define('KitchenSink.view.charts.gauge.Basic', {
                 xtype: 'polar',
                 height: 240,
                 width: 300,
-                insetPadding: 30,
+                insetPadding: '${insetPadding}',
+                captions: {
+                    title: {
+                        text: 'Fuel',
+                        style: {
+                            fontWeight: '300',
+                            fontSize: 18
+                        }
+                    }
+                },
                 padding: '0 0 0 10',
                 sprites: [{
                     type: 'path',
@@ -80,7 +105,6 @@ Ext.define('KitchenSink.view.charts.gauge.Basic', {
                     }
                 }],
                 axes: {
-                    title: 'Fuel',
                     type: 'numeric',
                     position: 'gauge',
                     majorTickSteps: 4,
@@ -107,9 +131,17 @@ Ext.define('KitchenSink.view.charts.gauge.Basic', {
                 height: 240,
                 width: 300,
                 padding: '10 0 0 0',
-                insetPadding: 30,
+                insetPadding: '${insetPadding}',
+                captions: {
+                    title: {
+                        text: 'Temp',
+                        style: {
+                            fontWeight: '300',
+                            fontSize: 18
+                        }
+                    }
+                },
                 axes: {
-                    title: 'Temp',
                     type: 'numeric',
                     position: 'gauge',
                     maximum: 250,
@@ -127,9 +159,17 @@ Ext.define('KitchenSink.view.charts.gauge.Basic', {
                 height: 240,
                 width: 300,
                 padding: '10 0 0 10',
-                insetPadding: 30,
+                insetPadding: '${insetPadding}',
+                captions: {
+                    title: {
+                        text: 'RPM',
+                        style: {
+                            fontWeight: '300',
+                            fontSize: 18
+                        }
+                    }
+                },
                 axes: {
-                    title: 'RPM',
                     type: 'numeric',
                     position: 'gauge',
                     maximum: 8000,

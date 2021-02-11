@@ -21,34 +21,32 @@
  *         items: [{
  *             text: 'Choose a color',
  *             menu: colorPicker
- *         },{
+ *         }, {
  *             iconCls: 'add16',
  *             text: 'Icon item'
- *         },{
+ *         }, {
  *             text: 'Regular item'
  *         }]
  *     }).showAt([5, 5]);
  */
- Ext.define('Ext.menu.ColorPicker', {
-     extend: 'Ext.menu.Menu',
-
-     alias: 'widget.colormenu',
-
-     requires: [
+Ext.define('Ext.menu.ColorPicker', {
+    extend: 'Ext.menu.Menu',
+    alias: 'widget.colormenu',
+    requires: [
         'Ext.picker.Color'
-     ],
+    ],
 
     /**
      * @cfg {Boolean} hideOnClick
      * False to continue showing the menu after a color is selected.
      */
-    hideOnClick : true,
+    hideOnClick: true,
 
     /**
      * @cfg {String} pickerId
      * An id to assign to the underlying color picker.
      */
-    pickerId : null,
+    pickerId: null,
 
     /**
      * @cfg {Number} maxHeight
@@ -65,25 +63,34 @@
      * @private
      */
 
-    initComponent : function(){
+    initComponent: function() {
         var me = this,
-            cfg = Ext.apply({}, me.initialConfig);
+            cfg = Ext.apply({}, me.initialConfig),
+            pickerConfig;
 
         // Ensure we don't get duplicate listeners
         delete cfg.listeners;
+
+        pickerConfig = Ext.applyIf({
+            cls: Ext.baseCSSPrefix + 'menu-color-item',
+            margin: 0,
+            id: me.pickerId,
+            xtype: 'colorpicker'
+        }, cfg);
+
+        // This is a Menu and it will have an ownerCmp pointing to its owning MenuItem.
+        // This MUST not be propagated down into the picker. The picker's getRefOwner
+        // must follow the ownerCt and find this Menu.
+        delete pickerConfig.ownerCmp;
+
         Ext.apply(me, {
             plain: true,
             showSeparator: false,
             bodyPadding: 0,
-            items: Ext.applyIf({
-                cls: Ext.baseCSSPrefix + 'menu-color-item',
-                margin: 0,
-                id: me.pickerId,
-                xtype: 'colorpicker'
-            }, cfg)
+            items: [pickerConfig]
         });
 
-        me.callParent(arguments);
+        me.callParent();
 
         me.picker = me.down('colorpicker');
 
@@ -105,4 +112,4 @@
     hidePickerOnSelect: function() {
         Ext.menu.Manager.hideAll();
     }
- });
+});

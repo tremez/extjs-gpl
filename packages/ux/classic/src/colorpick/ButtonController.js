@@ -13,11 +13,11 @@ Ext.define('Ext.ux.colorpick.ButtonController', {
         'Ext.ux.colorpick.ColorUtils'
     ],
 
-    afterRender: function (view) {
+    afterRender: function(view) {
         view.updateColor(view.getColor());
     },
 
-    destroy: function () {
+    destroy: function() {
         var view = this.getView(),
             colorPickerWindow = view.colorPickerWindow;
 
@@ -29,7 +29,7 @@ Ext.define('Ext.ux.colorpick.ButtonController', {
         this.callParent();
     },
 
-    getPopup: function () {
+    getPopup: function() {
         var view = this.getView(),
             popup = view.colorPickerWindow,
             selector;
@@ -69,8 +69,8 @@ Ext.define('Ext.ux.colorpick.ButtonController', {
         popup.showBy(view, 'tl-br?');
     },
 
-    onColorPickerOK: function (picker) {
-        var view  = this.getView(),
+    onColorPickerOK: function(picker) {
+        var view = this.getView(),
             color = picker.getColor(),
             cpWin = view.colorPickerWindow;
 
@@ -79,14 +79,14 @@ Ext.define('Ext.ux.colorpick.ButtonController', {
         view.setColor(color);
     },
 
-    onColorPickerCancel: function () {
-        var view  = this.getView(),
+    onColorPickerCancel: function() {
+        var view = this.getView(),
             cpWin = view.colorPickerWindow;
 
         cpWin.hide();
     },
 
-    syncColor: function (color) {
+    syncColor: function(color) {
         var view = this.getView();
 
         Ext.ux.colorpick.ColorUtils.setBackground(view.filterEl, color);

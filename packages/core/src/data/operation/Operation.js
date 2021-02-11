@@ -7,29 +7,31 @@
  */
 Ext.define('Ext.data.operation.Operation', {
     alternateClassName: 'Ext.data.Operation',
-    
+
     isOperation: true,
-    
+
     config: {
         /**
          * @cfg {Boolean} synchronous
          * True if this Operation is to be executed synchronously. This property is inspected by a
-         * {@link Ext.data.Batch Batch} to see if a series of Operations can be executed in parallel or not.
+         * {@link Ext.data.Batch Batch} to see if a series of Operations can be executed in parallel
+         * or not.
          */
         synchronous: false,
 
         /**
          * @cfg {String} url
-         * The url for this operation. Typically this will be provided by a proxy and not configured here.
+         * The url for this operation. Typically this will be provided by a proxy and not configured
+         * here.
          */
         url: '',
-        
+
         /**
          * @cfg {Object} params
          * Parameters to pass along with the request when performing the operation.
          */
         params: undefined,
-    
+
         /**
          * @cfg {Function} callback
          * Function to execute when operation completed.
@@ -38,66 +40,66 @@ Ext.define('Ext.data.operation.Operation', {
          * @cfg {Boolean} callback.success True when operation completed successfully.
          */
         callback: undefined,
-    
+
         /**
          * @cfg {Object} scope
          * Scope for the {@link #callback} function.
          */
         scope: undefined,
-        
+
         /**
          * @cfg {Ext.data.ResultSet} resultSet
          * The ResultSet for this operation.
          * @accessor
          */
         resultSet: null,
-        
+
         /**
          * @private
          * @cfg {Object} response
          * The response for this operation.
          */
         response: null,
-        
+
         /**
          * @cfg {Ext.data.Request} request
          * The request for this operation.
          */
         request: null,
-        
+
         /**
          * @cfg {Ext.data.Model[]} records
          * The records associated with this operation. If this is a `read` operation, this will be
          * `null` until data is returned from the {@link Ext.data.proxy.Proxy}.
          */
         records: null,
-        
+
         /**
          * @cfg {Object} id
          * The id of the operation.
          */
         id: undefined,
-        
+
         /**
          * @cfg {Ext.data.proxy.Proxy} proxy
          * The proxy for this operation
          */
         proxy: null,
-        
+
         /**
          * @cfg {Ext.data.Batch} 
          * The batch for this operation, if applicable
          */
         batch: null,
-        
+
         /**
          * @cfg {Function} recordCreator
          * Passed to the reader, see {@link Ext.data.reader.Reader#read}
          * @private
          */
         recordCreator: null,
-        
-        //We use this because in a lot of cases the developer can indirectly pass
+
+        // We use this because in a lot of cases the developer can indirectly pass
         // a callback/scope and that will get pushed on to the operation. As such,
         // create our own hook for the callback that will fire first
         /**
@@ -106,7 +108,7 @@ Ext.define('Ext.data.operation.Operation', {
          * @private
          */
         internalCallback: null,
-        
+
         /**
          * @cfg {Object} internalScope
          * Scope to run the {@link #internalCallback}
@@ -165,8 +167,8 @@ Ext.define('Ext.data.operation.Operation', {
     /**
      * @property {Boolean} success
      * Whether the Operation was successful or not. This starts as undefined and is set to true
-     * or false by the Proxy that is executing the Operation. It is also set to false by {@link #setException}. Use
-     * {@link #wasSuccessful} to query success status.
+     * or false by the Proxy that is executing the Operation. It is also set to false by
+     * {@link #setException}. Use {@link #wasSuccessful} to query success status.
      * @readonly
      * @private
      */
@@ -182,11 +184,12 @@ Ext.define('Ext.data.operation.Operation', {
 
     /**
      * @property {String/Object} error
-     * The error object passed when {@link #setException} was called. This could be any object or primitive.
+     * The error object passed when {@link #setException} was called. This could be any object or
+     * primitive.
      * @private
      */
     error: undefined,
-    
+
     idPrefix: 'ext-operation-',
 
     /**
@@ -207,20 +210,20 @@ Ext.define('Ext.data.operation.Operation', {
         if (config) {
             config.scope = scope;
         }
-        
+
         if (scope) {
             this.setScope(scope);
             this.initialConfig.scope = scope;
         }
-        
+
         // We need an internal id to track operations in Proxy
         this._internalId = Ext.id(this, this.idPrefix);
     },
-    
+
     getAction: function() {
-        return this.action;    
+        return this.action;
     },
-    
+
     /**
      * @private
      * Executes the operation on the configured {@link #proxy}.
@@ -233,42 +236,56 @@ Ext.define('Ext.data.operation.Operation', {
         delete me.error;
         delete me.success;
         me.complete = me.exception = false;
-        
+
         me.setStarted();
         me.request = request = me.doExecute();
+
         if (request) {
             request.setOperation(me);
         }
+
         return request;
     },
-    
+
     doExecute: Ext.emptyFn,
-    
+
     /**
      * Aborts the processing of this operation on the {@link #proxy}.
      * This is only valid for proxies that make asynchronous requests.
      */
     abort: function() {
         var me = this,
-            request = me.request;
-            
+            request = me.request,
+            proxy;
+
+        me.aborted = true;
+
         if (me.running && request) {
-            me.getProxy().abort(request);
+            proxy = me.getProxy();
+
+            if (proxy && !proxy.destroyed) {
+                proxy.abort(request);
+            }
+
             me.request = null;
-        }    
+        }
+
+        me.running = false;
     },
-    
+
     process: function(resultSet, request, response, autoComplete) {
         var me = this;
-        
+
         autoComplete = autoComplete !== false;
-        
+
         me.setResponse(response);
         me.setResultSet(resultSet);
+
         if (resultSet.getSuccess()) {
             me.doProcess(resultSet, request, response);
             me.setSuccessful(autoComplete);
-        } else if (autoComplete) {
+        }
+        else if (autoComplete) {
             me.setException(resultSet.getMessage());
         }
     },
@@ -342,7 +359,8 @@ Ext.define('Ext.data.operation.Operation', {
                 if (serverLen === 0 || !(serverRecord = serverRecords[i])) {
                     // once i > serverLen then serverRecords[i] will be undefined...
                     clientRecord.commit();
-                } else {
+                }
+                else {
                     clientRecord.set(serverRecord, commitSetOptions);
                 }
             }
@@ -361,14 +379,24 @@ Ext.define('Ext.data.operation.Operation', {
      */
     setCompleted: function() {
         var me = this,
-            proxy = me.getProxy();
-        
+            proxy;
+
         me.complete = true;
-        me.running  = false;
-        
-        me.triggerCallbacks();
-        
-        if (proxy) {
+        me.running = false;
+
+        if (!me.destroying) {
+            me.triggerCallbacks();
+        }
+
+        // Operation can be destroyed in callback
+        if (me.destroyed) {
+            return;
+        }
+
+        proxy = me.getProxy();
+
+        // Store and proxy could be destroyed in callbacks
+        if (proxy && !proxy.destroyed) {
             proxy.completeOperation(me);
         }
     },
@@ -380,22 +408,24 @@ Ext.define('Ext.data.operation.Operation', {
      */
     setSuccessful: function(complete) {
         this.success = true;
+
         if (complete) {
             this.setCompleted();
         }
     },
 
     /**
-     * Marks the Operation as having experienced an exception. Can be supplied with an option error message/object.
+     * Marks the Operation as having experienced an exception. Can be supplied with an option
+     * error message/object.
      * @param {String/Object} error (optional) error string/object
      */
     setException: function(error) {
         var me = this;
-        
+
         me.exception = true;
         me.success = me.running = false;
         me.error = error;
-        
+
         me.setCompleted();
     },
 
@@ -406,14 +436,27 @@ Ext.define('Ext.data.operation.Operation', {
         // Call internal callback first (usually the Store's onProxyLoad method)
         if (callback) {
             callback.call(me.getInternalScope() || me, me);
+
+            // Operation callback can cause it to be destroyed
+            if (me.destroyed) {
+                return;
+            }
+
             me.setInternalCallback(null);
             me.setInternalScope(null);
         }
 
         // Call the user's callback as passed to Store's read/write
-        if (callback = me.getCallback()) {
+        callback = me.getCallback();
+
+        if (callback) {
             // Maintain the public API for callback
             callback.call(me.getScope() || me, me.getRecords(), me, me.wasSuccessful());
+
+            if (me.destroyed) {
+                return;
+            }
+
             me.setCallback(null);
             me.setScope(null);
         }
@@ -448,13 +491,14 @@ Ext.define('Ext.data.operation.Operation', {
      */
     getRecords: function() {
         var resultSet;
-        return this._records ||
-               ((resultSet = this.getResultSet()) ? resultSet.getRecords() : null);
+
+        /* eslint-disable-next-line no-cond-assign */
+        return this._records || ((resultSet = this.getResultSet()) ? resultSet.getRecords() : null);
     },
 
     /**
-     * Returns true if the Operation has been started. Note that the Operation may have started AND completed, see
-     * {@link #isRunning} to test if the Operation is currently running.
+     * Returns true if the Operation has been started. Note that the Operation may have started
+     * AND completed, see {@link #isRunning} to test if the Operation is currently running.
      * @return {Boolean} True if the Operation has started
      */
     isStarted: function() {
@@ -491,5 +535,22 @@ Ext.define('Ext.data.operation.Operation', {
      */
     allowWrite: function() {
         return true;
+    },
+
+    destroy: function() {
+        var me = this;
+
+        me.destroying = true;
+
+        if (me.running) {
+            me.abort();
+        }
+
+        // Cleanup upon destruction can be turned off
+        me._params = me._callback = me._scope = me._resultSet = me._response = null;
+        me.request = me._request = me._records = me._proxy = me._batch = null;
+        me._recordCreator = me._internalCallback = me._internalScope = null;
+
+        me.callParent();
     }
 });

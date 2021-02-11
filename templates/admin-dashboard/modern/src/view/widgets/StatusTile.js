@@ -24,10 +24,8 @@ Ext.define('Admin.view.widgets.StatusTile', {
     element: {
         reference: 'element',
         cls: 'status-tile',
-
         children: [{
             cls: 'status-tile-wrap',
-
             children: [{
                 reference: 'quantityElement',
                 cls: 'status-tile-quantity'
@@ -37,7 +35,6 @@ Ext.define('Admin.view.widgets.StatusTile', {
             }, {
                 cls: 'status-tile-icon-wrap',
                 reference: 'iconWrapElement',
-
                 children: [{
                     reference: 'iconElement',
                     cls: 'status-tile-icon'

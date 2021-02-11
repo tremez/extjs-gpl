@@ -21,7 +21,7 @@ Ext.define('Admin.view.profile.ShareUpdate', {
         items:[
             {
                 ui: 'header',
-                iconCls: 'x-fa fa-video-camera'
+                iconCls: 'x-fa fa-video'
             },
             {
                 ui: 'header',

@@ -1,6 +1,4 @@
-/* global expect, Ext */
-
-describe("Ext.util.Region", function() {
+topSuite("Ext.util.Region", ['Ext.dom.Element'], function() {
     var region,
         region1,
         region2,
@@ -22,12 +20,14 @@ describe("Ext.util.Region", function() {
         expect(toTest.bottom).toBe(b);
         expect(toTest.right).toBe(r);
     }
+
     function expectXYWH(toTest, x, y, w, h) {
         expect(toTest.top).toBe(y);
         expect(toTest.left).toBe(x);
         expect(toTest.getWidth()).toBe(w);
         expect(toTest.getHeight()).toBe(h);
     }
+
     describe("contains", function() {
         describe("form region 1 point of view", function() {
             it("should not contain region 2", function() {
@@ -477,22 +477,16 @@ describe("Ext.util.Region", function() {
     });
 
     describe('alignTo', function() {
-        var inside,
-            target,
-            testRegion,
-            result,
-            insideEl,
-            targetEl,
-            resultEl;
+        var inside, target, testRegion, result, insideEl, targetEl, resultEl, visualize;
 
         // For debugging purposes.
         // visualize the situation.
         visualize = function() {
-            insideEl = insideEl || Ext.getBody().createChild({style:'background-color:yellow;position:absolute'});
+            insideEl = insideEl || Ext.getBody().createChild({ style: 'background-color:yellow;position:absolute' });
             insideEl.setBox(inside);
-            targetEl = targetEl || Ext.getBody().createChild({style:'background-color:red;position:absolute'});
+            targetEl = targetEl || Ext.getBody().createChild({ style: 'background-color:red;position:absolute' });
             targetEl.setBox(target);
-            resultEl = resultEl || Ext.getBody().createChild({style:'background-color:blue;position:absolute'});
+            resultEl = resultEl || Ext.getBody().createChild({ style: 'background-color:blue;position:absolute' });
             resultEl.setBox(result);
         };
 
@@ -1744,6 +1738,105 @@ describe("Ext.util.Region", function() {
                         expectXYWH(result, 0, 460, 90, 40);
                         expectXYWH(result.anchor, 40, 450, 10, 10);
                     });
+                });
+            });
+
+            describe('corner to corner alignment', function() {
+                it('should handle b100-t0', function() {
+                    target.setPosition(250, 250);
+                    result = testRegion.alignTo({
+                        target: target,
+                        align: 'b100-t0',
+                        anchorSize: 10,
+                        offset: 0
+                    });
+
+                    expectXYWH(result, 168, 150, 90, 90);
+                    expectXYWH(result.anchor, 246, 240, 10, 10);
+                });
+                it('should handle b0-t100', function() {
+                    target.setPosition(250, 250);
+                    result = testRegion.alignTo({
+                        target: target,
+                        align: 'b0-t100',
+                        anchorSize: 10,
+                        offset: 0
+                    });
+
+                    expectXYWH(result, 491, 150, 90, 90);
+                    expectXYWH(result.anchor, 493, 240, 10, 10);
+                });
+                it('should handle t100-b0', function() {
+                    target.setPosition(250, 250);
+                    result = testRegion.alignTo({
+                        target: target,
+                        align: 't100-b0',
+                        anchorSize: 10,
+                        offset: 0
+                    });
+
+                    expectXYWH(result, 168, 510, 90, 90);
+                    expectXYWH(result.anchor, 246, 500, 10, 10);
+                });
+                it('should handle t0-b100', function() {
+                    target.setPosition(250, 250);
+                    result = testRegion.alignTo({
+                        target: target,
+                        align: 't0-b100',
+                        anchorSize: 10,
+                        offset: 0
+                    });
+
+                    expectXYWH(result, 491, 510, 90, 90);
+                    expectXYWH(result.anchor, 493, 500, 10, 10);
+                });
+                it('should handle r100-l0', function() {
+                    target.setPosition(250, 250);
+                    result = testRegion.alignTo({
+                        target: target,
+                        align: 'r100-l0',
+                        anchorSize: 10,
+                        offset: 0
+                    });
+
+                    expectXYWH(result, 150, 168, 90, 90);
+                    expectXYWH(result.anchor, 240, 246, 10, 10);
+                });
+                it('should handle r0-l100', function() {
+                    target.setPosition(250, 250);
+                    result = testRegion.alignTo({
+                        target: target,
+                        align: 'r0-l100',
+                        anchorSize: 10,
+                        offset: 0
+                    });
+
+                    expectXYWH(result, 150, 491, 90, 90);
+                    expectXYWH(result.anchor, 240, 493, 10, 10);
+                });
+                it('should handle l100-r0', function() {
+                    target.setPosition(250, 250);
+                    result = testRegion.alignTo({
+                        target: target,
+                        align: 'l100-r0',
+                        anchorSize: 10,
+                        offset: 0
+                    });
+
+                    expectXYWH(result, 510, 168, 90, 90);
+                    expectXYWH(result.anchor, 500, 246, 10, 10);
+                });
+                it('should handle l0-r100', function() {
+                    target.setPosition(250, 250);
+                    result = testRegion.alignTo({
+                        target: target,
+                        align: 'l0-r100',
+                        anchorSize: 10,
+                        offset: 0
+                    });
+
+                    expectXYWH(result, 510, 491, 90, 90);
+                    expectXYWH(result.anchor, 500, 493, 10, 10);
                 });
             });
         });

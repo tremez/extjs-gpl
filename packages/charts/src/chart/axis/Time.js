@@ -99,13 +99,6 @@ Ext.define('Ext.chart.axis.Time', {
     ],
     config: {
         /**
-         * @cfg {Boolean} calculateByLabelSize
-         * The minimum value drawn by the axis. If not set explicitly, the axis
-         * minimum will be calculated automatically.
-         */
-        calculateByLabelSize: true,
-
-        /**
          * @cfg {String} dateFormat
          * Indicates the format the date will be rendered in.
          * For example: 'M d' will render the dates as 'Jan 30'.
@@ -136,43 +129,46 @@ Ext.define('Ext.chart.axis.Time', {
         aggregator: 'time'
     },
 
-    updateDateFormat: function (format) {
+    updateDateFormat: function(format) {
         var renderer = this.getRenderer();
 
         if (!renderer || renderer.isDefault) {
-            renderer = function (axis, date) {
+            renderer = function(axis, date) {
                 return Ext.Date.format(new Date(date), format);
             };
+
             renderer.isDefault = true;
             this.setRenderer(renderer);
             this.performLayout();
         }
     },
 
-    updateRenderer: function (renderer) {
+    updateRenderer: function(renderer) {
         var dateFormat = this.getDateFormat();
 
         if (renderer) {
             this.performLayout();
-        } else if (dateFormat) {
+        }
+        else if (dateFormat) {
             // If the user removes custom `renderer` and `dateFormat` is set,
             // set the `renderer` to the default one based on `dateFormat`.
             this.updateDateFormat(dateFormat);
         }
     },
 
-    updateFromDate: function (date) {
+    updateFromDate: function(date) {
         this.setMinimum(+date);
     },
 
-    updateToDate: function (date) {
+    updateToDate: function(date) {
         this.setMaximum(+date);
     },
 
-    getCoordFor: function (value) {
+    getCoordFor: function(value) {
         if (Ext.isString(value)) {
             value = new Date(value);
         }
+
         return +value;
     }
 });

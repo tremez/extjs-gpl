@@ -28,7 +28,7 @@ Ext.define('KitchenSink.view.ArcText', {
 
     startAngle: -Math.PI / 2,
 
-    updateText: function (text) {
+    updateText: function(text) {
         var me = this;
 
         me.clearAll();
@@ -38,13 +38,14 @@ Ext.define('KitchenSink.view.ArcText', {
             // so postpone symbol sprites creation until render
             // when surface is surely available.
             me.pendingSymbols = text;
-        } else {
+        }
+        else {
             me.getTemplate();
             me.placeSymbols(text);
         }
     },
 
-    placeSymbols: function (text) {
+    placeSymbols: function(text) {
         var me = this,
             cx = me.getCenterX(),
             cy = me.getCenterY(),
@@ -82,6 +83,7 @@ Ext.define('KitchenSink.view.ArcText', {
             angleIncrement = (bbox.width + spacing) / circumference * twoPi;
             totalAngle += angleIncrement;
         }
+
         switch (textAlign) {
             case 'start':
                 angularShift = 0;
@@ -93,6 +95,7 @@ Ext.define('KitchenSink.view.ArcText', {
                 angularShift = -totalAngle / 2;
                 break;
         }
+
         me.setAttributes({
             rotationRads: me.attr.rotationRads + angularShift
         });
@@ -101,12 +104,14 @@ Ext.define('KitchenSink.view.ArcText', {
         me.applyTransformations();
     },
 
-    render: function () {
+    render: function() {
         var me = this;
+
         if (me.pendingSymbols) {
             me.placeSymbols(me.pendingSymbols);
             delete me.pendingSymbols;
         }
+
         me.callParent(arguments);
     }
 

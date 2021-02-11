@@ -40,6 +40,7 @@ Ext.define('KitchenSink.view.drag.DataController', {
         // the expectation to the user.
         info.getData('postage-duration').then(function(duration) {
             var s = Ext.String.format('Your parcel will arrive within {0} days', duration);
+
             Ext.Msg.alert('Delivery set', s);
         });
     },

@@ -31,32 +31,68 @@ Ext.define('KitchenSink.view.form.FormGrid', {
             width: 750,
             gridWidth: 0.6,
             formWidth: 0.4,
+            priceWidth: 75,
+            pricechangeWidth: 80,
             percentChangeColumnWidth: 75,
             lastUpdatedColumnWidth: 85,
             ratingColumnWidth: 30,
-            green: 'green',
-            red: 'red'
+            gainColor: 'green',
+            lossColor: 'red',
+            labelAlign: 'left',
+            bodyPadding: 5
         },
         neptune: {
             width: 880,
             gridWidth: 0.65,
             formWidth: 0.35,
+            priceWidth: 75,
+            pricechangeWidth: 80,
             percentChangeColumnWidth: 100,
             lastUpdatedColumnWidth: 115,
             ratingColumnWidth: 60,
-            green: '#73b51e',
-            red: '#cf4c35'
+            gainColor: '#73b51e',
+            lossColor: '#cf4c35',
+            labelAlign: 'left',
+            bodyPadding: 5
+        },
+        graphite: {
+            width: 1150,
+            gridWidth: 0.65,
+            formWidth: 0.35,
+            priceWidth: 100,
+            pricechangeWidth: 110,
+            percentChangeColumnWidth: 130,
+            lastUpdatedColumnWidth: 155,
+            ratingColumnWidth: 90,
+            gainColor: 'unset',
+            lossColor: 'unset',
+            labelAlign: 'left',
+            bodyPadding: 5
+        },
+        'classic-material': {
+            width: 1150,
+            gridWidth: 0.65,
+            formWidth: 0.35,
+            priceWidth: 100,
+            pricechangeWidth: 110,
+            percentChangeColumnWidth: 130,
+            lastUpdatedColumnWidth: 155,
+            ratingColumnWidth: 90,
+            gainColor: 'unset',
+            lossColor: 'unset',
+            labelAlign: 'top',
+            bodyPadding: 0
         }
     },
     //</example>
-    
+
     title: 'Company data',
     width: '${width}',
     frame: true,
-    bodyPadding: 5,
+    bodyPadding: '${bodyPadding}',
     layout: 'column',
     signTpl: '<span style="' +
-            'color:{value:sign(\'${red}\',\'${green}\')}"' +
+            'color:{value:sign(\'${lossColor}\',\'${gainColor}\')}"' +
         '>{text}</span>',
 
     viewModel: {
@@ -66,7 +102,7 @@ Ext.define('KitchenSink.view.form.FormGrid', {
     },
 
     fieldDefaults: {
-        labelAlign: 'left',
+        labelAlign: '${labelAlign}',
         labelWidth: 90,
         anchor: '100%',
         msgTarget: 'side'
@@ -90,30 +126,30 @@ Ext.define('KitchenSink.view.form.FormGrid', {
             dataIndex: 'name',
 
             flex: 1,
-            sortabl: true
+            sortable: true
         }, {
             text: 'Price',
             dataIndex: 'price',
 
-            width: 75,
+            width: '${priceWidth}',
             sortable: true
         }, {
             text: 'Change',
-            dataIndex: 'change',
+            dataIndex: 'priceChange',
 
-            width: 80,
+            width: '${pricechangeWidth}',
             sortable: true,
             renderer: 'renderChange'
         }, {
             text: '% Change',
-            dataIndex: 'pctChange',
+            dataIndex: 'priceChangePct',
 
             width: '${percentChangeColumnWidth}',
             sortable: true,
             renderer: 'renderPercent'
         }, {
             text: 'Last Updated',
-            dataIndex: 'lastChange',
+            dataIndex: 'priceLastChange',
 
             width: '${lastUpdatedColumnWidth}',
             sortable: true,
@@ -128,7 +164,7 @@ Ext.define('KitchenSink.view.form.FormGrid', {
         }]
     }, {
         xtype: 'fieldset',
-        title:'Company details',
+        title: 'Company details',
 
         columnWidth: '${formWidth}',
         margin: '0 0 0 10',
@@ -143,11 +179,7 @@ Ext.define('KitchenSink.view.form.FormGrid', {
             bind: '{theCompany.price}'
         }, {
             fieldLabel: '% Change',
-            bind: '{theCompany.pctChange}'
-        }, {
-            xtype: 'datefield',
-            fieldLabel: 'Last Updated',
-            bind: '{theCompany.lastChange}'
+            bind: '{theCompany.priceChangePct}'
         }, {
             xtype: 'radiogroup',
             fieldLabel: 'Rating',
@@ -168,6 +200,16 @@ Ext.define('KitchenSink.view.form.FormGrid', {
                 boxLabel: 'C',
                 inputValue: 2
             }]
+        }, {
+            labelAlign: 'top',
+            xtype: 'datefield',
+            fieldLabel: 'Last Updated (Not editable)',
+            labelSeparator: '',
+            bind: '{theCompany.priceLastChange}',
+
+            // This field is only set when the price changes
+            // The Model rejects set changes.
+            readOnly: true
         }]
     }]
 });

@@ -59,5 +59,3 @@ Ext.define('Neptune.view.combination.BorderLayoutWindow', {
     }
 });
 
-
-

@@ -6,13 +6,13 @@
  * @var {number/list}
  * Check cell padding
  */
-$checkcell-padding: dynamic(0);
+$checkcell-padding: dynamic(4px 0);
 
 /**
  * @var {number/list}
  * Check cell padding in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$checkcell-padding-big: dynamic(0);
+$checkcell-padding-big: dynamic(6px 0);
 
 /**
  * @var {number}
@@ -30,13 +30,13 @@ $checkcell-checkbox-size-big: dynamic($checkcolumn-checkbox-size-big);
  * @var {number}
  * Check cell checkbox font-size
  */
-$checkcell-checkbox-font-size: dynamic($checkcolumn-checkbox-font-size);
+$checkcell-checkbox-font-size: dynamic(null);
 
 /**
  * @var {number}
  * Check cell checkbox font-size in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$checkcell-checkbox-font-size-big: dynamic($checkcolumn-checkbox-font-size-big);
+$checkcell-checkbox-font-size-big: dynamic(null);
 
 /**
  * @var {string/list}
@@ -75,11 +75,20 @@ $checkcell-disabled-checkbox-opacity: dynamic($checkcolumn-disabled-checkbox-opa
 $checkcell-disabled-checkbox-color: dynamic($checkcolumn-disabled-checkbox-color);
 
 /**
+ * @var {color}
+ * Check cell checkbox color when focused
+ */
+$checkcell-focused-checkbox-color: dynamic($checkcolumn-focused-checkbox-color);
+
+/**
  * Creates a visual theme for a check cell.
  *
  * @param {string} $ui
  * The name of the UI being created. Can not included spaces or special punctuation
  * (used in CSS class names).
+ *
+ * @param {String} [$xtype=checkcell] (protected) The {@link Ext.Class#xtype} to use
+ * in CSS selectors.  For use by UI mixins of derived classes.
  *
  * @param {number/list} $padding
  * Check cell padding
@@ -116,9 +125,13 @@ $checkcell-disabled-checkbox-color: dynamic($checkcolumn-disabled-checkbox-color
  *
  * @param {color} $disabled-checkbox-color
  * Check cell checkbox color when disabled
+ *
+ * @param {color} $focused-checkbox-color
+ * Check cell checkbox color when focused
  */
 @mixin checkcell-ui(
     $ui: null,
+    $xtype: 'checkcell',
     $padding: null,
     $padding-big: null,
     $checkbox-size: null,
@@ -130,39 +143,29 @@ $checkcell-disabled-checkbox-color: dynamic($checkcolumn-disabled-checkbox-color
     $checkbox-color: null,
     $checked-checkbox-color: null,
     $disabled-checkbox-opacity: null,
-    $disabled-checkbox-color: null
+    $disabled-checkbox-color: null,
+    $focused-checkbox-color: null
 ) {
     $ui-suffix: ui-suffix($ui);
 
-    .#{$prefix}checkcell#{$ui-suffix} {
-        padding: $padding;
+    $arguments: intersect-arguments(checkcell-ui, gridcell-ui);
 
-        @if $enable-big {
-            .#{$prefix}big & {
-                padding: $padding-big;
-            }
-        }
+    @include gridcell-ui($arguments...);
 
+    .#{$prefix}#{$xtype}#{$ui-suffix} {
         .#{$prefix}checkbox-el {
-            height: $checkbox-size;
-            width: $checkbox-size;
-            color: $checkbox-color;
-
-            @if $enable-big {
-                .#{$prefix}big & {
-                    height: $checkbox-size-big;
-                    width: $checkbox-size-big;
-                }
-            }
-
             @include icon(
                 $icon: $checkbox-icon,
+                $color: $checkbox-color,
+                $size: $checkbox-size,
+                $size-big: $checkbox-size-big,
                 $font-size: $checkbox-font-size,
                 $font-size-big: $checkbox-font-size-big
             );
         }
 
-        &.#{$prefix}checked .#{$prefix}checkbox-el {
+        &.#{$prefix}checked .#{$prefix}checkbox-el,
+        .#{$prefix}selected > * &.#{$prefix}selection-cell .#{$prefix}checkbox-el {
             color: $checked-checkbox-color;
             @include icon($checked-checkbox-icon);
         }
@@ -170,6 +173,10 @@ $checkcell-disabled-checkbox-color: dynamic($checkcolumn-disabled-checkbox-color
         &.#{$prefix}disabled .#{$prefix}checkbox-el {
             color: $disabled-checkbox-color;
             opacity: $disabled-checkbox-opacity;
+        }
+
+        .#{$prefix}checkbox-el:focus {
+            color: $focused-checkbox-color;
         }
     }
 }

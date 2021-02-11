@@ -7,7 +7,7 @@
  * @since 5.0.0
  */
 Ext.define('Ext.data.session.ChangesVisitor', {
-    constructor: function (session) {
+    constructor: function(session) {
         var me = this,
             crud;
 
@@ -15,6 +15,7 @@ Ext.define('Ext.data.session.ChangesVisitor', {
         crud = session.getCrudProperties();
         me.result = null;
 
+        /* eslint-disable max-len */
         me.writerOptions = {
             /*
              * Keyed by the $className of a Model, e.g. "Foo", and to cache data from
@@ -33,6 +34,7 @@ Ext.define('Ext.data.session.ChangesVisitor', {
              *  }
              */
         };
+        /* eslint-enable max-len */
 
         me.createKey = crud.create;
         me.readKey = crud.read;
@@ -40,12 +42,11 @@ Ext.define('Ext.data.session.ChangesVisitor', {
         me.dropKey = crud.drop;
     },
 
-    onDirtyRecord: function (record) {
+    onDirtyRecord: function(record) {
         var me = this,
             crud = me.crud,
             created = record.phantom,
             dropped = record.dropped,
-            updated = !created && !dropped,
             type = record.$className,
             prop = (created || dropped) ? 'allDataOptions' : 'partialDataOptions',
             writerOptions = me.writerOptions,
@@ -67,6 +68,7 @@ Ext.define('Ext.data.session.ChangesVisitor', {
                     all: record.getProxy().getWriter().getWriteAllFields()
                 };
             }
+
             if (!options.all) {
                 entry = record.id;
             }
@@ -105,7 +107,7 @@ Ext.define('Ext.data.session.ChangesVisitor', {
         options.serialize = true;
     },
 
-    onMatrixChange: function (association, id1, id2, state) {
+    onMatrixChange: function(association, id1, id2, state) {
         var me = this,
             name = association.left.type, // e.g., "User"
             assocName = association.right.role, // e.g., "groups"

@@ -1,6 +1,6 @@
 /**
- * A Column definition class which renders a passed date according to the default locale, or a configured
- * {@link #format}.
+ * A Column definition class which renders a passed date according to the default locale, 
+ * or a configured {@link #format}.
  *
  *     @example
  *     var store = Ext.create('Ext.data.Store', {
@@ -12,10 +12,30 @@
  *             { name: 'topday', type: 'date' }
  *         ],
  *         data:[
- *             { symbol: "msft",   date: '2011/04/22', change: 2.43, volume: 61606325, topday: '04/01/2010' },
- *             { symbol: "goog",   date: '2011/04/22', change: 0.81, volume: 3053782,  topday: '04/11/2010' },
- *             { symbol: "apple",  date: '2011/04/22', change: 1.35, volume: 24484858, topday: '04/28/2010' },
- *             { symbol: "sencha", date: '2011/04/22', change: 8.85, volume: 5556351,  topday: '04/22/2010' }
+ *             { symbol: "msft",
+ *               date: '2011/04/22',
+ *               change: 2.43,
+ *               volume: 61606325,
+ *               topday: '04/01/2010' 
+ *             },
+ *             { symbol: "goog",
+ *               date: '2011/04/22',
+ *               change: 0.81,
+ *               volume: 3053782,
+ *                topday: '04/11/2010' 
+ *             },
+ *             { symbol: "apple",
+ *               date: '2011/04/22',
+ *               change: 1.35,
+ *               volume: 24484858,
+ *               topday: '04/28/2010' 
+ *             },
+ *             { symbol: "sencha",
+ *               date: '2011/04/22',
+ *               change: 8.85,
+ *               volume: 5556351,
+ *               topday: '04/22/2010'
+ *             }
  *         ]
  *     });
  *
@@ -35,13 +55,14 @@
  */
 Ext.define('Ext.grid.column.Date', {
     extend: 'Ext.grid.column.Column',
+    xtype: 'datecolumn',
+
+    isDateColumn: true,
 
     requires: [
         'Ext.Date',
         'Ext.grid.cell.Date'
     ],
-
-    xtype: 'datecolumn',
 
     config: {
         /**

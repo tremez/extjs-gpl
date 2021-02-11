@@ -1,4 +1,4 @@
-/*!
+/* !
  * Ext JS Library
  * Copyright(c) 2006-2014 Sencha Inc.
  * licensing@sencha.com
@@ -10,31 +10,32 @@ Ext.define('Desktop.Notepad', {
 
     requires: [
         'Ext.form.field.HtmlEditor'
-        //'Ext.form.field.TextArea'
+        // 'Ext.form.field.TextArea'
     ],
 
-    id:'notepad',
+    id: 'notepad',
 
-    init : function(){
+    init: function() {
         this.launcher = {
             text: 'Notepad',
-            iconCls:'notepad'
-        }
+            iconCls: 'notepad'
+        };
     },
 
-    createWindow : function(){
-        var desktop = this.app.getDesktop();
-        var win = desktop.getWindow('notepad');
-        if(!win){
+    createWindow: function() {
+        var desktop = this.app.getDesktop(),
+            win = desktop.getWindow('notepad');
+
+        if (!win) {
             win = desktop.createWindow({
                 id: 'notepad',
-                title:'Notepad',
-                width:600,
-                height:400,
+                title: 'Notepad',
+                width: 600,
+                height: 400,
                 iconCls: 'notepad',
-                animCollapse:false,
+                animCollapse: false,
                 border: false,
-                //defaultFocus: 'notepad-editor', EXTJSIV-1300
+                // defaultFocus: 'notepad-editor', EXTJSIV-1300
 
                 // IE has a bug where it will keep the iframe's background visible when the window
                 // is set to visibility:hidden. Hiding the window via position offsets instead gets
@@ -45,7 +46,7 @@ Ext.define('Desktop.Notepad', {
                 items: [
                     {
                         xtype: 'htmleditor',
-                        //xtype: 'textarea',
+                        // xtype: 'textarea',
                         id: 'notepad-editor',
                         value: [
                             'Some <b>rich</b> <span style="color: rgb(255, 0, 0)">text</span> goes <u>here</u><br>',
@@ -55,6 +56,7 @@ Ext.define('Desktop.Notepad', {
                 ]
             });
         }
+
         return win;
     }
 });

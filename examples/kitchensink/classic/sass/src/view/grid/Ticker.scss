@@ -1,0 +1,27 @@
+@keyframes ticker-cell-loss {
+    0% {
+            background-color: rgba(215, 0, 0, 0.2);
+    }
+    100% {
+            background: none;
+    }
+}
+
+.ticker-cell-loss {
+    animation-name: ticker-cell-loss;
+    animation-duration: 0.4s;
+}
+
+@keyframes ticker-cell-gain {
+    0% {
+            background-color: rgba(0, 215, 0, 0.2);
+    }
+    100% {
+            background: none;
+    }
+}
+
+.ticker-cell-gain {
+    animation-name: ticker-cell-gain;
+    animation-duration: 0.4s;
+}

@@ -2,12 +2,22 @@
   "name": "ext",
   "namespace": "Ext",
   "format": "1",
-  "version": "6.2.0.981",
-  "compatVersion": "6.2.0",
+  "version": "7.0.0.168",
+  "compatVersion": "7.0.0",
   "creator": "Sencha",
   "summary": "Ext JS",
   "detailedDescription": "Sencha Ext JS JavaScript Framework",
   "type": "framework",
+  "signatures": [
+    {
+      "name": "Sencha",
+      "uuid": "1d6b0d9c-3333-4e65-885f-5b07a1fc3198",
+      "created": "2020-01-14T07:08:07Z",
+      "algorithm": "SHA1withRSA",
+      "nonce": "7nieRql1fas\u003d",
+      "signature": "UjGi4mP+Kp+YsuDnMvsGW+WAq1tB3AxpaZUL9VKqj8M7rPHwTAa11w5AG8hYisuic+h2sqEevIL0UQ6CBwBGQHsZOC0qpYi5wmYGouiGPAkTiGyZv1Qh0Ocvy2EVHMstXgjwkIGG64Pe5rP1wfgu+3of0Qpi0vu/XhPTaCAKkr5GVHoLbSPlsBIxjeKSro7C/m4eeQDCIxjwypW2aVk3kpyqqQmhDQjRxy+qEK652uWDUgOB6wIXLK2fVzhqgRSPudOm6HB7uS5re3qEHN0JmICW8sTnPTrYeUVilBoibBrcltwg3PPZqMpcwRvSumnE+60U1GYZTpd9Cq1OiiEusw\u003d\u003d"
+    }
+  ],
   "output": "${package.dir}/build",
   "build": {
     "dir": "${package.output.base}"
@@ -52,17 +62,31 @@
       "modern/oreilly"
     ]
   },
-  "subpkgs": [
-    "classic/classic",
-    "modern/modern",
-    "packages/charts",
-    "packages/amf",
-    "packages/soap",
-    "packages/ux",
-    "packages/google",
-    "packages/legacy",
-    "packages/font-awesome",
-    "packages/font-pictos",
-    "packages/font-ext"
-  ]
+  "subpkgs": {
+    "dir": "${package.dir}",
+    "packages": [
+      "classic/classic",
+      "modern/modern",
+      "packages/charts",
+      "packages/amf",
+      "packages/soap",
+      "packages/ux",
+      "packages/google",
+      "packages/legacy",
+      "packages/font-awesome",
+      "packages/font-pictos",
+      "packages/font-ext"
+    ]
+  },
+  "language": {
+    "js": {
+      "input": {
+        "version": "ES5"
+      }
+    }
+  },
+  "properties": {
+    "skip.sass": 1,
+    "skip.slice": 1
+  }
 }

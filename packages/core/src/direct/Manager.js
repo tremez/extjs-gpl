@@ -73,13 +73,13 @@ Ext.define('Ext.direct.Manager', {
         LOGIN: 'login',
         SERVER: 'exception'
     },
-    
+
     // Classes of Providers available to the application
     providerClasses: {},
-    
+
     // Remoting Methods registered with the Manager
     remotingMethods: {},
-    
+
     config: {
         /**
          * @cfg {String} [varName="Ext.REMOTING_API"]
@@ -87,9 +87,9 @@ Ext.define('Ext.direct.Manager', {
          */
         varName: 'Ext.REMOTING_API'
     },
-    
+
     apiNotFoundError: 'Ext Direct API was not found at {0}',
-    
+
     /**
      * @event event
      *
@@ -109,7 +109,7 @@ Ext.define('Ext.direct.Manager', {
      * @param {Ext.direct.Provider} provider The {@link Ext.direct.Provider Provider}
      * that provided the event.
      */
-    
+
     /**
      * @event providerload
      *
@@ -120,7 +120,7 @@ Ext.define('Ext.direct.Manager', {
      * @param {Ext.direct.Provider} provider The {@link Ext.direct.Provider Provider}
      * instance that was created.
      */
-    
+
     /**
      * @event providerloaderror
      * 
@@ -136,11 +136,11 @@ Ext.define('Ext.direct.Manager', {
      */
     constructor: function() {
         var me = this;
-        
+
         me.mixins.observable.constructor.call(me);
 
         me.transactions = new Ext.util.MixedCollection();
-        me.providers    = new Ext.util.MixedCollection();
+        me.providers = new Ext.util.MixedCollection();
     },
 
     /**
@@ -157,7 +157,7 @@ Ext.define('Ext.direct.Manager', {
      *          id: 'remoting1',
      *          type: 'remoting',           // create a Ext.direct.RemotingProvider
      *          url:  'php/router.php',     // url to connect to the Ext Direct server-side router.
-     *          actions: {                  // each property within the actions object represents an Action
+     *          actions: {                  // each property in actions object represents an Action
      *              TestAction: [{          // array of Methods within each server side Action
      *                  name: 'doEcho',     // name of method
      *                  len:  1
@@ -193,7 +193,7 @@ Ext.define('Ext.direct.Manager', {
             for (i = 0, len = args.length; i < len; ++i) {
                 me.addProvider(args[i]);
             }
-            
+
             return;
         }
 
@@ -201,10 +201,10 @@ Ext.define('Ext.direct.Manager', {
         if (!provider.isProvider) {
             provider = Ext.create('direct.' + provider.type + 'provider', provider);
         }
-        
+
         me.providers.add(provider);
         provider.on('data', me.onProviderData, me);
-        
+
         if (provider.relayedEvents) {
             relayers[provider.id] = me.relayEvents(provider, provider.relayedEvents);
         }
@@ -215,7 +215,7 @@ Ext.define('Ext.direct.Manager', {
 
         return provider;
     },
-    
+
     /**
      * Load Ext Direct Provider API declaration from the server and construct
      * a new Provider instance. The new Provider will then auto-connect and
@@ -241,55 +241,55 @@ Ext.define('Ext.direct.Manager', {
         var me = this,
             classes = me.providerClasses,
             type, url, varName, provider, i, len;
-        
+
         if (Ext.isArray(config)) {
             for (i = 0, len = config.length; i < len; i++) {
                 me.loadProvider(config[i], callback, scope);
             }
-            
+
             return;
         }
-        
+
         // We may have been passed config object containing enough
         // information to create a Provider without further ado.
         type = config.type;
-        url  = config.url;
-        
+        url = config.url;
+
         if (classes[type] && classes[type].checkConfig(config)) {
             provider = me.addProvider(config);
-            
+
             me.fireEventArgs('providerload', [url, provider]);
             Ext.callback(callback, scope, [url, provider]);
-            
+
             // We're deliberately not returning the provider here
             // to make way for the future Promises based implementation
             // that should be consistent with the remote API declaration
             // retrieval below.
             return;
         }
-        
+
         // For remote API declaration retrieval we need to know the
         // service discovery URL and variable name, at the minimum.
         // We have a default for the variable name but not for URL.
         varName = config.varName || me.getVarName();
         delete config.varName;
-        
+
         //<debug>
         if (!url) {
             Ext.raise("Need API discovery URL to load a Remoting provider!");
         }
         //</debug>
-        
+
         // The URL we are requesting API from is not the same as the
         // service URL, and we don't need them to mix.
         delete config.url;
-        
+
         // Have to use closures here as Loader does not allow passing
         // options object from caller to callback.
         Ext.Loader.loadScript({
             url: url,
             scope: me,
-            
+
             onLoad: function() {
                 this.onApiLoadSuccess({
                     url: url,
@@ -299,7 +299,7 @@ Ext.define('Ext.direct.Manager', {
                     scope: scope
                 });
             },
-            
+
             onError: function() {
                 this.onApiLoadFailure({
                     url: url,
@@ -309,7 +309,7 @@ Ext.define('Ext.direct.Manager', {
             }
         });
     },
-    
+
     /**
      * Retrieves a {@link Ext.direct.Provider provider} by the id specified when the
      * provider is added.
@@ -339,17 +339,17 @@ Ext.define('Ext.direct.Manager', {
             provider.un('data', me.onProviderData, me);
 
             id = provider.id;
-            
+
             if (relayers[id]) {
                 relayers[id].destroy();
                 delete relayers[id];
             }
-            
+
             providers.remove(provider);
-            
+
             return provider;
         }
-        
+
         return null;
     },
 
@@ -364,14 +364,15 @@ Ext.define('Ext.direct.Manager', {
      */
     addTransaction: function(transaction) {
         this.transactions.add(transaction);
-        
+
         return transaction;
     },
 
     /**
      * Removes a transaction from the manager.
      *
-     * @param {String/Ext.direct.Transaction} transaction The transaction/id of transaction to remove
+     * @param {String/Ext.direct.Transaction} transaction The transaction/id of transaction
+     * to remove
      *
      * @return {Ext.direct.Transaction} transaction
      *
@@ -379,10 +380,10 @@ Ext.define('Ext.direct.Manager', {
      */
     removeTransaction: function(transaction) {
         var me = this;
-        
+
         transaction = me.getTransaction(transaction);
         me.transactions.remove(transaction);
-        
+
         return transaction;
     },
 
@@ -407,20 +408,20 @@ Ext.define('Ext.direct.Manager', {
             for (i = 0, len = event.length; i < len; ++i) {
                 me.onProviderData(provider, event[i]);
             }
-            
+
             return;
         }
-        
+
         if (event.name && event.name !== 'event' && event.name !== 'exception') {
             me.fireEvent(event.name, event);
         }
         else if (event.status === false) {
             me.fireEvent('exception', event);
         }
-        
+
         me.fireEvent('event', event, provider);
     },
-    
+
     /**
      * Parses a direct function. It may be passed in a string format, for example:
      * "MyApp.Person.read".
@@ -433,31 +434,31 @@ Ext.define('Ext.direct.Manager', {
         var current = Ext.global,
             i = 0,
             resolved, parts, len;
-        
+
         if (Ext.isFunction(fn)) {
             resolved = fn;
         }
         else if (Ext.isString(fn)) {
             resolved = this.remotingMethods[fn];
-            
+
             // Support legacy resolution as top-down lookup
             // from the window scope
             if (!resolved) {
                 parts = fn.split('.');
-                len   = parts.length;
+                len = parts.length;
 
                 while (current && i < len) {
                     current = current[parts[i]];
                     ++i;
                 }
-            
+
                 resolved = Ext.isFunction(current) ? current : null;
             }
         }
-        
+
         return resolved || null;
     },
-        
+
     /**
      * @private
      * Iterate over an API object containing function names and resolve Direct functions.
@@ -469,20 +470,20 @@ Ext.define('Ext.direct.Manager', {
      */
     resolveApi: function(api, caller) {
         var prefix, action, method, fullName, fn;
-        
+
         prefix = api && api.prefix;
-        
+
         if (prefix && prefix.substr(prefix.length - 1) !== '.') {
             prefix += '.';
         }
-        
+
         for (action in api) {
             method = api[action];
-            
+
             if (action !== 'prefix' && typeof method !== 'function') {
                 fullName = (prefix || '') + method;
                 fn = this.parseMethod(fullName);
-                
+
                 if (typeof fn === 'function') {
                     api[action] = fn;
                 }
@@ -495,32 +496,32 @@ Ext.define('Ext.direct.Manager', {
                 //</debug>
             }
         }
-        
+
         return api;
     },
-    
+
     privates: {
         addProviderClass: function(type, cls) {
             this.providerClasses[type] = cls;
         },
-        
+
         onApiLoadSuccess: function(options) {
             var me = this,
                 url = options.url,
                 varName = options.varName,
                 api, provider, error;
-            
+
             try {
                 // Variable name could be nested (default is Ext.REMOTING_API),
                 // so we use eval() to get the actual value.
                 api = Ext.apply(options.config, eval(varName));
-                
+
                 provider = me.addProvider(api);
             }
             catch (e) {
                 error = e + '';
             }
-            
+
             if (error) {
                 me.fireEventArgs('providerloaderror', [url, error]);
                 Ext.callback(options.callback, options.scope, [url, error]);
@@ -530,21 +531,21 @@ Ext.define('Ext.direct.Manager', {
                 Ext.callback(options.callback, options.scope, [url, provider]);
             }
         },
-        
+
         onApiLoadFailure: function(options) {
             var url = options.url,
                 error;
-            
+
             error = Ext.String.format(this.apiNotFoundError, url);
-            
+
             this.fireEventArgs('providerloaderror', [url, error]);
             Ext.callback(options.callback, options.scope, [url, error]);
         },
-        
+
         registerMethod: function(name, method) {
             this.remotingMethods[name] = method;
         },
-        
+
         // Used for testing
         clearAllMethods: function() {
             this.remotingMethods = {};

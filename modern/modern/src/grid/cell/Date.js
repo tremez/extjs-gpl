@@ -9,6 +9,8 @@ Ext.define('Ext.grid.cell.Date', {
     extend: 'Ext.grid.cell.Text',
     xtype: 'datecell',
 
+    isDateCell: true,
+
     requires: ['Ext.Date'],
 
     config: {
@@ -16,16 +18,17 @@ Ext.define('Ext.grid.cell.Date', {
          * @cfg {String} format
          * A format string as used by {@link Ext.Date#format} to format values for this
          * column.
+         * @locale
          */
         format: ''
     },
 
-    updateColumn: function (column, oldColumn) {
+    updateColumn: function(column, oldColumn) {
         var format;
 
-        this.callParent([column, oldColumn]);
+        this.callParent([ column, oldColumn ]);
 
-        if (column) {
+        if (column && column.isDateColumn) {
             format = column.getFormat();
 
             if (format !== null) {
@@ -34,18 +37,17 @@ Ext.define('Ext.grid.cell.Date', {
         }
     },
 
-    applyFormat: function (format) {
+    applyFormat: function(format) {
         return format || Ext.Date.defaultFormat;
     },
 
-    updateFormat: function (format) {
+    updateFormat: function(format) {
         if (!this.isConfiguring) {
             this.writeValue();
         }
     },
 
-    writeValue: function () {
-        var value = this.getValue();
-        this.setRawValue(value ? Ext.Date.format(value, this.getFormat()) : null);
+    formatValue: function(value) {
+        return value ? Ext.Date.format(value, this.getFormat()) : '';
     }
 });

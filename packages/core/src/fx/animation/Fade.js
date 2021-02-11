@@ -13,8 +13,7 @@ Ext.define('Ext.fx.animation.Fade', {
          * @cfg {Boolean} out True if you want to make this animation fade out, instead of fade in.
          * @accessor
          */
-
-        out: false,
+        out: false, // Needs to default to false so updater runs and populates from/to data.
 
         before: {
             display: null,
@@ -28,15 +27,16 @@ Ext.define('Ext.fx.animation.Fade', {
     },
 
     updateOut: function(newOut) {
-        var to   = this.getTo(),
+        var to = this.getTo(),
             from = this.getFrom();
 
         if (newOut) {
             from.set('opacity', 1);
-            to.set('opacity',   0);
-        } else {
+            to.set('opacity', 0);
+        }
+        else {
             from.set('opacity', 0);
-            to.set('opacity',   1);
+            to.set('opacity', 1);
         }
     }
 });

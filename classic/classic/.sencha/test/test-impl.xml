@@ -81,6 +81,75 @@ this file in most cases.
         <property name="base.path" value="${local.runner.dir}"/>
         <property name="bootstrap.specs.file" value="../bootstrap-specs.js"/>
 
+        <!--Comment this line out to skip including bootstrap metadata for the test files-->
+        <property name="scan.test.files" value="true"/>
+        
+        <if>
+            <x-is-true value="${scan.test.files}"/>
+            <then>
+                <x-compile refid="${compiler.ref.id}">
+                    <![CDATA[
+                        save
+                            current
+                        and
+                        classpath
+                            +new
+                             -name=specs
+                             -path=${package.dir}/../../packages/core/test/specs
+                        and
+                        classpath
+                             -name=specs
+                             -path=${package.dir}/test/specs
+                        and
+                        classpath
+                             -name=specs
+                             -path=${package.dir}/../../packages/charts/test/specs
+                        and
+                        classpath
+                             -name=specs
+                             -path=${package.dir}/../../packages/charts/test/specs-classic
+                        and
+                        classpath
+                             -name=specs
+                             -path=${package.dir}/../../packages/ux/test/specs
+                        and
+                        classpath
+                             -name=specs
+                             -path=${package.dir}/../../packages/ux/test/classic/specs
+                        and
+                        classpath
+                             -name=specs
+                             -path=${package.dir}/../../../packages/d3/test/specs
+                        and
+                        classpath
+                             -name=specs
+                             -path=${package.dir}/../../../packages/d3/test/specs-classic
+                        and
+                        classpath
+                             -name=specs
+                             -path=${package.dir}/../../../packages/pivot/test/specs
+                        and
+                        classpath
+                             -name=specs
+                             -path=${package.dir}/../../../packages/pivot/test/classic/specs
+                        and
+                        classpath
+                             -name=specs
+                             -path=${package.dir}/../../../packages/exporter/test/specs
+                        and
+                        classpath
+                             -name=specs
+                             -path=${package.dir}/../../../packages/exporter/test/classic/specs
+                        and
+                        include
+                             -all
+                    ]]>
+                </x-compile>
+            </then>
+        </if>
+
+
+
         <x-bootstrap file="${base.path}/../bootstrap.js"
                      basedir="${base.path}"
                      coreFilesFile="${base.path}/../bootstrap-files.js"
@@ -102,6 +171,15 @@ Ext.Boot.loadSync([
 Ext.Boot.load("../bootstrap-launch.js");
 ]]>
          </x-bootstrap>
+        <if>
+            <x-is-true value="${scan.test.files}"/>
+            <then>
+                <x-compile refid="${compiler.ref.id}">
+                    restore
+                    current
+                </x-compile>
+            </then>
+        </if>
 
         <!--
         for the local runner, we also need to include all spec files in the bootstrap
@@ -199,10 +277,10 @@ Ext.Boot.load("../bootstrap-launch.js");
 ${specfiles.list}
         ];
 
-    if (window.Cmd) {
-        url = Cmd.status.getCurrentChunk(url);
+    if (top.Test && top.Test.Options && top.Test.Options.getCurrentChunk) {
+        url = top.Test.Options.getCurrentChunk(url);
     }
-    
+
     Ext.Boot.load({
         charset: "UTF-8",
         url: url,

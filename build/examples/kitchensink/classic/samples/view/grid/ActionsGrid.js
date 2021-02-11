@@ -21,7 +21,7 @@ Ext.define('KitchenSink.view.grid.ActionsGrid', {
     title: 'Actions Grid',
     store: 'Companies',
     width: '${width}',
-    height: 350,
+    height: '${height}',
 
     //<example>
     otherContent: [{
@@ -29,27 +29,51 @@ Ext.define('KitchenSink.view.grid.ActionsGrid', {
         path: 'classic/samples/view/grid/ActionsGridController.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/Companies.js'
+        path: 'app/store/Companies.js'
     }, {
         type: 'Model',
-        path: 'classic/samples/model/Company.js'
+        path: 'app/model/Company.js'
     }],
     profiles: {
         classic: {
             width: 600,
+            height: 350,
             priceWidth: 75,
+            pricechangeWidth: 80,
             percentChangeColumnWidth: 75,
             lastUpdatedColumnWidth: 85,
-            green: 'green',
-            red: 'red'
+            gainColor: 'green',
+            lossColor: 'red'
         },
         neptune: {
             width: 700,
+            height: 350,
             priceWidth: 95,
+            pricechangeWidth: 80,
             percentChangeColumnWidth: 100,
             lastUpdatedColumnWidth: 115,
-            green: '#73b51e',
-            red: '#cf4c35'
+            gainColor: '#73b51e',
+            lossColor: '#cf4c35'
+        },
+        graphite: {
+            width: 750,
+            height: 450,
+            priceWidth: 100,
+            pricechangeWidth: 110,
+            percentChangeColumnWidth: 120,
+            lastUpdatedColumnWidth: 150,
+            gainColor: 'unset',
+            lossColor: 'unset'
+        },
+        'classic-material': {
+            width: 750,
+            height: 450,
+            priceWidth: 100,
+            pricechangeWidth: 110,
+            percentChangeColumnWidth: 120,
+            lastUpdatedColumnWidth: 150,
+            gainColor: 'unset',
+            lossColor: 'unset'
         }
     },
     //</example>
@@ -60,7 +84,7 @@ Ext.define('KitchenSink.view.grid.ActionsGrid', {
             selectionchange: 'onSelectionChange'
         }
     },
-    
+
     // Clearing selection disables the Actions.
     allowDeselect: true,
     defaultActionType: 'button',
@@ -97,27 +121,21 @@ Ext.define('KitchenSink.view.grid.ActionsGrid', {
         dataIndex: 'price'
     }, {
         text: 'Change',
-        width: 80,
+        width: '${pricechangeWidth}',
         sortable: true,
         renderer: 'renderChange',
-        dataIndex: 'change'
-    }, {
-        text: 'Change',
-        width: 80,
-        sortable: true,
-        renderer: 'renderChange',
-        dataIndex: 'change'
+        dataIndex: 'priceChange'
     }, {
         text: '% Change',
         width: '${percentChangeColumnWidth}',
         sortable: true,
         renderer: 'renderPctChange',
-        dataIndex: 'pctChange'
+        dataIndex: 'priceChangePct'
     }, {
         text: 'Last Updated',
         width: '${lastUpdatedColumnWidth}',
         sortable: true,
         formatter: 'date("m/d/Y")',
-        dataIndex: 'lastChange'
+        dataIndex: 'priceLastChange'
     }]
 });

@@ -1,6 +1,5 @@
 // This will test all interaction between drag/drop targets.
-describe("Ext.drag.Manager", function() {
-
+topSuite("Ext.drag.Manager", ['Ext.drag.*', 'Ext.dom.Element', 'Ext.scroll.NativeScroller'], function() {
     var helper = Ext.testHelper,
         touchId = 0,
         cursorTrack, source, target,
@@ -14,7 +13,7 @@ describe("Ext.drag.Manager", function() {
         if (typeof x !== 'number') {
             x = 5;
         }
-        
+
         if (typeof y !== 'number') {
             y = 5;
         }
@@ -35,7 +34,7 @@ describe("Ext.drag.Manager", function() {
         if (typeof x !== 'number') {
             x = 50;
         }
-        
+
         if (typeof y !== 'number') {
             y = 50;
         }
@@ -54,23 +53,29 @@ describe("Ext.drag.Manager", function() {
 
     function makeSource(cfg) {
         cfg = cfg || {};
+
         if (!cfg.element) {
             if (!dragEl) {
                 makeDragEl();
             }
+
             cfg.element = dragEl;
         }
+
         source = new Ext.drag.Source(cfg);
     }
 
     function makeTarget(cfg) {
         cfg = cfg || {};
+
         if (!cfg.element) {
             if (!dropEl) {
                 makeDropEl();
             }
+
             cfg.element = dropEl;
         }
+
         target = new Ext.drag.Target(cfg);
     }
 
@@ -97,6 +102,7 @@ describe("Ext.drag.Manager", function() {
     function startDrag(x, y, target) {
         runs(function() {
             var xy = source.getElement().getXY();
+
             x = x || xy[0];
             y = y || xy[1];
 
@@ -114,19 +120,21 @@ describe("Ext.drag.Manager", function() {
             var el = source.getElement(),
                 xy = source.getElement().getXY(),
                 size = el.getSize(),
-                xOffset = 0, 
+                xOffset = 0,
                 yOffset = 0;
 
             if (xPos === 'middle') {
                 xOffset = size.width / 2;
-            } else if (xPos === 'end') {
-                xOffset = size.width;
+            }
+            else if (xPos === 'end') {
+                xOffset = size.width - 1;
             }
 
             if (yPos === 'middle') {
                 yOffset = size.height / 2;
-            } else if (yPos === 'end') {
-                yOffset = size.height;
+            }
+            else if (yPos === 'end') {
+                yOffset = size.height - 1;
             }
 
             start({
@@ -171,6 +179,7 @@ describe("Ext.drag.Manager", function() {
             if (!Ext.isArray(spies)) {
                 spies = [spies];
             }
+
             Ext.Array.forEach(spies, function(spy) {
                 expect(spy.callCount).toBe(n);
             });
@@ -275,14 +284,14 @@ describe("Ext.drag.Manager", function() {
                 startPosDrag('start', 'start');
                 moveBy(-19, -19);
                 runsExpectCallCount(enterSpy, 0);
-                moveBy(-2, -2);
+                moveBy(-2, -4);
                 runsExpectCallCount(enterSpy, 1);
                 moveBy(-10, -10);
                 runsExpectCallCount(enterSpy, 1);
                 moveBy(10, 10);
                 runsExpectCallCount(enterSpy, 1);
                 runsExpectCallCount(leaveSpy, 0);
-                moveBy(2, 2);
+                moveBy(2, 4);
                 runsExpectCallCount(leaveSpy, 1);
                 endDrag();
             });
@@ -295,14 +304,14 @@ describe("Ext.drag.Manager", function() {
                 startPosDrag('middle', 'start');
                 moveBy(0, -19);
                 runsExpectCallCount(enterSpy, 0);
-                moveBy(0, -2);
+                moveBy(0, -4);
                 runsExpectCallCount(enterSpy, 1);
                 moveBy(0, -10);
                 runsExpectCallCount(enterSpy, 1);
                 moveBy(0, 10);
                 runsExpectCallCount(enterSpy, 1);
                 runsExpectCallCount(leaveSpy, 0);
-                moveBy(0, 2);
+                moveBy(0, 4);
                 runsExpectCallCount(leaveSpy, 1);
                 endDrag();
             });
@@ -315,14 +324,14 @@ describe("Ext.drag.Manager", function() {
                 startPosDrag('end', 'start');
                 moveBy(19, -19);
                 runsExpectCallCount(enterSpy, 0);
-                moveBy(2, -2);
+                moveBy(2, -4);
                 runsExpectCallCount(enterSpy, 1);
                 moveBy(10, -10);
                 runsExpectCallCount(enterSpy, 1);
                 moveBy(-10, 10);
                 runsExpectCallCount(enterSpy, 1);
                 runsExpectCallCount(leaveSpy, 0);
-                moveBy(-2, 2);
+                moveBy(-2, 4);
                 runsExpectCallCount(leaveSpy, 1);
                 endDrag();
             });
@@ -369,6 +378,8 @@ describe("Ext.drag.Manager", function() {
         });
 
         describe("z-index", function() {
+            var drop1, drop2, drop3;
+
             function makeZIndexDrop(zIndex, color) {
                 var el = makeEl({
                     style: {
@@ -381,15 +392,20 @@ describe("Ext.drag.Manager", function() {
                         backgroundColor: color
                     }
                 });
+
                 return new Ext.drag.Target({
                     element: el
                 });
             }
 
+            afterEach(function() {
+                Ext.destroy(drop1, drop2, drop3);
+            });
+
             it("should only match the topmost z-index", function() {
-                var drop1 = makeZIndexDrop(300, 'red'),
-                    drop2 = makeZIndexDrop(200, 'blue'),
-                    drop3 = makeZIndexDrop(100, 'green');
+                drop1 = makeZIndexDrop(300, 'red');
+                drop2 = makeZIndexDrop(200, 'blue');
+                drop3 = makeZIndexDrop(100, 'green');
 
                 makeDragEl();
                 makeSource();
@@ -412,15 +428,12 @@ describe("Ext.drag.Manager", function() {
                     expect(leaveSpy.mostRecentCall.dragInfo.target).toBe(drop1);
                 });
                 endDrag();
-                runs(function() {
-                    Ext.destroy(drop1, drop2, drop3);
-                });
             });
 
             it("should not move to a lower z-index if the topmost doesn't accept the drop", function() {
-                var drop1 = makeZIndexDrop(300, 'red'),
-                    drop2 = makeZIndexDrop(200, 'blue'),
-                    drop3 = makeZIndexDrop(100, 'green');
+                drop1 = makeZIndexDrop(300, 'red');
+                drop2 = makeZIndexDrop(200, 'blue');
+                drop3 = makeZIndexDrop(100, 'green');
 
                 makeDragEl();
                 makeSource();
@@ -432,9 +445,6 @@ describe("Ext.drag.Manager", function() {
                 moveBy(50, 50);
                 runsExpectCallCount(enterSpy, 0);
                 endDrag();
-                runs(function() {
-                    Ext.destroy(drop1, drop2, drop3);
-                });
             });
         });
 
@@ -502,6 +512,7 @@ describe("Ext.drag.Manager", function() {
                 });
 
                 runs(function() {
+                    endDrag();
                     inner.destroy();
                 });
             });
@@ -509,33 +520,35 @@ describe("Ext.drag.Manager", function() {
 
         describe("scroll", function() {
             it("should match targets when the document is scrolled", function() {
-                var Scroller = Ext.scroll.Scroller,
-                    stretcher;
+                var stretcher, s;
 
                 makeDragEl(405, 405);
                 makeDropEl(450, 450);
 
                 setup();
-                if (Scroller && Scroller.viewport) {
-                    stretcher = Ext.getBody().createChild({
-                        style: {
-                            width: '5000px',
-                            height: '5000px',
-                            border: '1px solid red'
-                        }
-                    });
-                    Scroller.viewport.scrollTo(0, 400);
+                s = Ext.getViewportScroller();
 
-                    startDrag();
-                    moveBy(50, 50);
-                    runsExpectCallCount(enterSpy, 1);
-                    moveBy(-20, -20);
-                    runsExpectCallCount(leaveSpy, 1);
-                    endDrag();
-                    runs(function() {
-                        stretcher.remove();
-                    });
-                }
+                stretcher = Ext.getBody().insertFirst({
+                    style: {
+                        width: '5000px',
+                        height: '5000px',
+                        border: '1px solid red'
+                    }
+                });
+
+                s.scrollTo(0, 400);
+
+                waitsForEvent(s, 'scrollend');
+
+                startDrag();
+                moveBy(50, 50);
+                runsExpectCallCount(enterSpy, 1);
+                moveBy(-20, -20);
+                runsExpectCallCount(leaveSpy, 1);
+                endDrag();
+                runs(function() {
+                    stretcher.remove();
+                });
             });
         });
     });
@@ -573,6 +586,7 @@ describe("Ext.drag.Manager", function() {
                 if (!Ext.isArray(spies)) {
                     spies = [spies];
                 }
+
                 Ext.Array.forEach(spies, function(spy) {
                     expect(spy.mostRecentCall.valid).toBe(valid);
                 });
@@ -601,6 +615,7 @@ describe("Ext.drag.Manager", function() {
 
             it("should not call accept if target is disabled", function() {
                 var accepts = jasmine.createSpy().andReturn(true);
+
                 makeSource();
                 makeTarget({
                     accepts: accepts
@@ -614,6 +629,7 @@ describe("Ext.drag.Manager", function() {
 
             it("should not call accept if groups don't match", function() {
                 var accepts = jasmine.createSpy().andReturn(true);
+
                 makeSource({
                     groups: 'foo'
                 });
@@ -628,6 +644,7 @@ describe("Ext.drag.Manager", function() {
 
             it("should not enter the target if it doesn't accept the data", function() {
                 var accepts = jasmine.createSpy().andReturn(false);
+
                 makeSource();
                 makeTarget({
                     accepts: accepts
@@ -639,6 +656,7 @@ describe("Ext.drag.Manager", function() {
 
             it("should pass the info object", function() {
                 var accepts = jasmine.createSpy().andReturn(true);
+
                 makeSource();
                 makeTarget({
                     accepts: accepts
@@ -654,6 +672,7 @@ describe("Ext.drag.Manager", function() {
 
             it("should only call accepts once it enters the target", function() {
                 var accepts = jasmine.createSpy().andReturn(true);
+
                 makeSource();
                 makeTarget({
                     accepts: accepts
@@ -671,6 +690,7 @@ describe("Ext.drag.Manager", function() {
 
             it("should only call accepts once when it enters the target and the source is accepted", function() {
                 var accepts = jasmine.createSpy().andReturn(true);
+
                 makeSource();
                 makeTarget({
                     accepts: accepts
@@ -694,6 +714,7 @@ describe("Ext.drag.Manager", function() {
 
             it("should only call accepts once when it enters the target and the source is not accepted", function() {
                 var accepts = jasmine.createSpy().andReturn(false);
+
                 makeSource();
                 makeTarget({
                     accepts: accepts
@@ -717,6 +738,7 @@ describe("Ext.drag.Manager", function() {
 
             it("should call accepts each time it enters the target", function() {
                 var accepts = jasmine.createSpy().andReturn(true);
+
                 makeSource();
                 makeTarget({
                     accepts: accepts

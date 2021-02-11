@@ -62,18 +62,20 @@ Ext.define('Ext.chart.legend.sprite.Item', {
         series: null
     },
 
-    applyLabel: function (label, oldLabel) {
+    applyLabel: function(label, oldLabel) {
         var sprite;
 
         if (label) {
             if (label.isSprite && label.type === 'text') {
                 sprite = label;
-            } else {
+            }
+            else {
                 if (oldLabel && label.type === oldLabel.type) {
                     oldLabel.setConfig(label);
                     sprite = oldLabel;
                     this.scheduleUpdater(this.attr, 'layout');
-                } else {
+                }
+                else {
                     sprite = new Ext.draw.sprite.Text(label);
                 }
             }
@@ -84,40 +86,42 @@ Ext.define('Ext.chart.legend.sprite.Item', {
 
     defaultMarkerSize: 10,
 
-    updateLabel: function (label, oldLabel) {
+    updateLabel: function(label, oldLabel) {
         var me = this;
 
         me.removeSprite(oldLabel);
         label.setAttributes({
             textBaseline: 'middle'
         });
-        me.add(label);
+        me.addSprite(label);
         me.scheduleUpdater(me.attr, 'layout');
     },
 
-    applyMarker: function (config) {
+    applyMarker: function(config) {
         var marker;
 
         if (config) {
             if (config.isSprite) {
                 marker = config;
-            } else {
+            }
+            else {
                 marker = this.createMarker(config);
             }
         }
+
         marker = this.resetMarker(marker, config);
 
         return marker;
     },
 
-    createMarker: function (config) {
+    createMarker: function(config) {
         var marker;
 
         // If marker attributes are animated, the attributes change over
         // time from default values to the values specified in the marker
         // config. But the 'legenditem' sprite needs final values
         // to properly layout its children.
-        delete config.fx;
+        delete config.animation;
 
         if (config.type === 'image') {
             delete config.width;
@@ -129,7 +133,7 @@ Ext.define('Ext.chart.legend.sprite.Item', {
         return marker;
     },
 
-    resetMarker: function (sprite, config) {
+    resetMarker: function(sprite, config) {
         var size = config.size || this.defaultMarkerSize,
             bbox, max, scale;
 
@@ -142,7 +146,8 @@ Ext.define('Ext.chart.legend.sprite.Item', {
                 width: size,
                 height: size
             });
-        } else {
+        }
+        else {
             // This should work with any sprite, irrespective of what attribute
             // is used to control sprite's size ('size', 'r', or something else).
             // However, the 'image' sprite above is a special case.
@@ -158,24 +163,25 @@ Ext.define('Ext.chart.legend.sprite.Item', {
         return sprite;
     },
 
-    updateMarker: function (marker, oldMarker) {
+    updateMarker: function(marker, oldMarker) {
         var me = this;
 
         me.removeSprite(oldMarker);
-        me.add(marker);
+        me.addSprite(marker);
         me.scheduleUpdater(me.attr, 'layout');
     },
 
-    updateSurface: function (surface, oldSurface) {
+    updateSurface: function(surface, oldSurface) {
         var me = this;
 
         me.callParent([surface, oldSurface]);
+
         if (surface) {
             me.scheduleUpdater(me.attr, 'layout');
         }
     },
 
-    enabledUpdater: function (attr) {
+    enabledUpdater: function(attr) {
         var marker = this.getMarker();
 
         if (marker) {
@@ -185,7 +191,7 @@ Ext.define('Ext.chart.legend.sprite.Item', {
         }
     },
 
-    layoutUpdater: function (attr) {
+    layoutUpdater: function() {
         var me = this,
             attr = me.attr,
             label = me.getLabel(),
@@ -207,12 +213,12 @@ Ext.define('Ext.chart.legend.sprite.Item', {
         // we want to add to that transformation, not replace it,
         // so setting translationX/Y attributes here would be inappropriate.
         marker.transform([1, 0, 0, 1,
-            -markerBBox.x,
-            -markerBBox.y + (totalHeight - markerBBox.height) / 2
+                          -markerBBox.x,
+                          -markerBBox.y + (totalHeight - markerBBox.height) / 2
         ], true);
         label.transform([1, 0, 0, 1,
-            -labelBBox.x + markerBBox.width + attr.markerLabelGap,
-            -labelBBox.y + (totalHeight - labelBBox.height) / 2
+                         -labelBBox.x + markerBBox.width + attr.markerLabelGap,
+                         -labelBBox.y + (totalHeight - labelBBox.height) / 2
         ], true);
 
         me.bboxUpdater(attr);

@@ -6,7 +6,7 @@
  * @mixins Ext.device.twitter.Abstract
  */
 Ext.define('Ext.device.Twitter', {
-    alternateClassName:'Ext.ux.device.Twitter',
+    alternateClassName: 'Ext.ux.device.Twitter',
     singleton: true,
 
     requires: [
@@ -16,9 +16,11 @@ Ext.define('Ext.device.Twitter', {
 
     constructor: function() {
         var browserEnv = Ext.browser.is;
+
         if (browserEnv.WebView && browserEnv.Cordova) {
             return Ext.create('Ext.device.twitter.Cordova');
-        } else {
+        }
+        else {
             return Ext.create('Ext.device.twitter.Abstract');
         }
     }

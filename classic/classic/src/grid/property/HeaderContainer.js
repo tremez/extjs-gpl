@@ -10,21 +10,40 @@ Ext.define('Ext.grid.property.HeaderContainer', {
 
     nameWidth: 115,
 
-    //<locale>
-    nameText : 'Name',
-    //</locale>
-    //<locale>
-    valueText : 'Value',
-    //</locale>
-    //<locale>
-    dateFormat : 'm/j/Y',
-    //</locale>
-    //<locale>
+    /**
+     * @cfg {String} nameText
+     * The column header text for the name column.
+     * @locale
+     */
+    nameText: 'Name',
+
+    /**
+     * @cfg {String} valueText
+     * The column header text for the value column.
+     * @locale
+     */
+    valueText: 'Value',
+
+    /**
+     * @cfg {String} dateFormat
+     * The {@link Ext.Date date format} to use for date values.
+     * @locale
+     */
+    dateFormat: 'm/j/Y',
+
+    /**
+     * @cfg {String} trueText
+     * The text to display for boolean `true` values.
+     * @locale
+     */
     trueText: 'true',
-    //</locale>
-    //<locale>
+
+    /**
+     * @cfg {String} falseText
+     * The text to display for boolean `false` values.
+     * @locale
+     */
     falseText: 'false',
-    //</locale>
 
     /**
      * @private
@@ -37,15 +56,22 @@ Ext.define('Ext.grid.property.HeaderContainer', {
      * @param {Ext.grid.property.Grid} grid The grid this store will be bound to
      * @param {Object} source The source data config object
      */
-    constructor : function(grid, store) {
+    constructor: function(grid, source) {
         var me = this;
 
         me.grid = grid;
-        me.store = store;
+        me.store = source;
         me.callParent([{
             isRootHeader: true,
-            enableColumnResize: Ext.isDefined(grid.enableColumnResize) ? grid.enableColumnResize : me.enableColumnResize,
-            enableColumnMove: Ext.isDefined(grid.enableColumnMove) ? grid.enableColumnMove : me.enableColumnMove,
+
+            enableColumnResize: Ext.isDefined(grid.enableColumnResize)
+                ? grid.enableColumnResize
+                : me.enableColumnResize,
+
+            enableColumnMove: Ext.isDefined(grid.enableColumnMove)
+                ? grid.enableColumnMove
+                : me.enableColumnMove,
+
             items: [{
                 header: me.nameText,
                 width: grid.nameColumnWidth || me.nameWidth,
@@ -75,7 +101,7 @@ Ext.define('Ext.grid.property.HeaderContainer', {
         me.grid.valueColumn = me.items.getAt(1);
     },
 
-    getCellEditor: function(record){
+    getCellEditor: function(record) {
         return this.grid.getCellEditor(record, this);
     },
 
@@ -83,7 +109,7 @@ Ext.define('Ext.grid.property.HeaderContainer', {
      * @private
      * Render a property name cell
      */
-    renderProp : function(v) {
+    renderProp: function(v) {
         return this.getPropertyName(v);
     },
 
@@ -91,7 +117,7 @@ Ext.define('Ext.grid.property.HeaderContainer', {
      * @private
      * Render a property value cell
      */
-    renderCell : function(val, meta, rec) {
+    renderCell: function(val, meta, rec) {
         var me = this,
             grid = me.grid,
             renderer = grid.getConfigProp(rec.get(grid.nameField), 'renderer'),
@@ -103,7 +129,8 @@ Ext.define('Ext.grid.property.HeaderContainer', {
 
         if (Ext.isDate(val)) {
             result = me.renderDate(val);
-        } else if (Ext.isBoolean(val)) {
+        }
+        else if (Ext.isBoolean(val)) {
             result = me.renderBool(val);
         }
 
@@ -113,11 +140,12 @@ Ext.define('Ext.grid.property.HeaderContainer', {
     /**
      * @private
      */
-    renderDate : Ext.util.Format.date,
+    renderDate: Ext.util.Format.date,
 
     /**
      * @private
-     */    renderBool : function(bVal) {
+     */
+    renderBool: function(bVal) {
         return this[bVal ? 'trueText' : 'falseText'];
     },
 
@@ -125,7 +153,7 @@ Ext.define('Ext.grid.property.HeaderContainer', {
      * @private
      * Renders custom property names instead of raw names if defined in the Grid
      */
-    getPropertyName : function(name) {
+    getPropertyName: function(name) {
         return this.grid.getConfigProp(name, 'displayName', name);
     }
 });

@@ -1,0 +1,5 @@
+@include lockedgrid-ui(
+    $region-separator-color: $lockedgrid-region-separator-color,
+    $region-separator-width: $lockedgrid-region-separator-width,
+    $region-separator-style: $lockedgrid-region-separator-style
+);

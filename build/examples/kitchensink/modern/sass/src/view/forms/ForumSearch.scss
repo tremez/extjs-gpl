@@ -1,0 +1,44 @@
+.form-forumsearch {
+    .x-formpanel-body-el {
+        background-color: $content-panel-grid-background;
+    }
+
+    .x-field {
+        background-color: $background-color;
+        padding-bottom: 0;
+    }
+
+    .search-item {
+        padding: 5px 10px;
+        white-space: normal;
+        color: #555;
+        text-decoration: none;
+        display: block;
+        overflow: hidden;
+
+        .dark-mode & {
+            color: #ccc;
+        }
+
+        h3 {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            color: #222;
+            margin: 0;
+            padding: 0;
+
+            .dark-mode & {
+                color: #eee;
+            }
+
+            span {
+                float: right;
+                font-weight: normal;
+                margin: 0 0 5px 5px;
+                width: 100px;
+                clear: none;
+            }
+        }
+    }
+}

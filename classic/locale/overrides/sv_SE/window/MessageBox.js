@@ -5,5 +5,5 @@ Ext.define("Ext.locale.sv_SE.window.MessageBox", {
         cancel: "Avbryt",
         yes: "Ja",
         no: "Nej"
-    }    
+    }
 });

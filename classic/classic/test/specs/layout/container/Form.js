@@ -1,4 +1,4 @@
-describe('Ext.layout.container.Form', function() {
+topSuite('Ext.layout.container.Form', ['Ext.form.Panel', 'Ext.form.field.Text'], function() {
 
     // TODO: form layout specs
     xdescribe('child items manipulation', function() {
@@ -54,5 +54,4 @@ describe('Ext.layout.container.Form', function() {
         expect(panel.getWidth()).toBe(267);
         panel.destroy();
     });
-
 });

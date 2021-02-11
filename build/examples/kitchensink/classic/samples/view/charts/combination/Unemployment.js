@@ -17,18 +17,18 @@ Ext.define('KitchenSink.view.charts.combination.Unemployment', {
 
     layout: 'absolute',
     width: 990,
-    // <example>
+    //<example>
     otherContent: [{
         type: 'Controller',
         path: 'classic/samples/view/charts/combination/UnemploymentController.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/Unemployment.js'
+        path: 'app/store/Unemployment.js'
     }, {
         type: 'Sprite',
         path: 'classic/samples/view/charts/combination/ArcText.js'
     }],
-    // </example>
+    //</example>
 
     items: [
         {
@@ -286,7 +286,7 @@ Ext.define('KitchenSink.view.charts.combination.Unemployment', {
                     type: 'pie',
                     angleField: 'span',
                     donut: 93,
-                    rotation: -Math.PI/60,
+                    rotation: -3,
                     subStyle: {
                         strokeStyle: 'white',
                         lineWidth: 1
@@ -305,7 +305,7 @@ Ext.define('KitchenSink.view.charts.combination.Unemployment', {
                 },
                 {
                     type: 'pie',
-                    rotation: -Math.PI/60,
+                    rotation: -3,
                     angleField: 'span',
                     donut: 86,
                     radiusFactor: 93,
@@ -326,7 +326,7 @@ Ext.define('KitchenSink.view.charts.combination.Unemployment', {
                 },
                 {
                     type: 'pie',
-                    rotation: -Math.PI/60,
+                    rotation: -3,
                     angleField: 'span',
                     donut: 79,
                     radiusFactor: 86,
@@ -347,7 +347,7 @@ Ext.define('KitchenSink.view.charts.combination.Unemployment', {
                 },
                 {
                     type: 'pie',
-                    rotation: -Math.PI/60,
+                    rotation: -3,
                     angleField: 'span',
                     donut: 73,
                     radiusFactor: 79,
@@ -368,7 +368,7 @@ Ext.define('KitchenSink.view.charts.combination.Unemployment', {
                 },
                 {
                     type: 'pie',
-                    rotation: -Math.PI/60,
+                    rotation: -3,
                     angleField: 'span',
                     donut: 67,
                     radiusFactor: 73,
@@ -389,7 +389,7 @@ Ext.define('KitchenSink.view.charts.combination.Unemployment', {
                 },
                 {
                     type: 'pie',
-                    rotation: -Math.PI/60,
+                    rotation: -3,
                     angleField: 'span',
                     donut: 57,
                     radiusFactor: 63,
@@ -439,7 +439,7 @@ Ext.define('KitchenSink.view.charts.combination.Unemployment', {
                     // Translucent dummy series used for highlighting only.
                     // Rendered on top of all the series used to show the data.
                     type: 'pie',
-                    rotation: -Math.PI/60,
+                    rotation: -3,
                     angleField: 'span',
                     donut: 57,
                     subStyle: {
@@ -470,7 +470,7 @@ Ext.define('KitchenSink.view.charts.combination.Unemployment', {
                     // Displayed above all other series,
                     // including the series used for highlighting.
                     type: 'pie',
-                    rotation: -Math.PI/60,
+                    rotation: -3,
                     angleField: 'dummy',
                     donut: 63,
                     // Make a dummy store with a single record for this series

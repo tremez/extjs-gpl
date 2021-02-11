@@ -20,11 +20,8 @@ Ext.define('Ext.data.soap.Reader', {
  * (Simple Object Access Protocol) services.  SOAP Proxy constructs a SOAP Envelope and 
  * submits an AJAX request to load a SOAP response from the server.
  * 
- * For help getting started please refer to the [Soap Guide](../../../enterprise/soap.html).
- *
- * **Note: **  _This functionality is only available with the purchase of
- * Sencha Complete.  For more information about using this class, please visit
- * our [Sencha Complete](https://www.sencha.com/products/complete/) product page._
+ * For help getting started please refer to the
+ * [Soap Guide](../guides/backend_connectors/soap.html).
  *
  * @class Ext.data.soap.Proxy
  */
@@ -72,12 +69,12 @@ Ext.define('Ext.data.soap.Proxy', {
         */
         soapAction: {},
         /**
-        * @cfg {String} [operationParam='op']
+        * @cfg {String} operationParam
         * The name of the operation parameter to be appened to the SOAP endpoint url
         */
         operationParam: 'op',
         /**
-        * @cfg {Object/String/Ext.data.soap.Reader} [reader='soap']
+        * @cfg {Object/String/Ext.data.soap.Reader} reader
         * The {@link Ext.data.soap.Reader} to use to decode the server's response. This can
         * either be a SOAP Reader instance, a SOAP Reader config object or 'soap'.
         */
@@ -90,7 +87,7 @@ Ext.define('Ext.data.soap.Proxy', {
         */
         url: '',
         /**
-        * @cfg [envelopeTpl=undefined]
+        * @cfg {String/Ext.XTemplate} envelopeTpl
         * The template used to create the SOAP envelope.  Defaults to:
         * 
         *     [
@@ -113,7 +110,7 @@ Ext.define('Ext.data.soap.Proxy', {
         */
         createBodyTpl: null,
         /**
-        * @cfg {Ext.XTemplate/Array} [readBodyTpl=undefined]
+        * @cfg {Ext.XTemplate/Array} readBodyTpl
         * The template used to create the SOAP body for the "read" action.  Defaults to: 
         * 
         *     [
@@ -148,7 +145,7 @@ Ext.define('Ext.data.soap.Proxy', {
         */
         destroyBodyTpl: null,
         /**
-        * @cfg {Ext.XTemplate/Array} [writeBodyTpl=undefined]
+        * @cfg {Ext.XTemplate/Array} writeBodyTpl
         * The default template used to create the SOAP body for write actions (create, update,
         * and destroy). The individual body templates for each write action can be configured
         * using {@link #createBodyTpl}, {@link #updateBodyTpl}, and {@link #destroyBodyTpl}.

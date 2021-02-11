@@ -1,6 +1,4 @@
-/* global expect, Ext, spyOn */
-
-describe('Ext.util.Scheduler', function () {
+topSuite('Ext.util.Scheduler', 'Ext.util.Schedulable', function() {
     var scheduler,
         Item,
         log,
@@ -8,40 +6,41 @@ describe('Ext.util.Scheduler', function () {
         idle,
         sorts = 0;
 
-    function setup () {
+    function setup() {
+        // eslint-disable-next-line no-func-assign
         setup = Ext.emptyFn;
 
         Item = Ext.define(null, {
-            extend: Ext.util.Schedulable,
+            extend: 'Ext.util.Schedulable',
 
-            constructor: function (name) {
+            constructor: function(name) {
                 this.name = name;
                 this.scheduler = scheduler;
 
                 this.callParent();
             },
 
-            react: function () {
+            react: function() {
                 log.push(this.name);
             },
 
             privates: {
-                sort: function () {
+                sort: function() {
                     this.scheduler.sortItems(this.depends);
                 }
             }
         });
     }
 
-    beforeEach(function () {
+    beforeEach(function() {
         setup();
 
         scheduler = new Ext.util.Scheduler({
             listeners: {
-                busy: function () {
+                busy: function() {
                     ++busy;
                 },
-                idle: function () {
+                idle: function() {
                     ++idle;
                 }
             }
@@ -51,8 +50,9 @@ describe('Ext.util.Scheduler', function () {
 
         var sort = scheduler.sort;
 
-        scheduler.sort = function () {
+        scheduler.sort = function() {
             ++sorts;
+
             return sort.apply(this, arguments);
         };
 
@@ -60,11 +60,12 @@ describe('Ext.util.Scheduler', function () {
         sorts = 0;
     });
 
-    afterEach(function () {
+    afterEach(function() {
         if (scheduler) {
             scheduler.destroy();
             scheduler = null;
         }
+
         expect(Ext.util.Scheduler.instances.length).toBe(0);
     });
 
@@ -94,11 +95,12 @@ describe('Ext.util.Scheduler', function () {
         });
     });
 
-    describe('ordering', function () {
-        it('should order items only on first notification', function () {
+    describe('ordering', function() {
+        it('should order items only on first notification', function() {
             expect(sorts).toBe(0);
 
             var item1 = new Item('item1');
+
             var item2 = new Item('item2');
 
             item2.depends = [item1];
@@ -120,8 +122,9 @@ describe('Ext.util.Scheduler', function () {
             expect(log.join('/')).toBe('item1/item2/item1');
         });
 
-        it('should react to only what was scheduled', function () {
+        it('should react to only what was scheduled', function() {
             var item1 = new Item('item1');
+
             var item2 = new Item('item2');
 
             item2.depends = [item1];
@@ -140,10 +143,11 @@ describe('Ext.util.Scheduler', function () {
             expect(log.join('/')).toBe('item1/item2');
         });
 
-        it('should reorder items if new items are added', function () {
+        it('should reorder items if new items are added', function() {
             expect(sorts).toBe(0);
 
             var item1 = new Item('item1');
+
             var item2 = new Item('item2');
 
             item2.depends = [item1];
@@ -175,8 +179,9 @@ describe('Ext.util.Scheduler', function () {
             expect(log.join('/')).toBe('item3/item1/item2');
         });
 
-        it('should detect dependency cycles', function () {
+        it('should detect dependency cycles', function() {
             var item1 = new Item('item1');
+
             var item2 = new Item('item2');
 
             item2.depends = [item1];
@@ -186,7 +191,7 @@ describe('Ext.util.Scheduler', function () {
 
             item2.schedule();
 
-            expect(function () {
+            expect(function() {
                 scheduler.notify();
             }).toThrow();
             // Scheduler calls suspendLayouts
@@ -194,9 +199,10 @@ describe('Ext.util.Scheduler', function () {
         });
     });
 
-    describe('multiple pass notifications', function () {
-        it('should trigger dependent items in single pass', function () {
+    describe('multiple pass notifications', function() {
+        it('should trigger dependent items in single pass', function() {
             var item1 = new Item('item1');
+
             var item2 = new Item('item2');
 
             item2.depends = [item1];
@@ -204,8 +210,9 @@ describe('Ext.util.Scheduler', function () {
 
             item1.schedule();
             Ext.override(item1, {
-                react: function () {
+                react: function() {
                     item2.schedule();
+
                     return this.callParent();
                 }
             });
@@ -226,8 +233,9 @@ describe('Ext.util.Scheduler', function () {
             expect(log.join('/')).toBe('item1/item2');
         });
 
-        it('should trigger anti-dependent items in two passes', function () {
+        it('should trigger anti-dependent items in two passes', function() {
             var item1 = new Item('item1');
+
             var item2 = new Item('item2');
 
             item2.depends = [item1];
@@ -235,8 +243,9 @@ describe('Ext.util.Scheduler', function () {
 
             item2.schedule();
             Ext.override(item2, {
-                react: function () {
+                react: function() {
                     item1.schedule();
+
                     return this.callParent();
                 }
             });
@@ -257,8 +266,9 @@ describe('Ext.util.Scheduler', function () {
             expect(log.join('/')).toBe('item2/item1');
         });
 
-        it('should trigger self in two passes', function () {
+        it('should trigger self in two passes', function() {
             var item1 = new Item('item1');
+
             var item2 = new Item('item2');
 
             item2.depends = [item1];
@@ -266,9 +276,10 @@ describe('Ext.util.Scheduler', function () {
 
             item2.schedule();
             Ext.override(item2, {
-                react: function () {
+                react: function() {
                     delete this.react;
                     item2.schedule();
+
                     return this.callParent();
                 }
             });
@@ -289,9 +300,11 @@ describe('Ext.util.Scheduler', function () {
             expect(log.join('/')).toBe('item2/item2');
         });
 
-        it('should limit number of cycles', function () {
+        it('should limit number of cycles', function() {
             var item1 = new Item('A');
+
             var item2 = new Item('B');
+
             var limit = 100;
 
             item2.depends = [item1];
@@ -300,20 +313,24 @@ describe('Ext.util.Scheduler', function () {
 
             item2.schedule();
             Ext.override(item2, {
-                react: function () {
+                react: function() {
                     if (limit-- < 0) {
                         return;
                     }
+
                     item1.schedule();
+
                     return this.callParent();
                 }
             });
             Ext.override(item1, {
-                react: function () {
+                react: function() {
                     if (limit-- < 0) {
                         return;
                     }
+
                     item2.schedule();
+
                     return this.callParent();
                 }
             });
@@ -322,7 +339,8 @@ describe('Ext.util.Scheduler', function () {
             expect(sorts).toBe(0);
 
             var exceeded;
-            scheduler.onCycleLimitExceeded = function () {
+
+            scheduler.onCycleLimitExceeded = function() {
                 exceeded = true;
             };
 
@@ -344,8 +362,8 @@ describe('Ext.util.Scheduler', function () {
         });
     });
 
-    describe('busy / idle', function () {
-        it('should fire nothing initially', function () {
+    describe('busy / idle', function() {
+        it('should fire nothing initially', function() {
             expect(busy).toBe(0);
             expect(idle).toBe(0);
             expect(scheduler.isBusy()).toBe(false);
@@ -359,7 +377,7 @@ describe('Ext.util.Scheduler', function () {
             expect(scheduler.isIdle()).toBe(true);
         });
 
-        it('should fire busy event', function () {
+        it('should fire busy event', function() {
             expect(busy).toBe(0);
             expect(idle).toBe(0);
 
@@ -371,7 +389,7 @@ describe('Ext.util.Scheduler', function () {
             expect(scheduler.isIdle()).toBe(false);
         });
 
-        it('should not fire the idle event when busy', function () {
+        it('should not fire the idle event when busy', function() {
             expect(busy).toBe(0);
             expect(idle).toBe(0);
 
@@ -395,7 +413,7 @@ describe('Ext.util.Scheduler', function () {
             expect(scheduler.isIdle()).toBe(false);
         });
 
-        it('should fire idle event', function () {
+        it('should fire idle event', function() {
             expect(busy).toBe(0);
             expect(idle).toBe(0);
 
@@ -419,15 +437,16 @@ describe('Ext.util.Scheduler', function () {
             }
         });
 
-        it('should wait to fire the idle event', function () {
+        it('should wait to fire the idle event', function() {
             expect(busy).toBe(0);
             expect(idle).toBe(0);
 
             var item1 = new Item('A');
 
             Ext.override(item1, {
-                react: function () {
+                react: function() {
                     scheduler.adjustBusy(1);
+
                     return this.callParent();
                 }
             });

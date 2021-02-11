@@ -6,6 +6,8 @@
 Ext.define('Ext.util.translatable.ScrollParent', {
     extend: 'Ext.util.translatable.Dom',
 
+    alias: 'translatable.scrollparent', // also configures Factoryable
+
     isScrollParent: true,
 
     applyElement: function(element) {
@@ -23,8 +25,6 @@ Ext.define('Ext.util.translatable.ScrollParent', {
 
         parent.setScrollLeft(Math.round(-x));
         parent.setScrollTop(Math.round(-y));
-
-        this.callParent([x, y]);
     },
 
     getPosition: function() {

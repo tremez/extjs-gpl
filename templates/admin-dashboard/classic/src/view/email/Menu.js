@@ -46,7 +46,7 @@ Ext.define('Admin.view.email.Menu', {
         },
         {
             routeId: '',
-            iconCls: 'x-fa fa-trash-o',
+            iconCls: 'x-fa fa-trash-alt',
             text: 'Trash'
         }
     ]

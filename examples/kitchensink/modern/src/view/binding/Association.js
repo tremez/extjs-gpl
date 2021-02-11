@@ -1,9 +1,12 @@
 Ext.define('KitchenSink.view.binding.Association', {
     extend: 'Ext.Container',
+    xtype: 'binding-associations',
 
-    viewModel: 'binding-association',
+    viewModel: {
+        type: 'binding-association'
+    },
 
-    // <example>
+    //<example>
     otherContent: [{
         type: 'ViewModel',
         path: 'modern/src/view/binding/AssociationModel.js'
@@ -11,16 +14,32 @@ Ext.define('KitchenSink.view.binding.Association', {
         type: 'Model',
         path: 'modern/src/model/Person.js'
     }],
-    // </example>
 
+    profiles: {
+        defaults: {
+            height: 400,
+            width: 400
+        },
+        phone: {
+            defaults: {
+                height: undefined,
+                width: undefined
+            }
+        }
+    },
+
+    cls: 'demo-solid-background',
+    //</example>
+
+    height: '${height}',
     referenceHolder: true,
+    width: '${width}',
+
     layout: {
         type: 'vbox',
         align: 'stretch'
     },
 
-    shadow: true,
-    cls: 'demo-solid-background',
     items: [{
         xtype: 'list',
         flex: 2,

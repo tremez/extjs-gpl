@@ -4,6 +4,7 @@
  * Fields may be dropped onto grid data cells containing a matching data type.
  */
 Ext.define('Ext.ux.dd.CellFieldDropZone', {
+    /* eslint-disable vars-on-top */
     extend: 'Ext.dd.DropZone',
     alias: 'plugin.ux-cellfielddropzone',
 
@@ -26,7 +27,7 @@ Ext.define('Ext.ux.dd.CellFieldDropZone', {
      */
     onCellDrop: Ext.emptyFn,
 
-    constructor: function (cfg) {
+    constructor: function(cfg) {
         if (cfg) {
             var me = this,
                 ddGroup = cfg.ddGroup,
@@ -36,7 +37,8 @@ Ext.define('Ext.ux.dd.CellFieldDropZone', {
                 if (typeof onCellDrop === 'string') {
                     me.onCellDropFn = onCellDrop;
                     me.onCellDrop = me.callCellDrop;
-                } else {
+                }
+                else {
                     me.onCellDrop = onCellDrop;
                 }
             }
@@ -47,7 +49,7 @@ Ext.define('Ext.ux.dd.CellFieldDropZone', {
         }
     },
 
-    init: function (grid) {
+    init: function(grid) {
         var me = this;
 
         // Call the DropZone constructor using the View's scrolling element
@@ -61,17 +63,19 @@ Ext.define('Ext.ux.dd.CellFieldDropZone', {
                 },
                 single: true
             });
-        } else {
-            grid.on('render', me.init, me, {single: true});
+        }
+        else {
+            grid.on('render', me.init, me, { single: true });
         }
     },
 
     getTargetFromEvent: function(e) {
         var me = this,
-            v = me.view;
+            v = me.view,
 
-        // Ascertain whether the mousemove is within a grid cell
-        var cell = e.getTarget(v.getCellSelector());
+            // Ascertain whether the mousemove is within a grid cell
+            cell = e.getTarget(v.getCellSelector());
+
         if (cell) {
             // We *are* within a grid cell, so ask the View exactly which one,
             // Extract data from the Model to create a target object for
@@ -95,12 +99,14 @@ Ext.define('Ext.ux.dd.CellFieldDropZone', {
         // On Node enter, see if it is valid for us to drop the field on that type of
         // column.
         delete this.dropOK;
+
         if (!target) {
             return;
         }
 
         // Check that a field is being dragged.
         var f = dragData.field;
+
         if (!f) {
             return;
         }
@@ -108,6 +114,7 @@ Ext.define('Ext.ux.dd.CellFieldDropZone', {
         // Check whether the data type of the column being dropped on accepts the
         // dragged field type. If so, set dropOK flag, and highlight the target node.
         var field = target.record.fieldsMap[target.fieldName];
+
         if (field.isNumeric) {
             if (!f.isXType('numberfield')) {
                 return;
@@ -123,6 +130,7 @@ Ext.define('Ext.ux.dd.CellFieldDropZone', {
                 return;
             }
         }
+
         this.dropOK = true;
         Ext.fly(target.node).addCls('x-drop-target-active');
     },
@@ -141,13 +149,15 @@ Ext.define('Ext.ux.dd.CellFieldDropZone', {
         // Process the drop event if we have previously ascertained that a drop is OK.
         if (this.dropOK) {
             var value = dragData.field.getValue();
+
             target.record.set(target.fieldName, value);
             this.onCellDrop(target.fieldName, value);
+
             return true;
         }
     },
 
-    callCellDrop: function (fieldName, value) {
+    callCellDrop: function(fieldName, value) {
         Ext.callback(this.onCellDropFn, null, [fieldName, value], 0, this.grid);
     }
 });

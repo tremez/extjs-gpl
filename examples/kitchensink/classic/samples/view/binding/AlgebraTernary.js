@@ -12,6 +12,20 @@ Ext.define('KitchenSink.view.binding.AlgebraTernary', {
     bodyPadding: '40 10',
     bodyStyle: 'font-size: 3em; text-align: center',
     frame: true,
+    profiles: {
+        classic: {
+            textWidth: 120
+        },
+        neptune: {
+            textWidth: 120
+        },
+        graphite: {
+            textWidth: 120
+        },
+        'classic-material': {
+            textWidth: 150
+        }
+    },
 
     viewModel: {
         data: {
@@ -30,7 +44,7 @@ Ext.define('KitchenSink.view.binding.AlgebraTernary', {
         defaults: {
             labelWidth: 20,
             margin: '0 0 0 10',
-            width: 120
+            width: '${textWidth}'
         },
 
         items: [{

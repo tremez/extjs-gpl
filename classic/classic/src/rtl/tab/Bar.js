@@ -7,20 +7,26 @@ Ext.define('Ext.rtl.tab.Bar', {
             return this.getInherited().rtl ? 'right' : 'left';
         },
 
+        // eslint-disable-next-line max-len
         getCloseXY: function(closeEl, tabX, tabY, tabWidth, tabHeight, closeWidth, closeHeight, direction) {
             var closeXY, closeX, closeY, xy;
 
             if (this.isOppositeRootDirection()) {
                 closeXY = closeEl.getXY();
+
                 if (direction === 'right') {
                     closeX = tabX + closeXY[1] - tabY;
-                    closeY = tabY + tabHeight - (closeXY[0] - (tabX + tabWidth - tabHeight)) - closeWidth;
-                } else {
+                    closeY = tabY + tabHeight - (closeXY[0] - (tabX + tabWidth - tabHeight)) -
+                             closeWidth;
+                }
+                else {
                     closeX = tabX + tabWidth - (closeXY[1] - tabY) - closeHeight;
                     closeY = tabY + (closeXY[0] - (tabX + tabWidth - tabHeight));
                 }
+
                 xy = [closeX, closeY];
-            } else {
+            }
+            else {
                 xy = this.callParent(arguments);
             }
 

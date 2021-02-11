@@ -1,0 +1,18 @@
+@include extjs-graphite-tab-ui(
+    $ui: 'default',
+    
+    $base-color-active-over: $tab-base-color-active-over,
+    $background-opacity-active-over: $tab-background-opacity-active-over,
+    
+    $color-active-over: $tab-color-active-over,
+    $opacity-active-over: $tab-opacity-active-over,
+    
+    $glyph-color-active-over: $tab-glyph-color-active-over,
+    $glyph-opacity-active-over: $tab-glyph-opacity-active-over,
+    
+    $closable-icon-glyph-color-active-over: $tab-closable-icon-glyph-color-active-over,
+    $closable-icon-opacity-active-over: $tab-closable-icon-opacity-active-over,
+    
+    $inner-border-width-focus-over: $tab-inner-border-width-focus-over,
+    $inner-border-color-focus-over: $tab-inner-border-color-focus-over
+);

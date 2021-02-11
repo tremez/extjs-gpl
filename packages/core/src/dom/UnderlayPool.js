@@ -40,6 +40,7 @@ Ext.define('Ext.dom.UnderlayPool', {
      */
     checkIn: function(el) {
         this.cache.push(el);
+        Ext.getDetachedBody().dom.appendChild(el.dom);
     },
 
     /**

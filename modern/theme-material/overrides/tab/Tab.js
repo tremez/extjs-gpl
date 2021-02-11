@@ -3,5 +3,11 @@ Ext.define('Ext.theme.material.tab.Tab', {
     config: {
         iconAlign: 'top',
         flex: 1
+    },
+
+    platformConfig: {
+        desktop: {
+            maxWidth: 200
+        }
     }
 });

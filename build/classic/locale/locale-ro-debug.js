@@ -263,10 +263,10 @@ Ext.define("Ext.locale.ro.window.MessageBox", {
         cancel: "Renunţă",
         yes: "Da",
         no: "Nu"
-    }    
+    }
 });
 
 // This is needed until we can refactor all of the locales into individual files
-Ext.define("Ext.locale.ro.Component", {	
+Ext.define("Ext.locale.ro.Component", {
     override: "Ext.Component"
 });

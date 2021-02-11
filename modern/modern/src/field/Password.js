@@ -1,7 +1,8 @@
 /**
- * The Password field creates a password input and is usually created inside a form. Because it creates a password
- * field, when the user enters text it will show up as stars. Aside from that, the password field is just a normal text
- * field. Here's an example of how to use it in a form:
+ * The Password field creates a password input and is usually created inside a form. 
+ * Because it creates a password field, when the user enters text it will show up as stars. 
+ * Aside from that, the password field is just a normal text field. Here's an example of how 
+ * to use it in a form:
  *
  *     @example
  *     Ext.create('Ext.form.Panel', {
@@ -33,10 +34,10 @@
  *         value: 'existingPassword'
  *     });
  *
- * Because the password field inherits from {@link Ext.field.Text textfield} it gains all of the functionality that text
- * fields provide, including getting and setting the value at runtime, validations and various events that are fired as
- * the user interacts with the component. Check out the {@link Ext.field.Text} docs to see the additional functionality
- * available.
+ * Because the password field inherits from {@link Ext.field.Text textfield} it gains all of 
+ * the functionality that text fields provide, including getting and setting the value at runtime, 
+ * validations and various events that are fired as the user interacts with the component. 
+ * Check out the {@link Ext.field.Text} docs to see the additional functionality available.
  */
 Ext.define('Ext.field.Password', {
     extend: 'Ext.field.Text',
@@ -55,26 +56,31 @@ Ext.define('Ext.field.Password', {
         autoCapitalize: false,
 
         /**
-         * @cfg revealable {Boolean}
+         * @cfg {Boolean} revealable
          * Enables the reveal toggle button that will show the password in clear text.
          */
         revealable: false,
 
         /**
-         * @cfg revealed {Boolean}
+         * @cfg {Boolean} revealed
          * A value of 'true' for this config will show the password from clear text
          */
-        revealed: false,
-
-        /**
-         * @cfg component
-         * @inheritdoc
-         */
-        component: {
-	        xtype: 'passwordinput'
-	    }
+        revealed: {
+            $value: false,
+            lazy: true
+        }
     },
 
+    /**
+     * @cfg inputType
+     * @inheritdoc
+     */
+    inputType: 'password',
+
+    /**
+     * @property classCls
+     * @inheritdoc
+     */
     classCls: Ext.baseCSSPrefix + 'passwordfield',
     revealedCls: Ext.baseCSSPrefix + 'revealed',
 
@@ -93,71 +99,27 @@ Ext.define('Ext.field.Password', {
     },
 
     updateRevealed: function(newValue, oldValue) {
-        var me = this,
-            component = me.getComponent(),
-            revealedCls = me.revealedCls;
+        var me = this;
 
-        if(newValue) {
-            me.element.addCls(revealedCls);
-            component.setType("text");
-        } else {
-            me.element.removeCls(revealedCls);
-            component.setType("password");
+        if (newValue) {
+            me.element.addCls(me.revealedCls);
+            me.setInputType("text");
+        }
+        else {
+            me.element.removeCls(me.revealedCls);
+            me.setInputType("password");
         }
     },
 
-    /**
-     * @private
-     */
     updateValue: function(value, oldValue) {
-        this.toggleRevealTrigger(this.isValidTextValue(value));
+        this.syncRevealTrigger();
         this.callParent([value, oldValue]);
     },
 
     doKeyUp: function(me, e) {
-        var valid = me.isValidTextValue(me.getValue());
+        this.callParent([me, e]);
 
-        me.toggleClearTrigger(valid);
-
-        if (e.browserEvent.keyCode === 13) {
-            me.fireAction('action', [me, e], 'doAction');
-        }
-
-        me.toggleRevealTrigger(valid);
-    },
-
-    /**
-     * @private
-     */
-    showRevealTrigger: function() {
-        var me = this,
-            value = me.getValue(),
-            // allows value to be zero but not undefined or null (other falsey values)
-            valueValid = value !== undefined && value !== null && value !== "",
-            triggers, revealTrigger;
-
-        if (me.getRevealable() && !me.getDisabled() && valueValid) {
-            triggers = me.getTriggers();
-            revealTrigger = triggers && triggers.reveal;
-
-            if (revealTrigger) {
-                revealTrigger.show();
-            }
-        }
-
-        return me;
-    },
-
-    /**
-     * @private
-     */
-    hideRevealTrigger: function() {
-        var triggers = this.getTriggers(),
-            revealTrigger = triggers && triggers.reveal;
-
-        if (revealTrigger) {
-            revealTrigger.hide();
-        }
+        this.syncRevealTrigger();
     },
 
     onRevealTap: function(e) {
@@ -177,11 +139,27 @@ Ext.define('Ext.field.Password', {
             return (value !== undefined && value !== null && value !== '');
         },
 
-        toggleRevealTrigger: function(state) {
-            if (state) {
-                this.showRevealTrigger();
-            } else {
-                this.hideRevealTrigger();
+        syncRevealTrigger: function() {
+            var me = this,
+                triggers = me.getTriggers(),
+                revealTrigger = triggers && triggers.reveal,
+                visible, value;
+
+            if (revealTrigger) {
+                if (me.getRevealable()) {
+                    value = me.getValue();
+
+                    if (value != null && value !== '' && !me.getDisabled() && !me.getReadOnly()) {
+                        visible = true;
+                    }
+                }
+
+                if (visible) {
+                    revealTrigger.show();
+                }
+                else {
+                    revealTrigger.hide();
+                }
             }
         }
     }

@@ -1,0 +1,726 @@
+/**
+ * @class Ext.Chip
+ */
+
+/**
+ * @var {Number}
+ * Chip height
+ */
+$chip-height: dynamic(18px);
+
+/**
+ * @var {Number}
+ * Chip height in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$chip-height-big: dynamic(22px);
+
+/**
+ * @var {color}
+ * Chip content color
+ */
+$chip-color: dynamic($color);
+
+/**
+ * @var {String}
+ * Chip cursor name
+ */
+$chip-cursor: dynamic(default);
+
+/**
+ * @var {number}
+ * Chip content color when selected
+ */
+$chip-selected-color: dynamic(#fff);
+
+/**
+ * @var {number}
+ * Chip content color when hovered
+ */
+$chip-hovered-color: dynamic(null);
+
+/**
+ * @var {number}
+ * Chip content color when disabled
+ */
+$chip-disabled-color: dynamic(null);
+
+/**
+ * @var {color}
+ * Chip background-color
+ */
+$chip-background-color: dynamic(mix(#fff, $neutral-color, 15%));
+
+/**
+ * @var {color}
+ * Chip background-color when selected
+ */
+$chip-selected-background-color: dynamic(#3892d4);
+
+/**
+ * @var {number}
+ * Chip background-color when hovered
+ */
+$chip-hovered-background-color: dynamic(mix(#000, $chip-background-color, 10%));
+
+/**
+ * @var {number}
+ * Chip background-color when disabled
+ */
+$chip-disabled-background-color: dynamic(null);
+
+/**
+ * @var {number}
+ * Chip opacity
+ */
+$chip-opacity: dynamic(null);
+
+/**
+ * @var {number}
+ * Chip opacity when hovered
+ */
+$chip-hovered-opacity: dynamic(.8);
+
+/**
+ * @var {number}
+ * Chip opacity when disabled
+ */
+$chip-disabled-opacity: dynamic(.3);
+
+/**
+ * @var {number}
+ * Chip border radius
+ */
+$chip-border-radius: dynamic(3px);
+
+/**
+ * @var {number}
+ * Chip border radius in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$chip-border-radius-big: dynamic(null);
+
+/**
+ * @var {number}
+ * Chip icon size
+ */
+$chip-icon-size: dynamic($chip-height);
+
+/**
+ * @var {number}
+ * Chip icon size in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$chip-icon-size-big: dynamic($chip-height-big);
+
+/**
+ * @var {number}
+ * Chip font-size
+ */
+$chip-font-size: dynamic(null);
+
+/**
+ * @var {number}
+ * Chip font-size in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$chip-font-size-big: dynamic(null);
+
+/**
+ * @var {number}
+ * Padding before the chip's text.
+ */
+$chip-text-margin: dynamic(4px);
+
+/**
+ * @var {number}
+ * Padding before the chip's text the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$chip-text-margin-big: dynamic(6px);
+
+/**
+ * @var {number}
+ * The line-height for the text element
+ */
+$chip-text-line-height: dynamic($chip-height);
+
+/**
+ * @var {number}
+ * The line-height-big for the text element in the {@link Global_CSS#$enable-big big} sizing scheme.
+ */
+$chip-text-line-height-big: dynamic($chip-height-big);
+
+/**
+ * @var {number}
+ * The margins of chip items.
+ */
+$chip-margin: dynamic(0 3px 2px 0);
+
+/**
+ * @var {number}
+ * The margins of chip items in the {@link Global_CSS#$enable-big big} sizing scheme.
+ */
+$chip-margin-big: dynamic(0 4px 4px 0);
+
+/**
+ * @var {number}
+ * Chip outline width when focused
+ */
+$chip-focused-outline-width: dynamic(1px);
+
+/**
+ * @var {string}
+ * Chip outline style when focused
+ */
+$chip-focused-outline-style: dynamic(solid);
+
+/**
+ * @var {color}
+ * Chip outline color when focused
+ */
+$chip-focused-outline-color: dynamic($chip-selected-background-color);
+
+/**
+ * @var {number}
+ * Chip outline offset when focused
+ */
+$chip-focused-outline-offset: dynamic(-2px);
+
+/**
+ * @var {string}
+ * Chip close icon
+ */
+$chip-close-icon: dynamic($fa-var-times);
+
+/**
+ * @var {String}
+ * Chip close icon cursor name
+ */
+$chip-close-icon-cursor: dynamic(pointer);
+
+/**
+ * @var {color}
+ * Chip close icon color
+ */
+$chip-close-icon-color: dynamic(#444);
+
+/**
+ * @var {color}
+ * Chip close icon color when the chip is hovered
+ */
+$chip-close-icon-hovered-color: dynamic(#fff);
+
+/**
+ * @var {color}
+ * Chip close icon color when the chip is selected
+ */
+$chip-close-icon-selected-color: dynamic(#fff);
+
+/**
+ * @var {color}
+ * Chip close icon color when the chip is selected and hovered
+ */
+$chip-close-icon-selected-hovered-color: dynamic($chip-close-icon-hovered-color);
+
+/**
+ * @var {color}
+ * Chip close icon background-color
+ */
+$chip-close-icon-background-color: dynamic(null);
+
+/**
+ * @var {color}
+ * Chip close icon background-color when the chip is hovered
+ */
+$chip-close-icon-hovered-background-color: dynamic(rgba(0, 0, 0, 0.1));
+
+/**
+ * @var {color}
+ * Chip close icon background-color when the chip is selected
+ */
+$chip-close-icon-selected-background-color: dynamic(rgba(0, 0, 0, 0.2));
+
+/**
+ * @var {color}
+ * Chip close icon background-color when the chip is selected and hovered
+ */
+$chip-close-icon-selected-hovered-background-color: dynamic(rgba(255, 255, 255, 0.2));
+
+/**
+ * @var {number/list}
+ * Chip close icon border-radius
+ */
+$chip-close-icon-border-radius: dynamic(3px);
+
+/**
+ * @var {number/list}
+ * Chip close icon border-radius in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$chip-close-icon-border-radius-big: dynamic(null);
+
+/**
+ * @var {number}
+ * Chip close icon size
+ */
+$chip-close-icon-size: dynamic(12px);
+
+/**
+ * @var {number}
+ * Chip close icon size in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$chip-close-icon-size-big: dynamic(18px);
+
+/**
+ * @var {number}
+ * Chip close icon font-size
+ */
+$chip-close-icon-font-size: dynamic($chip-close-icon-size);
+
+/**
+ * @var {number}
+ * Chip close icon font-size in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$chip-close-icon-font-size-big: dynamic($chip-close-icon-size-big);
+
+/**
+ * @var {number/list}
+ * Chip close icon margin.
+ * Used to position the close icon relative to the top right corner of the tab.
+ */
+$chip-close-icon-margin: dynamic(3px);
+
+/**
+ * @var {number/list}
+ * Chip close icon margin in the {@link Global_CSS#$enable-big big} sizing scheme.
+ * Used to position the close icon relative to the top right corner of the tab.
+ */
+$chip-close-icon-margin-big: dynamic(null);
+
+/**
+ * @var {number}
+ * Additional spacing to add to the side of the tab that contains the close icon when closable
+ */
+$chip-close-icon-spacing: dynamic(10px);
+
+/**
+ * @var {number}
+ * Additional spacing to add to the side of the tab that contains the close icon when closable
+ * in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+$chip-close-icon-spacing-big: dynamic(20px);
+
+/**
+ * Creates a visual theme for a chip.
+ *
+ * @param {string} $ui
+ * The name of the UI being created. Can not included spaces or special punctuation
+ * (used in CSS class names).
+ *
+ * @param {String} [$xtype=chip] (protected) The {@link Ext.Class#xtype} to use
+ * in CSS selectors.  For use by UI mixins of derived classes.
+ *
+ * @param {Number} $height
+ * The height of Chip components.
+ *
+ * @param {Number} $height-big
+ * The height of Chip components in the {@link Global_CSS#$enable-big big} sizing scheme.
+ *
+ * @param {color} $color
+ * The color of chip content
+ *
+ * @param {String} $cursor
+ * The cursor over chips
+ *
+ * @param {number} $selected-color
+ * The color of chip content when hovered
+ *
+ * @param {number} $hovered-color
+ * The color of chip content when hovered
+ *
+ * @param {number} $disabled-color
+ * The color of chip content when disabled
+ *
+ * @param {color} $background-color
+ * Chip background color
+ *
+ * @param {number} $selected-background-color
+ * Chip background color when selected
+ *
+ * @param {number} $hovered-background-color
+ * Chip background color when hovered
+ *
+ * @param {number} $disabled-background-color
+ * Chip background-color when disabled
+ *
+ * @param {number} $opacity
+ * Chip opacity
+ *
+ * @param {number} $hovered-opacity
+ * Chip opacity when hovered
+ *
+ * @param {number} $disabled-opacity
+ * Chip opacity when disabled
+ *
+ * @param {number} $border-radius
+ * Chip border radius
+ *
+ * @param {number} $border-radius-big
+ * Chip border radius in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {number} $icon-size
+ * Chip icon size
+ *
+ * @param {number} $icon-size-big
+ * Chip icon size in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {number} $font-size
+ * Chip icon font-size
+ *
+ * @param {number} $font-size-big
+ * Chip icon font-size in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {nunber} $text-margin
+ * The margin before the text start.
+ *
+ * @param {nunber} $text-margin-big
+ * The margin before the text start in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {nunber} $text-line-height
+ * The line-height for the text element
+ *
+ * @param {nunber} $text-line-height-big
+ * The line-height for the text element in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {number} $margin
+ * The margins round Chips
+ *
+ * @param {number} $margin-big
+ * The margins round Chips in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {number} $focused-outline-width
+ * Chip outline width when focused
+ *
+ * @param {string} $focused-outline-style
+ * Chip outline style when focused
+ *
+ * @param {color} $focused-outline-color
+ * Chip outline color when focused
+ *
+ * @param {number} $focused-outline-offset
+ * Chip outline offset when focused
+ *
+ * @param {string} $close-icon
+ * Chip close icon
+ *
+ * @param {string} $close-icon-cursor
+ * Chip close icon cursor
+ *
+ * @param {color} $close-icon-color
+ * Chip close icon color
+ *
+ * @param {color} $close-icon-hovered-color
+ * Chip close icon color when the chip is hovered
+ *
+ * @param {color} $close-icon-selected-color
+ * Chip close icon color when the chip is selected
+ *
+ * @param {color} $close-icon-selected-hovered-color
+ * Chip close icon color when the chip is selected and hovered
+ *
+ * @param {color} $close-icon-background-color
+ * Chip close icon background-color
+ *
+ * @param {color} $close-icon-hovered-background-color
+ * Chip close icon background-color when the chip is hovered
+ *
+ * @param {color} $close-icon-selected-background-color
+ * Chip close icon background-color when the chip is selected
+ *
+ * @param {color} $close-icon-selected-hovered-background-color
+ * Chip close icon background-color when the chip is selected and hovered
+ *
+ * @param {number/list} $close-icon-border-radius
+ * Chip close icon border-radius
+ *
+ * @param {number/list} $close-icon-border-radius-big
+ * Chip close icon border-radius in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {number} $close-icon-size
+ * Chip close icon size
+ *
+ * @param {number} $close-icon-size-big
+ * Chip close icon size in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {number} $close-icon-font-size
+ * Chip close icon font-size
+ *
+ * @param {number} $close-icon-font-size-big
+ * Chip close icon font-size in the {@link Global_CSS#$enable-big big} sizing scheme
+ *
+ * @param {number/list} $close-icon-margin
+ * Chip close icon margin.
+ * Margin to left and right of close icon.
+ *
+ * @param {number/list} $close-icon-margin-big
+ * Chip close icon margin in the {@link Global_CSS#$enable-big big} sizing scheme.
+ * Margin to left and right of close icon.
+ *
+ * @param {number} $close-icon-spacing
+ * Additional spacing to add to the side of the tab that contains the close icon when closable
+ *
+ * @param {number} $close-icon-spacing-big
+ * Additional spacing to add to the side of the tab that contains the close icon when closable
+ * in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
+@mixin chip-ui(
+    $ui: null,
+    $xtype: chip,
+    $height: null,
+    $height-big: null,
+    $color: null,
+    $cursor: null,
+    $selected-color: null,
+    $hovered-color: null,
+    $disabled-color: null,
+    $background-color: null,
+    $selected-background-color: null,
+    $hovered-background-color: null,
+    $disabled-background-color: null,
+    $opacity: null,
+    $hovered-opacity: null,
+    $disabled-opacity: null,
+    $border-radius: null,
+    $border-radius-big: null,
+    $icon-size: null,
+    $icon-size-big: null,
+    $font-size: null,
+    $font-size-big: null,
+    $text-margin: null,
+    $text-margin-big: null,
+    $text-line-height: null,
+    $text-line-height-big: null,
+    $margin: null,
+    $margin-big: null,
+    $focused-outline-width: null,
+    $focused-outline-style: null,
+    $focused-outline-color: null,
+    $focused-outline-offset: null,
+    $close-icon: null,
+    $close-icon-cursor: null,
+    $close-icon-color: null,
+    $close-icon-hovered-color: null,
+    $close-icon-selected-color: null,
+    $close-icon-selected-hovered-color: null,
+    $close-icon-background-color: null,
+    $close-icon-hovered-background-color: null,
+    $close-icon-selected-background-color: null,
+    $close-icon-selected-hovered-background-color: null,
+    $close-icon-border-radius: null,
+    $close-icon-border-radius-big: null,
+    $close-icon-size: null,
+    $close-icon-size-big: null,
+    $close-icon-font-size: null,
+    $close-icon-font-size-big: null,
+    $close-icon-margin: null,
+    $close-icon-margin-big: null,
+    $close-icon-spacing: null,
+    $close-icon-spacing-big: null
+) {
+    $ui-suffix: ui-suffix($ui);
+
+    .#{$prefix}#{$xtype}#{$ui-suffix} {
+        display: inline-block;
+        cursor: $cursor;
+        margin: $margin;
+        background-color: $background-color;
+        @include border-radius($border-radius);
+        height: $height;
+
+        @if $enable-big {
+            .#{$prefix}big & {
+                margin: $margin-big;
+                @include border-radius($border-radius-big);
+                height: $height-big;
+            }
+        }
+
+        .#{$prefix}body-el {
+            display: flex;
+            align-items: center;
+        }
+
+        .#{$prefix}icon-el {
+            @include border-radius($border-radius);
+            opacity: $opacity;
+            display: none;
+            z-index: 10;
+
+            @include icon(
+                $color: $color,
+                $size: $icon-size,
+                $size-big: $icon-size-big,
+                $font-size: $font-size,
+                $font-size-big: $font-size-big
+            );
+
+            // If they use a URL, it's set as the background-image, so scale it.
+            background-size: contain;
+
+            @if $enable-big {
+                .#{$prefix}big & {
+                    @include border-radius($border-radius-big);
+                }
+            }
+        }
+
+        &.#{$prefix}has-icon .#{$prefix}icon-el {
+            display: inline-flex;
+        }
+
+        .#{$prefix}text-el {
+            flex: 1 1 auto;
+            margin: 0 $text-margin 0 $text-margin;
+            line-height: $text-line-height;
+            white-space: nowrap;
+            @if $enable-big {
+                .#{$prefix}big & {
+                    line-height: $text-line-height-big;
+                    margin: 0 $text-margin-big 0 $text-margin-big;
+                }
+            }
+        }
+
+        .#{$prefix}close-el {
+            cursor: $close-icon-cursor;
+            color: $close-icon-color;
+            width: $close-icon-size;
+            height: $close-icon-size;
+            background-color: $close-icon-background-color;
+            border-radius: $close-icon-border-radius;
+            margin: 0 $close-icon-margin 0 $close-icon-margin;
+            display: none;
+
+            @include icon(
+                $icon: $close-icon,
+                $font-size: $close-icon-font-size,
+                $font-size-big: $close-icon-font-size-big
+            );
+
+            @if $enable-big {
+                .#{$prefix}big & {
+                    width: $close-icon-size-big;
+                    height: $close-icon-size-big;
+                    border-radius: $close-icon-border-radius-big;
+                    margin: 0 $close-icon-margin-big 0 $close-icon-margin-big;
+                }
+            }
+        }
+
+        &.#{$prefix}selected .#{$prefix}close-el {
+            color: $close-icon-selected-color;
+            background-color: $close-icon-selected-background-color;
+        }
+
+        &:hover .#{$prefix}close-el {
+            color: $close-icon-hovered-color;
+            background-color: $close-icon-hovered-background-color;
+        }
+
+        &.#{$prefix}selected:hover .#{$prefix}close-el {
+            color: $close-icon-selected-hovered-color;
+            background-color: $close-icon-selected-hovered-background-color;
+        }
+
+        &.#{$prefix}closable {
+            .#{$prefix}text-el {
+                margin-right: 0;
+            }
+            .#{$prefix}close-el {
+                display: flex;
+            }
+        }
+
+        &.#{$prefix}hovered {
+            color: $hovered-color;
+            background-color: $hovered-background-color;
+
+            .#{$prefix}icon-el {
+                opacity: $hovered-opacity;
+            }
+        }
+
+        &.#{$prefix}selected {
+            color: $selected-color;
+            background-color: $selected-background-color;
+        }
+
+        &.#{$prefix}focused {
+            .#{$prefix}keyboard-mode & {
+                @include outline(
+                    $width: $focused-outline-width,
+                    $style: $focused-outline-style,
+                    $color: $focused-outline-color,
+                    $offset: $focused-outline-offset,
+                    $border-radius: $border-radius
+                );
+
+                @if $enable-big {
+                    .#{$prefix}big & {
+                        @include outline(
+                            $width: $focused-outline-width,
+                            $style: $focused-outline-style,
+                            $color: $focused-outline-color,
+                            $offset: $focused-outline-offset,
+                            $border-radius: $border-radius-big
+                        );
+                    }
+                }
+            }
+        }
+
+        &.#{$prefix}selected.#{$prefix}focused {
+            .#{$prefix}keyboard-mode & {
+                @include outline(
+                    $width: $focused-outline-width,
+                    $style: $focused-outline-style,
+                    $color: $background-color,
+                    $offset: $focused-outline-offset,
+                    $border-radius: $border-radius
+                );
+
+                @if $enable-big {
+                    .#{$prefix}big & {
+                        @include outline(
+                            $width: $focused-outline-width,
+                            $style: $focused-outline-style,
+                            $color: $background-color,
+                            $offset: $focused-outline-offset,
+                            $border-radius: $border-radius-big
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    // Ensure a SelectField's ChipView is heighted correctly and won't change height when the first chip
+    // is added, or last one removed. Ensure its top margin is consistent with chipd's bottom margin.
+    .#{$prefix}selectfield {
+        .#{$prefix}chipview {
+            min-height: $height + bottom($margin);
+            @if $enable-big {
+                .#{$prefix}big & {
+                    min-height: $height-big + bottom($margin-big);
+                }
+            }
+
+            margin-top: bottom($margin);
+            @if $enable-big {
+                .#{$prefix}big & {
+                    margin-top: bottom($margin-big);
+                }
+            }
+
+            .#{$prefix}chipview .#{$prefix}body-el {
+                // Override ChipView base class style
+                padding: 0;
+            }
+        }
+    }
+}

@@ -1,23 +1,28 @@
-/* global Ext, expect, spyOn, jasmine, xit, MockAjaxManager */
-
-describe("grid-general", function() {
+topSuite("grid-general",
+    [false, 'Ext.grid.Panel', 'Ext.grid.column.*', 'Ext.grid.plugin.*', 'Ext.data.ArrayStore',
+            'Ext.app.ViewController', 'Ext.mixin.Watchable'],
+function() {
     var grid, store,
         synchronousLoad = true,
         proxyStoreLoad = Ext.data.ProxyStore.prototype.load,
         loadStore = function() {
             proxyStoreLoad.apply(this, arguments);
+
             if (synchronousLoad) {
                 this.flushLoad.apply(this, arguments);
             }
+
             return this;
         };
 
     function spyOnEvent(object, eventName, fn) {
         var obj = {
-            fn: fn || Ext.emptyFn
-        },
-        spy = spyOn(obj, "fn");
+                fn: fn || Ext.emptyFn
+            },
+            spy = spyOn(obj, "fn");
+
         object.addListener(eventName, obj.fn);
+
         return spy;
     }
 
@@ -47,15 +52,20 @@ describe("grid-general", function() {
 
             if (Ext.supports.CssTransforms && !Ext.isIE9m) {
                 transform = dom.style[transformStyleName];
+
                 return transform ? parseInt(transform.split(',')[1], 10) : 0;
-            } else {
+            }
+            else {
                 return parseInt(dom.style.top || '0', 10);
             }
         }
 
     function createSuite(buffered) {
         describe(buffered ? "with buffered rendering" : "without buffered rendering", function() {
-            var GridModel = Ext.define(null, {
+            var GridModel, view, colRef;
+
+            beforeAll(function() {
+               GridModel = Ext.define(null, {
                     extend: 'Ext.data.Model',
                     fields: [
                         'field1',
@@ -69,7 +79,8 @@ describe("grid-general", function() {
                         'field9',
                         'field10'
                     ]
-                }), view, colRef;
+                });
+            });
 
             function makeStore(data) {
                 if (!data && data !== null) {
@@ -86,21 +97,44 @@ describe("grid-general", function() {
                         field10: 10
                     }];
                 }
+
                 store = new Ext.data.Store({
                     model: GridModel,
                     data: data
                 });
+
                 return store;
+            }
+
+            function makeData(rows, columns) {
+                var data = [],
+                    dataRow,
+                    i, j;
+
+                for (i = 0; i < rows; i++) {
+                    dataRow = {
+                        id: 'rec' + i
+                    };
+
+                    for (j = 0; j < columns.length; j++) {
+                        dataRow[columns[j].dataIndex] = (i + 1) + ', ' + (j + 1);
+                    }
+
+                    data.push(dataRow);
+                }
+
+                return data;
             }
 
             function makeGrid(columns, data, cfg, options, locked) {
                 options = options || {};
                 cfg = cfg || {};
 
-                var i, dataCount, dataRow;
+                var i;
 
                 if (!options.preventColumnCreate && !columns) {
                     columns = [];
+
                     for (i = 1; i < 11; i++) {
                         columns.push({
                             dataIndex: 'field' + i,
@@ -114,17 +148,7 @@ describe("grid-general", function() {
 
                 // Could pass number of required records
                 if (typeof data === 'number') {
-                    dataCount = data;
-                    data = [];
-                    for (i = 0; i < dataCount; i++) {
-                        dataRow = {
-                            id: 'rec' + i
-                        };
-                        for (var j = 0; j < columns.length; j++) {
-                            dataRow[columns[j].dataIndex] = (i + 1) + ', ' + (j + 1);
-                        }
-                        data.push(dataRow);
-                    }
+                    data = makeData(data, columns);
                 }
 
                 if (!options.preventStoreCreate) {
@@ -156,7 +180,7 @@ describe("grid-general", function() {
                 colRef = grid.getColumnManager().getColumns();
             }
 
-            afterEach(function () {
+            afterEach(function() {
                 view = colRef = null;
                 Ext.data.Model.schema.clear();
             });
@@ -165,7 +189,7 @@ describe("grid-general", function() {
                 var cell = view.getCell(store.getAt(row), colRef[col]),
                     selectorView = grid.lockedGrid ? grid.lockedGrid.getView() : view;
 
-                return cell.down(selectorView.innerSelector).dom.innerHTML;
+                return cell.querySelector(selectorView.innerSelector).innerHTML;
             }
 
             describe("misc tests", function() {
@@ -176,7 +200,45 @@ describe("grid-general", function() {
                         scrollable: false
                     });
                 });
-                
+
+                it("should sync the view scrollable with the onwergrid scrollable", function() {
+                    makeGrid(undefined, 50, {
+                        scrollable: true
+                    }, undefined, false);
+
+                    expect(grid.getScrollable()).not.toBe(true);
+                });
+
+                it("should keep scroll position when adding a scrolled grid to a container", function() {
+                    var scrollable;
+
+                    var win = Ext.create('Ext.window.Window', {
+                        width: 500,
+                        height: 500,
+                        title: 'Foo',
+                        layout: 'fit',
+                        x: 0,
+                        y: 0
+                    }).show();
+
+                    makeGrid(undefined, 100, {
+                        scrollable: true
+                    }, undefined, false);
+
+                    scrollable = grid.getScrollable();
+                    scrollable.scrollTo(null, 1000);
+
+                    waitsFor(function() {
+                        return scrollable.getPosition().y === 1000;
+                    });
+
+                    runs(function() {
+                        win.add(grid);
+                        expect(scrollable.getPosition().y).toBe(1000);
+                        win.destroy();
+                    });
+                });
+
                 // EXTJS-14858
                 it("should not throw an exception when hiding a column in a locked grid during initComponent", function() {
                     var Plug = Ext.define(null, {
@@ -194,6 +256,7 @@ describe("grid-general", function() {
 
                     }]);
                 });
+
                 // https://sencha.jira.com/browse/EXTJS-14879
                 it("should invalidate cached element data when grid DOM is updated", function() {
                     makeGrid();
@@ -212,6 +275,7 @@ describe("grid-general", function() {
                     });
 
                     var ct;
+
                     expect(function() {
                         ct = new Ext.container.Container({
                             renderTo: Ext.getBody(),
@@ -286,15 +350,207 @@ describe("grid-general", function() {
                         }, {
                             preventStoreCreate: true
                         });
-                    
+
                         grid.getViewModel().notify();
                         grid.destroy();
                         expect(grid.destroyed).toBe(true);
                     });
                 });
+
+                describe("updates while not visible", function() {
+                    describe("ancestor is not visible", function() {
+                        var ct;
+
+                        afterEach(function() {
+                            ct = Ext.destroy(ct);
+                        });
+
+                        it("should update after being hidden", function() {
+                            makeGrid(undefined, 5, {
+                                renderTo: null
+                            });
+
+                            ct = new Ext.container.Container({
+                                renderTo: Ext.getBody(),
+                                items: grid
+                            });
+
+                            ct.hide();
+
+                            store.loadData([{
+                                field1: 'foo'
+                            }]);
+                            ct.show();
+                            expect(getCellText(0, 0)).toBe('foo');
+                        });
+
+                        describe("collapsed", function() {
+                            describe("without animation", function() {
+                                it("should update after being collapsed", function() {
+                                    makeGrid(undefined, 5, {
+                                        renderTo: null
+                                    });
+
+                                    ct = new Ext.panel.Panel({
+                                        collapsible: true,
+                                        animCollapse: false,
+                                        renderTo: Ext.getBody(),
+                                        items: grid
+                                    });
+
+                                    ct.collapse();
+                                    store.loadData([{
+                                        field1: 'foo'
+                                    }]);
+                                    ct.expand();
+                                    expect(getCellText(0, 0)).toBe('foo');
+                                });
+                            });
+
+                            describe("with animation", function() {
+                                it("should update after being collapsed", function() {
+                                    makeGrid(undefined, 5, {
+                                        renderTo: null
+                                    });
+
+                                    var collapseSpy = jasmine.createSpy(),
+                                        expandSpy = jasmine.createSpy();
+
+                                    ct = new Ext.panel.Panel({
+                                        collapsible: true,
+                                        animCollapse: true,
+                                        renderTo: Ext.getBody(),
+                                        items: grid,
+                                        listeners: {
+                                            collapse: collapseSpy,
+                                            expand: expandSpy
+                                        }
+                                    });
+
+                                    ct.collapse();
+                                    waitsFor(function() {
+                                        return collapseSpy.callCount > 0;
+                                    });
+                                    runs(function() {
+                                        store.loadData([{
+                                            field1: 'foo'
+                                        }]);
+                                        ct.expand();
+                                    });
+                                    waitsFor(function() {
+                                        return expandSpy.callCount > 0;
+                                    });
+                                    runs(function() {
+                                        expect(getCellText(0, 0)).toBe('foo');
+                                    });
+                                });
+                            });
+                        });
+                    });
+
+                    describe("grid is not visible directly", function() {
+                        it("should update after being hidden", function() {
+                            makeGrid();
+                            grid.hide();
+                            store.loadData([{
+                                field1: 'foo'
+                            }]);
+                            grid.show();
+                            expect(getCellText(0, 0)).toBe('foo');
+                        });
+
+                        describe("collapsed", function() {
+                            describe("without animation", function() {
+                                it("should update after being collapsed", function() {
+                                    makeGrid(undefined, 5, {
+                                        collapsible: true,
+                                        animCollapse: false
+                                    });
+                                    grid.collapse();
+                                    store.loadData([{
+                                        field1: 'foo'
+                                    }]);
+                                    grid.expand();
+                                    expect(getCellText(0, 0)).toBe('foo');
+                                });
+                            });
+
+                            describe("with animation", function() {
+                                it("should update after being collapsed", function() {
+                                    var collapseSpy = jasmine.createSpy(),
+                                        expandSpy = jasmine.createSpy();
+
+                                    makeGrid(undefined, 5, {
+                                        collapsible: true,
+                                        animCollapse: false,
+                                        listeners: {
+                                            collapse: collapseSpy,
+                                            expand: expandSpy
+                                        }
+                                    });
+
+                                    grid.collapse();
+                                    waitsFor(function() {
+                                        return collapseSpy.callCount > 0;
+                                    });
+                                    runs(function() {
+                                        store.loadData([{
+                                            field1: 'foo'
+                                        }]);
+                                        grid.expand();
+                                    });
+                                    waitsFor(function() {
+                                        return expandSpy.callCount > 0;
+                                    });
+                                    runs(function() {
+                                        expect(getCellText(0, 0)).toBe('foo');
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
             });
 
             describe("focus behaviour", function() {
+                describe("focusing from another grid", function() {
+                    var ct;
+
+                    afterEach(function() {
+                        ct = Ext.destroy(ct);
+                    });
+
+                    it("should be able to be focus by clicking the container when another grid is focused", function() {
+                        makeGrid(null, 1, {
+                            renderTo: null
+                        });
+
+                        var other = grid,
+                            otherCols = colRef,
+                            otherView = other.view,
+                            otherStore = other.getStore();
+
+                        makeGrid(null, 1, {
+                            renderTo: null
+                        });
+
+                        ct = new Ext.container.Container({
+                            renderTo: Ext.getBody(),
+                            layout: 'hbox',
+                            items: [other, grid]
+                        });
+
+                        jasmine.focusAndWait(otherView.getCell(otherStore.getAt(0), otherCols[0]));
+
+                        runs(function() {
+                            // Trigger a click in the grid, not on a cell
+                            jasmine.fireMouseEvent(view.el, 'click', view.el.getX() + 50, 100);
+                        });
+
+                        expectFocused(view.getCell(store.getAt(0), colRef[0]));
+                    });
+                });
+
                 describe("after reconfigure", function() {
                     it("should be able to refocus the same row after reconfiguring with new columns/new records", function() {
                         makeGrid([{
@@ -306,7 +562,7 @@ describe("grid-general", function() {
                             rec = store.getAt(10);
 
                         view.focusRow(rec);
-                        jasmine.expectFocused(view.getCell(rec, colRef[0]));
+                        expectFocused(view.getCell(rec, colRef[0]));
                         runs(function() {
                             var data = [],
                                 newStore, i;
@@ -327,7 +583,7 @@ describe("grid-general", function() {
                             colRef = grid.getColumnManager().getColumns();
 
                             view.focusRow(rec);
-                            jasmine.expectFocused(view.getCell(rec, colRef[0]));
+                            expectFocused(view.getCell(rec, colRef[0]));
                         });
                     });
                 });
@@ -335,8 +591,9 @@ describe("grid-general", function() {
 
             describe("autoSizeColumn", function() {
                 function getPadding() {
-                    var cell = grid.getView().getEl().down(colRef[0].getCellInnerSelector()),
+                    var cell = Ext.fly(grid.getView().getEl().down(colRef[0].getCellInnerSelector(), true)),
                         right = Ext.supports.ScrollWidthInlinePaddingBug ? parseInt(cell.getStyle('padding-right'), 10) : 0;
+
                     return parseInt(cell.getStyle('padding-left'), 10) + right;
                 }
 
@@ -398,7 +655,8 @@ describe("grid-general", function() {
 
                 function getRow(index) {
                     var node = view.getNode(index);
-                    return Ext.fly(node).down(view.rowSelector);
+
+                    return Ext.fly(Ext.fly(node).down(view.rowSelector, true));
                 }
 
                 it("should be called for each rendered row", function() {
@@ -465,12 +723,22 @@ describe("grid-general", function() {
             describe("emptyText", function() {
 
                 function getEmpty() {
-                    return grid.getEl().down('.' + grid.emptyCls) || null;
+                    return Ext.fly(grid.getEl().down('.' + grid.emptyCls, true)) || null;
                 }
 
                 describe("when to display", function() {
                     it("should display on first refresh with deferEmptyText: false", function() {
                         makeGrid(null, null, {
+                            viewConfig: {
+                                emptyText: 'Foo',
+                                deferEmptyText: false
+                            }
+                        });
+                        expect(getEmpty()).not.toBeNull();
+                    });
+
+                    it("should display on first refresh with deferEmptyText: false and not columns defined", function() {
+                        makeGrid([], null, {
                             viewConfig: {
                                 emptyText: 'Foo',
                                 deferEmptyText: false
@@ -560,7 +828,8 @@ describe("grid-general", function() {
                                 deferEmptyText: false
                             }
                         });
-                        var otherParts = grid.body.getBorderWidth('tb') + grid.el.down(view.bodySelector).getHeight();
+                        var otherParts = grid.body.getBorderWidth('tb') + Ext.fly(grid.el.down(view.bodySelector, true)).getHeight();
+
                         expect(grid.getHeight()).toBe(100 + getEmpty().getPadding('tb') + otherParts);
                     });
                 });
@@ -638,7 +907,8 @@ describe("grid-general", function() {
                         Ext.Array.forEach(grid.getView().getNodes(), function(node, index) {
                             if (index % 2 === 1) {
                                 expect(Ext.fly(node).hasCls(stripeCls)).toBe(true);
-                            } else {
+                            }
+                            else {
                                 expect(Ext.fly(node).hasCls(stripeCls)).toBe(false);
                             }
                         });
@@ -656,7 +926,7 @@ describe("grid-general", function() {
                     it("should stripe rows when inserting records", function() {
                         store.insert(0, {});
                         expectStriped();
-                    }); 
+                    });
 
                     it("should stripe when removing records", function() {
                         store.removeAt(0);
@@ -690,7 +960,8 @@ describe("grid-general", function() {
             });
 
             describe("forceFit", function() {
-                var data; 
+                var data;
+
                 beforeEach(function() {
                     data = [];
 
@@ -755,10 +1026,10 @@ describe("grid-general", function() {
                         makeGrid([{
                             dataIndex: 'field1',
                             flex: 1
-                        },{
+                        }, {
                             dataIndex: 'field2',
                             hidden: true
-                        },{
+                        }, {
                             dataIndex: 'field3',
                             flex: 1
                         }], data, {
@@ -767,7 +1038,7 @@ describe("grid-general", function() {
                             height: 200
                         });
 
-                        expect(function(){
+                        expect(function() {
                             colRef[1].show();
                         }).not.toThrow();
 
@@ -780,11 +1051,11 @@ describe("grid-general", function() {
                         makeGrid([{
                             dataIndex: 'field1',
                             flex: 1
-                        },{
+                        }, {
                             dataIndex: 'field2',
                             hidden: true,
                             flex: 1
-                        },{
+                        }, {
                             dataIndex: 'field3',
                             flex: 1
                         }], data, {
@@ -800,7 +1071,7 @@ describe("grid-general", function() {
                         visibleColumns = grid.getVisibleColumnManager().getColumns();
                         expect(visibleColumns.length).toBe(3);
 
-                        for (var i=0; i<3; i++) {
+                        for (var i = 0; i < 3; i++) {
                             expect(visibleColumns[i].flex).not.toBeNaN();
                         }
                     });
@@ -809,11 +1080,11 @@ describe("grid-general", function() {
                         makeGrid([{
                             dataIndex: 'field1',
                             flex: 1
-                        },{
+                        }, {
                             dataIndex: 'field2',
                             hidden: true,
                             width: 100
-                        },{
+                        }, {
                             dataIndex: 'field3',
                             flex: 1
                         }], data, {
@@ -822,7 +1093,7 @@ describe("grid-general", function() {
                             height: 200
                         });
 
-                        expect(function(){
+                        expect(function() {
                             colRef[1].show();
                         }).not.toThrow();
 
@@ -831,16 +1102,48 @@ describe("grid-general", function() {
                 });
 
                 describe("with overflow", function() {
-                    beforeEach(function() {
+                    it("should size the columns to fit within the grid body, inside the scrollbar", function() {
                         makeGrid(null, data, {
                             forceFit: true,
                             width: 400,
                             height: 200
                         });
+                        expect(grid.headerCt.getTableWidth()).toBe(grid.body.getWidth() - grid.body.getBorderWidth('lr') - Ext.getScrollbarSize().width);
                     });
 
-                    it('should size the columns to fit within the grid body, inside the scrollbar', function() {
-                        expect(grid.headerCt.getTableWidth()).toBe(grid.body.getWidth() - grid.body.getBorderWidth('lr') - Ext.getScrollbarSize().width);
+                    it("should not change the column sizes after updateLayout when width is not specified", function() {
+                        var w1 = [],
+                            w2 = [],
+                            i;
+
+                        makeGrid([{
+                            dataIndex: 'field1',
+                            text: 'col1'
+                        }, {
+                            dataIndex: 'field2',
+                            text: 'col2'
+                        }, {
+                            dataIndex: 'field3',
+                            text: 'col3'
+                        }], 10, {
+                            fullScreen: true,
+                            forceFit: true,
+                            width: '100%'
+                        });
+
+                        colRef[0].autoSize();
+
+                        for (i = 0; i < colRef.length; i++) {
+                            w1.push(colRef[i].getWidth());
+                        }
+
+                        grid.updateLayout();
+
+                        for (i = 0; i < colRef.length; i++) {
+                            w2.push(colRef[i].getWidth());
+                        }
+
+                        expect(w1).toEqual(w2);
                     });
                 });
             });
@@ -850,7 +1153,7 @@ describe("grid-general", function() {
                     describe("without locking", function() {
                         it("should be able to configure without columns", function() {
                             expect(function() {
-                                makeGrid(null, undefined, null, {preventColumnCreate: true});
+                                makeGrid(null, undefined, null, { preventColumnCreate: true });
                             }).not.toThrow();
                         });
                     });
@@ -858,7 +1161,7 @@ describe("grid-general", function() {
                     describe("with locking", function() {
                         it("should be able to configure without columns", function() {
                             expect(function() {
-                                makeGrid(null, undefined, {enableLocking: true}, {preventColumnCreate: true});
+                                makeGrid(null, undefined, { enableLocking: true }, { preventColumnCreate: true });
                             }).not.toThrow();
                         });
                     });
@@ -866,18 +1169,18 @@ describe("grid-general", function() {
 
                 // Note: Arguably, these specs should not be in grid since itemSelector is a view config, but the bug only
                 // occurred in a locking grid. See EXTJS-15563.
-                describe("itemSelector", function () {
+                describe("itemSelector", function() {
                     var itemSelector = Ext.view.Table.prototype.itemSelector;
 
-                    describe("without locking", function () {
-                        it("should be able to lookup the itemSelector on the view", function () {
+                    describe("without locking", function() {
+                        it("should be able to lookup the itemSelector on the view", function() {
                             makeGrid();
                             expect(view.itemSelector).toBe(itemSelector);
                         });
                     });
 
-                    describe("with locking", function () {
-                        it("should be able to lookup the itemSelector on the LockingView", function () {
+                    describe("with locking", function() {
+                        it("should be able to lookup the itemSelector on the LockingView", function() {
                             makeGrid(null, undefined, null, null, true);
                             expect(view.itemSelector).toBe(itemSelector);
                         });
@@ -918,7 +1221,7 @@ describe("grid-general", function() {
                     });
 
                     function getCell(record, column) {
-                        return grid.getView().getCell(record, column);
+                        return Ext.fly(grid.getView().getCell(record, column));
                     }
 
                     describe("with markDirty: false", function() {
@@ -947,7 +1250,7 @@ describe("grid-general", function() {
                         it("should not add the dirtyText description when updated with a simple cell updater", function() {
                             makeDirtyGrid(false);
                             store.first().set('field1', 'bleh');
-                            
+
                             expect(grid.getEl().select('[aria-describedby]').getCount()).toBe(0);
                         });
 
@@ -970,7 +1273,7 @@ describe("grid-general", function() {
                                 }
                             }]);
                             store.first().set('field1', 'bleh');
-                            
+
                             expect(grid.getEl().select('[aria-describedby]').getCount()).toBe(0);
                         });
                     });
@@ -979,8 +1282,9 @@ describe("grid-general", function() {
                         it("should not render a cell with the dirtyCls initially if not dirty", function() {
                             makeDirtyGrid(true, true);
                             grid.render(Ext.getBody());
-                            
+
                             var rec = store.first();
+
                             for (var i = 0; i < colRef.length; ++i) {
                                 expect(getCell(rec, colRef[i])).not.toHaveCls(dirtyCls);
                             }
@@ -989,8 +1293,9 @@ describe("grid-general", function() {
                         it("should not render a cell with the dirtyText description initially if not dirty", function() {
                             makeDirtyGrid(true, true);
                             grid.render(Ext.getBody());
-                            
+
                             var rec = store.first();
+
                             for (var i = 0; i < colRef.length; ++i) {
                                 expect(getCell(rec, colRef[i])).not.toHaveAttr('aria-describedby');
                             }
@@ -1000,9 +1305,11 @@ describe("grid-general", function() {
                             makeDirtyGrid(true, true);
                             store.first().set('field1', 'bleh');
                             grid.render(Ext.getBody());
-                            
+
                             var rec = store.first();
+
                             expect(getCell(rec, colRef[0])).toHaveCls(dirtyCls);
+
                             for (var i = 1; i < colRef.length; ++i) {
                                 expect(getCell(rec, colRef[i])).not.toHaveCls(dirtyCls);
                             }
@@ -1012,10 +1319,11 @@ describe("grid-general", function() {
                             makeDirtyGrid(true, true);
                             store.first().set('field1', 'bleh');
                             grid.render(Ext.getBody());
-                            
+
                             var rec = store.first();
+
                             expect(getCell(rec, colRef[0])).toHaveAttr('aria-describedby', colRef[0].dirtyTextElementId);
-                            
+
                             for (var i = 1; i < colRef.length; ++i) {
                                 expect(getCell(rec, colRef[i])).not.toHaveAttr('aria-describedby');
                             }
@@ -1024,6 +1332,7 @@ describe("grid-general", function() {
                         it("should add the dirtyCls to updated cells", function() {
                             makeDirtyGrid(true);
                             var rec = store.first();
+
                             rec.set('field1', 'bleh');
                             expect(getCell(rec, colRef[0])).toHaveCls(dirtyCls);
                             rec.set('field4', 'qwerty');
@@ -1033,10 +1342,10 @@ describe("grid-general", function() {
                         it("should add the dirtyText description to updated cells", function() {
                             makeDirtyGrid(true);
                             var rec = store.first();
-                            
+
                             rec.set('field1', 'bleh');
                             expect(getCell(rec, colRef[0])).toHaveAttr('aria-describedby', colRef[0].dirtyTextElementId);
-                            
+
                             rec.set('field4', 'qwerty');
                             expect(getCell(rec, colRef[3])).toHaveAttr('aria-describedby', colRef[3].dirtyTextElementId);
                         });
@@ -1059,7 +1368,7 @@ describe("grid-general", function() {
 
                             rec.set('field1', 'asdf');
                             expect(getCell(rec, colRef[0])).toHaveAttr('aria-describedby', colRef[0].dirtyTextElementId);
-                            
+
                             rec.set('field1', val);
                             expect(getCell(rec, colRef[0])).not.toHaveAttr('aria-describedby');
                         });
@@ -1147,6 +1456,7 @@ describe("grid-general", function() {
                 function describeSelectionSuite(withLocking) {
                     describe(withLocking ? "with locking" : "without locking", function() {
                         var sm;
+
                         beforeEach(function() {
                             sm = new Ext.selection.RowModel();
                             makeGrid([{
@@ -1169,14 +1479,17 @@ describe("grid-general", function() {
 
                         it("should add the selectedItemCls when selected", function() {
                             var cls;
+
                             sm.select(0);
+
                             if (withLocking) {
                                 view = grid.normalGrid.getView();
                                 cls = view.selectedItemCls;
 
                                 expect(grid.lockedGrid.getView().getNode(0)).toHaveCls(cls);
                                 expect(view.getNode(0)).toHaveCls(cls);
-                            } else {
+                            }
+                            else {
                                 view = grid.getView();
                                 cls = view.selectedItemCls;
 
@@ -1186,6 +1499,7 @@ describe("grid-general", function() {
 
                         it("should remove the selectedItemCls when deselected", function() {
                             var cls;
+
                             sm.select(0);
                             sm.deselect(0);
 
@@ -1195,7 +1509,8 @@ describe("grid-general", function() {
 
                                 expect(grid.lockedGrid.getView().getNode(0)).not.toHaveCls(cls);
                                 expect(view.getNode(0)).not.toHaveCls(cls);
-                            } else {
+                            }
+                            else {
                                 view = grid.getView();
                                 cls = view.selectedItemCls;
 
@@ -1205,15 +1520,18 @@ describe("grid-general", function() {
 
                         it("should retain the selectedItemCls when updating a row", function() {
                             var cls;
+
                             sm.select(0);
                             store.first().commit();
+
                             if (withLocking) {
                                 view = grid.normalGrid.getView();
                                 cls = view.selectedItemCls;
 
                                 expect(grid.lockedGrid.getView().getNode(0)).toHaveCls(cls);
                                 expect(view.getNode(0)).toHaveCls(cls);
-                            } else {
+                            }
+                            else {
                                 view = grid.getView();
                                 cls = view.selectedItemCls;
 
@@ -1226,33 +1544,34 @@ describe("grid-general", function() {
                 describeSelectionSuite(false);
                 describeSelectionSuite(true);
             });
-            
-            describe("renderers", function(){
+
+            describe("renderers", function() {
                 describe("scope", function() {
-                    it("should use the grid as the default scope", function(){
+                    it("should use the grid as the default scope", function() {
                         var scope;
+
                         makeGrid([{
                             dataIndex: 'field1',
                             text: 'Field1',
-                            renderer: function(){
+                            renderer: function() {
                                 scope = this;
-                            }    
-                        }]);    
+                            }
+                        }]);
                         expect(scope).toBe(grid);
                     });
-                    
-                    it("should use the passed scope", function(){
+
+                    it("should use the passed scope", function() {
                         var o = {},
                             scope;
-                            
+
                         makeGrid([{
                             dataIndex: 'field1',
                             text: 'Field1',
                             scope: o,
-                            renderer: function(){
+                            renderer: function() {
                                 scope = this;
-                            }    
-                        }]);    
+                            }
+                        }]);
                         expect(scope).toBe(o);
                     });
                 });
@@ -1265,18 +1584,19 @@ describe("grid-general", function() {
                             dataIndex: 'field1',
                             renderer: function(value, meta) {
                                 meta.tdStyle = 'background-color:' + backgroundColor;
+
                                 return '<B>' + value.toUpperCase() + '</B>';
-                            }    
+                            }
                         }], 1);
                     });
-                    
+
                     it("should pass the value as the first param", function() {
-                        expect(view.getCell(0, 0).dom.style.backgroundColor).toBe(backgroundColor);
-                        expect(view.getCell(0, 0).child(view.innerSelector, true).innerHTML.toUpperCase()).toBe('<B>' + store.getAt(0).get('field1').toUpperCase() + '</B>');
+                        expect(view.getCell(0, 0).style.backgroundColor).toBe(backgroundColor);
+                        expect(view.getCell(0, 0).querySelector(view.innerSelector).innerHTML.toUpperCase()).toBe('<B>' + store.getAt(0).get('field1').toUpperCase() + '</B>');
                     });
-                    
+
                     it("should pass a meta object as the second param when refreshNode is called", function() {
-                        expect(view.getCell(0, 0).dom.style.backgroundColor).toBe(backgroundColor);
+                        expect(view.getCell(0, 0).style.backgroundColor).toBe(backgroundColor);
 
                         backgroundColor = 'red';
                         expect(function() {
@@ -1284,97 +1604,102 @@ describe("grid-general", function() {
                         }).not.toThrow();
 
                         // Must have updated the background color
-                        expect(view.getCell(0, 0).dom.style.backgroundColor).toBe(backgroundColor);
+                        expect(view.getCell(0, 0).style.backgroundColor).toBe(backgroundColor);
                     });
                 });
-                
-                describe("params", function(){
+
+                describe("params", function() {
                     var args;
-                    beforeEach(function(){
+
+                    beforeEach(function() {
                         makeGrid([{
                             dataIndex: 'field1',
-                            renderer: function(){
+                            renderer: function() {
                                 args = Array.prototype.slice.call(arguments, 0, arguments.length);
-                            }    
+                            }
                         }]);
                     });
-                    
-                    it("should pass the value as the first param", function(){
+
+                    it("should pass the value as the first param", function() {
                         expect(args[0]).toBe(1);
                     });
-                    
-                    it("should pass a meta object as the second param", function(){
+
+                    it("should pass a meta object as the second param", function() {
                         expect(Ext.isObject(args[1])).toBe(true);
                     });
-                    
-                    it("should pass the record as the third param", function(){
+
+                    it("should pass the record as the third param", function() {
                         expect(args[2]).toBe(store.getAt(0));
                     });
-                    
-                    it("should pass the recordIndex as the fourth param", function(){
+
+                    it("should pass the recordIndex as the fourth param", function() {
                         expect(args[3]).toBe(0);
                     });
-                    
-                    it("should pass the cellIndex as the fifth param", function(){
+
+                    it("should pass the cellIndex as the fifth param", function() {
                         expect(args[4]).toBe(0);
                     });
-                    
-                    it("should pass the store as the sixth param", function(){
+
+                    it("should pass the store as the sixth param", function() {
                         expect(args[5]).toBe(store);
                     });
-                    
-                    it("should pass the view as the seventh param", function(){
+
+                    it("should pass the view as the seventh param", function() {
                         expect(args[6]).toBe(grid.getView());
                     });
                 });
-                
-                describe("cellIndex", function(){
-                    it("should pass the local index when dealing with locked columns", function(){
+
+                describe("cellIndex", function() {
+                    it("should pass the local index when dealing with locked columns", function() {
                         var indexes = [],
-                            fn = function(){
+                            // We are testing passed cellIndex which is only calculated if there
+                            // is a recieving argument in the arg list, so declare them all.
+                            fn = function(value, cellValues, record, recordIndex, fullIndex, store, view) {
                                 indexes.push(arguments[4]);
                             };
-                            
+
                         makeGrid([{
                             locked: true,
                             dataIndex: 'field1',
-                            renderer: fn    
+                            renderer: fn
                         }, {
                             locked: true,
                             dataIndex: 'field2',
-                            renderer: fn    
+                            renderer: fn
                         }, {
                             dataIndex: 'field3',
-                            renderer: fn   
+                            renderer: fn
                         }, {
                             dataIndex: 'field4',
-                            renderer: fn   
+                            renderer: fn
                         }]);
                         expect(indexes).toEqual([0, 1, 0, 1]);
                     });
-                    
-                    it("should take into account hidden columns when passing cellIdx", function(){
+
+                    it("should take into account hidden columns when passing cellIdx", function() {
                         var values = [],
                             indexes = [],
-                            fn = function(v){
-                                values.push(v);
+                            // We are testing passed cellIndex which is only calculated if there
+                            // is a recieving argument in the arg list, so declare them all.
+                             fn = function(value, cellValues, record, recordIndex, fullIndex, store, view) {
+                                values.push(value);
                                 indexes.push(arguments[4]);
                             };
-                            
+
                         makeGrid([{
                             dataIndex: 'field1',
-                            renderer: fn    
+                            renderer: fn
                         }, {
                             hidden: true,
                             dataIndex: 'field2',
-                            renderer: fn    
+                            renderer: fn
                         }, {
                             dataIndex: 'field3',
-                            renderer: fn   
+                            renderer: fn
                         }, {
                             hidden: true,
                             dataIndex: 'field4',
-                            renderer: fn   
+                            renderer: fn
                         }, {
                             dataIndex: 'field5',
                             renderer: fn
@@ -1383,13 +1708,13 @@ describe("grid-general", function() {
                         expect(values).toEqual([1, 3, 5]);
                     });
                 });
-                
+
                 it("should accept a string formatter that maps to Ext.util.Format", function() {
                     var oldFormat = Ext.util.Format.capitalize,
                         called;
-                        
-                    Ext.util.Format.capitalize = function () {
-                        called = true;    
+
+                    Ext.util.Format.capitalize = function() {
+                        called = true;
                     };
 
                     makeGrid([{
@@ -1407,11 +1732,11 @@ describe("grid-general", function() {
                         oldFormat2 = Ext.util.Format.lowercase,
                         called, called2;
 
-                    Ext.util.Format.capitalize = function () {
+                    Ext.util.Format.capitalize = function() {
                         called = true;
                     };
 
-                    Ext.util.Format.lowercase = function () {
+                    Ext.util.Format.lowercase = function() {
                         called2 = true;
                     };
 
@@ -1430,7 +1755,7 @@ describe("grid-general", function() {
                 it("should accept a scoped formatter", function() {
                     var called = 0;
 
-                    var formatter = function (v, a1) {
+                    var formatter = function(v, a1) {
                         called = v + a1;
                     };
 
@@ -1448,11 +1773,11 @@ describe("grid-general", function() {
                 it("should accept chained and scoped formatters", function() {
                     var called = 0;
 
-                    var formatter = function (v, a1) {
+                    var formatter = function(v, a1) {
                         return v * a1; // 1*2
                     };
 
-                    var formatter2 = function (v, a1) {
+                    var formatter2 = function(v, a1) {
                         called = v / a1; // 2/4
                     };
 
@@ -1490,12 +1815,13 @@ describe("grid-general", function() {
                     });
 
                     var rec = store.getAt(0);
+
                     expect(getCellText(0, 1)).toBe('x1');
                     rec.set('field1', 'foo');
                     expect(getCellText(0, 1)).toBe('x2');
                 });
             });
-            
+
             describe("model operations", function() {
                 describe("destroy", function() {
                     it("should remove the model when destroy is called", function() {
@@ -1510,10 +1836,894 @@ describe("grid-general", function() {
                         }]);
                         store.first().erase();
                         expect(grid.getView().getNodes().length).toBe(2);
-                    });  
-                });  
+                    });
+                });
             });
-            
+
+            describe("row binding", function() {
+                // While these tests will use widgetcolumn/rowwidget, they are really testing the functionality
+                // shared in the grid/row context
+
+                function makeBindSuite(o) {
+                    var widgets, wCount;
+
+                    function notify() {
+                        var vm = grid.lookupViewModel();
+
+                        if (vm) {
+                            vm.notify();
+                        }
+                        else {
+                            Ext.Array.forEach(widgets, function(widget) {
+                                var vm = widget.lookupViewModel();
+
+                                if (vm) {
+                                    if (vm.getParent()) {
+                                        vm = vm.getParent();
+                                    }
+
+                                    vm.notify();
+                                }
+                            });
+                        }
+                    }
+
+                    beforeEach(function() {
+                        wCount = 0;
+                        widgets = [];
+
+                        Ext.define('spec.RowVM', {
+                            extend: 'Ext.app.ViewModel',
+                            alias: 'viewmodel.specgridrow'
+                        });
+
+                        Ext.define('spec.WidgetVM', {
+                            extend: 'Ext.app.ViewModel',
+                            alias: 'viewmodel.specwidgetvm'
+                        });
+
+                        Ext.define('spec.GridWidget', {
+                            extend: 'Ext.container.Container',
+                            xtype: 'gridwidget',
+
+                            defaultBindProperty: 'a',
+
+                            config: {
+                                a: ''
+                            },
+
+                            constructor: function(config) {
+                                ++wCount;
+                                this.callParent([config]);
+
+                                if (!o.ignoreFirst || wCount > 1) {
+                                    widgets.push(this);
+                                }
+                            },
+
+                            fireIt: function() {
+                                this.fireEvent('widgetevent', this);
+                            }
+                        });
+
+                        Ext.define('spec.GridWidgetChild', {
+                            extend: 'Ext.Component',
+                            xtype: 'gridwidgetchild',
+
+                            defaultBindProperty: 'z',
+
+                            config: {
+                                z: ''
+                            },
+
+                            fireIt: function() {
+                                this.fireEvent('childevent', this);
+                            }
+                        });
+                    });
+
+                    afterEach(function() {
+                        wCount = 0;
+                        widgets = null;
+                        Ext.undefine('spec.WidgetVM');
+                        Ext.undefine('spec.RowVM');
+                        Ext.undefine('spec.GridWidget');
+                        Ext.undefine('spec.GridWidgetChild');
+                    });
+
+                    function getWidget(index) {
+                        o.activateWidget(index);
+
+                        return widgets[index];
+                    }
+
+                    function create(widgetCfg, data, gridCfg) {
+                        o.createFn(widgetCfg, data, gridCfg);
+                    }
+
+                    describe("default viewModel creation", function() {
+                        it("should not create a viewmodel by default", function() {
+                            create({
+                                xtype: 'gridwidget'
+                            }, 1);
+
+                            var w = getWidget(0);
+
+                            expect(w.getViewModel()).toBeNull();
+                        });
+
+                        it("should create a viewmodel if the widget has a bind statement", function() {
+                            create({
+                                xtype: 'gridwidget',
+                                bind: '{record.id}'
+                            }, 1);
+
+                            var w = getWidget(0);
+
+                            expect(w.lookupViewModel().$className).toBe('Ext.app.ViewModel');
+                            notify();
+                            expect(w.getA()).toBe('rec0');
+                        });
+
+                        it("should create a viewmodel if a rowViewModel if specified", function() {
+                            create({
+                                xtype: 'gridwidget'
+                            }, 1, {
+                                rowViewModel: {}
+                            });
+
+                            var w = getWidget(0);
+
+                            expect(w.lookupViewModel().$className).toBe('Ext.app.ViewModel');
+                        });
+
+                        it("should use the viewModel type as a string", function() {
+                            create({
+                                xtype: 'gridwidget'
+                            }, 1, {
+                                rowViewModel: 'specgridrow'
+                            });
+
+                            var w = getWidget(0);
+
+                            expect(w.lookupViewModel().$className).toBe('spec.RowVM');
+                        });
+
+                        it("should use the viewModel type as an object", function() {
+                            create({
+                                xtype: 'gridwidget'
+                            }, 1, {
+                                rowViewModel: {
+                                    type: 'specgridrow'
+                                }
+                            });
+
+                            var w = getWidget(0);
+
+                            expect(w.lookupViewModel().$className).toBe('spec.RowVM');
+                        });
+                    });
+
+                    describe("inheriting viewmodels", function() {
+                        describe("viewmodel above grid", function() {
+                            var ct, vm;
+
+                            beforeEach(function() {
+                                vm = new Ext.app.ViewModel({
+                                    data: {
+                                        foo: 'xxx'
+                                    }
+                                });
+                            });
+
+                            afterEach(function() {
+                                vm = ct = Ext.destroy(ct);
+                            });
+
+                            describe("without a rowviewmodel", function() {
+                                describe("without widget viewmodel", function() {
+                                    it("should hook up rows to the parent vm", function() {
+                                        create({
+                                            xtype: 'gridwidget',
+                                            items: {
+                                                xtype: 'gridwidgetchild',
+                                                bind: '{foo}'
+                                            }
+                                        }, 1, {
+                                            renderTo: null
+                                        });
+
+                                        ct = new Ext.container.Container({
+                                            viewModel: vm,
+                                            items: grid,
+                                            renderTo: Ext.getBody()
+                                        });
+
+                                        var w = getWidget(0);
+
+                                        notify();
+                                        expect(w.lookupViewModel()).toBe(vm);
+                                        expect(w.items.first().getZ()).toBe('xxx');
+                                    });
+                                });
+
+                                describe("with widget viewmodel", function() {
+                                    it("should hook up rows to the parent vm", function() {
+                                        create({
+                                            xtype: 'gridwidget',
+                                            items: {
+                                                xtype: 'gridwidgetchild',
+                                                bind: '{foo}{bar}'
+                                            },
+                                            viewModel: {
+                                                type: 'specwidgetvm',
+                                                data: {
+                                                    bar: 'yyy'
+                                                }
+                                            }
+                                        }, 1, {
+                                            renderTo: null
+                                        });
+
+                                        ct = new Ext.container.Container({
+                                            viewModel: vm,
+                                            items: grid,
+                                            renderTo: Ext.getBody()
+                                        });
+
+                                        var w = getWidget(0),
+                                            wVM = w.lookupViewModel();
+
+                                        notify();
+                                        expect(wVM.$className).toBe('spec.WidgetVM');
+                                        expect(wVM.getParent()).toBe(vm);
+                                        expect(w.items.first().getZ()).toBe('xxxyyy');
+                                    });
+                                });
+                            });
+
+                            describe("with a rowviewmodel", function() {
+                                describe("without widget viewmodel", function() {
+                                    it("should hook up rows to the parent vm", function() {
+                                        create({
+                                            xtype: 'gridwidget',
+                                            bind: '{foo}{bar}',
+                                            items: {
+                                                xtype: 'gridwidgetchild',
+                                                bind: '{foo}{bar}'
+                                            }
+                                        }, 1, {
+                                            renderTo: null,
+                                            rowViewModel: {
+                                                type: 'specgridrow',
+                                                data: {
+                                                    bar: 'yyy'
+                                                }
+                                            }
+                                        });
+
+                                        ct = new Ext.container.Container({
+                                            viewModel: vm,
+                                            items: grid,
+                                            renderTo: Ext.getBody()
+                                        });
+
+                                        var w = getWidget(0),
+                                            wVM = w.lookupViewModel();
+
+                                        notify();
+                                        expect(wVM.$className).toBe('spec.RowVM');
+                                        expect(wVM.getParent()).toBe(vm);
+                                        expect(w.getA()).toBe('xxxyyy');
+                                        expect(w.items.first().getZ()).toBe('xxxyyy');
+                                    });
+                                });
+
+                                describe("with widget viewmodel", function() {
+                                    it("should hook up rows to the parent vm", function() {
+                                        create({
+                                            xtype: 'gridwidget',
+                                            bind: '{foo}{bar}{baz}',
+                                            items: {
+                                                xtype: 'gridwidgetchild',
+                                                bind: '{foo}{bar}{baz}'
+                                            },
+                                            viewModel: {
+                                                type: 'specwidgetvm',
+                                                data: {
+                                                    baz: 'zzz'
+                                                }
+                                            }
+                                        }, 1, {
+                                            renderTo: null,
+                                            rowViewModel: {
+                                                type: 'specgridrow',
+                                                data: {
+                                                    bar: 'yyy'
+                                                }
+                                            }
+                                        });
+
+                                        ct = new Ext.container.Container({
+                                            viewModel: vm,
+                                            items: grid,
+                                            renderTo: Ext.getBody()
+                                        });
+
+                                        var w = getWidget(0),
+                                            wVM = w.lookupViewModel();
+
+                                        notify();
+                                        expect(wVM.$className).toBe('spec.WidgetVM');
+                                        expect(wVM.getParent().$className).toBe('spec.RowVM');
+                                        expect(wVM.getParent().getParent()).toBe(vm);
+                                        expect(w.getA()).toBe('xxxyyyzzz');
+                                        expect(w.items.first().getZ()).toBe('xxxyyyzzz');
+                                    });
+                                });
+                            });
+                        });
+
+                        describe("viewmodel on grid", function() {
+                            var vm;
+
+                            beforeEach(function() {
+                                vm = new Ext.app.ViewModel({
+                                    data: {
+                                        foo: 'xxx'
+                                    }
+                                });
+                            });
+
+                            afterEach(function() {
+                                vm = null;
+                            });
+
+                            describe("without a rowviewmodel", function() {
+                                describe("without widget viewmodel", function() {
+                                    it("should hook up rows to the parent vm", function() {
+                                        create({
+                                            xtype: 'gridwidget',
+                                            items: {
+                                                xtype: 'gridwidgetchild',
+                                                bind: '{foo}'
+                                            }
+                                        }, 1, {
+                                            viewModel: vm
+                                        });
+
+                                        var w = getWidget(0);
+
+                                        notify();
+                                        expect(w.lookupViewModel()).toBe(vm);
+                                        expect(w.items.first().getZ()).toBe('xxx');
+                                    });
+                                });
+
+                                describe("with widget viewmodel", function() {
+                                    it("should hook up rows to the parent vm", function() {
+                                        create({
+                                            xtype: 'gridwidget',
+                                            items: {
+                                                xtype: 'gridwidgetchild',
+                                                bind: '{foo}{bar}'
+                                            },
+                                            viewModel: {
+                                                type: 'specwidgetvm',
+                                                data: {
+                                                    bar: 'yyy'
+                                                }
+                                            }
+                                        }, 1, {
+                                            viewModel: vm
+                                        });
+
+                                        var w = getWidget(0),
+                                            wVM = w.lookupViewModel();
+
+                                        notify();
+                                        expect(wVM.$className).toBe('spec.WidgetVM');
+                                        expect(wVM.getParent()).toBe(vm);
+                                        expect(w.items.first().getZ()).toBe('xxxyyy');
+                                    });
+                                });
+                            });
+
+                            describe("with a rowviewmodel", function() {
+                                describe("without widget viewmodel", function() {
+                                    it("should hook up rows to the parent vm", function() {
+                                        create({
+                                            xtype: 'gridwidget',
+                                            bind: '{foo}{bar}',
+                                            items: {
+                                                xtype: 'gridwidgetchild',
+                                                bind: '{foo}{bar}'
+                                            }
+                                        }, 1, {
+                                            viewModel: vm,
+                                            rowViewModel: {
+                                                type: 'specgridrow',
+                                                data: {
+                                                    bar: 'yyy'
+                                                }
+                                            }
+                                        });
+
+                                        var w = getWidget(0),
+                                            wVM = w.lookupViewModel();
+
+                                        notify();
+                                        expect(wVM.$className).toBe('spec.RowVM');
+                                        expect(wVM.getParent()).toBe(vm);
+                                        expect(w.getA()).toBe('xxxyyy');
+                                        expect(w.items.first().getZ()).toBe('xxxyyy');
+                                    });
+                                });
+
+                                describe("with widget viewmodel", function() {
+                                    it("should hook up rows to the parent vm", function() {
+                                        create({
+                                            xtype: 'gridwidget',
+                                            bind: '{foo}{bar}{baz}',
+                                            items: {
+                                                xtype: 'gridwidgetchild',
+                                                bind: '{foo}{bar}{baz}'
+                                            },
+                                            viewModel: {
+                                                type: 'specwidgetvm',
+                                                data: {
+                                                    baz: 'zzz'
+                                                }
+                                            }
+                                        }, 1, {
+                                            viewModel: vm,
+                                            rowViewModel: {
+                                                type: 'specgridrow',
+                                                data: {
+                                                    bar: 'yyy'
+                                                }
+                                            }
+                                        });
+
+                                        var w = getWidget(0),
+                                            wVM = w.lookupViewModel();
+
+                                        notify();
+                                        expect(wVM.$className).toBe('spec.WidgetVM');
+                                        expect(wVM.getParent().$className).toBe('spec.RowVM');
+                                        expect(wVM.getParent().getParent()).toBe(vm);
+                                        expect(w.getA()).toBe('xxxyyyzzz');
+                                        expect(w.items.first().getZ()).toBe('xxxyyyzzz');
+                                    });
+                                });
+                            });
+                        });
+
+                        describe("no viewmodel on grid", function() {
+                            describe("without a rowviewmodel", function() {
+                                describe("without widget viewmodel", function() {
+                                    it("should not throw an error", function() {
+                                        // We can't bind here, but it should still render
+                                        create({
+                                            xtype: 'gridwidget',
+                                            a: 1,
+                                            items: {
+                                                xtype: 'gridwidgetchild'
+                                            }
+                                        }, 1);
+
+                                        var w = getWidget(0);
+
+                                        expect(w.getA()).toBe(1);
+                                    });
+                                });
+
+                                describe("with widget viewmodel", function() {
+                                    beforeEach(function() {
+                                        create({
+                                            xtype: 'gridwidget',
+                                            items: {
+                                                xtype: 'gridwidgetchild',
+                                                bind: '{foo}'
+                                            },
+                                            viewModel: {
+                                                type: 'specwidgetvm',
+                                                data: {
+                                                    foo: 'xxx'
+                                                }
+                                            }
+                                        }, 5);
+                                    });
+
+                                    it("should hook up rows to the parent vm", function() {
+                                        var w = getWidget(0),
+                                            wVM = w.lookupViewModel();
+
+                                        notify();
+                                        expect(wVM.$className).toBe('spec.WidgetVM');
+                                        expect(w.items.first().getZ()).toBe('xxx');
+                                    });
+
+                                    it("should share a scheduler for all widgets", function() {
+                                        var scheduler = getWidget(0).getViewModel().getScheduler();
+
+                                        expect(getWidget(1).getViewModel().getScheduler()).toBe(scheduler);
+                                        expect(getWidget(2).getViewModel().getScheduler()).toBe(scheduler);
+                                        expect(getWidget(3).getViewModel().getScheduler()).toBe(scheduler);
+                                        expect(getWidget(4).getViewModel().getScheduler()).toBe(scheduler);
+                                    });
+                                });
+                            });
+
+                            describe("with a rowviewmodel", function() {
+                                describe("without widget viewmodel", function() {
+                                    beforeEach(function() {
+                                        create({
+                                            xtype: 'gridwidget',
+                                            bind: '{foo}',
+                                            items: {
+                                                xtype: 'gridwidgetchild',
+                                                bind: '{foo}'
+                                            }
+                                        }, 5, {
+                                            rowViewModel: {
+                                                type: 'specgridrow',
+                                                data: {
+                                                    foo: 'xxx'
+                                                }
+                                            }
+                                        });
+                                    });
+
+                                    it("should hook up rows to the parent vm", function() {
+                                        var w = getWidget(0),
+                                            wVM = w.lookupViewModel();
+
+                                        notify();
+                                        expect(wVM.$className).toBe('spec.RowVM');
+                                        expect(w.getA()).toBe('xxx');
+                                        expect(w.items.first().getZ()).toBe('xxx');
+                                    });
+
+                                    it("should share a scheduler for all widgets", function() {
+                                        var scheduler = getWidget(0).lookupViewModel().getScheduler();
+
+                                        expect(getWidget(1).lookupViewModel().getScheduler()).toBe(scheduler);
+                                        expect(getWidget(2).lookupViewModel().getScheduler()).toBe(scheduler);
+                                        expect(getWidget(3).lookupViewModel().getScheduler()).toBe(scheduler);
+                                        expect(getWidget(4).lookupViewModel().getScheduler()).toBe(scheduler);
+                                    });
+                                });
+
+                                describe("with widget viewmodel", function() {
+                                    beforeEach(function() {
+                                        create({
+                                            xtype: 'gridwidget',
+                                            bind: '{foo}{bar}',
+                                            items: {
+                                                xtype: 'gridwidgetchild',
+                                                bind: '{foo}{bar}'
+                                            },
+                                            viewModel: {
+                                                type: 'specwidgetvm',
+                                                data: {
+                                                    bar: 'yyy'
+                                                }
+                                            }
+                                        }, 5, {
+                                            rowViewModel: {
+                                                type: 'specgridrow',
+                                                data: {
+                                                    foo: 'xxx'
+                                                }
+                                            }
+                                        });
+                                    });
+
+                                    it("should hook up rows to the parent vm", function() {
+                                        var w = getWidget(0),
+                                            wVM = w.lookupViewModel();
+
+                                        notify();
+                                        expect(wVM.$className).toBe('spec.WidgetVM');
+                                        expect(wVM.getParent().$className).toBe('spec.RowVM');
+                                        expect(w.getA()).toBe('xxxyyy');
+                                        expect(w.items.first().getZ()).toBe('xxxyyy');
+                                    });
+
+                                    it("should share a scheduler for all widgets", function() {
+                                        var scheduler = getWidget(0).getViewModel().getScheduler();
+
+                                        expect(getWidget(1).getViewModel().getScheduler()).toBe(scheduler);
+                                        expect(getWidget(2).getViewModel().getScheduler()).toBe(scheduler);
+                                        expect(getWidget(3).getViewModel().getScheduler()).toBe(scheduler);
+                                        expect(getWidget(4).getViewModel().getScheduler()).toBe(scheduler);
+                                    });
+                                });
+                            });
+                        });
+                    });
+
+                    describe("data", function() {
+                        it("should put the record and recordIndex in the vm", function() {
+                            create({
+                                xtype: 'gridwidget',
+                                bind: '{record.id} - {recordIndex}'
+                            }, [{ id: 101 }, { id: 102 }, { id: 103 }, { id: 104 }]);
+
+                            // Force widget creation in expander mode
+                            getWidget(0);
+                            getWidget(1);
+                            getWidget(2);
+                            getWidget(3);
+
+                            notify();
+
+                            expect(getWidget(0).getA()).toBe('101 - 0');
+                            expect(getWidget(1).getA()).toBe('102 - 1');
+                            expect(getWidget(2).getA()).toBe('103 - 2');
+                            expect(getWidget(3).getA()).toBe('104 - 3');
+                        });
+                    });
+
+                    describe("resolving listeners", function() {
+                        beforeEach(function() {
+                            Ext.define('spec.GridController', {
+                                extend: 'Ext.app.ViewController',
+                                alias: 'controller.specgrid',
+
+                                onFoo: function() {},
+                                onBar: function() {}
+                            });
+                        });
+
+                        afterEach(function() {
+                            Ext.undefine('spec.GridController');
+                        });
+
+                        describe("controller above the grid", function() {
+                            var ct;
+
+                            afterEach(function() {
+                                ct = Ext.destroy(ct);
+                            });
+
+                            it("should resolve to the controller", function() {
+                                create({
+                                    xtype: 'gridwidget',
+                                    listeners: {
+                                        widgetevent: 'onFoo'
+                                    },
+                                    items: {
+                                        xtype: 'gridwidgetchild',
+                                        listeners: {
+                                            childevent: 'onBar'
+                                        }
+                                    }
+                                }, 1, {
+                                    renderTo: null
+                                });
+
+                                var controller = new spec.GridController();
+
+                                spyOn(controller, 'onFoo');
+                                spyOn(controller, 'onBar');
+
+                                ct = new Ext.container.Container({
+                                    controller: controller,
+                                    items: grid,
+                                    renderTo: Ext.getBody()
+                                });
+
+                                var w = getWidget(0);
+
+                                w.fireIt();
+                                expect(controller.onFoo.callCount).toBe(1);
+
+                                w.items.first().fireIt();
+                                expect(controller.onBar.callCount).toBe(1);
+                            });
+                        });
+
+                        describe("controller on the grid", function() {
+                            it("should resolve to the controller", function() {
+                                var controller = new spec.GridController();
+
+                                spyOn(controller, 'onFoo');
+                                spyOn(controller, 'onBar');
+
+                                create({
+                                    xtype: 'gridwidget',
+                                    listeners: {
+                                        widgetevent: 'onFoo'
+                                    },
+                                    items: {
+                                        xtype: 'gridwidgetchild',
+                                        listeners: {
+                                            childevent: 'onBar'
+                                        }
+                                    }
+                                }, 1, {
+                                    controller: controller
+                                });
+
+                                var w = getWidget(0);
+
+                                w.fireIt();
+                                expect(controller.onFoo.callCount).toBe(1);
+
+                                w.items.first().fireIt();
+                                expect(controller.onBar.callCount).toBe(1);
+                            });
+                        });
+
+                        describe("method on the widget view", function() {
+                            beforeEach(function() {
+                                Ext.define('spec.SelfWidget', {
+                                    extend: 'Ext.Component',
+                                    xtype: 'selfwidget',
+
+                                    constructor: function(config) {
+                                        ++wCount;
+                                        this.callParent([config]);
+
+                                        if (!o.ignoreFirst || wCount > 1) {
+                                            widgets.push(this);
+                                        }
+                                    },
+
+                                    fireIt: function() {
+                                        this.fireEvent('selfevent', this);
+                                    },
+
+                                    onSelfEvent: function() {},
+
+                                    defaultListenerScope: true,
+                                    listeners: {
+                                        selfEvent: 'onSelfEvent'
+                                    }
+                                });
+                            });
+
+                            afterEach(function() {
+                                Ext.undefine('spec.SelfWidget');
+                            });
+
+                            it("should resolve to the widget method", function() {
+                                create({
+                                    xtype: 'selfwidget'
+                                }, 1);
+
+                                var w = getWidget(0);
+
+                                spyOn(w, 'onSelfEvent');
+
+                                w.fireIt();
+                                expect(w.onSelfEvent.callCount).toBe(1);
+                            });
+                        });
+
+                        describe("method on the widget controller", function() {
+                            beforeEach(function() {
+                                Ext.define('spec.ControllerWidget', {
+                                    extend: 'Ext.Component',
+                                    xtype: 'controllerwidget',
+
+                                    controller: 'specgrid',
+
+                                    constructor: function(config) {
+                                        ++wCount;
+                                        this.callParent([config]);
+
+                                        if (!o.ignoreFirst || wCount > 1) {
+                                            widgets.push(this);
+                                        }
+                                    },
+
+                                    fireIt: function() {
+                                        this.fireEvent('controllerevent', this);
+                                    },
+
+                                    listeners: {
+                                        controllerevent: 'onFoo'
+                                    }
+                                });
+                            });
+
+                            afterEach(function() {
+                                Ext.undefine('spec.ControllerWidget');
+                            });
+
+                            it("should resolve to the controller method", function() {
+                                create({
+                                    xtype: 'controllerwidget'
+                                }, 1);
+
+                                var w = getWidget(0),
+                                    controller = w.getController();
+
+                                spyOn(controller, 'onFoo');
+
+                                w.fireIt();
+                                expect(controller.onFoo.callCount).toBe(1);
+                            });
+                        });
+                    });
+
+                    describe("bindings", function() {
+                        describe("hidden", function() {
+                            beforeEach(function() {
+                                create({
+                                    xtype: 'gridwidget',
+                                    bind: {
+                                        hidden: '{record.field1}'
+                                    }
+                                }, [{
+                                    field1: false
+                                }, {
+                                    field1: true
+                                }]);
+                                getWidget(0);
+                                getWidget(1);
+                                notify();
+                            });
+
+                            it("should bind to the hidden state", function() {
+                                expect(getWidget(0).isVisible()).toBe(true);
+                                expect(getWidget(1).isVisible()).toBe(false);
+                            });
+
+                            it("should be able to bind to hidden state after reloading data", function() {
+                                store.loadData([{
+                                    field1: true
+                                }, {
+                                    field1: false
+                                }]);
+                                getWidget(0);
+                                getWidget(1);
+                                notify();
+                                expect(getWidget(0).isVisible()).toBe(false);
+                                expect(getWidget(1).isVisible()).toBe(true);
+                            });
+                        });
+                    });
+                }
+
+                describe("widget column", function() {
+                    makeBindSuite({
+                        ignoreFirst: true,
+                        createFn: function(widgetCfg, data, gridCfg) {
+                            makeGrid([{
+                                xtype: 'widgetcolumn',
+                                widget: widgetCfg
+                            }], data, gridCfg);
+                        },
+                        activateWidget: Ext.emptyFn
+                    });
+                });
+
+                describe("row widget", function() {
+                    makeBindSuite({
+                        ignoreFirst: false,
+                        createFn: function(widgetCfg, data, gridCfg) {
+                            gridCfg = gridCfg || {};
+                            gridCfg.plugins = [{
+                                ptype: 'rowwidget',
+                                widget: widgetCfg
+                            }];
+                            makeGrid([{
+                                dataIndex: 'field1'
+                            }], data, gridCfg);
+                        },
+                        activateWidget: function(index) {
+                            var expander = grid.plugins[0];
+
+                            expander.toggleRow(index, store.getAt(index));
+                        }
+                    });
+                });
+            });
+
             describe("reconfigure", function() {
                 describe("setStore", function() {
                     var storeChangeSpy;
@@ -1545,6 +2755,68 @@ describe("grid-general", function() {
                             expectNodeLength(0);
                             expect(storeChangeSpy.callCount).toBe(1);
                         });
+
+                        it("should not throw errors if the grid is hidden", function() {
+                            var p = new Ext.panel.Panel({
+                                renderTo: Ext.getBody(),
+                                collapsed: true,
+                                items: {
+                                    xtype: 'gridpanel',
+                                    enableLocking: true
+                                }
+                            });
+
+                            expect(function() {
+                                p.items.first().reconfigure(null, [{ dataIndex: 'name' }]);
+                            }).not.toThrow();
+
+                            p.destroy();
+                        });
+                    });
+                });
+
+                describe("scroller", function() {
+                    it("should scroll to top", function() {
+                        var columns = [{
+                            dataIndex: 'field1',
+                            text: 'Field 1',
+                            width: 90
+                        }];
+
+                        makeGrid(columns, 50);
+
+                        grid.getView().getScrollable().scrollTo(null, 300, false);
+                        grid.reconfigure(makeStore(makeData(50, columns)));
+
+                        expect(grid.getView().getScrollable().position.y).toBe(0);
+                    });
+
+                    it("should reconfigure the scroller if needed", function() {
+                        var columnsA = [{
+                            width: 100,
+                            dataIndex: 'field1'
+                        }],
+                        columnsB = [{
+                            width: 300,
+                            dataIndex: 'field1'
+                        }, {
+                            width: 300,
+                            dataIndex: 'field2'
+                        }];
+
+                        makeGrid(columnsA, 5, {
+                            width: 400,
+                            height: 400
+                        });
+
+                        // Safari and Android are always scrollable
+                        if (!Ext.isSafari && !Ext.isAndroid) {
+                            expect(grid.getView().getScrollable().getX()).toBe(false);
+                        }
+
+                        grid.reconfigure(null, columnsB);
+
+                        expect(grid.getView().getScrollable().getX()).toBe(true);
                     });
                 });
 
@@ -1553,9 +2825,11 @@ describe("grid-general", function() {
 
                     function makeReconfigureGrid(columns, data, cfg, options, locked) {
                         cfg = cfg || {};
+
                         if (beforeRender) {
                             cfg.renderTo = null;
                         }
+
                         makeGrid(columns, data, cfg, options, locked);
                         storeChangeSpy = spyOnEvent(grid, 'storechange');
                     }
@@ -1565,10 +2839,11 @@ describe("grid-general", function() {
                             storeChangeCount = storeChangeSpy.callCount;
 
                         grid.reconfigure.apply(grid, arguments);
+
                         if (beforeRender) {
                             grid.render(Ext.getBody());
                         }
-                        
+
                         // Passing store as null only unbinds if allowUnbind is passed truthy
                         if (store !== oldStore && (store || allowUnbind)) {
                             expect(storeChangeSpy.callCount).toBe(storeChangeCount + 1);
@@ -1584,9 +2859,11 @@ describe("grid-general", function() {
 
                                 describe("with no store", function() {
                                     beforeEach(function() {
+                                        store = null;
+
                                         makeReconfigureGrid([{
                                             dataIndex: 'field1'
-                                        }], undefined, null, {preventStoreCreate: true});
+                                        }], undefined, null, { preventStoreCreate: true });
                                         reconfigure(makeStore());
                                     });
 
@@ -1687,12 +2964,14 @@ describe("grid-general", function() {
 
                                 describe("with no store", function() {
                                     beforeEach(function() {
+                                        store = null;
+
                                         makeReconfigureGrid([{
                                             locked: true,
                                             dataIndex: 'field1'
                                         }, {
                                             dataIndex: 'field2'
-                                        }], undefined, null, {preventStoreCreate: true});
+                                        }], undefined, null, { preventStoreCreate: true });
                                         reconfigure(makeStore());
                                     });
 
@@ -1799,7 +3078,7 @@ describe("grid-general", function() {
                             describe("without locking", function() {
                                 describe("with no columns", function() {
                                     beforeEach(function() {
-                                        makeReconfigureGrid(null, undefined, null, {preventColumnCreate: true});
+                                        makeReconfigureGrid(null, undefined, null, { preventColumnCreate: true });
                                         oldCols = colRef;
                                         reconfigure(null, [{
                                             dataIndex: 'field2'
@@ -1871,7 +3150,7 @@ describe("grid-general", function() {
                             describe("with locking", function() {
                                 describe("with no columns", function() {
                                     beforeEach(function() {
-                                        makeReconfigureGrid(null, undefined, {enableLocking: true}, {preventColumnCreate: true});
+                                        makeReconfigureGrid(null, undefined, { enableLocking: true }, { preventColumnCreate: true });
                                         oldCols = colRef;
                                         reconfigure(null, [{
                                             locked: true,
@@ -1947,7 +3226,6 @@ describe("grid-general", function() {
                                         renderCount = spy.callCount;
                                     });
 
-
                                     reconfigure(null, [{
                                         locked: true,
                                         dataIndex: 'field2',
@@ -1981,7 +3259,9 @@ describe("grid-general", function() {
 
                                 describe("with no store and no columns", function() {
                                     beforeEach(function() {
-                                        makeReconfigureGrid(null,  undefined, null, {preventStoreCreate: true, preventColumnCreate: true});
+                                        store = null;
+
+                                        makeReconfigureGrid(null,  undefined, null, { preventStoreCreate: true, preventColumnCreate: true });
                                         oldCols = colRef;
                                         oldStore = store;
                                         reconfigure(makeStore(), [{
@@ -2029,7 +3309,7 @@ describe("grid-general", function() {
 
                                 describe("with an existing store and no columns", function() {
                                     beforeEach(function() {
-                                        makeReconfigureGrid(null,  undefined, null, {preventColumnCreate: true});
+                                        makeReconfigureGrid(null,  undefined, null, { preventColumnCreate: true });
                                         oldCols = colRef;
                                         oldStore = store;
                                         reconfigure(makeStore(), [{
@@ -2088,9 +3368,11 @@ describe("grid-general", function() {
 
                                 describe("with no store and existing columns", function() {
                                     beforeEach(function() {
+                                        store = null;
+
                                         makeReconfigureGrid([{
                                             dataIndex: 'field1'
-                                        }],  undefined, null, {preventStoreCreate: true});
+                                        }],  undefined, null, { preventStoreCreate: true });
                                         oldCols = colRef;
                                         oldStore = store;
                                         reconfigure(makeStore(), [{
@@ -2218,7 +3500,7 @@ describe("grid-general", function() {
                                     view.on('refresh', function() {
                                         renderCount = spy.callCount;
                                     });
-          
+
                                     reconfigure(store, [{
                                         dataIndex: 'field2',
                                         listeners: {
@@ -2243,7 +3525,9 @@ describe("grid-general", function() {
 
                                 describe("with no store and no columns", function() {
                                     beforeEach(function() {
-                                        makeReconfigureGrid(null,  undefined, {enableLocking: true}, {preventStoreCreate: true, preventColumnCreate: true});
+                                        store = null;
+
+                                        makeReconfigureGrid(null,  undefined, { enableLocking: true }, { preventStoreCreate: true, preventColumnCreate: true });
                                         oldCols = colRef;
                                         oldStore = store;
                                         reconfigure(makeStore(), [{
@@ -2297,7 +3581,7 @@ describe("grid-general", function() {
 
                                 describe("with an existing store and no columns", function() {
                                     beforeEach(function() {
-                                        makeReconfigureGrid(null,  undefined, {enableLocking: true}, {preventColumnCreate: true});
+                                        makeReconfigureGrid(null,  undefined, { enableLocking: true }, { preventColumnCreate: true });
                                         oldCols = colRef;
                                         oldStore = store;
                                         reconfigure(makeStore(), [{
@@ -2362,12 +3646,14 @@ describe("grid-general", function() {
 
                                 describe("with no store and existing columns", function() {
                                     beforeEach(function() {
+                                        store = null;
+
                                         makeReconfigureGrid([{
                                             locked: true,
                                             dataIndex: 'field1'
                                         }, {
                                             dataIndex: 'field3'
-                                        }],  undefined, null, {preventStoreCreate: true});
+                                        }],  undefined, null, { preventStoreCreate: true });
                                         oldCols = colRef;
                                         oldStore = store;
                                         reconfigure(makeStore(), [{
@@ -2517,7 +3803,7 @@ describe("grid-general", function() {
                                     view.on('refresh', function() {
                                         renderCount = spy.callCount;
                                     });
-          
+
                                     reconfigure(makeStore(), [{
                                         locked: true,
                                         dataIndex: 'field2',
@@ -2575,7 +3861,8 @@ describe("grid-general", function() {
                         data,
                         scrollTop,
                         viewSize,
-                        rowHeight;
+                        rowHeight,
+                        sStyle;
 
                     beforeEach(function() {
 
@@ -2586,11 +3873,14 @@ describe("grid-general", function() {
                             row;
 
                         data = [];
+
                         for (i = 0; i < 100; i++) {
                             row = {};
+
                             for (j = 1; j < 11; j++) {
                                 row['field' + j] = 'r' + i + ',f' + j;
                             }
+
                             data.push(row);
                         }
 
@@ -2607,6 +3897,7 @@ describe("grid-general", function() {
                         view = grid.getView();
                         rows = view.all;
                         bufferedRenderer = view.bufferedRenderer;
+                        sStyle = view.getScrollable().getSpacer().dom.style;
 
                         // Get as close to 15 visible rows as possible
                         grid.setHeight(bufferedRenderer.rowHeight * 15 + grid.headerCt.getHeight());
@@ -2615,10 +3906,17 @@ describe("grid-general", function() {
                         // For Safari, we have to force a synchronous layout for scroll values to be updated in this event thread
                         store.on({
                             datachanged: function() {
-                                var sStyle = view.getScrollable().getSpacer().dom.style;
+                                var st = view.el.dom.scrollTop;
 
                                 // This flip-flops between 0px and 1px
                                 sStyle.lineHeight = Number(!parseInt(sStyle.lineHeight)) + 'px';
+
+                                // force a layout. Safari does not update the scrollHeight without this
+                                // and so tests which test the scrollHeight fail.
+                                view.el.dom.scrollTop += 1;
+                                // eslint-disable-next-line no-unused-expressions
+                                view.el.dom.scrollHeight;
+                                view.el.dom.scrollTop = st;
                             }
                         });
                     });
@@ -2665,6 +3963,11 @@ describe("grid-general", function() {
                         scrollTop = view.getScrollY();
 
                         store.removeAt(rows.startIndex - 10, 20);
+
+                        // Safari now appears to need a forced synchronous layout in order to produce
+                        // the up to date scrollHeight;
+                        // eslint-disable-next-line no-unused-expressions
+                        view.body.dom.offsetHeight;
 
                         // Constant row height, so we know the scroll range
                         expect(view.el.dom.scrollHeight).toBeWithin(1, rowHeight * store.getCount());
@@ -2750,7 +4053,6 @@ describe("grid-general", function() {
                         expect(getViewTop(view.body)).toBe(0);
                     });
 
-
                     it("should handle removing range which removes from top to halfway down rendered view", function() {
                         rowHeight = bufferedRenderer.rowHeight;
 
@@ -2786,7 +4088,7 @@ describe("grid-general", function() {
                         // Constant row height, so we know the scroll range
                         expect(view.el.dom.scrollHeight).toBeWithin(1, rowHeight * store.getCount());
 
-                        bufferedRenderer.scrollTo(64);//was 50
+                        bufferedRenderer.scrollTo(64); // was 50
                         scrollTop = view.getScrollY();
 
                         store.removeAt(rows.endIndex + 10, 10);
@@ -2810,7 +4112,7 @@ describe("grid-general", function() {
                         // Constant row height, so we know the scroll range
                         expect(view.el.dom.scrollHeight).toBeWithin(1, rowHeight * store.getCount());
 
-                        bufferedRenderer.scrollTo(44);//was 30
+                        bufferedRenderer.scrollTo(44); // was 30
                         scrollTop = view.getScrollY();
 
                         store.removeAt(5, 90);
@@ -2875,19 +4177,20 @@ describe("grid-general", function() {
                         // The table should be at top
                         expect(getViewTop(view.body)).toBe(0);
                     });
-                    
+
                     it("Should prepend to the rendered block when inserting at position 0", function() {
                         var cell00;
+
                         scrollTop = view.getScrollY();
-                        
+
                         store.insert(0, {
                             field1: 'Test'
                         });
-                        
-                        cell00 = Ext.getDom(view.getCellByPosition({
+
+                        cell00 = view.getCellByPosition({
                             row: 0,
                             column: 0
-                        }));
+                        }, true);
 
                         // Operation should bump us down the scroll range
                         expect(view.getScrollY()).toBeGreaterThan(scrollTop);
@@ -2946,9 +4249,9 @@ describe("grid-general", function() {
                         expect(rows.getCount()).toBe(targetViewSize);
                         expect(bufferedRenderer.scrollTop).toBe(0);
                         expect(bufferedRenderer.position).toBe(0);
-                        
+
                         store.add({});
-                        
+
                         // Must has added a row
                         expect(rows.getCount()).toBe(targetViewSize + 1);
                         expect(bufferedRenderer.scrollTop).toBe(0);
@@ -2965,6 +4268,7 @@ describe("grid-general", function() {
 
                         beforeEach(function() {
                             data = [];
+
                             // We need a lot of rows so that we get to add more than the original default viewSize
                             for (i = 0; i < 200; i++) {
                                 data.push({
@@ -2983,7 +4287,7 @@ describe("grid-general", function() {
                                 }
                             }];
                         });
-                        
+
                         it("should append new rows to the view", function() {
                             // Make like mobile dev, and only overhang 1 row each side
                             // Make it tall enough so that the default viewSize of 100 will leave
@@ -3007,7 +4311,7 @@ describe("grid-general", function() {
 
                             // The rendered row count should have been bumped up to the calculated viewSize
                             expect(view.all.getCount()).toBe(view.bufferedRenderer.viewSize);
-                            
+
                             // Two calls to Store#getRange should have been made...
                             expect(getRangeSpy.callCount).toBe(2);
 
@@ -3027,6 +4331,7 @@ describe("grid-general", function() {
 
                         beforeEach(function() {
                             data = [];
+
                             // We need a lot of rows so that we get to add more than the original default viewSize
                             for (i = 0; i < 200; i++) {
                                 data.push({
@@ -3045,7 +4350,7 @@ describe("grid-general", function() {
                                 }
                             }];
                         });
-                        
+
                         it("should remove rows from the view", function() {
                             // Make like mobile dev, and only overhang 1 row each side
                             // Make it tall enough so that the default viewSize of 100 will leave
@@ -3070,7 +4375,7 @@ describe("grid-general", function() {
 
                             // The rendered row count should have been shrunk to the calculated viewSize
                             expect(view.all.getCount()).toBe(view.bufferedRenderer.viewSize);
-                            
+
                             // Two calls to Store#getRange should have been made.
                             // One for the refresh, and another for the firing of the itemremove
                             expect(getRangeSpy.callCount).toBe(2);
@@ -3093,15 +4398,19 @@ describe("grid-general", function() {
                         row;
 
                     data = [];
+
                     for (i = 0; i < 100; i++) {
                         row = {};
+
                         for (j = 1; j < 11; j++) {
                             row['field' + j] = 'r' + i + ',f' + j;
                         }
+
                         data.push(row);
                     }
-                    
+
                     columns = [];
+
                     for (i = 1; i < 11; i++) {
                         columns.push({
                             dataIndex: 'field' + i,
@@ -3109,6 +4418,7 @@ describe("grid-general", function() {
                             width: 90
                         });
                     }
+
                     columns[0].flex = 1;
                 });
 
@@ -3117,7 +4427,7 @@ describe("grid-general", function() {
                         height: undefined,
                         border: false
                     });
-                    
+
                     // View and Grid should be stretched vertically to accommodate content.
                     // Flexed column should mean that the horizontal content fits exactly.
                     // All widths should be equal since we configured NO BORDERS.
@@ -3132,7 +4442,7 @@ describe("grid-general", function() {
                         maxHeight: 100,
                         border: false
                     });
-                    
+
                     // The width of the View still fits because of the flexed column
                     expect(view.getWidth()).toBe(grid.getWidth());
 
@@ -3147,8 +4457,52 @@ describe("grid-general", function() {
                 });
             });
 
-            describe("locking columns", function(){
-                it("should synchronize horizontal scrollbar presence between locked and normal side.", function(){
+            describe("locking columns", function() {
+                describe("basic rendering", function() {
+                    describe("locked scroller top", function() {
+                        it("should set the top of the scroller to include the view region", function() {
+                            makeGrid([{
+                                locked: true,
+                                dataIndex: 'field1',
+                                text: 'Foo'
+                            }, {
+                                dataIndex: 'field2',
+                                text: 'Bar'
+                            }], 1);
+
+                            var top = grid.scrollContainer.getTop();
+
+                            expect(top).toBe(grid.lockedGrid.headerCt.getHeight() + 1);
+                        });
+
+                        it("should set the top of the scroller to include the view region with only locked columns", function() {
+                            makeGrid([{
+                                locked: true,
+                                dataIndex: 'field1',
+                                text: 'Foo'
+                            }], 1);
+
+                            var top = grid.scrollContainer.getTop();
+
+                            expect(top).toBe(grid.lockedGrid.headerCt.getHeight() + 1);
+                        });
+
+                        it("should set the top of the scroller to include the view region with only unlocked columns", function() {
+                            makeGrid([{
+                                dataIndex: 'field1',
+                                text: 'Foo'
+                            }], 1, {
+                                enableLocking: true
+                            });
+
+                            var top = grid.scrollContainer.getTop();
+
+                            expect(top).toBe(grid.normalGrid.headerCt.getHeight() + 1);
+                        });
+                    });
+                });
+
+                it("should synchronize horizontal scrollbar presence between locked and normal side.", function() {
                     makeGrid([{
                         locked: true,
                         dataIndex: 'field1'
@@ -3237,7 +4591,7 @@ describe("grid-general", function() {
                     expect(store.hasListeners.refresh).toBeUndefined();
                 });
 
-                describe("loadMask", function () {
+                describe("loadMask", function() {
                     function returnSucessFalse() {
                         while (Ext.Ajax.mockGetAllRequests().length) {
                             Ext.Ajax.mockComplete({
@@ -3285,7 +4639,7 @@ describe("grid-general", function() {
                         });
                     });
 
-                    it("should raise a load mask by default (no loadMask config specified)", function () {
+                    it("should raise a load mask by default (no loadMask config specified)", function() {
                         makeGrid([{
                             locked: true,
                             dataIndex: 'field1'
@@ -3304,7 +4658,7 @@ describe("grid-general", function() {
                         expect(grid.view.loadMask instanceof Ext.LoadMask).toBe(true);
                     });
 
-                    it("should not raise a load mask when set as false in viewConfig", function () {
+                    it("should not raise a load mask when set as false in viewConfig", function() {
                         makeGrid([{
                             locked: true,
                             dataIndex: 'field1'
@@ -3324,7 +4678,7 @@ describe("grid-general", function() {
                         expect(grid.view.loadMask).toBe(false);
                     });
 
-                    it("should raise a load mask when set on the grid", function () {
+                    it("should raise a load mask when set on the grid", function() {
                         makeGrid([{
                             locked: true,
                             dataIndex: 'field1'
@@ -3343,7 +4697,7 @@ describe("grid-general", function() {
                         expect(grid.view.loadMask instanceof Ext.LoadMask).toBe(true);
                     });
 
-                    it("should respect the viewConfig definition as final (loadMask == true)", function () {
+                    it("should respect the viewConfig definition as final (loadMask == true)", function() {
                         makeGrid([{
                             locked: true,
                             dataIndex: 'field1'
@@ -3365,7 +4719,7 @@ describe("grid-general", function() {
                         expect(grid.view.loadMask instanceof Ext.LoadMask).toBe(true);
                     });
 
-                    it("should respect the viewConfig definition as final (loadMask == false)", function () {
+                    it("should respect the viewConfig definition as final (loadMask == false)", function() {
                         makeGrid([{
                             locked: true,
                             dataIndex: 'field1'
@@ -3388,14 +4742,14 @@ describe("grid-general", function() {
                     });
                 });
 
-                describe("reconfiguring", function () {
-                    describe("with CheckboxModel", function () {
-                        it("should invalidate the lockedGrid.width so it shrinkwraps", function () {
+                describe("reconfiguring", function() {
+                    describe("with CheckboxModel", function() {
+                        it("should invalidate the lockedGrid.width so it shrinkwraps", function() {
                             // See EXTJS-13408.
                             var activeHeader;
 
                             this.addMatchers({
-                                toBeAtLeast: function (expected) {
+                                toBeAtLeast: function(expected) {
                                     return expected <= this.actual;
                                 }
                             });
@@ -3419,7 +4773,7 @@ describe("grid-general", function() {
                             }, {
                                 dataIndex: 'field3'
                             }]);
-                        
+
                             var borderWidth = grid.lockedGrid.gridPanelBorderWidth;
 
                             // First, verify that the width of the lockedGrid is the width of the checkbox
@@ -3481,8 +4835,48 @@ describe("grid-general", function() {
                             grid.normalGrid.getVisibleColumnManager().getColumns()[0].hide();
 
                             // Now that the only variableRowHeight column is hidden, the buffered renderer should know about that.
-                            expect(grid.normalGrid.view.bufferedRenderer.variableRowHeight).toBe(false);            
+                            expect(grid.normalGrid.view.bufferedRenderer.variableRowHeight).toBe(false);
                         }
+                    });
+                });
+
+                describe("locked side sizing", function() {
+                    beforeEach(function() {
+                        makeGrid([{
+                            locked: true,
+                            width: 110
+                        }, {
+                            locked: true,
+                            width: 160
+                        }, {
+                            flex: 1
+                        }]);
+                    });
+
+                    it("should wrap around locked column sizing", function() {
+                        var locked = grid.lockedGrid;
+
+                        expect(locked.getWidth()).toBe(270 + locked.gridPanelBorderWidth);
+                    });
+
+                    it("should be able to change to a fixed size", function() {
+                        var locked = grid.lockedGrid;
+
+                        locked.setWidth(400);
+
+                        expect(locked.getWidth()).toBe(400);
+                    });
+
+                    it("should be able to change to wrapping", function() {
+                        var locked = grid.lockedGrid;
+
+                        locked.setWidth(400);
+
+                        expect(locked.getWidth()).toBe(400);
+
+                        locked.setWidth(null);
+
+                        expect(locked.getWidth()).toBe(270 + locked.gridPanelBorderWidth);
                     });
                 });
             });
@@ -3514,7 +4908,8 @@ describe("grid-general", function() {
                     });
                     waitsFor(function() {
                         return success;
-                    });
+                    }, 'rec 400 to scroll into view');
+
                     runs(function() {
                         // Default scope is the grid
                         expect(detectedScope).toBe(grid);
@@ -3530,6 +4925,7 @@ describe("grid-general", function() {
                         // The bottom of the row should be within view
                         expect(Ext.fly(htmlEl).getBox().bottom).toBeLessThanOrEqual(view.getBox().bottom);
 
+                        success = false;
                         grid.ensureVisible('rec100', {
                             callback: function(passedSuccess, passedRecord, passedHtmlEl) {
                                 success = passedSuccess;
@@ -3538,24 +4934,26 @@ describe("grid-general", function() {
                                 detectedScope = this;
                             }
                         });
-                        waitsFor(function() {
-                            return success;
-                        });
+                    });
 
-                        runs(function() {
-                            // Default scope is the grid
-                            expect(detectedScope).toBe(grid);
+                    waitsFor(function() {
+                        return success;
+                    }, 'rec 100 to scroll into view');
 
-                            expect(record).toBe(rec100);
+                    runs(function() {
+                        // Default scope is the grid
+                        expect(detectedScope).toBe(grid);
 
-                            // Table row scrolled to must be correct
-                            expect(htmlEl).toBe(view.getNode(rec100));
+                        expect(record).toBe(rec100);
 
-                            // The top of the row should be within view
-                            expect(Ext.fly(htmlEl).getBox().top).toBeGreaterThanOrEqual(view.getBox().top);
-                        });
+                        // Table row scrolled to must be correct
+                        expect(htmlEl).toBe(view.getNode(rec100));
+
+                        // The top of the row should be within view
+                        expect(Ext.fly(htmlEl).getBox().top).toBeGreaterThanOrEqual(view.getBox().top);
                     });
                 });
+
                 it("should scroll into view when using record", function() {
                     var o = {};
 
@@ -3568,9 +4966,11 @@ describe("grid-general", function() {
                         },
                         scope: o
                     });
+
                     waitsFor(function() {
                         return success;
-                    });
+                    }, 'rec 400 to scroll into view');
+
                     runs(function() {
                         // Use passed scope
                         expect(detectedScope).toBe(o);
@@ -3583,6 +4983,7 @@ describe("grid-general", function() {
                         // The bottom of the row should be within view
                         expect(Ext.fly(htmlEl).getBox().bottom).toBeLessThanOrEqual(view.getBox().bottom);
 
+                        success = false;
                         grid.ensureVisible(rec100, {
                             callback: function(passedSuccess, passedRecord, passedHtmlEl) {
                                 success = passedSuccess;
@@ -3592,24 +4993,225 @@ describe("grid-general", function() {
                             },
                             scope: o
                         });
-                        waitsFor(function() {
-                            return success;
-                        });
-                        
-                        runs(function() {
-                            // Use passed scope
-                            expect(detectedScope).toBe(o);
+                    });
 
-                            expect(record).toBe(rec100);
+                    waitsFor(function() {
+                        return success;
+                    }, 'rec 100 to scroll into view');
 
-                            // Table row scrolled to must be correct
-                            expect(htmlEl).toBe(view.getNode(rec100));
+                    runs(function() {
+                        // Use passed scope
+                        expect(detectedScope).toBe(o);
 
-                            // The top of the row should be within view
-                            expect(Ext.fly(view.getNode(rec100)).getBox().top).toBeGreaterThanOrEqual(view.getBox().top);
-                        });
+                        expect(record).toBe(rec100);
+
+                        // Table row scrolled to must be correct
+                        expect(htmlEl).toBe(view.getNode(rec100));
+
+                        // The top of the row should be within view
+                        expect(Ext.fly(view.getNode(rec100)).getBox().top).toBeGreaterThanOrEqual(view.getBox().top);
                     });
                 });
+
+                it("should scroll into view when using record index", function() {
+                    grid.ensureVisible(400, {
+                        callback: function(passedSuccess, passedRecord, passedHtmlEl) {
+                            success = passedSuccess;
+                            record = passedRecord;
+                            htmlEl = passedHtmlEl;
+                        }
+                    });
+
+                    waitsFor(function() {
+                        return success;
+                    }, 'rec 400 to scroll into view');
+
+                    runs(function() {
+                        expect(record).toBe(rec400);
+
+                        // Table row scrolled to must be correct
+                        expect(htmlEl).toBe(view.getNode(rec400));
+
+                        // The bottom of the row should be within view
+                        expect(Ext.fly(htmlEl).getBox().bottom).toBeLessThanOrEqual(view.getBox().bottom);
+
+                        success = false;
+                        grid.ensureVisible(100, {
+                            callback: function(passedSuccess, passedRecord, passedHtmlEl) {
+                                success = passedSuccess;
+                                record = passedRecord;
+                                htmlEl = passedHtmlEl;
+                                detectedScope = this;
+                            }
+                        });
+                    });
+
+                    waitsFor(function() {
+                        return success;
+                    }, 'rec 100 to scroll into view');
+
+                    runs(function() {
+                        expect(record).toBe(rec100);
+
+                        // Table row scrolled to must be correct
+                        expect(htmlEl).toBe(view.getNode(rec100));
+
+                        // The top of the row should be within view
+                        expect(Ext.fly(htmlEl).getBox().top).toBeGreaterThanOrEqual(view.getBox().top);
+                    });
+                });
+            });
+
+            describe("ensureVisible with locking", function() {
+                var success,
+                    record,
+                    htmlEl,
+                    detectedScope,
+                    rec100,
+                    rec400;
+
+                // Each test uses a grid with 500 rows
+                beforeEach(function() {
+                    success = false;
+                    makeGrid(null, 500, null, null, true);
+                    rec100 = store.getAt(100);
+                    rec400 = store.getAt(400);
+
+                    // We'll be defaulting to the locked grid
+                    view = grid.lockedGrid.getView();
+                });
+
+                it("should scroll into view when using record ID", function() {
+                    grid.ensureVisible('rec400', {
+                        callback: function(passedSuccess, passedRecord, passedHtmlEl) {
+                            success = passedSuccess;
+                            record = passedRecord;
+                            htmlEl = passedHtmlEl;
+                            detectedScope = this;
+                        },
+                        select: true,
+                        focus: true,
+                        animate: true
+                    });
+
+                    // We are animating, so it must not have performed any of the actions yet.
+                    // No scrolling
+                    expect(grid.getScrollable().getPosition().y).toBe(0);
+                    // No selection
+                    expect(grid.getSelectionModel().getSelection().length).toBe(0);
+                    // No focus
+                    expect(grid.view.el.contains(Ext.Element.getActiveElement())).toBe(false);
+
+                    waitsFor(function() {
+                        return success;
+                    });
+
+                    runs(function() {
+                        // Default scope is the grid
+                        expect(detectedScope).toBe(grid.lockedGrid);
+
+                        expect(record).toBe(rec400);
+
+                        // Table row scrolled to must be correct
+                        expect(htmlEl).toBe(view.getNode(rec400));
+
+                        // The select option was passed
+                        expect(grid.getSelectionModel().getSelection()[0]).toBe(rec400);
+
+                        // Navigation position must be set as the focus options was passed.
+                        expect(grid.getNavigationModel().getPosition().isEqual(new Ext.grid.CellContext(grid.view).setPosition(rec400, 0))).toBe(true);
+
+                        // The bottom of the row should be within view
+                        expect(Ext.fly(htmlEl).getBox().bottom).toBeLessThanOrEqual(view.getBox().bottom);
+
+                        success = false;
+                        grid.ensureVisible('rec100', {
+                            callback: function(passedSuccess, passedRecord, passedHtmlEl) {
+                                success = passedSuccess;
+                                record = passedRecord;
+                                htmlEl = passedHtmlEl;
+                                detectedScope = this;
+                            }
+                        });
+                    });
+
+                    waitsFor(function() {
+                        return success;
+                    });
+
+                    runs(function() {
+                        // Default scope is the grid
+                        expect(detectedScope).toBe(grid.lockedGrid);
+
+                        expect(record).toBe(rec100);
+
+                        // Table row scrolled to must be correct
+                        expect(htmlEl).toBe(view.getNode(rec100));
+
+                        // The top of the row should be within view
+                        expect(Ext.fly(htmlEl).getBox().top).toBeGreaterThanOrEqual(view.getBox().top);
+                    });
+                });
+
+                it("should scroll into view when using record", function() {
+                    var o = {};
+
+                    grid.ensureVisible(rec400, {
+                        callback: function(passedSuccess, passedRecord, passedHtmlEl) {
+                            success = passedSuccess;
+                            record = passedRecord;
+                            htmlEl = passedHtmlEl;
+                            detectedScope = this;
+                        },
+                        scope: o
+                    });
+
+                    waitsFor(function() {
+                        return success;
+                    });
+
+                    runs(function() {
+                        // Use passed scope
+                        expect(detectedScope).toBe(o);
+
+                        expect(record).toBe(rec400);
+
+                        // Table row scrolled to must be correct
+                        expect(htmlEl).toBe(view.getNode(rec400));
+
+                        // The bottom of the row should be within view
+                        expect(Ext.fly(htmlEl).getBox().bottom).toBeLessThanOrEqual(view.getBox().bottom);
+
+                        success = false;
+                        grid.ensureVisible(rec100, {
+                            callback: function(passedSuccess, passedRecord, passedHtmlEl) {
+                                success = passedSuccess;
+                                record = passedRecord;
+                                htmlEl = passedHtmlEl;
+                                detectedScope = this;
+                            },
+                            scope: o
+                        });
+                    });
+
+                    waitsFor(function() {
+                        return success;
+                    });
+
+                    runs(function() {
+                        // Use passed scope
+                        expect(detectedScope).toBe(o);
+
+                        expect(record).toBe(rec100);
+
+                        // Table row scrolled to must be correct
+                        expect(htmlEl).toBe(view.getNode(rec100));
+
+                        // The top of the row should be within view
+                        expect(Ext.fly(view.getNode(rec100)).getBox().top).toBeGreaterThanOrEqual(view.getBox().top);
+                    });
+                });
+
                 it("should scroll into view when using record index", function() {
                     grid.ensureVisible(400, {
                         callback: function(passedSuccess, passedRecord, passedHtmlEl) {
@@ -3630,6 +5232,7 @@ describe("grid-general", function() {
                         // The bottom of the row should be within view
                         expect(Ext.fly(htmlEl).getBox().bottom).toBeLessThanOrEqual(view.getBox().bottom);
 
+                        success = false;
                         grid.ensureVisible(100, {
                             callback: function(passedSuccess, passedRecord, passedHtmlEl) {
                                 success = passedSuccess;
@@ -3638,24 +5241,107 @@ describe("grid-general", function() {
                                 detectedScope = this;
                             }
                         });
-                        waitsFor(function() {
-                            return success;
-                        });
-                        
-                        runs(function() {
-                            expect(record).toBe(rec100);
+                    });
 
-                            // Table row scrolled to must be correct
-                            expect(htmlEl).toBe(view.getNode(rec100));
+                    waitsFor(function() {
+                        return success;
+                    });
 
-                            // The top of the row should be within view
-                            expect(Ext.fly(htmlEl).getBox().top).toBeGreaterThanOrEqual(view.getBox().top);
-                        });
+                    runs(function() {
+                        expect(record).toBe(rec100);
+
+                        // Table row scrolled to must be correct
+                        expect(htmlEl).toBe(view.getNode(rec100));
+
+                        // The top of the row should be within view
+                        expect(Ext.fly(htmlEl).getBox().top).toBeGreaterThanOrEqual(view.getBox().top);
                     });
                 });
             });
 
             describe("scrollbars", function() {
+                var gridRef,
+                    colRef,
+                    lockedIsVariable,
+                    originalScrollBarSize,
+                    headerCtHeight,
+                    singleRowHeight,
+                    gridHeight,
+                    maxRowsBeforeScroll,
+                    maxRowsBeforeScrollWithHorizontalScrollBar,
+                    scrollRowSize,
+                    lockingExtraWidth,
+                    measureView,
+                    viewHeight,
+                    gridExtraHeight,
+                    measureNode;
+
+                beforeAll(function() {
+                    // Do some measuring first
+                    // First up, a locking grid, so we can get the locked->normal border width.
+                    makeGrid([{
+                        dataIndex: 'field1',
+                        text: 'Field1',
+                        width: 100,
+                        locked: true
+                    }, {
+                        dataIndex: 'field2',
+                        text: 'Field2',
+                        width: 100
+                    }], 10);
+
+                    lockingExtraWidth = grid.lockedGrid.gridPanelBorderWidth;
+                    grid.destroy();
+                    store.destroy();
+
+                    // Now we measure row heights and exactly how many rows cause scrolling
+                    makeGrid([{
+                        dataIndex: 'field1',
+                        text: 'Field1',
+                        width: 100
+                    }], 10);
+
+                    measureView = grid.getView();
+                    viewHeight = measureView.getHeight();
+                    gridExtraHeight = grid.getHeight() - viewHeight;
+                    measureNode = Ext.fly(measureView.getNode(0));
+
+                    headerCtHeight = grid.headerCt.getHeight();
+
+                    singleRowHeight = measureNode.getHeight();
+
+                    // In IE8 we're adding bottom border on all the rows to work around
+                    // the lack of :last-child selector, and we compensate that by setting
+                    // a negative top margin that equals the border width, so that top and
+                    // bottom borders overlap on adjacent rows. Negative margin does not
+                    // affect the row's reported height though so we have to compensate
+                    // for that effectively invisible additional border width here.
+                    // Note that this code mostly duplicates the actual row height
+                    // calculation performed in BufferedRenderer.getScrollHeight(),
+                    // and the same compensation is applied there as well.
+                    if (Ext.isIE8) {
+                        singleRowHeight -= measureNode.getBorderWidth('b');
+                    }
+
+                    // Then calculate the view height to hold 21 rows but to overflow
+                    // as soon as a horizontal scrollbar appears.
+                    // Account for non space taking scrollbars
+                    viewHeight = singleRowHeight * 21 + (Ext.getScrollbarSize().height || (singleRowHeight - 5));
+
+                    // Calculate a grid height in which the view encompasses 21 rows and a horizontal scrollbar.
+                    // We need to be able to definitely know whether we are going to trigger
+                    // scrollbars or not so we can test for expected results.
+                    gridHeight = viewHeight + gridExtraHeight;
+
+                    maxRowsBeforeScroll = Math.floor(viewHeight / singleRowHeight);
+                    maxRowsBeforeScrollWithHorizontalScrollBar = maxRowsBeforeScroll - (Ext.getScrollbarSize().height ? 1 : 0);
+                    scrollRowSize = maxRowsBeforeScroll + 100;
+
+                    grid.destroy();
+                    store.destroy();
+                    gridRef = colRef = null;
+                });
+
                 beforeEach(function() {
                     lockedIsVariable = false;
                     originalScrollBarSize = Ext.grid.ColumnLayout.prototype.scrollbarWidth;
@@ -3669,80 +5355,6 @@ describe("grid-general", function() {
                     lockedIsVariable = false;
                 });
 
-                // Do some measuring first
-                // First up, a locking grid, so we can get the locked->normal border width.
-                makeGrid([{
-                    dataIndex: 'field1',
-                    text: 'Field1',
-                    width: 100,
-                    locked: true
-                }, {
-                    dataIndex: 'field2',
-                    text: 'Field2',
-                    width: 100
-                }], 10);
-                lockingExtraWidth = grid.lockedGrid.gridPanelBorderWidth;
-                grid.destroy();
-                store.destroy();
-
-                // Now we measure row heights and exactly how many rows cause scrolling
-                makeGrid([{
-                    dataIndex: 'field1',
-                    text: 'Field1',
-                    width: 100
-                }], 10);
-
-                var gridRef,
-                    colRef,
-                    lockedIsVariable,
-                    originalScrollBarSize,
-                    headerCtHeight,
-                    singleRowHeight,
-                    gridHeight,
-                    maxRowsBeforeScroll,
-                    maxRowsBeforeScrollWithHorizontalScrollBar,
-                    scrollRowSize,
-                    lockingExtraWidth,
-                    measureView = grid.getView(),
-                    viewHeight = measureView.getHeight(),
-                    gridExtraHeight = grid.getHeight() - viewHeight,
-                    measureNode = Ext.fly(measureView.getNode(0));
-
-                headerCtHeight = grid.headerCt.getHeight();
-
-                singleRowHeight = measureNode.getHeight();
-
-                // In IE8 we're adding bottom border on all the rows to work around
-                // the lack of :last-child selector, and we compensate that by setting
-                // a negative top margin that equals the border width, so that top and
-                // bottom borders overlap on adjacent rows. Negative margin does not
-                // affect the row's reported height though so we have to compensate
-                // for that effectively invisible additional border width here.
-                // Note that this code mostly duplicates the actual row height
-                // calculation performed in BufferedRenderer.getScrollHeight(),
-                // and the same compensation is applied there as well.
-                if (Ext.isIE8) {
-                    singleRowHeight -= measureNode.getBorderWidth('b');
-                }
-
-                // Then calculate the view height to hold 21 rows but to overflow
-                // as soon as a horizontal scrollbar appears.
-                // Account for non space taking scrollbars
-                viewHeight = singleRowHeight * 21 + (Ext.getScrollbarSize().height || (singleRowHeight - 5));
-
-                // Calculate a grid height in which the view encompasses 21 rows and a horizontal scrollbar.
-                // We need to be able to definitely know whether we are going to trigger
-                // scrollbars or not so we can test for expected results.
-                gridHeight = viewHeight + gridExtraHeight;
-
-                maxRowsBeforeScroll = Math.floor(viewHeight / singleRowHeight);
-                maxRowsBeforeScrollWithHorizontalScrollBar = maxRowsBeforeScroll - (Ext.getScrollbarSize().height ? 1 : 0);
-                scrollRowSize = maxRowsBeforeScroll + 100;
-
-                grid.destroy();
-                store.destroy();
-                gridRef = colRef = null;
-
                 function makeScrollSuite(withLocking) {
                     describe(withLocking ? "with locking" : "without locking", function() {
                         function makeScrollGrid(columns, data, cfg) {
@@ -3752,11 +5364,13 @@ describe("grid-general", function() {
                             if (Ext.isNumber(data)) {
                                 data = makeRows(data);
                             }
+
                             Ext.Array.forEach(columns, function(column, i) {
                                 if (!column.dataIndex) {
                                     column.dataIndex = 'field' + (i + 1);
                                 }
                             });
+
                             if (withLocking) {
                                 columns.unshift({
                                     width: lockedColWidth,
@@ -3766,12 +5380,17 @@ describe("grid-general", function() {
                                 });
                                 cfg.width = 1000 + lockingExtraWidth + lockedColWidth;
                             }
+
                             cfg.height = gridHeight;
 
                             // If they want hideHeaders, ensure the viewHeight is still as required
                             if (cfg.hideHeaders) {
                                 cfg.height -= headerCtHeight;
                             }
+                            else {
+                                cfg.hideHeaders = false;
+                            }
+
                             makeGrid(columns, data, cfg);
                             gridRef = withLocking ? grid.normalGrid : grid;
                             colRef = gridRef.getColumnManager().getColumns();
@@ -3821,7 +5440,7 @@ describe("grid-general", function() {
                                 i;
 
                             for (i = 0; i < len; ++i) {
-                                expect(columns[i].getWidth()).toBe(sizes[i]);
+                                expect(columns[i].getWidth()).toBeApprox(sizes[i], 1);
                             }
 
                         }
@@ -3863,6 +5482,20 @@ describe("grid-general", function() {
                                     }], 1);
                                     expectScroll(false, false);
                                     expectColumnWidths([100, 300]);
+                                });
+
+                                it("should respect the scrollable config as an object", function() {
+                                    makeGrid(null, 50, {
+                                        scrollable: {
+                                            y: true,
+                                            x: false
+                                        },
+                                        width: 300,
+                                        height: 400
+                                    });
+
+                                    expect(view.el.getStyle('overflow-x')).toBe('hidden');
+                                    expect(view.getScrollable().getX()).toBe(false);
                                 });
 
                                 it("should show a vertical scrollbar if y overflows", function() {
@@ -3969,7 +5602,7 @@ describe("grid-general", function() {
                                     // This is essentially the same as combined width + flex, since hitting
                                     // a min width is essentially the same as setting a fixed size, but
                                     // may hit different parts of the code.
-                                    
+
                                     it("should show a horizontal scrollbar if x overflows", function() {
                                         makeScrollGrid([{
                                             flex: 1,
@@ -4052,7 +5685,7 @@ describe("grid-general", function() {
                                         flex: 1
                                     }], scrollRowSize);
                                     expectScroll(true, false);
-                                    expectColumnWidths(scrollbarsTakeSpace ? [200, 260, 260, 260]: [200, 267, 267, 266]);
+                                    expectColumnWidths(scrollbarsTakeSpace ? [200, 260, 260, 260] : [200, 266, 267, 267]);
                                 });
                             });
                         });
@@ -4337,7 +5970,11 @@ describe("grid-general", function() {
                         });
 
                         describe("column operations", function() {
-                            var minColWidth = Ext.grid.plugin.HeaderResizer.prototype.minColWidth;
+                            var minColWidth;
+
+                            beforeAll(function() {
+                                minColWidth = Ext.grid.plugin.HeaderResizer.prototype.minColWidth;
+                            });
 
                             describe("resizing", function() {
                                 describe("fixed width columns", function() {
@@ -4459,6 +6096,7 @@ describe("grid-general", function() {
                                 function addCol(col) {
                                     gridRef.headerCt.add(col);
                                 }
+
                                 describe("fixed width columns", function() {
                                     it("should show a horizontal scrollbar if adding causes overflow", function() {
                                         makeScrollGrid([{
@@ -4502,6 +6140,7 @@ describe("grid-general", function() {
                                     describe("with variableRowHeight", function() {
                                         visibleScrollbarsIt("should show a vertical scrollbar if adding causes overflow", function() {
                                             var data = makeRows(maxRowsBeforeScroll);
+
                                             data[0].field3 = makeRowDiv(2);
                                             makeScrollGrid([{
                                                 width: 100
@@ -4519,6 +6158,7 @@ describe("grid-general", function() {
 
                                         visibleScrollbarsIt("should show a horizontal scrollbar if adding triggered a vertical scrollbar", function() {
                                             var data = makeRows(maxRowsBeforeScroll);
+
                                             data[0].field3 = makeRowDiv(2);
                                             makeScrollGrid([{
                                                 width: 330
@@ -4537,7 +6177,7 @@ describe("grid-general", function() {
                                 });
 
                                 // Intentionally leaving out flex only
-                                
+
                                 describe("fixed width + flexed columns", function() {
                                     it("should show a horizontal scrollbar if adding causes overflow", function() {
                                         makeScrollGrid([{
@@ -4587,6 +6227,7 @@ describe("grid-general", function() {
                                     describe("with variableRowHeight", function() {
                                         it("should show a vertical scrollbar if adding causes overflow", function() {
                                             var data = makeRows(maxRowsBeforeScroll);
+
                                             data[0].field3 = makeRowDiv(2);
                                             makeScrollGrid([{
                                                 width: 300
@@ -4654,6 +6295,7 @@ describe("grid-general", function() {
                                     describe("with variableRowHeight", function() {
                                         visibleScrollbarsIt("should show a vertical scrollbar if showing causes overflow", function() {
                                             var data = makeRows(maxRowsBeforeScroll);
+
                                             data[0].field3 = makeRowDiv(2);
                                             makeScrollGrid([{
                                                 width: 100
@@ -4671,6 +6313,7 @@ describe("grid-general", function() {
 
                                         visibleScrollbarsIt("should show a horizontal scrollbar if showing triggered a vertical scrollbar", function() {
                                             var data = makeRows(maxRowsBeforeScroll);
+
                                             data[0].field3 = makeRowDiv(2);
                                             makeScrollGrid([{
                                                 width: 330
@@ -4689,7 +6332,7 @@ describe("grid-general", function() {
                                 });
 
                                 // Intentionally leaving out flex only
-                                
+
                                 describe("fixed width + flexed columns", function() {
                                     it("should show a horizontal scrollbar if adding causes overflow", function() {
                                         makeScrollGrid([{
@@ -4742,6 +6385,7 @@ describe("grid-general", function() {
                                     describe("with variableRowHeight", function() {
                                         it("should show a vertical scrollbar if showing causes overflow", function() {
                                             var data = makeRows(maxRowsBeforeScroll);
+
                                             data[0].field3 = makeRowDiv(2);
                                             makeScrollGrid([{
                                                 width: 300
@@ -4806,6 +6450,7 @@ describe("grid-general", function() {
                                     describe("with variableRowHeight", function() {
                                         it("should not show a vertical scrollbar if removing causes underflow", function() {
                                             var data = makeRows(maxRowsBeforeScroll);
+
                                             data[0].field3 = makeRowDiv(2);
                                             makeScrollGrid([{
                                                 width: 100
@@ -4822,6 +6467,7 @@ describe("grid-general", function() {
 
                                         visibleScrollbarsIt("should not show a horizontal scrollbar if removing triggered a vertical scrollbar removal", function() {
                                             var data = makeRows(maxRowsBeforeScroll);
+
                                             data[0].field3 = makeRowDiv(2);
                                             makeScrollGrid([{
                                                 width: 330
@@ -4839,7 +6485,7 @@ describe("grid-general", function() {
                                 });
 
                                 // Intentionally leaving out flex only
-                                
+
                                 describe("fixed width + flexed columns", function() {
                                     it("should not show a horizontal scrollbar if removing causes underflow", function() {
                                         makeScrollGrid([{
@@ -4896,6 +6542,7 @@ describe("grid-general", function() {
                                     describe("with variableRowHeight", function() {
                                         it("should not show a vertical scrollbar if removing causes underflow", function() {
                                             var data = makeRows(maxRowsBeforeScroll);
+
                                             data[0].field3 = makeRowDiv(2);
                                             makeScrollGrid([{
                                                 width: 300
@@ -4964,6 +6611,7 @@ describe("grid-general", function() {
                                     describe("with variableRowHeight", function() {
                                         it("should not show a vertical scrollbar if hiding causes underflow", function() {
                                             var data = makeRows(maxRowsBeforeScroll);
+
                                             data[0].field3 = makeRowDiv(2);
                                             makeScrollGrid([{
                                                 width: 100
@@ -4985,6 +6633,7 @@ describe("grid-general", function() {
 
                                         visibleScrollbarsIt("should not show a horizontal scrollbar if hiding triggered a vertical scrollbar removal", function() {
                                             var data = makeRows(maxRowsBeforeScroll);
+
                                             data[0].field3 = makeRowDiv(2);
                                             makeScrollGrid([{
                                                 width: 330
@@ -5002,7 +6651,7 @@ describe("grid-general", function() {
                                 });
 
                                 // Intentionally leaving out flex only
-                                
+
                                 describe("fixed width + flexed columns", function() {
                                     it("should not show a horizontal scrollbar if hiding causes underflow", function() {
                                         makeScrollGrid([{
@@ -5059,6 +6708,7 @@ describe("grid-general", function() {
                                     describe("with variableRowHeight", function() {
                                         it("should not show a vertical scrollbar if hiding causes underflow", function() {
                                             var data = makeRows(maxRowsBeforeScroll);
+
                                             data[0].field3 = makeRowDiv(2);
                                             makeScrollGrid([{
                                                 width: 300
@@ -5462,6 +7112,7 @@ describe("grid-general", function() {
                                     describe("making content smaller", function() {
                                         it("should not show a vertical scrollbar if the update causes an underflow", function() {
                                             var data = makeRows(maxRowsBeforeScroll);
+
                                             data[0].field1 = makeRowDiv(3);
                                             makeScrollGrid([{
                                                 width: 100,
@@ -5493,6 +7144,7 @@ describe("grid-general", function() {
 
                                         visibleScrollbarsIt("should not show a horizontal scrollbar if triggered by a vertical scrollbar", function() {
                                             var data = makeRows(maxRowsBeforeScrollWithHorizontalScrollBar);
+
                                             data[0].field1 = makeRowDiv(3);
                                             makeScrollGrid([{
                                                 width: 495,
@@ -5900,6 +7552,7 @@ describe("grid-general", function() {
                                     var overflowX = grid.lockedGrid.getView().getScrollable().getX();
 
                                     expect(overflowX).toBe(true);
+
                                     if (scrollbarsTakeSpace) {
                                         expect(grid.lockedScrollbar.el.isVisible()).toBe(scroll);
                                     }
@@ -6137,6 +7790,7 @@ describe("grid-general", function() {
 
                                         it("should not show the placeholder when an update causes an underflow via a vertical scrollbar", function() {
                                             var data = makeRows(maxRowsBeforeScroll);
+
                                             data[0].field1 = makeRowDiv(2);
                                             makeScrollGrid([{
                                                 width: 495
@@ -6216,6 +7870,7 @@ describe("grid-general", function() {
 
                                 it("should show a vertical scrollbar if the locked content cause overflow", function() {
                                     var data = makeRows(maxRowsBeforeScroll);
+
                                     data[0].field10 = makeRowDiv(2);
                                     makeScrollGrid([{
                                         width: 100
@@ -6240,6 +7895,7 @@ describe("grid-general", function() {
 
                                 it("should not show a vertical scrollbar if remving causes underflow", function() {
                                     var data = makeRows(maxRowsBeforeScroll);
+
                                     data[0].field10 = makeRowDiv(2);
                                     makeScrollGrid([{
                                         width: 100
@@ -6265,6 +7921,7 @@ describe("grid-general", function() {
 
                                 it("should not show a vertical scrollbar if update causes an underflow", function() {
                                     var data = makeRows(maxRowsBeforeScroll);
+
                                     data[0].field10 = makeRowDiv(2);
                                     makeScrollGrid([{
                                         width: 100,
@@ -6280,6 +7937,7 @@ describe("grid-general", function() {
                         }
                     });
                 }
+
                 makeScrollSuite(false);
                 makeScrollSuite(true);
             });
@@ -6292,17 +7950,15 @@ describe("grid-general", function() {
                     expect(grid.isMasked()).toBe(true);
                     expect(grid.headerCt.disabled).toBe(true);
                     expect(grid.headerCt.isMasked()).toBeFalsy();
-                    expect(grid.headerCt.tabGuardBeforeEl.dom.getAttribute('tabIndex')).toBe('-1');
-                    expect(grid.headerCt.tabGuardAfterEl.dom.getAttribute('tabIndex')).toBe('-1');
-                    
+                    expect(grid.headerCt.isFocusableContainerActive()).toBeFalsy();
+
                     grid.enable();
                     expect(grid.isMasked()).toBeFalsy();
                     expect(grid.headerCt.disabled).toBe(false);
                     expect(grid.headerCt.isMasked()).toBeFalsy();
-                    expect(grid.headerCt.tabGuardBeforeEl.dom.getAttribute('tabIndex')).toBe('0');
-                    expect(grid.headerCt.tabGuardAfterEl.dom.getAttribute('tabIndex')).toBe('0');
+                    expect(grid.headerCt.isFocusableContainerActive()).toBeTruthy();
                 });
-                
+
                 it("should disable locking grids", function() {
                     makeGrid(null, undefined, null, null, true);
                     grid.disable();
@@ -6314,16 +7970,14 @@ describe("grid-general", function() {
                     expect(grid.lockedGrid.isMasked()).toBeFalsy();
                     expect(grid.lockedGrid.headerCt.disabled).toBe(true);
                     expect(grid.lockedGrid.headerCt.isMasked()).toBeFalsy();
-                    expect(grid.lockedGrid.headerCt.tabGuardBeforeEl.dom.getAttribute('tabIndex')).toBe('-1');
-                    expect(grid.lockedGrid.headerCt.tabGuardAfterEl.dom.getAttribute('tabIndex')).toBe('-1');
+                    expect(grid.lockedGrid.headerCt.isFocusableContainerActive()).toBeFalsy();
 
                     // Normal side
                     expect(grid.normalGrid.isMasked()).toBeFalsy();
                     expect(grid.normalGrid.headerCt.disabled).toBe(true);
                     expect(grid.normalGrid.headerCt.isMasked()).toBeFalsy();
-                    expect(grid.normalGrid.headerCt.tabGuardBeforeEl.dom.getAttribute('tabIndex')).toBe('-1');
-                    expect(grid.normalGrid.headerCt.tabGuardAfterEl.dom.getAttribute('tabIndex')).toBe('-1');
-                    
+                    expect(grid.normalGrid.headerCt.isFocusableContainerActive()).toBeFalsy();
+
                     grid.enable();
 
                     // Outermost grid should not be masked
@@ -6333,15 +7987,13 @@ describe("grid-general", function() {
                     expect(grid.lockedGrid.isMasked()).toBeFalsy();
                     expect(grid.lockedGrid.headerCt.disabled).toBe(false);
                     expect(grid.lockedGrid.headerCt.isMasked()).toBeFalsy();
-                    expect(grid.lockedGrid.headerCt.tabGuardBeforeEl.dom.getAttribute('tabIndex')).toBe('0');
-                    expect(grid.lockedGrid.headerCt.tabGuardAfterEl.dom.getAttribute('tabIndex')).toBe('0');
+                    expect(grid.lockedGrid.headerCt.isFocusableContainerActive()).toBeTruthy();
 
                     // Normal side
                     expect(grid.normalGrid.isMasked()).toBeFalsy();
                     expect(grid.normalGrid.headerCt.disabled).toBe(false);
                     expect(grid.normalGrid.headerCt.isMasked()).toBeFalsy();
-                    expect(grid.normalGrid.headerCt.tabGuardBeforeEl.dom.getAttribute('tabIndex')).toBe('0');
-                    expect(grid.normalGrid.headerCt.tabGuardAfterEl.dom.getAttribute('tabIndex')).toBe('0');
+                    expect(grid.normalGrid.headerCt.isFocusableContainerActive()).toBeTruthy();
                 });
             });
 
@@ -6366,7 +8018,7 @@ describe("grid-general", function() {
                 it("should disable both views in a locking grid when view.disable is alled on a locking grid", function() {
                     makeGrid(null, undefined, null, null, true);
                     grid.view.disable();
-                    
+
                     expect(grid.disabled).toBe(false);
                     expect(grid.isMasked()).toBeFalsy();
 
@@ -6379,14 +8031,14 @@ describe("grid-general", function() {
                     expect(grid.lockedGrid.isMasked()).toBeFalsy();
                     expect(grid.lockedGrid.headerCt.disabled).toBe(false);
                     expect(grid.lockedGrid.headerCt.isMasked()).toBeFalsy();
-                    
+
                     expect(grid.normalGrid.view.disabled).toBe(true);
                     expect(grid.normalGrid.view.isMasked()).toBeTruthy();
                     expect(grid.lockedGrid.view.disabled).toBe(true);
                     expect(grid.lockedGrid.view.isMasked()).toBeTruthy();
 
                     grid.view.enable();
-                    
+
                     expect(grid.disabled).toBe(false);
                     expect(grid.isMasked()).toBeFalsy();
 
@@ -6399,7 +8051,7 @@ describe("grid-general", function() {
                     expect(grid.lockedGrid.isMasked()).toBeFalsy();
                     expect(grid.lockedGrid.headerCt.disabled).toBe(false);
                     expect(grid.lockedGrid.headerCt.isMasked()).toBeFalsy();
-                    
+
                     expect(grid.normalGrid.view.disabled).toBe(false);
                     expect(grid.normalGrid.view.isMasked()).toBeFalsy();
                     expect(grid.lockedGrid.view.disabled).toBe(false);
@@ -6407,7 +8059,7 @@ describe("grid-general", function() {
                 });
             });
         });
-        
+
         if (buffered) {
             describe("cellWrap: true column width changing halfway down buffer rendered large dataset", function() {
                 var i,
@@ -6424,6 +8076,7 @@ describe("grid-general", function() {
                 for (i = 0; i < 500; i++) {
                     data.push(['Row ' + (i + 1), lorem.substr(0, Ext.Number.randomInt(minLen, loremLen))]);
                 }
+
                 afterEach(function() {
                     Ext.destroy(store, grid);
                 });
@@ -6480,7 +8133,7 @@ describe("grid-general", function() {
                     // Should move the rendered range to top if the viewSize >= storeCount
                     expect(bufferedRenderer.bodyTop).toBe(0);
                 });
-                
+
                 it("should not refresh if the rendered view is positioned at the start", function() {
                     store = new Ext.data.ArrayStore({
                         data: data,
@@ -6520,6 +8173,7 @@ describe("grid-general", function() {
             });
         }
     }
+
     createSuite(false);
     createSuite(true);
 
@@ -6541,36 +8195,35 @@ describe("grid-general", function() {
                     }
                 }],
                 store: [{
-                    
+
                 }]
             });
-            var col = grid.getVisibleColumnManager().getColumns()[0],
-                cell00 = new Ext.grid.CellContext(grid.view).setPosition(0, 0);
+
+            var col, cell00, widget00;
+
+            col = grid.getVisibleColumnManager().getColumns()[0];
+            cell00 = new Ext.grid.CellContext(grid.view).setPosition(0, 0);
+            widget00 = col.getWidget(grid.store.getAt(0));
 
             // First jump into the grid. Get tabIndex values correct as in real world grid use.
             grid.getNavigationModel().setPosition(0, 0);
-            waitsFor(function() {
-                return Ext.Element.getActiveElement() === cell00.getCell(true);
-            }, 'Cell 0,0 to gain focus');
+
+            waitsForFocus(cell00.getCell(true), 'Cell 0,0 to gain focus');
 
             runs(function() {
                 grid.setActionableMode(true, cell00);
             });
 
             // Widget in cell 0,0 must have focus
-            waitsFor(function() {
-                return col.getWidget(grid.store.getAt(0)).hasFocus;
-            }, 'Button in cell 0,0 to gain focus');
-            
+            waitsForFocus(widget00);
+
             runs(function() {
                 jasmine.fireKeyEvent(document.activeElement, 'keydown', Ext.event.Event.SPACE);
             });
 
             // When the record is deleted from actioning the focused button, focus must
             // move into the column header
-            waitsFor(function() {
-                return Ext.Element.getActiveElement() === col.el.dom;
-            }, 'Column header 0 to gain focus');
+            waitsForFocus(col.el, 'Column header 0 to gain focus');
         });
 
         describe("direct focus of internal tabbable element", function() {
@@ -6588,15 +8241,15 @@ describe("grid-general", function() {
                 });
                 var col = grid.getVisibleColumnManager().getColumns()[0],
                     cell00 = new Ext.grid.CellContext(grid.view).setPosition(0, 0),
-                    icon = cell00.getCell().down('.' + col.actionIconCls, true);
+                    icon = cell00.getCell(true).querySelector('.' + col.actionIconCls);
 
                 // Focus directly inside the cell.
                 // This should result in actionable mode.
-                icon.focus();
+                focusAndWait(icon, null, 'action icon to focus');
 
-                waitsFor(function() {
-                    return Ext.Element.getActiveElement() === icon && grid.actionableMode === true;
-                }, 'action icon to focus and grid to enter actionable mode');
+                runs(function() {
+                    expect(grid.actionableMode).toBe(true);
+                });
             });
         });
 
@@ -6612,7 +8265,7 @@ describe("grid-general", function() {
                     store: [{
 
                     }, {
-                        
+
                     }]
                 });
                 var cell01 = new Ext.grid.CellContext(grid.view).setPosition(1, 0);
@@ -6620,9 +8273,13 @@ describe("grid-general", function() {
                 // Focus the tabGuard directly to imitate SHIFT+TAB from a following element.
                 grid.view.tabGuardEl.focus();
 
-                waitsFor(function() {
-                    return grid.getNavigationModel().getPosition().isEqual(cell01) && Ext.Element.getActiveElement() === cell01.getCell(true) && grid.actionableMode !== true;
-                }, 'last cell to be focused');
+                waitsForFocus(grid.view, 'view to gain focus');
+
+                runs(function() {
+                    expect(grid.getNavigationModel().getPosition().isEqual(cell01)).toBe(true);
+                    expect(Ext.Element.getActiveElement()).toBe(cell01.getCell(true));
+                    expect(grid.actionableMode).not.toBe(true);
+                });
             });
         });
 
@@ -6635,22 +8292,22 @@ describe("grid-general", function() {
                     split: true,
                     syncRowHeight: false,
                     store: new Ext.data.Store({
-                        fields: ['id','name','name1'],
+                        fields: ['id', 'name', 'name1'],
                         data: [
-                            { id : 1, name : '1', name1: 'one' }
+                            { id: 1, name: '1', name1: 'one' }
                         ]
                     }),
-                    columns		: [
-                        { text : 'Id', dataIndex : 'id', locked : true, width : 100 },
-                        { text : 'Name', dataIndex : 'name', locked: true, width : 100 },
-                        { text : 'Name1', dataIndex : 'name1', width : 100 }
+                    columns: [
+                        { text: 'Id', dataIndex: 'id', locked: true, width: 100 },
+                        { text: 'Name', dataIndex: 'name', locked: true, width: 100 },
+                        { text: 'Name1', dataIndex: 'name1', width: 100 }
                     ]
                 });
-                
+
                 grid.columns[0].setWidth(150);
 
                 // Must have successfully layed out the table with the new first cell width
-                expect(grid.lockedGrid.getView().getCell(0, 0).getWidth()).toBe(150);
+                expect(Ext.fly(grid.lockedGrid.getView().getCell(0, 0)).getWidth()).toBe(150);
             });
         });
     });

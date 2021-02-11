@@ -34,7 +34,7 @@ Ext.define('Admin.view.email.Inbox', {
             text: '<span class="x-fa fa-heart"></span>',
             width: 40,
             renderer: function(value) {
-                return '<span class="x-fa fa-heart'+ (value ? '' : '-o') +'"></span>';
+                return '<span class="x-fa fa-heart'+ (value ? '' : ' inactive') +'"></span>';
             }
         },
         {

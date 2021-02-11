@@ -11,8 +11,9 @@ Ext.define('KitchenSink.view.tab.AdvancedTabsController', {
     onAddTabClick: function() {
         var tabPanel = this.lookupReference('tabpanel'),
             counter = ++this.counter,
-            html = counter % 2 ? KitchenSink.DummyText.longText :
-                KitchenSink.DummyText.extraLongText,
+            html = counter % 2
+                ? KitchenSink.DummyText.longText
+                : KitchenSink.DummyText.extraLongText,
             tab = tabPanel.add({
                 title: 'Tab ' + counter,
                 html: html
@@ -25,12 +26,14 @@ Ext.define('KitchenSink.view.tab.AdvancedTabsController', {
         var me = this;
 
         if (pressed) {
-            me.cycleInterval = setInterval(function() {
-                me.doCycle()
+            me.cycleInterval = Ext.interval(function() {
+                me.doCycle();
             }, 500);
-            me.doCycle()
-        } else {
-            clearInterval(me.cycleInterval);
+
+            me.doCycle();
+        }
+        else {
+            me.cycleInterval = Ext.uninterval(me.cycleInterval);
         }
     },
 
@@ -43,13 +46,16 @@ Ext.define('KitchenSink.view.tab.AdvancedTabsController', {
         }
 
         Ext.suspendLayouts();
-        this.lookupReference('positionBtn').setValue(this.positions[position]);
-        this.lookupReference('rotationBtn').setValue(this.rotations[rotation]);
+
+        this.lookup('positionBtn').setValue(this.positions[position]);
+        this.lookup('rotationBtn').setValue(this.rotations[rotation]);
+
         Ext.resumeLayouts(true);
     },
-    
+
     destroy: function() {
-        clearInterval(this.cycleInterval);
+        Ext.uninterval(this.cycleInterval);
+
         this.callParent(arguments);
     }
 });

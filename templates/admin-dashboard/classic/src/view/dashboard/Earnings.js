@@ -12,7 +12,7 @@ Ext.define('Admin.view.dashboard.Earnings', {
 
     title: 'Earnings',
     ui: 'light',
-    iconCls: 'x-fa fa-dollar',
+    iconCls: 'x-fa fa-dollar-sign',
     headerPosition: 'bottom',
 
     cls: 'quick-graph-panel shadow',

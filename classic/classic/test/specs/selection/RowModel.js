@@ -1,18 +1,24 @@
-describe('Ext.selection.RowModel', function () {
-    var grid, view, selModel, navModel, store, columns, cell, rawData,
+topSuite("Ext.selection.RowModel",
+    ['Ext.grid.Panel', 'Ext.tree.Panel', 'Ext.app.ViewModel',
+     'Ext.toolbar.Paging', 'Ext.Button'],
+function() {
+    var itNotTouch = jasmine.supportsTouch ? xit : it,
+        grid, view, selModel, navModel, store, columns, cell, rawData,
         synchronousLoad = true,
         proxyStoreLoad = Ext.data.ProxyStore.prototype.load,
         loadStore = function() {
             proxyStoreLoad.apply(this, arguments);
+
             if (synchronousLoad) {
                 this.flushLoad.apply(this, arguments);
             }
+
             return this;
         },
         cellSelectedCls = Ext.view.Table.prototype.selectedCellCls,
         itemSelectedCls = Ext.view.Table.prototype.selectedItemCls;
 
-    function createStore (config) {
+    function createStore(config) {
         return new Ext.data.Store(Ext.apply({
             fields: ['name'],
             proxy: {
@@ -63,7 +69,7 @@ describe('Ext.selection.RowModel', function () {
         ];
     });
 
-    afterEach(function () {
+    afterEach(function() {
         // Undo the overrides.
         Ext.data.ProxyStore.prototype.load = proxyStoreLoad;
 
@@ -71,7 +77,7 @@ describe('Ext.selection.RowModel', function () {
         rawData = store = grid = selModel = null;
     });
 
-    it('should not select the row upon in-row navigation', function () {
+    it('should not select the row upon in-row navigation', function() {
         createGrid({
             columns: [
                 { text: 'ID', dataIndex: 'id' },
@@ -82,7 +88,7 @@ describe('Ext.selection.RowModel', function () {
         navModel.setPosition(0, 0, null, null, true);
 
         // Wait for the nav model to be fully away of the focus
-        waitsFor(function(){
+        waitsFor(function() {
             return !!navModel.getPosition();
         });
 
@@ -102,7 +108,7 @@ describe('Ext.selection.RowModel', function () {
         });
     });
 
-    it('should render cells without the x-grid-cell-selected cls (EXTJSIV-17255)', function () {
+    it('should render cells without the x-grid-cell-selected cls (EXTJSIV-17255)', function() {
         createGrid();
 
         selModel.select(0);
@@ -111,7 +117,9 @@ describe('Ext.selection.RowModel', function () {
         expect(grid.getView().getNode(2).firstChild).not.toHaveCls(cellSelectedCls);
     });
 
-    it('SINGLE select mode should not select on CTRL/click (EXTJS-18592)', function() {
+    itNotTouch = jasmine.supportsTouch ? xit : it;
+
+    itNotTouch('SINGLE select mode should not select on CTRL/click (EXTJS-18592)', function() {
         createGrid({}, {
             selType: 'rowmodel', // rowmodel is the default selection model
             mode: 'SINGLE',
@@ -122,6 +130,7 @@ describe('Ext.selection.RowModel', function () {
         // Select row 1
         cell = grid.view.getCell(0, columns[0]);
         jasmine.fireMouseEvent(cell, 'click');
+
         var selection = selModel.getSelection();
 
         // Row 0 should be selected
@@ -132,7 +141,8 @@ describe('Ext.selection.RowModel', function () {
         // CTRL/click on row 2. Should NOT select that row
         cell = grid.view.getCell(1, columns[0]);
         jasmine.fireMouseEvent(cell, 'click', null, null, null, false, true);
-        var selection = selModel.getSelection();
+
+        selection = selModel.getSelection();
 
         // Row 0 should be still be selected
         expect(grid.view.all.item(0).hasCls(itemSelectedCls)).toBe(true);
@@ -152,6 +162,7 @@ describe('Ext.selection.RowModel', function () {
         // Select row 2 by clicking on its first column
         cell = grid.view.getCell(1, columns[0]);
         jasmine.fireMouseEvent(cell, 'click');
+
         var selection = selModel.getSelection();
 
         // Row 2 should be selected
@@ -161,7 +172,8 @@ describe('Ext.selection.RowModel', function () {
 
         // LEFT from there should select row 1
         jasmine.fireKeyEvent(navModel.getPosition().getCell(true), 'keydown', Ext.event.Event.LEFT);
-        var selection = selModel.getSelection();
+
+        selection = selModel.getSelection();
 
         // Row 1 should be now be selected
         expect(grid.view.all.item(0).hasCls(itemSelectedCls)).toBe(true);
@@ -170,7 +182,8 @@ describe('Ext.selection.RowModel', function () {
 
         // RIGHT from there should select row 2
         jasmine.fireKeyEvent(navModel.getPosition().getCell(true), 'keydown', Ext.event.Event.RIGHT);
-        var selection = selModel.getSelection();
+
+        selection = selModel.getSelection();
 
         // Row 2 should be now be selected
         expect(grid.view.all.item(1).hasCls(itemSelectedCls)).toBe(true);
@@ -179,7 +192,7 @@ describe('Ext.selection.RowModel', function () {
 
     });
 
-    it('should not allow deselect on SPACE if configured allowDeselect:false', function () {
+    it('should not allow deselect on SPACE if configured allowDeselect:false', function() {
         createGrid({}, {
             allowDeselect: false
         });
@@ -337,8 +350,8 @@ describe('Ext.selection.RowModel', function () {
         });
     });
 
-    describe('selecting a range', function () {
-        it('should allow a range to be selected after programmatically selecting the first selection', function () {
+    describe('selecting a range', function() {
+        it('should allow a range to be selected after programmatically selecting the first selection', function() {
             // See EXTJSIV-10393.
             createGrid({}, {
                 mode: 'MULTI'
@@ -350,7 +363,7 @@ describe('Ext.selection.RowModel', function () {
             expect(selModel.selected.length).toBe(3);
         });
 
-        it('should allow a range to be selected when shift is held down when making first selection', function () {
+        it('should allow a range to be selected when shift is held down when making first selection', function() {
             // See EXTJIV-11374.
             createGrid({}, {
                 mode: 'MULTI'
@@ -368,15 +381,22 @@ describe('Ext.selection.RowModel', function () {
         });
     });
 
-    describe('contextmenu', function () {
-        beforeEach(function () {
+    describe('contextmenu', function() {
+        beforeEach(function() {
             createGrid({
             }, {
                 mode: 'MULTI'
             });
         });
 
-        it('should not deselect the range when right-clicking over a previously selected record', function () {
+        function triggerCellContextMenu(row, col) {
+            var cell = new Ext.grid.CellContext(grid.view).setPosition(row, col).getCell(true);
+
+            jasmine.fireMouseEvent(cell, 'mousedown', 0, 0, 2);
+            jasmine.doFireMouseEvent(cell, 'contextmenu');
+        }
+
+        itNotTouch('should not deselect the range when right-clicking over a previously selected record', function() {
             // See EXTJSIV-11378.
             selModel.select(4);
 
@@ -385,14 +405,13 @@ describe('Ext.selection.RowModel', function () {
             });
 
             // Right-click on a row in the range.
-            var cell = grid.view.getCell(2, columns[0]);
-            jasmine.fireMouseEvent(cell, 'mousedown', null, null, 2);
+            triggerCellContextMenu(2, 0);
 
             // Length should be the previously-selected rows.
             expect(selModel.selected.length).toBe(5);
         });
 
-        it('should deselect the range when right-clicking over a record not previously selected', function () {
+        itNotTouch('should deselect the range when right-clicking over a record not previously selected', function() {
             // See EXTJSIV-11378.
             selModel.select(4);
 
@@ -401,8 +420,7 @@ describe('Ext.selection.RowModel', function () {
             });
 
             // Right-click on a row not in the range.
-            var cell = grid.view.getCell(5, grid.view.getVisibleColumnManager().getColumns()[0]);
-            jasmine.fireMouseEvent(cell, 'mousedown', null, null, 2);
+            triggerCellContextMenu(5, 0);
 
             // Length should only be the row that was right-clicked.
             expect(selModel.selected.length).toBe(1);
@@ -583,6 +601,7 @@ describe('Ext.selection.RowModel', function () {
 
         function byName(name) {
             var index = store.findExact('name', name);
+
             return store.getAt(index);
         }
 
@@ -598,14 +617,17 @@ describe('Ext.selection.RowModel', function () {
 
             it("should publish null by default", function() {
                 var args = spy.mostRecentCall.args;
+
                 expect(args[0]).toBeNull();
                 expect(args[1]).toBeUndefined();
             });
 
             it("should publish the value when selected", function() {
                 var rec = byName('Ben');
+
                 selectNotify(rec);
                 var args = spy.mostRecentCall.args;
+
                 expect(args[0]).toBe(rec);
                 expect(args[1]).toBeNull();
             });
@@ -618,17 +640,20 @@ describe('Ext.selection.RowModel', function () {
                 spy.reset();
                 selectNotify(rec2);
                 var args = spy.mostRecentCall.args;
+
                 expect(args[0]).toBe(rec2);
                 expect(args[1]).toBe(rec1);
             });
 
             it("should publish when an item is deselected", function() {
                 var rec = byName('Ben');
+
                 selectNotify(rec);
                 spy.reset();
                 selModel.deselect(rec);
                 viewModel.notify();
                 var args = spy.mostRecentCall.args;
+
                 expect(args[0]).toBeNull();
                 expect(args[1]).toBe(rec);
             });
@@ -649,8 +674,10 @@ describe('Ext.selection.RowModel', function () {
             describe("changing the selection", function() {
                 it("should trigger the binding when adding a selection", function() {
                     var rec = byName('Don');
+
                     selectNotify(rec);
                     var args = spy.mostRecentCall.args;
+
                     expect(args[0]).toBe(rec);
                     expect(args[1]).toBeUndefined();
                 });
@@ -663,17 +690,20 @@ describe('Ext.selection.RowModel', function () {
                     spy.reset();
                     selectNotify(rec2);
                     var args = spy.mostRecentCall.args;
+
                     expect(args[0]).toBe(rec2);
                     expect(args[1]).toBe(rec1);
                 });
 
                 it("should trigger the binding when an item is deselected", function() {
                     var rec = byName('Don');
+
                     selectNotify(rec);
                     spy.reset();
                     selModel.deselect(rec);
                     viewModel.notify();
                     var args = spy.mostRecentCall.args;
+
                     expect(args[0]).toBeNull();
                     expect(args[1]).toBe(rec);
                 });
@@ -682,6 +712,7 @@ describe('Ext.selection.RowModel', function () {
             describe("changing the viewmodel value", function() {
                 it("should select the record when setting the value", function() {
                     var rec = byName('Phil');
+
                     viewModel.set('foo', rec);
                     viewModel.notify();
                     expect(selModel.isSelected(rec)).toBe(true);
@@ -754,7 +785,7 @@ describe('Ext.selection.RowModel', function () {
         });
     });
 
-    describe('chained stores', function () {
+    describe('chained stores', function() {
         it('should remove records from selection by default when removed from source', function() {
             // See EXTJS-16067
             createGrid({

@@ -1,10 +1,10 @@
-describe("Ext.util.Inflector", function() {
+topSuite("Ext.util.Inflector", function() {
     var Inflector = Ext.util.Inflector;
 
-    //set of irregular words taken from http://www.english-zone.com/spelling/plurals.html
+    // set of irregular words taken from http://www.english-zone.com/spelling/plurals.html
     var testWords = {
-        bus : 'buses',
-        word : 'words',
+        bus: 'buses',
+        word: 'words',
         tomato: 'tomatoes',
         potato: 'potatoes',
         person: 'people',
@@ -14,7 +14,7 @@ describe("Ext.util.Inflector", function() {
         nucleus: 'nuclei',
         radius: 'radii',
         stimulus: 'stimuli',
-        axis : 'axes',
+        axis: 'axes',
         analysis: 'analyses',
         basis: 'bases',
         crisis: 'crises',
@@ -126,9 +126,10 @@ describe("Ext.util.Inflector", function() {
 
         it("should recognize the new pluralization correctly", function() {
             var oldPlurals = Inflector.plurals;
+
             Inflector.plurals = [];
 
-            //shouldn't be recognized yet
+            // shouldn't be recognized yet
             expect(Inflector.pluralize('ox')).toEqual('ox');
 
             Inflector.plural(/^(ox)$/, "$1en");
@@ -151,7 +152,7 @@ describe("Ext.util.Inflector", function() {
 
             Inflector.singulars = [];
 
-            //shouldn't be recognized yet
+            // shouldn't be recognized yet
             expect(Inflector.singularize('oxen')).toEqual('oxen');
 
             Inflector.singular(/^(ox)en$/, "$1");

@@ -1,0 +1,22 @@
+.#{$prefix}grid-paging-toolbar {
+    .#{$prefix}btn {
+        .#{$prefix}btn-wrap {
+            .#{$prefix}btn-icon-el {
+                color: $grid-paging-toolbar-glyph-color;
+            }
+            
+            .#{$prefix}btn-inner {
+                color: $grid-paging-toolbar-glyph-color;
+            }
+        
+            &.#{$prefix}btn-arrow-right:after,
+            &.#{$prefix}btn-arrow-split:after {
+                color: $grid-paging-toolbar-glyph-color;
+            }
+        }
+    }
+    
+    .#{$prefix}slider .#{$prefix}slider-thumb {
+        border-color: $toolbar-docked-bottom-background-color;
+    }
+}

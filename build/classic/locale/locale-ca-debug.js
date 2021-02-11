@@ -125,9 +125,9 @@ Ext.define("Ext.locale.ca.form.field.Number", {
     nanText: "{0} no &#233;s un nombre v&#224;lid"
 });
 
-Ext.define("Ext.locale.ca.form.field.File", { 
-    override: "Ext.form.field.File", 
-    buttonText: "Examinar..." 
+Ext.define("Ext.locale.ca.form.field.File", {
+    override: "Ext.form.field.File",
+    buttonText: "Examinar..."
 });
 
 Ext.define("Ext.locale.ca.form.field.Date", {
@@ -285,10 +285,10 @@ Ext.define("Ext.locale.ca.window.MessageBox", {
         cancel: "Cancel&#183;lar",
         yes: "S&#237;",
         no: "No"
-    }    
+    }
 });
 
 // This is needed until we can refactor all of the locales into individual files
-Ext.define("Ext.locale.ca.Component", {	
+Ext.define("Ext.locale.ca.Component", {
     override: "Ext.Component"
 });

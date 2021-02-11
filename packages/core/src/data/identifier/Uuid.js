@@ -47,8 +47,9 @@ Ext.define('Ext.data.identifier.Uuid', {
     alias: 'data.identifier.uuid',
 
     /**
-     * Provides a way to determine if this identifier supports creating unique IDs. Proxies like {@link Ext.data.proxy.LocalStorage}
-     * need the identifier to create unique IDs and will check this property.
+     * Provides a way to determine if this identifier supports creating unique IDs. Proxies like
+     * {@link Ext.data.proxy.LocalStorage} need the identifier to create unique IDs and will check
+     * this property.
      * @property isUnique
      * @type Boolean
      * @private
@@ -57,9 +58,10 @@ Ext.define('Ext.data.identifier.Uuid', {
 
     config: {
         /**
+         * @cfg {String} id
          * The id for this generator instance. By default all model instances share the same
-         * UUID generator instance. By specifying an id other then 'uuid', a unique generator instance
-         * will be created for the Model.
+         * UUID generator instance. By specifying an id other than 'uuid', a unique generator
+         * instance will be created for the Model.
          */
         id: null
     },
@@ -101,7 +103,7 @@ Ext.define('Ext.data.identifier.Uuid', {
      * Only applicable when `version` is set to `1`.
      */
 
-    constructor: function (config) {
+    constructor: function(config) {
         this.callParent([ config ]);
 
         this.reconfigure(config);
@@ -111,25 +113,27 @@ Ext.define('Ext.data.identifier.Uuid', {
      * Reconfigures this generator given new config properties. The only values that this
      * changes are `version` and, if `version` is 1, its related config properties.
      */
-    reconfigure: function (config) {
+    reconfigure: function(config) {
         var cls = this.self;
 
-        this.generate = (config && config.version === 1) ?
-            cls.createSequential(config.salt, config.timestamp, config.clockSeq) :
-            cls.createRandom();
+        this.generate = (config && config.version === 1)
+            ? cls.createSequential(config.salt, config.timestamp, config.clockSeq)
+            : cls.createRandom();
     },
 
     clone: null,
 
     statics: {
-        createRandom: function () {
+        createRandom: function() {
             var pattern = 'xxxxxxxx-xxxx-4xxx-Rxxx-xMxxxxxxxxxx'.split(''),
                 hex = '0123456789abcdef'.split(''),
                 length = pattern.length,
                 parts = [];
 
-            return function () {
-                for (var r, c, i = 0; i < length; ++i) {
+            return function() {
+                var r, c, i;
+
+                for (i = 0; i < length; ++i) {
                     c = pattern[i];
 
                     if (c !== '-' && c !== '4') {
@@ -145,24 +149,33 @@ Ext.define('Ext.data.identifier.Uuid', {
             };
         },
 
-        createSequential: function (salt, time, clockSeq) {
+        createSequential: function(salt, time, clockSeq) {
             var parts = [],
                 twoPow32 = Math.pow(2, 32),
-                saltLo = salt.lo, saltHi = salt.hi, timeLo = time.lo, timeHi = time.hi,
-                toHex = function (value, length) {
-                    var ret = value.toString(16).toLowerCase();
-                    if (ret.length > length) {
-                        ret = ret.substring(ret.length - length); // right-most digits
-                    } else if (ret.length < length) {
-                        ret = Ext.String.leftPad(ret, length, '0');
-                    }
-                    return ret;
-                };
+                saltLo = salt.lo,
+                saltHi = salt.hi,
+                timeLo = time.lo,
+                timeHi = time.hi,
+                toHex;
+
+            toHex = function(value, length) {
+                var ret = value.toString(16).toLowerCase();
+
+                if (ret.length > length) {
+                    ret = ret.substring(ret.length - length); // right-most digits
+                }
+                else if (ret.length < length) {
+                    ret = Ext.String.leftPad(ret, length, '0');
+                }
+
+                return ret;
+            };
 
             if (typeof salt === 'number') {
                 saltHi = Math.floor(salt / twoPow32);
                 saltLo = Math.floor(salt - saltHi * twoPow32);
             }
+
             if (typeof time === 'number') {
                 timeHi = Math.floor(time / twoPow32);
                 timeLo = Math.floor(time - timeHi * twoPow32);
@@ -200,13 +213,14 @@ Ext.define('Ext.data.identifier.Uuid', {
                                        |
                                     reserved (upper 2 bits)
             */
-            return function () {
+            return function() {
                 parts[0] = toHex(timeLo, 8);
                 parts[1] = toHex(timeHi & 0xFFFF, 4);
                 parts[2] = toHex(((timeHi >>> 16) & 0xFFF) | (1 << 12), 4);
 
                 // sequentially increment the timestamp...
                 ++timeLo;
+
                 if (timeLo >= twoPow32) { // if (overflow)
                     timeLo = 0;
                     ++timeHi;
@@ -216,8 +230,7 @@ Ext.define('Ext.data.identifier.Uuid', {
             };
         }
     }
-},
-function() {
+}, function() {
     this.Global = new this({
         id: 'uuid'
     });

@@ -6,19 +6,6 @@ Ext.define('Admin.view.widgets.SocialBar', {
     xtype: 'socialbar',
     border: false,
 
-    /**
-     * @event facebook
-     */
-    /**
-     * @event twitter
-     */
-    /**
-     * @event googleplus
-     */
-    /**
-     * @event email
-     */
-
     layout: {
         pack: 'center'
     },
@@ -30,35 +17,19 @@ Ext.define('Admin.view.widgets.SocialBar', {
 
     items: [{
         ui: 'facebook',
-        iconCls: 'x-fa fa-facebook',
-
-        handler: function () {
-            var parent = this.getParent();
-            parent.fireEvent('facebook', parent);
-        }
+        iconCls: 'x-fab fa-facebook',
+        handler: 'onContactFacebook'
     }, {
         ui: 'soft-cyan',
-        iconCls: 'x-fa fa-twitter',
-
-        handler: function () {
-            var parent = this.getParent();
-            parent.fireEvent('twitter', parent);
-        }
+        iconCls: 'x-fab fa-twitter',
+        handler: 'onContactTwitter'
     }, {
         ui: 'soft-red',
-        iconCls: 'x-fa fa-google-plus',
-
-        handler: function () {
-            var parent = this.getParent();
-            parent.fireEvent('googleplus', parent);
-        }
+        iconCls: 'x-fab fa-google-plus',
+        handler: 'onContactGooglePlus'
     }, {
         ui: 'soft-purple',
         iconCls: 'x-fa fa-envelope',
-
-        handler: function () {
-            var parent = this.getParent();
-            parent.fireEvent('email', parent);
-        }
+        handler: 'onContactEmail'
     }]
 });

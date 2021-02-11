@@ -12,7 +12,8 @@ Ext.define('Ext.event.gesture.Swipe', {
      * @member Ext.dom.Element
      * @event swipe
      * Fires when there is a swipe
-     * When listening to this, ensure you know about the {@link Ext.event.Event#direction} property in the `event` object.
+     * When listening to this, ensure you know about the {@link Ext.event.Event#direction} property
+     * in the `event` object.
      * @param {Ext.event.Event} event The {@link Ext.event.Event} event encapsulating the DOM event.
      * @param {HTMLElement} node The target of the event.
      * @param {Object} options The options object passed to Ext.mixin.Observable.addListener.
@@ -146,7 +147,8 @@ Ext.define('Ext.event.gesture.Swipe', {
             if (me.isHorizontal) {
                 direction = (deltaX < 0) ? 'left' : 'right';
                 distance = absDeltaX;
-            } else if (me.isVertical) {
+            }
+            else if (me.isVertical) {
                 direction = (deltaY < 0) ? 'up' : 'down';
                 distance = absDeltaY;
             }
@@ -175,5 +177,6 @@ Ext.define('Ext.event.gesture.Swipe', {
     }
 }, function(Swipe) {
     var gestures = Ext.manifest.gestures;
+
     Swipe.instance = new Swipe(gestures && gestures.swipe);
 });

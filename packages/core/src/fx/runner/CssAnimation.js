@@ -36,7 +36,7 @@ Ext.define('Ext.fx.runner.CssAnimation', {
             elementEndState = elementEndStates[elementId],
             data = {};
 
-        //console.log("START============= " + name);
+        // console.log("START============= " + name);
 
         if (elementEndState) {
             delete elementEndStates[elementId];
@@ -62,7 +62,7 @@ Ext.define('Ext.fx.runner.CssAnimation', {
             runningAnimations = runningAnimationsMap[elementId],
             animation = runningAnimations[name];
 
-        //console.log("END============= " + name);
+        // console.log("END============= " + name);
 
         if (animation.onBeforeEnd) {
             animation.onBeforeEnd.call(animation.scope || this, element);
@@ -98,7 +98,7 @@ Ext.define('Ext.fx.runner.CssAnimation', {
 
         animations = Ext.Array.from(animations);
 
-        for (i = 0,ln = animations.length; i < ln; i++) {
+        for (i = 0, ln = animations.length; i < ln; i++) {
             animation = animations[i];
 
             animation = Ext.factory(animation, Ext.fx.Animation);
@@ -141,15 +141,15 @@ Ext.define('Ext.fx.runner.CssAnimation', {
             }
 
             data[elementId] = {
-                'animation-name'            : names,
-                'animation-duration'        : durations,
-                'animation-timing-function' : easings,
-                'animation-delay'           : delays,
-                'animation-direction'       : directions,
-                'animation-iteration-count' : iterations
+                'animation-name': names,
+                'animation-duration': durations,
+                'animation-timing-function': easings,
+                'animation-delay': delays,
+                'animation-direction': directions,
+                'animation-iteration-count': iterations
             };
 
-//            Ext.apply(data[elementId], animation.origin);
+            //            Ext.apply(data[elementId], animation.origin);
 
             if (animation.preserveEndState) {
                 elementEndStates[elementId] = states['100%'];
@@ -197,7 +197,7 @@ Ext.define('Ext.fx.runner.CssAnimation', {
             rules = styleSheet.cssRules,
             i, ln, rule;
 
-        for (i = 0,ln = rules.length; i < ln; i++) {
+        for (i = 0, ln = rules.length; i < ln; i++) {
             rule = rules[i];
 
             if (rule.name === name) {

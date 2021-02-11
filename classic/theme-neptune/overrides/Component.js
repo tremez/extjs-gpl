@@ -10,7 +10,7 @@ Ext.define('Ext.theme.neptune.Component', {
     },
 
     privates: {
-        initStyles: function () {
+        initStyles: function() {
             var me = this,
                 hasOwnBorder = me.hasOwnProperty('border'),
                 border = me.border;
@@ -20,11 +20,13 @@ Ext.define('Ext.theme.neptune.Component', {
                 // allow dock layout to decide which borders to suppress.
                 me.border = null;
             }
+
             me.callParent(arguments);
 
             if (hasOwnBorder) {
                 me.border = border;
-            } else {
+            }
+            else {
                 delete me.border;
             }
         }

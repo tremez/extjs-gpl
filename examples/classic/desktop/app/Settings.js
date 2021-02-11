@@ -1,4 +1,4 @@
-/*!
+/* !
  * Ext JS Library
  * Copyright(c) 2006-2014 Sencha Inc.
  * licensing@sencha.com
@@ -27,7 +27,7 @@ Ext.define('Desktop.Settings', {
     height: 480,
     border: false,
 
-    initComponent: function () {
+    initComponent: function() {
         var me = this;
 
         me.selected = me.desktop.getWallpaper();
@@ -63,7 +63,7 @@ Ext.define('Desktop.Settings', {
                 boxLabel: 'Stretch to fit',
                 checked: me.stretch,
                 listeners: {
-                    change: function (comp) {
+                    change: function(comp) {
                         me.stretch = comp.checked;
                     }
                 }
@@ -73,14 +73,15 @@ Ext.define('Desktop.Settings', {
         me.callParent();
     },
 
-    createTree : function() {
-        var me = this;
+    createTree: function() {
+        var me = this,
+            tree;
 
-        function child (img) {
+        function child(img) {
             return { img: img, text: me.getTextOfWallpaper(img), iconCls: '', leaf: true };
         }
 
-        var tree = new Ext.tree.Panel({
+        tree = new Ext.tree.Panel({
             title: 'Desktop Background',
             rootVisible: false,
             lines: false,
@@ -97,9 +98,9 @@ Ext.define('Desktop.Settings', {
             store: new Ext.data.TreeStore({
                 model: 'Desktop.model.Wallpaper',
                 root: {
-                    text:'Wallpaper',
+                    text: 'Wallpaper',
                     expanded: true,
-                    children:[
+                    children: [
                         { text: "None", iconCls: '', leaf: true },
                         child('Blue-Sencha.jpg'),
                         child('Dark-Sencha.jpg'),
@@ -117,41 +118,53 @@ Ext.define('Desktop.Settings', {
         return tree;
     },
 
-    getTextOfWallpaper: function (path) {
-        var text = path, slash = path.lastIndexOf('/');
+    getTextOfWallpaper: function(path) {
+        var text = path,
+            slash = path.lastIndexOf('/'),
+            dot;
+
         if (slash >= 0) {
-            text = text.substring(slash+1);
+            text = text.substring(slash + 1);
         }
-        var dot = text.lastIndexOf('.');
+
+        dot = text.lastIndexOf('.');
+
         text = Ext.String.capitalize(text.substring(0, dot));
         text = text.replace(/[-]/g, ' ');
+
         return text;
     },
 
-    onOK: function () {
+    onOK: function() {
         var me = this;
+
         if (me.selected) {
             me.desktop.setWallpaper(me.selected, me.stretch);
         }
+
         me.destroy();
     },
 
-    onSelect: function (tree, record) {
+    onSelect: function(tree, record) {
         var me = this;
 
         if (record.data.img) {
             me.selected = 'resources/images/wallpapers/' + record.data.img;
-        } else {
+        }
+        else {
             me.selected = Ext.BLANK_IMAGE_URL;
         }
 
         me.preview.setWallpaper(me.selected);
     },
 
-    setInitialSelection: function () {
-        var s = this.desktop.getWallpaper();
+    setInitialSelection: function() {
+        var s = this.desktop.getWallpaper(),
+            path;
+
         if (s) {
-            var path = '/Wallpaper/' + this.getTextOfWallpaper(s);
+            path = '/Wallpaper/' + this.getTextOfWallpaper(s);
+
             this.tree.selectPath(path, 'text');
         }
     }

@@ -1,0 +1,31 @@
+.#{$prefix}keyboard-mode {
+    .#{$prefix}column-header-focus {
+        .#{$prefix}column-header-over {
+            @include inner-border($grid-column-header-focus-over-border-width, $grid-column-header-focus-over-border-color);
+            background-color: $grid-column-header-focus-background-color;
+
+         .#{$prefix}column-header-trigger {
+                @include inner-border($grid-column-header-focus-over-border-width, $grid-column-header-focus-over-border-color);
+                background-color: $grid-column-header-focus-background-color;
+            }
+        }
+    }
+}
+
+.#{$prefix}column-header-sort-ASC,
+.#{$prefix}column-header-sort-DESC {
+    .#{$prefix}column-header-text-inner {
+        color: $grid-header-sort-glyph-color;
+    }
+}
+
+.#{$prefix}column-header-focus, 
+.#{$prefix}column-header-over {
+    .#{$prefix}column-header-text-inner {
+        color: $checkbox-focus-glyph-color;
+
+        &:after {
+            color: $checkbox-focus-glyph-color;
+        }
+    }
+}

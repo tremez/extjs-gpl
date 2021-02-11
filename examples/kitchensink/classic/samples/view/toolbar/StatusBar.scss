@@ -1,0 +1,9 @@
+@if $theme-name == 'theme-material' {
+    .status-bar-container {
+        .#{$prefix}form-type-text {
+            .#{$prefix}form-item-label {
+                text-align: left;
+            }
+        } 
+    }
+}

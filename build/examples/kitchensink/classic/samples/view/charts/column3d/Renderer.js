@@ -9,7 +9,7 @@ Ext.define('KitchenSink.view.charts.column3d.Renderer', {
     controller: 'column-renderer-3d',
     requires: ['Ext.chart.theme.Muted'],
 
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     bodyStyle: 'background: transparent !important',
     layout: {
@@ -21,15 +21,37 @@ Ext.define('KitchenSink.view.charts.column3d.Renderer', {
         path: 'classic/samples/view/charts/column3d/RendererController.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/Browsers.js'
+        path: 'app/store/Browsers.js'
     }],
-    // </example>
-    width: 650,
+    //</example>
+    width: '${width}',
 
+    profiles: {
+        classic: {
+            width: 650
+        },
+        neptune: {
+            width: 650
+        },
+        graphite: {
+            width: 900
+        },
+        'classic-material': {
+            width: 900
+        }
+    },
     items: [{
         xtype: 'cartesian',
         width: '100%',
         height: 500,
+        captions: {
+            title: 'Renderer assigns a unique color to each column in a series',
+            credits: {
+                text: 'Data: Google Chrome marker share in 2012 (Browser Stats)\n' +
+                'Source: http://www.w3schools.com/',
+                align: 'left'
+            }
+        },
         interactions: {
             type: 'panzoom',
             zoomOnPanGesture: true
@@ -40,7 +62,6 @@ Ext.define('KitchenSink.view.charts.column3d.Renderer', {
         theme: {
             type: 'muted'
         },
-        insetPadding: '60 40 40 40',
         innerPadding: '0 4 0 3',
         axes: [{
             type: 'numeric3d',
@@ -82,27 +103,6 @@ Ext.define('KitchenSink.view.charts.column3d.Renderer', {
             },
             renderer: 'onColumnRender'
 
-        }],
-        sprites: [{
-            type: 'text',
-            text: 'Renderer assigns a unique color to each column in a series',
-            fontSize: 22,
-            width: 100,
-            height: 30,
-            x: 40, // the sprite x position
-            y: 40  // the sprite y position
-        }, {
-            type: 'text',
-            text: 'Data: Google Chrome marker share in 2012 (Browser Stats)',
-            fontSize: 10,
-            x: 12,
-            y: 470
-        }, {
-            type: 'text',
-            text: 'Source: http://www.w3schools.com/',
-            fontSize: 10,
-            x: 12,
-            y: 485
         }]
     }]
 

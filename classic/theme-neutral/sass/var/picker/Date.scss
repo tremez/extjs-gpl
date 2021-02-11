@@ -93,6 +93,11 @@ $datepicker-arrow-opacity: dynamic(1);
 $datepicker-arrow-opacity-over: dynamic(1);
 
 /**
+ * @var {color} $datepicker-header-background-color
+ * The Date Picker header background color.
+ */
+
+/**
  * @var {string/list}
  * The Date Picker header background gradient. Can be either the name of a predefined gradient
  * or a list of color stops. Used as the `$type` parameter for {@link Global_CSS#background-gradient}.

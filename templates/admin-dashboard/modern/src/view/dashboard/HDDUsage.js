@@ -1,7 +1,6 @@
 Ext.define('Admin.view.dashboard.HDDUsage', {
     extend: 'Ext.Panel',
     xtype: 'hddusage',
-    ui: 'light',
 
     requires: [
         'Ext.chart.CartesianChart',
@@ -11,81 +10,52 @@ Ext.define('Admin.view.dashboard.HDDUsage', {
         'Ext.chart.interactions.PanZoom'
     ],
 
+    cls: 'quick-graph-panel',
     height: 130,
     layout: 'fit',
-
     title: 'HDD Usage',
-    cls: 'quick-graph-panel',
+    ui: 'light',
+
     header: {
         docked: 'bottom'
     },
+
     platformConfig: {
         '!phone': {
             iconCls: 'x-fa fa-database'
         }
     },
 
-    items: [
-        {
-            xtype: 'cartesian',
-            animation : !Ext.isIE9m && Ext.os.is.Desktop,
-            height: '100%',
-            width: '100%',
-            constrain: true,
-            constrainHeader: true,
-            background: '#70bf73',
-            colors: [
-                '#a9d9ab'
-            ],
-
-            bind: {
-                store: '{hddusage}'
-            },
-
-            axes: [
-                {
-                    type: 'category',
-                    fields: [
-                        'xvalue'
-                    ],
-                    hidden: true,
-                    position: 'bottom'
-                },
-                {
-                    type: 'numeric',
-                    fields: [
-                        'yvalue'
-                    ],
-                    grid: {
-                        odd: {
-                            fill: '#e8e8e8'
-                        }
-                    },
-                    hidden: true,
-                    position: 'left'
-                }
-            ],
-
-            series: [
-                {
-                    type: 'area',
-                    style: {
-                        stroke: '#FFFFFF',
-                        'stroke-width': '2px'
-                    },
-                    useDarkerStrokeColor: false,
-                    xField: 'xvalue',
-                    yField: [
-                        'yvalue'
-                    ]
-                }
-            ],
-
-            interactions: [
-                {
-                    type: 'panzoom'
-                }
-            ]
-        }
-    ]
+    items: [{
+        xtype: 'cartesian',
+        animation : Ext.os.is.Desktop,
+        background: '#70bf73',
+        bind: '{hddusage}',
+        colors: [
+            '#a9d9ab'
+        ],
+        axes: [{
+            type: 'category',
+            fields: 'xvalue',
+            hidden: true,
+            position: 'bottom'
+        }, {
+            type: 'numeric',
+            fields: 'yvalue',
+            hidden: true,
+            position: 'left'
+        }],
+        series: [{
+            type: 'area',
+            useDarkerStrokeColor: false,
+            xField: 'xvalue',
+            yField: 'yvalue',
+            style: {
+                stroke: '#FFFFFF'
+            }
+        }],
+        interactions: Ext.supports.Touch ? [{
+            type: 'panzoom'
+        }] : null
+    }]
 });

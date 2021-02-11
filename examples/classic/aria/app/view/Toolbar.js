@@ -1,48 +1,50 @@
 Ext.define('Aria.view.Toolbar', {
-    extend:'Ext.container.Container',
-    alias:'widget.mysimpletoolbar',
-    title:'Toolbar',
+    extend: 'Ext.container.Container',
+    alias: 'widget.mysimpletoolbar',
+    title: 'Toolbar',
 
     requires: [
         'Ext.menu.DatePicker',
         'Ext.menu.ColorPicker',
         'Ext.container.ButtonGroup'
     ],
-    
-    initComponent: function() {
-        // functions to display feedback
-        function onButtonClick(btn){
-            Aria.app.msg('Button Click','You clicked the "{0}" button.', btn.displayText || btn.text);
-        }
 
-        function onItemClick(item){
+    initComponent: function() {
+        var dateMenu, colorMenu, store, menu, scrollMenu, i, tb, tb1, item;
+
+        // functions to display feedback
+        // function onButtonClick(btn) {
+        //     Aria.app.msg('Button Click', 'You clicked the "{0}" button.', btn.displayText || btn.text);
+        // }
+
+        function onItemClick(item) {
             Aria.app.msg('Menu Click', 'You clicked the "{0}" menu item.', item.text);
         }
 
-        function onItemCheck(item, checked){
+        function onItemCheck(item, checked) {
             Aria.app.msg('Item Check', 'You {1} the "{0}" menu item.', item.text, checked ? 'checked' : 'unchecked');
         }
 
-        function onItemToggle(item, pressed){
+        function onItemToggle(item, pressed) {
             Aria.app.msg('Button Toggled', 'Button "{0}" was toggled to {1}.', item.text, pressed);
         }
 
-        var dateMenu = Ext.create('Ext.menu.DatePicker', {
-            handler: function(dp, date){
+        dateMenu = Ext.create('Ext.menu.DatePicker', {
+            handler: function(dp, date) {
                 Aria.app.msg('Date Selected', 'You choose {0}.', Ext.Date.format(date, 'M j, Y'));
 
             }
         });
 
-        var colorMenu = Ext.create('Ext.menu.ColorPicker', {
-            handler: function(cm, color){
+        colorMenu = Ext.create('Ext.menu.ColorPicker', {
+            handler: function(cm, color) {
                 Aria.app.msg('Color Selected', '<span style="color:#' + color + ';">You choose {0}.</span>', color);
             }
         });
 
-        var store = Ext.create('Ext.data.ArrayStore', {
+        store = Ext.create('Ext.data.ArrayStore', {
             fields: ['abbr', 'state', 'desc'],
-            data : [
+            data: [
                 ['AL', 'Alabama', 'The Heart of Dixie'],
                 ['AK', 'Alaska', 'The Land of the Midnight Sun'],
                 ['AZ', 'Arizona', 'The Grand Canyon State'],
@@ -97,7 +99,7 @@ Ext.define('Aria.view.Toolbar', {
             ]
         });
 
-        var combo = Ext.create('Ext.form.field.ComboBox', {
+        Ext.create('Ext.form.field.ComboBox', {
             hideLabel: true,
             store: store,
             displayField: 'state',
@@ -110,13 +112,13 @@ Ext.define('Aria.view.Toolbar', {
             iconCls: 'no-icon'
         });
 
-        var menu = Ext.create('Ext.menu.Menu', {
+        menu = Ext.create('Ext.menu.Menu', {
             id: 'mainMenu',
-//             style: {
-//                 overflow: 'visible'     // For the Combo popup
-//             },
+            // style: {
+            //     overflow: 'visible'     // For the Combo popup
+            // },
             items: [
-//                 combo,                  // A Field in a Menu
+            //                 combo,                  // A Field in a Menu
                 {
                     text: 'I like Ext',
                     checked: true,       // when checked has a boolean value, it is assumed to be a CheckItem
@@ -125,7 +127,7 @@ Ext.define('Aria.view.Toolbar', {
                     text: 'Radio Options',
                     menu: {        // <-- submenu by nested config object
                         items: [
-                            // stick any markup in a menu
+                        // stick any markup in a menu
                             '<b class="menu-title">Choose a Theme</b>',
                             {
                                 text: 'Aero Glass',
@@ -150,75 +152,76 @@ Ext.define('Aria.view.Toolbar', {
                             }
                         ]
                     }
-                },{
+                }, {
                     text: 'Choose a Date',
                     iconCls: 'calendar',
                     menu: dateMenu // <-- submenu by reference
-                },{
+                }, {
                     text: 'Choose a Color',
                     menu: colorMenu // <-- submenu by reference
                 }
             ]
         });
 
-        var tb = Ext.create('Ext.toolbar.Toolbar');
-        var tb1 = Ext.create('Ext.toolbar.Toolbar');
+        tb = Ext.create('Ext.toolbar.Toolbar');
+        tb1 = Ext.create('Ext.toolbar.Toolbar');
 
         tb.add({
-                text:'Button w/ Menu',
-                iconCls: 'bmenu',  // <-- icon
-                menu: menu  // assign menu by instance
-//             }, {
-//                 text: 'Users',
-//                 menu: {
-//                     xtype: 'menu',
-//                     plain: true,
-//                     items: {
-//                         xtype: 'buttongroup',
-//                         title: 'User options',
-//                         columns: 2,
-//                         defaults: {
-//                             xtype: 'button',
-//                             scale: 'large',
-//                             iconAlign: 'left',
-//                             handler: onButtonClick
-//                         },
-//                         items: [{
-//                             text: 'User<br/>manager',
-//                             width: 90,
-//                             displayText: 'User manager'
-//                         },{
-//                             tooltip: 'Add user',
-//                             width: 100,
-//                             text: 'Add user'
-//                         },{
-//                             colspan: 2,
-//                             text: 'Import',
-//                             scale: 'small',
-//                             width: 130
-//                         },{
-//                             colspan: 2,
-//                             text: 'Who is online?',
-//                             scale: 'small',
-//                             width: 130
-//                         }]
-//                     }
-//                 }
-            },
-            '-', {
-                text: 'Toggle Me',
-                enableToggle: true,
-                toggleHandler: onItemToggle,
-                pressed: true
-            });
+            text: 'Button w/ Menu',
+            iconCls: 'bmenu',  // <-- icon
+            menu: menu  // assign menu by instance
+            //             }, {
+            //                 text: 'Users',
+            //                 menu: {
+            //                     xtype: 'menu',
+            //                     plain: true,
+            //                     items: {
+            //                         xtype: 'buttongroup',
+            //                         title: 'User options',
+            //                         columns: 2,
+            //                         defaults: {
+            //                             xtype: 'button',
+            //                             scale: 'large',
+            //                             iconAlign: 'left',
+            //                             handler: onButtonClick
+            //                         },
+            //                         items: [{
+            //                             text: 'User<br/>manager',
+            //                             width: 90,
+            //                             displayText: 'User manager'
+            //                         },{
+            //                             tooltip: 'Add user',
+            //                             width: 100,
+            //                             text: 'Add user'
+            //                         },{
+            //                             colspan: 2,
+            //                             text: 'Import',
+            //                             scale: 'small',
+            //                             width: 130
+            //                         },{
+            //                             colspan: 2,
+            //                             text: 'Who is online?',
+            //                             scale: 'small',
+            //                             width: 130
+            //                         }]
+            //                     }
+            //                 }
+        },
+               '-', {
+                   text: 'Toggle Me',
+                   enableToggle: true,
+                   toggleHandler: onItemToggle,
+                   pressed: true
+               });
 
         menu.add(' ');
 
         // Menus have a rich api for
         // adding and removing elements dynamically
-        var item = menu.add({
+        item = menu.add({
             text: 'Dynamically added Item'
         });
+
         // items support full Observable API
         item.on('click', onItemClick);
 
@@ -231,15 +234,15 @@ Ext.define('Aria.view.Toolbar', {
         // access items by id or index
         menu.items.get('disableMe').disable();
 
+        scrollMenu = Ext.create('Ext.menu.Menu');
 
-        var scrollMenu = Ext.create('Ext.menu.Menu');
-        for (var i = 0; i < 50; ++i){
+        for (i = 0; i < 50; ++i) {
             scrollMenu.add({
                 text: 'Item ' + (i + 1),
                 handler: onItemClick
             });
         }
-        
+
         tb1.add({
             text: 'Link',
             url: 'http://www.google.com/search',
@@ -259,14 +262,14 @@ Ext.define('Aria.view.Toolbar', {
         this.items = [
             {
                 xtype: 'panel',
-                title:'Toolbar Example',
+                title: 'Toolbar Example',
                 ariaRole: 'region',
-                
-                bodyPadding:12,
-                width:700,
-                height:250,
-                header:true,
-                dockedItems:{
+
+                bodyPadding: 12,
+                width: 700,
+                height: 250,
+                header: true,
+                dockedItems: {
                     dock: 'top',
                     items: [tb, tb1]
                 }

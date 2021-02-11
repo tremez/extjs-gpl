@@ -2,7 +2,7 @@ Ext.define('KitchenSink.view.charts.bar.StackedController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.bar-stacked',
 
-    onAxisLabelRender: function (axis, label, layoutContext) {
+    onAxisLabelRender: function(axis, label, layoutContext) {
         // Custom renderer overrides the native axis label renderer.
         // Since we don't want to do anything fancy with the value
         // ourselves except appending a '%' sign, but at the same time
@@ -11,7 +11,7 @@ Ext.define('KitchenSink.view.charts.bar.StackedController', {
         return layoutContext.renderer(label) + '%';
     },
 
-    onSeriesTooltipRender: function (tooltip, record, item) {
+    onSeriesTooltipRender: function(tooltip, record, item) {
         var fieldIndex = Ext.Array.indexOf(item.series.getYField(), item.field),
             browser = item.series.getTitle()[fieldIndex];
 
@@ -19,16 +19,21 @@ Ext.define('KitchenSink.view.charts.bar.StackedController', {
             record.get(item.field) + '%');
     },
 
-    onColumnRender: function (v) {
+    onColumnRender: function(v) {
         return v + '%';
     },
 
-    onPreview: function () {
+    onPreview: function() {
+        var chart;
+
         if (Ext.isIE8) {
             Ext.Msg.alert('Unsupported Operation', 'This operation requires a newer version of Internet Explorer.');
+
             return;
         }
-        var chart = this.lookupReference('chart');
+
+        chart = this.lookup('chart');
+
         chart.preview();
     }
 

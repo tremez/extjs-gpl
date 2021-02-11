@@ -15,28 +15,32 @@ Ext.define('Ext.app.domain.Controller', {
 
     type: 'controller',
     prefix: 'controller.',
-    idMatchRe: /^\#/,
+    idMatchRe: /^#/,
 
     constructor: function() {
         var me = this;
-        
+
         me.callParent();
         me.monitor(Ext.app.BaseController);
     },
-    
+
     match: function(target, selector) {
         var result = false,
             alias = target.alias;
-        
+
         if (selector === '*') {
             result = true;
-        } else if (selector === '#') {
+        }
+        else if (selector === '#') {
             result = !!target.isApplication;
-        } else if (this.idMatchRe.test(selector)) {
+        }
+        else if (this.idMatchRe.test(selector)) {
             result = target.getId() === selector.substring(1);
-        } else if (alias) {
+        }
+        else if (alias) {
             result = Ext.Array.indexOf(alias, this.prefix + selector) > -1;
         }
+
         return result;
     }
 });

@@ -2,32 +2,37 @@ Ext.define('KitchenSink.view.charts.column3d.BasicController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.column-basic-3d',
 
-    onDownload: function () {
+    onDownload: function() {
+        var chart;
+
         if (Ext.isIE8) {
             Ext.Msg.alert('Unsupported Operation', 'This operation requires a newer version of Internet Explorer.');
+
             return;
         }
-        var chart = this.lookupReference('chart');
+
+        chart = this.lookup('chart');
 
         if (Ext.os.is.Desktop) {
             chart.download({
                 filename: 'Industry size in major economies for 2011'
             });
-        } else {
+        }
+        else {
             chart.preview();
         }
     },
 
-    onSeriesLabelRender: function (v) {
+    onSeriesLabelRender: function(v) {
         return Ext.util.Format.number(v / 1000, '0,000');
     },
 
-    onTooltipRender: function (tooltip, record, item) {
+    onTooltipRender: function(tooltip, record, item) {
         tooltip.setHtml(record.get('country') + ': ' +
             Ext.util.Format.number(record.get('ind'), '0,000 (millions of USD)'));
     },
 
-    onAxisLabelRender: function (axis, label, layoutContext) {
+    onAxisLabelRender: function(axis, label, layoutContext) {
         // Custom renderer overrides the native axis label renderer.
         // Since we don't want to do anything fancy with the value
         // ourselves except adding a thousands separator, but at the same time

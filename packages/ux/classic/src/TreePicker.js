@@ -4,7 +4,7 @@
 Ext.define('Ext.ux.TreePicker', {
     extend: 'Ext.form.field.Picker',
     xtype: 'treepicker',
-    
+
     uses: [
         'Ext.tree.Panel'
     ],
@@ -49,7 +49,7 @@ Ext.define('Ext.ux.TreePicker', {
          */
         minPickerHeight: 100
     },
-   
+
     editable: false,
 
     /**
@@ -96,8 +96,10 @@ Ext.define('Ext.ux.TreePicker', {
             view = picker.getView();
 
         if (Ext.isIE9 && Ext.isStrict) {
-            // In IE9 strict mode, the tree view grows by the height of the horizontal scroll bar when the items are highlighted or unhighlighted.
-            // Also when items are collapsed or expanded the height of the view is off. Forcing a repaint fixes the problem.
+            // In IE9 strict mode, the tree view grows by the height of the horizontal scroll bar
+            // when the items are highlighted or unhighlighted.
+            // Also when items are collapsed or expanded the height of the view is off.
+            // Forcing a repaint fixes the problem.
             view.on({
                 scope: me,
                 highlightitem: me.repaintPickerView,
@@ -106,6 +108,7 @@ Ext.define('Ext.ux.TreePicker', {
                 afteritemcollapse: me.repaintPickerView
             });
         }
+
         return picker;
     },
 
@@ -115,8 +118,9 @@ Ext.define('Ext.ux.TreePicker', {
     repaintPickerView: function() {
         var style = this.picker.getView().getEl().dom.style;
 
-        // can't use Element.repaint because it contains a setTimeout, which results in a flicker effect
-        style.display = style.display;
+        // can't use Element.repaint because it contains a setTimeout, which results
+        // in a flicker effect
+        style.display = style.display; // eslint-disable-line no-self-assign
     },
 
     /**
@@ -135,8 +139,11 @@ Ext.define('Ext.ux.TreePicker', {
     /**
      * Handles a keypress event on the picker element
      * @private
+     * @param {Ext.tree.View} treeView
+     * @param {Ext.data.Model} record
+     * @param {HTMLElement} item
+     * @param {Number} index
      * @param {Ext.event.Event} e
-     * @param {HTMLElement} el
      */
     onPickerKeyDown: function(treeView, record, item, index, e) {
         var key = e.getKey();
@@ -153,14 +160,15 @@ Ext.define('Ext.ux.TreePicker', {
      */
     selectItem: function(record) {
         var me = this;
+
         me.setValue(record.getId());
         me.fireEvent('select', me, record);
         me.collapse();
     },
 
     /**
-     * Runs when the picker is expanded.  Selects the appropriate tree node based on the value of the input element,
-     * and focuses the picker so that keyboard navigation will work.
+     * Runs when the picker is expanded.  Selects the appropriate tree node based on the value
+     * of the input element, and focuses the picker so that keyboard navigation will work.
      * @private
      */
     onExpand: function() {
@@ -169,15 +177,14 @@ Ext.define('Ext.ux.TreePicker', {
             value = this.value,
             node;
 
-        
         if (value) {
             node = store.getNodeById(value);
         }
-        
+
         if (!node) {
             node = store.getRoot();
         }
-        
+
         picker.ensureVisible(node, {
             select: true,
             focus: true
@@ -199,13 +206,15 @@ Ext.define('Ext.ux.TreePicker', {
             // Called while the Store is loading. Ensure it is processed by the onLoad method.
             return me;
         }
-            
+
         // try to find a record in the store that matches the value
         record = value ? me.store.getNodeById(value) : me.store.getRoot();
+
         if (value === undefined) {
             record = me.store.getRoot();
             me.value = record.getId();
-        } else {
+        }
+        else {
             record = me.store.getNodeById(value);
         }
 
@@ -214,9 +223,9 @@ Ext.define('Ext.ux.TreePicker', {
 
         return me;
     },
-    
-    getSubmitValue: function(){
-        return this.value;    
+
+    getSubmitValue: function() {
+        return this.value;
     },
 
     /**
@@ -238,14 +247,13 @@ Ext.define('Ext.ux.TreePicker', {
             this.setValue(value);
         }
     },
-    
-    onUpdate: function(store, rec, type, modifiedFieldNames){
+
+    onUpdate: function(store, rec, type, modifiedFieldNames) {
         var display = this.displayField;
-        
-        if (type === 'edit' && modifiedFieldNames && Ext.Array.contains(modifiedFieldNames, display) && this.value === rec.getId()) {
+
+        if (type === 'edit' && modifiedFieldNames &&
+            Ext.Array.contains(modifiedFieldNames, display) && this.value === rec.getId()) {
             this.setRawValue(rec.get(display));
         }
     }
-
 });
-

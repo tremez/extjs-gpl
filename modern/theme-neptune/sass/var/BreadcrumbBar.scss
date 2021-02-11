@@ -1,0 +1,253 @@
+/**
+ * @var {number}
+ * BreadcrumbBar button margin
+ */
+$breadcrumbbar-button-margin: dynamic(0);
+
+/**
+ * @var {string}
+ * BreadcrumbBar leaf icon
+ */
+$breadcrumbbar-leaf-icon: dynamic($fa-var-file);
+
+/**
+ * @var {string}
+ * BreadcrumbBar folder icon
+ */
+$breadcrumbbar-folder-icon: dynamic($fa-var-folder-o);
+
+/**
+ * @var {string}
+ * BreadcrumbBar open folder icon
+ */
+$breadcrumbbar-folder-open-icon: dynamic($fa-var-folder-open-o);
+
+/**
+ * @var {string}
+ * BreadcrumbBar item padding
+ */
+$breadcrumbbar-folder-icon-width: dynamic(18px);
+
+/**
+ * @var {string}
+ * BreadcrumbBar folder icon big size
+ */
+$breadcrumbbar-folder-icon-big: dynamic(16px);
+
+/**
+ * @var {color}
+ * BreadcrumbBar background-color
+ */
+$breadcrumbbar-background-color: dynamic($background-color);
+
+/**
+ * @var {number/list}
+ * BreadcrumbBar border-width
+ */
+$breadcrumbbar-border-width: dynamic(0);
+
+/**
+ * @var {string/list}
+ * BreadcrumbBar border-style
+ */
+$breadcrumbbar-border-style: dynamic(solid);
+
+/**
+ * @var {color/list}
+ * BreadcrumbBar border-color
+ */
+$breadcrumbbar-border-color: dynamic($neutral-medium-dark-color);
+
+/**
+ * @var {list}
+ * BreadcrumbBar box-shadow
+ */
+$breadcrumbbar-box-shadow: dynamic(null);
+
+/**
+ * @var {number/list}
+ * BreadcrumbBar padding
+ */
+$breadcrumbbar-padding: dynamic(6px 8px);
+
+/**
+ * @var {number}
+ * BreadcrumbBar min-height
+ */
+$breadcrumbbar-min-height: dynamic(36px);
+
+/**
+ * @var {string}
+ * BreadcrumbBar arrow-icon
+ */
+$breadcrumbbar-arrow-icon: dynamic($fa-var-angle-right);
+
+/**
+ * @var {string}
+ * BreadcrumbBar pressed-arrow-icon
+ */
+$breadcrumbbar-arrow-pressed-icon: dynamic($fa-var-angle-down);
+
+/**
+ * @var {number}
+ * BreadcrumbBar arrow-icon-size
+ */
+$breadcrumbbar-arrow-icon-size: dynamic(22px);
+
+/**
+ * @var {string}
+ * BreadcrumbBar arrow-separator-color
+ */
+$breadcrumbbar-arrow-separator-color: dynamic(transparent);
+
+/**
+ * @var {string}
+ * BreadcrumbBar split button padding
+ */
+$breadcrumbbar-split-item-padding: dynamic(8px 5px);
+
+/**
+ * @var {string}
+ * BreadcrumbBar button padding
+ */
+$breadcrumbbar-button-item-padding: dynamic(8px 5px);
+
+/**
+ * @var {string}
+ * BreadcrumbBar split button arrow element left margin
+ */
+$breadcrumbbar-split-arrow-margin-left: dynamic(0);
+
+/**
+ * @var {string}
+ * BreadcrumbBar button arrow element left margin
+ */
+$breadcrumbbar-button-arrow-margin-left: dynamic(5px);
+
+/**
+ * Creates a visual theme for a breadcrumb.
+ *
+ * @param {String} [$xtype=panel] (protected) The {@link Ext.Class#xtype} to use
+ * in CSS selectors.  For use by UI mixins of derived classes.
+ *
+ * @param {number} $button-margin
+ * BreadcrumbBar button margin
+ *
+ * @param {String} $leaf-icon
+ * BreadcrumbBar leaf icon
+ *
+ * @param {string} $folder-icon
+ * BreadcrumbBar folder icon
+ */
+
+@mixin breadcrumbbar-ui(
+    $xtype: breadcrumbbar,
+    $button-margin: null,
+    $leaf-icon: null,
+    $folder-icon: null,
+    $background-color: null,
+    $border-color: null,
+    $border-width: null,
+    $border-style: null,
+    $box-shadow: null,
+    $padding: null,
+    $min-height: null
+) {
+    @if $enable-big {
+        .#{$prefix}big {
+            .#{$prefix}#{$xtype}-items {
+                &.#{$prefix}splitButton,
+                &.#{$prefix}button {
+                    .#{$prefix}icon-el:before {
+                        font-size: $breadcrumbbar-folder-icon-big;
+                    }
+                }
+            }
+        }
+    }
+
+    .#{$prefix}#{$xtype} {
+        .#{$prefix}#{$xtype}-body-el {
+            background-color: $background-color;
+            padding: $padding;
+            min-height: $min-height;
+            @include border($border-width, $border-style, $border-color);
+            @include box-shadow($box-shadow);
+        }
+
+        .#{$prefix}#{$xtype}-items {
+            margin: $breadcrumbbar-button-margin;
+
+            &.#{$prefix}splitButton,
+            &.#{$prefix}button {
+                .#{$prefix}icon-el {
+                    width: $breadcrumbbar-folder-icon-width;
+                }
+            }
+
+            &.#{$prefix}splitButton {
+                .#{$prefix}splitInner-el {
+                    padding: $breadcrumbbar-split-item-padding;
+                }
+
+                .#{$prefix}splitArrow-el {
+                    padding: $breadcrumbbar-split-item-padding;
+                    border-color: $breadcrumbbar-arrow-separator-color;
+                    margin-left: $breadcrumbbar-split-arrow-margin-left;
+                }
+            }
+
+            &.#{$prefix}button {
+                .#{$prefix}inner-el {
+                    padding: $breadcrumbbar-button-item-padding;
+
+                    .#{$prefix}arrow-el {
+                        margin-left: $breadcrumbbar-button-arrow-margin-left;
+                    }
+                }
+            }
+
+            &.#{$prefix}no-arrow {
+                .#{$prefix}splitArrow-el {
+                    display: none;
+                }
+            }
+
+            .#{$prefix}arrow-el {
+                &:before {
+                    content: $breadcrumbbar-arrow-icon;
+                    font-size: $breadcrumbbar-arrow-icon-size;
+                }
+            }
+
+            &.#{$prefix}pressed {
+                .#{$prefix}arrow-el {
+                    &:before {
+                        content: $breadcrumbbar-arrow-pressed-icon;
+                        font-size: $breadcrumbbar-arrow-icon-size;
+                    }
+                }
+            }
+         
+            &.#{$prefix}pressed {
+            .#{$prefix}#{$xtype}-icon-folder {
+                    @include icon(
+                        $icon: $breadcrumbbar-folder-open-icon
+                    );
+                } 
+            }
+        }
+
+        .#{$prefix}#{$xtype}-icon-leaf {
+            @include icon(
+                $icon: $breadcrumbbar-leaf-icon
+            );
+        }
+
+        .#{$prefix}#{$xtype}-icon-folder {
+            @include icon(
+                $icon: $breadcrumbbar-folder-icon
+            );
+        }
+    }
+}

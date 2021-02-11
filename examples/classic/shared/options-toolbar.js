@@ -1,199 +1,209 @@
 (function() {
-    function getQueryParam(name, queryString) {
-        var match = RegExp(name + '=([^&]*)').exec(queryString || location.search);
-        return match && decodeURIComponent(match[1]);
-    }
+var scriptTags, defaultTheme, defaultRtl, i, requires, comboWidth,
+    labelWidth, defaultQueryString, src, theme, rtl, toolbar;
 
-    function hasOption(opt) {
-        var s = window.location.search;
-        var re = new RegExp('(?:^|[&?])' + opt + '(?:[=]([^&]*))?(?:$|[&])', 'i');
-        var m = re.exec(s);
+function getQueryParam(name, queryString) {
+    var match = RegExp(name + '=([^&]*)').exec(queryString || location.search);
 
-        return m ? (m[1] === undefined ? true : m[1]) : false;
-    }
+    return match && decodeURIComponent(match[1]);
+}
 
-    var scriptTags = document.getElementsByTagName('script'),
-        defaultTheme = 'triton',
-        defaultRtl = false,
-        i = scriptTags.length,
-        requires = [
-            'Ext.window.MessageBox',
-            'Ext.toolbar.Toolbar',
-            'Ext.form.field.ComboBox',
-            'Ext.form.FieldContainer',
-            'Ext.form.field.Radio'
+function hasOption(opt) {
+    var s = window.location.search,
+        re = new RegExp('(?:^|[&?])' + opt + '(?:[=]([^&]*))?(?:$|[&])', 'i'),
+        m = re.exec(s);
 
-        ],
-        comboWidth = {
-            classic: 160,
-            gray: 160,
-            neptune: 180,
-            triton: 180,
-            crisp: 180,
-            'neptune-touch': 220,
-            'crisp-touch': 220
-        },
-        labelWidth = {
-            classic: 40,
-            gray: 40,
-            neptune: 45,
-            triton: 45,
-            crisp: 45,
-            'neptune-touch': 55,
-            'crisp-touch': 55
-        },
-        defaultQueryString, src, theme, rtl, toolbar;
+    return m ? (m[1] === undefined ? true : m[1]) : false;
+}
 
-    while (i--) {
-        src = scriptTags[i].src;
-        if (src.indexOf('include-ext.js') !== -1) {
-            defaultQueryString = src.split('?')[1];
-            if (defaultQueryString) {
-                defaultTheme = getQueryParam('theme', defaultQueryString) || defaultTheme;
-                defaultRtl = getQueryParam('rtl', defaultQueryString) || defaultRtl;
-            }
-            break;
+scriptTags = document.getElementsByTagName('script');
+defaultTheme = 'triton';
+defaultRtl = false;
+i = scriptTags.length;
+requires = [
+    'Ext.window.MessageBox',
+    'Ext.toolbar.Toolbar',
+    'Ext.form.field.ComboBox',
+    'Ext.form.FieldContainer',
+    'Ext.form.field.Radio'
+
+];
+comboWidth = {
+    classic: 160,
+    gray: 160,
+    neptune: 180,
+    triton: 180,
+    crisp: 180,
+    'neptune-touch': 220,
+    'crisp-touch': 220
+};
+labelWidth = {
+    classic: 40,
+    gray: 40,
+    neptune: 45,
+    triton: 45,
+    crisp: 45,
+    'neptune-touch': 55,
+    'crisp-touch': 55
+};
+
+while (i--) {
+    src = scriptTags[i].src;
+
+    if (src.indexOf('include-ext.js') !== -1) {
+        defaultQueryString = src.split('?')[1];
+
+        if (defaultQueryString) {
+            defaultTheme = getQueryParam('theme', defaultQueryString) || defaultTheme;
+            defaultRtl = getQueryParam('rtl', defaultQueryString) || defaultRtl;
         }
+
+        break;
     }
+}
 
-    Ext.themeName = theme = getQueryParam('theme') || defaultTheme;
-    
-    rtl = getQueryParam('rtl') || defaultRtl;
+Ext.themeName = theme = getQueryParam('theme') || defaultTheme;
 
-    if (rtl.toString() === 'true') {
-        requires.unshift('Ext.rtl.*');
-        Ext.define('Ext.examples.RtlComponent', {
-            override: 'Ext.Component',
-            rtl: true
+rtl = getQueryParam('rtl') || defaultRtl;
+
+if (rtl.toString() === 'true') {
+    requires.unshift('Ext.rtl.*');
+    Ext.define('Ext.examples.RtlComponent', {
+        override: 'Ext.Component',
+        rtl: true
+    });
+}
+
+Ext.require(requires);
+
+Ext.onReady(function() {
+    Ext.getBody().addCls(Ext.baseCSSPrefix + 'theme-' + Ext.themeName);
+
+    // prevent touchmove from panning the viewport in mobile safari
+    if (Ext.supports.TouchEvents) {
+        Ext.getDoc().on({
+            touchmove: function(e) {
+                // If within a scroller, don't let the document use it
+                if (Ext.scroll.Scroller.isTouching) {
+                    e.preventDefault();
+                }
+            },
+            translate: false,
+            delegated: false
         });
     }
 
-    Ext.require(requires);
+    if (hasOption('nocss3')) {
+        Ext.supports.CSS3BorderRadius = false;
+        Ext.getBody().addCls('x-nbr x-nlg');
+    }
 
-    Ext.onReady(function() {
-        Ext.getBody().addCls(Ext.baseCSSPrefix + 'theme-' + Ext.themeName);
+    if (hasOption('nlg')) {
+        Ext.getBody().addCls('x-nlg');
+    }
 
-        // prevent touchmove from panning the viewport in mobile safari
-        if (Ext.supports.TouchEvents) {
-            Ext.getDoc().on({
-                touchmove: function(e) {
-                    // If within a scroller, don't let the document use it
-                    if (Ext.scroll.Scroller.isTouching) {
-                        e.preventDefault();
-                    }
-                },
-                translate: false,
-                delegated: false
-            });
-        }
+    function setParam(param) {
+        var queryString = Ext.Object.toQueryString(
+            Ext.apply(Ext.Object.fromQueryString(location.search), param)
+        );
 
-        if (hasOption('nocss3')) {
-            Ext.supports.CSS3BorderRadius = false;
-            Ext.getBody().addCls('x-nbr x-nlg');
-        }
+        location.search = queryString;
+    }
 
-        if (hasOption('nlg')) {
-            Ext.getBody().addCls('x-nlg');
-        }
+    function removeParam(paramName) {
+        var params = Ext.Object.fromQueryString(location.search);
 
-        function setParam(param) {
-            var queryString = Ext.Object.toQueryString(
-                Ext.apply(Ext.Object.fromQueryString(location.search), param)
-            );
-            location.search = queryString;
-        }
+        delete params[paramName];
 
-        function removeParam(paramName) {
-            var params = Ext.Object.fromQueryString(location.search);
+        location.search = Ext.Object.toQueryString(params);
+    }
 
-            delete params[paramName];
+    if (hasOption('no-toolbar') || /no-toolbar/.test(document.cookie)) {
+        return;
+    }
 
-            location.search = Ext.Object.toQueryString(params);
-        }
-        
-        if (hasOption('no-toolbar') || /no-toolbar/.test(document.cookie)) {
-            return;
-        }
+    setTimeout(function() {
+        toolbar = Ext.widget({
+            xtype: 'toolbar',
+            border: true,
+            rtl: false,
+            id: 'options-toolbar',
+            floating: true,
+            fixed: true,
+            defaultAlign: Ext.optionsToolbarAlign || 'tr-tr',
+            alignOffset: [-(Ext.getScrollbarSize().width + 5), 0],
+            preventFocusOnActivate: true,
+            draggable: {
+                constrain: true
+            },
+            defaults: { rtl: false },
+            items: [{
+                xtype: 'combo',
+                width: comboWidth[Ext.themeName],
+                labelWidth: labelWidth[Ext.themeName],
+                fieldLabel: 'Theme',
+                displayField: 'name',
+                valueField: 'value',
+                labelStyle: 'cursor:move;',
+                margin: '0 5 0 0',
+                queryMode: 'local',
+                store: Ext.create('Ext.data.Store', {
+                    fields: ['value', 'name'],
+                    data: [
+                        { value: 'triton', name: 'Triton' },
+                        { value: 'neptune', name: 'Neptune' },
+                        { value: 'neptune-touch', name: 'Neptune Touch' },
+                        { value: 'crisp', name: 'Crisp' },
+                        { value: 'crisp-touch', name: 'Crisp Touch' },
+                        { value: 'classic', name: 'Classic' },
+                        { value: 'graphite', name: 'Graphite' },
+                        { value: 'gray', name: 'Gray' }
+                    ]
+                }),
+                value: theme,
+                listeners: {
+                    select: function(combo) {
+                        var theme = combo.getValue();
 
-        setTimeout(function() {
-            toolbar = Ext.widget({
-                xtype: 'toolbar',
-                border: true,
-                rtl: false,
-                id: 'options-toolbar',
-                floating: true,
-                fixed: true,
-                defaultAlign: Ext.optionsToolbarAlign || 'tr-tr',
-                alignOffset: [-(Ext.getScrollbarSize().width + 5), 0],
-                preventFocusOnActivate: true,
-                draggable: {
-                    constrain: true
-                },
-                defaults : { rtl : false },
-                items: [{
-                    xtype: 'combo',
-                    width: comboWidth[Ext.themeName],
-                    labelWidth: labelWidth[Ext.themeName],
-                    fieldLabel: 'Theme',
-                    displayField: 'name',
-                    valueField: 'value',
-                    labelStyle: 'cursor:move;',
-                    margin: '0 5 0 0',
-                    queryMode: 'local',
-                    store: Ext.create('Ext.data.Store', {
-                        fields: ['value', 'name'],
-                        data : [
-                            { value: 'triton', name: 'Triton' },
-                            { value: 'neptune', name: 'Neptune' },
-                            { value: 'neptune-touch', name: 'Neptune Touch' },
-                            { value: 'crisp', name: 'Crisp' },
-                            { value: 'crisp-touch', name: 'Crisp Touch' },
-                            { value: 'classic', name: 'Classic' },
-                            { value: 'gray', name: 'Gray' },
-                            { value: 'aria', name: 'ARIA' }
-                        ]
-                    }),
-                    value: theme,
-                    listeners: {
-                        select: function(combo) {
-                            var theme = combo.getValue();
-                            if (theme !== defaultTheme) {
-                                setParam({ theme: theme });
-                            } else {
-                                removeParam('theme');
-                            }
+                        if (theme !== defaultTheme) {
+                            setParam({ theme: theme });
+                        }
+                        else {
+                            removeParam('theme');
                         }
                     }
-                }, {
+                }
+            }, {
 
-                    /**
+                /**
                      * Only visible in repoDevMode and on QA sites
                      */
-                    xtype: 'button',
-                    hidden: !(Ext.devMode === 2 || location.href.indexOf('qa.sencha.com') !== -1),
-                    enableToggle: true,
-                    pressed: rtl,
-                    text: 'RTL',
-                    margin: '0 5 0 0',
-                    listeners: {
-                        toggle: function(btn, pressed) {
-                            if (pressed) {
-                                setParam({ rtl: true });
-                            } else {
-                                removeParam('rtl');
-                            }
+                xtype: 'button',
+                hidden: !(Ext.devMode === 2 || location.href.indexOf('qa.sencha.com') !== -1),
+                enableToggle: true,
+                pressed: rtl,
+                text: 'RTL',
+                margin: '0 5 0 0',
+                listeners: {
+                    toggle: function(btn, pressed) {
+                        if (pressed) {
+                            setParam({ rtl: true });
+                        }
+                        else {
+                            removeParam('rtl');
                         }
                     }
-                }, {
-                    xtype: 'tool',
-                    type: 'close',
-                    handler: function() {
-                        toolbar.destroy();
-                    }
-                }]
-            });
-            toolbar.show();
-        }, 100);
+                }
+            }, {
+                xtype: 'tool',
+                type: 'close',
+                handler: function() {
+                    toolbar.destroy();
+                }
+            }]
+        });
+        toolbar.show();
+    }, 100);
 
-    });
+});
 })();

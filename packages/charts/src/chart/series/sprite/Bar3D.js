@@ -33,7 +33,7 @@ Ext.define('Ext.chart.series.sprite.Bar3D', {
             },
 
             defaults: {
-                depthWidthRatio: 1/3,
+                depthWidthRatio: 1 / 3,
                 saturationFactor: 1,
                 brightnessFactor: 1,
                 colorSpread: 1,
@@ -45,7 +45,7 @@ Ext.define('Ext.chart.series.sprite.Bar3D', {
             },
 
             updaters: {
-                panzoom: function (attr) {
+                panzoom: function(attr) {
                     var me = this,
                         dx = attr.visibleMaxX - attr.visibleMinX,
                         dy = attr.visibleMaxY - attr.visibleMinY,
@@ -56,9 +56,11 @@ Ext.define('Ext.chart.series.sprite.Bar3D', {
 
                     if (isRtl && !attr.flipXY) {
                         attr.translationX = innerWidth + attr.visibleMinX * innerWidth / dx;
-                    } else {
+                    }
+                    else {
                         attr.translationX = -attr.visibleMinX * innerWidth / dx;
                     }
+
                     attr.translationY = -attr.visibleMinY * (innerHeight - me.depth) / dy;
                     attr.scalingX = (isRtl && !attr.flipXY ? -1 : 1) * innerWidth / dx;
                     attr.scalingY = (innerHeight - me.depth) / dy;
@@ -76,7 +78,7 @@ Ext.define('Ext.chart.series.sprite.Bar3D', {
 
     depth: 0,
 
-    drawBar: function (ctx, surface, clip, left, top, right, bottom, index) {
+    drawBar: function(ctx, surface, clip, left, top, right, bottom, index) {
         var me = this,
             attr = me.attr,
             itemCfg = {},
@@ -100,10 +102,11 @@ Ext.define('Ext.chart.series.sprite.Bar3D', {
         }
 
         if (renderer) {
-            params = [me, itemCfg, {store: me.getStore()}, index];
+            params = [me, itemCfg, { store: me.getStore() }, index];
             changes = Ext.callback(renderer, null, params, 0, me.getSeries());
             Ext.apply(itemCfg, changes);
         }
+
         me.putMarker('items', itemCfg, index, !renderer);
     }
 

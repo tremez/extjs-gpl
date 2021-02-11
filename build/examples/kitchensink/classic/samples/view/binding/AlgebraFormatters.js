@@ -12,9 +12,28 @@ Ext.define('KitchenSink.view.binding.AlgebraFormatters', {
     extend: 'Ext.panel.Panel',
     xtype: 'binding-algebra-formatters',
 
+    profiles: {
+        classic: {
+            width: 370,
+            footerWidth: 120
+        },
+        neptune: {
+            width: 370,
+            footerWidth: 120
+        },
+        graphite: {
+            width: 470,
+            footerWidth: 150
+        },
+        'classic-material': {
+            width: 350,
+            footerWidth: 150
+        }
+    },
+
     title: 'Formatters',
 
-    width: 370,
+    width: '${width}',
     bodyPadding: '10 20',
     frame: true,
 
@@ -44,7 +63,7 @@ Ext.define('KitchenSink.view.binding.AlgebraFormatters', {
         defaults: {
             labelWidth: 20,
             margin: '0 0 0 10',
-            width: 120
+            width: '${footerWidth}'
         },
 
         items: [{

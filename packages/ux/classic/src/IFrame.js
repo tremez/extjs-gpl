@@ -11,18 +11,21 @@ Ext.define('Ext.ux.IFrame', {
     src: 'about:blank',
 
     renderTpl: [
+        // eslint-disable-next-line max-len
         '<iframe src="{src}" id="{id}-iframeEl" data-ref="iframeEl" name="{frameName}" width="100%" height="100%" frameborder="0"></iframe>'
     ],
+
     childEls: ['iframeEl'],
 
-    initComponent: function () {
+    initComponent: function() {
         this.callParent();
 
         this.frameName = this.frameName || this.id + '-frame';
     },
 
-    initEvents : function() {
+    initEvents: function() {
         var me = this;
+
         me.callParent();
         me.iframeEl.on('load', me.onLoad, me);
     },
@@ -36,13 +39,15 @@ Ext.define('Ext.ux.IFrame', {
 
     getBody: function() {
         var doc = this.getDoc();
+
         return doc.body || doc.documentElement;
     },
 
     getDoc: function() {
         try {
             return this.getWin().document;
-        } catch (ex) {
+        }
+        catch (ex) {
             return null;
         }
     },
@@ -51,11 +56,13 @@ Ext.define('Ext.ux.IFrame', {
         var me = this,
             name = me.frameName,
             win = Ext.isIE ? me.iframeEl.dom.contentWindow : window.frames[name];
+
         return win;
     },
 
     getFrame: function() {
         var me = this;
+
         return me.iframeEl.dom;
     },
 
@@ -67,16 +74,16 @@ Ext.define('Ext.ux.IFrame', {
             this.el.unmask();
             this.fireEvent('load', this);
 
-        } else if (me.src) {
+        }
+        else if (me.src) {
 
             this.el.unmask();
             this.fireEvent('error', this);
         }
 
-
     },
 
-    load: function (src) {
+    load: function(src) {
         var me = this,
             text = me.loadMask,
             frame = me.getFrame();
@@ -115,5 +122,4 @@ Ext.define('Ext.ux.IFrame', {
  *     elements are orphaned.  Accessing the html and body elements or any of their properties
  *     results in a "Permission Denied" error.
  */
-
 

@@ -1,7 +1,7 @@
 Ext.define('Aria.view.Form', {
     extend: 'Ext.form.Panel',
     alias: 'widget.mysimpleform',
-    
+
     requires: [
         'Ext.form.field.Display',
         'Ext.form.field.ComboBox',
@@ -15,17 +15,17 @@ Ext.define('Aria.view.Form', {
         'Ext.data.ArrayStore',
         'Ext.button.Button'
     ],
-    
+
     fieldDefaults: {
         labelAlign: 'left',
         labelWidth: 80,
         margin: '0 0 6 0'
     },
-    
+
     width: 320,
     bodyPadding: 12,
     scrollable: true,
-    
+
     dockedItems: [{
         xtype: 'toolbar',
         dock: 'bottom',
@@ -39,10 +39,10 @@ Ext.define('Aria.view.Form', {
             text: 'Submit',
             handler: function(btn) {
                 var form, data;
-                
+
                 form = btn.up('form');
                 data = form.getForm().getValues();
-                
+
                 Ext.Msg.alert(
                     'Form submit',
                     'Form data:<br><br>' + Ext.JSON.encode(data).replace(/(["\]])\,/g, '$1,<br>')
@@ -56,7 +56,7 @@ Ext.define('Aria.view.Form', {
             }
         }]
     }],
-    
+
     items: [{
         xtype: 'displayfield',
         fieldLabel: 'Foo',

@@ -1,11 +1,12 @@
-/* global expect, Ext, MockAjaxManager, jasmine, spyOn */
-
-describe("Ext.data.ChainedStore", function() {
+topSuite("Ext.data.ChainedStore", [
+    'Ext.data.Session',
+    'Ext.data.summary.*'
+], function() {
     var fakeScope = {},
-        abeRec, aaronRec, edRec, tommyRec, 
+        abeRec, aaronRec, edRec, tommyRec,
         abeRaw, aaronRaw, edRaw, tommyRaw,
         source, store, User;
-        
+
     function addSourceData() {
         source.add(edRaw, abeRaw, aaronRaw, tommyRaw);
         edRec    = source.getAt(0);
@@ -13,19 +14,22 @@ describe("Ext.data.ChainedStore", function() {
         aaronRec = source.getAt(2);
         tommyRec = source.getAt(3);
     }
-    
+
     function makeUser(email, data) {
         if (Ext.isObject(email)) {
             data = email;
-        } else {
+        }
+        else {
             data = data || {};
+
             if (!data.email) {
                 data.email = email;
             }
         }
+
         return new User(data);
     }
-    
+
     function createSource(cfg) {
         cfg = cfg || {};
         source = new Ext.data.Store(Ext.applyIf(cfg, {
@@ -33,20 +37,17 @@ describe("Ext.data.ChainedStore", function() {
             model: 'spec.User'
         }));
     }
-    
+
     function createStore(cfg) {
         store = new Ext.data.ChainedStore(Ext.apply({
             source: source
         }, cfg));
     }
-    
+
     function completeWithData(data) {
-        Ext.Ajax.mockComplete({
-            status: 200,
-            responseText: Ext.JSON.encode(data)
-        });
+        Ext.Ajax.mockCompleteWithData(data);
     }
-    
+
     function expectOrder(recs, s) {
         var len = recs.length,
             i;
@@ -55,43 +56,54 @@ describe("Ext.data.ChainedStore", function() {
             expect(s.getAt(i)).toBe(recs[i]);
         }
     }
-    
+
+    function getRecValues(store, fieldName) {
+        var ret = [];
+
+        store.each(function(r) {
+            ret.push(r.data[fieldName]);
+        });
+
+        return ret;
+    }
+
     function spyOnEvent(object, eventName, fn) {
-        var obj = {
-            fn: fn || Ext.emptyFn
-        },
-        spy = spyOn(obj, "fn");
+        var obj = { fn: fn || Ext.emptyFn };
+
+        var spy = spyOn(obj, "fn");
+
         object.addListener(eventName, obj.fn);
+
         return spy;
     }
 
     beforeEach(function() {
         Ext.data.Model.schema.setNamespace('spec');
         MockAjaxManager.addMethods();
-        edRaw = {name: 'Ed Spencer',   email: 'ed@sencha.com',    evilness: 100, group: 'code',  old: false, age: 25, valid: 'yes'};
-        abeRaw = {name: 'Abe Elias',    email: 'abe@sencha.com',   evilness: 70,  group: 'admin', old: false, age: 20, valid: 'yes'};
-        aaronRaw = {name: 'Aaron Conran', email: 'aaron@sencha.com', evilness: 5,   group: 'admin', old: true, age: 26, valid: 'yes'};
-        tommyRaw = {name: 'Tommy Maintz', email: 'tommy@sencha.com', evilness: -15, group: 'code',  old: true, age: 70, valid: 'yes'};
-            
+        edRaw = { name: 'Ed Spencer',   email: 'ed@sencha.com',    evilness: 100, group: 'code',  old: false, age: 25, valid: 'yes' };
+        abeRaw = { name: 'Abe Elias',    email: 'abe@sencha.com',   evilness: 70,  group: 'admin', old: false, age: 20, valid: 'yes' };
+        aaronRaw = { name: 'Aaron Conran', email: 'aaron@sencha.com', evilness: 5,   group: 'admin', old: true, age: 26, valid: 'yes' };
+        tommyRaw = { name: 'Tommy Maintz', email: 'tommy@sencha.com', evilness: -15, group: 'code',  old: true, age: 70, valid: 'yes' };
+
         User = Ext.define('spec.User', {
             extend: 'Ext.data.Model',
             idProperty: 'email',
 
             fields: [
-                {name: 'name',      type: 'string'},
-                {name: 'email',     type: 'string'},
-                {name: 'evilness',  type: 'int'},
-                {name: 'group',     type: 'string'},
-                {name: 'old',       type: 'boolean'},
-                {name: 'valid',     type: 'string'},
-                {name: 'age',       type: 'int'}
+                { name: 'name',      type: 'string' },
+                { name: 'email',     type: 'string' },
+                { name: 'evilness',  type: 'int' },
+                { name: 'group',     type: 'string' },
+                { name: 'old',       type: 'boolean' },
+                { name: 'valid',     type: 'string' },
+                { name: 'age',       type: 'int' }
             ]
         });
-        
+
         createSource();
         addSourceData();
     });
-    
+
     afterEach(function() {
         MockAjaxManager.removeMethods();
         Ext.data.Model.schema.clear();
@@ -99,7 +111,7 @@ describe("Ext.data.ChainedStore", function() {
         User = source = store = Ext.destroy(source, store);
         Ext.data.Model.schema.clear(true);
     });
-    
+
     describe("constructing", function() {
         it("should inherit the model from the backing store", function() {
             createStore();
@@ -108,27 +120,34 @@ describe("Ext.data.ChainedStore", function() {
 
         it("should have the data from the backing store", function() {
             createStore();
-            
+
             var sourceData = source.getRange(),
                 storeData = store.getRange(),
                 len = sourceData.length,
                 i;
 
             expect(storeData.length).toBe(sourceData.length);
+
             for (i = 0; i < len; ++i) {
                 expect(storeData[i]).toBe(sourceData[i]);
             }
         });
 
         it("should not fire a refresh or datachanged event", function() {
-            var spy = jasmine.createSpy();
+            var called = 0;
+
             createStore({
                 listeners: {
-                    refresh: spy,
-                    datachanged: spy
+                    refresh: function() {
+                        called += 1;
+                    },
+                    datachanged: function() {
+                        called += 2;
+                    }
                 }
             });
-            expect(spy).not.toHaveBeenCalled();
+
+            expect(called).toBe(0);
         });
 
         it("should accept an id of a store as the source", function() {
@@ -136,6 +155,7 @@ describe("Ext.data.ChainedStore", function() {
                 model: 'spec.User',
                 storeId: 'sourceId'
             });
+
             source = 'sourceId';
             createStore();
             source = null;
@@ -148,6 +168,7 @@ describe("Ext.data.ChainedStore", function() {
             var child = new Ext.data.ChainedStore({
                 source: store
             });
+
             expect(child.getCount()).toBe(4);
             expect(child.getModel()).toBe(User);
             child.destroy();
@@ -157,6 +178,7 @@ describe("Ext.data.ChainedStore", function() {
     it("should not join the records to the store", function() {
         createStore();
         var joined = edRec.joined;
+
         expect(joined.length).toBe(1);
         expect(joined[0]).toBe(source);
     });
@@ -270,7 +292,7 @@ describe("Ext.data.ChainedStore", function() {
             createStore();
             addSourceData();
         });
-        
+
         describe("first", function() {
             it("should return the first record", function() {
                 expect(store.first()).toBe(edRec);
@@ -280,7 +302,7 @@ describe("Ext.data.ChainedStore", function() {
                 store.remove([edRec, abeRec, tommyRec]);
                 expect(store.first()).toBe(aaronRec);
             });
-            
+
             it("should return null with an empty store", function() {
                 store.removeAll();
                 expect(store.first()).toBeNull();
@@ -294,7 +316,7 @@ describe("Ext.data.ChainedStore", function() {
                 expect(store.first()).toBe(abeRec);
             });
         });
-        
+
         describe("last", function() {
             it("should return the last record", function() {
                 expect(store.last()).toBe(tommyRec);
@@ -304,7 +326,7 @@ describe("Ext.data.ChainedStore", function() {
                 store.remove([edRec, abeRec, tommyRec]);
                 expect(store.last()).toBe(aaronRec);
             });
-            
+
             it("should return null with an empty store", function() {
                 store.removeAll();
                 expect(store.last()).toBeNull();
@@ -318,56 +340,56 @@ describe("Ext.data.ChainedStore", function() {
                 expect(store.last()).toBe(aaronRec);
             });
         });
-        
+
         describe("getAt", function() {
             it("should return the record at the specified index", function() {
                 expect(store.getAt(1)).toBe(abeRec);
             });
-            
+
             it("should return null when the index is outside the store bounds", function() {
                 expect(store.getAt(100)).toBe(null);
             });
-            
+
             it("should return null when the store is empty", function() {
                 store.removeAll();
                 expect(store.getAt(0)).toBe(null);
             });
         });
-        
+
         describe("getById", function() {
             it("should return the record with the matching id", function() {
                 expect(store.getById('tommy@sencha.com')).toBe(tommyRec);
             });
-            
+
             it("should return null if a matching id is not found", function() {
                 expect(store.getById('foo@sencha.com')).toBe(null);
             });
-            
+
             it("should return null when the store is empty", function() {
                 store.removeAll();
                 expect(store.getById('ed@sencha.com')).toBe(null);
             });
-            
+
             it("should ignore filters", function() {
                 store.filter('email', 'ed@sencha.com');
                 expect(store.getById('aaron@sencha.com')).toBe(aaronRec);
             });
         });
-        
+
         describe("getByInternalId", function() {
             it("should return the record with the matching id", function() {
                 expect(store.getByInternalId(tommyRec.internalId)).toBe(tommyRec);
             });
-            
+
             it("should return null if a matching id is not found", function() {
                 expect(store.getByInternalId('foo@sencha.com')).toBe(null);
             });
-            
+
             it("should return null when the store is empty", function() {
                 store.removeAll();
                 expect(store.getByInternalId('ed@sencha.com')).toBe(null);
             });
-            
+
             it("should ignore filters", function() {
                 store.filter('email', 'ed@sencha.com');
                 expect(store.getByInternalId(aaronRec.internalId)).toBe(aaronRec);
@@ -384,20 +406,20 @@ describe("Ext.data.ChainedStore", function() {
                 expect(store.getByInternalId(aaronRec.internalId)).toBe(aaronRec);
             });
         });
-        
+
         describe("getRange", function() {
             it("should default to the full store range", function() {
                 expect(store.getRange()).toEqual([edRec, abeRec, aaronRec, tommyRec]);
             });
-            
+
             it("should return from the start index", function() {
                 expect(store.getRange(2)).toEqual([aaronRec, tommyRec]);
             });
-            
+
             it("should use the end index, and include it", function() {
                 expect(store.getRange(0, 2)).toEqual([edRec, abeRec, aaronRec]);
             });
-            
+
             it("should ignore an end index greater than the store range", function() {
                 expect(store.getRange(1, 100)).toEqual([abeRec, aaronRec, tommyRec]);
             });
@@ -415,18 +437,18 @@ describe("Ext.data.ChainedStore", function() {
                 expect(coders.contains(aaronRec)).toBe(false);
                 expect(coders.contains(abeRec)).toBe(false);
             });
-            
+
             it("should return null if a matching id is not found", function() {
                 slackers = store.query('group', 'slackers');
                 expect(slackers.length).toBe(0);
             });
-            
+
             it("should return null when the store is empty", function() {
                 store.removeAll();
                 coders = store.query('group', 'code');
                 expect(coders.length).toBe(0);
             });
-            
+
             it("should ignore filters", function() {
                 store.filter('email', 'ed@sencha.com');
                 expect(store.getCount()).toBe(1);
@@ -437,7 +459,7 @@ describe("Ext.data.ChainedStore", function() {
                 expect(coders.contains(aaronRec)).toBe(false);
                 expect(coders.contains(abeRec)).toBe(false);
             });
-        });        
+        });
     });
 
     describe("sorting", function() {
@@ -505,12 +527,14 @@ describe("Ext.data.ChainedStore", function() {
                 expectOrder(source.getRange(), store);
             });
 
-            it("should have a record present in the store when added to the source but filtered out", function() {
+            it("should have record in store when added to source but filtered out", function() {
                 createStore();
                 source.filter('group', 'code');
+
                 var rec = makeUser('foo@sencha.com', {
                     group: 'admin'
                 });
+
                 source.add(rec);
                 source.getFilters().removeAll();
                 expect(store.indexOf(rec)).toBe(4);
@@ -529,10 +553,15 @@ describe("Ext.data.ChainedStore", function() {
                 });
 
                 it("should fire the refresh event on the store", function() {
-                    store.on('refresh', spy);
+                    var called = 0;
+
+                    store.on('refresh', function() {
+                        ++called;
+                    });
+
                     source.filter('group', 'code');
-                    expect(spy).toHaveBeenCalled();
-                    expect(spy.callCount).toBe(1);
+
+                    expect(called).toBe(1);
                 });
 
                 it("should fire the datachanged event on the store", function() {
@@ -622,25 +651,35 @@ describe("Ext.data.ChainedStore", function() {
 
             describe("events", function() {
                 it("should fire the refresh event", function() {
-                    var spy = jasmine.createSpy();
+                    var called = 0;
+
                     createStore();
-                    store.on('refresh', spy);
+
+                    store.on('refresh', function() {
+                        ++called;
+                    });
+
                     store.filter('group', 'code');
-                    expect(spy).toHaveBeenCalled();
-                    expect(spy.callCount).toBe(1);
+
+                    expect(called).toBe(1);
                 });
 
                 it("should fire the datachanged event", function() {
-                    var spy = jasmine.createSpy();
+                    var called = 0;
+
                     createStore();
-                    store.on('datachanged', spy);
+                    store.on('datachanged', function() {
+                        ++called;
+                    });
+
                     store.filter('group', 'code');
-                    expect(spy).toHaveBeenCalled();
-                    expect(spy.callCount).toBe(1);
+
+                    expect(called).toBe(1);
                 });
 
                 it("should fire the filterchange event", function() {
                     var spy = jasmine.createSpy();
+
                     createStore();
                     store.on('filterchange', spy);
                     store.filter('group', 'code');
@@ -663,7 +702,7 @@ describe("Ext.data.ChainedStore", function() {
                     store.on('update', function()  {
                         sourceFiredUpdate = true;
                     });
-                    chained.on('update', function(){
+                    chained.on('update', function() {
                         chainedFiredUpdate = true;
                     });
 
@@ -717,7 +756,7 @@ describe("Ext.data.ChainedStore", function() {
                     // The only record is filtered out
                     expect(store.getCount()).toBe(0);
                     expect(chained.getCount()).toBe(0);
-                    
+
                     // Source should have fired the update event
                     expect(sourceFiredUpdate).toBe(true);
 
@@ -750,12 +789,13 @@ describe("Ext.data.ChainedStore", function() {
                 expect(store.getCount()).toBe(1);
                 expect(store.getAt(0)).toBe(source.getAt(0));
             });
-            
+
             describe("events", function() {
                 it("should not fire the add, remove or clear events", function() {
                     source.removeAll();
                     createStore();
                     var spy = jasmine.createSpy();
+
                     store.on('add', spy);
                     store.on('remove', spy);
                     store.on('clear', spy);
@@ -766,9 +806,11 @@ describe("Ext.data.ChainedStore", function() {
 
                 it("should relay the beforeload event", function() {
                     var readSpy = spyOn(User.getProxy(), 'read').andCallThrough();
+
                     source.removeAll();
                     createStore();
                     var spy = jasmine.createSpy();
+
                     store.on('beforeload', spy);
                     source.load();
                     completeWithData([abeRaw, tommyRaw, edRaw, aaronRaw]);
@@ -779,9 +821,11 @@ describe("Ext.data.ChainedStore", function() {
 
                 it("should relay the load event", function() {
                     var readSpy = spyOn(User.getProxy(), 'read').andCallThrough();
+
                     source.removeAll();
                     createStore();
                     var spy = jasmine.createSpy();
+
                     store.on('load', spy);
                     source.load();
                     completeWithData([abeRaw, tommyRaw, edRaw, aaronRaw]);
@@ -791,22 +835,53 @@ describe("Ext.data.ChainedStore", function() {
                     expect(spy.mostRecentCall.args[2]).toBe(true);
                     expect(spy.mostRecentCall.args[3]).toBe(readSpy.mostRecentCall.args[0]);
                 });
-                    
+
                 it("should fire the refresh and datachanged event", function() {
                     createStore();
                     var dataChangedSpy = jasmine.createSpy(),
                         refreshSpy = jasmine.createSpy();
-                        
+
                     store.on('refresh', refreshSpy);
                     store.on('datachanged', dataChangedSpy);
-                    
+
                     source.load();
                     completeWithData([abeRaw, tommyRaw, edRaw, aaronRaw]);
                     expect(refreshSpy).toHaveBeenCalled();
                     expect(refreshSpy.mostRecentCall.args[0]).toBe(store);
-                    
+
                     expect(dataChangedSpy).toHaveBeenCalled();
                     expect(dataChangedSpy.mostRecentCall.args[0]).toBe(store);
+                });
+
+                it("should forward on beforeload/load events when the source is chained", function() {
+                    createStore();
+
+                    var readSpy = spyOn(User.getProxy(), 'read').andCallThrough();
+
+                    var beforeLoadSpy = jasmine.createSpy(),
+                        loadSpy = jasmine.createSpy(),
+                        child = new Ext.data.ChainedStore({
+                            source: store,
+                            listeners: {
+                                beforeload: beforeLoadSpy,
+                                load: loadSpy
+                            }
+                        });
+
+                    source.load();
+                    expect(beforeLoadSpy.callCount).toBe(1);
+                    expect(beforeLoadSpy.mostRecentCall.args[0]).toBe(child);
+                    expect(beforeLoadSpy.mostRecentCall.args[1]).toBe(readSpy.mostRecentCall.args[0]);
+
+                    completeWithData([abeRaw, tommyRaw, edRaw, aaronRaw]);
+                    expect(loadSpy.callCount).toBe(1);
+
+                    expect(loadSpy.mostRecentCall.args[0]).toBe(child);
+                    expect(loadSpy.mostRecentCall.args[1]).toEqual([source.getAt(0), source.getAt(1), source.getAt(2), source.getAt(3)]);
+                    expect(loadSpy.mostRecentCall.args[2]).toBe(true);
+                    expect(loadSpy.mostRecentCall.args[3]).toBe(readSpy.mostRecentCall.args[0]);
+
+                    child.destroy();
                 });
             });
         });
@@ -827,36 +902,38 @@ describe("Ext.data.ChainedStore", function() {
                 expect(store.getCount()).toBe(1);
                 expect(store.getAt(0)).toBe(source.getAt(0));
             });
-            
+
             it("should not fire the add event", function() {
                 source.removeAll();
                 createStore();
                 var spy = jasmine.createSpy();
+
                 store.on('add', spy);
                 source.loadData([edRaw, tommyRaw, aaronRaw, abeRaw]);
                 expect(spy).not.toHaveBeenCalled();
             });
-            
+
             it("should not fire the remove event", function() {
                 createStore();
                 var spy = jasmine.createSpy();
+
                 store.on('remove', spy);
                 source.loadData([edRaw, tommyRaw, aaronRaw, abeRaw]);
                 expect(spy).not.toHaveBeenCalled();
             });
-            
+
             it("should fire the refresh and datachanged event", function() {
                 createStore();
                 var dataChangedSpy = jasmine.createSpy(),
                     refreshSpy = jasmine.createSpy();
-                    
+
                 store.on('refresh', refreshSpy);
                 store.on('datachanged', dataChangedSpy);
-                
+
                 source.loadData([edRaw, tommyRaw, aaronRaw, abeRaw]);
                 expect(refreshSpy).toHaveBeenCalled();
                 expect(refreshSpy.mostRecentCall.args[0]).toBe(store);
-                
+
                 expect(dataChangedSpy).toHaveBeenCalled();
                 expect(dataChangedSpy.mostRecentCall.args[0]).toBe(store);
             });
@@ -878,36 +955,38 @@ describe("Ext.data.ChainedStore", function() {
                 expect(store.getCount()).toBe(1);
                 expect(store.getAt(0)).toBe(source.getAt(0));
             });
-            
+
             it("should not fire the add event", function() {
                 source.removeAll();
                 createStore();
                 var spy = jasmine.createSpy();
+
                 store.on('add', spy);
                 source.loadRawData([edRaw, tommyRaw, aaronRaw, abeRaw]);
                 expect(spy).not.toHaveBeenCalled();
             });
-            
+
             it("should not fire the remove event", function() {
                 createStore();
                 var spy = jasmine.createSpy();
+
                 store.on('remove', spy);
                 source.loadRawData([edRaw, tommyRaw, aaronRaw, abeRaw]);
                 expect(spy).not.toHaveBeenCalled();
             });
-            
+
             it("should fire the refresh and datachanged event", function() {
                 createStore();
                 var dataChangedSpy = jasmine.createSpy(),
                     refreshSpy = jasmine.createSpy();
-                    
+
                 store.on('refresh', refreshSpy);
                 store.on('datachanged', dataChangedSpy);
-                
+
                 source.loadRawData([edRaw, tommyRaw, aaronRaw, abeRaw]);
                 expect(refreshSpy).toHaveBeenCalled();
                 expect(refreshSpy.mostRecentCall.args[0]).toBe(store);
-                
+
                 expect(dataChangedSpy).toHaveBeenCalled();
                 expect(dataChangedSpy.mostRecentCall.args[0]).toBe(store);
             });
@@ -954,6 +1033,7 @@ describe("Ext.data.ChainedStore", function() {
                 var rec = source.add({
                     id: 'new@sencha.com'
                 })[0];
+
                 expect(store.getAt(4)).toBe(rec);
             });
 
@@ -981,6 +1061,7 @@ describe("Ext.data.ChainedStore", function() {
 
                 it("should fire add on the source, then the store", function() {
                     var order = [];
+
                     source.on('add', function() {
                         order.push('source');
                     });
@@ -998,20 +1079,32 @@ describe("Ext.data.ChainedStore", function() {
                 describe("with the source sorted", function() {
                     it("should use the position from the source", function() {
                         source.sort('email');
-                        var rec = source.add({
+
+                        source.add({
                             email: 'aaaa@sencha.com'
-                        })[0];
-                        expect(source.getAt(0)).toBe(rec);
-                        expect(store.getAt(0)).toBe(rec);
+                        });
+
+                        expect(getRecValues(source, 'email')).toEqual([
+                            'aaaa@sencha.com', 'aaron@sencha.com', 'abe@sencha.com',
+                            'ed@sencha.com', 'tommy@sencha.com'
+                        ]);
+
+                        expect(getRecValues(store, 'email')).toEqual([
+                            'ed@sencha.com', 'abe@sencha.com',
+                            'aaaa@sencha.com', // add before aaron
+                            'aaron@sencha.com', 'tommy@sencha.com'
+                        ]);
                     });
                 });
 
                 describe("with the store sorted", function() {
-                    it("should add to the end of the source and insert into the sorted position in the store", function() {
+                    it("should add to source and insert in sorted position in store", function() {
                         store.sort('email');
+
                         var rec = source.add({
                             email: 'bbb@sencha.com'
                         })[0];
+
                         expect(source.getAt(4)).toBe(rec);
                         expect(store.getAt(2)).toBe(rec);
                     });
@@ -1021,9 +1114,11 @@ describe("Ext.data.ChainedStore", function() {
                     it("should insert into the correct sorted position", function() {
                         store.sort('email');
                         source.sort('email', 'desc');
+
                         var rec = source.add({
                             email: 'aazzon@sencha.com'
                         })[0];
+
                         expect(source.getAt(3)).toBe(rec);
                         expect(store.getAt(1)).toBe(rec);
                     });
@@ -1037,6 +1132,7 @@ describe("Ext.data.ChainedStore", function() {
                         email: 'new@sencha.com',
                         group: 'code'
                     })[0];
+
                     expect(store.indexOf(rec)).toBe(-1);
                 });
 
@@ -1046,6 +1142,7 @@ describe("Ext.data.ChainedStore", function() {
                         email: 'new@sencha.com',
                         group: 'code'
                     })[0];
+
                     store.getFilters().removeAll();
                     expect(store.getAt(4)).toBe(rec);
                 });
@@ -1057,6 +1154,7 @@ describe("Ext.data.ChainedStore", function() {
                 var rec = store.add({
                     id: 'new@sencha.com'
                 })[0];
+
                 expect(source.getAt(4)).toBe(rec);
             });
 
@@ -1070,7 +1168,8 @@ describe("Ext.data.ChainedStore", function() {
 
                     var rec = store.add({
                         id: 'new@sencha.com'
-                    })[0], args;
+                    })[0],
+                    args;
 
                     expect(addSpy).toHaveBeenCalled();
                     args = addSpy.mostRecentCall.args;
@@ -1083,6 +1182,7 @@ describe("Ext.data.ChainedStore", function() {
 
                 it("should fire add on the source, then the store", function() {
                     var order = [];
+
                     source.on('add', function() {
                         order.push('source');
                     });
@@ -1103,6 +1203,7 @@ describe("Ext.data.ChainedStore", function() {
                         var rec = store.add({
                             email: 'aaaa@sencha.com'
                         })[0];
+
                         expect(source.getAt(0)).toBe(rec);
                         expect(store.getAt(4)).toBe(rec);
                     });
@@ -1114,6 +1215,7 @@ describe("Ext.data.ChainedStore", function() {
                         var rec = source.add({
                             email: 'aaaa@sencha.com'
                         })[0];
+
                         expect(store.getAt(0)).toBe(rec);
                     });
                 });
@@ -1125,6 +1227,7 @@ describe("Ext.data.ChainedStore", function() {
                         var rec = source.add({
                             email: 'aazzon@sencha.com'
                         })[0];
+
                         expect(source.getAt(3)).toBe(rec);
                         expect(store.getAt(1)).toBe(rec);
                     });
@@ -1143,6 +1246,7 @@ describe("Ext.data.ChainedStore", function() {
                 var rec = source.insert(0, {
                     id: 'new@sencha.com'
                 })[0];
+
                 expect(source.getAt(0)).toBe(rec);
                 expect(store.getAt(0)).toBe(rec);
             });
@@ -1171,6 +1275,7 @@ describe("Ext.data.ChainedStore", function() {
 
                 it("should fire add on the source, then the store", function() {
                     var order = [];
+
                     source.on('add', function() {
                         order.push('source');
                     });
@@ -1188,11 +1293,21 @@ describe("Ext.data.ChainedStore", function() {
                 describe("with the source sorted", function() {
                     it("should use the position from the source", function() {
                         source.sort('email');
-                        var rec = source.insert(2, {
+
+                        source.insert(2, {
                             email: 'aaaa@sencha.com'
-                        })[0];
-                        expect(source.getAt(0)).toBe(rec);
-                        expect(store.getAt(0)).toBe(rec);
+                        });
+
+                        expect(getRecValues(source, 'email')).toEqual([
+                            'aaaa@sencha.com', 'aaron@sencha.com', 'abe@sencha.com',
+                            'ed@sencha.com', 'tommy@sencha.com'
+                        ]);
+
+                        expect(getRecValues(store, 'email')).toEqual([
+                            'ed@sencha.com', 'abe@sencha.com',
+                            'aaaa@sencha.com', // before aaron
+                            'aaron@sencha.com', 'tommy@sencha.com'
+                        ]);
                     });
                 });
 
@@ -1202,6 +1317,7 @@ describe("Ext.data.ChainedStore", function() {
                         var rec = source.insert(3, {
                             email: 'aaaa@sencha.com'
                         })[0];
+
                         expect(source.getAt(3)).toBe(rec);
                         expect(store.getAt(0)).toBe(rec);
                     });
@@ -1215,6 +1331,7 @@ describe("Ext.data.ChainedStore", function() {
                         var rec = source.insert(3, {
                             email: 'aazzon@sencha.com'
                         })[0];
+
                         expect(source.getAt(3)).toBe(rec);
                         expect(store.getAt(1)).toBe(rec);
                     });
@@ -1228,6 +1345,7 @@ describe("Ext.data.ChainedStore", function() {
                         email: 'new@sencha.com',
                         group: 'code'
                     })[0];
+
                     expect(store.indexOf(rec)).toBe(-1);
                 });
 
@@ -1237,6 +1355,7 @@ describe("Ext.data.ChainedStore", function() {
                         email: 'new@sencha.com',
                         group: 'code'
                     })[0];
+
                     store.getFilters().removeAll();
                     expect(source.getAt(0)).toBe(rec);
                 });
@@ -1247,6 +1366,7 @@ describe("Ext.data.ChainedStore", function() {
                         email: 'new@sencha.com',
                         group: 'code'
                     })[0];
+
                     store.getFilters().removeAll();
                     expect(store.getAt(2)).toBe(rec);
                 });
@@ -1258,6 +1378,7 @@ describe("Ext.data.ChainedStore", function() {
                 var rec = store.insert(0, {
                     id: 'new@sencha.com'
                 })[0];
+
                 expect(source.getAt(0)).toBe(rec);
             });
 
@@ -1271,7 +1392,8 @@ describe("Ext.data.ChainedStore", function() {
 
                     var rec = store.insert(2, {
                         id: 'new@sencha.com'
-                    })[0], args;
+                    })[0],
+                    args;
 
                     expect(addSpy).toHaveBeenCalled();
                     args = addSpy.mostRecentCall.args;
@@ -1284,6 +1406,7 @@ describe("Ext.data.ChainedStore", function() {
 
                 it("should fire add on the source, then the store", function() {
                     var order = [];
+
                     source.on('add', function() {
                         order.push('source');
                     });
@@ -1304,6 +1427,7 @@ describe("Ext.data.ChainedStore", function() {
                         var rec = store.insert(2, {
                             email: 'aaaa@sencha.com'
                         })[0];
+
                         expect(source.getAt(0)).toBe(rec);
                         expect(store.getAt(2)).toBe(rec);
                     });
@@ -1315,6 +1439,7 @@ describe("Ext.data.ChainedStore", function() {
                         var rec = store.insert(3, {
                             email: 'aaaa@sencha.com'
                         })[0];
+
                         expect(source.getAt(3)).toBe(rec);
                         expect(store.getAt(0)).toBe(rec);
                     });
@@ -1328,6 +1453,7 @@ describe("Ext.data.ChainedStore", function() {
                         var rec = store.insert(3, {
                             email: 'aazzon@sencha.com'
                         })[0];
+
                         expect(source.getAt(3)).toBe(rec);
                         expect(store.getAt(1)).toBe(rec);
                     });
@@ -1340,7 +1466,7 @@ describe("Ext.data.ChainedStore", function() {
         beforeEach(function() {
             createStore();
         });
-        
+
         describe("remove", function() {
             describe("removing from the source", function() {
                 it("should also remove from the store", function() {
@@ -1369,6 +1495,7 @@ describe("Ext.data.ChainedStore", function() {
 
                 it("should fire remove on the source, then the store", function() {
                     var order = [];
+
                     source.on('remove', function() {
                         order.push('source');
                     });
@@ -1416,6 +1543,7 @@ describe("Ext.data.ChainedStore", function() {
 
                 it("should fire add on the source, then the store", function() {
                     var order = [];
+
                     source.on('remove', function() {
                         order.push('source');
                     });
@@ -1427,41 +1555,46 @@ describe("Ext.data.ChainedStore", function() {
                 });
             });
         });
-        
+
         describe("removeAll", function() {
             it("should not fire a remove event", function() {
                 var spy = jasmine.createSpy();
+
                 store.on('remove', spy);
                 source.removeAll();
                 expect(spy).not.toHaveBeenCalled();
             });
-            
+
             it("should fire the clear event", function() {
                 var spy = jasmine.createSpy();
+
                 store.on('clear', spy);
                 source.removeAll();
                 expect(spy).toHaveBeenCalled();
                 expect(spy.mostRecentCall.args[0]).toBe(store);
             });
-            
+
             it("should fire the datachanged event", function() {
                 var spy = jasmine.createSpy();
+
                 store.on('datachanged', spy);
                 source.removeAll();
                 expect(spy).toHaveBeenCalled();
                 expect(spy.mostRecentCall.args[0]).toBe(store);
             });
-            
+
             describe("with silent: true", function() {
                 it("should not fire the clear event", function() {
                     var spy = jasmine.createSpy();
+
                     store.on('clear', spy);
                     source.removeAll(true);
                     expect(spy).not.toHaveBeenCalled();
                 });
-            
+
                 it("should not fire the datachanged event", function() {
                     var spy = jasmine.createSpy();
+
                     store.on('datachanged', spy);
                     source.removeAll(true);
                     expect(spy).not.toHaveBeenCalled();
@@ -1511,6 +1644,7 @@ describe("Ext.data.ChainedStore", function() {
 
             it("should fire the event on the source first, then the store", function() {
                 var order = [];
+
                 source.on('update', function() {
                     order.push('source');
                 });
@@ -1564,6 +1698,7 @@ describe("Ext.data.ChainedStore", function() {
 
             it("should fire the event on the source first, then the store", function() {
                 var order = [];
+
                 edRec.set('name', 'foo');
                 source.on('update', function() {
                     order.push('source');
@@ -1583,7 +1718,7 @@ describe("Ext.data.ChainedStore", function() {
                 expect(spy).not.toHaveBeenCalled();
             });
         });
-        
+
         describe("via reject", function() {
             it("should fire the update event on the source & pass the store, record, type & modified fields", function() {
                 var args;
@@ -1619,6 +1754,7 @@ describe("Ext.data.ChainedStore", function() {
 
             it("should fire the event on the source first, then the store", function() {
                 var order = [];
+
                 edRec.set('name', 'foo');
                 source.on('update', function() {
                     order.push('source');
@@ -1638,7 +1774,7 @@ describe("Ext.data.ChainedStore", function() {
                 expect(spy).not.toHaveBeenCalled();
             });
         });
-    });   
+    });
 
     describe("misc", function() {
         var Order, OrderItem, orders;
@@ -1685,8 +1821,7 @@ describe("Ext.data.ChainedStore", function() {
             Ext.undefine('spec.OrderItem');
         });
 
-        it("should add records from source store to chained store in sorted order if chained store is sorted", function() {
-
+        it("should add records from source in sorted order of chained store", function() {
             source.add({
                 id: 2
             });
@@ -1697,7 +1832,7 @@ describe("Ext.data.ChainedStore", function() {
             expect(store.getAt(2)).toBe(source.getById(3));
         });
 
-        it("should prepend records from source store to chained store if chained store is not sorted", function() {
+        it("should prepend records from source if chained store is not sorted", function() {
             store.setAutoSort(false);
 
             source.add({
@@ -1705,15 +1840,16 @@ describe("Ext.data.ChainedStore", function() {
             });
 
             // The new id:2 record should have been appended
-            expect(store.getAt(0)).toBe(source.getById(2));
-            expect(store.getAt(1)).toBe(source.getById(1));
-            expect(store.getAt(2)).toBe(source.getById(3));
+            expect(getRecValues(store, 'id')).toEqual([ 1, 3, 2 ]);
+
+            expect(getRecValues(source, 'id')).toEqual([ 1, 3, 2 ]);
         });
 
         it('should fire idchanged when the source collection updates a key', function() {
             var spy = spyOnEvent(store, 'idchanged');
 
             var rec = source.getAt(0);
+
             rec.set('id', 'foobar');
 
             // Downstream store must pass on the idchanged event.
@@ -1721,7 +1857,7 @@ describe("Ext.data.ChainedStore", function() {
             expect(spy.mostRecentCall.args).toEqual([store, rec, 1, 'foobar']);
         });
 
-        it("should maintain synchronization with source store when observers are added", function () {
+        it("should maintain synchronization with source store when observers are added", function() {
             source = new Ext.data.Store({
                 fields: ['id', 'name'],
                 data: [{
@@ -1734,11 +1870,11 @@ describe("Ext.data.ChainedStore", function() {
 
             var spy = spyOnEvent(store, 'remove');
 
-            source.on('remove', function () {
+            source.on('remove', function() {
                 // the initialization of the collectionkey will call addObserver() in the underlying collection
                 // if this happens while we're in the middle of notify(), chained store will be left out
                 source.setExtraKeys({
-                    byFoo: {property: 'name', root: ''}
+                    byFoo: { property: 'name', root: '' }
                 });
             });
             // remove the last record
@@ -1746,6 +1882,358 @@ describe("Ext.data.ChainedStore", function() {
             // if all went as planned, the chained store's collection should have been notified of the removal as well
             expect(store.getCount()).toBe(0);
             expect(spy).toHaveBeenCalled();
+        });
+    });
+
+    describe("session", function() {
+        beforeEach(function() {
+            source = Ext.destroy(source);
+        });
+
+        it("should return the session from the source", function() {
+            source = Ext.destroy(source);
+
+            var s = new Ext.data.Session();
+
+            createSource({
+                session: s
+            });
+            createStore();
+            expect(store.getSession()).toBe(s);
+        });
+
+        it("should return null when there is no source", function() {
+            createStore();
+            expect(store.getSession()).toBeNull();
+        });
+    });
+
+    describe("getModel", function() {
+        it("should return the model from the source", function() {
+            createStore();
+            expect(store.getModel()).toBe(User);
+        });
+
+        it("should return null when there is no source", function() {
+            source = Ext.destroy(source);
+            createStore();
+            expect(store.getModel()).toBeNull();
+        });
+    });
+
+    describe("hasPendingLoad", function() {
+        it("should return the hasPendingLoad from the source", function() {
+            createStore();
+            source.load();
+            expect(store.hasPendingLoad()).toBe(true);
+            completeWithData([]);
+        });
+
+        it("should return false when there is no source", function() {
+            source = Ext.destroy(source);
+            createStore();
+            expect(store.hasPendingLoad()).toBe(false);
+        });
+    });
+
+    describe("isLoaded", function() {
+        it("should return the isLoaded from the source", function() {
+            createStore();
+            source.load();
+            completeWithData([]);
+            expect(store.isLoaded()).toBe(true);
+        });
+
+        it("should return false when there is no source", function() {
+            source = Ext.destroy(source);
+            createStore();
+            expect(store.isLoaded()).toBe(false);
+        });
+    });
+
+    describe("isLoading", function() {
+        it("should return the isLoading from the source", function() {
+            createStore();
+            source.load();
+            expect(store.isLoading()).toBe(true);
+            completeWithData([]);
+        });
+
+        it("should return false when there is no source", function() {
+            source = Ext.destroy(source);
+            createStore();
+            expect(store.isLoading()).toBe(false);
+        });
+    });
+
+    describe("summaries", function() {
+        var M = Ext.define(null, {
+            extend: 'Ext.data.Model',
+            fields: ['group', {
+                name: 'rate',
+                summary: 'average'
+            }],
+            summary: {
+                maxRate: {
+                    summary: 'max',
+                    field: 'rate'
+                }
+            }
+        }),
+        data;
+
+        beforeEach(function() {
+            data = [
+                { group: 'g1', rate: 8 },
+                { group: 'g1', rate: 12 },
+                { group: 'g2', rate: 15 },
+                { group: 'g2', rate: 13 }
+            ];
+
+            source.destroy();
+
+            createSource({
+                model: M,
+                data: data
+            });
+        });
+
+        afterEach(function() {
+            data = null;
+        });
+
+        describe("group summaries", function() {
+            function getSummaryFor(group) {
+                return store.getGroups().get(group).getSummaryRecord();
+            }
+
+            beforeEach(function() {
+                createStore({
+                    model: M,
+                    groupField: 'group'
+                }, false);
+            });
+
+            it("should return the calculated values", function() {
+                var r = getSummaryFor('g1');
+
+                expect(r.get('rate')).toBe(10);
+                expect(r.get('maxRate')).toBe(12);
+
+                r = getSummaryFor('g2');
+                expect(r.get('rate')).toBe(14);
+                expect(r.get('maxRate')).toBe(15);
+            });
+
+            describe("dynamic", function() {
+                beforeEach(function() {
+                    // Force creation
+                    getSummaryFor('g1');
+                    getSummaryFor('g2');
+                });
+
+                describe("adding", function() {
+                    it("should react to a new group being created", function() {
+                        source.add({ group: 'g3', rate: 100 });
+
+                        var r = getSummaryFor('g1');
+
+                        expect(r.get('rate')).toBe(10);
+                        expect(r.get('maxRate')).toBe(12);
+
+                        r = getSummaryFor('g2');
+                        expect(r.get('rate')).toBe(14);
+                        expect(r.get('maxRate')).toBe(15);
+
+                        r = getSummaryFor('g3');
+                        expect(r.get('rate')).toBe(100);
+                        expect(r.get('maxRate')).toBe(100);
+                    });
+
+                    it("should react to an add in an existing group", function() {
+                        source.add({ group: 'g1', rate: 100 });
+
+                        var r = getSummaryFor('g1');
+
+                        expect(r.get('rate')).toBe(40);
+                        expect(r.get('maxRate')).toBe(100);
+
+                        r = getSummaryFor('g2');
+                        expect(r.get('rate')).toBe(14);
+                        expect(r.get('maxRate')).toBe(15);
+                    });
+                });
+
+                describe("updating", function() {
+                    it("should react to an update", function() {
+                        store.getAt(0).set('rate', 200);
+
+                        var r = getSummaryFor('g1');
+
+                        expect(r.get('rate')).toBe(106);
+                        expect(r.get('maxRate')).toBe(200);
+
+                        r = getSummaryFor('g2');
+                        expect(r.get('rate')).toBe(14);
+                        expect(r.get('maxRate')).toBe(15);
+                    });
+
+                    it("should react to an update that forces a group change", function() {
+                        store.getAt(0).set('group', 'g2');
+
+                        var r = getSummaryFor('g1');
+
+                        expect(r.get('rate')).toBe(12);
+                        expect(r.get('maxRate')).toBe(12);
+
+                        r = getSummaryFor('g2');
+                        expect(r.get('rate')).toBe(12);
+                        expect(r.get('maxRate')).toBe(15);
+                    });
+                });
+
+                it("should react to a remove", function() {
+                    source.removeAt(1);
+
+                    var r = getSummaryFor('g1');
+
+                    expect(r.get('rate')).toBe(8);
+                    expect(r.get('maxRate')).toBe(8);
+
+                    r = getSummaryFor('g2');
+                    expect(r.get('rate')).toBe(14);
+                    expect(r.get('maxRate')).toBe(15);
+                });
+
+                it("should react to filtering", function() {
+                    store.getFilters().add({
+                        filterFn: function(rec) {
+                            var rate = rec.get('rate');
+
+                            return rate === 12 || rate === 13;
+                        }
+                    });
+
+                    var r = getSummaryFor('g1');
+
+                    expect(r.get('rate')).toBe(12);
+                    expect(r.get('maxRate')).toBe(12);
+
+                    r = getSummaryFor('g2');
+                    expect(r.get('rate')).toBe(13);
+                    expect(r.get('maxRate')).toBe(13);
+
+                    store.getFilters().removeAll();
+
+                    r = getSummaryFor('g1');
+                    expect(r.get('rate')).toBe(10);
+                    expect(r.get('maxRate')).toBe(12);
+
+                    r = getSummaryFor('g2');
+                    expect(r.get('rate')).toBe(14);
+                    expect(r.get('maxRate')).toBe(15);
+                });
+
+                it("should react to a loadData", function() {
+                    source.loadData([
+                        { group: 'g1', rate: 82 },
+                        { group: 'g1', rate: 81 },
+                        { group: 'g2', rate: 99 },
+                        { group: 'g2', rate: 100 }
+                    ]);
+
+                    var r = getSummaryFor('g1');
+
+                    expect(r.get('rate')).toBe(81.5);
+                    expect(r.get('maxRate')).toBe(82);
+
+                    r = getSummaryFor('g2');
+                    expect(r.get('rate')).toBe(99.5);
+                    expect(r.get('maxRate')).toBe(100);
+                });
+            });
+        });
+
+        describe("total summaries", function() {
+            beforeEach(function() {
+                createStore({
+                    model: M
+                }, false);
+            });
+
+            it("should return the calculated values", function() {
+                var r = store.getSummaryRecord();
+
+                expect(r.get('rate')).toBe(12);
+                expect(r.get('maxRate')).toBe(15);
+            });
+
+            describe("dynamic changes", function() {
+                beforeEach(function() {
+                    // Force creation
+                    store.getSummaryRecord();
+                });
+
+                it("should react to an add", function() {
+                    source.add({ rate: 20 });
+                    var r = store.getSummaryRecord();
+
+                    expect(r.get('rate')).toBe(13.6);
+                    expect(r.get('maxRate')).toBe(20);
+                });
+
+                it("should react to a remove", function() {
+                    source.removeAt(2);
+                    var r = store.getSummaryRecord();
+
+                    expect(r.get('rate')).toBe(11);
+                    expect(r.get('maxRate')).toBe(13);
+                });
+
+                it("should react to a removeAll", function() {
+                    source.removeAll();
+                    var r = store.getSummaryRecord();
+
+                    expect(r.get('rate')).toBeUndefined();
+                    expect(r.get('maxRate')).toBeUndefined();
+                });
+
+                it("should react to an update", function() {
+                    source.getAt(2).set('rate', 1);
+                    var r = store.getSummaryRecord();
+
+                    expect(r.get('rate')).toBe(8.5);
+                    expect(r.get('maxRate')).toBe(13);
+                });
+
+                it("should react to filtering", function() {
+                    store.getFilters().add({
+                        filterFn: function(rec) {
+                            return rec.get('rate') < 13;
+                        }
+                    });
+                    var r = store.getSummaryRecord();
+
+                    expect(r.get('rate')).toBe(10);
+                    expect(r.get('maxRate')).toBe(12);
+
+                    store.getFilters().removeAll();
+                    r = store.getSummaryRecord();
+                    expect(r.get('rate')).toBe(12);
+                    expect(r.get('maxRate')).toBe(15);
+                });
+
+                it("should react to a loadData", function() {
+                    source.loadData([
+                        { rate: 20 },
+                        { rate: 30 }
+                    ]);
+                    var r = store.getSummaryRecord();
+
+                    expect(r.get('rate')).toBe(25);
+                    expect(r.get('maxRate')).toBe(30);
+                });
+            });
         });
     });
 });

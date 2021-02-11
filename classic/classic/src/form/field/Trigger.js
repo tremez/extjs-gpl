@@ -9,15 +9,20 @@
  * not used internally by the framework.
  */
 Ext.define('Ext.form.field.Trigger', {
-    extend:'Ext.form.field.Text',
+    extend: 'Ext.form.field.Text',
     alias: ['widget.triggerfield', 'widget.trigger'],
-    requires: ['Ext.dom.Helper', 'Ext.util.ClickRepeater'],
     alternateClassName: ['Ext.form.TriggerField', 'Ext.form.TwinTriggerField', 'Ext.form.Trigger'],
+
+    requires: [
+        'Ext.dom.Helper',
+        'Ext.util.ClickRepeater'
+    ],
 
     /**
      * @cfg {String} triggerCls
-     * An additional CSS class used to style the trigger button. The trigger will always get the {@link Ext.form.trigger.Trigger#baseCls}
-     * by default and triggerCls will be **appended** if specified.
+     * An additional CSS class used to style the trigger button. The trigger will always get
+     * the {@link Ext.form.trigger.Trigger#baseCls} by default and triggerCls will be **appended**
+     * if specified.
      */
     triggerCls: Ext.baseCSSPrefix + 'form-arrow-trigger',
 

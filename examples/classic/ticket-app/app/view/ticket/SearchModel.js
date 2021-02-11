@@ -4,22 +4,22 @@
 Ext.define('Ticket.view.ticket.SearchModel', {
     extend: 'Ext.app.ViewModel',
     alias: 'viewmodel.ticketsearch',
-    
+
     data: {
         defaultStatus: 2
     },
-    
+
     formulas: {
-        defaultUser: function (get) {
-            var project = get('theProject');
+        defaultUser: function(get) {
             if (get('currentUser.projectId') === get('theProject.id')) {
                 return get('currentUser.id');
-            } else {
+            }
+            else {
                 return get('theProject.leadId');
             }
         }
     },
-    
+
     stores: {
         tickets: {
             model: 'Ticket',

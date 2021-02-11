@@ -3,32 +3,32 @@ Ext.define('KitchenSink.view.dd.GridToFormController', {
 
     alias: 'controller.dd-grid-to-form',
 
-    beforeRender: function () {
+    beforeRender: function() {
         var store = this.lookup('grid').store,
             data = (this.myData = []),
             obj;
 
         // Keep a copy of the original data for reset:
-        store.each(function (rec) {
+        store.each(function(rec) {
             data.push(obj = Ext.apply({}, rec.data));
             delete obj.id;
         });
     },
 
-    boxReady: function () {
+    boxReady: function() {
         var form = this.lookup('form'),
             body = form.body;
 
         this.formPanelDropTarget = new Ext.dd.DropTarget(body, {
             ddGroup: 'grid-to-form',
 
-            notifyEnter: function (ddSource, e, data) {
-                //Add some flare to invite drop.
+            notifyEnter: function(ddSource, e, data) {
+                // Add some flare to invite drop.
                 body.stopAnimation();
                 body.highlight();
             },
 
-            notifyDrop: function (ddSource, e, data) {
+            notifyDrop: function(ddSource, e, data) {
                 // Reference the record (single selection) for readability
                 var selectedRecord = ddSource.dragData.records[0];
 
@@ -37,12 +37,13 @@ Ext.define('KitchenSink.view.dd.GridToFormController', {
 
                 // Delete record from the source store.  not really required.
                 ddSource.view.store.remove(selectedRecord);
+
                 return true;
             }
         });
     },
 
-    destroy: function () {
+    destroy: function() {
         var target = this.formPanelDropTarget;
 
         if (target) {
@@ -53,7 +54,7 @@ Ext.define('KitchenSink.view.dd.GridToFormController', {
         this.callParent();
     },
 
-    onResetClick: function () {
+    onResetClick: function() {
         this.lookup('grid').getStore().loadData(this.myData);
         this.lookup('form').getForm().reset();
     }

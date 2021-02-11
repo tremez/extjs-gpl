@@ -46,14 +46,16 @@ Ext.define('Ext.device.filesystem.HTML5', {
     requestFileSystem: function(config) {
         if (!config.success) {
             Ext.Logger.error('Ext.device.filesystem#requestFileSystem: You must specify a `success` callback.');
+
             return null;
         }
 
-        var me = this;
-        var successCallback = function(fs) {
-            var fileSystem = Ext.create('Ext.device.filesystem.FileSystem', fs);
-            config.success.call(config.scope || me, fileSystem);
-        };
+        var me = this,
+            successCallback = function(fs) {
+                var fileSystem = Ext.create('Ext.device.filesystem.FileSystem', fs);
+
+                config.success.call(config.scope || me, fileSystem);
+            };
 
         window.requestFileSystem(
             config.type,
@@ -132,6 +134,7 @@ Ext.define('Ext.device.filesystem.HTML5', {
              */
             getName: function() {
                 var components = this.path.split('/');
+
                 for (var i = components.length - 1; i >= 0; --i) {
                     if (components[i].length > 0) {
                         return components[i];
@@ -195,6 +198,7 @@ Ext.define('Ext.device.filesystem.HTML5', {
             moveTo: function(config) {
                 if (config.parent == null) {
                     Ext.Logger.error('Ext.device.filesystem.Entry#moveTo: You must specify a new `parent` of the entry.');
+
                     return null;
                 }
 
@@ -215,7 +219,8 @@ Ext.define('Ext.device.filesystem.HTML5', {
                                                     entry.isDirectory ? Ext.create('Ext.device.filesystem.DirectoryEntry', entry.fullPath, me.fileSystem) : Ext.create('Ext.device.filesystem.FileEntry', entry.fullPath, me.fileSystem)
                                                 );
                                             }, config.failure);
-                                        } else {
+                                        }
+                                        else {
                                             sourceEntry.moveTo(destinationEntry, config.newName, function(entry) {
                                                 config.success.call(
                                                     config.scope || me,
@@ -268,14 +273,15 @@ Ext.define('Ext.device.filesystem.HTML5', {
                     {
                         success: function(entry) {
                             if (config.recursively && this.directory) {
-                                entry.removeRecursively(config.success, config.failure)
-                            } else {
-                                entry.remove(config.success, config.failure)
+                                entry.removeRecursively(config.success, config.failure);
+                            }
+                            else {
+                                entry.remove(config.success, config.failure);
                             }
                         },
                         failure: config.failure
                     }
-                )
+                );
             },
 
             /**
@@ -302,10 +308,12 @@ Ext.define('Ext.device.filesystem.HTML5', {
             getParent: function(config) {
                 if (!config.success) {
                     Ext.Logger.error('Ext.device.filesystem.Entry#getParent: You must specify a `success` callback.');
+
                     return null;
                 }
 
                 var me = this;
+
                 this.getEntry(
                     {
                         options: config.options || {},
@@ -317,15 +325,15 @@ Ext.define('Ext.device.filesystem.HTML5', {
                                         parentEntry.isDirectory
                                             ? Ext.create('Ext.device.filesystem.DirectoryEntry', parentEntry.fullPath, me.fileSystem)
                                             : Ext.create('Ext.device.filesystem.FileEntry', parentEntry.fullPath, me.fileSystem)
-                                    )
+                                    );
                                 },
                                 config.failure
-                            )
+                            );
 
                         },
                         failure: config.failure
                     }
-                )
+                );
             }
         });
 
@@ -366,11 +374,12 @@ Ext.define('Ext.device.filesystem.HTML5', {
              * @param {FileError} config.failure.error
              */
             getEntry: function(config) {
-                var me = this;
-                var callback = config.success;
+                var me = this,
+                    callback = config.success;
 
                 if ((config.options && config.options.create) && this.path) {
                     var folders = this.path.split("/");
+
                     if (folders[0] == '.' || folders[0] == '') {
                         folders = folders.slice(1);
                     }
@@ -378,18 +387,20 @@ Ext.define('Ext.device.filesystem.HTML5', {
                     var recursiveCreation = function(dirEntry) {
                         if (folders.length) {
                             dirEntry.getDirectory(folders.shift(), config.options, recursiveCreation, config.failure);
-                        } else {
+                        }
+                        else {
                             callback(dirEntry);
                         }
                     };
 
                     recursiveCreation(this.fileSystem.fs.root);
-                } else {
+                }
+                else {
                     this.fileSystem.fs.root.getDirectory(this.path, config.options,
-                        function(directory) {
-                            config.success.call(config.scope || me, directory);
-                        },
-                        config.failure
+                                                         function(directory) {
+                                                             config.success.call(config.scope || me, directory);
+                                                         },
+                                                         config.failure
                     );
                 }
             },
@@ -418,14 +429,17 @@ Ext.define('Ext.device.filesystem.HTML5', {
             readEntries: function(config) {
                 if (!config.success) {
                     Ext.Logger.error('Ext.device.filesystem.DirectoryEntry#readEntries: You must specify a `success` callback.');
+
                     return null;
                 }
 
                 var me = this;
+
                 this.getEntry(
                     {
                         success: function(dirEntry) {
                             var directoryReader = dirEntry.createReader();
+
                             directoryReader.readEntries(
                                 function(entryInfos) {
                                     var entries = [],
@@ -438,6 +452,7 @@ Ext.define('Ext.device.filesystem.HTML5', {
                                             ? Ext.create('Ext.device.filesystem.DirectoryEntry', entryInfo.fullPath, me.fileSystem)
                                             : Ext.create('Ext.device.filesystem.FileEntry', entryInfo.fullPath, me.fileSystem);
                                     }
+
                                     config.success.call(config.scope || this, entries);
                                 },
                                 function(error) {
@@ -488,12 +503,14 @@ Ext.define('Ext.device.filesystem.HTML5', {
             getFile: function(config) {
                 if (config.path == null) {
                     Ext.Logger.error('Ext.device.filesystem.DirectoryEntry#getFile: You must specify a `path` of the file.');
+
                     return null;
                 }
 
-                var me = this;
-                var fullPath = this.path + config.path;
-                var fileEntry = Ext.create('Ext.device.filesystem.FileEntry', fullPath, this.fileSystem);
+                var me = this,
+                    fullPath = this.path + config.path,
+                    fileEntry = Ext.create('Ext.device.filesystem.FileEntry', fullPath, this.fileSystem);
+
                 fileEntry.getEntry(
                     {
                         success: function() {
@@ -502,7 +519,7 @@ Ext.define('Ext.device.filesystem.HTML5', {
                         options: config.options || {},
                         failure: config.failure
                     }
-                )
+                );
             },
 
             /**
@@ -512,12 +529,14 @@ Ext.define('Ext.device.filesystem.HTML5', {
             getDirectory: function(config) {
                 if (config.path == null) {
                     Ext.Logger.error('Ext.device.filesystem.DirectoryEntry#getFile: You must specify a `path` of the file.');
+
                     return null;
                 }
 
-                var me = this;
-                var fullPath = this.path + config.path;
-                var directoryEntry = Ext.create('Ext.device.filesystem.DirectoryEntry', fullPath, this.fileSystem);
+                var me = this,
+                    fullPath = this.path + config.path,
+                    directoryEntry = Ext.create('Ext.device.filesystem.DirectoryEntry', fullPath, this.fileSystem);
+
                 directoryEntry.getEntry(
                     {
                         success: function() {
@@ -526,7 +545,7 @@ Ext.define('Ext.device.filesystem.HTML5', {
                         options: config.options || {},
                         failure: config.failure
                     }
-                )
+                );
             },
 
             /**
@@ -584,12 +603,14 @@ Ext.define('Ext.device.filesystem.HTML5', {
              *
              */
             getEntry: function(config) {
-                var me = this;
-                var originalConfig = Ext.applyIf({}, config);
+                var me = this,
+                    originalConfig = Ext.applyIf({}, config);
+
                 if (this.fileSystem) {
                     var failure = function(evt) {
                         if ((config.options && config.options.create) && Ext.isString(this.path)) {
                             var folders = this.path.split("/");
+
                             if (folders[0] == '.' || folders[0] == '') {
                                 folders = folders.slice(1);
                             }
@@ -598,6 +619,7 @@ Ext.define('Ext.device.filesystem.HTML5', {
                                 folders.pop();
 
                                 var dirEntry = Ext.create('Ext.device.filesystem.DirectoryEntry', folders.join("/"), me.fileSystem);
+
                                 dirEntry.getEntry(
                                     {
                                         options: config.options,
@@ -608,12 +630,14 @@ Ext.define('Ext.device.filesystem.HTML5', {
                                         failure: config.failure
                                     }
                                 );
-                            } else {
+                            }
+                            else {
                                 if (config.failure) {
                                     config.failure.call(config.scope || me, evt);
                                 }
                             }
-                        } else {
+                        }
+                        else {
                             if (config.failure) {
                                 config.failure.call(config.scope || me, evt);
                             }
@@ -621,23 +645,24 @@ Ext.define('Ext.device.filesystem.HTML5', {
                     };
 
                     this.fileSystem.fs.root.getFile(this.path, config.options || null,
-                        function(fileEntry) {
-                            fileEntry.file(
-                                function(file) {
-                                    me.length = file.size;
-                                    originalConfig.success.call(config.scope || me, fileEntry);
-                                },
-                                function(error) {
-                                    failure.call(config.scope || me, error);
-                                }
-                            );
-                        },
-                        function(error) {
-                            failure.call(config.scope || me, error);
-                        }
+                                                    function(fileEntry) {
+                                                        fileEntry.file(
+                                                            function(file) {
+                                                                me.length = file.size;
+                                                                originalConfig.success.call(config.scope || me, fileEntry);
+                                                            },
+                                                            function(error) {
+                                                                failure.call(config.scope || me, error);
+                                                            }
+                                                        );
+                                                    },
+                                                    function(error) {
+                                                        failure.call(config.scope || me, error);
+                                                    }
                     );
-                } else {
-                    config.failure({code: -1, message: "FileSystem not Initialized"});
+                }
+                else {
+                    config.failure({ code: -1, message: "FileSystem not Initialized" });
                 }
             },
 
@@ -675,6 +700,7 @@ Ext.define('Ext.device.filesystem.HTML5', {
             seek: function(config) {
                 if (config.offset == null) {
                     Ext.Logger.error('Ext.device.filesystem.FileEntry#seek: You must specify an `offset` in the file.');
+
                     return null;
                 }
 
@@ -727,6 +753,7 @@ Ext.define('Ext.device.filesystem.HTML5', {
              */
             read: function(config) {
                 var me = this;
+
                 this.getEntry(
                     {
                         success: function(fileEntry) {
@@ -735,15 +762,18 @@ Ext.define('Ext.device.filesystem.HTML5', {
                                     if (Ext.isNumber(config.length)) {
                                         if (Ext.isFunction(file.slice)) {
                                             file = file.slice(me.offset, config.length);
-                                        } else {
+                                        }
+                                        else {
                                             if (config.failure) {
-                                                config.failure.call(config.scope || me, {code: -2, message: "File missing slice functionality"});
+                                                config.failure.call(config.scope || me, { code: -2, message: "File missing slice functionality" });
                                             }
+
                                             return;
                                         }
                                     }
 
                                     var reader = new FileReader();
+
                                     reader.onloadend = function(evt) {
                                         config.success.call(config.scope || me, evt.target.result);
                                     };
@@ -760,6 +790,7 @@ Ext.define('Ext.device.filesystem.HTML5', {
 
                                     switch (config.type) {
                                         default:
+
                                         case "text":
                                             reader.readAsText(file, config.encoding);
                                             break;
@@ -775,15 +806,15 @@ Ext.define('Ext.device.filesystem.HTML5', {
                                     }
                                 },
                                 function(error) {
-                                    config.failure.call(config.scope || me, error)
+                                    config.failure.call(config.scope || me, error);
                                 }
                             );
                         },
                         failure: function(error) {
-                            config.failure.call(config.scope || me, error)
+                            config.failure.call(config.scope || me, error);
                         }
                     }
-                )
+                );
             },
 
             /**
@@ -823,10 +854,12 @@ Ext.define('Ext.device.filesystem.HTML5', {
             write: function(config) {
                 if (config.data == null) {
                     Ext.Logger.error('Ext.device.filesystem.FileEntry#write: You must specify `data` to write into the file.');
+
                     return null;
                 }
 
                 var me = this;
+
                 this.getEntry(
                     {
                         options: config.options || {},
@@ -848,22 +881,23 @@ Ext.define('Ext.device.filesystem.HTML5', {
 
                                     if (me.offset) {
                                         writer.seek(me.offset);
-                                    } else if (config.append) {
+                                    }
+                                    else if (config.append) {
                                         writer.seek(me.length);
                                     }
 
-                                    me.writeData (writer, config.data);
+                                    me.writeData(writer, config.data);
                                 },
                                 function(error) {
-                                    config.failure.call(config.scope || me, error)
+                                    config.failure.call(config.scope || me, error);
                                 }
-                            )
+                            );
                         },
                         failure: function(error) {
-                            config.failure.call(config.scope || me, error)
+                            config.failure.call(config.scope || me, error);
                         }
                     }
-                )
+                );
             },
 
             writeData: function(writer, data) {
@@ -895,11 +929,13 @@ Ext.define('Ext.device.filesystem.HTML5', {
             truncate: function(config) {
                 if (config.size == null) {
                     Ext.Logger.error('Ext.device.filesystem.FileEntry#write: You must specify a `size` of the file.');
+
                     return null;
                 }
 
                 var me = this;
-                //noinspection JSValidateTypes
+
+                // noinspection JSValidateTypes
                 this.getEntry(
                     {
                         success: function(fileEntry) {
@@ -909,15 +945,15 @@ Ext.define('Ext.device.filesystem.HTML5', {
                                     config.success.call(config.scope || me, me);
                                 },
                                 function(error) {
-                                    config.failure.call(config.scope || me, error)
+                                    config.failure.call(config.scope || me, error);
                                 }
-                            )
+                            );
                         },
                         failure: function(error) {
-                            config.failure.call(config.scope || me, error)
+                            config.failure.call(config.scope || me, error);
                         }
                     }
-                )
+                );
             }
         });
     });

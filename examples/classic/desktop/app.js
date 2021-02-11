@@ -16,6 +16,6 @@ Ext.application({
         'Desktop.App'
     ],
     init: function() {
-        var app = new Desktop.App();
+        new Desktop.App();
     }
 });

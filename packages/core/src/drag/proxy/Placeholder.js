@@ -43,41 +43,35 @@ Ext.define('Ext.drag.proxy.Placeholder', {
     placeholderCls: Ext.baseCSSPrefix + 'drag-proxy-placeholder',
 
     /**
+     * @method cleanup
      * @inheritdoc
      */
     cleanup: function() {
-        var el = this.element;
-        if (el) {
-            el.hide();
-        }
+        this.element = Ext.destroy(this.element);
     },
 
     /**
+     * @method getElement
      * @inheritdoc
      */
-    getElement: function(source) {
-        var me = this,
-            el = me.element;
+    getElement: function() {
+        var el = Ext.getBody().createChild({
+            cls: this.getCls(),
+            html: this.getHtml()
+        });
 
-        if (!el) {
-            me.element = el = Ext.getBody().createChild({
-                cls: me.getCls(),
-                html: me.getHtml()
-            });
-            el.addCls(me.placeholderCls);
-            
-            el.setTouchAction({
-                panX: false,
-                panY: false
-            });
+        el.addCls(this.placeholderCls);
 
-        }
-        el.show();
+        el.setTouchAction({
+            panX: false,
+            panY: false
+        });
 
         return el;
     },
 
     /**
+     * @method update
      * @inheritdoc
      */
     update: function(info) {
@@ -90,13 +84,15 @@ Ext.define('Ext.drag.proxy.Placeholder', {
             // If we are valid, replace the invalidCls with the validCls.
             // Otherwise do the reverse
             el.replaceCls(valid ? invalidCls : validCls, valid ? validCls : invalidCls);
-        } else {
+        }
+        else {
             el.removeCls([invalidCls, validCls]);
         }
     },
 
     updateCls: function(cls, oldCls) {
         var el = this.element;
+
         if (el) {
             if (oldCls) {
                 el.removeCls(oldCls);
@@ -110,6 +106,7 @@ Ext.define('Ext.drag.proxy.Placeholder', {
 
     updateHtml: function(html) {
         var el = this.element;
+
         if (el) {
             el.setHtml(html || '');
         }
@@ -125,19 +122,23 @@ Ext.define('Ext.drag.proxy.Placeholder', {
 
     destroy: function() {
         this.element = Ext.destroy(this.element);
+
         this.callParent();
     },
 
     privates: {
         /**
+         * @method adjustCursorOffset
          * @inheritdoc
          */
         adjustCursorOffset: function(info, xy) {
             var offset = this.getCursorOffset();
+
             if (offset) {
                 xy[0] += (offset[0] || 0);
                 xy[1] += (offset[1] || 0);
             }
+
             return xy;
         },
 

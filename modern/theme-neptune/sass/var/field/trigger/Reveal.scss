@@ -96,13 +96,13 @@ $revealtrigger-icon-size-big: dynamic(null);
  * @var {number}
  * Reveal Trigger icon font-size
  */
-$revealtrigger-icon-font-size: dynamic($revealtrigger-icon-size);
+$revealtrigger-icon-font-size: dynamic(null);
 
 /**
  * @var {number}
  * Reveal Trigger icon font-size in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$revealtrigger-icon-font-size-big: dynamic($revealtrigger-icon-size-big);
+$revealtrigger-icon-font-size-big: dynamic(null);
 
 /**
  * Creates a visual theme for a Reveal Trigger.
@@ -186,25 +186,7 @@ $revealtrigger-icon-font-size-big: dynamic($revealtrigger-icon-size-big);
     $icon-font-size: null,
     $icon-font-size-big: null
 ) {
-    @include trigger-ui(
-        $ui: $ui,
-        $xtype: $xtype,
-        $width: $width,
-        $width-big: $width-big,
-        $background-color: $background-color,
-        $hovered-background-color: $hovered-background-color,
-        $pressed-background-color: $pressed-background-color,
-        $icon: $icon,
-        $icon-color: $icon-color,
-        $hovered-icon-color: $hovered-icon-color,
-        $pressed-icon-color: $pressed-icon-color,
-        $icon-background-color: $icon-background-color,
-        $hovered-icon-background-color: $hovered-icon-background-color,
-        $pressed-icon-background-color: $pressed-icon-background-color,
-        $icon-border-radius: $icon-border-radius,
-        $icon-size: $icon-size,
-        $icon-size-big: $icon-size-big,
-        $icon-font-size: $icon-font-size,
-        $icon-font-size-big: $icon-font-size-big
-    );
+    $arguments: intersect-arguments(revealtrigger-ui, trigger-ui);
+
+    @include trigger-ui($arguments...);
 }

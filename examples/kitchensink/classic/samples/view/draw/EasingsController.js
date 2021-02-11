@@ -9,14 +9,14 @@ Ext.define('KitchenSink.view.draw.EasingsController', {
     cyEnd: 400,
     fxTime: 1000,
 
-    onSelect: function (combo, record) {
+    onSelect: function(combo, record) {
         var me = this,
             name = record.get('name'),
             sprite = me.sprite;
 
-        sprite.fx.setConfig({
-            easing: name === 'custom' ? me.customEasing : name,
-            duration: me.fxTime
+        sprite.setAnimation({
+            duration: me.fxTime,
+            easing: name === 'custom' ? me.customEasing : name
         });
         sprite.setAttributes({
             cy: me.cyEnd
@@ -24,22 +24,22 @@ Ext.define('KitchenSink.view.draw.EasingsController', {
     },
 
     // p is time here in the [0, 1] interval.
-    customEasing: function (p) {
+    customEasing: function(p) {
         return Math.round(p * 5) / 5; // Round to 0.2.
     },
 
-    onAnimationEnd: function (fx) {
+    onAnimationEnd: function(fx) {
         var me = this,
             sprite = fx.getSprite();
 
-        me.timeoutId = Ext.defer(function () {
+        me.timeoutId = Ext.defer(function() {
             sprite.setAttributes({
                 cy: sprite.attr.cy === me.cyEnd ? me.cyStart : me.cyEnd
             });
         }, me.fxTime);
     },
 
-    onAfterRender: function () {
+    init: function() {
         var me = this,
             easingsCombo = me.lookupReference('easings'),
             easingMap = Ext.draw.TimingFunctions.easingMap,
@@ -47,17 +47,17 @@ Ext.define('KitchenSink.view.draw.EasingsController', {
             surface = draw.getSurface(),
             sprite = surface.getItems()[0],
             data = [],
-            store, name, easing, record;
+            store, name, record;
 
         me.sprite = sprite;
-        sprite.fx.on('animationend', me.onAnimationEnd, me);
+        sprite.getAnimation().on('animationend', me.onAnimationEnd, me);
 
         for (name in easingMap) {
-            easing = easingMap[name];
             data.push({
                 name: name
             });
         }
+
         data.push({
             name: 'custom'
         });
@@ -74,8 +74,8 @@ Ext.define('KitchenSink.view.draw.EasingsController', {
         me.onSelect(easingsCombo, record);
     },
 
-    destroy: function () {
-        clearTimeout(this.timeoutId);
+    destroy: function() {
+        Ext.undefer(this.timeoutId);
         this.callParent();
     }
 

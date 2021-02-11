@@ -1,0 +1,19 @@
+@include timetrigger-ui(
+    $width: $timetrigger-width,
+    $width-big: $timetrigger-width-big,
+    $background-color: $timetrigger-background-color,
+    $hovered-background-color: $timetrigger-hovered-background-color,
+    $pressed-background-color: $timetrigger-pressed-background-color,
+    $icon: $timetrigger-icon,
+    $icon-color: $timetrigger-icon-color,
+    $hovered-icon-color: $timetrigger-hovered-icon-color,
+    $pressed-icon-color: $timetrigger-pressed-icon-color,
+    $icon-background-color: $timetrigger-icon-background-color,
+    $hovered-icon-background-color: $timetrigger-hovered-icon-background-color,
+    $pressed-icon-background-color: $timetrigger-pressed-icon-background-color,
+    $icon-border-radius: $timetrigger-icon-border-radius,
+    $icon-size: $timetrigger-icon-size,
+    $icon-size-big: $timetrigger-icon-size-big,
+    $icon-font-size: $timetrigger-icon-font-size,
+    $icon-font-size-big: $timetrigger-icon-font-size-big
+);

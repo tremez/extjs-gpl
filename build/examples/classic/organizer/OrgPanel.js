@@ -8,9 +8,9 @@
 Ext.define('Ext.org.OrgPanel', {
     extend: 'Ext.panel.Panel',
     requires: 'Ext.layout.container.Border',
-    
+
     layout: 'border',
-    
+
     initComponent: function() {
         this.items = [
             {
@@ -41,12 +41,12 @@ Ext.define('Ext.org.OrgPanel', {
                         itemmouseenter: function (view, record, item, index, e) {
                             Ext.log('item', e.type, ' id=', record.id);
                         }
-                    },/**/
+                    },/* */
                     trackOver: true
                 }
             }
         ];
-        
+
         this.callParent(arguments);
     }
 });

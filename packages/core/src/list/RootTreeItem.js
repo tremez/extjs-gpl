@@ -21,15 +21,16 @@ Ext.define('Ext.list.RootTreeItem', {
         cls: Ext.baseCSSPrefix + 'treelist-root-container'
     },
 
-    insertItem: function (item, refItem) {
+    insertItem: function(item, refItem) {
         if (refItem) {
             item.element.insertBefore(refItem.element);
-        } else {
+        }
+        else {
             this.element.appendChild(item.element);
         }
     },
 
-    isToggleEvent: function (e) {
+    isToggleEvent: function(e) {
         return false;
     }
 });

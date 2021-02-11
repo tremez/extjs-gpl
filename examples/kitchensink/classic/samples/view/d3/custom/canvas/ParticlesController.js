@@ -6,42 +6,42 @@ Ext.define('KitchenSink.view.d3.custom.canvas.ParticlesController', {
         'KitchenSink.view.d3.custom.canvas.Particle'
     ],
 
-    onSceneResize: function (component, canvas) {
+    onSceneResize: function(component, canvas) {
         // Do setup on first resize (we expect no more).
         var me = this,
             view = me.getView(),
             width = view.getWidth(),
             height = view.getHeight(),
-            list = me.list = [];
+            list = me.list = [],
+            context, i, p;
 
         me.view = me.getView();
         me.x = width / 2;
         me.y = height / 2;
 
-        me.color = d3.scale.linear()
+        me.color = d3.scaleLinear()
             .domain([0, 0.2, 0.4, 0.6, 0.8, 1])
             .range(['red', 'orange', 'yellow', 'green', 'blue', 'violet']);
 
-        var context = canvas.getContext('2d');
+        context = canvas.getContext('2d');
+
         context.lineWidth = 4;
 
-        d3.timer(function() {
-            // There is no other way to stop a D3 timer
-            // other than returning 'true' from a callback.
-            if (component.isDestroyed) {
-                return true;
-            }
-
+        me.timer = d3.timer(function() {
             context.save();
             context.globalCompositeOperation = 'lighter';
-            for (var i = list.length - 1; i >= 0; i--) {
-                var p = list[i];
+
+            for (i = list.length - 1; i >= 0; i--) {
+                p = list[i];
+
                 p.updatePosition();
                 p.render(context);
+
                 if (p.isDead) {
                     list.splice(i, 1);
                 }
             }
+
             context.restore();
 
             list.push(me.createParticle(me.x, me.y));
@@ -51,7 +51,7 @@ Ext.define('KitchenSink.view.d3.custom.canvas.ParticlesController', {
         });
     },
 
-    createParticle: function (x, y) {
+    createParticle: function(x, y) {
         var raduis = 2 + Math.random() * 3,
             color = this.color(Math.random()),
             p = new KitchenSink.view.d3.custom.canvas.Particle(x, y, raduis, color);
@@ -62,7 +62,7 @@ Ext.define('KitchenSink.view.d3.custom.canvas.ParticlesController', {
         return p;
     },
 
-    onMouseMove: function (e) {
+    onMouseMove: function(e) {
         var me = this,
             view = me.view,
             viewXY = view.getXY(),
@@ -74,6 +74,12 @@ Ext.define('KitchenSink.view.d3.custom.canvas.ParticlesController', {
 
         if (isRtl) {
             me.x = view.getSize().width - me.x;
+        }
+    },
+
+    onDestroy: function() {
+        if (this.timer) {
+            this.timer.stop();
         }
     }
 

@@ -1,14 +1,13 @@
-.stretch-html .x-innerhtml {
-    height: 100%;
-}
-
-.group-source, .group-target {
+.group-source,
+.group-target {
     width: 100px;
     height: 100px;
     padding: 5px;
     text-align: center;
+    vertical-align: top;
     color: #FFF;
-    position: absolute;
+    float: left;
+    margin-right: 10px;
     @include border-radius(5px);
     @include user-select(none);
 
@@ -17,13 +16,24 @@
     }
 }
 
+.group-target-group1 {
+    clear: both;
+}
 .group-source {
     cursor: move;
 }
 
 .group-target {
     color: #000;
-    border: 2px dashed #37474F;
+    border: 2px dashed #879095;
+    margin-top: 10px;
+}
+
+@if $theme-name == 'theme-graphite' {
+    .group-target {
+        border: 2px dashed #ffffff;
+        color: #ffffff;
+    }
 }
 
 .group-proxy {
@@ -50,49 +60,12 @@
 
 .group-source-group1 {
     background-color: #FF5722;
-    left: 10px; 
-    top: 10px;
 }
 
 .group-source-group2 {
     background-color: #9C27B0;
-    left: 125px; 
-    top: 10px;
-
-    .x-phone & {
-        left: 35vw;
-    }
 }
 
 .group-source-both {
     background-color: #039BE5;
-    left: 240px; 
-    top: 10px;
-
-    .x-phone & {
-        left: 67vw;
-    }
-}
-
-.group-target-group1 {
-    left: 10px; 
-    top: 170px;
-}
-
-.group-target-group2 {
-    left: 125px; 
-    top: 170px;
-
-    .x-phone & {
-        left: 35vw;
-    }
-}
-
-.group-target-both {
-    left: 240px; 
-    top: 170px;
-
-    .x-phone & {
-        left: 67vw;
-    }
 }

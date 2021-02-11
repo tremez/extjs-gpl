@@ -161,7 +161,7 @@ Ext.env.Ready = {
      * Binds the appropriate browser event for checking if the DOM has loaded.
      * @private
      */
-    bind: function () {
+    bind: function() {
         var me = Ext.env.Ready,
             doc = document;
 
@@ -172,19 +172,22 @@ Ext.env.Ready = {
                 me.onReadyEvent({
                     type: doc.readyState || 'body'
                 });
-            } else {
+            }
+            else {
                 me.bound = 1;
+
                 if (Ext.browser.is.PhoneGap && !Ext.os.is.Desktop) {
                     me.bound = 2;
                     doc.addEventListener('deviceready', me.onReadyEvent, false);
                 }
+
                 doc.addEventListener('DOMContentLoaded', me.onReadyEvent, false);
                 window.addEventListener('load', me.onReadyEvent, false);
             }
         }
     },
 
-    block: function () {
+    block: function() {
         ++this.blocks;
         Ext.isReady = false;
     },
@@ -194,7 +197,7 @@ Ext.env.Ready = {
      * on the `delay` property.
      * @private
      */
-    fireReady: function () {
+    fireReady: function() {
         var me = Ext.env.Ready;
 
         if (!me.state) {
@@ -207,7 +210,8 @@ Ext.env.Ready = {
 
             if (!me.delay) {
                 me.handleReady();
-            } else if (navigator.standalone) {
+            }
+            else if (navigator.standalone) {
                 // When running from Home Screen, the splash screen will not disappear
                 // until all external resource requests finish.
                 // The first timeout clears the splash screen
@@ -216,7 +220,8 @@ Ext.env.Ready = {
                     me.timer = null;
                     me.handleReadySoon();
                 }, 1);
-            } else {
+            }
+            else {
                 me.handleReadySoon();
             }
         }
@@ -227,7 +232,7 @@ Ext.env.Ready = {
      * `state` from 1 to 2 and ensure the proper subset of `listeners` are invoked.
      * @private
      */
-    handleReady: function () {
+    handleReady: function() {
         var me = this;
 
         if (me.state === 1) {
@@ -245,11 +250,11 @@ Ext.env.Ready = {
      * @param {Number} [delay] If passed, this overrides the `delay` property.
      * @private
      */
-    handleReadySoon: function (delay) {
+    handleReadySoon: function(delay) {
         var me = this;
 
         if (!me.timer) {
-            me.timer = Ext.defer(function () {
+            me.timer = Ext.defer(function() {
                 me.timer = null;
                 me.handleReady();
             }, delay || me.delay);
@@ -260,15 +265,17 @@ Ext.env.Ready = {
      * This method invokes the given `listener` instance based on its options.
      * @param {Object} listener
      */
-    invoke: function (listener) {
+    invoke: function(listener) {
         var delay = listener.delay;
 
         if (delay) {
             Ext.defer(listener.fn, delay, listener.scope);
-        } else {
+        }
+        else {
             if (Ext.elevateFunction) {
                 Ext.elevateFunction(listener.fn, listener.scope);
-            } else {
+            }
+            else {
                 listener.fn.call(listener.scope);
             }
         }
@@ -282,12 +289,13 @@ Ext.env.Ready = {
     invokeAll: function() {
         if (Ext.elevateFunction) {
             Ext.elevateFunction(this.doInvokeAll, this);
-        } else {
+        }
+        else {
             this.doInvokeAll();
         }
     },
 
-    doInvokeAll: function () {
+    doInvokeAll: function() {
         var me = this,
             listeners = me.listeners,
             listener;
@@ -296,6 +304,7 @@ Ext.env.Ready = {
             // Since DOM is ready and we have no blocks, we mark the framework as ready.
             Ext.isReady = true;
         }
+
         me.firing = true;
 
         // NOTE: We cannot cache this length because each time through the loop a callback
@@ -312,11 +321,13 @@ Ext.env.Ready = {
             }
 
             listener = listeners.pop();
+
             if (me.blocks && !listener.dom) {
                 // If we are blocked (i.e., only DOM ready) and this listener is not a
                 // DOM-ready listener we have reached the end of the line. The remaining
                 // listeners are Framework ready listeners.
                 listeners.push(listener);
+
                 break;
             }
 
@@ -342,7 +353,7 @@ Ext.env.Ready = {
      * @return {Object} The listener instance.
      * @private
      */
-    makeListener: function (fn, scope, options) {
+    makeListener: function(fn, scope, options) {
         var ret = {
             fn: fn,
             id: ++this.nextId, // so sortFn can respect FIFO
@@ -350,10 +361,13 @@ Ext.env.Ready = {
             dom: false,
             priority: 0
         };
+
         if (options) {
             Ext.apply(ret, options);
         }
+
         ret.phase = ret.dom ? 0 : 1; // to simplify the sortFn
+
         return ret;
     },
 
@@ -373,7 +387,7 @@ Ext.env.Ready = {
      * means full Framework and DOM readiness.
      * @private
      */
-    on: function (fn, scope, options) {
+    on: function(fn, scope, options) {
         var me = Ext.env.Ready,
             listener = me.makeListener(fn, scope, options);
 
@@ -386,7 +400,8 @@ Ext.env.Ready = {
             // (or currently executing) call to handleReady or unblock will trigger its
             // delivery in proper priority order.
             me.invoke(listener);
-        } else {
+        }
+        else {
             me.listeners.push(listener);
             ++me.generation;
 
@@ -406,17 +421,18 @@ Ext.env.Ready = {
      * @param {Event} [ev] The event instance.
      * @private
      */
-    onReadyEvent: function (ev) {
+    onReadyEvent: function(ev) {
         var me = Ext.env.Ready;
 
         if (Ext.elevateFunction) {
             Ext.elevateFunction(me.doReadyEvent, me, arguments);
-        } else {
+        }
+        else {
             me.doReadyEvent(ev);
         }
     },
 
-    doReadyEvent: function (ev) {
+    doReadyEvent: function(ev) {
         var me = this;
 
         //<debug>
@@ -440,11 +456,11 @@ Ext.env.Ready = {
      * to fire can be determined using `pop` on the `listeners` array.
      * @private
      */
-    sortFn: function (a, b) {
+    sortFn: function(a, b) {
         return -((a.phase - b.phase) || (b.priority - a.priority) || (a.id - b.id));
     },
 
-    unblock: function () {
+    unblock: function() {
         var me = this;
 
         if (me.blocks) {
@@ -468,7 +484,7 @@ Ext.env.Ready = {
      * detect ready state.
      * @private
      */
-    unbind: function () {
+    unbind: function() {
         var me = this,
             doc = document;
 
@@ -481,208 +497,212 @@ Ext.env.Ready = {
     }
 };
 
-(function () {
-    var Ready = Ext.env.Ready;
+(function() {
+var Ready = Ext.env.Ready;
 
-    //<feature legacyBrowser>
+//<feature legacyBrowser>
 
-    /*
-     *  EXTJS-13522
-     *  Although IE 9 has the DOMContentLoaded event available, usage of that causes
-     *  timing issues when attempting to access document.namespaces (VmlCanvas.js).
-     *  Consequently, even in IE 9 we need to use the legacy bind override for ready
-     *  detection.  This defers ready firing enough to allow access to the
-     *  document.namespaces property.
-     *
-     *  NOTE: this issue is very timing sensitive, and typically only displays itself
-     *  when there is a large amount of latency between the browser and the server, and
-     *  when testing against a built page (ext-all.js) and not a dev mode page.
+/*
+ *  EXTJS-13522
+ *  Although IE 9 has the DOMContentLoaded event available, usage of that causes
+ *  timing issues when attempting to access document.namespaces (VmlCanvas.js).
+ *  Consequently, even in IE 9 we need to use the legacy bind override for ready
+ *  detection.  This defers ready firing enough to allow access to the
+ *  document.namespaces property.
+ *
+ *  NOTE: this issue is very timing sensitive, and typically only displays itself
+ *  when there is a large amount of latency between the browser and the server, and
+ *  when testing against a built page (ext-all.js) and not a dev mode page.
+ */
+if (Ext.isIE9m) {
+    /* Customized implementation for Legacy IE. The default implementation is 
+     * configured for use with all other 'standards compliant' agents.
+     * References: http://javascript.nwbox.com/IEContentLoaded/
+     * licensed courtesy of http://developer.yahoo.com/yui/license.html
      */
-    if (Ext.isIE9m) {
-        /* Customized implementation for Legacy IE. The default implementation is 
-         * configured for use with all other 'standards compliant' agents.
-         * References: http://javascript.nwbox.com/IEContentLoaded/
-         * licensed courtesy of http://developer.yahoo.com/yui/license.html
+    Ext.apply(Ready, {
+        /**
+         * Timer for doScroll polling
+         * @private
          */
-        Ext.apply(Ready, {
-            /**
-             * Timer for doScroll polling
-             * @private
-             */
-            scrollTimer: null,
+        scrollTimer: null,
 
-            /**
-             * @private
-             */
-            readyStatesRe  : /complete/i,
+        /**
+         * @private
+         */
+        readyStatesRe: /complete/i,
 
-            /**
-             * This strategy has minimal benefits for Sencha solutions that build
-             * themselves (ie. minimal initial page markup). However, progressively-enhanced
-             * pages (with image content and/or embedded frames) will benefit the most
-             * from it. Browser timer resolution is too poor to ensure a doScroll check
-             * more than once on a page loaded with minimal assets (the readystatechange
-             * event 'complete' usually beats the doScroll timer on a 'lightly-loaded'
-             * initial document).
-             * @private
-             */
-            pollScroll : function() {
-                var scrollable = true;
+        /**
+         * This strategy has minimal benefits for Sencha solutions that build
+         * themselves (ie. minimal initial page markup). However, progressively-enhanced
+         * pages (with image content and/or embedded frames) will benefit the most
+         * from it. Browser timer resolution is too poor to ensure a doScroll check
+         * more than once on a page loaded with minimal assets (the readystatechange
+         * event 'complete' usually beats the doScroll timer on a 'lightly-loaded'
+         * initial document).
+         * @private
+         */
+        pollScroll: function() {
+            var scrollable = true;
 
-                try {
-                    document.documentElement.doScroll('left');
-                } catch(e) {
-                    scrollable = false;
-                }
-
-                // on IE8, when running within an iFrame, document.body is not immediately
-                // available
-                if (scrollable && document.body) {
-                    Ready.onReadyEvent({
-                        type: 'doScroll'
-                    });
-                } else {
-                     // Minimize thrashing --
-                     // adjusted for setTimeout's close-to-minimums (not too low),
-                     // as this method SHOULD always be called once initially
-                    Ready.scrollTimer = Ext.defer(Ready.pollScroll, 20);
-                }
-
-                return scrollable;
-            },
-
-            bind: function () {
-                if (Ready.bound) {
-                    return;
-                }
-
-                var doc = document,
-                    topContext;
-
-                // See if we are in an IFRAME? (doScroll ineffective here)
-                try {
-                    topContext = window.frameElement === undefined;
-                } catch(e) {
-                    // If we throw an exception, it means we're probably getting access
-                    // denied, which means we're in an iframe cross domain.
-                }
-
-                if (!topContext || !doc.documentElement.doScroll) {
-                    Ready.pollScroll = Ext.emptyFn;   //then noop this test altogether
-                }
-                else if (Ready.pollScroll()) { // starts scroll polling if necessary
-                    return;
-                }
-
-                if (doc.readyState === 'complete')  {
-                    // Loaded AFTER initial document write/load...
-                    Ready.onReadyEvent({
-                        type: 'already ' + (doc.readyState || 'body')
-                    });
-                } else {
-                    doc.attachEvent('onreadystatechange', Ready.onReadyStateChange);
-                    window.attachEvent('onload', Ready.onReadyEvent);
-                    Ready.bound = 1;
-                }
-            },
-
-            unbind : function () {
-                document.detachEvent('onreadystatechange', Ready.onReadyStateChange);
-                window.detachEvent('onload', Ready.onReadyEvent);
-
-                if (Ext.isNumber(Ready.scrollTimer)) {
-                    clearTimeout(Ready.scrollTimer);
-                    Ready.scrollTimer = null;
-                }
-            },
-
-            /**
-             * This event handler is called when the readyState changes.
-             * @private
-             */
-            onReadyStateChange: function() {
-                var state = document.readyState;
-
-                if (Ready.readyStatesRe.test(state)) {
-                    Ready.onReadyEvent({
-                        type: state
-                    });
-                }
+            try {
+                document.documentElement.doScroll('left');
             }
-        });
-    }
-    //</feature>
+            catch (e) {
+                scrollable = false;
+            }
 
-    /**
-     * @property {Boolean} isDomReady
-     * `true` when the document body is ready for use.
-     * @member Ext
-     * @readonly
-     */
+            // on IE8, when running within an iFrame, document.body is not immediately
+            // available
+            if (scrollable && document.body) {
+                Ready.onReadyEvent({
+                    type: 'doScroll'
+                });
+            }
+            else {
+                // Minimize thrashing --
+                // adjusted for setTimeout's close-to-minimums (not too low),
+                // as this method SHOULD always be called once initially
+                Ready.scrollTimer = Ext.defer(Ready.pollScroll, 20);
+            }
 
-    /**
-     * @property {Boolean} isReady
-     * `true` when `isDomReady` is true and the Framework is ready for use.
-     * @member Ext
-     * @readonly
-     */
+            return scrollable;
+        },
 
-    /**
-     * @method onDocumentReady
-     * @member Ext
-     * Adds a listener to be notified when the document is ready (before onload and before
-     * images are loaded).
-     *
-     * @param {Function} fn The method to call.
-     * @param {Object} [scope] The scope (`this` reference) in which the handler function
-     * executes. Defaults to the browser window.
-     * @param {Object} [options] An object with extra options.
-     * @param {Number} [options.delay=0] A number of milliseconds to delay.
-     * @param {Number} [options.priority=0] Relative priority of this callback. A larger
-     * number will result in the callback being sorted before the others.  Priorities
-     * 1000 or greater and -1000 or lesser are reserved for internal framework use only.
-     * @private
-     */
-    Ext.onDocumentReady = function (fn, scope, options) {
-        var opt = {
-            dom: true
-        };
+        bind: function() {
+            var doc = document,
+                topContext;
 
-        if (options) {
-            Ext.apply(opt, options);
+            if (Ready.bound) {
+                return;
+            }
+
+            // See if we are in an IFRAME? (doScroll ineffective here)
+            try {
+                topContext = window.frameElement === undefined;
+            }
+            catch (e) {
+                // If we throw an exception, it means we're probably getting access
+                // denied, which means we're in an iframe cross domain.
+            }
+
+            if (!topContext || !doc.documentElement.doScroll) {
+                Ready.pollScroll = Ext.emptyFn; // then noop this test altogether
+            }
+            else if (Ready.pollScroll()) { // starts scroll polling if necessary
+                return;
+            }
+
+            if (doc.readyState === 'complete') {
+                // Loaded AFTER initial document write/load...
+                Ready.onReadyEvent({
+                    type: 'already ' + (doc.readyState || 'body')
+                });
+            }
+            else {
+                doc.attachEvent('onreadystatechange', Ready.onReadyStateChange);
+                window.attachEvent('onload', Ready.onReadyEvent);
+                Ready.bound = 1;
+            }
+        },
+
+        unbind: function() {
+            document.detachEvent('onreadystatechange', Ready.onReadyStateChange);
+            window.detachEvent('onload', Ready.onReadyEvent);
+
+            if (Ext.isNumber(Ready.scrollTimer)) {
+                Ext.undefer(Ready.scrollTimer);
+                Ready.scrollTimer = null;
+            }
+        },
+
+        /**
+         * This event handler is called when the readyState changes.
+         * @private
+         */
+        onReadyStateChange: function() {
+            var state = document.readyState;
+
+            if (Ready.readyStatesRe.test(state)) {
+                Ready.onReadyEvent({
+                    type: state
+                });
+            }
         }
+    });
+}
+//</feature>
 
-        Ready.on(fn, scope, opt);
+/**
+ * @property {Boolean} isDomReady
+ * `true` when the document body is ready for use.
+ * @member Ext
+ * @readonly
+ */
+
+/**
+ * @property {Boolean} isReady
+ * `true` when `isDomReady` is true and the Framework is ready for use.
+ * @member Ext
+ * @readonly
+ */
+
+/**
+ * @method onDocumentReady
+ * @member Ext
+ * Adds a listener to be notified when the document is ready (before onload and before
+ * images are loaded).
+ *
+ * @param {Function} fn The method to call.
+ * @param {Object} [scope] The scope (`this` reference) in which the handler function
+ * executes. Defaults to the browser window.
+ * @param {Object} [options] An object with extra options.
+ * @param {Number} [options.delay=0] A number of milliseconds to delay.
+ * @param {Number} [options.priority=0] Relative priority of this callback. A larger
+ * number will result in the callback being sorted before the others.  Priorities
+ * 1000 or greater and -1000 or lesser are reserved for internal framework use only.
+ * @private
+ */
+Ext.onDocumentReady = function(fn, scope, options) {
+    var opt = {
+        dom: true
     };
 
-    /**
-     * @method onReady
-     * @member Ext
-     * Adds a listener to be notified when the document is ready (before onload and before
-     * images are loaded).
-     *
-     * @param {Function} fn The method to call.
-     * @param {Object} [scope] The scope (`this` reference) in which the handler function
-     * executes. Defaults to the browser window.
-     * @param {Object} [options] An object with extra options.
-     * @param {Number} [options.delay=0] A number of milliseconds to delay.
-     * @param {Number} [options.priority=0] Relative priority of this callback. A larger
-     * number will result in the callback being sorted before the others.  Priorities
-     * 1000 or greater and -1000 or lesser are reserved for internal framework use only.
-     * @param {Boolean} [options.dom=false] Pass `true` to only wait for DOM ready, `false`
-     * means full Framework and DOM readiness.
-     * numbers are reserved.
-     */
-    Ext.onReady = function (fn, scope, options) {
-        Ready.on(fn, scope, options);
-    };
-
-    // A shortcut method for onReady with a high priority
-    Ext.onInternalReady = function(fn, scope, options) {
-        Ready.on(fn, scope, Ext.apply({
-            priority: 1000
-        }, options));
+    if (options) {
+        Ext.apply(opt, options);
     }
 
-    Ready.bind();
+    Ready.on(fn, scope, opt);
+};
+
+/**
+ * @method onReady
+ * @member Ext
+ * Adds a listener to be notified when the document is ready (before onload and before
+ * images are loaded).
+ *
+ * @param {Function} fn The method to call.
+ * @param {Object} [scope] The scope (`this` reference) in which the handler function
+ * executes. Defaults to the browser window.
+ * @param {Object} [options] An object with extra options.
+ * @param {Number} [options.delay=0] A number of milliseconds to delay.
+ * @param {Number} [options.priority=0] Relative priority of this callback. A larger
+ * number will result in the callback being sorted before the others.  Priorities
+ * 1000 or greater and -1000 or lesser are reserved for internal framework use only.
+ * @param {Boolean} [options.dom=false] Pass `true` to only wait for DOM ready, `false`
+ * means full Framework and DOM readiness.
+ * numbers are reserved.
+ */
+Ext.onReady = function(fn, scope, options) {
+    Ready.on(fn, scope, options);
+};
+
+// A shortcut method for onReady with a high priority
+Ext.onInternalReady = function(fn, scope, options) {
+    Ready.on(fn, scope, Ext.apply({
+        priority: 1000
+    }, options));
+};
+
+Ready.bind();
 }());

@@ -25,7 +25,7 @@ Ext.define('KitchenSink.view.tree.TreeList', {
     title: 'TreeList',
     controller: 'tree-list',
 
-    iconCls: 'x-fa fa-gears',
+    iconCls: 'x-fa fa-cogs',
     layout: 'border',
 
     viewModel: {
@@ -36,6 +36,7 @@ Ext.define('KitchenSink.view.tree.TreeList', {
         items: [{
             xtype: 'button',
             text: 'Options',
+            cls: 'dock-tab-btn',
             menu: [{
                 text: 'Expander Only',
                 checked: true,
@@ -47,16 +48,18 @@ Ext.define('KitchenSink.view.tree.TreeList', {
                 handler: 'onToggleConfig',
                 config: 'singleExpand'
             }]
-        },{
+        }, {
             xtype: 'button',
             text: 'Nav',
             enableToggle: true,
             reference: 'navBtn',
+            cls: 'dock-tab-btn',
             toggleHandler: 'onToggleNav'
-        },{
+        }, {
             xtype: 'button',
             text: 'Micro',
             enableToggle: true,
+            cls: 'dock-tab-btn',
             toggleHandler: 'onToggleMicro'
         }]
     },

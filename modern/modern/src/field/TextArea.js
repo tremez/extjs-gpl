@@ -1,9 +1,9 @@
 /**
- * Creates an HTML textarea field on the page. This is useful whenever you need the user to enter large amounts of text
- * (i.e. more than a few words). Typically, text entry on mobile devices is not a pleasant experience for the user so
- * it's good to limit your use of text areas to only those occasions when free form text is required or alternative
- * input methods like select boxes or radio buttons are not possible. Text Areas are usually created inside forms, like
- * this:
+ * Creates an HTML textarea field on the page. This is useful whenever you need the user to enter
+ * large amounts of text (i.e. more than a few words). Typically, text entry on mobile devices 
+ * is not a pleasant experience for the user so it's good to limit your use of text areas to only 
+ * those occasions when free form text is required or alternative input methods like select boxes 
+ * or radio buttons are not possible. Text Areas are usually created inside forms, like this:
  *
  *     @example
  *     Ext.create('Ext.form.Panel', {
@@ -29,13 +29,15 @@
  *         ]
  *     });
  *
- * In the example above we're creating a form with a {@link Ext.field.Text text field} for the user's name and a text
- * area for their bio. We used the {@link #maxRows} configuration on the text area to tell it to grow to a maximum of 4
- * rows of text before it starts using a scroll bar inside the text area to scroll the text.
+ * In the example above we're creating a form with a {@link Ext.field.Text text field} for the
+ * user's name and a text area for their bio. We used the {@link #maxRows} configuration on the
+ *  text area to tell it to grow to a maximum of 4 rows of text before it starts using a scroll 
+ * bar inside the text area to scroll the text.
  *
  * We can also create a text area outside the context of a form, like this:
  *
- * This creates two text fields inside a form. Text Fields can also be created outside of a Form, like this:
+ * This creates two text fields inside a form. Text Fields can also be created outside of a Form, 
+ * like this:
  *
  *     Ext.create('Ext.field.TextArea', {
  *         label: 'About You',
@@ -45,58 +47,59 @@
 Ext.define('Ext.field.TextArea', {
     extend: 'Ext.field.Text',
     xtype: 'textareafield',
-    requires: ['Ext.field.TextAreaInput'],
+
     alternateClassName: 'Ext.form.TextArea',
 
     config: {
         /**
-         * @cfg
+         * @cfg autoCapitalize
          * @inheritdoc
          */
         autoCapitalize: false,
 
         /**
-         * @cfg
-         * @inheritdoc
-         */
-        component: {
-            xtype: 'textareainput'
-        },
-
-        /**
-         * @cfg {Number} maxRows The maximum number of lines made visible by the input.
-         * @accessor
+         * @cfg {Number} maxRows
+         * The maximum number of lines made visible by the input.
          */
         maxRows: null,
 
-        clearIcon: false
+        /**
+         * @cfg clearable
+         * @inheritdoc
+         */
+        clearable: false
     },
 
+    /**
+     * @property tag
+     * @inheritdoc
+     */
+    tag: 'textarea',
+
+    /**
+     * @property classCls
+     * @inheritdoc
+     */
     classCls: Ext.baseCSSPrefix + 'textareafield',
 
-    /**
-     * @private
-     */
+    //<debug>
+    applyMaxRows: function(maxRows) {
+        if (maxRows !== null && typeof maxRows !== 'number') {
+            throw new Error(
+                "Ext.field.TextArea: [applyMaxRows] trying to pass a value which is not a number"
+            );
+        }
+
+        return maxRows;
+    },
+    //</debug>
+
     updateMaxRows: function(newRows) {
-        this.getComponent().setMaxRows(newRows);
+        this.setInputAttribute('rows', newRows);
     },
 
-    updateHeight: function(height, oldHeight) {
-        this.callParent([height, oldHeight]);
-        this.getComponent().inputElement.setHeight(height);
-    },
-
-    updateWidth: function(width, oldWidth) {
-        this.callParent([width, oldWidth]);
-        this.getComponent().inputElement.setWidth(width);
-    },
-
-    /**
-     * Called when a key has been pressed in the `<input>`
-     * @private
-     */
     doKeyUp: function(me) {
-        // getValue to ensure that we are in sync with the dom
-        this.toggleClearTrigger(this.getValue());
+        // Do not call parent - we don't want to fire action on enter key press
+        this.syncEmptyState();
     }
 });

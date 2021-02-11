@@ -25,56 +25,70 @@ Ext.define('Ext.draw.sprite.Instancing', {
 
     instances: null,
 
-    applyTemplate: function (template) {
+    applyTemplate: function(template) {
+        var surface;
+
         //<debug>
         if (!Ext.isObject(template)) {
             Ext.raise("A template of an instancing sprite must either be " +
                 "a sprite instance or a valid config object from which a template " +
                 "sprite will be created.");
-        } else if (template.isInstancing || template.isComposite) {
+        }
+        else if (template.isInstancing || template.isComposite) {
             Ext.raise("Can't use an instancing or composite sprite " +
                 "as a template for an instancing sprite.");
         }
+
         //</debug>
         if (!template.isSprite) {
             if (!template.xclass && !template.type) {
                 // For compatibility with legacy charts.
                 template.type = 'circle';
             }
+
             template = Ext.create(template.xclass || 'sprite.' + template.type, template);
         }
-        var surface = template.getSurface();
+
+        surface = template.getSurface();
+
         if (surface) {
             surface.remove(template);
         }
+
         template.setParent(this);
+
         return template;
     },
 
-    updateTemplate: function (template, oldTemplate) {
+    updateTemplate: function(template, oldTemplate) {
         if (oldTemplate) {
             delete oldTemplate.ownAttr;
         }
+
         template.setSurface(this.getSurface());
+
         // ownAttr is used to get a reference to the template's attributes
         // when one of the instances is rendering, as at that moment the template's
         // attributes (template.attr) are the instance's attributes.
         template.ownAttr = template.attr;
 
         this.clearAll();
+        this.setDirty(true);
     },
 
-    updateInstances: function (instances) {
+    updateInstances: function(instances) {
+        var i, ln;
+
         this.clearAll();
 
         if (Ext.isArray(instances)) {
-            for (var i = 0, ln = instances.length; i < ln; i++) {
+            for (i = 0, ln = instances.length; i < ln; i++) {
                 this.add(instances[i]);
             }
         }
     },
 
-    updateSurface: function (surface) {
+    updateSurface: function(surface) {
         var template = this.getTemplate();
 
         if (template && !template.destroyed) {
@@ -82,15 +96,15 @@ Ext.define('Ext.draw.sprite.Instancing', {
         }
     },
 
-    get: function (index) {
+    get: function(index) {
         return this.instances[index];
     },
 
-    getCount: function () {
+    getCount: function() {
         return this.instances.length;
     },
 
-    clearAll: function () {
+    clearAll: function() {
         var template = this.getTemplate();
 
         template.attr.children = this.instances = [];
@@ -101,7 +115,7 @@ Ext.define('Ext.draw.sprite.Instancing', {
      * @deprecated 6.2.0
      * Deprecated, use the {@link #add} method instead.
      */
-    createInstance: function (config, bypassNormalization, avoidCopy) {
+    createInstance: function(config, bypassNormalization, avoidCopy) {
         return this.add(config, bypassNormalization, avoidCopy);
     },
 
@@ -113,18 +127,20 @@ Ext.define('Ext.draw.sprite.Instancing', {
      * @param {Boolean} [avoidCopy] 'true' to avoid copying the `config` object.
      * @return {Object} The attributes of the instance.
      */
-    add: function (config, bypassNormalization, avoidCopy) {
-        var template = this.getTemplate(),
+    add: function(config, bypassNormalization, avoidCopy) {
+        var me = this,
+            template = me.getTemplate(),
             originalAttr = template.attr,
             attr = Ext.Object.chain(originalAttr);
 
-        template.topModifier.prepareAttributes(attr);
+        template.modifiers.target.prepareAttributes(attr);
         template.attr = attr;
         template.setAttributes(config, bypassNormalization, avoidCopy);
         attr.template = template;
-        this.instances.push(attr);
+        me.instances.push(attr);
         template.attr = originalAttr;
-        this.position++;
+        me.position++;
+
         return attr;
     },
 
@@ -133,16 +149,19 @@ Ext.define('Ext.draw.sprite.Instancing', {
      * 
      * @return {null}
      */
-    getBBox: function () { return null; },
+    getBBox: function() {
+        return null;
+    },
 
     /**
      * Returns the bounding box for the instance at the given index.
      *
      * @param {Number} index The index of the instance.
-     * @param {Boolean} [isWithoutTransform] 'true' to not apply sprite transforms to the bounding box.
+     * @param {Boolean} [isWithoutTransform] 'true' to not apply sprite transforms
+     * to the bounding box.
      * @return {Object} The bounding box for the instance.
      */
-    getBBoxFor: function (index, isWithoutTransform) {
+    getBBoxFor: function(index, isWithoutTransform) {
         var template = this.getTemplate(),
             originalAttr = template.attr,
             bbox;
@@ -150,6 +169,7 @@ Ext.define('Ext.draw.sprite.Instancing', {
         template.attr = this.instances[index];
         bbox = template.getBBox(isWithoutTransform);
         template.attr = originalAttr;
+
         return bbox;
     },
 
@@ -158,7 +178,7 @@ Ext.define('Ext.draw.sprite.Instancing', {
      * Checks if the instancing sprite can be seen.
      * @return {Boolean}
      */
-    isVisible: function () {
+    isVisible: function() {
         var attr = this.attr,
             parent = this.getParent(),
             result;
@@ -173,7 +193,7 @@ Ext.define('Ext.draw.sprite.Instancing', {
      * Checks if the instance of an instancing sprite can be seen.
      * @param {Number} index The index of the instance.
      */
-    isInstanceVisible: function (index) {
+    isInstanceVisible: function(index) {
         var me = this,
             template = me.getTemplate(),
             originalAttr = template.attr,
@@ -185,18 +205,23 @@ Ext.define('Ext.draw.sprite.Instancing', {
         }
 
         template.attr = instances[index];
+
+        // TODO This is clearly a bug, fix it
+        // eslint-disable-next-line no-undef
         result = template.isVisible(point, options);
         template.attr = originalAttr;
 
         return result;
     },
 
-    render: function (surface, ctx, rect) {
+    render: function(surface, ctx, rect) {
         //<debug>
         if (!this.getTemplate()) {
             Ext.raise('An instancing sprite must have a template.');
         }
         //</debug>
+
+        // eslint-disable-next-line vars-on-top
         var me = this,
             template = me.getTemplate(),
             surfaceRect = surface.getRect(),
@@ -210,16 +235,21 @@ Ext.define('Ext.draw.sprite.Instancing', {
         template.preRender(surface, ctx, rect);
         template.useAttributes(ctx, surfaceRect);
 
+        template.isSpriteInstance = true;
+
         for (i = 0; i < ln; i++) {
             if (instances[i].hidden) {
                 continue;
             }
+
             ctx.save();
             template.attr = instances[i];
             template.useAttributes(ctx, surfaceRect);
             template.render(surface, ctx, rect);
             ctx.restore();
         }
+
+        template.isSpriteInstance = false;
 
         template.attr = originalAttr;
     },
@@ -231,7 +261,7 @@ Ext.define('Ext.draw.sprite.Instancing', {
      * @param {Object} changes the attributes to change
      * @param {Boolean} [bypassNormalization] 'true' to avoid attribute normalization
      */
-    setAttributesFor: function (index, changes, bypassNormalization) {
+    setAttributesFor: function(index, changes, bypassNormalization) {
         var template = this.getTemplate(),
             originalAttr = template.attr,
             attr = this.instances[index];
@@ -239,17 +269,21 @@ Ext.define('Ext.draw.sprite.Instancing', {
         if (!attr) {
             return;
         }
+
         template.attr = attr;
+
         if (bypassNormalization) {
             changes = Ext.apply({}, changes);
-        } else {
+        }
+        else {
             changes = template.self.def.normalize(changes);
         }
-        template.topModifier.pushDown(attr, changes);
+
+        template.modifiers.target.pushDown(attr, changes);
         template.attr = originalAttr;
     },
 
-    destroy: function () {
+    destroy: function() {
         var me = this,
             template = me.getTemplate();
 

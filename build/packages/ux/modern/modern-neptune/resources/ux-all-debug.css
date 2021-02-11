@@ -1,21 +1,472 @@
-/* /Users/space/buildAgent/work/8cc7421dd8da164c/staging/packages/ux/sass/src/Gauge.scss:1 */
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:36 */
+.fi:before {
+    font-family: 'Font Awesome 5 Free' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-align-center:before {
+    content: '\f037' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-align-justify:before {
+    content: '\f039' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-align-left:before {
+    content: '\f036' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-align-right:before {
+    content: '\f038' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-arrow-down:before {
+    content: '\f063' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-arrow-left:before {
+    content: '\f060' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-arrow-right:before {
+    content: '\f061' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-arrow-up:before {
+    content: '\f062' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-bars:before {
+    content: '\f0c9' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-caret-down:before {
+    content: '\f0d7' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-caret-left:before {
+    content: '\f0d9' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-caret-right:before {
+    content: '\f0da' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-caret-up:before {
+    content: '\f0d8' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-check:before {
+    content: '\f00c' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-chevron-down:before {
+    content: '\f078' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-chevron-left:before {
+    content: '\f053' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-chevron-right:before {
+    content: '\f054' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-chevron-up:before {
+    content: '\f077' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-edit:before {
+    content: '\f044' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-ellipsis-h:before {
+    content: '\f141' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-ellipsis-v:before {
+    content: '\f142' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-filter:before {
+    content: '\f0b0' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-gear:before {
+    content: '\f013' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-group:before {
+    content: '\f0c0' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-home:before {
+    content: '\f015' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-lock:before {
+    content: '\f023' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-minus:before {
+    content: '\f068' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-pencil:before {
+    content: '\f303' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-plus:before {
+    content: '\f067' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-print:before {
+    content: '\f02f' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-redo:before {
+    content: '\f021' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-refresh:before {
+    content: '\f021' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-save:before {
+    content: '\f0c7' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-search:before {
+    content: '\f002' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-star:before {
+    content: '\f005' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-times:before {
+    content: '\f00d' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-trash:before {
+    content: '\f2ed' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-th:before {
+    content: '\f00a' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-th-list:before {
+    content: '\f00b' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-undo:before {
+    content: '\f0e2' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-unlock:before {
+    content: '\f09c' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/font-icons.scss:11 */
+.fi-user:before {
+    content: '\f007' !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/sass/src/gauge/Gauge.scss:1 */
+.x-gauge svg {
+    display: block;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/sass/src/gauge/Gauge.scss:6 */
 .x-gauge-text {
     position: absolute;
     text-align: center;
 }
-/* /Users/space/buildAgent/work/8cc7421dd8da164c/staging/packages/ux/sass/var/Gauge.scss:28 */
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/sass/var/gauge/Gauge.scss:39 */
+.x-gauge svg {
+    display: block;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/sass/var/gauge/Gauge.scss:42 */
 .x-gauge .x-gauge-track {
-    fill: #000;
+    fill: #f0f0f0;
     fill-opacity: 1;
-    stroke: #126daf;
+    stroke: #d4d4d4;
     stroke-opacity: 1;
     stroke-width: 1;
 }
-/* /Users/space/buildAgent/work/8cc7421dd8da164c/staging/packages/ux/sass/var/Gauge.scss:36 */
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/sass/var/gauge/Gauge.scss:50 */
 .x-gauge .x-gauge-value {
     fill: #157fcc;
     fill-opacity: 1;
     stroke: none;
     stroke-opacity: 1;
     stroke-width: 1;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/sass/var/gauge/Gauge.scss:58 */
+.x-gauge .x-gauge-needle {
+    fill: #6e6e6e;
+    fill-opacity: 1;
+    stroke: none;
+    stroke-opacity: 1;
+    stroke-width: 1;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/sass/src/rating/Picker.scss:1 */
+.ux-rating-picker {
+    overflow: hidden;
+    color: #ccc;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+    opacity: 0.8;
+    display: inline-block;
+    vertical-align: top;
+    line-height: 1;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/sass/src/rating/Picker.scss:15 */
+.ux-rating-picker-inner {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: top;
+    cursor: pointer;
+    white-space: nowrap;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/sass/src/rating/Picker.scss:28 */
+.ux-rating-picker-over.ux-rating-picker-track-over {
+    color: #ccc;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/sass/src/rating/Picker.scss:31 */
+.ux-rating-picker-over.ux-rating-picker-track-over > * > .ux-rating-picker-value {
+    display: none;
+    width: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/sass/src/rating/Picker.scss:36 */
+.ux-rating-picker-over.ux-rating-picker-track-over > * > .ux-rating-picker-value:hover {
+    color: inherit;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/sass/src/rating/Picker.scss:40 */
+.ux-rating-picker-over.ux-rating-picker-track-over > * > .ux-rating-picker-tracker {
+    display: inline-block;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/sass/src/rating/Picker.scss:45 */
+.ux-rating-picker-value,
+.ux-rating-picker-tracker {
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    top: 0;
+    width: 0;
+    height: 100%;
+    color: #ffe850;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/sass/src/rating/Picker.scss:58 */
+.ux-rating-picker-tracker {
+    display: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/sass/src/rating/Picker.scss:62 */
+.ux-rating-picker-over {
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+    opacity: 1;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Selector.scss:2 */
+.x-colorpicker {
+    /* The actual pop window with the color picker components */
+    overflow: visible;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Selector.scss:8 */
+.x-colorpicker >.x-box-inner {
+    overflow: visible;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Selector.scss:12 */
+.x-colorpicker .x-field.x-label-text-align-left >.x-label-el {
+    text-align: center;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Selector.scss:16 */
+.x-colorpicker .x-body-el {
+    overflow: visible;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Selector.scss:20 */
+.x-colorpicker .x-colorpicker-escape-overflow {
+    overflow: visible;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Selector.scss:24 */
+.x-colorpicker .x-colorpicker-slider {
+    overflow: visible;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Selector.scss:28 */
+.x-colorpicker .x-button.x-has-text .x-inner-el {
+    padding: 8px 0;
+    text-align: center;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Selector.scss:35 */
+.x-colorpicker .x-textfield > .x-label-el:after {
+    display: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Selector.scss:43 */
+.x-phone.x-portrait .x-colorpicker-column-sslider,
+.x-phone.x-portrait .x-colorpicker-column-vslider,
+.x-phone.x-portrait .x-colorpicker-column-preview {
+    display: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Selector.scss:51 */
+.x-phone.x-landscape .x-colorpicker {
+    max-height: 90vh;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Selector.scss:56 */
+.x-phone .x-colorpicker-escape-overflow .x-input-el {
+    padding-left: 2px;
+    padding-right: 2px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Selector.scss:63 */
+.x-colorpicker-colormap {
+    background-image: url(images/colorpick/map_gradient.png);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Selector.scss:70 */
+.x-colorpicker-colormap-draghandle-container {
+    overflow: visible;
+    z-index: 1;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Selector.scss:76 */
+.x-colorpicker-colormap-blender {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Selector.scss:84 */
+.x-colorpicker-colormap-draghandle {
+    width: 15px;
+    height: 15px;
+    position: relative;
+    left: -7px;
+    top: -7px;
+    background-image: url(images/colorpick/drag_circle.png);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Selector.scss:95 */
+.x-colorpicker-draghandle-container {
+    width: 20px;
+    overflow: visible;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Selector.scss:98 */
+.x-colorpicker-draghandle-container .x-autocontainer-outerCt {
+    height: 100%;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Selector.scss:103 */
+.x-colorpicker-draghandle {
+    width: 32px;
+    height: 9px;
+    position: relative;
+    left: -6px;
+    top: -4px;
+    background-image: url(images/colorpick/pickerslider.png);
+    background-repeat: no-repeat;
+    z-index: 1;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Selector.scss:114 */
+.x-colorpicker-hue {
+    background-image: url(images/colorpick/huegradient.png);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Selector.scss:121 */
+.x-colorpicker-hue-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Selector.scss:135 */
+.x-colorpicker-saturation .x-colorpicker-draghandle-container {
+    background: -moz-linear-gradient(top, #fff 0%, #000 100%);
+    /* FF3.6+ */
+    background: -webkit-linear-gradient(top, #fff 0%, #000 100%);
+    /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #fff 0%, #000 100%);
+    /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #fff 0%, #000 100%);
+    /* IE10+ */
+    background: linear-gradient(to bottom, #fff 0%, #000 100%);
+    /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#000000',GradientType=0 );
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Selector.scss:146 */
+.x-colorpicker-value .x-colorpicker-draghandle-container {
+    background: -moz-linear-gradient(top, red 0%, #000 100%);
+    /* FF3.6+ */
+    background: -webkit-linear-gradient(top, red 0%, #000 100%);
+    /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, red 0%, #000 100%);
+    /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, red 0%, #000 100%);
+    /* IE10+ */
+    background: linear-gradient(to bottom, red 0%, #000 100%);
+    /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff0000', endColorstr='#000000',GradientType=0 );
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Selector.scss:157 */
+.x-colorpicker-alpha .x-colorpicker-draghandle-container {
+    background-image: url(images/colorpick/checkerboard.png);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Selector.scss:163 */
+.x-colorpicker-preview {
+    background-image: url(images/colorpick/checkerboard.png);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Selector.scss:167 */
+.x-colorpreview {
+    position: relative;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Selector.scss:170 */
+.x-colorpreview .x-colorpreview-filter-el {
+    height: 100%;
+    position: absolute;
+    width: 100%;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Selector.scss:176 */
+.x-colorpreview .x-colorpreview-btn-el {
+    height: 100%;
+    position: absolute;
+    width: 100%;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Button.scss:1 */
+.x-colorpicker-button {
+    position: relative;
+    border: 1px solid gray;
+    background-image: url(images/colorpick/checkerboard.png);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Button.scss:6 */
+.x-colorpicker-button .x-colorbutton-filter-el {
+    height: 100%;
+    position: absolute;
+    width: 100%;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Button.scss:12 */
+.x-colorpicker-button .x-colorbutton-btn-el {
+    height: 100%;
+    position: absolute;
+    width: 100%;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Field.scss:3 */
+.x-colorpicker-field .x-form-item-body {
+    position: relative;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Field.scss:8 */
+.x-colorpicker-field .x-input-el.x-input-el {
+    padding-left: 26px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Field.scss:14 */
+.x-colorpicker-field-swatch {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 4px;
+    background-image: url(images/colorpick/checkerboard.png);
+    top: 0px;
+    bottom: 0px;
+    margin: auto;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/ux/modern/sass/src/colorpick/Field.scss:27 */
+.x-colorpicker-field-swatch-inner {
+    position: absolute;
+    height: 100%;
+    width: 100%;
 }

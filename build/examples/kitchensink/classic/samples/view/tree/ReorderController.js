@@ -2,8 +2,8 @@ Ext.define('KitchenSink.view.tree.ReorderController', {
     extend: 'Ext.app.ViewController',
 
     alias: 'controller.tree-reorder',
-    
-    onExpandAllClick: function () {
+
+    onExpandAllClick: function() {
         var view = this.getView(),
             toolbar = view.lookup('tbar');
 
@@ -16,7 +16,7 @@ Ext.define('KitchenSink.view.tree.ReorderController', {
         });
     },
 
-    onCollapseAllClick: function () {
+    onCollapseAllClick: function() {
         var view = this.getView(),
             toolbar = view.lookup('tbar');
 

@@ -1,14 +1,14 @@
 @mixin material-icon-class($name, $pseudo: 'before') {
-  // Convert to dashes so we can write everything dash-like (eg 3d_rotation === 3d-rotation)
-  $dash-name: str-replace-regex($name, '_', '-', true);
+    // Convert to dashes so we can write everything dash-like (eg 3d_rotation === 3d-rotation)
+    $dash-name: str-replace-regex($name, '_', '-', true);
 
-  // This allows users to enter a name of 'icon-name' and get the proper material 'icon_name' content
-  $name: str-replace-regex($name, '-', '_', true);
-  .md-icon-#{$dash-name} {
-    &::#{$pseudo} {
-      content: '#{$name}';
+    // This allows users to enter a name of 'icon-name' and get the proper material 'icon_name' content
+    $name: str-replace-regex($name, '-', '_', true);
+    .md-icon-#{$dash-name} {
+        &::#{$pseudo} {
+            content: '#{$name}';
+        }
     }
-  }
 }
 
 // <editor-fold desc="Material Icons">
@@ -944,4 +944,5 @@ $material-icons: (
         'star',
         'star_border',
         'star_half'
-)// </editor-fold>
+)
+// </editor-fold>

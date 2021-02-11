@@ -14,8 +14,14 @@
 Ext.define('KitchenSink.view.tab.LazyTabs', {
     extend: 'Ext.tab.Panel',
     xtype: 'lazy-tabs',
+
+    requires: [
+        'Ext.plugin.LazyItems'
+    ],
+
     //<example>
     exampleTitle: 'Lazy Tabs',
+    cls: Ext.baseCSSPrefix + 'shadow',
     //</example>
 
     width: 600,
@@ -52,22 +58,23 @@ Ext.define('KitchenSink.view.tab.LazyTabs', {
     }, {
         title: 'Lazy Tab',
         plugins: {
-            ptype: 'lazyitems',
-            items: [{
-                fieldLabel: 'Field 1',
-                xtype: 'textfield',
-                style: 'margin: 0 10px 5px 0'
-            }, {
-                fieldLabel: 'Field 2',
-                xtype: 'numberfield'
-            }, {
-                fieldLabel: 'Field 3',
-                xtype: 'combobox',
-                style: 'margin: 0 10px 5px 0'
-            }, {
-                fieldLabel: 'Field 4',
-                xtype: 'datefield'
-            }]
+            lazyitems: {
+                items: [{
+                    fieldLabel: 'Field 1',
+                    xtype: 'textfield',
+                    style: 'margin: 0 10px 5px 0'
+                }, {
+                    fieldLabel: 'Field 2',
+                    xtype: 'numberfield'
+                }, {
+                    fieldLabel: 'Field 3',
+                    xtype: 'combobox',
+                    style: 'margin: 0 10px 5px 0'
+                }, {
+                    fieldLabel: 'Field 4',
+                    xtype: 'datefield'
+                }]
+            }
         }
     }]
 });

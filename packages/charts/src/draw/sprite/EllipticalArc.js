@@ -41,7 +41,8 @@ Ext.define('Ext.draw.sprite.EllipticalArc', {
                 endAngle: 'number',
 
                 /**
-                 * @cfg {Boolean} [anticlockwise=false] Determines whether or not the arc is drawn clockwise.
+                 * @cfg {Boolean} [anticlockwise=false] Determines whether or not the arc
+                 * is drawn clockwise.
                  */
                 anticlockwise: 'bool'
             },
@@ -64,7 +65,8 @@ Ext.define('Ext.draw.sprite.EllipticalArc', {
         }
     },
 
-    updatePath: function (path, attr) {
-        path.ellipse(attr.cx, attr.cy, attr.rx, attr.ry, attr.axisRotation, attr.startAngle, attr.endAngle, attr.anticlockwise);
+    updatePath: function(path, attr) {
+        path.ellipse(attr.cx, attr.cy, attr.rx, attr.ry, attr.axisRotation, attr.startAngle,
+                     attr.endAngle, attr.anticlockwise);
     }
 });

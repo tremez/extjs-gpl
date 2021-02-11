@@ -7,14 +7,14 @@ Ext.define('Ext.ux.event.Driver', {
     active: null,
 
     specialKeysByName: {
-        PGUP:  33,
-        PGDN:  34,
-        END:   35,
-        HOME:  36,
-        LEFT:  37,
-        UP:    38,
+        PGUP: 33,
+        PGDN: 34,
+        END: 35,
+        HOME: 36,
+        LEFT: 37,
+        UP: 38,
         RIGHT: 39,
-        DOWN:  40
+        DOWN: 40
     },
 
     specialKeysByCode: {
@@ -32,7 +32,7 @@ Ext.define('Ext.ux.event.Driver', {
      * @param {Ext.ux.event.Driver} this
      */
 
-    getTextSelection: function (el) {
+    getTextSelection: function(el) {
         // See https://code.google.com/p/rangyinputs/source/browse/trunk/rangyinputs_jquery.js
         var doc = el.ownerDocument,
             range, range2, start, end;
@@ -40,7 +40,8 @@ Ext.define('Ext.ux.event.Driver', {
         if (typeof el.selectionStart === "number") {
             start = el.selectionStart;
             end = el.selectionEnd;
-        } else if (doc.selection) {
+        }
+        else if (doc.selection) {
             range = doc.selection.createRange();
             range2 = el.createTextRange();
             range2.setEndPoint('EndToStart', range);
@@ -52,26 +53,27 @@ Ext.define('Ext.ux.event.Driver', {
         return [ start, end ];
     },
 
-    getTime: function () {
+    getTime: function() {
         return new Date().getTime();
     },
 
     /**
      * Returns the number of milliseconds since start was called.
      */
-    getTimestamp: function () {
+    getTimestamp: function() {
         var d = this.getTime();
+
         return d - this.startTime;
     },
 
-    onStart: function () {},
+    onStart: function() {},
 
-    onStop: function () {},
+    onStop: function() {},
 
     /**
      * Starts this object. If this object is already started, nothing happens.
      */
-    start: function () {
+    start: function() {
         var me = this;
 
         if (!me.active) {
@@ -85,7 +87,7 @@ Ext.define('Ext.ux.event.Driver', {
     /**
      * Stops this object. If this object is not started, nothing happens.
      */
-    stop: function () {
+    stop: function() {
         var me = this;
 
         if (me.active) {
@@ -94,11 +96,10 @@ Ext.define('Ext.ux.event.Driver', {
             me.fireEvent('stop', me);
         }
     }
-},
-function () {
+}, function() {
     var proto = this.prototype;
 
-    Ext.Object.each(proto.specialKeysByName, function (name, value) {
+    Ext.Object.each(proto.specialKeysByName, function(name, value) {
         proto.specialKeysByCode[value] = name;
     });
 });

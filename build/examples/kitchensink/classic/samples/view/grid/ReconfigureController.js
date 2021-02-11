@@ -7,7 +7,7 @@ Ext.define('KitchenSink.view.grid.ReconfigureController', {
     cities: ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Philadelphia', 'Phoenix', 'San Antonio', 'San Diego', 'Dallas', 'San Jose'],
     departments: ['Development', 'QA', 'Marketing', 'Accounting', 'Sales'],
 
-    onShowClick: function (btn) {
+    onShowClick: function(btn) {
         var me = this,
             name = btn.itemId,
             view = me.getView(),
@@ -28,14 +28,15 @@ Ext.define('KitchenSink.view.grid.ReconfigureController', {
         // disabled so that automatic focus handling can find an enabled sibling.
         if (btn === showEmployees) {
             showOffices.enable();
-        } else {
+        }
+        else {
             showEmployees.enable();
         }
 
         btn.disable();
     },
 
-    createEmployeeStore: function(){
+    createEmployeeStore: function() {
         var data = [],
             i = 0,
             usedNames = {},
@@ -50,13 +51,14 @@ Ext.define('KitchenSink.view.grid.ReconfigureController', {
                 department: this.getDepartment()
             });
         }
+
         return new Ext.data.Store({
             model: KitchenSink.model.grid.Employee,
             data: data
         });
     },
 
-    createOfficeStore: function(){
+    createOfficeStore: function() {
         var data = [],
             i = 0,
             usedNames = {},
@@ -69,6 +71,7 @@ Ext.define('KitchenSink.view.grid.ReconfigureController', {
                 totalEmployees: Ext.Number.randomInt(10, 25)
             });
         }
+
         return new Ext.data.Store({
             model: KitchenSink.model.grid.Office,
             data: data
@@ -76,7 +79,7 @@ Ext.define('KitchenSink.view.grid.ReconfigureController', {
     },
 
     // Fake data generation functions
-    generateName: function(){
+    generateName: function() {
         var lasts = this.lastNames,
             firsts = this.firstNames,
             lastLen = lasts.length,
@@ -97,32 +100,37 @@ Ext.define('KitchenSink.view.grid.ReconfigureController', {
         }
 
         used[key] = true;
+
         return name;
     },
 
-    getCity: function(){
+    getCity: function() {
         var cities = this.cities,
             len = cities.length;
 
         return cities[Ext.Number.randomInt(0, len - 1)];
     },
 
-    getUniqueCity: function(used){
+    getUniqueCity: function(used) {
         var city = this.getCity();
+
         if (used[city]) {
             return this.getUniqueCity(used);
         }
 
         used[city] = true;
+
         return city;
     },
 
     getEmployeeNo: function() {
         var out = '',
             i = 0;
+
         for (; i < 6; ++i) {
             out += Ext.Number.randomInt(0, 7);
         }
+
         return out;
     },
 

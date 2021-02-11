@@ -1,10 +1,12 @@
 /**
- * This is a base class for layouts that contain a single item that automatically expands to fill the layout's
- * container. This class is intended to be extended or created via the layout:'fit'
- * {@link Ext.container.Container#layout} config, and should generally not need to be created directly via the new keyword.
+ * This is a base class for layouts that contain a single item that automatically expands to fill
+ * the layout's container. This class is intended to be extended or created via the `layout: 'fit'`
+ * {@link Ext.container.Container#layout} config, and should generally not need to be created
+ * directly via the new keyword.
  *
- * Fit layout does not have any direct config options (other than inherited ones). To fit a panel to a container using
- * Fit layout, simply set `layout: 'fit'` on the container and add a single panel to it.
+ * Fit layout does not have any direct config options (other than inherited ones). To fit a panel
+ * to a container using Fit layout, simply set `layout: 'fit'` on the container and add
+ * a single panel to it.
  *
  *     @example
  *     Ext.create('Ext.panel.Panel', {
@@ -21,27 +23,23 @@
  *         renderTo: Ext.getBody()
  *     });
  *
- * If the container has multiple items, all of the items will all be equally sized. This is usually not
- * desired, so to avoid this, place only a **single** item in the container. This sizing of all items
- * can be used to provide a background {@link Ext.Img image} that is "behind" another item
- * such as a {@link Ext.view.View dataview} if you also absolutely position the items.
+ * If the container has multiple items, all of the items will all be equally sized. This is usually
+ * not desired, so to avoid this, place only a **single** item in the container. This sizing
+ * of all items can be used to provide a background {@link Ext.Img image} that is "behind"
+ * another item such as a {@link Ext.view.View dataview} if you also absolutely position the items.
  */
 Ext.define('Ext.layout.container.Fit', {
-
-    /* Begin Definitions */
     extend: 'Ext.layout.container.Container',
-    alternateClassName: 'Ext.layout.FitLayout',
-
+    alternateClassName: ['Ext.layout.FitLayout', 'Ext.layout.Fit'],
     alias: 'layout.fit',
 
-    /* End Definitions */
-
     /**
+     * @cfg itemCls
      * @inheritdoc Ext.layout.container.Container#cfg-itemCls
      */
     itemCls: Ext.baseCSSPrefix + 'fit-item',
     type: 'fit',
-   
+
     manageMargins: true,
 
     sizePolicies: [
@@ -51,22 +49,23 @@ Ext.define('Ext.layout.container.Fit', {
         { readsWidth: 0, readsHeight: 0, setsWidth: 1, setsHeight: 1 }
     ],
 
-    getItemSizePolicy: function (item, ownerSizeModel) {
+    getItemSizePolicy: function(item, ownerSizeModel) {
         // this layout's sizePolicy is derived from its owner's sizeModel:
         var sizeModel = ownerSizeModel || this.owner.getSizeModel(),
-            mode = (sizeModel.width.shrinkWrap ? 0 : 1) | // jshint ignore:line
+            mode = (sizeModel.width.shrinkWrap ? 0 : 1) |
                    (sizeModel.height.shrinkWrap ? 0 : 2);
 
-       return this.sizePolicies[mode];
+        return this.sizePolicies[mode];
     },
 
-    beginLayoutCycle: function (ownerContext, firstCycle) {
+    beginLayoutCycle: function(ownerContext, firstCycle) {
         var me = this,
             // determine these before the lastSizeModels get updated:
             resetHeight = me.lastHeightModel && me.lastHeightModel.calculated,
             resetWidth = me.lastWidthModel && me.lastWidthModel.calculated,
             resetSizes = resetWidth || resetHeight,
-            maxChildMinHeight = 0, maxChildMinWidth = 0,
+            maxChildMinHeight = 0,
+            maxChildMinWidth = 0,
             c, childItems, i, item, length, margins, minHeight, minWidth, style, undef;
 
         me.callParent(arguments);
@@ -105,6 +104,7 @@ Ext.define('Ext.layout.container.Fit', {
                     if (maxChildMinHeight < minHeight) {
                         maxChildMinHeight = minHeight;
                     }
+
                     if (maxChildMinWidth < minWidth) {
                         maxChildMinWidth = minWidth;
                     }
@@ -117,6 +117,7 @@ Ext.define('Ext.layout.container.Fit', {
                 if (resetHeight) {
                     style.height = '';
                 }
+
                 if (resetWidth) {
                     style.width = '';
                 }
@@ -132,7 +133,7 @@ Ext.define('Ext.layout.container.Fit', {
         // won't be triggering overflow in that case) and false if we have no minSize (so
         // no child to trigger an overflow).
         c = ownerContext.target;
-        ownerContext.overflowX = (!ownerContext.widthModel.shrinkWrap && 
+        ownerContext.overflowX = (!ownerContext.widthModel.shrinkWrap &&
                                    ownerContext.maxChildMinWidth &&
                                    c.scrollFlags.x) || undef;
 
@@ -141,7 +142,7 @@ Ext.define('Ext.layout.container.Fit', {
                                    c.scrollFlags.y) || undef;
     },
 
-    calculate: function (ownerContext) {
+    calculate: function(ownerContext) {
         var me = this,
             childItems = ownerContext.childItems,
             length = childItems.length,
@@ -158,21 +159,27 @@ Ext.define('Ext.layout.container.Fit', {
             scrollbars, scrollbarSize, padding, i, contentWidth, contentHeight;
 
         ownerContext.state.info = info;
+
         if (overflowX || overflowY) {
             // If we have children that have minHeight/Width, we may be forced to overflow
             // and gain scrollbars. If so, we want to remove their space from the other
             // axis so that we fit things inside the scrollbars rather than under them.
             scrollbars = me.getScrollbarsNeeded(
-                    overflowX && containerSize.width, overflowY && containerSize.height,
-                    ownerContext.maxChildMinWidth, ownerContext.maxChildMinHeight);
+                overflowX && containerSize.width,
+                overflowY && containerSize.height,
+                ownerContext.maxChildMinWidth,
+                ownerContext.maxChildMinHeight
+            );
 
             if (scrollbars) {
-                scrollbarSize = Ext.getScrollbarSize();
-                if (scrollbars & 1) { // jshint ignore:line
+                scrollbarSize = Ext.scrollbar.size();
+
+                if (scrollbars & 1) {
                     // if we need the hscrollbar, remove its height
                     containerSize.height -= scrollbarSize.height;
                 }
-                if (scrollbars & 2) { // jshint ignore:line
+
+                if (scrollbars & 2) {
                     // if we need the vscrollbar, remove its width
                     containerSize.width -= scrollbarSize.width;
                 }
@@ -186,28 +193,32 @@ Ext.define('Ext.layout.container.Fit', {
                 info.index = i;
                 me.fitItem(childItems[i], info);
             }
-        } else {
+        }
+        else {
             info.contentWidth = info.contentHeight = 0;
         }
 
         if (shrinkWrapHeight || shrinkWrapWidth) {
             padding = ownerContext.targetContext.getPaddingInfo();
-            
+
             if (shrinkWrapWidth) {
                 if (overflowY && !containerSize.gotHeight) {
                     // if we might overflow vertically and don't have the container height,
                     // we don't know if we will need a vscrollbar or not, so we must wait
                     // for that height so that we can determine the contentWidth...
                     me.done = false;
-                } else {
+                }
+                else {
                     contentWidth = info.contentWidth + padding.width;
+
                     // the scrollbar flag (if set) will indicate that an overflow exists on
                     // the horz(1) or vert(2) axis... if not set, then there could never be
                     // an overflow...
-                    if (scrollbars & 2) { // jshint ignore:line
+                    if (scrollbars & 2) {
                         // if we need the vscrollbar, add its width
                         contentWidth += scrollbarSize.width;
                     }
+
                     if (!ownerContext.setContentWidth(contentWidth)) {
                         me.done = false;
                     }
@@ -220,15 +231,18 @@ Ext.define('Ext.layout.container.Fit', {
                     // we don't know if we will need a hscrollbar or not, so we must wait
                     // for that width so that we can determine the contentHeight...
                     me.done = false;
-                } else {
+                }
+                else {
                     contentHeight = info.contentHeight + padding.height;
+
                     // the scrollbar flag (if set) will indicate that an overflow exists on
                     // the horz(1) or vert(2) axis... if not set, then there could never be
                     // an overflow...
-                    if (scrollbars & 1) { // jshint ignore:line
+                    if (scrollbars & 1) {
                         // if we need the hscrollbar, add its height
                         contentHeight += scrollbarSize.height;
                     }
+
                     if (!ownerContext.setContentHeight(contentHeight)) {
                         me.done = false;
                     }
@@ -237,11 +251,12 @@ Ext.define('Ext.layout.container.Fit', {
         }
     },
 
-    fitItem: function (itemContext, info) {
+    fitItem: function(itemContext, info) {
         var me = this;
 
         if (itemContext.invalid) {
             me.done = false;
+
             return;
         }
 
@@ -257,8 +272,9 @@ Ext.define('Ext.layout.container.Fit', {
         }
     },
 
-    fitItemWidth: function (itemContext, info) {
+    fitItemWidth: function(itemContext, info) {
         var contentWidth, width;
+
         // Attempt to set only dimensions that are being controlled, not shrinkWrap dimensions
         if (info.ownerContext.widthModel.shrinkWrap) {
             // contentWidth must include the margins to be consistent with setItemWidth
@@ -266,17 +282,22 @@ Ext.define('Ext.layout.container.Fit', {
             // because we add margins, width will be NaN or a number (not undefined)
 
             contentWidth = info.contentWidth;
+
             if (contentWidth === undefined) {
                 info.contentWidth = width;
-            } else {
+            }
+            else {
                 info.contentWidth = Math.max(contentWidth, width);
             }
-        } else if (itemContext.widthModel.calculated) {
+        }
+        else if (itemContext.widthModel.calculated) {
             ++info.needed;
+
             if (info.targetSize.gotWidth) {
                 ++info.got;
                 this.setItemWidth(itemContext, info);
-            } else {
+            }
+            else {
                 // Too early to position
                 return;
             }
@@ -285,25 +306,31 @@ Ext.define('Ext.layout.container.Fit', {
         this.positionItemX(itemContext, info);
     },
 
-    fitItemHeight: function (itemContext, info) {
+    fitItemHeight: function(itemContext, info) {
         var contentHeight, height;
+
         if (info.ownerContext.heightModel.shrinkWrap) {
             // contentHeight must include the margins to be consistent with setItemHeight
             height = itemContext.getProp('height') + info.margins.height;
-            // because we add margins, height will be NaN or a number (not undefined)
 
+            // because we add margins, height will be NaN or a number (not undefined)
             contentHeight = info.contentHeight;
+
             if (contentHeight === undefined) {
                 info.contentHeight = height;
-            } else {
+            }
+            else {
                 info.contentHeight = Math.max(contentHeight, height);
             }
-        } else if (itemContext.heightModel.calculated) {
+        }
+        else if (itemContext.heightModel.calculated) {
             ++info.needed;
+
             if (info.targetSize.gotHeight) {
                 ++info.got;
                 this.setItemHeight(itemContext, info);
-            } else {
+            }
+            else {
                 // Too early to position
                 return;
             }
@@ -312,7 +339,7 @@ Ext.define('Ext.layout.container.Fit', {
         this.positionItemY(itemContext, info);
     },
 
-    positionItemX: function (itemContext, info) {
+    positionItemX: function(itemContext, info) {
         var margins = info.margins;
 
         // Adjust position to account for configured margins or if we have multiple items
@@ -322,12 +349,13 @@ Ext.define('Ext.layout.container.Fit', {
         }
 
         if (margins.width && info.ownerContext.widthModel.shrinkWrap) {
-            // Need the margins for shrink-wrapping but old IE sometimes collapses the left margin into the padding
+            // Need the margins for shrink-wrapping but old IE sometimes collapses
+            // the left margin into the padding
             itemContext.setProp('margin-right', margins.width);
         }
     },
 
-    positionItemY: function (itemContext, info) {
+    positionItemY: function(itemContext, info) {
         var margins = info.margins;
 
         if (info.index || margins.top) {
@@ -335,16 +363,17 @@ Ext.define('Ext.layout.container.Fit', {
         }
 
         if (margins.height && info.ownerContext.heightModel.shrinkWrap) {
-            // Need the margins for shrink-wrapping but old IE sometimes collapses the top margin into the padding
+            // Need the margins for shrink-wrapping but old IE sometimes collapses
+            // the top margin into the padding
             itemContext.setProp('margin-bottom', margins.height);
         }
     },
 
-    setItemHeight: function (itemContext, info) {
+    setItemHeight: function(itemContext, info) {
         itemContext.setHeight(info.targetSize.height - info.margins.height);
     },
 
-    setItemWidth: function (itemContext, info) {
+    setItemWidth: function(itemContext, info) {
         itemContext.setWidth(info.targetSize.width - info.margins.width);
     }
 });

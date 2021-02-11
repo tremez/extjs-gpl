@@ -1,5 +1,5 @@
 /**
- * This container class is used to manage the items (such as title and tools) for `Ext.Panel`.
+ * This container is used to manage the items (such as title and tools) for `Ext.Panel`.
  *
  * @since 6.0.1
  */
@@ -15,45 +15,7 @@ Ext.define('Ext.panel.Header', {
      */
     isPanelHeader: true,
 
-    baseCls: Ext.baseCSSPrefix + 'panel-header',
-
     config: {
-        /**
-         * @cfg {Number/String} glyph
-         * @accessor
-         * A numeric unicode character code to use as the icon.  The default font-family
-         * for glyphs can be set globally using
-         * {@link Ext.app.Application#glyphFontFamily glyphFontFamily} application
-         * config or the {@link Ext#setGlyphFontFamily Ext.setGlyphFontFamily()} method.
-         *
-         * The following shows how to set the glyph using the font icons provided in the
-         * SDK (assuming the font-family has been configured globally):
-         *
-         *     // assumes the glyphFontFamily is "FontAwesome"
-         *     glyph: 'xf005'     // the "home" icon
-         *
-         *     // assumes the glyphFontFamily is "Pictos"
-         *     glyph: 'H'         // the "home" icon
-         *
-         * Alternatively, this config option accepts a string with the charCode and
-         * font-family separated by the `@` symbol.
-         *
-         *     // using Font Awesome
-         *     glyph: 'xf005@FontAwesome'     // the "home" icon
-         *
-         *     // using Pictos
-         *     glyph: 'H@Pictos'              // the "home" icon
-         *
-         * Depending on the theme you're using, you may need include the font icon
-         * packages in your application in order to use the icons included in the
-         * SDK.  For more information see:
-         *
-         *  - [Font Awesome icons](http://fortawesome.github.io/Font-Awesome/cheatsheet/)
-         *  - [Pictos icons](http://docs.sencha.com/extjs/6.0/core_concepts/font_ext.html)
-         *  - [Theming Guide](http://docs.sencha.com/extjs/6.0/core_concepts/theming.html)
-         */
-        glyph: null,
-
         /**
          * @cfg {String} icon
          * Path to an image to use as an icon.
@@ -102,10 +64,29 @@ Ext.define('Ext.panel.Header', {
          * SDK.  For more information see:
          *
          *  - [Font Awesome icons](http://fortawesome.github.io/Font-Awesome/cheatsheet/)
-         *  - [Pictos icons](http://docs.sencha.com/extjs/6.0/core_concepts/font_ext.html)
-         *  - [Theming Guide](http://docs.sencha.com/extjs/6.0/core_concepts/theming.html)
+         *  - [Pictos icons](../guides/core_concepts/font_ext.html)
+         *  - [Theming Guide](../guides/core_concepts/theming.html)
          */
         iconCls: null,
+
+        /**
+         * @cfg {'auto'/'90'/'270'/'0'}
+         * The rotation of the {@link #cfg-title}.
+         *
+         * - `'auto'` - use the default rotation, depending on the
+         *  {@link Ext.Panel#cfg-headerPosition headerPosition}.
+         * - `'0'` - no rotation
+         * - `'90'` - rotate 90 degrees clockwise
+         * - `'270'` - rotate 270 degrees clockwise
+         *
+         * The default behavior of this config depends on the 
+         * {@link Ext.Panel#cfg-headerPosition headerPosition}:
+         *
+         * - `'top'` or `'bottom'` - `'0'`
+         * - `'right'` - `90`
+         * - `'left'` - `270`
+         */
+        titleRotation: 'auto',
 
         /**
          * @cfg {String/Ext.panel.Title}
@@ -123,141 +104,116 @@ Ext.define('Ext.panel.Header', {
         titleAlign: null,
 
         layout: {
-            type: 'hbox',
+            type: 'box',
+            vertical: false,
             align: 'center'
-        }
+        },
+
+        /**
+         * @private
+         * Used by the owning panel to inform the header of its position
+         */
+        position: null
     },
 
-    add: function (item) {
-        var me = this,
-            isArray = Ext.isArray(item),
-            array = isArray ? item.slice(0) : [ item ], // copy array since we sort it
-            items = me.getItems(),
-            length = items.length,
-            n = array.length,
-            c, i, pos, instanced;
+    autoSize: null,
 
-        for (i = 0; i < n; ++i) {
-            c = array[i];
-            // We have to ensure all items are actual instances because the "weight"
-            // config may come from the class.
-            instanced = c.isWidget;
-            if (!instanced) {
-                c.$initParent = me;
-            }
-            array[i] = me.factoryItem(c);
-            delete c.$initParent;
-        }
+    classCls: Ext.baseCSSPrefix + 'panelheader',
+    verticalCls: Ext.baseCSSPrefix + 'vertical',
+    horizontalCls: Ext.baseCSSPrefix + 'horizontal',
+    toolEndCls: Ext.baseCSSPrefix + 'end',
+    toolStartCls: Ext.baseCSSPrefix + 'start',
 
-        Ext.Array.sort(array, me.sortByWeight);
-
-        if (length) {
-            items = items.items; // get the items array of our ItemCollection
-            pos = 0;
-
-            // Both "items" and "array" are in order by weight. For each new item,
-            // we find the pos where items[pos] is greater than the new item. This
-            // ensures new items of equal weight are added after existing items of
-            // that weight.
-
-            for (i = 0; i < n; ++i) {
-                c = array[i];
-
-                for ( ; pos < length; ++pos) {
-                    if (me.sortByWeight(c, items[pos]) < 0) {
-                        break;
-                    }
-                }
-
-                me.insert(pos, c);
-
-                ++pos;
-                ++length;
-            }
-        } else {
-            me.callParent([ array ]);
-        }
-
-        return isArray ? array : item;
+    rotationMap: {
+        top: '0',
+        right: '90',
+        bottom: '0',
+        left: '270'
     },
 
-    applyTitle: function (newTitle, oldTitle) {
+    dockCls: {
+        top: Ext.baseCSSPrefix + 'docked-top',
+        right: Ext.baseCSSPrefix + 'docked-right',
+        bottom: Ext.baseCSSPrefix + 'docked-bottom',
+        left: Ext.baseCSSPrefix + 'docked-left'
+    },
+
+    weighted: true,
+
+    vertical: false,
+
+    inheritUi: true,
+
+    addTools: function(tools) {
+        var items = Ext.Array.from(tools);
+
+        if (items && items.length) {
+            items = this.add(items);
+        }
+
+        return items;
+    },
+
+    applyTitle: function(newTitle, oldTitle) {
         var title = oldTitle;
 
         if (title) {
             if (!newTitle || typeof newTitle === 'string') {
                 title.setText(newTitle || '');
-            } else if (newTitle) {
+            }
+            else if (newTitle) {
                 title.setConfig(newTitle);
             }
-        } else {
+        }
+        else {
             title = Ext.create(this.createTitle(newTitle));
         }
 
         return title;
     },
 
-    createTitle: function (config) {
-        var ret = {
+    createTitle: function(config) {
+        var panel = this.getRefOwner();
+
+        if (config && typeof config === 'string') {
+            config = {
+                text: config
+            };
+        }
+
+        return Ext.merge({
             xtype: 'paneltitle',
-            flex: 1
-        };
-
-        if (config) {
-            if (typeof config === 'string') {
-                config = {
-                    text: config
-                };
-            }
-
-            Ext.merge(ret, config);
-        }
-
-        return ret;
+            instanceCls: (panel && panel.titleCls) || null,
+            flex: '1 1 auto'
+        }, config);
     },
 
-    createTools: function (tools, toolOwner) {
-        var n = tools && tools.length,
-            ret = n && [],
-            c, i;
+    onItemAdd: function(item, index) {
+        var me = this,
+            title = me.getTitle(),
+            titleWeight = (title && title.weight) || -10,
+            itemWeight = item.weight || 0;
 
-        toolOwner = toolOwner || null;
+        me.callParent([item, index]);
 
-        for (i = 0; i < n; ++i) {
-            c = tools[i];
-
-            if (typeof c === 'string') {
-                c = {
-                    xtype: 'paneltool',
-                    type: c,
-                    toolOwner: toolOwner
-                };
-            } else if (c.isInstance) {
-                if (toolOwner) {
-                    c.setToolOwner(toolOwner);
-                }
-            } else {
-                c = Ext.apply({
-                    xtype: 'paneltool',
-                    toolOwner: toolOwner
-                }, c);
-            }
-
-            ret[i] = c;
+        if (item.isTool) {
+            item.addCls((itemWeight < titleWeight) ? me.toolStartCls : me.toolEndCls);
         }
-
-        return ret;
     },
 
-    updateGlyph: function(glyph) {
-        this.ensureTitle().setGlyph(glyph);
+    onItemRemove: function(item, index, destroying) {
+        this.callParent([item, index, destroying]);
+
+        if (item.isTool) {
+            item.removeCls([this.toolStartCls, this.toolEndCls]);
+        }
     },
 
     updateIcon: function(icon) {
         this.ensureTitle().setIcon(icon);
     },
 
-    updateIconAlign: function(align, oldAlign) {
+    updateIconAlign: function(align) {
         this.ensureTitle().setIconAlign(align);
     },
 
@@ -268,36 +224,94 @@ Ext.define('Ext.panel.Header', {
     updateTitle: function(title, oldTitle) {
         if (oldTitle) {
             oldTitle.setConfig(title);
-        } else {
+        }
+        else {
             this.add(title);
         }
     },
 
-    updateTitleAlign: function(align, oldAlign) {
+    updateTitleAlign: function(align) {
         this.ensureTitle().setTextAlign(align);
     },
 
-    updateUi: function(ui, oldValue) {
-        this.callParent([ ui, oldValue ]);
+    updateTitleRotation: function(rotation) {
+        var me = this,
+            owner;
 
-        this.ensureTitle().setUi(ui);
+        if (rotation === 'auto') {
+            // The panel will call to indicate the header position, so just drop out
+            // now, otherwise we're calling back into the panel init sequence which
+            // can cause some issues
+            if (me.isConfiguring) {
+                return;
+            }
+
+            owner = me.getRefOwner();
+
+            //<debug>
+            if (!owner) {
+                Ext.raise('Cannot use rotation auto without an owning panel.');
+            }
+
+            //</debug>
+            if (owner) {
+                rotation = me.rotationMap[owner.getHeaderPosition()];
+            }
+        }
+
+        me.rotateTitle(rotation);
+    },
+
+    updatePosition: function(position, oldPosition) {
+        var me = this,
+            layout = me.getLayout(),
+            isLeft = (position === 'left'),
+            isRight = (position === 'right'),
+            vertical = me.vertical = (isLeft || isRight),
+            verticalCls = me.verticalCls,
+            horizontalCls = me.horizontalCls,
+            dockCls = me.dockCls;
+
+        layout.setVertical(vertical);
+        layout.setReverse(isLeft);
+
+        // The header is not a true docked item, but it must have the x-docked-[side]
+        // css cls so that it can participate in border management
+        if (oldPosition) {
+            me.removeCls(dockCls[oldPosition]);
+        }
+
+        if (position) {
+            me.addCls(dockCls[position]);
+        }
+
+        if (vertical) {
+            me.replaceCls(horizontalCls, verticalCls);
+        }
+        else {
+            me.replaceCls(verticalCls, horizontalCls);
+        }
+
+        if (me.getTitleRotation() === 'auto') {
+            me.rotateTitle(me.rotationMap[position]);
+        }
     },
 
     privates: {
-        clearTools: function () {
+        clearTools: function() {
             var items = this.getItems().items,
                 c, i;
 
-            for (i = items.length; i-- > 0; ) {
+            for (i = items.length; i-- > 0;) {
                 c = items[i];
 
-                if (c.isPanelTool) {
+                if (c.isTool && !c.$internal) {
                     this.remove(c);
                 }
             }
         },
 
-        ensureTitle: function () {
+        ensureTitle: function() {
             var me = this,
                 title = me.getTitle();
 
@@ -309,8 +323,28 @@ Ext.define('Ext.panel.Header', {
             return title;
         },
 
-        sortByWeight: function (item1, item2) {
+        isVertical: function() {
+            return this.vertical;
+        },
+
+        rotateTitle: function(rotation) {
+            this.ensureTitle().setRotation(rotation);
+        },
+
+        sortByWeight: function(item1, item2) {
             return (item1.weight || 0) - (item2.weight || 0);
+        }
+    },
+
+    deprecated: {
+        '6.5': {
+            configs: {
+                /**
+                 * @cfg {Number/String} glyph
+                 * @removed 6.5.0 Use {@link #iconCls} instead
+                 */
+                glyph: null
+            }
         }
     }
 });

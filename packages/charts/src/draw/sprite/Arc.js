@@ -40,7 +40,8 @@ Ext.define('Ext.draw.sprite.Arc', {
                 endAngle: 'number',
 
                 /**
-                 * @cfg {Boolean} [anticlockwise=false] Determines whether or not the arc is drawn clockwise.
+                 * @cfg {Boolean} [anticlockwise=false] Determines whether or not the arc is drawn
+                 * clockwise.
                  */
                 anticlockwise: 'bool'
             },
@@ -63,7 +64,7 @@ Ext.define('Ext.draw.sprite.Arc', {
         }
     },
 
-    updatePath: function (path, attr) {
+    updatePath: function(path, attr) {
         path.arc(attr.cx, attr.cy, attr.r, attr.startAngle, attr.endAngle, attr.anticlockwise);
     }
 });

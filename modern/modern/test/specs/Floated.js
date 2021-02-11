@@ -1,13 +1,18 @@
 /* global Ext, spyOn, jasmine, expect */
 
-describe("Ext.Widget.floated", function() {
-
+topSuite('Ext.Widget.floated', [
+    false,
+    'Ext.Dialog',
+    'Ext.form.*',
+    'Ext.field.*'
+], function() {
     var w;
 
     function makeWidget(cfg) {
         w = Ext.create(Ext.apply({
             hidden: false
         }, cfg));
+
         return w;
     }
 
@@ -16,16 +21,25 @@ describe("Ext.Widget.floated", function() {
             el = el.element;
         }
         var box = Ext.fly(el).getBox();
+
         expect(box.x).toBe(x);
         expect(box.y).toBe(y);
     }
 
     afterEach(function() {
-        w = Ext.Viewport = Ext.floatRoot = Ext.Widget.$mousedownListeners = Ext.destroy(w, Ext.Viewport, Ext.floatRoot, Ext.Widget.$mousedownListeners);
+        var toDestroy = [Ext.Viewport, Ext.Widget.$mousedownListeners];
+
+        if (w !== Ext.Viewport) {
+            toDestroy.push(w);
+        }
+
+        w = Ext.Viewport = Ext.Widget.$mousedownListeners = Ext.destroy(toDestroy);
 
         // Restore body element to cleanliness after Viewport has mangled it.
         Ext.Object.eachValue(document.body.attributes, function(attr) {
-            document.body.removeAttribute(attr.name);
+            if (attr.name !== 'id') {
+                document.body.removeAttribute(attr.name);
+            }
         });
         document.body.style = '';
     });
@@ -78,33 +92,36 @@ describe("Ext.Widget.floated", function() {
             w.render(document.body);
             var item = w.child('#item');
 
-            // Container's innerElement contains the item
-            expect(item.el.dom.parentNode === w.innerElement.dom).toBe(true);
+            // Container's bodyElement contains the item
+            expect(item.el.dom.parentNode === w.bodyElement.dom).toBe(true);
 
             item.setFloated(true);
 
-            // The global float root contains the item
-            expect(item.el.dom.parentNode === Ext.getFloatRoot().dom).toBe(true);
+            // The global float root contains the item encapsulated in its floatWrap
+            expect(item.floatWrap.dom.parentNode === Ext.getFloatRoot().dom).toBe(true);
 
             // The global float root must always be on top
             expect(Ext.getFloatRoot().dom.nextSibling).toBe(null);
 
             item.setFloated(false);
 
-            // Container's innerElement must again the item
-            expect(item.el.dom.parentNode === w.innerElement.dom).toBe(true);
+            // Container's bodyElement must contain the item
+            expect(item.el.dom.parentNode === w.bodyElement.dom).toBe(true);
         });
     });
 
     describe('hierarchical floateds', function() {
-        var floatedPanel,
-            floatedPanelChild,
-            floatedPanelSecondChild,
-            otherFloatedPanel,
-            otherFloatedPanelChild,
-            otherFloatedPanelSecondChild;
+        var floatedPanel, floatedPanelChild, floatedPanelSecondChild,
+            otherFloatedPanel, otherFloatedPanelChild, otherFloatedPanelSecondChild,
+            wasRendered;
 
-        function setup() {
+        beforeEach(function() {
+            if (Ext.Msg) {
+                wasRendered = Ext.Msg.rendered;
+                // Tests assume a pristine floatRoot
+                Ext.Msg.setRendered(false);
+            }
+
             w = new Ext.viewport.Viewport.setup({
                 items: [{
                     id: 'test-centered-panel',
@@ -116,12 +133,12 @@ describe("Ext.Widget.floated", function() {
                     border: true,
                     centered: true,
                     items: [{
-                       xtype: 'fieldset',
-                       title: 'Some fields',
-                       items: [{
-                           fieldLabel: 'Testing form fields',
-                           xtype: 'textfield'
-                       }]
+                        xtype: 'fieldset',
+                        title: 'Some fields',
+                        items: [{
+                            fieldLabel: 'Testing form fields',
+                            xtype: 'textfield'
+                        }]
                     }, {
                         xtype: 'panel',
                         height: 200,
@@ -197,45 +214,53 @@ describe("Ext.Widget.floated", function() {
                 }]
             });
             floatedPanel = w.down('#floated-panel');
-            floatedPanelChild = w.down('#floated-panel-child');
-            floatedPanelSecondChild = w.down('#floated-panel-second-child');
+
+            // Extract the child floateds by looking in the floatWrap.
+            // The child floated MUST be physically contained in the floatWrap in order to move
+            // up or down the z-index stack in synchrony with their parent.
+            floatedPanelChild = Ext.Component.from(floatedPanel.floatWrap.down('#floated-panel-child'), 1);
+            floatedPanelSecondChild = Ext.Component.from(floatedPanel.floatWrap.down('#floated-panel-second-child'), 1);
             otherFloatedPanel = w.down('#other-floated-panel');
             otherFloatedPanelChild = w.down('#other-floated-panel-child');
             otherFloatedPanelSecondChild = w.down('#other-floated-panel-second-child');
-        }
+        });
+
+        afterEach(function() {
+            if (wasRendered) {
+                wasRendered = Ext.Msg.setRendered(false);
+            }
+
+            wasRendered = false;
+        });
 
         it('should arrange the floated components in nested floatRoot elements', function() {
             var f;
 
-            setup();
-
             // Global float root should be immediately after the viewport body
-            expect(Ext.Viewport.element.dom.lastChild).toBe(Ext.floatRoot.dom);
+            expect(Ext.Viewport.element.dom.nextSibling).toBe(Ext.floatRoot.dom);
 
             // Ensure correct start nesting positions.
             // Global float root contains the wrapping floatRoot elements of both global floateds
             // in initial order.
-            f = Ext.floatRoot.query('.x-float-wrap');
+            f = Ext.floatRoot.dom.childNodes;
             expect(f[0]).toBe(floatedPanel.floatWrap.dom);
             expect(f[1]).toBe(otherFloatedPanel.floatWrap.dom);
 
             // The floated panel's floatRoot wrapper should always have the floated panel
             // as the first node, followed by the children in order
             expect(floatedPanel.floatWrap.dom.firstChild).toBe(floatedPanel.el.dom);
-            expect(floatedPanel.floatWrap.dom.childNodes[1]).toBe(floatedPanelChild.el.dom);
-            expect(floatedPanel.floatWrap.dom.childNodes[2]).toBe(floatedPanelSecondChild.el.dom);
+            expect(floatedPanel.floatWrap.dom.childNodes[1]).toBe(floatedPanelChild.floatWrap.dom);
+            expect(floatedPanel.floatWrap.dom.childNodes[2]).toBe(floatedPanelSecondChild.floatWrap.dom);
 
             // The other floated panel's floatRoot wrapper should always have the other floated panel's shim
             // as the first node, then the other floated panel, followed by the children in order
             expect(otherFloatedPanel.floatWrap.dom.firstChild).toBe(otherFloatedPanel.getShim().el.dom);
             expect(otherFloatedPanel.floatWrap.dom.childNodes[1]).toBe(otherFloatedPanel.el.dom);
-            expect(otherFloatedPanel.floatWrap.dom.childNodes[2]).toBe(otherFloatedPanelChild.el.dom);
-            expect(otherFloatedPanel.floatWrap.dom.childNodes[3]).toBe(otherFloatedPanelSecondChild.el.dom);
+            expect(otherFloatedPanel.floatWrap.dom.childNodes[2]).toBe(otherFloatedPanelChild.floatWrap.dom);
+            expect(otherFloatedPanel.floatWrap.dom.childNodes[3]).toBe(otherFloatedPanelSecondChild.floatWrap.dom);
         });
 
         it('should start with correct positions', function() {
-            setup();
-
             expectXY(floatedPanel, 100, 100);
             expectXY(floatedPanelChild, 150, 150);
             expectXY(floatedPanelSecondChild, 180, 180);
@@ -246,8 +271,7 @@ describe("Ext.Widget.floated", function() {
         });
 
         it('should reset position on unfloat', function() {
-            setup();
-            var otherFloatedPanelRegion = otherFloatedPanel.innerElement.getConstrainRegion();
+            var otherFloatedPanelRegion = otherFloatedPanel.bodyElement.getConstrainRegion();
 
             // Unfloat the second chlid. This will insert it into the Other floated panel's layout
             // as the first inner item.
@@ -259,7 +283,6 @@ describe("Ext.Widget.floated", function() {
         });
 
         it('should move mousedowned floated components to above their siblings', function() {
-            setup();
             var r = floatedPanelChild.el.getRegion(),
                 cfg = {
                     id: floatedPanelChild.id,
@@ -280,30 +303,34 @@ describe("Ext.Widget.floated", function() {
             Ext.testHelper.touchEnd(floatedPanelChild.el, cfg);
 
             // tofront event should have fired
-            expect(toFrontDone).toBe(true);
+            waitsFor(function() {
+                return toFrontDone === true;
+            });
 
-            // The two top level float roots should be swapped to bring floated panel
-            // (along with its descendants) to the top
-            expect(Ext.floatRoot.dom.firstChild).toBe(otherFloatedPanel.floatWrap.dom);
-            expect(Ext.floatRoot.dom.childNodes[1]).toBe(floatedPanel.floatWrap.dom);
+            runs(function() {
+                toFrontDone = false;
 
-            // Floated panel should have had its child panels reorders
-            // floatedPanelChild should be on top (last element)
-            expect(floatedPanel.floatWrap.dom.firstChild).toBe(floatedPanel.el.dom);
-            expect(floatedPanel.floatWrap.dom.childNodes[1]).toBe(floatedPanelSecondChild.el.dom);
-            expect(floatedPanel.floatWrap.dom.childNodes[2]).toBe(floatedPanelChild.el.dom);
+                // The two top level float roots should be swapped to bring floated panel
+                // (along with its descendants) to the top
+                expect(Ext.floatRoot.dom.firstChild).toBe(otherFloatedPanel.floatWrap.dom);
+                expect(Ext.floatRoot.dom.childNodes[1]).toBe(floatedPanel.floatWrap.dom);
 
-            // The inner details of Other floated panel must not have been affected
-            expect(otherFloatedPanel.floatWrap.dom.firstChild).toBe(otherFloatedPanel.getShim().el.dom);
-            expect(otherFloatedPanel.floatWrap.dom.childNodes[1]).toBe(otherFloatedPanel.el.dom);
-            expect(otherFloatedPanel.floatWrap.dom.childNodes[2]).toBe(otherFloatedPanelChild.el.dom);
-            expect(otherFloatedPanel.floatWrap.dom.childNodes[3]).toBe(otherFloatedPanelSecondChild.el.dom);
+                // Floated panel should have had its child panels reorders
+                // floatedPanelChild should be on top (last element)
+                expect(floatedPanel.floatWrap.dom.firstChild).toBe(floatedPanel.el.dom);
+                expect(floatedPanel.floatWrap.dom.childNodes[1]).toBe(floatedPanelSecondChild.floatWrap.dom);
+                expect(floatedPanel.floatWrap.dom.childNodes[2]).toBe(floatedPanelChild.floatWrap.dom);
+
+                // The inner details of Other floated panel must not have been affected
+                expect(otherFloatedPanel.floatWrap.dom.firstChild).toBe(otherFloatedPanel.getShim().el.dom);
+                expect(otherFloatedPanel.floatWrap.dom.childNodes[1]).toBe(otherFloatedPanel.el.dom);
+                expect(otherFloatedPanel.floatWrap.dom.childNodes[2]).toBe(otherFloatedPanelChild.floatWrap.dom);
+                expect(otherFloatedPanel.floatWrap.dom.childNodes[3]).toBe(otherFloatedPanelSecondChild.floatWrap.dom);
+            });
         });
 
         it('should move a component to above its siblings on a toFront call', function() {
             var toFrontDone;
-
-            setup();
 
             floatedPanelChild.on({
                 tofront: function() {
@@ -325,20 +352,18 @@ describe("Ext.Widget.floated", function() {
             // Floated panel should have had its child panels reorders
             // floatedPanelChild should be on top (last element)
             expect(floatedPanel.floatWrap.dom.firstChild).toBe(floatedPanel.el.dom);
-            expect(floatedPanel.floatWrap.dom.childNodes[1]).toBe(floatedPanelSecondChild.el.dom);
-            expect(floatedPanel.floatWrap.dom.childNodes[2]).toBe(floatedPanelChild.el.dom);
+            expect(floatedPanel.floatWrap.dom.childNodes[1]).toBe(floatedPanelSecondChild.floatWrap.dom);
+            expect(floatedPanel.floatWrap.dom.childNodes[2]).toBe(floatedPanelChild.floatWrap.dom);
 
             // The inner details of Other floated panel must not have been affected
             expect(otherFloatedPanel.floatWrap.dom.firstChild).toBe(otherFloatedPanel.getShim().el.dom);
             expect(otherFloatedPanel.floatWrap.dom.childNodes[1]).toBe(otherFloatedPanel.el.dom);
-            expect(otherFloatedPanel.floatWrap.dom.childNodes[2]).toBe(otherFloatedPanelChild.el.dom);
-            expect(otherFloatedPanel.floatWrap.dom.childNodes[3]).toBe(otherFloatedPanelSecondChild.el.dom);
+            expect(otherFloatedPanel.floatWrap.dom.childNodes[2]).toBe(otherFloatedPanelChild.floatWrap.dom);
+            expect(otherFloatedPanel.floatWrap.dom.childNodes[3]).toBe(otherFloatedPanelSecondChild.floatWrap.dom);
         });
 
         it('should allow a toFront operation to be vetoed', function() {
             var toFrontDone = false;
-
-            setup();
 
             // veto toFront operation
             floatedPanelChild.on({
@@ -360,7 +385,7 @@ describe("Ext.Widget.floated", function() {
             // test above. Initial conditions should NOT have changed
 
             // Global float root should be immediately after the viewport body
-            expect(Ext.Viewport.element.dom.lastChild).toBe(Ext.floatRoot.dom);
+            expect(Ext.Viewport.element.dom.nextSibling).toBe(Ext.floatRoot.dom);
 
             // Ensure correct start nesting positions.
             // Global float root contains the wrapping floatRoot elements of both global floateds
@@ -371,47 +396,18 @@ describe("Ext.Widget.floated", function() {
             // The floated panel's floatRoot wrapper should always have the floated panel
             // as the first node, followed by the children in order
             expect(floatedPanel.floatWrap.dom.firstChild).toBe(floatedPanel.el.dom);
-            expect(floatedPanel.floatWrap.dom.childNodes[1]).toBe(floatedPanelChild.el.dom);
-            expect(floatedPanel.floatWrap.dom.childNodes[2]).toBe(floatedPanelSecondChild.el.dom);
+            expect(floatedPanel.floatWrap.dom.childNodes[1]).toBe(floatedPanelChild.floatWrap.dom);
+            expect(floatedPanel.floatWrap.dom.childNodes[2]).toBe(floatedPanelSecondChild.floatWrap.dom);
 
             // The other floated panel's floatRoot wrapper should always have the other floated panel's shim
             // as the first node, then the other floated panel, followed by the children in order
             expect(otherFloatedPanel.floatWrap.dom.firstChild).toBe(otherFloatedPanel.getShim().el.dom);
             expect(otherFloatedPanel.floatWrap.dom.childNodes[1]).toBe(otherFloatedPanel.el.dom);
-            expect(otherFloatedPanel.floatWrap.dom.childNodes[2]).toBe(otherFloatedPanelChild.el.dom);
-            expect(otherFloatedPanel.floatWrap.dom.childNodes[3]).toBe(otherFloatedPanelSecondChild.el.dom);
+            expect(otherFloatedPanel.floatWrap.dom.childNodes[2]).toBe(otherFloatedPanelChild.floatWrap.dom);
+            expect(otherFloatedPanel.floatWrap.dom.childNodes[3]).toBe(otherFloatedPanelSecondChild.floatWrap.dom);
         });
 
-        it('should give alwaysOnTop floated components a higher z-index', function() {
-            setup();
-
-            // Initial conditions
-            expect(otherFloatedPanel.floatWrap.dom.firstChild).toBe(otherFloatedPanel.getShim().el.dom);
-            expect(otherFloatedPanel.floatWrap.dom.childNodes[1]).toBe(otherFloatedPanel.el.dom);
-            expect(otherFloatedPanel.floatWrap.dom.childNodes[2]).toBe(otherFloatedPanelChild.el.dom);
-            expect(otherFloatedPanel.floatWrap.dom.childNodes[3]).toBe(otherFloatedPanelSecondChild.el.dom);
-
-            otherFloatedPanelChild.setAlwaysOnTop(true);
-
-            // otherFloatedPanelChild must be the last element in the stack
-            expect(otherFloatedPanel.floatWrap.dom.firstChild).toBe(otherFloatedPanel.getShim().el.dom);
-            expect(otherFloatedPanel.floatWrap.dom.childNodes[1]).toBe(otherFloatedPanel.el.dom);
-            expect(otherFloatedPanel.floatWrap.dom.childNodes[2]).toBe(otherFloatedPanelSecondChild.el.dom);
-            expect(otherFloatedPanel.floatWrap.dom.childNodes[3]).toBe(otherFloatedPanelChild.el.dom);
-
-            // This should have no effect
-            otherFloatedPanelSecondChild.toFront();
-
-            // otherFloatedPanelChild must STILL be the last element in the stack
-            expect(otherFloatedPanel.floatWrap.dom.firstChild).toBe(otherFloatedPanel.getShim().el.dom);
-            expect(otherFloatedPanel.floatWrap.dom.childNodes[1]).toBe(otherFloatedPanel.el.dom);
-            expect(otherFloatedPanel.floatWrap.dom.childNodes[2]).toBe(otherFloatedPanelSecondChild.el.dom);
-            expect(otherFloatedPanel.floatWrap.dom.childNodes[3]).toBe(otherFloatedPanelChild.el.dom);
-        });
-        
         it('should destroy correctly, removing all traces from the DOM', function() {
-            setup();
-            
             floatedPanel.destroy();
             otherFloatedPanel.destroy();
 
@@ -422,66 +418,174 @@ describe("Ext.Widget.floated", function() {
         it('should size the modal mask correctly, and move it to below the topmost floated when floated set to false', function() {
             var mask;
 
-            setup();
-
             otherFloatedPanelSecondChild.setModal(true);
             mask = otherFloatedPanelSecondChild.floatParentNode.getData().modalMask;
 
             // The mask must be immediately before the panel in the DOM
-            expect(mask.dom.nextSibling).toBe(otherFloatedPanelSecondChild.el.dom);
+            expect(mask.dom.nextSibling).toBe(otherFloatedPanelSecondChild.floatWrap.dom);
             expect(mask.getSize()).toEqual(otherFloatedPanelSecondChild.parent.el.getSize());
 
             otherFloatedPanelChild.toFront();
             otherFloatedPanelChild.setModal(true);
 
             // The mask must be immediately before the panel in the DOM
-            expect(mask.dom.nextSibling).toBe(otherFloatedPanelChild.el.dom);
+            expect(mask.dom.nextSibling).toBe(otherFloatedPanelChild.floatWrap.dom);
             expect(mask.getSize()).toEqual(otherFloatedPanelChild.parent.el.getSize());
-            
+
             // The mask must NOT be immediately before the panel in the DOM
             otherFloatedPanelChild.setModal(false);
-            expect(otherFloatedPanelChild.el.dom.previousSibling).not.toBe(mask.dom);
-            
+            expect(otherFloatedPanelChild.floatWrap.dom.previousSibling).not.toBe(mask.dom);
+
             // The mask must have dropped to just below the other, lower modal
-            expect(otherFloatedPanelSecondChild.el.dom.previousSibling).toBe(mask.dom);
-            
-            // Mak it so that there are NO visible modals.
+            expect(otherFloatedPanelSecondChild.floatWrap.dom.previousSibling).toBe(mask.dom);
+
+            // Make it so that there are NO visible modals.
             otherFloatedPanelSecondChild.setModal(false);
 
             // So the mask ust be stashed safely in the detached body
-            expect(mask.dom.parentNode).toBe(Ext.getDetachedBody().dom);            
+            expect(mask.dom.parentNode).toBe(Ext.getDetachedBody().dom);
         });
 
-        it('should size the modal mask correctly, and move it to below the topmost floated when hidden', function() {
+        it('should size the modal mask correctly, and move it to below the topmost floated when hidden - relative', function() {
             var mask;
-
-            setup();
 
             otherFloatedPanelSecondChild.setModal(true);
             mask = otherFloatedPanelSecondChild.floatParentNode.getData().modalMask;
 
             // The mask must be immediately before the panel in the DOM
-            expect(mask.dom.nextSibling).toBe(otherFloatedPanelSecondChild.el.dom);
+            expect(mask.dom.nextSibling).toBe(otherFloatedPanelSecondChild.floatWrap.dom);
             expect(mask.getSize()).toEqual(otherFloatedPanelSecondChild.parent.el.getSize());
 
             otherFloatedPanelChild.toFront();
             otherFloatedPanelChild.setModal(true);
 
             // The mask must be immediately before the panel in the DOM
-            expect(mask.dom.nextSibling).toBe(otherFloatedPanelChild.el.dom);
+            expect(mask.dom.nextSibling).toBe(otherFloatedPanelChild.floatWrap.dom);
             expect(mask.getSize()).toEqual(otherFloatedPanelChild.parent.el.getSize());
 
             // Hide topmost modal
             otherFloatedPanelChild.hide(false);
-            
+
             // The mask must have dropped to just below the other, lower modal
-            expect(otherFloatedPanelSecondChild.el.dom.previousSibling).toBe(mask.dom);
-            
-            // Mak it so that there are NO visible modals.
+            expect(otherFloatedPanelSecondChild.floatWrap.dom.previousSibling).toBe(mask.dom);
+
+            // Make it so that there are NO visible modals.
             otherFloatedPanelSecondChild.setModal(false);
 
             // So the mask ust be stashed safely in the detached body
-            expect(mask.dom.parentNode).toBe(Ext.getDetachedBody().dom);            
+            expect(mask.dom.parentNode).toBe(Ext.getDetachedBody().dom);
+        });
+
+        it('should move the mask to below the topmost floated when hidden - absolute', function() {
+            var floatRoot = Ext.getFloatRoot(),
+                mask;
+
+            floatedPanel.toFront();
+
+            floatedPanelSecondChild.setModal(true);
+            mask = floatRoot.getData().modalMask;
+
+            // The mask must be immediately before the panel in the DOM
+            expect(mask.dom.nextSibling).toBe(floatedPanelSecondChild.floatWrap.dom);
+            expect(mask.getSize()).toEqual(floatRoot.getSize());
+
+            floatedPanelChild.toFront();
+            floatedPanelChild.setModal(true);
+
+            // The mask must be immediately before the panel in the DOM
+            expect(mask.dom.nextSibling).toBe(floatedPanelChild.floatWrap.dom);
+            expect(mask.getSize()).toEqual(floatRoot.getSize());
+
+            // Hide topmost modal
+            floatedPanelChild.hide(false);
+
+            // The mask must have dropped to just below the other, lower modal
+            expect(floatedPanelSecondChild.floatWrap.dom.previousSibling).toBe(mask.dom);
+
+            // Make it so that there are NO visible modals.
+            floatedPanelSecondChild.setModal(false);
+
+            // So the mask ust be stashed safely in the detached body
+            expect(mask.dom.parentNode).toBe(Ext.getDetachedBody().dom);
+        });
+
+        describe("alwaysOnTop", function() {
+            it('should give alwaysOnTop floated components a higher z-index', function() {
+                // Initial conditions
+                expect(otherFloatedPanel.floatWrap.dom.firstChild).toBe(otherFloatedPanel.getShim().el.dom);
+                expect(otherFloatedPanel.floatWrap.dom.childNodes[1]).toBe(otherFloatedPanel.el.dom);
+                expect(otherFloatedPanel.floatWrap.dom.childNodes[2]).toBe(otherFloatedPanelChild.floatWrap.dom);
+                expect(otherFloatedPanel.floatWrap.dom.childNodes[3]).toBe(otherFloatedPanelSecondChild.floatWrap.dom);
+
+                otherFloatedPanelChild.setAlwaysOnTop(true);
+
+                // otherFloatedPanelChild must be the last element in the stack
+                expect(otherFloatedPanel.floatWrap.dom.firstChild).toBe(otherFloatedPanel.getShim().el.dom);
+                expect(otherFloatedPanel.floatWrap.dom.childNodes[1]).toBe(otherFloatedPanel.el.dom);
+                expect(otherFloatedPanel.floatWrap.dom.childNodes[2]).toBe(otherFloatedPanelSecondChild.floatWrap.dom);
+                expect(otherFloatedPanel.floatWrap.dom.childNodes[3]).toBe(otherFloatedPanelChild.floatWrap.dom);
+
+                // This should have no effect
+                otherFloatedPanelSecondChild.toFront();
+
+                // otherFloatedPanelChild must STILL be the last element in the stack
+                expect(otherFloatedPanel.floatWrap.dom.firstChild).toBe(otherFloatedPanel.getShim().el.dom);
+                expect(otherFloatedPanel.floatWrap.dom.childNodes[1]).toBe(otherFloatedPanel.el.dom);
+                expect(otherFloatedPanel.floatWrap.dom.childNodes[2]).toBe(otherFloatedPanelSecondChild.floatWrap.dom);
+                expect(otherFloatedPanel.floatWrap.dom.childNodes[3]).toBe(otherFloatedPanelChild.floatWrap.dom);
+            });
+
+            it("should display component with alwaysOnTop in front of components without", function() {
+                floatedPanelChild.setAlwaysOnTop(true);
+                floatedPanelSecondChild.toFront();
+
+                expect(floatedPanel.floatWrap.dom.childNodes[2]).toBe(floatedPanelChild.floatWrap.dom);
+            });
+
+            it("should respect the alwaysOnTop number value", function() {
+                floatedPanelChild.setAlwaysOnTop(10);
+                floatedPanelSecondChild.setAlwaysOnTop(5);
+
+                expect(floatedPanel.floatWrap.dom.childNodes[2]).toBe(floatedPanelChild.floatWrap.dom);
+
+                floatedPanelSecondChild.setAlwaysOnTop(11);
+                expect(floatedPanel.floatWrap.dom.childNodes[2]).toBe(floatedPanelSecondChild.floatWrap.dom);
+            });
         });
     });
+
+    // Phones do not use floated pickers
+    if (!Ext.platformTags.phone) {
+        describe('non-parent hierarchy', function() {
+            var dialog, dateField, picker;
+
+            afterEach(function() {
+                Ext.destroy(dialog);
+            });
+
+            it('should render the float roots of non-child descendant floateds into the closest ancestor floatWrap', function() {
+                dialog = new Ext.Dialog({
+                    modal: false,
+                    title: 'Floated Panel',
+                    height: 400,
+                    width: 600,
+                    items: [{
+                        xtype: 'datefield',
+                        id: 'test-datefield'
+                    }]
+                });
+                dialog.showAt(0, 0);
+                dateField = Ext.getCmp('test-datefield');
+                dateField.expand();
+                picker = dateField.getPicker();
+
+                // The dialog's floatWrap must contain the floated picker's floatWrap
+                // So that they move up and down the z-index hierarchy together when
+                // the dialog moves up or down.
+                expect(dialog.floatWrap.contains(picker.floatWrap)).toBe(true);
+
+                dialog.hide();
+            });
+        });
+    }
 });

@@ -1,6 +1,6 @@
 /**
- * Small helper class to make creating {@link Ext.data.Store}s from Array data easier. An ArrayStore will be
- * automatically configured with a {@link Ext.data.reader.Array}.
+ * Small helper class to make creating {@link Ext.data.Store}s from Array data easier. An
+ * ArrayStore will be automatically configured with a {@link Ext.data.reader.Array}.
  *
  * A store configuration would be something like:
  *
@@ -49,8 +49,9 @@ Ext.define('Ext.data.ArrayStore', {
         }
     },
 
-    loadData: function (data, append) {
+    loadData: function(data, append) {
         if (this.expandData) {
+            /* eslint-disable-next-line vars-on-top */
             var r = [],
                 i = 0,
                 ln = data.length;

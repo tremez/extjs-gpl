@@ -1,10 +1,11 @@
 /**
- * A general picker class. {@link Ext.picker.Slot}s are used to organize multiple scrollable slots into a single picker. {@link #slots} is
- * the only necessary configuration.
+ * A general picker class. {@link Ext.picker.Slot}s are used to organize multiple scrollable
+ * slots into a single picker. {@link #slots} is the only necessary configuration.
  *
  * The {@link #slots} configuration with a few key values:
  *
- * - `name`: The name of the slot (will be the key when using {@link #getValues} in this {@link Ext.picker.Picker}).
+ * - `name`: The name of the slot (will be the key when using {@link #getValues} in this
+ *  {@link Ext.picker.Picker}).
  * - `title`: The title of this slot (if {@link #useTitles} is set to `true`).
  * - `data`/`store`: The data or store to use for this slot.
  *
@@ -12,7 +13,7 @@
  *
  * ## Examples
  *
- *     @example miniphone preview
+ *     @example
  *     var picker = Ext.create('Ext.Picker', {
  *         slots: [
  *             {
@@ -30,9 +31,10 @@
  *     Ext.Viewport.add(picker);
  *     picker.show();
  *
- * You can also customize the top toolbar on the {@link Ext.picker.Picker} by changing the {@link #doneButton} and {@link #cancelButton} configurations:
+ * You can also customize the top toolbar on the {@link Ext.picker.Picker} by changing the
+ * {@link #doneButton} and {@link #cancelButton} configurations:
  *
- *     @example miniphone preview
+ *     @example
  *     var picker = Ext.create('Ext.Picker', {
  *         doneButton: 'I\'m done!',
  *         cancelButton: false,
@@ -54,7 +56,7 @@
  *
  * Or by passing a custom {@link #toolbar} configuration:
  *
- *     @example miniphone preview
+ *     @example
  *     var picker = Ext.create('Ext.Picker', {
  *         doneButton: false,
  *         cancelButton: false,
@@ -80,7 +82,7 @@
  */
 Ext.define('Ext.picker.Picker', {
     extend: 'Ext.Sheet',
-    alias : 'widget.picker',
+    xtype: 'picker',
     alternateClassName: 'Ext.Picker',
     requires: ['Ext.picker.Slot', 'Ext.TitleBar', 'Ext.data.Model', 'Ext.util.InputBlocker'],
 
@@ -109,12 +111,6 @@ Ext.define('Ext.picker.Picker', {
      */
 
     config: {
-        /**
-         * @cfg
-         * @inheritdoc
-         */
-        baseCls: Ext.baseCSSPrefix + 'picker',
-
         /**
          * @cfg {String/Mixed} doneButton
          * Can be either:
@@ -150,15 +146,38 @@ Ext.define('Ext.picker.Picker', {
          * An array of slot configurations.
          *
          * - `name` {String} - Name of the slot
-         * - `data` {Array} - An array of text/value pairs in the format `{text: 'myKey', value: 'myValue'}`
-         * - `title` {String} - Title of the slot. This is used in conjunction with `useTitles: true`.
+         * - `data` {Array} - An array of text/value pairs in the format `{text: 'myKey',
+         * value: 'myValue'}`
+         * - `title` {String} - Title of the slot. This is used in conjunction with
+         * `useTitles: true`.
          *
          * @accessor
          */
         slots: null,
 
         /**
-         * @cfg {String/Number} value The value to initialize the picker with.
+         * @cfg {Object} value
+         * The value to initialize the picker with. The value must be an object with the
+         * key being the name of the slot to set the value to.
+         *
+         *     Ext.create('Ext.picker.Picker', {
+         *         displayed: true,
+         *         side: 'bottom',
+         *         value: {
+         *             limit_speed: 100
+         *         },
+         *         slots: [{
+         *             name: 'limit_speed',
+         *             title: 'Speed',
+         *             data: [
+         *                 {text: '50 KB/s', value: 50},
+         *                 {text: '100 KB/s', value: 100},
+         *                 {text: '200 KB/s', value: 200},
+         *                 {text: '300 KB/s', value: 300}
+         *             ]
+         *         }]
+         *     });
+         *
          * @accessor
          */
         value: null,
@@ -171,34 +190,34 @@ Ext.define('Ext.picker.Picker', {
         height: 220,
 
         /**
-         * @cfg
+         * @cfg layout
          * @inheritdoc
          */
         layout: {
-            type : 'hbox',
+            type: 'hbox',
             align: 'stretch'
         },
 
         /**
-         * @cfg
+         * @cfg centered
          * @hide
          */
         centered: false,
 
         /**
-         * @cfg
+         * @cfg left
          * @inheritdoc
          */
-        left : 0,
+        left: 0,
 
         /**
-         * @cfg
+         * @cfg right
          * @inheritdoc
          */
         right: 0,
 
         /**
-         * @cfg
+         * @cfg bottom
          * @inheritdoc
          */
         bottom: 0,
@@ -212,9 +231,10 @@ Ext.define('Ext.picker.Picker', {
 
         /**
          * @cfg {Ext.TitleBar/Ext.Toolbar/Object} toolbar
-         * The toolbar which contains the {@link #doneButton} and {@link #cancelButton} buttons.
-         * You can override this if you wish, and add your own configurations. Just ensure that you take into account
-         * the {@link #doneButton} and {@link #cancelButton} configurations.
+         * The toolbar which contains the {@link #doneButton} and {@link #cancelButton}
+         * buttons. You can override this if you wish, and add your own configurations.
+         * Just ensure that you take into account the {@link #doneButton} and
+         * {@link #cancelButton} configurations.
          *
          * The default xtype is a {@link Ext.TitleBar}:
          *
@@ -253,110 +273,153 @@ Ext.define('Ext.picker.Picker', {
          */
         toolbar: {
             xtype: 'titlebar'
+        },
+
+        /**
+         * @cfg side
+         * @inheritdoc
+         */
+        side: 'bottom'
+    },
+
+    /**
+     * @property baseCls
+     * @inheritdoc
+     */
+    baseCls: Ext.baseCSSPrefix + 'picker',
+
+    /**
+     * @cfg floated
+     * @inheritdoc
+     */
+    floated: true,
+
+    /**
+     * @property focusable
+     * @inheritdoc
+     */
+    focusable: true,
+
+    /**
+     * @cfg tabIndex
+     * @inheritdoc
+     */
+    tabIndex: -1,
+
+    constructor: function(config) {
+        this.callParent([config]);
+
+        // TODO: Should value be a config?
+        // It would entail overriding the generated getter & setter
+        if ('value' in config) {
+            this.setValue(config.value);
         }
     },
 
-    floated: true,
-
     initialize: function() {
-        var me = this,
-            clsPrefix = Ext.baseCSSPrefix,
-            innerElement = this.innerElement;
+        this.callParent();
 
-        //insert the mask, and the picker bar
-        this.mask = innerElement.insertFirst({
-            cls: clsPrefix + 'picker-mask'
-        });
-
-        this.bar = this.mask.createChild({
-            cls: clsPrefix + 'picker-bar'
-        });
-
-        me.on({
-            scope   : this,
+        this.on({
+            scope: this,
             delegate: 'pickerslot',
             slotpick: 'onSlotPick'
         });
     },
 
-    /**
-     * @private
-     */
-    applyToolbar: function(config) {
-        if (config === true) {
-            config = {};
-        }
+    getTemplate: function() {
+        var me = this,
+            clsPrefix = Ext.baseCSSPrefix,
+            template = me.callParent();
 
-        Ext.applyIf(config, {
-            docked: this.getToolbarPosition()
-        });
+        template[0].children[0].children = [{
+            reference: 'mask',
+            cls: clsPrefix + 'picker-mask',
+            children: [{
+                reference: 'bar',
+                cls: clsPrefix + 'picker-bar'
+            }]
+        }];
 
-        return Ext.factory(config, 'Ext.TitleBar', this.getToolbar());
+        return template;
     },
 
     /**
      * @private
      */
-    updateToolbar: function(newToolbar, oldToolbar) {
-        if (newToolbar) {
-            this.add(newToolbar);
-        }
-
-        if (oldToolbar) {
-            this.remove(oldToolbar);
-        }
-    },
-
-    /**
-     * Updates the {@link #doneButton} configuration. Will change it into a button when appropriate, or just update the text if needed.
-     * @param {Object} config
-     * @return {Object}
-     */
-    applyDoneButton: function(config) {
+    applyToolbar: function(config, oldToolbar) {
         if (config) {
-            if (Ext.isBoolean(config)) {
+            if (config === true) {
                 config = {};
             }
 
-            if (typeof config == "string") {
+            Ext.applyIf(config, {
+                docked: this.getToolbarPosition()
+            });
+        }
+
+        return Ext.factory(config, 'Ext.TitleBar', oldToolbar);
+    },
+
+    /**
+     * @private
+     */
+    updateToolbar: function(newToolbar) {
+        if (newToolbar) {
+            this.add(newToolbar);
+        }
+    },
+
+    /**
+     * Updates the {@link #doneButton} configuration. Will change it into a button when
+     * appropriate, or just update the text if needed.
+     * @param {Object} config
+     * @param {Object} oldButton
+     * @return {Object}
+     */
+    applyDoneButton: function(config, oldButton) {
+        if (config) {
+            if (config === true) {
+                config = {};
+            }
+
+            if (typeof config === "string") {
                 config = {
                     text: config
                 };
             }
 
             Ext.applyIf(config, {
-                ui: 'action',
                 align: 'right',
                 text: 'Done'
             });
         }
 
-        return Ext.factory(config, 'Ext.Button', this.getDoneButton());
+        return Ext.factory(config, 'Ext.Button', oldButton);
     },
 
-    updateDoneButton: function(newDoneButton, oldDoneButton) {
+    updateDoneButton: function(newDoneButton) {
         var toolbar = this.getToolbar();
 
         if (newDoneButton) {
             toolbar.add(newDoneButton);
             newDoneButton.on('tap', this.onDoneButtonTap, this);
-        } else if (oldDoneButton) {
-            toolbar.remove(oldDoneButton);
         }
     },
 
     /**
-     * Updates the {@link #cancelButton} configuration. Will change it into a button when appropriate, or just update the text if needed.
+     * Updates the {@link #cancelButton} configuration. Will change it into a button when
+     * appropriate, or just update the text if needed.
      * @param {Object} config
+     * @param {Object} oldButton
      * @return {Object}
      */
-    applyCancelButton: function(config) {
+    applyCancelButton: function(config, oldButton) {
         if (config) {
             if (Ext.isBoolean(config)) {
                 config = {};
             }
 
-            if (typeof config == "string") {
+            if (typeof config === "string") {
                 config = {
                     text: config
                 };
@@ -368,17 +431,15 @@ Ext.define('Ext.picker.Picker', {
             });
         }
 
-        return Ext.factory(config, 'Ext.Button', this.getCancelButton());
+        return Ext.factory(config, 'Ext.Button', oldButton);
     },
 
-    updateCancelButton: function(newCancelButton, oldCancelButton) {
+    updateCancelButton: function(newCancelButton) {
         var toolbar = this.getToolbar();
 
         if (newCancelButton) {
             toolbar.add(newCancelButton);
             newCancelButton.on('tap', this.onCancelButtonTap, this);
-        } else if (oldCancelButton) {
-            toolbar.remove(oldCancelButton);
         }
     },
 
@@ -391,14 +452,8 @@ Ext.define('Ext.picker.Picker', {
             cls = Ext.baseCSSPrefix + 'use-titles',
             i, innerItem;
 
-        //add a cls onto the picker
-        if (useTitles) {
-            this.addCls(cls);
-        } else {
-            this.removeCls(cls);
-        }
+        this.toggleCls(cls, useTitles);
 
-        //show the time on each of the slots
         for (i = 0; i < ln; i++) {
             innerItem = innerItems[i];
 
@@ -409,8 +464,8 @@ Ext.define('Ext.picker.Picker', {
     },
 
     applySlots: function(slots) {
-        //loop through each of the slots and add a reference to this picker
         if (slots) {
+            // eslint-disable-next-line vars-on-top
             var ln = slots.length,
                 i;
 
@@ -427,22 +482,25 @@ Ext.define('Ext.picker.Picker', {
      * @private
      */
     updateSlots: function(newSlots) {
-        var bcss = Ext.baseCSSPrefix,
+        var me = this,
+            bcss = Ext.baseCSSPrefix,
             innerItems;
 
-        this.removeAll();
+        me.removeAll();
 
         if (newSlots) {
-            this.add(newSlots);
+            me.add(newSlots);
         }
 
-        innerItems = this.getInnerItems();
+        innerItems = me.getInnerItems();
+
         if (innerItems.length > 0) {
             innerItems[0].addCls(bcss + 'first');
             innerItems[innerItems.length - 1].addCls(bcss + 'last');
         }
 
-        this.updateUseTitles(this.getUseTitles());
+        me.updateUseTitles(me.getUseTitles());
+        me.setValue(me.getValue());
     },
 
     /**
@@ -450,14 +508,17 @@ Ext.define('Ext.picker.Picker', {
      * Called when the done button has been tapped.
      */
     onDoneButtonTap: function() {
-        var oldValue = this._value,
-            newValue = this.getValue(true);
+        var me = this,
+            oldValue = me._value,
+            newValue = me.getValue(true);
 
-        if (newValue != oldValue) {
-            this.fireEvent('change', this, newValue);
+        if (newValue !== oldValue) {
+            me._values = me._value = newValue;
+
+            me.fireEvent('change', me, newValue);
         }
 
-        this.hide();
+        me.hide();
         Ext.util.InputBlocker.unblockInputs();
     },
 
@@ -479,17 +540,32 @@ Ext.define('Ext.picker.Picker', {
         this.fireEvent('pick', this, this.getValue(true), slot);
     },
 
-    show: function() {
-        if (this.getParent() === undefined) {
-            Ext.Viewport.add(this);
-        }
+    afterShow: function() {
+        this.callParent();
 
-        this.callParent(arguments);
+        this.scrollSlotsIntoView();
 
-        if (!this.isHidden()) {
-            this.setValue(this._value);
-        }
         Ext.util.InputBlocker.blockInputs();
+    },
+
+    updateDisplayed: function(displayed, oldDisplayed) {
+        this.callParent([displayed, oldDisplayed]);
+
+        Ext.util.InputBlocker.blockInputs();
+    },
+
+    scrollSlotsIntoView: function() {
+        var slots = this.getInnerItems(),
+            i, slot, location;
+
+        for (i = 0; i < slots.length; i++) {
+            slot = slots[i];
+            location = slot.getNavigationModel().location;
+
+            // MultiSelection means that you cannot scroll to a selection.
+            // Scroll to the last navigation position
+            slot.navigateToItem(location ? location.item : slot.itemFromRecord(0));
+        }
     },
 
     /**
@@ -502,32 +578,32 @@ Ext.define('Ext.picker.Picker', {
         var me = this,
             slots = me.getInnerItems(),
             ln = slots.length,
-            key, slot, loopSlot, i, value;
+            key, slot, i, value;
 
         if (!values) {
             values = {};
+
             for (i = 0; i < ln; i++) {
-                //set the value to false so the slot will return null when getValue is called
-                values[slots[i].config.name] = null;
+                // Set the value to false so the slot will return null when getValue is called
+                values[slots[i].getName()] = null;
             }
         }
 
         for (key in values) {
-            slot = null;
             value = values[key];
-            for (i = 0; i < slots.length; i++) {
-                loopSlot = slots[i];
-                if (loopSlot.config.name == key) {
-                    slot = loopSlot;
-                    break;
-                }
-            }
 
-            if (slot) {
-                if (animated) {
-                    slot.setValueAnimated(value);
-                } else {
-                    slot.setValue(value);
+            for (i = 0; i < slots.length; i++) {
+                slot = slots[i];
+
+                if (slot.getName() === key) {
+                    if (animated) {
+                        slot.setValueAnimated(value);
+                    }
+                    else {
+                        slot.setValue(value);
+                    }
+
+                    break;
                 }
             }
         }
@@ -554,6 +630,7 @@ Ext.define('Ext.picker.Picker', {
         if (useDom) {
             for (i = 0; i < ln; i++) {
                 item = items[i];
+
                 if (item && item.isSlot) {
                     values[item.getName()] = item.getValue(useDom);
                 }
@@ -571,13 +648,5 @@ Ext.define('Ext.picker.Picker', {
      */
     getValues: function() {
         return this.getValue();
-    },
-
-    doDestroy: function() {
-        var me = this;
-
-        me.mask = me.bar = Ext.destroy(me.mask, me.bar);
-        
-        me.callParent();
     }
 });

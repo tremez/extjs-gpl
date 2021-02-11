@@ -1,0 +1,25 @@
+.demo-buttons-extra {
+    .button-group {
+        .dark-mode & {
+            background: #343434;
+        }
+        &.alt {
+            .x-disabled {
+                .x-splitBody-el {
+                    background-color: rgba(255,255,255,0.12);
+                    color: rgba(255,255,255,0.3);
+                }
+                .x-icon-el {
+                    color: rgba(255,255,255,0.3);
+                }
+                .x-arrow-el {
+                    color: rgba(255,255,255,0.3);
+                }
+                .x-inner-el {
+                    background-color: rgba(255,255,255,0.12);
+                    color: rgba(255,255,255,0.3);
+                }
+            }
+        }
+    }
+}

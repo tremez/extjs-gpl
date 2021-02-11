@@ -8,7 +8,8 @@ Ext.define('ExecDashboard.view.main.Main', {
     xtype: 'app-main',
 
     requires: [
-        'ExecDashboard.view.*'
+        'ExecDashboard.view.*',
+        'Ext.Responsive'
     ],
 
     controller: 'main',
@@ -37,7 +38,6 @@ Ext.define('ExecDashboard.view.main.Main', {
         },
         tools: [{
             type: 'gear',
-            plugins: 'responsive',
             width: 120,
             margin: '0 0 0 0',
             handler: 'onSwitchTool',
@@ -75,7 +75,6 @@ Ext.define('ExecDashboard.view.main.Main', {
 
     defaults: {
         tabConfig: {
-            plugins: 'responsive',
             responsiveConfig: {
                 wide: {
                     iconAlign: 'left',

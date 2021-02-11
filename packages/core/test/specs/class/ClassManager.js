@@ -1,21 +1,22 @@
-describe("Ext.ClassManager", function() {
+/* global My, I, Test, Something, FooTest9 */
+
+topSuite("Ext.ClassManager", function() {
     var manager = Ext.ClassManager,
-        cls, emptyFn = function(){};
-
-
+        cls,
+        emptyFn = function() {};
 
     beforeEach(function() {
         manager.enableNamespaceParseCache = false;
         window.My = {
             awesome: {
-                Class: function(){console.log(11);},
-                Class1: function(){console.log(12);},
-                Class2: function(){console.log(13);}
+                Class: function() { console.log(11); },
+                Class1: function() { console.log(12); },
+                Class2: function() { console.log(13); }
             },
             cool: {
-                AnotherClass: function(){console.log(21);},
-                AnotherClass1: function(){console.log(22);},
-                AnotherClass2: function(){console.log(23);}
+                AnotherClass: function() { console.log(21); },
+                AnotherClass1: function() { console.log(22); },
+                AnotherClass2: function() { console.log(23); }
             }
         };
     });
@@ -26,12 +27,14 @@ describe("Ext.ClassManager", function() {
             delete window.My;
             delete window.I;
             delete window.Test;
-        } catch (e) {
+        }
+        catch (e) {
             window.Something = undefined;
             window.My = undefined;
             window.I = undefined;
             window.Test = undefined;
         }
+
         manager.enableNamespaceParseCache = true;
     });
 
@@ -44,7 +47,7 @@ describe("Ext.ClassManager", function() {
 
     describe("loader preprocessor", function() {
         beforeEach(function() {
-            cls = function(){};
+            cls = function() {};
         });
 
         it("should load and replace string class names with objects", function() {
@@ -63,7 +66,6 @@ describe("Ext.ClassManager", function() {
                     }
                 },
                 classNames;
-
 
             spyOn(Ext.Loader, 'require').andCallFake(function(classes, fn) {
                 classNames = classes;
@@ -177,7 +179,7 @@ describe("Ext.ClassManager", function() {
                 }
             });
         });
-        
+
         afterEach(function() {
             Ext.undefine('I.am.the.MixinClass1');
             Ext.undefine('I.am.the.MixinClass2');
@@ -201,7 +203,7 @@ describe("Ext.ClassManager", function() {
                 var called = false;
 
                 subClass.addStatics({
-                    staticMethod: function(){
+                    staticMethod: function() {
                         called = true;
                     }
                 });
@@ -215,7 +217,7 @@ describe("Ext.ClassManager", function() {
             it("multiple with object map argument", function() {
                 subClass.addStatics({
                     staticProperty: 'something',
-                    staticMethod: function(){}
+                    staticMethod: function() {}
                 });
 
                 expect(subClass.staticProperty).toEqual('something');
@@ -226,6 +228,7 @@ describe("Ext.ClassManager", function() {
         describe("mixin", function() {
             it("should have all properties of mixins", function() {
                 var obj = new subClass();
+
                 expect(obj.mixinProperty1).toEqual('mixinProperty1');
                 expect(obj.mixinProperty2).toEqual('mixinProperty2');
                 expect(obj.mixinMethod1).toBeDefined();
@@ -279,16 +282,19 @@ describe("Ext.ClassManager", function() {
         describe("overriden methods", function() {
             it("should call self constructor", function() {
                 var obj = new subClass();
+
                 expect(obj.subConstrutorCalled).toBeTruthy();
             });
 
             it("should call parent constructor", function() {
                 var obj = new subClass();
+
                 expect(obj.parentConstructorCalled).toBeTruthy();
             });
 
             it("should call mixins constructors", function() {
                 var obj = new subClass();
+
                 expect(obj.mixinConstructor1Called).toBeTruthy();
                 expect(obj.mixinConstructor2Called).toBeTruthy();
             });
@@ -306,24 +312,24 @@ describe("Ext.ClassManager", function() {
         });
     });
 
-    describe('define', function () {
-        it('should allow anonymous classes', function () {
-            var T = Ext.define(null, function (Self) {
+    describe('define', function() {
+        it('should allow anonymous classes', function() {
+            var T = Ext.define(null, function(Self) {
                 return {
-                    constructor: function () {
+                    constructor: function() {
                         this.foo = 1;
                         this.T = Self;
                     }
-                }
+                };
             });
-            
+
             var obj = new T();
-            
+
             expect(obj.foo).toBe(1);
             expect(T).toBe(obj.self);
             expect(obj.T).toBe(T);
             expect(obj.$className).toBeNull();
-        })
+        });
     });
 
     describe("instantiate", function() {
@@ -367,16 +373,19 @@ describe("Ext.ClassManager", function() {
 
         it("should create the instance by full class name", function() {
             var me = Ext.create('Test.stuff.Person', 'Jacky', 24, 'male');
+
             expect(me instanceof Test.stuff.Person).toBe(true);
         });
 
         it("should create the instance by alias", function() {
             var me = manager.instantiateByAlias('person', 'Jacky', 24, 'male');
+
             expect(me instanceof Test.stuff.Person).toBe(true);
         });
 
         it("should pass all arguments to the constructor", function() {
             var me = manager.instantiateByAlias('person', 'Jacky', 24, 'male');
+
             expect(me.name).toBe('Jacky');
             expect(me.age).toBe(24);
             expect(me.sex).toBe('male');
@@ -384,6 +393,7 @@ describe("Ext.ClassManager", function() {
 
         it("should have all methods in prototype", function() {
             var me = manager.instantiateByAlias('person', 'Jacky', 24, 'male');
+
             me.eat('rice');
 
             expect(me.eatenFood).toBe('rice');
@@ -391,6 +401,7 @@ describe("Ext.ClassManager", function() {
 
         it("should works with inheritance", function() {
             var me = manager.instantiateByAlias('developer', true, 'Jacky', 24, 'male');
+
             me.code('javascript');
 
             expect(me.languageCoded).toBe('javascript');
@@ -404,8 +415,8 @@ describe("Ext.ClassManager", function() {
         });
 
         xdescribe("uses", function() {
-            //expect(Something.Cool).toBeDefined();
-            //expect(Something.Cool instanceof test).toBeTruthy();
+            // expect(Something.Cool).toBeDefined();
+            // expect(Something.Cool instanceof test).toBeTruthy();
         });
 
         describe("singleton", function() {
@@ -463,10 +474,11 @@ describe("Ext.ClassManager", function() {
     describe("Ext.namespace", function() {
         var w = window;
 
-        function undo (name) {
+        function undo(name) {
             if (Ext.isIE8) {
                 w[name] = undefined;
-            } else {
+            }
+            else {
                 delete w[name];
             }
         }
@@ -524,7 +536,7 @@ describe("Ext.ClassManager", function() {
             undo('FooTest8');
         });
 
-        it ("should not overwritte existing namespace", function() {
+        it("should not overwritte existing namespace", function() {
             Ext.namespace('FooTest9');
 
             FooTest9.prop1 = 'foo';

@@ -5,7 +5,7 @@ Ext.define('Neptune.view.form.widget.ComboBox', {
     displayField: 'state',
     store: Ext.create('Ext.data.ArrayStore', {
         fields: ['abbr', 'state'],
-        data : [
+        data: [
             ['AL', 'Alabama', 'The Heart of Dixie'],
             ['AK', 'Alaska', 'The Land of the Midnight Sun'],
             ['AZ', 'Arizona', 'The Grand Canyon State'],

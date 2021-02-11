@@ -1,12 +1,21 @@
-describe('Ext.chart.series.Gauge', function () {
+topSuite("Ext.chart.series.Gauge", ['Ext.chart.*', 'Ext.data.ArrayStore'], function() {
+    beforeEach(function() {
+        // Silence warnings regarding Sencha download server
+        spyOn(Ext.log, 'warn');
+    });
 
-    describe('series renderer', function () {
-        it('should be called with the right index', function () {
-            var chart,
-                redrawCount = 0,
-                indexes = [];
+    describe('series renderer', function() {
+        var chart;
 
-            runs(function () {
+        afterEach(function() {
+            Ext.destroy(chart);
+        });
+
+        it('should be called with the right index', function() {
+            var indexes = [],
+                layoutDone;
+
+            runs(function() {
                 chart = Ext.create({
                     xtype: 'polar',
                     renderTo: Ext.getBody(),
@@ -40,30 +49,27 @@ describe('Ext.chart.series.Gauge', function () {
                             label: 'Hot',
                             color: 'tomato'
                         }],
-                        renderer: function (sprite, config, rendererData, spriteIndex) {
+                        renderer: function(sprite, config, rendererData, spriteIndex) {
                             indexes.push(spriteIndex);
                         }
                     },
                     listeners: {
-                        redraw: function () {
-                            redrawCount++;
+                        layout: function() {
+                            layoutDone = true;
                         }
                     }
                 });
             });
 
-            waitsFor(function () {
-                return redrawCount >= 3;
+            waitsFor(function() {
+                return layoutDone;
             });
 
-            runs(function () {
+            runs(function() {
                 expect(indexes[0]).toEqual(1);
                 expect(indexes[1]).toEqual(2);
                 expect(indexes[2]).toEqual(3);
-
-                Ext.destroy(chart);
             });
         });
     });
-
 });

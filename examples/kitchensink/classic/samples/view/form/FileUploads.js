@@ -6,25 +6,39 @@ Ext.define('KitchenSink.view.form.FileUploads', {
     extend: 'Ext.container.Container',
     xtype: 'form-fileuploads',
     controller: 'form-fileuploads',
-    
+
     //<example>
     requires: [
         'KitchenSink.view.form.FileUploadsController'
     ],
-    
+
     exampleTitle: 'File Upload fields',
     otherContent: [{
-        type: 'ViewController',
+        type: 'Controller',
         path: 'classic/samples/view/form/FileUploadsController.js'
     }],
     //</example>
-    
+
+    profiles: {
+        classic: {
+            labelWidth: 70
+        },
+        neptune: {
+            labelWidth: 70
+        },
+        graphite: {
+            labelWidth: 120
+        },
+        'classic-material': {
+            labelWidth: 120
+        }
+    },
     width: 600,
     layout: {
         type: 'vbox',
         align: 'stretch'
     },
-    
+
     defaults: {
         xtype: 'form',
         layout: 'anchor',
@@ -33,12 +47,12 @@ Ext.define('KitchenSink.view.form.FileUploads', {
         style: {
             'margin-bottom': '20px'
         },
-        
+
         defaults: {
             anchor: '100%'
         }
     },
-    
+
     items: [{
         items: [{
             xtype: 'component',
@@ -88,7 +102,7 @@ Ext.define('KitchenSink.view.form.FileUploads', {
             anchor: '100%',
             allowBlank: false,
             msgTarget: 'side',
-            labelWidth: 50
+            labelWidth: 60
         },
 
         items: [{
@@ -122,7 +136,7 @@ Ext.define('KitchenSink.view.form.FileUploads', {
             anchor: '100%',
             allowBlank: false,
             msgTarget: 'side',
-            labelWidth: 70
+            labelWidth: '${labelWidth}'
         },
 
         items: [{
@@ -134,7 +148,7 @@ Ext.define('KitchenSink.view.form.FileUploads', {
             fieldLabel: 'Photo',
             name: 'photo-path',
             buttonConfig: {
-                text : '',
+                text: '',
                 iconCls: 'file-uploads-image-add'
             }
         }, {

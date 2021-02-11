@@ -6,17 +6,35 @@
 Ext.define('KitchenSink.view.form.CustomFields', {
     extend: 'Ext.form.Panel',
     xtype: 'form-customfields',
-    
+
     requires: [
         'Ext.ux.form.SearchField'
     ],
 
     //<example>
     //</example>
-    
+
+    profiles: {
+        classic: {
+            width: 600,
+            labelWidth: 50
+        },
+        neptune: {
+            width: 600,
+            labelWidth: 50
+        },
+        graphite: {
+            width: 750,
+            labelWidth: 60
+        },
+        'classic-material': {
+            width: 750,
+            labelWidth: 60
+        }
+    },
     title: 'Forum Search',
     height: 600,
-    width: 600,
+    width: '${width}',
 
     layout: 'fit',
 
@@ -34,15 +52,15 @@ Ext.define('KitchenSink.view.form.CustomFields', {
         tpl: [
             '<tpl for=".">',
             '<div class="search-item">',
-                '<h3><span>{lastPost:this.formatDate}<br>by {author}</span>',
-                '<a href="http://sencha.com/forum/showthread.php?t={topicId}&p={postId}" target="_blank">{title}</a></h3>',
-                '<p>{excerpt}</p>',
+            '<h3><span>{lastPost:this.formatDate}<br>by {author}</span>',
+            '<a href="http://sencha.com/forum/showthread.php?t={topicId}&p={postId}" target="_blank">{title}</a></h3>',
+            '<p>{excerpt}</p>',
             '</div></tpl>',
-        {
-            formatDate: function(value) {
-                return Ext.Date.format(value, 'M j, Y');
-            }
-        }],
+            {
+                formatDate: function(value) {
+                    return Ext.Date.format(value, 'M j, Y');
+                }
+            }],
         itemSelector: 'div.search-item',
         emptyText: '<div class="x-grid-empty">No Matching Threads</div>',
         store: 'form-forum-posts'
@@ -51,7 +69,7 @@ Ext.define('KitchenSink.view.form.CustomFields', {
     tbar: [{
         width: 400,
         fieldLabel: 'Search',
-        labelWidth: 50,
+        labelWidth: '${labelWidth}',
         xtype: 'searchfield',
         store: 'form-forum-posts'
     }],
@@ -63,7 +81,7 @@ Ext.define('KitchenSink.view.form.CustomFields', {
         emptyMsg: 'No topics to display'
     },
 
-    applyStore: function (store) {
+    applyStore: function(store) {
         return store && Ext.Factory.store(store);
     }
 });

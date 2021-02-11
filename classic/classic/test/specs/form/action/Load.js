@@ -1,12 +1,13 @@
-describe("Ext.form.action.Load", function() {
-
+topSuite("Ext.form.action.Load", function() {
     var action;
 
     function createAction(config) {
         config = config || {};
+
         if (!config.form) {
             config.form = {};
         }
+
         action = new Ext.form.action.Load(config);
     }
 
@@ -14,10 +15,19 @@ describe("Ext.form.action.Load", function() {
         action = undefined;
     });
 
+    describe("alternate class name", function() {
+        it("should have Ext.form.Action.Load as the alternate class name", function() {
+            expect(Ext.form.action.Load.prototype.alternateClassName).toEqual("Ext.form.Action.Load");
+        });
 
+        it("should allow the use of Ext.form.Action.Load", function() {
+            expect(Ext.form.Action.Load).toBeDefined();
+        });
+    });
 
     it("should be registered in the action manager under the alias 'formaction.load'", function() {
         var inst = Ext.ClassManager.instantiateByAlias('formaction.load', {});
+
         expect(inst instanceof Ext.form.action.Load).toBeTruthy();
     });
 
@@ -45,7 +55,7 @@ describe("Ext.form.action.Load", function() {
         });
 
         it("should use the BasicForm's 'method' config as the ajax call method if specified", function() {
-            createAction({ form: {method: 'FORMMETHOD'} });
+            createAction({ form: { method: 'FORMMETHOD' } });
             action.run();
             expect(ajaxRequestCfg.method).toEqual('FORMMETHOD');
         });
@@ -57,7 +67,7 @@ describe("Ext.form.action.Load", function() {
         });
 
         it("should use the BasicForm's 'url' config as the ajax call url if specified", function() {
-            createAction({ form: {url: '/url-from-form'} });
+            createAction({ form: { url: '/url-from-form' } });
             action.run();
             expect(ajaxRequestCfg.url).toEqual('/url-from-form');
         });
@@ -69,7 +79,8 @@ describe("Ext.form.action.Load", function() {
         });
 
         it("should use the Action's 'headers' config as the ajax call headers if specified", function() {
-            var headers = {foo: 'bar'};
+            var headers = { foo: 'bar' };
+
             createAction({ headers: headers });
             action.run();
             expect(ajaxRequestCfg.headers).toBe(headers);
@@ -82,14 +93,16 @@ describe("Ext.form.action.Load", function() {
         });
 
         it("should add the BasicForm's 'baseParams' config to the ajax call params if specified", function() {
-            var params = {one: '1', two: '2'};
-            createAction({ form: {baseParams: params} });
+            var params = { one: '1', two: '2' };
+
+            createAction({ form: { baseParams: params } });
             action.run();
             expect(ajaxRequestCfg.params).toEqual(params);
         });
 
         it("should use the Action's 'params' config for the ajax call params if specfied (as an Object)", function() {
-            var params = {one: '1', two: '2'};
+            var params = { one: '1', two: '2' };
+
             createAction({ params: params });
             action.run();
             expect(ajaxRequestCfg.params).toEqual(params);
@@ -97,25 +110,26 @@ describe("Ext.form.action.Load", function() {
 
         it("should use the Action's 'params' config for the ajax call params if specfied (as a String)", function() {
             var params = 'one=1&two=2';
+
             createAction({ params: params });
             action.run();
-            expect(ajaxRequestCfg.params).toEqual({one: '1', two: '2'});
+            expect(ajaxRequestCfg.params).toEqual({ one: '1', two: '2' });
         });
 
         it("should concatenate the Action's 'params' config (as an Object) with the BasicForm's 'baseParams' config", function() {
-            createAction({ params: {one: '1', two: '2'}, form: {baseParams: {three: '3', four: '4'} } });
+            createAction({ params: { one: '1', two: '2' }, form: { baseParams: { three: '3', four: '4' } } });
             action.run();
-            expect(ajaxRequestCfg.params).toEqual({one: '1', two: '2', three: '3', four: '4'});
+            expect(ajaxRequestCfg.params).toEqual({ one: '1', two: '2', three: '3', four: '4' });
         });
 
         it("should concatenate the Action's 'params' config (as a String) with the BasicForm's 'baseParams' config", function() {
-            createAction({ params: 'one=1&two=2', form: {baseParams: {three: '3', four: '4'} } });
+            createAction({ params: 'one=1&two=2', form: { baseParams: { three: '3', four: '4' } } });
             action.run();
-            expect(ajaxRequestCfg.params).toEqual({one: '1', two: '2', three: '3', four: '4'});
+            expect(ajaxRequestCfg.params).toEqual({ one: '1', two: '2', three: '3', four: '4' });
         });
 
         it("should use the BasicForm's 'timeout' config as the ajax call timeout if specified", function() {
-            createAction({ form: {timeout: 123} });
+            createAction({ form: { timeout: 123 } });
             action.run();
             expect(ajaxRequestCfg.timeout).toEqual(123000);
         });
@@ -133,13 +147,12 @@ describe("Ext.form.action.Load", function() {
         });
     });
 
-
     describe("ajax request error", function() {
         var wantResponse = { responseText: '{}' };
 
         function run(response, form) {
             response = response || wantResponse;
-            
+
             spyOn(Ext.Ajax, 'request').andCallFake(function(config) {
                 // call the configured failure handler
                 config.failure.call(config.scope, response);
@@ -154,35 +167,35 @@ describe("Ext.form.action.Load", function() {
 
         it("should set the Action's failureType property to CONNECT_FAILURE", function() {
             run();
-            
+
             expect(action.failureType).toEqual(Ext.form.action.Action.CONNECT_FAILURE);
         });
 
         it("should set the Action's response property to the ajax response", function() {
             run();
-            
+
             expect(action.response).toEqual(wantResponse);
         });
 
         it("should call the BasicForm's afterAction method with a false success param", function() {
             run();
-            
+
             expect(action.form.afterAction).toHaveBeenCalledWith(action, false);
         });
-        
+
         it("should not call afterAction if the form is destroying", function() {
             run(null, { destroying: true });
-            
+
             expect(action.form.afterAction).not.toHaveBeenCalled();
         });
-        
+
         it("should not call afterAction if the form is already destroyed", function() {
             run(null, { destroyed: true });
-            
+
             expect(action.form.afterAction).not.toHaveBeenCalled();
         });
     });
-    
+
     describe("load failure", function() {
 
         function run(response, form) {
@@ -214,27 +227,26 @@ describe("Ext.form.action.Load", function() {
             expect(action.failureType).toBeDefined();
         });
         it("should require the result object to have success=true", function() {
-            run({responseText: '{"success":false, "data":{}}'});
+            run({ responseText: '{"success":false, "data":{}}' });
             expect(action.failureType).toBeDefined();
         });
         it("should require the result object to have a data property", function() {
-            run({responseText: '{"success":true}'});
+            run({ responseText: '{"success":true}' });
             expect(action.failureType).toBeDefined();
         });
-        
+
         it("should not call afterAction if the form is destroying", function() {
             run({}, { destroying: true });
-            
+
             expect(action.form.afterAction).not.toHaveBeenCalled();
         });
-        
+
         it("should not call afterAction if the form is already destroyed", function() {
             run({}, { destroyed: true });
-            
+
             expect(action.form.afterAction).not.toHaveBeenCalled();
         });
     });
-
 
     describe("load success", function() {
         function run(response, reader, form) {
@@ -254,48 +266,49 @@ describe("Ext.form.action.Load", function() {
         }
 
         it("should call the BasicForm's clearInvalid method", function() {
-            run({responseText: '{"success":true,"data":{"from":"responseText"}}'});
+            run({ responseText: '{"success":true,"data":{"from":"responseText"}}' });
             expect(action.form.clearInvalid).toHaveBeenCalled();
         });
 
         it("should call the BasicForm's setValues method", function() {
-            run({responseText: '{"success":true,"data":{"from":"responseText"}}'});
+            run({ responseText: '{"success":true,"data":{"from":"responseText"}}' });
             expect(action.form.setValues).toHaveBeenCalled();
         });
 
         it("should invoke the BasicForm's afterAction method with a true success param", function() {
-            run({responseText: '{"success":true,"data":{"from":"responseText"}}'});
+            run({ responseText: '{"success":true,"data":{"from":"responseText"}}' });
             expect(action.form.afterAction).toHaveBeenCalledWith(action, true);
         });
 
         it("should parse the responseText as JSON", function() {
-            run({responseText: '{"success":true,"data":{"from":"responseText"}}'});
-            expect(action.form.setValues).toHaveBeenCalledWith({from: "responseText"});
+            run({ responseText: '{"success":true,"data":{"from":"responseText"}}' });
+            expect(action.form.setValues).toHaveBeenCalledWith({ from: "responseText" });
         });
 
         it("should use the BasicForm's configured Reader to parse the response if present", function() {
-            var response = {responseText: '{}'};
+            var response = { responseText: '{}' };
+
             run(response, {
                 read: jasmine.createSpy().andReturn({
                     success: true,
                     records: [
-                        {data: {from: 'reader'}}
+                        { data: { from: 'reader' } }
                     ]
                 })
             });
             expect(action.form.reader.read).toHaveBeenCalledWith(response);
-            expect(action.form.setValues).toHaveBeenCalledWith({from: "reader"});
+            expect(action.form.setValues).toHaveBeenCalledWith({ from: "reader" });
         });
-        
+
         it("should not call afterAction if the form is destroying", function() {
-            run({responseText: '{"success":true,"data":{"from":"responseText"}}'}, undefined, { destroying: true });
-            
+            run({ responseText: '{"success":true,"data":{"from":"responseText"}}' }, undefined, { destroying: true });
+
             expect(action.form.afterAction).not.toHaveBeenCalled();
         });
-        
+
         it("should not call afterAction if the form is already destroyed", function() {
-            run({responseText: '{"success":true,"data":{"from":"responseText"}}'}, undefined, { destroyed: true });
-            
+            run({ responseText: '{"success":true,"data":{"from":"responseText"}}' }, undefined, { destroyed: true });
+
             expect(action.form.afterAction).not.toHaveBeenCalled();
         });
     });

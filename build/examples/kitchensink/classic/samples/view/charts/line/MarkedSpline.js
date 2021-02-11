@@ -7,7 +7,7 @@ Ext.define('KitchenSink.view.charts.line.MarkedSpline', {
     xtype: 'line-marked-spline',
     controller: 'line-marked-spline',
 
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     bodyStyle: 'background: transparent !important',
     layout: {
@@ -19,9 +19,9 @@ Ext.define('KitchenSink.view.charts.line.MarkedSpline', {
         path: 'classic/samples/view/charts/line/MarkedSplineController.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/Spline.js'
+        path: 'app/store/Spline.js'
     }],
-    // </example>
+    //</example>
     width: 650,
 
     tbar: [
@@ -40,24 +40,12 @@ Ext.define('KitchenSink.view.charts.line.MarkedSpline', {
         store: {
             type: 'spline'
         },
-        insetPadding: {
-            top: 40,
-            right: 40,
-            bottom: 20,
-            left: 20
-        },
         legend: {
             docked: 'right'
         },
-        sprites: [{
-            type: 'text',
-            text: 'Line Charts - Marked Spline',
-            fontSize: 22,
-            width: 100,
-            height: 30,
-            x: 40, // the sprite x position
-            y: 20  // the sprite y position
-        }],
+        captions: {
+            title: 'Line Charts - Marked Spline'
+        },
         axes: [{
             type: 'numeric',
             fields: ['sin', 'cos', 'tan' ],
@@ -132,26 +120,5 @@ Ext.define('KitchenSink.view.charts.line.MarkedSpline', {
             }
         }]
         //<example>
-    }, {
-        style: 'margin-top: 10px;',
-        xtype: 'gridpanel',
-        height: 240,
-        columns : {
-            defaults: {
-                sortable: false,
-                menuDisabled: true
-            },
-            items: [
-                { text: 'Theta', dataIndex: 'theta' },
-                { text: 'Sin', dataIndex: 'sin' },
-                { text: 'Cos', dataIndex: 'cos' },
-                { text: 'Tan', dataIndex: 'tan' }
-            ]
-        },
-        store: {
-            type: 'spline'
-        },
-        width: '100%'
-        //</example>
     }]
 });

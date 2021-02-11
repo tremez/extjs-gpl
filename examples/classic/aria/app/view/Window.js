@@ -11,9 +11,9 @@ Ext.define('Aria.view.Window', {
     closable: true,
     constrain: true,
     defaultFocus: 'textfield',
-    
+
     layout: 'fit',
-    
+
     items: [{
         xtype: 'form',
         layout: 'form',
@@ -27,7 +27,7 @@ Ext.define('Aria.view.Window', {
             fieldLabel: 'Last Name'
         }]
     }],
-    
+
     dockedItems: {
         dock: 'bottom',
         items: [{

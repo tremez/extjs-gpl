@@ -17,28 +17,46 @@ Ext.define('KitchenSink.view.grid.Paging', {
         path: 'classic/samples/view/grid/PagingController.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/ForumThreads.js'
+        path: 'app/store/ForumThreads.js'
     }, {
         type: 'Model',
-        path: 'classic/samples/model/grid/ForumThread.js'
+        path: 'app/model/grid/ForumThread.js'
     }],
     profiles: {
         classic: {
             width: 700,
+            height: 500,
+            repliesWidth: 70,
             percentChangeColumnWidth: 75,
-            lastUpdatedColumnWidth: 85
+            lastUpdatedColumnWidth: 85,
+            lastpostWidth: 150
         },
         neptune: {
             width: 760,
+            height: 500,
             percentChangeColumnWidth: 100,
-            lastUpdatedColumnWidth: 115
+            lastUpdatedColumnWidth: 115,
+            repliesWidth: 70,
+            lastpostWidth: 150
+        },
+        graphite: {
+            width: 1000,
+            height: 600,
+            repliesWidth: 150,
+            lastpostWidth: 250
+        },
+        'classic-material': {
+            width: 1000,
+            height: 600,
+            repliesWidth: 150,
+            lastpostWidth: 250
         }
     },
     //</example>
 
     title: 'Browse Forums',
     width: '${width}',
-    height: 500,
+    height: '${height}',
 
     autoLoad: true,
     frame: true,
@@ -54,12 +72,12 @@ Ext.define('KitchenSink.view.grid.Paging', {
         }
     },
 
-    plugins: [{
-        ptype: 'preview',
-
-        expanded: true,
-        bodyField: 'excerpt'
-    }],
+    plugins: {
+        preview: {
+            expanded: true,
+            bodyField: 'excerpt'
+        }
+    },
 
     viewConfig: {
         trackOver: false,
@@ -73,25 +91,25 @@ Ext.define('KitchenSink.view.grid.Paging', {
         flex: 1,
         sortable: false,
         renderer: 'renderTopic'
-    },{
+    }, {
         text: "Author",
         dataIndex: 'username',
 
         width: 100,
         hidden: true,
         sortable: true
-    },{
+    }, {
         text: "Replies",
         dataIndex: 'replycount',
 
-        width: 70,
+        width: '${repliesWidth}',
         align: 'right',
         sortable: true
-    },{
+    }, {
         text: "Last Post",
         dataIndex: 'lastpost',
 
-        width: 150,
+        width: '${lastpostWidth}',
         sortable: true,
         renderer: 'renderLast'
     }],

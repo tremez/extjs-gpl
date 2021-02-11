@@ -11,21 +11,21 @@ Ext.define('KitchenSink.view.charts.pie.Custom', {
     xtype: 'pie-custom',
     controller: 'pie-basic',
 
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     otherContent: [{
         type: 'Controller',
         path: 'classic/samples/view/charts/pie/BasicController.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/DeviceMarketShare.js'
+        path: 'app/store/DeviceMarketShare.js'
     }],
     bodyStyle: 'background: transparent !important',
     layout: {
         type: 'vbox',
         pack: 'center'
     },
-    // </example>
+    //</example>
     width: 650,
 
     tbar: [
@@ -44,31 +44,19 @@ Ext.define('KitchenSink.view.charts.pie.Custom', {
         store: {
             type: 'device-market-share'
         },
-        insetPadding: 30,
-        innerPadding: 20,
+        innerPadding: 10,
         legend: {
             docked: 'bottom'
         },
         interactions: ['rotate', 'itemhighlight'],
-        sprites: [{
-            type: 'text',
-            text: 'Pie Charts - Custom Slice Sizing',
-            fontSize: 22,
-            width: 100,
-            height: 30,
-            x: 40, // the sprite x position
-            y: 20  // the sprite y position
-        }, {
-            type: 'text',
-            text: 'Data: IDC Predictions - 2017',
-            x: 12,
-            y: 425
-        }, {
-            type: 'text',
-            text: 'Source: Internet',
-            x: 12,
-            y: 440
-        }],
+        captions: {
+            title: 'Pie Charts - Custom Slice Sizing',
+            credits: {
+                text: 'Data: IDC Predictions - 2017\n' +
+                    'Source: Internet',
+                align: 'left'
+            }
+        },
         series: [{
             type: 'pie',
             animation: {
@@ -96,25 +84,6 @@ Ext.define('KitchenSink.view.charts.pie.Custom', {
             }
         }]
         //<example>
-    }, {
-        style: 'padding-top: 10px;',
-        xtype: 'gridpanel',
-        columns : {
-            defaults: {
-                sortable: false,
-                menuDisabled: true
-            },
-            items: [
-                { text: 'OS', dataIndex: 'os' },
-                { text: 'Market Share', dataIndex: 'data1', width: 150, renderer: 'onDataRender' },
-                { text: 'Growth', dataIndex: 'data2', width: 150, renderer: 'onDataRender' }
-            ]
-        },
-        store: {
-            type: 'device-market-share'
-        },
-        width: '100%'
-        //</example>
     }]
 
 });

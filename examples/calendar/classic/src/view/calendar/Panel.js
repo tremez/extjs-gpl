@@ -20,7 +20,9 @@ Ext.define('Calendar.view.calendar.Panel', {
     privates: {
         createSideBar: function() {
             var result = this.callParent();
+
             result.items.unshift(this.getSideBarHeader());
+
             return result;
         }
     }

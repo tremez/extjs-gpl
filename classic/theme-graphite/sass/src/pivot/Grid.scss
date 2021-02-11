@@ -1,0 +1,26 @@
+.#{$prefix}pivot-grid-config-column.#{$prefix}focus .#{$prefix}pivot-grid-config-column-inner {
+    background-color: $grid-row-cell-focus-background-color;
+}
+
+.#{$prefix}pivot-grid-config-column .#{$prefix}pivot-grid-config-column-btn {
+    margin-top: $pivot-grid-config-column-btn-margin;
+}
+
+.#{$prefix}grid-cell-selected,
+.#{$prefix}grid-item-selected .#{$prefix}grid-cell {
+    &.#{$prefix}pivot-grid-group-title,
+    .#{$prefix}pivot-grid-group-title,
+    .#{$prefix}grid-cell-inner {
+        color: $grid-row-cell-selected-color;
+    }
+    
+    &.#{$prefix}grid-item-focused {
+        &.#{$prefix}pivot-grid-group-title,
+        .#{$prefix}pivot-grid-group-title,
+        .#{$prefix}grid-cell-inner {
+            background-color: $grid-row-cell-focus-background-color;
+            color: $grid-row-cell-focus-color;
+        }
+    }
+}
+

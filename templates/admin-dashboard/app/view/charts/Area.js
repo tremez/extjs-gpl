@@ -12,7 +12,7 @@ Ext.define('Admin.view.charts.Area', {
     ],
 
     title: 'Area Chart',
-    iconCls: 'x-fa fa-area-chart',
+    iconCls: 'x-fa fa-chart-area',
 
     items: [{
         xtype: 'cartesian',

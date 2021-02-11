@@ -1,0 +1,332 @@
+$fi-important: dynamic(true);
+$fi-font-family: dynamic($font-icon-font-family);
+
+@mixin fi($name, $icon) {
+    $args: parseIconArgs($icon);
+
+    $char: nth($args, 1);
+    $font-family: nth($args, 2);
+    $rotation: nth($args, 3);
+
+    .fi-#{$name}:before {
+        @if $fi-important {
+            content: $char !important;
+        } @else {
+            content: $char;
+        }
+
+        @if $fi-important {
+            font-family: $font-family !important;
+        } @else {
+
+            font-family: $font-family;
+        }
+
+        @if $rotation != null {
+            $rotation-origin: 50% 50%;
+            $angle: rotate(#{$rotation}deg);
+
+            display: inline-block;
+            transform: $angle;
+            transform-origin: $rotation-origin;
+        }
+    }
+}
+
+.fi:before {
+    font-family: $fi-font-family !important;
+}
+
+/**
+ * @var {string}
+ * The "align-center" font-icon
+ */
+$fi-var-align-center: dynamic($fa-var-align-center);
+@include fi(align-center, $fi-var-align-center);
+
+/**
+ * @var {string}
+ * The "align-justify" font-icon
+ */
+$fi-var-align-justify: dynamic($fa-var-align-justify);
+@include fi(align-justify, $fi-var-align-justify);
+
+/**
+ * @var {string}
+ * The "align-left" font-icon
+ */
+$fi-var-align-left: dynamic($fa-var-align-left);
+@include fi(align-left, $fi-var-align-left);
+
+/**
+ * @var {string}
+ * The "align-right" font-icon
+ */
+$fi-var-align-right: dynamic($fa-var-align-right);
+@include fi(align-right, $fi-var-align-right);
+
+/**
+ * @var {string}
+ * The "arrow-down" font-icon
+ */
+$fi-var-arrow-down: dynamic($fa-var-arrow-down);
+@include fi(arrow-down, $fi-var-arrow-down);
+
+/**
+ * @var {string}
+ * The "arrow-left" font-icon
+ */
+$fi-var-arrow-left: dynamic($fa-var-arrow-left);
+@include fi(arrow-left, $fi-var-arrow-left);
+
+/**
+ * @var {string}
+ * The "arrow-right" font-icon
+ */
+$fi-var-arrow-right: dynamic($fa-var-arrow-right);
+@include fi(arrow-right, $fi-var-arrow-right);
+
+/**
+ * @var {string}
+ * The "arrow-up" font-icon
+ */
+$fi-var-arrow-up: dynamic($fa-var-arrow-up);
+@include fi(arrow-up, $fi-var-arrow-up);
+
+/**
+ * @var {string}
+ * The "bars" font-icon
+ */
+$fi-var-bars: dynamic($fa-var-bars);
+@include fi(bars, $fi-var-bars);
+
+/**
+ * @var {string}
+ * The "caret-down" font-icon
+ */
+$fi-var-caret-down: dynamic($fa-var-caret-down);
+@include fi(caret-down, $fi-var-caret-down);
+
+/**
+ * @var {string}
+ * The "caret-left" font-icon
+ */
+$fi-var-caret-left: dynamic($fa-var-caret-left);
+@include fi(caret-left, $fi-var-caret-left);
+
+/**
+ * @var {string}
+ * The "caret-right" font-icon
+ */
+$fi-var-caret-right: dynamic($fa-var-caret-right);
+@include fi(caret-right, $fi-var-caret-right);
+
+/**
+ * @var {string}
+ * The "caret-up" font-icon
+ */
+$fi-var-caret-up: dynamic($fa-var-caret-up);
+@include fi(caret-up, $fi-var-caret-up);
+
+/**
+ * @var {string}
+ * The "check" font-icon
+ */
+$fi-var-check: dynamic($fa-var-check);
+@include fi(check, $fi-var-check);
+
+/**
+ * @var {string}
+ * The "chevron-down" font-icon
+ */
+$fi-var-chevron-down: dynamic($fa-var-chevron-down);
+@include fi(chevron-down, $fi-var-chevron-down);
+
+/**
+ * @var {string}
+ * The "chevron-left" font-icon
+ */
+$fi-var-chevron-left: dynamic($fa-var-chevron-left);
+@include fi(chevron-left, $fi-var-chevron-left);
+
+/**
+ * @var {string}
+ * The "chevron-right" font-icon
+ */
+$fi-var-chevron-right: dynamic($fa-var-chevron-right);
+@include fi(chevron-right, $fi-var-chevron-right);
+
+/**
+ * @var {string}
+ * The "chevron-up" font-icon
+ */
+$fi-var-chevron-up: dynamic($fa-var-chevron-up);
+@include fi(chevron-up, $fi-var-chevron-up);
+
+/**
+ * @var {string}
+ * The "edit" font-icon
+ */
+$fi-var-edit: dynamic($fa-var-edit);
+@include fi(edit, $fi-var-edit);
+
+/**
+ * @var {string}
+ * The "ellipsis-h" font-icon
+ */
+$fi-var-ellipsis-h: dynamic($fa-var-ellipsis-h);
+@include fi(ellipsis-h, $fi-var-ellipsis-h);
+
+/**
+ * @var {string}
+ * The "ellipsis-v" font-icon
+ */
+$fi-var-ellipsis-v: dynamic($fa-var-ellipsis-v);
+@include fi(ellipsis-v, $fi-var-ellipsis-v);
+
+/**
+ * @var {string}
+ * The "filter" font-icon
+ */
+$fi-var-filter: dynamic($fa-var-filter);
+@include fi(filter, $fi-var-filter);
+
+/**
+ * @var {string}
+ * The "gear" font-icon
+ */
+$fi-var-gear: dynamic($fa-var-cog);
+@include fi(gear, $fi-var-gear);
+
+/**
+ * @var {string}
+ * The "group" font-icon
+ */
+$fi-var-group: dynamic($fa-var-users);
+@include fi(group, $fi-var-group);
+
+/**
+ * @var {string}
+ * The "home" font-icon
+ */
+$fi-var-home: dynamic($fa-var-home);
+@include fi(home, $fi-var-home);
+
+/**
+ * @var {string}
+ * The "lock" font-icon
+ */
+$fi-var-lock: dynamic($fa-var-lock);
+@include fi(lock, $fi-var-lock);
+
+/**
+ * @var {string}
+ * The "minus" font-icon
+ */
+$fi-var-minus: dynamic($fa-var-minus);
+@include fi(minus, $fi-var-minus);
+
+/**
+ * @var {string}
+ * The "pencil" font-icon
+ */
+$fi-var-pencil: dynamic($fa-var-pencil);
+@include fi(pencil, $fi-var-pencil);
+
+/**
+ * @var {string}
+ * The "plus" font-icon
+ */
+$fi-var-plus: dynamic($fa-var-plus);
+@include fi(plus, $fi-var-plus);
+
+/**
+ * @var {string}
+ * The "print" font-icon
+ */
+$fi-var-print: dynamic($fa-var-print);
+@include fi(print, $fi-var-print);
+
+/**
+ * @var {string}
+ * The "redo" font-icon
+ */
+$fi-var-redo: dynamic($fa-var-sync);
+@include fi(redo, $fi-var-redo);
+
+/**
+ * @var {string}
+ * The "refresh" font-icon
+ */
+$fi-var-refresh: dynamic($fa-var-sync);
+@include fi(refresh, $fi-var-refresh);
+
+/**
+ * @var {string}
+ * The "save" font-icon
+ */
+$fi-var-save: dynamic($fa-var-save);
+@include fi(save, $fi-var-save);
+
+/**
+ * @var {string}
+ * The "search" font-icon
+ */
+$fi-var-search: dynamic($fa-var-search);
+@include fi(search, $fi-var-search);
+
+/**
+ * @var {string}
+ * The "star" font-icon
+ */
+$fi-var-star: dynamic($fa-var-star);
+@include fi(star, $fi-var-star);
+
+/**
+ * @var {string}
+ * The "times" font-icon
+ */
+$fi-var-times: dynamic($fa-var-times);
+@include fi(times, $fi-var-times);
+
+/**
+ * @var {string}
+ * The "trash" font-icon
+ */
+$fi-var-trash: dynamic($fa-var-trash);
+@include fi(trash, $fi-var-trash);
+
+/**
+ * @var {string}
+ * The "th" font-icon
+ */
+$fi-var-th: dynamic($fa-var-th);
+@include fi(th, $fi-var-th);
+
+/**
+ * @var {string}
+ * The "th-list" font-icon
+ */
+$fi-var-th-list: dynamic($fa-var-th-list);
+@include fi(th-list, $fi-var-th-list);
+
+/**
+ * @var {string}
+ * The "undo" font-icon
+ */
+$fi-var-undo: dynamic($fa-var-undo);
+@include fi(undo, $fi-var-undo);
+
+/**
+ * @var {string}
+ * The "unlock" font-icon
+ */
+$fi-var-unlock: dynamic($fa-var-unlock);
+@include fi(unlock, $fi-var-unlock);
+
+/**
+ * @var {string}
+ * The "user" font-icon
+ */
+$fi-var-user: dynamic($fa-var-user);
+@include fi(user, $fi-var-user);

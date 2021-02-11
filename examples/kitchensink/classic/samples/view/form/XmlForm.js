@@ -6,7 +6,7 @@ Ext.define('KitchenSink.view.form.XmlForm', {
     extend: 'Ext.form.Panel',
     xtype: 'form-xml',
     controller: 'form-xml',
-    
+
     //<example>
     requires: [
         'Ext.data.reader.Xml',
@@ -14,7 +14,7 @@ Ext.define('KitchenSink.view.form.XmlForm', {
         'KitchenSink.model.form.FieldError',
         'KitchenSink.view.form.XmlFormController'
     ],
-    
+
     exampleTitle: 'XML Form',
     otherContent: [{
         type: 'Contact Model',
@@ -24,9 +24,9 @@ Ext.define('KitchenSink.view.form.XmlForm', {
         path: 'classic/samples/model/form/FieldError.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/States.js'
+        path: 'app/store/States.js'
     }, {
-        type: 'ViewController',
+        type: 'Controller',
         path: 'classic/samples/view/form/XmlFormController.js'
     }, {
         type: 'Load XML',
@@ -36,16 +36,41 @@ Ext.define('KitchenSink.view.form.XmlForm', {
         path: 'data/form/xml-form-errors.xml'
     }],
     //</example>
-    
-    title:'XML Form',
+    profiles: {
+        classic: {
+            width: 340,
+            fieldsetWidth: 280,
+            labelWidth: 85,
+            labelAlign: 'right'
+        },
+        neptune: {
+            width: 340,
+            fieldsetWidth: 280,
+            labelWidth: 85,
+            labelAlign: 'right'
+        },
+        graphite: {
+            width: 440,
+            fieldsetWidth: 380,
+            labelWidth: 115,
+            labelAlign: 'right'
+        },
+        'classic-material': {
+            width: 440,
+            fieldsetWidth: 380,
+            labelWidth: 150,
+            labelAlign: 'top'
+        }
+    },
+    title: 'XML Form',
     frame: true,
-    width: 340,
+    width: '${width}',
     bodyPadding: 5,
     waitMsgTarget: true,
 
     fieldDefaults: {
-        labelAlign: 'right',
-        labelWidth: 85,
+        labelAlign: '${labelAlign}',
+        labelWidth: '${labelWidth}',
         msgTarget: 'side'
     },
 
@@ -61,7 +86,7 @@ Ext.define('KitchenSink.view.form.XmlForm', {
     errorReader: {
         type: 'xml',
         model: 'KitchenSink.model.form.FieldError',
-        record : 'field',
+        record: 'field',
         successProperty: '@success'
     },
 
@@ -70,7 +95,7 @@ Ext.define('KitchenSink.view.form.XmlForm', {
         title: 'Contact Information',
         defaultType: 'textfield',
         defaults: {
-            width: 280
+            width: '${fieldsetWidth}'
         },
         items: [{
             fieldLabel: 'First Name',
@@ -86,7 +111,7 @@ Ext.define('KitchenSink.view.form.XmlForm', {
         }, {
             fieldLabel: 'Email',
             name: 'email',
-            vtype:'email'
+            vtype: 'email'
         }, {
             xtype: 'combobox',
             fieldLabel: 'State',

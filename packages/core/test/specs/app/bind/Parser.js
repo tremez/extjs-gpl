@@ -1,29 +1,32 @@
-describe('Ext.app.bind.Parser', function () {
+topSuite("Ext.app.bind.Parser", function() {
     var parser;
 
-    beforeEach(function () {
+    beforeEach(function() {
         parser = Ext.app.bind.Parser.fly();
     });
-    afterEach(function () {
+
+    afterEach(function() {
         parser.release();
         parser = null;
     });
 
-    function dump (data) {
+    function dump(data) {
         var s = JSON.stringify(data, null, '    ');
+
         console.log(s);
     }
 
-    function parseExpression (text) {
+    function parseExpression(text) {
         parser.reset(text);
+
         return parser.parseExpression();
     }
 
-    describe('expressions with formatters', function () {
-        it('should parse simple formatter', function () {
+    describe('expressions with formatters', function() {
+        it('should parse simple formatter', function() {
             //                          012345678
-            var expr = parseExpression('foo:bar');
-            var data = expr.dump();
+            var expr = parseExpression('foo:bar'),
+                data = expr.dump();
 
             expect(data).toEqual({
                 at: 3,
@@ -42,10 +45,10 @@ describe('Ext.app.bind.Parser', function () {
             });
         });
 
-        it('should parse chained formatters', function () {
+        it('should parse chained formatters', function() {
             //                          0123456789
-            var expr = parseExpression('foo:b.r:zip');
-            var data = expr.dump();
+            var expr = parseExpression('foo:b.r:zip'),
+                data = expr.dump();
 
             expect(data).toEqual({
                 at: 3,
@@ -68,11 +71,11 @@ describe('Ext.app.bind.Parser', function () {
             });
         });
 
-        it('should parse chained formatters with other operators', function () {
+        it('should parse chained formatters with other operators', function() {
             //                                    111111
             //                          0123456789012345
-            var expr = parseExpression('2/foo:bar:zip*3');
-            var data = expr.dump();
+            var expr = parseExpression('2/foo:bar:zip*3'),
+                data = expr.dump();
 
             expect(data).toEqual({
                 at: 13,
@@ -115,11 +118,11 @@ describe('Ext.app.bind.Parser', function () {
             });
         });
 
-        it('should parse formatter with args', function () {
+        it('should parse formatter with args', function() {
             //                                    11111111112
             //                          012345678901234567890
-            var expr = parseExpression('foo:bar(.314,"abc()")');
-            var data = expr.dump();
+            var expr = parseExpression('foo:bar(.314,"abc()")'),
+                data = expr.dump();
 
             expect(data).toEqual({
                 at: 3,
@@ -152,11 +155,11 @@ describe('Ext.app.bind.Parser', function () {
             });
         });
 
-        it('should parse chained formatter with args', function () {
+        it('should parse chained formatter with args', function() {
             //                                    111111111122222 2222 23333333333444444444
             //                          0123456789012345678901234 5678 90123456789012345678
-            var expr = parseExpression('foo:bar(10,"abc()"): zip(\'xyz\',null,true, false )');
-            var data = expr.dump();
+            var expr = parseExpression('foo:bar(10,"abc()"): zip(\'xyz\',null,true, false )'),
+                data = expr.dump();
 
             expect(data).toEqual({
                 at: 3,
@@ -215,11 +218,11 @@ describe('Ext.app.bind.Parser', function () {
             });
         });
 
-        it('should parse nested formatter', function () {
+        it('should parse nested formatter', function() {
             //                                    111111111122
             //                          0123456789012345678901
-            var expr = parseExpression('foo:bar(@d.rp:zip(42))');
-            var data = expr.dump();
+            var expr = parseExpression('foo:bar(@d.rp:zip(42))'),
+                data = expr.dump();
 
             expect(data).toEqual({
                 at: 3,
@@ -273,11 +276,11 @@ describe('Ext.app.bind.Parser', function () {
             });
         });
 
-        it('should parse nested formatter with args', function () {
+        it('should parse nested formatter with args', function() {
             //                                    1111111111222222222 2333333333 34444444444
             //                          01234567890123456789012345678 9012345678 90123456789
-            var expr = parseExpression('foo:bar(10,"abc()",@derp:zip(\'{"a(:)a"}\',2.1e-07))');
-            var data = expr.dump();
+            var expr = parseExpression('foo:bar(10,"abc()",@derp:zip(\'{"a(:)a"}\',2.1e-07))'),
+                data = expr.dump();
 
             expect(data).toEqual({
                 at: 3,
@@ -343,11 +346,11 @@ describe('Ext.app.bind.Parser', function () {
             });
         });
 
-        it('should parse chained and nested formatters', function () {
+        it('should parse chained and nested formatters', function() {
             //                                    111111111122222222223333333333444444
             //                          0123456789012345678901234567890123456789012345
-            var expr = parseExpression(' f :bar(@derp:zip(42):boo:zoo(2)):woot(21):waz');
-            var data = expr.dump();
+            var expr = parseExpression(' f :bar(@derp:zip(42):boo:zoo(2)):woot(21):waz'),
+                data = expr.dump();
 
             expect(data).toEqual({
                 at: 3,
@@ -439,19 +442,19 @@ describe('Ext.app.bind.Parser', function () {
 
     }); // operators
 
-    describe('compileFormat', function () {
+    describe('compileFormat', function() {
         var parser;
 
-        beforeEach(function(){
+        beforeEach(function() {
             parser = Ext.app.bind.Parser.fly();
         });
 
-        afterEach(function(){
+        afterEach(function() {
             parser.release();
             parser = null;
         });
 
-        it('should parse basic formats', function () {
+        it('should parse basic formats', function() {
             parser.reset('round');
             var fmt = parser.compileFormat();
 
@@ -460,7 +463,7 @@ describe('Ext.app.bind.Parser', function () {
             expect(s).toBe(3);
         });
 
-        it('should parse formats with basic arguments', function () {
+        it('should parse formats with basic arguments', function() {
             parser.reset('round(2)');
             var fmt = parser.compileFormat();
 
@@ -469,7 +472,7 @@ describe('Ext.app.bind.Parser', function () {
             expect(s).toBe(3.14);
         });
 
-        it('should parse formats with string arguments', function () {
+        it('should parse formats with string arguments', function() {
             parser.reset('date("Y-m-d")');
             var fmt = parser.compileFormat();
 
@@ -478,7 +481,7 @@ describe('Ext.app.bind.Parser', function () {
             expect(s).toBe('2013-03-02');
         });
 
-        it('should parse chained formatters', function () {
+        it('should parse chained formatters', function() {
             parser.reset('lowercase:capitalize');
             var fmt = parser.compileFormat();
 
@@ -487,16 +490,16 @@ describe('Ext.app.bind.Parser', function () {
             expect(s).toBe('Sencha');
         });
 
-        it('should parse chained formatters with arguments', function () {
+        it('should parse chained formatters with arguments', function() {
             parser.reset('round:this.multiply(4):this.divide(2)');
             var fmt = parser.compileFormat();
 
             var s = fmt(3.14, {
-                multiply: function (v, factor) {
-                    return v*factor;
+                multiply: function(v, factor) {
+                    return v * factor;
                 },
-                divide: function(v, factor){
-                    return v/factor;
+                divide: function(v, factor) {
+                    return v / factor;
                 }
             });
 
@@ -504,25 +507,27 @@ describe('Ext.app.bind.Parser', function () {
         });
     });
 
-    describe('syntax errors', function () {
-        it('should fail for numbers in formatter', function () {
+    describe('syntax errors', function() {
+        it('should fail for numbers in formatter', function() {
             try {
                 var expr = parseExpression('foo:2');
             }
             catch (e) {
                 expect(parser.error).not.toBeNull();
+
                 return;
             }
 
             expect('Invalid formatter').toBe('an exception');
         });
 
-        it('should fail for operators in formatter', function () {
+        it('should fail for operators in formatter', function() {
             try {
                 var expr = parseExpression('foo:2+2');
             }
             catch (e) {
                 expect(parser.error).not.toBeNull();
+
                 return;
             }
 

@@ -6,9 +6,10 @@ Ext.define('Neptune.view.button.widget.Small', {
 
     constructor: function(cfg) {
         if (cfg.icon) {
-            this.glyph = 'xF015@FontAwesome';
+            this.glyph = 'xF015@\'Font Awesome 5 Free\'';
             delete cfg.icon;
         }
+
         this.callParent(arguments);
     }
 });

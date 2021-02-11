@@ -1,13 +1,22 @@
-describe('Ext.chart.series.Area', function () {
+topSuite("Ext.chart.series.Area", ['Ext.chart.*', 'Ext.data.ArrayStore'], function() {
+    var chart;
 
-    describe('renderer', function () {
-        it('should work on markers with style.step = false', function () {
-            var chart,
-                red = '#ff0000',
+    beforeEach(function() {
+        // Silence warnings regarding Sencha download server
+        spyOn(Ext.log, 'warn');
+    });
+
+    afterEach(function() {
+        Ext.destroy(chart);
+    });
+
+    describe('renderer', function() {
+        it('should work on markers with style.step = false', function() {
+            var red = '#ff0000',
                 green = '#ff0000',
-                redrawCount = 0;
+                layoutDone;
 
-            run(function () {
+            runs(function() {
                 chart = new Ext.chart.CartesianChart({
                     renderTo: Ext.getBody(),
                     width: 300,
@@ -39,7 +48,7 @@ describe('Ext.chart.series.Area', function () {
                     }],
                     series: [{
                         type: 'area',
-                        renderer: function (sprite, config, rendererData, index) {
+                        renderer: function(sprite, config, rendererData, index) {
                             return {
                                 fillStyle: index % 2 ? red : green
                             };
@@ -49,21 +58,18 @@ describe('Ext.chart.series.Area', function () {
                         marker: true
                     }],
                     listeners: {
-                        redraw: function () {
-                            redrawCount++;
+                        layout: function() {
+                            layoutDone = true;
                         }
                     }
-                })
+                });
             });
 
-            waitFor(function () {
-                // Chart normally renders twice:
-                // 1) to measure things
-                // 2) to adjust layout
-                return redrawCount == 2;
+            waitFor(function() {
+                return layoutDone;
             });
 
-            run(function () {
+            runs(function() {
                 var seriesSprite = chart.getSeries()[0].getSprites()[0],
                     markerCategory = seriesSprite.getId(),
                     markers = seriesSprite.getMarker('markers');
@@ -72,18 +78,15 @@ describe('Ext.chart.series.Area', function () {
                 expect(markers.getMarkerFor(markerCategory, 1).fillStyle).toBe(red);
                 expect(markers.getMarkerFor(markerCategory, 2).fillStyle).toBe(green);
                 expect(markers.getMarkerFor(markerCategory, 3).fillStyle).toBe(red);
-
-                Ext.destroy(chart);
             });
         });
 
-        it('should work on markers with style.step = true', function () {
-            var chart,
-                red = '#ff0000',
+        it('should work on markers with style.step = true', function() {
+            var red = '#ff0000',
                 green = '#ff0000',
-                redrawCount = 0;
+                layoutDone;
 
-            run(function () {
+            runs(function() {
                 chart = new Ext.chart.CartesianChart({
                     renderTo: Ext.getBody(),
                     width: 300,
@@ -118,7 +121,7 @@ describe('Ext.chart.series.Area', function () {
                         style: {
                             step: true
                         },
-                        renderer: function (sprite, config, rendererData, index) {
+                        renderer: function(sprite, config, rendererData, index) {
                             return {
                                 fillStyle: index % 2 ? red : green
                             };
@@ -128,21 +131,18 @@ describe('Ext.chart.series.Area', function () {
                         marker: true
                     }],
                     listeners: {
-                        redraw: function () {
-                            redrawCount++;
+                        layout: function() {
+                            layoutDone = true;
                         }
                     }
-                })
+                });
             });
 
-            waitFor(function () {
-                // Chart normally renders twice:
-                // 1) to measure things
-                // 2) to adjust layout
-                return redrawCount == 2;
+            waitFor(function() {
+                return layoutDone;
             });
 
-            run(function () {
+            runs(function() {
                 var seriesSprite = chart.getSeries()[0].getSprites()[0],
                     markerCategory = seriesSprite.getId(),
                     markers = seriesSprite.getMarker('markers');
@@ -151,10 +151,7 @@ describe('Ext.chart.series.Area', function () {
                 expect(markers.getMarkerFor(markerCategory, 1).fillStyle).toBe(red);
                 expect(markers.getMarkerFor(markerCategory, 2).fillStyle).toBe(green);
                 expect(markers.getMarkerFor(markerCategory, 3).fillStyle).toBe(red);
-
-                Ext.destroy(chart);
             });
         });
     });
-
 });

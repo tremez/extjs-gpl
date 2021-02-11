@@ -1,3 +1,12 @@
+Ext.define('Ext.theme.ios.Panel', {
+    override: 'Ext.Panel',
+    config: {
+        buttonToolbar: {
+            defaultButtonUI: null
+        }
+    }
+});
+
 Ext.define('Ext.theme.neptune.Titlebar', {
     override: 'Ext.TitleBar',
     config: {
@@ -12,6 +21,23 @@ Ext.define('Ext.theme.ios.TitleBar', {
     }
 });
 
+Ext.define('Ext.theme.triton.dataview.ListCollapser', {
+    override: 'Ext.dataview.ListCollapser',
+    config: {
+        tool: {
+            weight: -100,
+            zone: 'start'
+        }
+    }
+});
+
+Ext.define('Ext.theme.ios.dataview.IndexBar', {
+    override: 'Ext.dataview.IndexBar',
+    config: {
+        indicator: false
+    }
+});
+
 Ext.define('Ext.theme.ios.dataview.NestedList', {
     override: 'Ext.dataview.NestedList',
     config: {
@@ -21,9 +47,11 @@ Ext.define('Ext.theme.ios.dataview.NestedList', {
     }
 });
 
-Ext.define('Ext.theme.neptune.tip.ToolTip', {
-    override: 'Ext.tip.ToolTip',
-    bodyBorder: false
+Ext.define('Ext.theme.ios.dataview.pullrefresh.Bar', {
+    override: 'Ext.dataview.pullrefresh.Bar',
+    config: {
+        mode: 'spinner'
+    }
 });
 
 Ext.define('Ext.theme.ios.field.Checkbox', {
@@ -33,8 +61,13 @@ Ext.define('Ext.theme.ios.field.Checkbox', {
     }
 });
 
-Ext.define('Ext.theme.ios.form.FieldContainer', {
-    override: 'Ext.form.FieldContainer',
+Ext.define('Ext.theme.neptune.panel.Date', {
+    override: 'Ext.panel.Date',
+    border: true
+});
+
+Ext.define('Ext.theme.ios.form.Borders', {
+    override: 'Ext.form.Borders',
     config: {
         fieldSeparators: true,
         inputBorders: false

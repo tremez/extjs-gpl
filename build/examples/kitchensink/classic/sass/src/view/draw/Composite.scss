@@ -1,0 +1,9 @@
+@if $theme-name == 'theme-material' {
+    .dark-mode { 
+        .composite-panel {
+            .#{$prefix}panel-body-default {
+                background-color: $focus-font-color;
+            }
+        }
+    }
+}

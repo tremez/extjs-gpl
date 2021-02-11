@@ -1,55 +1,47 @@
-describe("Ext.form.field.VTypes", function() {
+topSuite("Ext.form.field.VTypes", function() {
     var VTYPES = Ext.form.field.VTypes;
-
-    beforeEach(function() {
-
-    });
-
-    afterEach(function() {
-
-    });
 
     describe('Ext.form.field.VTypes.url()', function() {
 
         it("should return TRUE for properly formatted URLs", function() {
 
-            //missing WWW
+            // missing WWW
             expect(VTYPES.url('http://sencha.com')).toEqual(true);
             expect(VTYPES.url('https://sencha.com')).toEqual(true);
 
-            //trailing slash
+            // trailing slash
             expect(VTYPES.url('http://sencha.com/')).toEqual(true);
             expect(VTYPES.url('https://sencha.com/')).toEqual(true);
 
-            //with WWW
+            // with WWW
             expect(VTYPES.url('http://www.sencha.com')).toEqual(true);
             expect(VTYPES.url('https://www.sencha.com')).toEqual(true);
 
-            //trailing slash
+            // trailing slash
             expect(VTYPES.url('http://www.sencha.com/')).toEqual(true);
             expect(VTYPES.url('https://www.sencha.com/')).toEqual(true);
 
-            //missing WWW, multi-TLD
+            // missing WWW, multi-TLD
             expect(VTYPES.url('http://sencha.com.au')).toEqual(true);
             expect(VTYPES.url('https://sencha.com.au')).toEqual(true);
 
-            //trailing slash, multi-TLD
+            // trailing slash, multi-TLD
             expect(VTYPES.url('http://sencha.com.au/')).toEqual(true);
             expect(VTYPES.url('https://sencha.com.au/')).toEqual(true);
 
-            //with WWW, multi-TLD
+            // with WWW, multi-TLD
             expect(VTYPES.url('http://www.sencha.com.au')).toEqual(true);
             expect(VTYPES.url('https://www.sencha.com.au')).toEqual(true);
 
-            //trailing slash, multi-TLD
+            // trailing slash, multi-TLD
             expect(VTYPES.url('http://www.sencha.com.au/')).toEqual(true);
             expect(VTYPES.url('https://www.sencha.com.au/')).toEqual(true);
 
-            //GET params
+            // GET params
             expect(VTYPES.url('http://www.sencha.com?foo=bar')).toEqual(true);
             expect(VTYPES.url('https://www.sencha.com?foo=bar')).toEqual(true);
 
-            //trailing slash, GET params
+            // trailing slash, GET params
             expect(VTYPES.url('http://www.sencha.com/?foo=bar')).toEqual(true);
             expect(VTYPES.url('https://www.sencha.com/?foo=bar')).toEqual(true);
 
@@ -57,21 +49,21 @@ describe("Ext.form.field.VTypes", function() {
 
         it("should return FALSE for improperly formatted URLs", function() {
 
-            //domains should have at least a 2 letter TLD
-            //missing WWW
+            // domains should have at least a 2 letter TLD
+            // missing WWW
             expect(VTYPES.url('http://a.a')).toEqual(false);
             expect(VTYPES.url('https://a.a')).toEqual(false);
 
-            //domains should have at least a 2 letter TLD
-            //with WWW
+            // domains should have at least a 2 letter TLD
+            // with WWW
             expect(VTYPES.url('http://www.a.a')).toEqual(false);
             expect(VTYPES.url('https://www.a.a')).toEqual(false);
 
-            //nonsense url
+            // nonsense url
             expect(VTYPES.url('http://foobar')).toEqual(false);
             expect(VTYPES.url('https://foobar')).toEqual(false);
 
-            //trailing slash
+            // trailing slash
             expect(VTYPES.url('http://foobar/')).toEqual(false);
             expect(VTYPES.url('https://foobar/')).toEqual(false);
 
@@ -79,36 +71,36 @@ describe("Ext.form.field.VTypes", function() {
 
         it("should return TRUE for localhost URLs", function() {
 
-            //normal localhost
+            // normal localhost
             expect(VTYPES.url('http://localhost')).toEqual(true);
             expect(VTYPES.url('https://localhost')).toEqual(true);
 
-            //trailing slash
+            // trailing slash
             expect(VTYPES.url('http://localhost/')).toEqual(true);
             expect(VTYPES.url('https://localhost/')).toEqual(true);
 
-            //GET params
+            // GET params
             expect(VTYPES.url('http://localhost?foo=bar')).toEqual(true);
             expect(VTYPES.url('https://localhost?foo=bar')).toEqual(true);
 
-            //trailing slash, GET params
+            // trailing slash, GET params
             expect(VTYPES.url('http://localhost/?foo=bar')).toEqual(true);
             expect(VTYPES.url('https://localhost/?foo=bar')).toEqual(true);
 
-            //CAPITAL LOCALHOST
-            //normal localhost
+            // CAPITAL LOCALHOST
+            // normal localhost
             expect(VTYPES.url('http://LOCALHOST')).toEqual(true);
             expect(VTYPES.url('https://LOCALHOST')).toEqual(true);
 
-            //trailing slash
+            // trailing slash
             expect(VTYPES.url('http://LOCALHOST/')).toEqual(true);
             expect(VTYPES.url('https://LOCALHOST/')).toEqual(true);
 
-            //GET params
+            // GET params
             expect(VTYPES.url('http://LOCALHOST?foo=bar')).toEqual(true);
             expect(VTYPES.url('https://LOCALHOST?foo=bar')).toEqual(true);
 
-            //trailing slash, GET params
+            // trailing slash, GET params
             expect(VTYPES.url('http://LOCALHOST/?foo=bar')).toEqual(true);
             expect(VTYPES.url('https://LOCALHOST/?foo=bar')).toEqual(true);
 
@@ -208,7 +200,7 @@ describe("Ext.form.field.VTypes", function() {
             it("should allow for it to be wrapped by double quotes", function() {
                 expect(VTYPES.email('"dev"@extjs.com')).toEqual(true);
             });
-            
+
             it("should not allow a single white space at the beginning", function() {
                 expect(VTYPES.email(' dev@extjs.com')).toEqual(false);
             });

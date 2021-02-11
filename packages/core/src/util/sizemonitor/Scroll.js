@@ -23,7 +23,7 @@ Ext.define('Ext.util.sizemonitor.Scroll', {
     },
 
     constructor: function(config) {
-        this.onScroll = Ext.Function.bind(this.onScroll, this);
+        this.onScroll = this.onScroll.bind(this);
 
         this.callParent(arguments);
     },
@@ -35,12 +35,10 @@ Ext.define('Ext.util.sizemonitor.Scroll', {
         this.shrinkMonitor[method]('scroll', this.onScroll, true);
     },
 
-    forceRefresh: function() {
-        Ext.TaskQueue.requestRead('refresh', this, [true]);
-    },
-
     onScroll: function() {
-        Ext.TaskQueue.requestRead('refresh', this);
+        if (!this.destroyed) {
+            Ext.TaskQueue.requestRead('refresh', this);
+        }
     },
 
     refreshMonitors: function() {
@@ -58,11 +56,11 @@ Ext.define('Ext.util.sizemonitor.Scroll', {
             shrinkMonitor.scrollTop = end;
         }
     },
-    
+
     destroy: function() {
         // This is a closure so Base destructor won't null it
         this.onScroll = null;
-        
+
         this.callParent();
     }
 });

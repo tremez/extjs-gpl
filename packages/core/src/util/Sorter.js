@@ -1,5 +1,6 @@
 /**
- * Represents a single sorter that can be used as part of the sorters configuration in Ext.mixin.Sortable.
+ * Represents a single sorter that can be used as part of the sorters configuration in
+ * Ext.mixin.Sortable.
  *
  * A common place for Sorters to be used are {@link Ext.data.Store Stores}. For example:
  *
@@ -41,7 +42,8 @@
  *           fields: ['firstName', 'spiritAnimal'],
  *            sorters: [
  *                {
- *                    // Sort by first letter of second word of spirit animal, in descending order
+ *                    // Sort by first letter of second word of spirit animal, in
+ *                    // descending order
  *                    sorterFn: function(record1, record2) {
  *                        var name1 = record1.data.spiritAnimal.split(' ')[1].substr(0,1),
  *                            name2 = record2.data.spiritAnimal.split(' ')[1].substr(0,1);
@@ -54,7 +56,7 @@
  *         
  *           data: [
  *               { firstName: 'Mitch',  spiritAnimal: "Panda Bear"},
- *               { firstName: 'Seth',   spiritAnimal: "Tina Belcher"},
+ *               { firstName: 'Seth',   spiritAnimal: "Rascally Rabbit"},
  *               { firstName: 'Fred',   spiritAnimal: "Honey Badger"},
  *               { firstName: 'Israel', spiritAnimal: "Mysterious Capybara"},
  *               { firstName: 'Greg',   spiritAnimal: "Majestic Platypus"},
@@ -62,7 +64,7 @@
  *               { firstName: 'Brandon',spiritAnimal: "Pygmy Goat"},
  *               { firstName: 'Gary',   spiritAnimal: "Suri Alpaca"},
  *               { firstName: 'Scott',  spiritAnimal: "Ripe Armadillo"},
- *               { firstName: 'Pat',    spiritAnimal: "The Cougar"}
+ *               { firstName: 'Pat',    spiritAnimal: "Wiley Coyote"}
  *           ]
  *        });
  *        
@@ -82,14 +84,17 @@ Ext.define('Ext.util.Sorter', {
 
     config: {
         /**
-         * @cfg {String} property The property to sort by. Required unless `sorterFn` is provided
+         * @cfg {String} property
+         * The property to sort by. Required unless `sorterFn` is provided
          */
         property: null,
 
         /**
-         * @cfg {Function} sorterFn A specific sorter function to execute. Can be passed instead of {@link #property}.
-         * This function should compare the two passed arguments, returning -1, 0 or 1 depending on if item 1 should be
-         * sorted before, at the same level, or after item 2.
+         * @cfg {Function} sorterFn
+         * A specific sorter function to execute. Can be passed instead of {@link #property}.
+         * This function should compare the two passed arguments, returning -1, 0 or 1
+         * depending on if item 1 should be sorted before, at the same level, or after
+         * item 2.
          *
          *     sorterFn: function(person1, person2) {
          *         return (person1.age > person2.age) ? 1 : (person1.age === person2.age ? 0 : -1);
@@ -98,8 +103,9 @@ Ext.define('Ext.util.Sorter', {
         sorterFn: null,
 
         /**
-         * @cfg {String} root Optional root property. This is mostly useful when sorting a Store, in which case we set the
-         * root to 'data' to make the filter pull the {@link #property} out of the data object of each item
+         * @cfg {String} root Optional root property. This is mostly useful when sorting a Store,
+         * in which case we set the root to 'data' to make the filter pull the {@link #property}
+         * out of the data object of each item
          */
         root: null,
 
@@ -139,15 +145,17 @@ Ext.define('Ext.util.Sorter', {
          * with equality.
          * @return {Function} The comparator function.
          */
-        createComparator: function (sorters, nextFn) {
+        createComparator: function(sorters, nextFn) {
             nextFn = nextFn || 0;
-            return function (lhs, rhs) {
+
+            return function(lhs, rhs) {
                 var items = sorters.isCollection ? sorters.items : sorters,
                     n = items.length,
                     comp, i;
 
                 for (i = 0; i < n; ++i) {
                     comp = items[i].sort(lhs, rhs);
+
                     if (comp) {
                         return comp;
                     }
@@ -179,21 +187,23 @@ Ext.define('Ext.util.Sorter', {
         this.initConfig(config);
     },
 
-    getId: function () {
+    getId: function() {
         var id = this._id;
 
         if (!id) {
             id = this.getProperty();
+
             if (!id) {
                 id = Ext.id(null, 'ext-sorter-');
             }
+
             this._id = id;
         }
 
         return id;
     },
 
-    sort: function (lhs, rhs) {
+    sort: function(lhs, rhs) {
         return this.multiplier * this.sortFn(lhs, rhs);
     },
 
@@ -202,7 +212,7 @@ Ext.define('Ext.util.Sorter', {
      * Basic default sorter function that just compares the defined property of each object.
      * This is hidden by the `sorterFn` provided by the user.
      */
-    sortFn: function (item1, item2) {
+    sortFn: function(item1, item2) {
         var me = this,
             transform = me._transform,
             root = me._root,
@@ -224,23 +234,23 @@ Ext.define('Ext.util.Sorter', {
 
         return (lhs > rhs) ? 1 : (lhs < rhs ? -1 : 0);
     },
-    
+
     applyDirection: function(direction) {
         return direction ? direction : 'ASC';
     },
 
-    updateDirection: function (direction) {
+    updateDirection: function(direction) {
         this.multiplier = (direction.toUpperCase() === "DESC") ? -1 : 1;
     },
 
-    updateProperty: function (property) {
+    updateProperty: function(property) {
         if (property) {
             // Unhide the default sortFn on our prototype
             delete this.sortFn;
         }
     },
 
-    updateSorterFn: function (sorterFn) {
+    updateSorterFn: function(sorterFn) {
         // Hide the default sortFn on our prototype
         this.sortFn = sorterFn;
     },
@@ -270,7 +280,7 @@ Ext.define('Ext.util.Sorter', {
         if (me._id) {
             result.id = me._id;
         }
-        
+
         return result;
     },
 
@@ -279,7 +289,7 @@ Ext.define('Ext.util.Sorter', {
      * to a server.
      * @return {Object}
      */
-    serialize: function () {
+    serialize: function() {
         return {
             property: this.getProperty(),
             direction: this.getDirection()

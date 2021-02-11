@@ -1,5 +1,5 @@
 /**
- * @class Ext.Titlebar
+ * @class Ext.TitleBar
  */
 
 /**
@@ -55,19 +55,19 @@ $titlebar-font-weight: dynamic($font-weight-bold);
  * @var {number}
  * Titlebar font-size
  */
-$titlebar-font-size: dynamic(1rem);
+$titlebar-font-size: dynamic($font-size);
 
 /**
  * @var {number}
  * Titlebar font-size in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$titlebar-font-size-big: dynamic(null);
+$titlebar-font-size-big: dynamic($font-size-big);
 
 /**
  * @var {number}
  * Titlebar line-height
  */
-$titlebar-line-height: dynamic(1.25em);
+$titlebar-line-height: dynamic(16px);
 
 /**
  * @var {number}
@@ -85,39 +85,39 @@ $titlebar-font-family: dynamic($font-family);
  * @var {number/list}
  * Titlebar padding
  */
-$titlebar-padding: dynamic(.4616em .5em);
+$titlebar-padding: dynamic(6px 6px);
 
 /**
  * @var {number/list}
  * Titlebar padding in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$titlebar-padding-big: dynamic(.4em .67em);
+$titlebar-padding-big: dynamic(6px 10px);
 
 /**
  * @var {number}
  * The space in between horizontally aligned Titlebar items
  */
-$titlebar-horizontal-spacing: dynamic(.2rem);
+$titlebar-horizontal-spacing: dynamic(3px);
 
 /**
  * @var {number}
  * The space in between horizontally aligned Titlebar items in the
  * {@link Global_CSS#$enable-big big} sizing scheme
  */
-$titlebar-horizontal-spacing-big: dynamic(.3rem);
+$titlebar-horizontal-spacing-big: dynamic(4px);
 
 /**
  * @var {number}
  * The space in between vertically aligned Titlebar items
  */
-$titlebar-vertical-spacing: dynamic(.2rem);
+$titlebar-vertical-spacing: dynamic(3px);
 
 /**
  * @var {number}
  * The space in between vertically aligned Titlebar items in the
  * {@link Global_CSS#$enable-big big} sizing scheme
  */
-$titlebar-vertical-spacing-big: dynamic(.3rem);
+$titlebar-vertical-spacing-big: dynamic(4px);
 
 /**
  * @var {color}
@@ -167,13 +167,13 @@ $titlebar-title-padding-big: dynamic(null);
  * @var {number}
  * Titlebar min-height
  */
-$titlebar-min-height: dynamic(2.7693em);
+$titlebar-min-height: dynamic(36px);
 
 /**
  * @var {number}
  * Titlebar min-height in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$titlebar-min-height-big: dynamic(2.9334em);
+$titlebar-min-height-big: dynamic(44px);
 
 /**
  * Creates a visual theme for a Titlebar.
@@ -191,6 +191,9 @@ $titlebar-min-height-big: dynamic(2.9334em);
  * @param {string/list} $background-gradient
  * Titlebar background-gradient. Can be either the name of a gradient defined by
  * {@link Global_CSS#background-gradient} or a list of color stops.
+ *
+ * @param {color} $color
+ * Titlebar color
  *
  * @param {number/list} $border-width
  * Titlebar border-width
@@ -303,36 +306,7 @@ $titlebar-min-height-big: dynamic(2.9334em);
     $min-height: null,
     $min-height-big: null
 ) {
-    @include toolbar-ui(
-        $ui: $ui,
-        $xtype: $xtype,
-        $background-color: $background-color,
-        $background-gradient: $background-gradient,
-        $color: $color,
-        $border-width: $border-width,
-        $border-style: $border-style,
-        $border-color: $border-color,
-        $box-shadow: $box-shadow,
-        $font-weight: $font-weight,
-        $font-size: $font-size,
-        $font-size-big: $font-size-big,
-        $line-height: $line-height,
-        $line-height-big: $line-height-big,
-        $font-family: $font-family,
-        $padding: $padding,
-        $padding-big: $padding-big,
-        $horizontal-spacing: $horizontal-spacing,
-        $horizontal-spacing-big: $horizontal-spacing-big,
-        $vertical-spacing: $vertical-spacing,
-        $vertical-spacing-big: $vertical-spacing-big,
-        $title-color: $title-color,
-        $title-font-weight: $title-font-weight,
-        $title-font-size: $title-font-size,
-        $title-font-size-big: $title-font-size-big,
-        $title-font-family: $title-font-family,
-        $title-padding: $title-padding,
-        $title-padding-big: $title-padding-big,
-        $min-height: $min-height,
-        $min-height-big: $min-height-big
-    );
+    $arguments: intersect-arguments(titlebar-ui, toolbar-ui);
+
+    @include toolbar-ui($arguments...);
 }

@@ -1,33 +1,47 @@
 /**
- * Demonstrates how to create a simple List based on inline data.
- * First we create a simple Person model with first and last name fields, then we create a Store to contain
- * the data, finally we create the List itself, which gets its data out of the Store
+ * Demonstrates how to create a simple List based on
+ * inline data. First we create a simple Person model
+ * with first and last name fields, then we create a
+ * Store to contain the data, finally we create the List
+ * itself, which gets its data out of the Store.
  */
 
 Ext.define('KitchenSink.view.lists.DisclosureList', {
-    extend: 'Ext.Container',
-    requires: ['KitchenSink.model.Person'],
-    // <example>
+    extend: 'Ext.dataview.List',
+    xtype: 'disclosure-list',
+    controller: 'disclosure-list',
+
+    //<example>
     otherContent: [{
+        type: 'Controller',
+        path: 'modern/src/view/lists/DisclosureListController.js'
+    }, {
+        type: 'Store',
+        path: 'modern/src/store/List.js'
+    }, {
         type: 'Model',
         path: 'modern/src/model/Person.js'
     }],
-    // </example>
-    layout: Ext.os.deviceType == 'Phone' ? 'fit' : {
-        type: 'vbox',
-        align: 'center',
-        pack: 'center'
-    },
-    cls: 'demo-list',
-    items: [{
-        width: Ext.os.deviceType == 'Phone' ? null : '50%',
-        height: Ext.os.deviceType == 'Phone' ? null : '80%',
-        xtype: 'list',
-        shadow: true,
-        onItemDisclosure: function(record, btn, index) {
-            Ext.Msg.alert('Tap', 'Disclose more info for ' + record.get('firstName'), Ext.emptyFn);
+
+    profiles: {
+        defaults: {
+            height: 400,
+            width: 300
         },
-        store: 'List',
-        itemTpl: '{firstName} {lastName}'
-    }]
+        phone: {
+            defaults: {
+                height: undefined,
+                width: undefined
+            }
+        }
+    },
+    //</example>
+
+    height: '${height}',
+    itemTpl: '{firstName} {lastName}',
+    store: 'List',
+    width: '${width}',
+    grouped: false,
+
+    onItemDisclosure: 'onDisclosureTap'
 });

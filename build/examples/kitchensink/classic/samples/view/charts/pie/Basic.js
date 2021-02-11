@@ -14,21 +14,21 @@ Ext.define('KitchenSink.view.charts.pie.Basic', {
     xtype: 'pie-basic',
     controller: 'pie-basic',
 
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     otherContent: [{
         type: 'Controller',
         path: 'classic/samples/view/charts/pie/BasicController.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/MobileOS.js'
+        path: 'app/store/MobileOS.js'
     }],
     bodyStyle: 'background: transparent !important',
     layout: {
         type: 'vbox',
         pack: 'center'
     },
-    // </example>
+    //</example>
     width: 650,
 
     tbar: [
@@ -42,10 +42,18 @@ Ext.define('KitchenSink.view.charts.pie.Basic', {
     items: [{
         xtype: 'polar',
         reference: 'chart',
+        captions: {
+            title: 'Pie Charts - Basic',
+            credits: {
+                text: 'Data: IDC Predictions - 2017\n' +
+                    'Source: Internet',
+                align: 'left'
+            }
+        },
         theme: 'default-gradients',
         width: '100%',
         height: 500,
-        insetPadding: 50,
+        insetPadding: 40,
         innerPadding: 20,
         store: {
             type: 'mobile-os'
@@ -54,25 +62,6 @@ Ext.define('KitchenSink.view.charts.pie.Basic', {
             docked: 'bottom'
         },
         interactions: ['rotate'],
-        sprites: [{
-            type: 'text',
-            text: 'Pie Charts - Basic',
-            fontSize: 22,
-            width: 100,
-            height: 30,
-            x: 40, // the sprite x position
-            y: 20  // the sprite y position
-        }, {
-            type: 'text',
-            text: 'Data: IDC Predictions - 2017',
-            x: 12,
-            y: 425
-        }, {
-            type: 'text',
-            text: 'Source: Internet',
-            x: 12,
-            y: 440
-        }],
         series: [{
             type: 'pie',
             angleField: 'data1',
@@ -91,24 +80,6 @@ Ext.define('KitchenSink.view.charts.pie.Basic', {
             }
         }]
         //<example>
-    }, {
-        style: 'padding-top: 10px;',
-        xtype: 'gridpanel',
-        columns : {
-            defaults: {
-                sortable: false,
-                menuDisabled: true
-            },
-            items: [
-                { text: 'OS', dataIndex: 'os' },
-                { text: 'Market Share', dataIndex: 'data1', width: 150, renderer: 'onDataRender' }
-            ]
-        },
-        store: {
-            type: 'mobile-os'
-        },
-        width: '100%'
-        //</example>
     }]
 
 });

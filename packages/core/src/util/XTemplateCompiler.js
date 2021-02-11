@@ -17,16 +17,18 @@ Ext.define('Ext.util.XTemplateCompiler', {
     // IE and Opera are also fine with the "new Function" technique.
     useEval: Ext.isGecko,
 
-    // See http://jsperf.com/nige-array-append for quickest way to append to an array of unknown length
-    // (Due to arbitrary code execution inside a template, we cannot easily track the length in  var)
-    // On IE8 and earlier, myArray[myArray.length]='foo' is better. On other browsers myArray.push('foo') is better.
+    // See http://jsperf.com/nige-array-append for quickest way to append to an array
+    // of unknown length. (Due to arbitrary code execution inside a template, we cannot easily
+    // track the length in var)
+    // On IE8 and earlier, myArray[myArray.length]='foo' is better. On other browsers
+    // myArray.push('foo') is better.
     useIndex: Ext.isIE8m,
 
     useFormat: true,
-    
-    propNameRe: /^[\w\d\$]*$/,
 
-    compile: function (tpl) {
+    propNameRe: /^[\w\d$]*$/,
+
+    compile: function(tpl) {
         var me = this,
             code = me.generate(tpl);
 
@@ -37,7 +39,7 @@ Ext.define('Ext.util.XTemplateCompiler', {
         return me.useEval ? me.evalTpl(code) : (new Function('Ext', code))(Ext);
     },
 
-    generate: function (tpl) {
+    generate: function(tpl) {
         var me = this,
             // note: Ext here is properly sandboxed
             definitions = 'var fm=Ext.util.Format,ts=Object.prototype.toString;',
@@ -47,24 +49,29 @@ Ext.define('Ext.util.XTemplateCompiler', {
         me.maxLevel = 0;
 
         me.body = [
-            'var c0=values, a0=' + me.createArrayTest(0) + ', p0=parent, n0=xcount, i0=xindex, k0, v;\n'
+            'var c0=values, a0=' + me.createArrayTest(0) +
+            ', p0=parent, n0=xcount, i0=xindex, k0, v;\n'
         ];
+
         if (me.definitions) {
             if (typeof me.definitions === 'string') {
                 me.definitions = [me.definitions, definitions ];
-            } else {
+            }
+            else {
                 me.definitions.push(definitions);
             }
-        } else {
+        }
+        else {
             me.definitions = [ definitions ];
         }
+
         me.switches = [];
 
         me.parse(tpl);
 
         me.definitions.push(
             (me.useEval ? '$=' : 'return') + ' function (' + me.fnArgs + ') {',
-                me.body.join(''),
+            me.body.join(''),
             '}'
         );
 
@@ -72,9 +79,7 @@ Ext.define('Ext.util.XTemplateCompiler', {
 
         // Free up the arrays.
         me.definitions.length = me.body.length = me.switches.length = 0;
-        delete me.definitions;
-        delete me.body;
-        delete me.switches;
+        me.definitions = me.body = me.switches = 0;
 
         return code;
     },
@@ -82,86 +87,98 @@ Ext.define('Ext.util.XTemplateCompiler', {
     //-----------------------------------
     // XTemplateParser callouts
 
-    doText: function (text) {
+    doText: function(text) {
         var me = this,
             out = me.body;
 
         text = text.replace(me.aposRe, "\\'").replace(me.newLineRe, '\\n');
+
         if (me.useIndex) {
             out.push('out[out.length]=\'', text, '\'\n');
-        } else {
+        }
+        else {
             out.push('out.push(\'', text, '\')\n');
         }
     },
 
-    doExpr: function (expr) {
+    doExpr: function(expr) {
         var out = this.body;
+
         out.push('if ((v=' + expr + ') != null) out');
 
-        // Coerce value to string using concatenation of an empty string literal.
-        // See http://jsperf.com/tostringvscoercion/5
+        // Do not coerce individual values in the buffer.
+        // The final Array#join('') will coerce to strings.
         if (this.useIndex) {
-             out.push('[out.length]=v+\'\'\n');
-        } else {
-             out.push('.push(v+\'\')\n');
+            out.push('[out.length]=v\n');
+        }
+        else {
+            out.push('.push(v)\n');
         }
     },
 
-    doTag: function (tag) {
+    doTag: function(tag) {
         var expr = this.parseTag(tag);
+
         if (expr) {
             this.doExpr(expr);
-        } else {
+        }
+        else {
             // if we cannot match on tagRe handle as plain text
             this.doText('{' + tag + '}');
         }
     },
 
-    doElse: function () {
+    doElse: function() {
         this.body.push('} else {\n');
     },
 
-    doEval: function (text) {
+    doEval: function(text) {
         this.body.push(text, '\n');
     },
 
-    doIf: function (action, actions) {
+    doIf: function(action, actions) {
         var me = this;
 
         // If it's just a propName, use it directly in the if
         if (action === '.') {
             me.body.push('if (values) {\n');
-        } else if (me.propNameRe.test(action)) {
+        }
+        else if (me.propNameRe.test(action)) {
             me.body.push('if (', me.parseTag(action), ') {\n');
         }
-        // Otherwise, it must be an expression, and needs to be returned from an fn which uses with(values)
+        // Otherwise, it must be an expression, and needs to be returned from an fn
+        // which uses with(values)
         else {
             me.body.push('if (', me.addFn(action), me.callFn, ') {\n');
         }
+
         if (actions.exec) {
             me.doExec(actions.exec);
         }
     },
 
-    doElseIf: function (action, actions) {
+    doElseIf: function(action, actions) {
         var me = this;
 
         // If it's just a propName, use it directly in the else if
         if (action === '.') {
             me.body.push('else if (values) {\n');
-        } else if (me.propNameRe.test(action)) {
+        }
+        else if (me.propNameRe.test(action)) {
             me.body.push('} else if (', me.parseTag(action), ') {\n');
         }
-        // Otherwise, it must be an expression, and needs to be returned from an fn which uses with(values)
+        // Otherwise, it must be an expression, and needs to be returned from an fn
+        // which uses with(values)
         else {
             me.body.push('} else if (', me.addFn(action), me.callFn, ') {\n');
         }
+
         if (actions.exec) {
             me.doExec(actions.exec);
         }
     },
 
-    doSwitch: function (action) {
+    doSwitch: function(action) {
         var me = this,
             key;
 
@@ -169,17 +186,20 @@ Ext.define('Ext.util.XTemplateCompiler', {
         if (action === '.' || action === '#') {
             key = action === '.' ? 'values' : 'xindex';
             me.body.push('switch (', key, ') {\n');
-        } else if (me.propNameRe.test(action)) {
+        }
+        else if (me.propNameRe.test(action)) {
             me.body.push('switch (', me.parseTag(action), ') {\n');
         }
-        // Otherwise, it must be an expression, and needs to be returned from an fn which uses with(values)
+        // Otherwise, it must be an expression, and needs to be returned from an fn
+        // which uses with(values)
         else {
             me.body.push('switch (', me.addFn(action), me.callFn, ') {\n');
         }
+
         me.switches.push(0);
     },
 
-    doCase: function (action) {
+    doCase: function(action) {
         var me = this,
             cases = Ext.isArray(action) ? action : [action],
             n = me.switches.length - 1,
@@ -187,36 +207,38 @@ Ext.define('Ext.util.XTemplateCompiler', {
 
         if (me.switches[n]) {
             me.body.push('break;\n');
-        } else {
+        }
+        else {
             me.switches[n]++;
         }
 
         for (i = 0, n = cases.length; i < n; ++i) {
             match = me.intRe.exec(cases[i]);
-            cases[i] = match ? match[1] : ("'" + cases[i].replace(me.aposRe,"\\'") + "'");
+            cases[i] = match ? match[1] : ("'" + cases[i].replace(me.aposRe, "\\'") + "'");
         }
 
         me.body.push('case ', cases.join(': case '), ':\n');
     },
 
-    doDefault: function () {
+    doDefault: function() {
         var me = this,
             n = me.switches.length - 1;
 
         if (me.switches[n]) {
             me.body.push('break;\n');
-        } else {
+        }
+        else {
             me.switches[n]++;
         }
 
         me.body.push('default:\n');
     },
 
-    doEnd: function (type, actions) {
+    doEnd: function(type, actions) {
         var me = this,
-            L = me.level-1;
+            L = me.level - 1;
 
-        if (type == 'for' || type == 'foreach') {
+        if (type === 'for' || type === 'foreach') {
             /*
             To exit a for or foreach loop we must restore the outer loop's context. The
             code looks like this (which goes with that produced by doFor or doForEach):
@@ -236,26 +258,30 @@ Ext.define('Ext.util.XTemplateCompiler', {
             }
 
             me.body.push('}\n');
-            me.body.push('parent=p',L,';values=r',L+1,';xcount=n'+L+';xindex=i',L,'+1;xkey=k',L,';\n');
-        } else if (type == 'if' || type == 'switch') {
+            me.body.push('parent=p', L, ';values=r', L + 1, ';xcount=n' + L + ';xindex=i',
+                         L, '+1;xkey=k', L, ';\n');
+        }
+        else if (type === 'if' || type === 'switch') {
             me.body.push('}\n');
         }
     },
 
-    doFor: function (action, actions) {
+    doFor: function(action, actions) {
         var me = this,
             s,
             L = me.level,
-            up = L-1,
+            up = L - 1,
             parentAssignment;
 
         // If it's just a propName, use it directly in the switch
         if (action === '.') {
             s = 'values';
-        } else if (me.propNameRe.test(action)) {
+        }
+        else if (me.propNameRe.test(action)) {
             s = me.parseTag(action);
         }
-        // Otherwise, it must be an expression, and needs to be returned from an fn which uses with(values)
+        // Otherwise, it must be an expression, and needs to be returned from an fn
+        // which uses with(values)
         else {
             s = me.addFn(action) + me.callFn;
         }
@@ -307,43 +333,52 @@ Ext.define('Ext.util.XTemplateCompiler', {
             me.maxLevel = L;
             me.body.push('var ');
         }
-        
-        if (action == '.') {
+
+        if (action === '.') {
             parentAssignment = 'c' + L;
-        } else {
+        }
+        else {
             parentAssignment = 'a' + up + '?c' + up + '[i' + up + ']:c' + up;
         }
-        
-        me.body.push('i',L,'=0,n', L, '=0,c',L,'=',s,',a',L,'=', me.createArrayTest(L),',r',L,'=values,p',L,',k',L,';\n',
-            'p',L,'=parent=',parentAssignment,'\n',
-            'if (c',L,'){if(a',L,'){n', L,'=c', L, '.length;}else if (c', L, '.isMixedCollection){c',L,'=c',L,'.items;n',L,'=c',L,'.length;}else if(c',L,'.isStore){c',L,'=c',L,'.data.items;n',L,'=c',L,'.length;}else{c',L,'=[c',L,'];n',L,'=1;}}\n',
-            'for (xcount=n',L,';i',L,'<n'+L+';++i',L,'){\n',
-            'values=c',L,'[i',L,']');
+
+        me.body.push(
+            'i', L, '=0,n', L, '=0,c', L, '=', s, ',a', L, '=', me.createArrayTest(L),
+            ',r', L, '=values,p', L, ',k', L, ';\n',
+            'p', L, '=parent=', parentAssignment, '\n',
+            'if (c', L, '){if(a', L, '){n', L, '=c', L, '.length;}else if (c', L,
+            '.isMixedCollection){c', L, '=c', L, '.items;n', L, '=c', L,
+            '.length;}else if(c', L, '.isStore){c', L, '=c', L, '.data.items;n',
+            L, '=c', L, '.length;}else{c', L, '=[c', L, '];n', L, '=1;}}\n',
+            'for (xcount=n', L, ';i', L, '<n' + L + ';++i', L, '){\n',
+            'values=c', L, '[i', L, ']'
+        );
+
         if (actions.propName) {
             me.body.push('.', actions.propName);
         }
-        me.body.push('\n',
-            'xindex=i',L,'+1\n');
-        
+
+        me.body.push('\n', 'xindex=i', L, '+1\n');
+
         if (actions.between) {
-            me.body.push('if(xindex>1){ out.push("',actions.between,'"); } \n');
+            me.body.push('if(xindex>1){ out.push("', actions.between, '"); } \n');
         }
     },
 
-    doForEach: function (action, actions) {
+    doForEach: function(action, actions) {
         var me = this,
-            s,
             L = me.level,
-            up = L-1,
-            parentAssignment;
+            up = L - 1,
+            s, parentAssignment;
 
         // If it's just a propName, use it directly in the switch
         if (action === '.') {
             s = 'values';
-        } else if (me.propNameRe.test(action)) {
+        }
+        else if (me.propNameRe.test(action)) {
             s = me.parseTag(action);
         }
-        // Otherwise, it must be an expression, and needs to be returned from an fn which uses with(values)
+        // Otherwise, it must be an expression, and needs to be returned from an fn
+        // which uses with(values)
         else {
             s = me.addFn(action) + me.callFn;
         }
@@ -371,7 +406,6 @@ Ext.define('Ext.util.XTemplateCompiler', {
                 xkey = k2;
                 values = c2[k2]; // values is the property value
 
-
         The body of the loop is whatever comes between the tpl and /tpl statements (which
         is handled by doEnd).
         */
@@ -381,46 +415,55 @@ Ext.define('Ext.util.XTemplateCompiler', {
             me.maxLevel = L;
             me.body.push('var ');
         }
-        
-        if (action == '.') {
+
+        if (action === '.') {
             parentAssignment = 'c' + L;
-        } else {
+        }
+        else {
             parentAssignment = 'a' + up + '?c' + up + '[i' + up + ']:c' + up;
         }
-        
-        me.body.push('i',L,'=-1,n',L,'=0,c',L,'=',s,',a',L,'=',me.createArrayTest(L),',r',L,'=values,p',L,',k',L,';\n',
-            'p',L,'=parent=',parentAssignment,'\n',
-            'for(k',L,' in c',L,'){\n',
-                'xindex=++i',L,'+1;\n',
-                'xkey=k',L,';\n',
-                'values=c',L,'[k',L,'];');
+
+        me.body.push(
+            'i', L, '=-1,n', L, '=0,c', L, '=', s, ',a', L, '=',
+            me.createArrayTest(L), ',r', L, '=values,p', L, ',k', L, ';\n',
+            'p', L, '=parent=', parentAssignment, '\n',
+            'for(k', L, ' in c', L, '){\n',
+            'xindex=++i', L, '+1;\n',
+            'xkey=k', L, ';\n',
+            'values=c', L, '[k', L, '];'
+        );
+
         if (actions.propName) {
             me.body.push('.', actions.propName);
         }
-        
+
         if (actions.between) {
-            me.body.push('if(xindex>1){ out.push("',actions.between,'"); } \n');
+            me.body.push('if(xindex>1){ out.push("', actions.between, '"); } \n');
         }
     },
 
-    createArrayTest: ('isArray' in Array) ? function(L) {
-        return 'Array.isArray(c' + L + ')';
-    } : function(L) {
-        return 'ts.call(c' + L + ')==="[object Array]"';
-    },
+    createArrayTest: ('isArray' in Array)
+        ? function(L) {
+            return 'Array.isArray(c' + L + ')';
+        }
+        : function(L) {
+            return 'ts.call(c' + L + ')==="[object Array]"';
+        },
 
-    doExec: function (action, actions) {
+    doExec: function(action, actions) {
         var me = this,
             name = 'f' + me.definitions.length,
             guards = me.guards[me.strict ? 0 : 1];
 
-        me.definitions.push('function ' + name + '(' + me.fnArgs + ') {',
-                            guards.doTry,
-                            ' var $v = values; with($v) {',
-                            '  ' + action,
-                            ' }',
-                            guards.doCatch,
-                      '}');
+        me.definitions.push(
+            'function ' + name + '(' + me.fnArgs + ') {',
+            guards.doTry,
+            ' var $v = values; with($v) {',
+            '  ' + action,
+            ' }',
+            guards.doCatch,
+            '}'
+        );
 
         me.body.push(name + me.callFn + '\n');
     },
@@ -440,33 +483,36 @@ Ext.define('Ext.util.XTemplateCompiler', {
             '}'
     }],
 
-    addFn: function (body) {
+    addFn: function(body) {
         var me = this,
             name = 'f' + me.definitions.length,
             guards = me.guards[me.strict ? 0 : 1];
 
         if (body === '.') {
-            me.definitions.push('function ' + name + '(' + me.fnArgs + ') {',
-                            ' return values',
-                       '}');
-        } else if (body === '..') {
-            me.definitions.push('function ' + name + '(' + me.fnArgs + ') {',
-                            ' return parent',
-                       '}');
-        } else {
-            me.definitions.push('function ' + name + '(' + me.fnArgs + ') {',
-                            guards.doTry,
-                            ' var $v = values; with($v) {',
-                            '  return(' + body + ')',
-                            ' }',
-                            guards.doCatch,
-                       '}');
+            me.definitions.push(
+                'function ' + name + '(' + me.fnArgs + ') {', ' return values', '}'
+            );
+        }
+        else if (body === '..') {
+            me.definitions.push(
+                'function ' + name + '(' + me.fnArgs + ') {', ' return parent', '}');
+        }
+        else {
+            me.definitions.push(
+                'function ' + name + '(' + me.fnArgs + ') {',
+                guards.doTry,
+                ' var $v = values; with($v) {',
+                '  return(' + body + ')',
+                ' }',
+                guards.doCatch,
+                '}'
+            );
         }
 
         return name;
     },
 
-    parseTag: function (tag) {
+    parseTag: function(tag) {
         var me = this,
             m = me.tagRe.exec(tag),
             name, format, args, math, v;
@@ -481,32 +527,33 @@ Ext.define('Ext.util.XTemplateCompiler', {
         math = m[4];
 
         // name = "." - Just use the values object.
-        if (name == '.') {
+        if (name === '.') {
             // filter to not include arrays/objects/nulls
             if (!me.validTypes) {
                 me.definitions.push('var validTypes={string:1,number:1,boolean:1};');
                 me.validTypes = true;
             }
+
             v = 'validTypes[typeof values] || ts.call(values) === "[object Date]" ? values : ""';
         }
         // name = "#" - Use the xindex
-        else if (name == '#') {
+        else if (name === '#') {
             v = 'xindex';
         }
         // name = "$" - Use the xkey
-        else if (name == '$') {
+        else if (name === '$') {
             v = 'xkey';
         }
-        else if (name.substr(0, 7) == "parent.") {
+        else if (name.substr(0, 7) === "parent.") {
             v = name;
         }
         // compound Javascript property name (e.g., "foo.bar")
-        else if (isNaN(name) && name.indexOf('-') == -1 && name.indexOf('.') != -1) {
+        else if (isNaN(name) && name.indexOf('-') === -1 && name.indexOf('.') !== -1) {
             v = "values." + name;
         }
         // number or a '-' in it or a single word (maybe a keyword): use array notation
         // (http://jsperf.com/string-property-access/4)
-        else {    
+        else {
             v = "values['" + name + "']";
         }
 
@@ -516,12 +563,15 @@ Ext.define('Ext.util.XTemplateCompiler', {
 
         if (format && me.useFormat) {
             args = args ? ',' + args : "";
-            if (format.substr(0, 5) != "this.") {
+
+            if (format.substr(0, 5) !== "this.") {
                 format = "fm." + format + '(';
-            } else {
+            }
+            else {
                 format += '(';
             }
-        } else {
+        }
+        else {
             return v;
         }
 
@@ -531,22 +581,24 @@ Ext.define('Ext.util.XTemplateCompiler', {
     /**
      * @private
      */
-    evalTpl: function ($) {
+    evalTpl: function($) {
 
         // We have to use eval to realize the code block and capture the inner func we also
         // don't want a deep scope chain. We only do this in Firefox and it is also unhappy
         // with eval containing a return statement, so instead we assign to "$" and return
         // that. Because we use "eval", we are automatically sandboxed properly.
         eval($);
+
         return $;
     },
 
     newLineRe: /\r\n|\r|\n/g,
     aposRe: /[']/g,
-    intRe:  /^\s*(\d+)\s*$/,
-    tagRe:  /^([\w-\.\#\$]+)(?:\:([\w\.]*)(?:\((.*?)?\))?)?(\s?[\+\-\*\/]\s?[\d\.\+\-\*\/\(\)]+)?$/
+    intRe: /^\s*(\d+)\s*$/,
+    // eslint-disable-next-line no-useless-escape
+    tagRe: /^([\w-\.\#\$]+)(?:\:([\w\.]*)(?:\((.*?)?\))?)?(\s?[\+\-\*\/]\s?[\d\.\+\-\*\/\(\)]+)?$/
 
-}, function () {
+}, function() {
     var proto = this.prototype;
 
     proto.fnArgs = 'out,values,parent,xindex,xcount,xkey';

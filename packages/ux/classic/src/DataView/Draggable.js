@@ -52,8 +52,8 @@ Ext.define('Ext.ux.DataView.Draggable', {
     requires: 'Ext.dd.DragZone',
 
     /**
-     * @cfg {String} ghostCls The CSS class added to the outermost element of the created ghost proxy
-     * (defaults to 'x-dataview-draggable-ghost')
+     * @cfg {String} ghostCls The CSS class added to the outermost element of the created
+     * ghost proxy (defaults to 'x-dataview-draggable-ghost')
      */
     ghostCls: 'x-dataview-draggable-ghost',
 
@@ -62,7 +62,7 @@ Ext.define('Ext.ux.DataView.Draggable', {
      */
     ghostTpl: [
         '<tpl for=".">',
-            '{title}',
+            '{title}', // eslint-disable-line indent
         '</tpl>'
     ],
 
@@ -71,7 +71,8 @@ Ext.define('Ext.ux.DataView.Draggable', {
      */
 
     /**
-     * @cfg {String} ghostConfig Config object that is used to configure the internally created DataView
+     * @cfg {String} ghostConfig Config object that is used to configure the internally created
+     * DataView
      */
 
     init: function(dataview, config) {
@@ -86,7 +87,7 @@ Ext.define('Ext.ux.DataView.Draggable', {
 
         Ext.apply(this, {
             itemSelector: dataview.itemSelector,
-            ghostConfig : {}
+            ghostConfig: {}
         }, config || {});
 
         Ext.applyIf(this.ghostConfig, {
@@ -103,13 +104,13 @@ Ext.define('Ext.ux.DataView.Draggable', {
     onRender: function() {
         var me = this,
             config = Ext.apply({}, me.ddConfig || {}, {
-            dvDraggable: me,
-            dataview   : me.dataview,
-            getDragData: me.getDragData,
-            getTreeNode: me.getTreeNode,
-            afterRepair: me.afterRepair,
-            getRepairXY: me.getRepairXY
-        });
+                dvDraggable: me,
+                dataview: me.dataview,
+                getDragData: me.getDragData,
+                getTreeNode: me.getTreeNode,
+                afterRepair: me.afterRepair,
+                getRepairXY: me.getRepairXY
+            });
 
         /**
          * @property dragZone
@@ -129,16 +130,16 @@ Ext.define('Ext.ux.DataView.Draggable', {
 
     getDragData: function(e) {
         var draggable = this.dvDraggable,
-            dataview  = this.dataview,
-            selModel  = dataview.getSelectionModel(),
-            target    = e.getTarget(draggable.itemSelector),
+            dataview = this.dataview,
+            selModel = dataview.getSelectionModel(),
+            target = e.getTarget(draggable.itemSelector),
             selected, dragData;
 
         if (target) {
             // preventDefault is needed here to avoid the browser dragging the image
             // instead of dragging the container like it's supposed to
             e.preventDefault();
-            
+
             if (!dataview.isSelected(target)) {
                 selModel.select(dataview.getRecord(target));
             }
@@ -154,7 +155,8 @@ Ext.define('Ext.ux.DataView.Draggable', {
             if (selected.length === 1) {
                 dragData.single = true;
                 dragData.ddel = target;
-            } else {
+            }
+            else {
                 dragData.multi = true;
                 dragData.ddel = draggable.prepareGhost(selModel.getSelection());
             }
@@ -170,13 +172,13 @@ Ext.define('Ext.ux.DataView.Draggable', {
     },
 
     afterRepair: function() {
-        this.dragging = false;
-
-        var nodes  = this.dragData.nodes,
+        var nodes = this.dragData.nodes,
             length = nodes.length,
             i;
 
-        //FIXME: Ext.fly does not work here for some reason, only frames the last node
+        this.dragging = false;
+
+        // FIXME: Ext.fly does not work here for some reason, only frames the last node
         for (i = 0; i < length; i++) {
             Ext.get(nodes[i]).frame('#8db2e3', 1);
         }
@@ -184,18 +186,22 @@ Ext.define('Ext.ux.DataView.Draggable', {
 
     /**
      * @private
-     * Returns the x and y co-ordinates that the dragged item should be animated back to if it was dropped on an
-     * invalid drop target. If we're dragging more than one item we don't animate back and just allow afterRepair
-     * to frame each dropped item.
+     * Returns the x and y co-ordinates that the dragged item should be animated back to if it
+     * was dropped on an invalid drop target. If we're dragging more than one item we don't animate
+     * back and just allow afterRepair to frame each dropped item.
      */
     getRepairXY: function(e) {
+        var repairEl, repairXY;
+
         if (this.dragData.multi) {
             return false;
-        } else {
-            var repairEl = Ext.get(this.dragData.ddel),
-                repairXY = repairEl.getXY();
+        }
+        else {
+            repairEl = Ext.get(this.dragData.ddel);
+            repairXY = repairEl.getXY();
 
-            //take the item's margins and padding into account to make the repair animation line up perfectly
+            // take the item's margins and padding into account to make the repair animation
+            // line up perfectly
             repairXY[0] += repairEl.getPadding('t') + repairEl.getMargin('t');
             repairXY[1] += repairEl.getPadding('l') + repairEl.getMargin('l');
 
@@ -204,7 +210,8 @@ Ext.define('Ext.ux.DataView.Draggable', {
     },
 
     /**
-     * Updates the internal ghost DataView by ensuring it is rendered and contains the correct records
+     * Updates the internal ghost DataView by ensuring it is rendered and contains the correct
+     * records
      * @param {Array} records The set of records that is currently selected in the parent DataView
      * @return {HTMLElement} The Ghost DataView's encapsulating HTMLElement.
      */
@@ -214,8 +221,9 @@ Ext.define('Ext.ux.DataView.Draggable', {
 
     /**
      * @private
-     * Creates the 'ghost' DataView that follows the mouse cursor during the drag operation. This div is usually a
-     * lighter-weight representation of just the nodes that are selected in the parent DataView.
+     * Creates the 'ghost' DataView that follows the mouse cursor during the drag operation.
+     * This div is usually a lighter-weight representation of just the nodes that are selected
+     * in the parent DataView.
      */
     createGhost: function(records) {
         var me = this,
@@ -223,18 +231,22 @@ Ext.define('Ext.ux.DataView.Draggable', {
 
         if (me.ghost) {
             (store = me.ghost.store).loadRecords(records);
-        } else {
+        }
+        else {
             store = Ext.create('Ext.data.Store', {
                 model: records[0].self
             });
 
             store.loadRecords(records);
+
             me.ghost = Ext.create('Ext.view.View', Ext.apply({
                 renderTo: document.createElement('div'),
                 store: store
             }, me.ghostConfig));
+
             me.ghost.container.skipGarbageCollection = me.ghost.el.skipGarbageCollection = true;
         }
+
         store.clearData();
 
         return me.ghost;
@@ -247,6 +259,7 @@ Ext.define('Ext.ux.DataView.Draggable', {
             ghost.container.destroy();
             ghost.destroy();
         }
+
         this.callParent();
     }
 });

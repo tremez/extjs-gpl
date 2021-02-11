@@ -22,13 +22,16 @@ Ext.define('Ext.mixin.ConfigState', {
 
         if (isAlternate) {
             state = {};
+
             for (key in cfg) {
                 state[key] = me.getConfig(key);
             }
+
             me.capturedConfigState = state;
             me.setConfig(cfg);
             // Capture
-        } else if (!me.isConfiguring && state) {
+        }
+        else if (!me.isConfiguring && state) {
             me.setConfig(state);
             delete me.capturedConfigState;
         }

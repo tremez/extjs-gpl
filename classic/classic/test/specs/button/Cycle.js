@@ -1,17 +1,15 @@
-/* global expect, Ext, jasmine */
-
-describe("Ext.button.Cycle", function() {
+topSuite("Ext.button.Cycle", ['Ext.app.ViewController'], function() {
     var button;
 
-    function clickIt (event) {
+    function clickIt(event) {
         jasmine.fireMouseEvent(button.el.dom, event || 'click');
     }
 
-    function makeButton (config) {
+    function makeButton(config) {
         // ARIA errors and warnings are expected
         spyOn(Ext.log, 'error');
         spyOn(Ext.log, 'warn');
-        
+
         button = new Ext.button.Cycle(Ext.apply({
             text: 'Button',
             menu: {
@@ -37,8 +35,19 @@ describe("Ext.button.Cycle", function() {
         button = null;
     });
 
+    describe("alternate class name", function() {
+        it("should have Ext.CycleButton as the alternate class name", function() {
+            expect(Ext.button.Cycle.prototype.alternateClassName).toEqual("Ext.CycleButton");
+        });
+
+        it("should allow the use of Ext.CycleButton", function() {
+            expect(Ext.CycleButton).toBeDefined();
+        });
+    });
+
     describe("event/handler", function() {
         var eventSpy, handlerSpy;
+
         beforeEach(function() {
             eventSpy = jasmine.createSpy();
             handlerSpy = jasmine.createSpy();
@@ -117,6 +126,7 @@ describe("Ext.button.Cycle", function() {
 
             it("should use a passed scope", function() {
                 var scope = {};
+
                 makeButton({
                     changeHandler: handlerSpy,
                     scope: scope
@@ -128,14 +138,17 @@ describe("Ext.button.Cycle", function() {
 
         it("should be able to resolve to a view controller", function() {
             var ctrl = new Ext.app.ViewController();
+
             ctrl.doSomething = jasmine.createSpy();
             makeButton({
                 changeHandler: 'doSomething'
             });
+
             var ct = new Ext.container.Container({
                 controller: ctrl,
                 items: button
             });
+
             button = ct.items.first();
             button.setActiveItem(2);
             ct.destroy();

@@ -3,12 +3,12 @@ Ext.define('KitchenSink.view.button.ButtonsController', {
 
     alias: 'controller.buttons',
 
-    toggleDisabled: function (checkbox, checked) {
+    toggleDisabled: function(checkbox, checked) {
         var view = this.getView(),
             stateFn = checked ? 'disable' : 'enable',
             buttons = view.query('button');
 
-        Ext.each(buttons, function (btn) {
+        Ext.each(buttons, function(btn) {
             btn[stateFn]();
         });
     }

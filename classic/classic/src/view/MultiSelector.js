@@ -71,7 +71,7 @@ Ext.define('Ext.view.MultiSelector', {
      */
     addToolText: 'Search for items to add',
 
-    initComponent: function () {
+    initComponent: function() {
         var me = this,
             emptyText = me.emptyText,
             store = me.getStore(),
@@ -86,9 +86,11 @@ Ext.define('Ext.view.MultiSelector', {
         //</debug>
 
         searchStore = search.store;
+
         if (searchStore.isStore) {
             model = searchStore.getModel();
-        } else {
+        }
+        else {
             model = searchStore.model;
         }
 
@@ -116,7 +118,7 @@ Ext.define('Ext.view.MultiSelector', {
         me.callParent();
     },
 
-    addTools: function () {
+    addTools: function() {
         var me = this;
 
         me.addTool({
@@ -132,7 +134,7 @@ Ext.define('Ext.view.MultiSelector', {
 
     convertSelectionRecord: Ext.identityFn,
 
-    makeRemoveRowColumn: function () {
+    makeRemoveRowColumn: function() {
         var me = this;
 
         return {
@@ -147,24 +149,25 @@ Ext.define('Ext.view.MultiSelector', {
         };
     },
 
-    processRowEvent: function (type, view, cell, recordIndex, cellIndex, e, record, row) {
+    processRowEvent: function(type, view, cell, recordIndex, cellIndex, e, record, row) {
         var body = Ext.getBody();
 
-        if (e.type === 'click' || (e.type === 'keydown' && (e.keyCode === e.SPACE || e.keyCode === e.ENTER))) {
-
+        if (e.type === 'click' ||
+            (e.type === 'keydown' && (e.keyCode === e.SPACE || e.keyCode === e.ENTER))) {
             // Deleting the focused row will momentarily focusLeave
             // That would dismiss the popup, so disable that.
             body.suspendFocusEvents();
             this.store.remove(record);
             body.resumeFocusEvents();
+
             if (this.searchPopup) {
                 this.searchPopup.deselectRecords(record);
             }
         }
     },
 
-    renderRemoveRow: function () {
-        return '<span data-qtip="'+ this.removeRowTip + '" role="button" tabIndex="0">' +
+    renderRemoveRow: function() {
+        return '<span data-qtip="' + this.removeRowTip + '" role="button" tabIndex="0">' +
             this.removeRowText + '</span>';
     },
 
@@ -178,6 +181,7 @@ Ext.define('Ext.view.MultiSelector', {
             popup = me.searchPopup;
 
         me.callParent([width, height, prevWidth, prevHeight]);
+
         if (popup && popup.isVisible()) {
             popup.showBy(me, me.popupAlign);
         }
@@ -186,23 +190,25 @@ Ext.define('Ext.view.MultiSelector', {
     privates: {
         popupAlign: 'tl-tr?',
 
-        onGlobalScroll: function (scroller) {
+        onGlobalScroll: function(scroller) {
             // Collapse if the scroll is anywhere but inside this selector or the popup
             if (!this.owns(scroller.getElement())) {
                 this.onDismissSearch();
             }
         },
 
-        onDismissSearch: function (e) {
+        onDismissSearch: function(e) {
             var searchPopup = this.searchPopup;
-            if (searchPopup && (!e || !(searchPopup.owns(e.getTarget()) || this.owns(e.getTarget())))) {
+
+            if (searchPopup &&
+                (!e || !(searchPopup.owns(e.getTarget()) || this.owns(e.getTarget())))) {
                 this.scrollListeners.destroy();
                 this.touchListeners.destroy();
                 searchPopup.hide();
             }
         },
 
-        onShowSearch: function (panel, tool, event) {
+        onShowSearch: function(panel, tool, event) {
             var me = this,
                 searchPopup = me.searchPopup,
                 store = me.getStore();
@@ -244,7 +250,7 @@ Ext.define('Ext.view.MultiSelector', {
             me.touchListeners = Ext.getDoc().on({
                 // Do not translate on non-touch platforms.
                 // mousedown will blur the field.
-                translate:false,
+                translate: false,
                 touchstart: me.onDismissSearch,
                 scope: me,
                 delegated: false,

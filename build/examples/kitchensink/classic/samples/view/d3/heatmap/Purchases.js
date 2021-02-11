@@ -13,7 +13,7 @@ Ext.define('KitchenSink.view.d3.heatmap.Purchases', {
         'Ext.d3.HeatMap'
     ],
 
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     otherContent: [
         {
@@ -25,9 +25,23 @@ Ext.define('KitchenSink.view.d3.heatmap.Purchases', {
             path: 'classic/samples/store/HeatMap.js'
         }
     ],
-    // </example>
+    //</example>
 
-    width: 960,
+    profiles: {
+        classic: {
+            width: 960
+        },
+        neptune: {
+            width: 960
+        },
+        graphite: {
+            width: 1100
+        },
+        'classic-material': {
+            width: 1100
+        }
+    },
+    width: '${width}',
     height: 700,
 
     layout: 'fit',
@@ -42,14 +56,14 @@ Ext.define('KitchenSink.view.d3.heatmap.Purchases', {
             top: 20,
             right: 30,
             bottom: 20,
-            left: 80
+            left: 90
         },
 
         xAxis: {
             axis: {
-                ticks: 'd3.time.days',
-                tickFormat: "d3.time.format('%b %d')",
-                orient: 'bottom'
+                orient: 'bottom',
+                ticks: 'd3.timeDay',
+                tickFormat: "d3.timeFormat('%b %d')"
             },
             scale: {
                 type: 'time'
@@ -64,7 +78,7 @@ Ext.define('KitchenSink.view.d3.heatmap.Purchases', {
         yAxis: {
             axis: {
                 orient: 'left',
-                tickFormat: "d3.format('$ %d')"
+                tickFormat: "d3.format('$d')"
             },
             scale: {
                 type: 'linear'
@@ -75,7 +89,7 @@ Ext.define('KitchenSink.view.d3.heatmap.Purchases', {
             field: 'bucket',
             step: 100
         },
-        
+
         colorAxis: {
             scale: {
                 type: 'linear',
@@ -98,7 +112,6 @@ Ext.define('KitchenSink.view.d3.heatmap.Purchases', {
             items: {
                 count: 7,
                 slice: [1],
-                reverse: true,
                 size: {
                     x: 60,
                     y: 30

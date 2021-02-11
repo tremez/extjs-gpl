@@ -11,25 +11,43 @@ Ext.define('KitchenSink.view.form.combobox.CustomTemplate', {
         'KitchenSink.model.State',
         'KitchenSink.store.States'
     ],
-    
+
     exampleTitle: 'Custom Template ComboBox',
     otherContent: [{
         type: 'Model',
-        path: 'classic/samples/model/State.js'
+        path: 'app/model/State.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/States.js'
+        path: 'app/store/States.js'
     }],
     //</example>
-    
+
+    profiles: {
+        classic: {
+            labelWidth: 110
+        },
+        neptune: {
+            labelWidth: 110
+        },
+        graphite: {
+            labelWidth: 140
+        },
+        'classic-material': {
+            labelWidth: 140
+        }
+    },
     title: 'Custom Template  ComboBox',
     width: 500,
     layout: 'form',
+    cls: 'simple-combo',
     viewModel: {},
-    
+
     items: [{
         xtype: 'fieldset',
         layout: 'anchor',
+        fieldDefaults: {
+            labelWidth: '${labelWidth}'
+        },
         items: [{
             xtype: 'component',
             anchor: '100%',
@@ -37,7 +55,7 @@ Ext.define('KitchenSink.view.form.combobox.CustomTemplate', {
                 '<h3>Custom Item Templates</h3>',
                 '<p>This ComboBox uses the same data, but also illustrates ',
                 'how to use an optional custom template to create custom UI ',
-                'renditions for list items by overriding the getInnerTpl method. ',
+                'renditions for list items by overriding the itemTpl config. ',
                 'In this case each item shows the state\'s abbreviation, and has ',
                 'a QuickTip which displays the state\'s nickname when hovered over.</p>'
             ]

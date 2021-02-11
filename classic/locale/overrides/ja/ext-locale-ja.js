@@ -44,12 +44,12 @@ Ext.onReady(function() {
 
         Ext.Date.formatCodes.a = "(this.getHours() < 12 ? '午前' : '午後')";
         Ext.Date.formatCodes.A = "(this.getHours() < 12 ? '午前' : '午後')"; // no case difference
-        
+
         parseCodes = {
             g: 1,
-            c: "if (/(午前)/i.test(results[{0}])) {\n"
-                + "if (!h || h == 12) { h = 0; }\n"
-                + "} else { if (!h || h < 12) { h = (h || 0) + 12; }}",
+            c: "if (/(午前)/i.test(results[{0}])) {\n" +
+                "if (!h || h == 12) { h = 0; }\n" +
+                "} else { if (!h || h < 12) { h = (h || 0) + 12; }}",
             s: "(午前|午後)",
             calcAtEnd: true
         };
@@ -315,10 +315,10 @@ Ext.define("Ext.locale.ja.window.MessageBox", {
         cancel: "キャンセル",
         yes: "はい",
         no: "いいえ"
-    }    
+    }
 });
 
 // This is needed until we can refactor all of the locales into individual files
-Ext.define("Ext.locale.ja.Component", {	
+Ext.define("Ext.locale.ja.Component", {
     override: "Ext.Component"
 });

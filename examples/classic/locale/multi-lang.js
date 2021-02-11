@@ -5,26 +5,28 @@ Ext.require([
     'Ext.grid.Panel'
 ]);
 
-Ext.onReady(function(){
+Ext.onReady(function() {
+    // eslint-disable-next-line
     MultiLangDemo = (function() {
         // get the selected language code parameter from url (if exists)
-        var params = Ext.urlDecode(window.location.search.substring(1));
-        //Ext.form.Field.prototype.msgTarget = 'side';
+        var params = Ext.urlDecode(window.location.search.substring(1)),
+            // Ext.form.Field.prototype.msgTarget = 'side';
+            store, combo, record, url, monthArray, ds;
 
         return {
             init: function() {
                 Ext.tip.QuickTipManager.init();
 
                 /* Language chooser combobox  */
-                var store = Ext.create('Ext.data.ArrayStore', {
+                store = Ext.create('Ext.data.ArrayStore', {
                     fields: ['code', 'language'],
-                    data : Ext.exampledata.languages // from languages.js
+                    data: Ext.exampledata.languages // from languages.js
                 });
 
-                var combo = Ext.create('Ext.form.field.ComboBox', {
+                combo = Ext.create('Ext.form.field.ComboBox', {
                     renderTo: 'languages',
                     store: store,
-                    displayField:'language',
+                    displayField: 'language',
                     queryMode: 'local',
                     emptyText: 'Select a language...',
                     hideLabel: true,
@@ -32,18 +34,17 @@ Ext.onReady(function(){
                         select: function(cb, record) {
                             var search = location.search,
                                 index = search.indexOf('&'),
-                                params = Ext.urlEncode({'lang': record.get('code')});
+                                params = Ext.urlEncode({ 'lang': record.get('code') });
 
                             location.search = (index === -1) ? params : params + search.substr(index);
                         }
                     }
                 });
 
-                var record, url;
-
                 if (params.lang) {
                     // check if there's really a language with that language code
                     record = store.findRecord('code', params.lang, null, null, null, true);
+
                     // if language was found in store assign it as current value in combobox
                     if (record) {
                         combo.setValue(record.data.language);
@@ -52,18 +53,20 @@ Ext.onReady(function(){
                     url = Ext.util.Format.format('../../../' + (Ext.devMode ? 'build/' : '') + 'classic/locale/locale-{0}.js', params.lang);
 
                     Ext.Loader.loadScript({
-                            url: url,
-                            onLoad: this.onSuccess,
-                            onError: this.onFailure,
-                            scope: this
-                        }
+                        url: url,
+                        onLoad: this.onSuccess,
+                        onError: this.onFailure,
+                        scope: this
+                    }
                     );
-                } else {
+                }
+                else {
                     this.setupDemo();
                 }
             },
             onSuccess: function() {
                 var me = this;
+
                 // Give the locale file onReady a chance to process
                 setTimeout(function() {
                     me.setupDemo();
@@ -78,6 +81,7 @@ Ext.onReady(function(){
                 // In this case, it's Russian.
 
                 var width = 720;
+
                 /* Email field */
                 Ext.create('Ext.FormPanel', {
                     renderTo: 'emailfield',
@@ -118,8 +122,11 @@ Ext.onReady(function(){
                 });
 
                 // shorthand alias                
-                var monthArray = Ext.Array.map(Ext.Date.monthNames, function (e) { return [e]; });
-                var ds = Ext.create('Ext.data.Store', {
+                monthArray = Ext.Array.map(Ext.Date.monthNames, function(e) {
+                    return [e];
+                });
+
+                ds = Ext.create('Ext.data.Store', {
                     fields: ['month'],
                     remoteSort: true,
                     pageSize: 6,
@@ -137,8 +144,8 @@ Ext.onReady(function(){
                     renderTo: 'grid',
                     width: width,
                     height: 330,
-                    title:'Month Browser',
-                    columns:[{
+                    title: 'Month Browser',
+                    columns: [{
                         text: 'Month of the year',
                         dataIndex: 'month',
                         width: 240

@@ -3,7 +3,19 @@
  *
  * Plots a bullet graph based upon the input {@link #values} array.
  *
- * See <a href="http://en.wikipedia.org/wiki/Bullet_graph">Bullet graphs Wikipedia Page</a> for more information.
+ * See <a href="http://en.wikipedia.org/wiki/Bullet_graph">Bullet graphs Wikipedia Page</a>
+ * for more information.
+ *
+ * The first value should be the target value. If there is no target value, it should be `null`.
+ * The second value should be the performance value. If there is no performance value, it should be
+ * specified as `null`.
+ *
+ * An example value:
+ *
+ *     // Target 10
+ *     // Performance 12
+ *     // Ranges 12,9,7
+ *     [10, 12, 12, 9, 7]
  *
  * See {@link Ext.sparkline.Base the base class} for a simple example.
  */
@@ -18,22 +30,24 @@ Ext.define('Ext.sparkline.Bullet', {
          * @cfg {String} [targetColor=#f33] The colour of the vertical target marker.
          */
         targetColor: '#f33',
-        
+
         /**
          * @cfg {Number} [targetWidth=3] Width of the target bar in pixels.
          */
         targetWidth: 3,
-        
+
         /**
-         * @cfg {String} [performanceColor=#33f] The color of the performance measure horizontal bar.
+         * @cfg {String} [performanceColor=#33f] The color of the performance measure
+         * horizontal bar.
          */
         performanceColor: '#33f',
-        
+
         /**
-         * @cfg {String[]} [rangeColors] An array of colors to use for each qualitative range background color.
+         * @cfg {String[]} [rangeColors] An array of colors to use for each qualitative range
+         * background color.
          */
         rangeColors: ['#d3dafe', '#a8b6ff', '#7f94ff'],
-        
+
         /**
          * @cfg {Number} [base] Set this to a number to change the base start number.
          */
@@ -45,9 +59,11 @@ Ext.define('Ext.sparkline.Bullet', {
             if (v === 'r') {
                 return 'Range';
             }
+
             if (v === 'p') {
                 return 'Performance';
             }
+
             if (v === 't') {
                 return 'Target';
             }
@@ -57,8 +73,10 @@ Ext.define('Ext.sparkline.Bullet', {
     // Ensure values is an array of normalized values
     applyValues: function(newValues) {
         newValues = Ext.Array.map(Ext.Array.from(newValues), this.normalizeValue);
+
         this.disabled = !(newValues && newValues.length);
-        this.applyConfigChange();
+        this.updateConfigChange();
+
         return newValues;
     },
 
@@ -76,17 +94,21 @@ Ext.define('Ext.sparkline.Bullet', {
         vals[1] = values[1] === null ? vals[2] : vals[1];
         min = Math.min.apply(Math, values);
         max = Math.max.apply(Math, values);
+
         if (base == null) {
             min = min < 0 ? min : 0;
-        } else {
+        }
+        else {
             min = base;
         }
+
         me.min = min;
         me.max = max;
         me.range = max - min;
         me.shapes = {};
         me.valueShapes = {};
         me.regiondata = {};
+
         if (!values.length) {
             me.disabled = true;
         }
@@ -94,13 +116,16 @@ Ext.define('Ext.sparkline.Bullet', {
 
     getRegion: function(x, y) {
         var shapeid = this.canvas.getShapeAt(x, y);
-        return (shapeid !== undefined && this.shapes[shapeid] !== undefined) ? this.shapes[shapeid] : undefined;
+
+        return (shapeid !== undefined && this.shapes[shapeid] !== undefined)
+            ? this.shapes[shapeid]
+            : undefined;
     },
 
     getRegionFields: function(region) {
         return {
             fieldkey: region.substr(0, 1),
-            value: this.values[region.substr(1)],
+            value: this.values[parseInt(region.substr(1), 10)],
             region: region
         };
     },
@@ -116,7 +141,7 @@ Ext.define('Ext.sparkline.Bullet', {
 
         switch (region.substr(0, 1)) {
             case 'r':
-                shape = me.renderRange(region.substr(1), true);
+                shape = me.renderRange(parseInt(region.substr(1), 10), true);
                 break;
             case 'p':
                 shape = me.renderPerformance(true);
@@ -132,30 +157,36 @@ Ext.define('Ext.sparkline.Bullet', {
     },
 
     renderRange: function(region, highlight) {
-        var rangeval = this.values[region],
-            rangewidth = Math.round(this.getWidth() * ((rangeval - this.min) / this.range)),
-            color = this.getRangeColors()[region - 2];
+        var me = this,
+            rangeval = me.values[region],
+            rangewidth = Math.round(me.getWidth() * ((rangeval - me.min) / me.range)),
+            colors = me.getRangeColors(),
+            color = colors[Math.min(region - 2, colors.length - 1)];
+
         if (highlight) {
-            color = this.calcHighlightColor(color);
+            color = me.calcHighlightColor(color);
         }
-        return this.canvas.drawRect(0, 0, rangewidth - 1, this.getHeight() - 1, color, color);
+
+        return me.canvas.drawRect(0, 0, rangewidth - 1, me.getHeight() - 1, color, color);
     },
 
     renderPerformance: function(highlight) {
         var perfval = this.values[1],
             perfwidth = Math.round(this.getWidth() * ((perfval - this.min) / this.range)),
             color = this.getPerformanceColor();
+
         if (highlight) {
             color = this.calcHighlightColor(color);
         }
+
         return this.canvas.drawRect(0, Math.round(this.getHeight() * 0.3), perfwidth - 1,
-            Math.round(this.getHeight() * 0.4) - 1, color, color);
+                                    Math.round(this.getHeight() * 0.4) - 1, color, color);
     },
 
     renderTarget: function(highlight) {
         var targetval = this.values[0],
             targetWidth = this.getTargetWidth(),
-            x = Math.round(this.getWidth() * ((targetval - this.min) / this.range) - (targetWidth / 2)),
+            x = Math.round(this.getWidth() * ((targetval - this.min) / this.range) - (targetWidth / 2)), // eslint-disable-line max-len
             targettop = Math.round(this.getHeight() * 0.10),
             targetheight = this.getHeight() - (targettop * 2),
             color = this.getTargetColor();
@@ -163,10 +194,11 @@ Ext.define('Ext.sparkline.Bullet', {
         if (highlight) {
             color = this.calcHighlightColor(color);
         }
+
         return this.canvas.drawRect(x, targettop, targetWidth - 1, targetheight - 1, color, color);
     },
 
-    renderGraph: function () {
+    renderGraph: function() {
         var me = this,
             vlen = me.values.length,
             canvas = me.canvas,
@@ -177,16 +209,19 @@ Ext.define('Ext.sparkline.Bullet', {
         if (!me.callParent()) {
             return;
         }
+
         for (i = 2; i < vlen; i++) {
             shape = me.renderRange(i).append();
             shapes[shape.id] = 'r' + i;
             valueShapes['r' + i] = shape.id;
         }
+
         if (me.values[1] !== null) {
             shape = me.renderPerformance().append();
             shapes[shape.id] = 'p1';
             valueShapes.p1 = shape.id;
         }
+
         if (me.values[0] !== null) {
             shape = this.renderTarget().append();
             shapes[shape.id] = 't0';
@@ -194,15 +229,16 @@ Ext.define('Ext.sparkline.Bullet', {
         }
 
         // If mouse is over, apply the highlight
-        if (me.currentPageXY && me.el.getRegion().contains(me.currentPageXY)) {
+        if (me.currentPageXY && me.canvasRegion.contains(me.currentPageXY)) {
             me.updateDisplay();
         }
+
         canvas.render();
     },
 
     privates: {
         isValidRegion: function(region, values) {
-            return true;
+            return parseInt(region.substr(1), 10) < values.length;
         }
     }
 });

@@ -61,7 +61,7 @@ Ext.define('Ext.draw.sprite.Circle', {
         }
     },
 
-    updatePlainBBox: function (plain) {
+    updatePlainBBox: function(plain) {
         var attr = this.attr,
             cx = attr.cx,
             cy = attr.cy,
@@ -73,7 +73,7 @@ Ext.define('Ext.draw.sprite.Circle', {
         plain.height = r + r;
     },
 
-    updateTransformedBBox: function (transform) {
+    updateTransformedBBox: function(transform) {
         var attr = this.attr,
             cx = attr.cx,
             cy = attr.cy,
@@ -91,7 +91,7 @@ Ext.define('Ext.draw.sprite.Circle', {
         transform.height = ry + ry;
     },
 
-    updatePath: function (path, attr) {
+    updatePath: function(path, attr) {
         path.arc(attr.cx, attr.cy, attr.r, 0, Math.PI * 2, false);
     }
 });

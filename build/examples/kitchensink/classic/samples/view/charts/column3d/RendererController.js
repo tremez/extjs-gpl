@@ -17,7 +17,7 @@ Ext.define('KitchenSink.view.charts.column3d.RendererController', {
         '#998baa'
     ],
 
-    onColumnRender: function (sprite, config, data, index) {
+    onColumnRender: function(sprite, config, data, index) {
         return {
             fillStyle: this.colors[index],
             strokeStyle: index % 2 ? 'none' : 'black',
@@ -25,11 +25,11 @@ Ext.define('KitchenSink.view.charts.column3d.RendererController', {
         };
     },
 
-    onTooltipRender: function (tooltip, record, item) {
+    onTooltipRender: function(tooltip, record, item) {
         tooltip.setHtml(record.get('month') + ': ' + record.get('data3') + '%');
     },
 
-    onAxisLabelRender: function (axis, label, layoutContext) {
+    onAxisLabelRender: function(axis, label, layoutContext) {
         // Custom renderer overrides the native axis label renderer.
         // Since we don't want to do anything fancy with the value
         // ourselves except appending a '%' sign, but at the same time

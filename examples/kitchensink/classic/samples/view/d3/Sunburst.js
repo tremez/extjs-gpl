@@ -18,7 +18,7 @@ Ext.define('KitchenSink.view.d3.Sunburst', {
         'Ext.d3.hierarchy.partition.Sunburst'
     ],
 
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     otherContent: [
         {
@@ -27,7 +27,7 @@ Ext.define('KitchenSink.view.d3.Sunburst', {
         },
         {
             type: 'Model',
-            path: 'classic/samples/model/Tree.js'
+            path: 'app/model/Tree.js'
         },
         {
             type: 'View Model',
@@ -38,7 +38,7 @@ Ext.define('KitchenSink.view.d3.Sunburst', {
             path: 'data/tree/tree.json'
         }
     ],
-    // </example>
+    //</example>
 
     width: 930,
     height: 600,

@@ -5,21 +5,40 @@ Ext.define('KitchenSink.view.grid.RowEditing', {
     extend: 'Ext.grid.Panel',
     xtype: 'row-editing',
     controller: 'row-editing',
-    
+
     title: 'Row Editing Employees',
-    width: 700,
+    width: '${width}',
     height: 400,
-    
+
+    profiles: {
+        classic: {
+            width: 700,
+            activeColumnWidth: 60
+        },
+        neptune: {
+            width: 700,
+            activeColumnWidth: 60
+        },
+        graphite: {
+            width: 950,
+            activeColumnWidth: 100
+        },
+        'classic-material': {
+            width: 950,
+            activeColumnWidth: 150
+        }
+    },
     store: {
         type: 'big-data'
     },
-    
-    plugins: [{
-        ptype: 'rowediting',
-        clicksToMoveEditor: 1,
-        autoCancel: false
-    }],
-    
+
+    plugins: {
+        rowediting: {
+            clicksToMoveEditor: 1,
+            autoCancel: false
+        }
+    },
+
     columns: [{
         header: 'Name',
         dataIndex: 'name',
@@ -69,7 +88,7 @@ Ext.define('KitchenSink.view.grid.RowEditing', {
         xtype: 'checkcolumn',
         header: 'Active?',
         dataIndex: 'active',
-        width: 60,
+        width: '${activeColumnWidth}',
         editor: {
             xtype: 'checkbox',
             cls: 'x-grid-checkheader-editor'
@@ -85,7 +104,7 @@ Ext.define('KitchenSink.view.grid.RowEditing', {
         handler: 'onRemoveClick',
         disabled: true
     }],
-    
+
     listeners: {
         selectionchange: 'onSelectionChange'
     }

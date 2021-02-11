@@ -9,33 +9,37 @@ Ext.define('BigDataSimlet', {
 
     data: [],
     numFields: 10,
-    numRecords: 50*1000,
+    numRecords: 50 * 1000,
     groupSize: 1,
 
-    getData: function (ctx) {
+    getData: function(ctx) {
         var me = this,
             data = me.data,
             groupSize = ctx.params.groupSize || 1,
-            group;
+            group, r, rec, i, k;
 
-        if (data.length != me.numRecords || me.lastNumColumns != me.numFields || groupSize !== me.groupSize) {
+        if (data.length !== me.numRecords || me.lastNumColumns !== me.numFields || groupSize !== me.groupSize) {
             me.currentOrder = null;
             me.lastNumColumns = me.numFields;
             me.groupSize = groupSize;
 
             data.length = 0;
-            for (var r = 0, k = me.numRecords; r < k; r++) {
+
+            for (r = 0, k = me.numRecords; r < k; r++) {
                 group = Math.floor((r + groupSize) / groupSize);
-                var rec = {
+                rec = {
                     id: 'rec-' + r
                 };
-                for (var i = 0; i < me.numFields; i++) {
+
+                for (i = 0; i < me.numFields; i++) {
                     if (groupSize > 1 && i === 0) {
                         rec['field' + i] = group;
-                    } else {
+                    }
+                    else {
                         rec['field' + i] = r;
                     }
                 }
+
                 data.push(rec);
             }
         }
@@ -45,18 +49,20 @@ Ext.define('BigDataSimlet', {
 });
 
 Ext.onReady(function() {
-    
+    var simlet, center, storeCount, summaryTypes, summaryTypeNames, store, grid, logPanel, controls;
+
     Ext.define('StoreInfo', {
         override: 'Ext.data.BufferedStore',
-        prefetch: function(options){
+        prefetch: function(options) {
             var page = options.page;
-        
+
             if (!this.pageCached(page) && !this.pagePending(page)) {
                 logPanel.log('Prefetch rows ' + options.start + '-' + (options.start + options.limit));
             }
+
             this.callParent(arguments);
         },
-    
+
         onProxyPrefetch: function(operation) {
             this.callParent(arguments);
             logPanel.log('Prefetch returned ' + operation.getStart() + '-' + (operation.getStart() + operation.getLimit()));
@@ -65,18 +71,17 @@ Ext.onReady(function() {
 
     Ext.define('BufferInfo', {
         override: 'Ext.grid.plugin.BufferedRenderer',
-    
+
         setBodyTop: function(bodyTop) {
             this.callParent(arguments);
             logPanel.log('Table moved to top: ' + bodyTop);
         }
     });
 
-    var simlet = new BigDataSimlet(),
-        center,
-        storeCount = 0,
-        summaryTypes = ['count', 'min', 'max', 'sum', 'average'],
-        summaryTypeNames = ['count', 'min', 'max', 'sum', 'avg'];
+    simlet = new BigDataSimlet();
+    storeCount = 0;
+    summaryTypes = ['count', 'min', 'max', 'sum', 'average'];
+    summaryTypeNames = ['count', 'min', 'max', 'sum', 'avg'];
 
     Ext.ux.ajax.SimManager.init({
         delay: 300
@@ -84,7 +89,7 @@ Ext.onReady(function() {
         localAjaxSimulator: simlet
     });
 
-    function createStore (numFields, buffered, pageSize, groupSize) {
+    function createStore(numFields, buffered, pageSize, groupSize) {
         var fields = [],
             i, storeConfig,
             result,
@@ -99,7 +104,7 @@ Ext.onReady(function() {
             storeId: 'infinite-scroll-store-' + (storeCount++),
             remoteSort: buffered,
             pageSize: pageSize,
-            
+
             fields: fields,
             proxy: {
                 // Simulating Ajax.
@@ -111,10 +116,12 @@ Ext.onReady(function() {
                 }
             }
         };
+
         if (groupSize) {
             storeConfig.remoteGroup = buffered;
             storeConfig.groupField = 'field0';
         }
+
         result = Ext.create(buffered ? 'Ext.data.BufferedStore' : 'Ext.data.Store', storeConfig);
         pageCache = result.getData();
 
@@ -152,14 +159,15 @@ Ext.onReady(function() {
                     groupHeaderTpl: [
                         '{columnName}: {name:this.groupName}',
                         '<tpl if="rows.length">',
-                            ' ({rows.length} Item{[values.rows.length > 1 ? "s" : ""]})',
+                        ' ({rows.length} Item{[values.rows.length > 1 ? "s" : ""]})',
                         '</tpl>',
                         {
                             groupName: function(group) {
                                 var rowIdx = (group - 1) * simlet.groupSize;
+
                                 return groupColumnRenderer(rowIdx, null, null, rowIdx, 1);
-                        }
-                    }],
+                            }
+                        }],
                     id: 'field0Grouping'
                 })
             ];
@@ -168,18 +176,19 @@ Ext.onReady(function() {
         return Ext.create('Ext.grid.Panel', gridConfig);
     }
 
-    var store = createStore(10),
-        grid = createGrid({
-            store: store
-        });
+    store = createStore(10);
+    grid = createGrid({
+        store: store
+    });
 
-    function makeLabel (ns, cls, name) {
+    function makeLabel(ns, cls, name) {
         var docs = '../..';
-        //docs = '../../../.build/sdk'; // for development/testing
-        return '<a href="'+docs+'/docs/#!/api/'+ns+'.'+cls+'-cfg-'+name+'" target="docs" tabIndex="-1">' + cls + ' ' + name + '</a>';
+
+        // docs = '../../../.build/sdk'; // for development/testing
+        return '<a href="' + docs + '/docs/#!/api/' + ns + '.' + cls + '-cfg-' + name + '" target="docs" tabIndex="-1">' + cls + ' ' + name + '</a>';
     }
 
-    var logPanel = new Ext.Panel({
+    logPanel = new Ext.Panel({
         title: 'Log',
         region: 'center',
         scrollable: true,
@@ -191,29 +200,32 @@ Ext.onReady(function() {
                 logPanel.body.dom.scrollTop = 1000000;
             }
         },
-        tbar: [{
-            text: 'Logging on',
-            pressed: true,
-            enableToggle: true,
-            toggleHandler: function(btn, pressed) {
-                if (pressed) {
-                    btn.setText('Logging on');
-                    logPanel.disabled = false;
-                } else {
-                    btn.setText('Logging off');
-                    logPanel.disabled = true;
+        tbar: [
+            {
+                text: 'Logging on',
+                pressed: true,
+                enableToggle: true,
+                toggleHandler: function(btn, pressed) {
+                    if (pressed) {
+                        btn.setText('Logging on');
+                        logPanel.disabled = false;
+                    }
+                    else {
+                        btn.setText('Logging off');
+                        logPanel.disabled = true;
+                    }
+                }
+            },
+            {
+                text: 'Clear',
+                handler: function() {
+                    logPanel.body.update('');
                 }
             }
-        },
-        {
-            text: 'Clear',
-            handler: function() {
-                logPanel.body.update('');
-            }
-        }]
+        ]
     });
 
-    var controls = Ext.create('Ext.form.Panel', {
+    controls = Ext.create('Ext.form.Panel', {
         region: 'north',
         split: true,
         bodyPadding: 5,
@@ -250,7 +262,9 @@ Ext.onReady(function() {
             listeners: {
                 change: function(fld, newVal, oldVal) {
                     var nfeField = controls.down('#scrollerNumFromEdge');
+
                     nfeField.maxValue = newVal - 1;
+
                     if (nfeField.getValue() >= newVal) {
                         nfeField.setValue(newVal - 1);
                     }
@@ -288,7 +302,8 @@ Ext.onReady(function() {
                         storeLeadingBufferZone.enable();
                         purgePageCount.enable();
                         scrollToLoadBuffer.enable();
-                    } else {
+                    }
+                    else {
                         pageSize.disable();
                         storeTrailingBufferZone.disable();
                         storeLeadingBufferZone.disable();
@@ -332,6 +347,7 @@ Ext.onReady(function() {
             listeners: {
                 change: function(f, newVal, oldVal) {
                     Ext.grid.plugin.BufferedRenderer.prototype.scrollToLoadBuffer = newVal;
+
                     if (grid) {
                         grid.view.bufferedRenderer.scrollToLoadBuffer = newVal;
                     }
@@ -359,8 +375,8 @@ Ext.onReady(function() {
             group = Math.floor((rowIdx + groupSize) / groupSize),
             groupStart = (group - 1) * groupSize + 1,
             groupEnd = groupStart + (groupSize - 1);
-            
-            return 'rows ' + groupStart + ' to ' + groupEnd;
+
+        return 'rows ' + groupStart + ' to ' + groupEnd;
     }
 
     function scrollTopToBottom(b, maxScroll) {
@@ -371,8 +387,10 @@ Ext.onReady(function() {
             scrollQuantum = 30,
             start = new Date().getTime(),
             nextScroll = function() {
+                var newPos;
+
                 el.dom.scrollTop += scrollQuantum;
-                var newPos = el.dom.scrollTop;
+                newPos = el.dom.scrollTop;
 
                 // At max scroll - we're done
                 if (newPos >= maxScroll) {
@@ -400,6 +418,7 @@ Ext.onReady(function() {
             start = new Date().getTime(),
             nextScroll = function() {
                 var newPos = el.dom.scrollTop - scrollQuantum;
+
                 el.dom.scrollTop = newPos;
 
                 // At min scroll - we're done
@@ -419,7 +438,7 @@ Ext.onReady(function() {
         nextScroll();
     }
 
-    function initializeGrid () {
+    function initializeGrid() {
         var numFields = controls.down('#numFields').getValue(),
             columns = [{
                 xtype: 'rownumberer',
@@ -428,7 +447,7 @@ Ext.onReady(function() {
             }],
             i,
             rowCount = controls.down('#rowCount').getValue(),
-            groupSize = grid.ownerCt.down('#groupSize').getValue()||0,
+            groupSize = grid.ownerCt.down('#groupSize').getValue() || 0,
             buffered = controls.down('#buffered').getValue(),
             columnSpec;
 
@@ -440,22 +459,25 @@ Ext.onReady(function() {
 
         for (i = 0; i < numFields; ++i) {
             columnSpec = {
-                text: 'Field ' + (i+1),
+                text: 'Field ' + (i + 1),
                 dataIndex: 'field' + i,
                 renderer: columnRenderer,
                 summaryType: summaryTypes[i % 5],
                 align: 'right',
                 summaryRenderer: function(value, cellValues, record, recordIndex, colIdx, store, view) {
                     cellValues.style = 'text-align:right';
+
                     return summaryTypeNames[(colIdx - 1) % 5] + ': ' + Ext.util.Format.number(value, '0.00');
                 }
             };
+
             if (i === 0 && groupSize > 1) {
                 delete columnSpec.summaryType;
                 delete columnSpec.summaryRenderer;
                 columnSpec.width = 150;
                 columnSpec.renderer = groupColumnRenderer;
             }
+
             columns.push(columnSpec);
         }
 
@@ -482,11 +504,13 @@ Ext.onReady(function() {
         if (buffered) {
             // Load the first page. It will be diverted through the prefetch buffer.
             store.loadPage(1);
-        } else {
+        }
+        else {
             store.load({
                 limit: rowCount
             });
         }
+
         Ext.resumeLayouts(true);
     }
 
@@ -502,8 +526,8 @@ Ext.onReady(function() {
                     fn: function(p) {
                         Ext.on('idle', function() {
                             p.header.removeCls('x-docked-noborder-left x-docked-noborder-right x-docked-noborder-top');
-                            p.updateLayout({isRoot:true});
-                        }, null, {single: true});
+                            p.updateLayout({ isRoot: true });
+                        }, null, { single: true });
                     },
                     single: true
                 },
@@ -537,7 +561,8 @@ Ext.onReady(function() {
                     if (v.bufferedRenderer.hasOwnProperty('handleViewScroll')) {
                         delete v.bufferedRenderer.handleViewScroll;
                         scrollButton.setText(scrollButton.initialConfig.text);
-                    } else {
+                    }
+                    else {
                         scrollButton.setText('Stop scroll');
                         v.el.dom.scrollTop = 0;
                         Ext.defer(scrollTopToBottom, controls.down('#latency').getValue() + 200, null, [scrollButton, el.dom.scrollHeight - el.dom.clientHeight]);
@@ -553,7 +578,8 @@ Ext.onReady(function() {
                     if (v.bufferedRenderer.hasOwnProperty('handleViewScroll')) {
                         delete v.bufferedRenderer.handleViewScroll;
                         scrollButton.setText(scrollButton.initialConfig.text);
-                    } else {
+                    }
+                    else {
                         scrollButton.setText('Stop scroll');
                         v.el.dom.scrollTop = el.dom.scrollHeight;
                         Ext.defer(scrollBottomToTop, controls.down('#latency').getValue() + 200, null, [scrollButton, el.dom.scrollHeight - el.dom.clientHeight]);

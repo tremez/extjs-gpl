@@ -19,7 +19,7 @@ Ext.define('Ext.draw.overrides.hittest.Path', {
      * @return {Boolean}
      * @member Ext.draw.Path
      */
-    isPointInPath: function (x, y) {
+    isPointInPath: function(x, y) {
         var me = this,
             commands = me.commands,
             solver = Ext.draw.PathUtil,
@@ -37,22 +37,30 @@ Ext.define('Ext.draw.overrides.hittest.Path', {
             switch (commands[i]) {
                 case 'M':
                     if (firstX !== null) {
+                        // eslint-disable-next-line max-len
                         if (solver.linesIntersection(firstX, firstY, lastX, lastY, origin.x, origin.y, x, y)) {
                             count += 1;
                         }
                     }
+
                     firstX = lastX = params[j];
                     firstY = lastY = params[j + 1];
                     j += 2;
+
                     break;
+
                 case 'L':
+                    // eslint-disable-next-line max-len
                     if (solver.linesIntersection(lastX, lastY, params[j], params[j + 1], origin.x, origin.y, x, y)) {
                         count += 1;
                     }
+
                     lastX = params[j];
                     lastY = params[j + 1];
                     j += 2;
+
                     break;
+
                 case 'C':
                     count += solver.cubicLineIntersections(
                         lastX, params[j], params[j + 2], params[j + 4],
@@ -62,16 +70,21 @@ Ext.define('Ext.draw.overrides.hittest.Path', {
                     lastX = params[j + 4];
                     lastY = params[j + 5];
                     j += 6;
+
                     break;
+
                 case 'Z':
                     if (firstX !== null) {
+                        // eslint-disable-next-line max-len
                         if (solver.linesIntersection(firstX, firstY, lastX, lastY, origin.x, origin.y, x, y)) {
                             count += 1;
                         }
                     }
+
                     break;
             }
         }
+
         return count % 2 === 1;
     },
 
@@ -82,7 +95,7 @@ Ext.define('Ext.draw.overrides.hittest.Path', {
      * @return {Boolean}
      * @member Ext.draw.Path
      */
-    isPointOnPath: function (x, y) {
+    isPointOnPath: function(x, y) {
         var me = this,
             commands = me.commands,
             solver = Ext.draw.PathUtil,
@@ -102,37 +115,48 @@ Ext.define('Ext.draw.overrides.hittest.Path', {
                             return true;
                         }
                     }
+
                     firstX = lastX = params[j];
                     firstY = lastY = params[j + 1];
                     j += 2;
+
                     break;
+
                 case 'L':
                     if (solver.pointOnLine(lastX, lastY, params[j], params[j + 1], x, y)) {
                         return true;
                     }
+
                     lastX = params[j];
                     lastY = params[j + 1];
                     j += 2;
+
                     break;
+
                 case 'C':
                     if (solver.pointOnCubic(
                         lastX, params[j], params[j + 2], params[j + 4],
                         lastY, params[j + 1], params[j + 3], params[j + 5], x, y)) {
                         return true;
                     }
+
                     lastX = params[j + 4];
                     lastY = params[j + 5];
                     j += 6;
+
                     break;
+
                 case 'Z':
                     if (firstX !== null) {
                         if (solver.pointOnLine(firstX, firstY, lastX, lastY, x, y)) {
                             return true;
                         }
                     }
+
                     break;
             }
         }
+
         return false;
     },
 
@@ -154,7 +178,7 @@ Ext.define('Ext.draw.overrides.hittest.Path', {
      * @return {Array}
      * @member Ext.draw.Path
      */
-    getSegmentIntersections: function (x1, y1, x2, y2, x3, y3, x4, y4) {
+    getSegmentIntersections: function(x1, y1, x2, y2, x3, y3, x4, y4) {
         var me = this,
             count = arguments.length,
             solver = Ext.draw.PathUtil,
@@ -174,40 +198,54 @@ Ext.define('Ext.draw.overrides.hittest.Path', {
                     if (firstX !== null) {
                         switch (count) {
                             case 4:
-                                points = solver.linesIntersection(firstX, firstY, lastX, lastY, x1, y1, x2, y2);
+                                points = solver.linesIntersection(firstX, firstY, lastX, lastY,
+                                                                  x1, y1, x2, y2);
+
                                 if (points) {
                                     intersections.push(points);
                                 }
+
                                 break;
+
                             case 8:
-                                points = solver.cubicLineIntersections(x1, x2, x3, x4, y1, y2, y3, y4,
-                                    firstX, firstY, lastX, lastY);
+                                points = solver.cubicLineIntersections(x1, x2, x3, x4, y1, y2, y3,
+                                                                       y4, firstX, firstY, lastX,
+                                                                       lastY);
                                 intersections.push.apply(intersections, points);
                                 break;
                         }
                     }
+
                     firstX = lastX = params[j];
                     firstY = lastY = params[j + 1];
                     j += 2;
                     break;
+
                 case 'L':
                     switch (count) {
                         case 4:
-                            points = solver.linesIntersection(lastX, lastY, params[j], params[j + 1], x1, y1, x2, y2);
+                            points = solver.linesIntersection(lastX, lastY, params[j],
+                                                              params[j + 1], x1, y1, x2, y2);
+
                             if (points) {
                                 intersections.push(points);
                             }
+
                             break;
+
                         case 8:
                             points = solver.cubicLineIntersections(x1, x2, x3, x4, y1, y2, y3, y4,
-                                lastX, lastY, params[j], params[j + 1]);
+                                                                   lastX, lastY, params[j],
+                                                                   params[j + 1]);
                             intersections.push.apply(intersections, points);
                             break;
                     }
+
                     lastX = params[j];
                     lastY = params[j + 1];
                     j += 2;
                     break;
+
                 case 'C':
                     switch (count) {
                         case 4:
@@ -217,6 +255,7 @@ Ext.define('Ext.draw.overrides.hittest.Path', {
                                 x1, y1, x2, y2);
                             intersections.push.apply(intersections, points);
                             break;
+
                         case 8:
                             points = solver.cubicsIntersections(
                                 lastX, params[j], params[j + 2], params[j + 4],
@@ -225,33 +264,42 @@ Ext.define('Ext.draw.overrides.hittest.Path', {
                             intersections.push.apply(intersections, points);
                             break;
                     }
+
                     lastX = params[j + 4];
                     lastY = params[j + 5];
                     j += 6;
                     break;
+
                 case 'Z':
                     if (firstX !== null) {
                         switch (count) {
                             case 4:
-                                points = solver.linesIntersection(firstX, firstY, lastX, lastY, x1, y1, x2, y2);
+                                points = solver.linesIntersection(firstX, firstY, lastX, lastY, x1,
+                                                                  y1, x2, y2);
+
                                 if (points) {
                                     intersections.push(points);
                                 }
+
                                 break;
+
                             case 8:
-                                points = solver.cubicLineIntersections(x1, x2, x3, x4, y1, y2, y3, y4,
-                                    firstX, firstY, lastX, lastY);
+                                points = solver.cubicLineIntersections(x1, x2, x3, x4, y1, y2, y3,
+                                                                       y4, firstX, firstY, lastX,
+                                                                       lastY);
                                 intersections.push.apply(intersections, points);
                                 break;
                         }
                     }
+
                     break;
             }
         }
+
         return intersections;
     },
 
-    getIntersections: function (path) {
+    getIntersections: function(path) {
         var me = this,
             commands = me.commands,
             params = me.params,
@@ -267,38 +315,48 @@ Ext.define('Ext.draw.overrides.hittest.Path', {
             switch (commands[i]) {
                 case 'M':
                     if (firstX !== null) {
-                        points = path.getSegmentIntersections.call(path, firstX, firstY, lastX, lastY);
+                        points = path.getSegmentIntersections.call(path, firstX, firstY, lastX,
+                                                                   lastY);
                         intersections.push.apply(intersections, points);
                     }
+
                     firstX = lastX = params[j];
                     firstY = lastY = params[j + 1];
                     j += 2;
                     break;
+
                 case 'L':
-                    points = path.getSegmentIntersections.call(path, lastX, lastY, params[j], params[j + 1]);
+                    points = path.getSegmentIntersections.call(path, lastX, lastY, params[j],
+                                                               params[j + 1]);
                     intersections.push.apply(intersections, points);
                     lastX = params[j];
                     lastY = params[j + 1];
                     j += 2;
                     break;
+
                 case 'C':
-                    points = path.getSegmentIntersections.call(path,
-                        lastX, lastY, params[j], params[j + 1],
-                        params[j + 2], params[j + 3], params[j + 4], params[j + 5]
-                    );
+                    points = path.getSegmentIntersections.call(path, lastX, lastY, params[j],
+                                                               params[j + 1], params[j + 2],
+                                                               params[j + 3], params[j + 4],
+                                                               params[j + 5]);
+
                     intersections.push.apply(intersections, points);
                     lastX = params[j + 4];
                     lastY = params[j + 5];
                     j += 6;
                     break;
+
                 case 'Z':
                     if (firstX !== null) {
-                        points = path.getSegmentIntersections.call(path, firstX, firstY, lastX, lastY);
+                        points = path.getSegmentIntersections.call(path, firstX, firstY, lastX,
+                                                                   lastY);
                         intersections.push.apply(intersections, points);
                     }
+
                     break;
             }
         }
+
         return intersections;
     }
 });

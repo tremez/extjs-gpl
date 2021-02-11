@@ -19,6 +19,7 @@ Ext.define('Admin.view.authentication.LockingWindow', {
     titleAlign: 'center',
     maximized: true,
     modal: true,
+    scrollable: true,
 
     layout: {
         type: 'vbox',

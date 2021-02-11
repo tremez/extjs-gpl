@@ -24,6 +24,7 @@ Ext.define('Ext.fx.easing.EaseOut', {
 
         if (deltaTime >= duration) {
             this.isEnded = true;
+
             return endValue;
         }
 

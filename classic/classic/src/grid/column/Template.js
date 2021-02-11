@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /**
  * A Column definition class which renders a value by processing a {@link Ext.data.Model Model}'s
  * {@link Ext.data.Model#getData data} using a {@link #tpl configured}
@@ -30,10 +31,12 @@
  *     });
  */
 Ext.define('Ext.grid.column.Template', {
+    /* eslint-enable max-len */
     extend: 'Ext.grid.column.Column',
     alias: ['widget.templatecolumn'],
-    requires: ['Ext.XTemplate'],
     alternateClassName: 'Ext.grid.TemplateColumn',
+
+    requires: ['Ext.XTemplate'],
 
     /**
      * @cfg {String/Ext.XTemplate} tpl
@@ -51,21 +54,25 @@ Ext.define('Ext.grid.column.Template', {
      * @hide
      */
 
-    initComponent: function(){
+    initComponent: function() {
         var me = this;
+
         me.tpl = (!Ext.isPrimitive(me.tpl) && me.tpl.compile) ? me.tpl : new Ext.XTemplate(me.tpl);
+
         // Set this here since the template may access any record values,
         // so we must always run the update for this column
         me.hasCustomRenderer = true;
-        me.callParent(arguments);
+        me.callParent();
     },
 
     defaultRenderer: function(value, meta, record) {
         var data = Ext.apply({}, record.data, record.getAssociatedData());
+
         return this.tpl.apply(data);
     },
 
     updater: function(cell, value) {
-        Ext.fly(cell).down(this.getView().innerSelector, true).innerHTML = Ext.grid.column.CheckColumn.prototype.defaultRenderer.call(this, value);
+        Ext.fly(cell).down(this.getView().innerSelector, true).innerHTML =
+            Ext.grid.column.CheckColumn.prototype.defaultRenderer.call(this, value);
     }
 });

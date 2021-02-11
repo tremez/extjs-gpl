@@ -1,10 +1,10 @@
 Ext.define('AM.view.user.Edit', {
     extend: 'Ext.window.Window',
-    alias : 'widget.useredit',
+    alias: 'widget.useredit',
 
     requires: ['Ext.form.Panel'],
 
-    title : 'Edit User',
+    title: 'Edit User',
     layout: 'fit',
     autoShow: true,
     width: 280,
@@ -20,12 +20,12 @@ Ext.define('AM.view.user.Edit', {
                 items: [
                     {
                         xtype: 'textfield',
-                        name : 'name',
+                        name: 'name',
                         fieldLabel: 'Name'
                     },
                     {
                         xtype: 'textfield',
-                        name : 'email',
+                        name: 'email',
                         fieldLabel: 'Email'
                     }
                 ]

@@ -24,64 +24,60 @@ Ext.define('KitchenSink.controller.phone.Main', {
 
     refs: {
         toolbar: '#mainNavigationBar',
+        closeSourceButton: 'button[action=closeSource]',
         nav: '#cardPanel',
         touchEvents: 'touchevents',
-        consoleButton: 'button[action=showConsole]'
+        consoleButton: 'button[action=showConsole]',
+        sourceButton: 'button[action=viewSource]',
+        sourceOverlay: {
+            selector: 'sourceoverlay',
+            xtype: 'sourceoverlay',
+            autoCreate: true
+        }
     },
 
     control: {
         nav: {
-            itemtap: 'onNavTap',
-            leafitemtap: 'onNavLeafTap',
+            childtap: 'onNavTap',
+            leafchildtap: 'onNavLeafTap',
             back: 'onBackTap'
         },
         consoleButton: {
             tap: 'showTouchEventConsole'
+        },
+        closeSourceButton: {
+            tap: 'onCloseSourceTap'
         }
-    },
-    routes: {
-        ':id' : 'showById'
     },
 
     /**
-     * This method is executed when the NestedList for navigation has been initialized.  We want to 
+     * This method is executed when the NestedList for navigation has been initialized.  We want to
      * check the hash on the URL and go to the correct list or leaf, accordingly.
      */
-    showById: function(id) {
-        var me = this,
-            nav = me.getNav(),
-            store = Ext.StoreMgr.get('Navigation'),
-            hash = (window.location.hash || '').substr(1),
-            node = hash.length ? store.getNodeById(hash) : store.getNodeById('All');
-            
-        if (node !== null) {
-            me.record = node;
-            if (node.isLeaf()) {
-                me.showView(node);
-            }
-            else {
-                // go to the proper sublist
-                nav.goToNode(node);
-            }
+    handleRoute: function(id) {
+        var node = Ext.StoreMgr.get('Navigation').getNodeById(id);
+
+        this.record = node;
+
+        if (node.isLeaf()) {
+            this.showView(node);
+        }
+        else {
+            // go to the proper sublist
+            this.getNav().goToNode(node);
         }
     },
 
     /**
      * This is called whenever the user taps on an item in the main navigation NestedList
      */
-    onNavTap: function(nestedList, list, index, target, record, e) {
-        // this just changes the hash on the URL
-        this.redirectTo(record.get('id'));
+    onNavTap: function(nestedList, location) {
+        // this just changes the hash on the URL, the route will take care of showing the view
+        this.redirectTo(location.record.get('id'));
     },
 
-    /**
-     * This is called whenever the user taps on a leaf item in the main navigation NestedList
-     */
-    onNavLeafTap: function(nestedList, list, index, target, record, e) {
-        var me = this;
-
-        me.record = record;
-        me.showView(record, true);
+    onNavLeafTap: function(nestedList, location) {
+        nestedList.setDetailCard(this.createView(location.record));
     },
 
     /**
@@ -90,19 +86,29 @@ Ext.define('KitchenSink.controller.phone.Main', {
      */
     onSourceTap: function() {
         var me = this,
-            overlay = me.getSourceOverlay(),
-            demo = me.currentDemo,
-            view = me.activeView,
-            cls, files, content;
+            menu = me.burgerActions,
+            sourceOverlay = me.getSourceOverlay();
 
-        me.burgerActions.destroy();
-        me.burgerActions = null;
+        Ext.Viewport.animateActiveItem(sourceOverlay, {
+            type: 'slide',
+            direction: 'left'
+        });
 
-        if (demo) {
-            Ext.Viewport.animateActiveItem(overlay, { type: 'cover', direction: 'up'});
-            me.updateDetails(me.record);
-            //me.loadOverlayContent(demo, view);
+        me.updateDetails(me.record);
+
+        if (menu && menu.isViewportMenu) {
+            menu.setDisplayed(false);
         }
+    },
+
+    /**
+     * Closes the source code view.
+     */
+    onCloseSourceTap: function() {
+        Ext.Viewport.animateActiveItem(0, {
+            type: 'slide',
+            direction: 'right'
+        });
     },
 
     /**
@@ -115,40 +121,52 @@ Ext.define('KitchenSink.controller.phone.Main', {
      * @param {String} name The full class name of the view to create (e.g. "KitchenSink.view.Forms")
      * @return {Ext.Component} The component, which may be from the cache
      */
-    createView: function (item) {
+    createView: function(item, title) {
         var me = this,
-            name = me.getViewName(item),
+            viewClass = me.getViewClass(item),
+            prototype = viewClass.prototype,
+            name = Ext.ClassManager.getName(viewClass),
             cache = me.viewCache,
-            ln = cache.length,
+            length = cache.length,
             limit = item.get('limit') || 20,
-            view, i = 0, j, oldView;
+            cfg, view, i, j, oldView;
 
-        for (; i < ln; i++) {
+        for (i = 0; i < length; i++) {
             view = cache[i];
-            if (view.viewName === name) {
-                me.activeView = view;
-                return view;
+
+            if (Ext.ClassManager.getName(view) === name) {
+                return me.activeView = view;
             }
         }
 
-        if (ln >= limit) {
-            for (i = 0, j = 0; i < ln; i++) {
+        if (length >= limit) {
+            for (i = 0, j = 0; i < length; i++) {
                 oldView = cache[i];
+
                 if (!oldView.isPainted()) {
                     oldView.destroy();
-                } else {
+                }
+                else {
                     cache[j++] = oldView;
                 }
             }
+
             cache.length = j;
         }
 
-        view = Ext.create(name);
-        view.viewName = name;
-        cache.push(view);
-        me.viewCache = cache;
+        cfg = {
+            id: name.replace(/\./g, '-').toLowerCase()
+        };
 
-        me.activeView = view;
+        if (prototype.title === title || (prototype.config && prototype.config.title === title)) {
+            /**
+             * The navigation view's toolbar will be showing the title, no need
+             * to show the title twice.
+             */
+            cfg.title = null;
+        }
+
+        cache.push(me.activeView = view = new viewClass(cfg));
 
         return view;
     },
@@ -158,32 +176,44 @@ Ext.define('KitchenSink.controller.phone.Main', {
      * 'demo/:id', so is called automatically whenever the user navigates back or forward between demos.
      * @param {KitchenSink.model.Demo} item The Demo model instance for which we want to show a view
      */
-    showView: function(item, direct) {
+    showView: function(item) {
         var me = this,
-            nav    = me.getNav(),
-            title  = item.get('text'),
-            view   = me.createView(item),
-            layout = nav.getLayout(),
-            anim   = item.get('animation'),
-            initialAnim = layout.getAnimation(),
-            newAnim;
+            nav = me.getNav(),
+            title = item.get('text'),
+            view = me.createView(item, title),
+            lastList, layout, anim;
 
         if (nav.getDetailCard() !== view) {
-            if (anim) {
-                layout.setAnimation(anim);
-                newAnim = layout.getAnimation();
-            }
-            me.currentDemo = item;
-            nav.setDetailCard(view);
-            if (!direct) {
-                nav.goToLeaf(item);
+            lastList = nav.getLastActiveList();
+
+            if (!lastList || lastList.getStore().getNode().id !== item.parentNode.id) {
+                /**
+                 * Let's go to the parent's node without animation.
+                 * This is so when someone hits the back button in the toolbar,
+                 * they are taken to the correct list they would expect.
+                 *
+                 * This likely happened when someone is deep linking into
+                 * the application without user interaction
+                 * (changing hash manually or first visiting via bookmark).
+                 */
+                layout = nav.getLayout();
+                anim = layout.getAnimation();
+
+                anim.disable();
+
+                nav.goToNode(item.parentNode);
+
+                anim.enable();
             }
 
-            if (newAnim) {
-                newAnim.on('animationend', function() {
-                    layout.setAnimation(initialAnim);
-                }, me, { single: true });
-            }
+            me.currentDemo = item;
+
+            nav.setDetailCard(view);
+
+            nav.goToLeaf(item);
+        }
+        else if (item.isLeaf()) {
+            me.currentDemo = item;
         }
 
         me.getToolbar().setTitle(title);
@@ -203,5 +233,40 @@ Ext.define('KitchenSink.controller.phone.Main', {
      */
     showTouchEventConsole: function(button) {
         this.getTouchEvents().showConsole();
+    },
+
+    getAvailableThemes: function() {
+        var items = this.callParent();
+
+        delete items[0].xtype;
+
+        items.push({
+            text: 'View Source',
+            ui: 'confirm',
+            handler: this.onSourceTap,
+            scope: this,
+            separator: true
+        });
+
+        return items;
+    },
+
+    parseAvailableThemes: function(me) {
+        var oldParser = this.callParent([me]);
+
+        /**
+         * Non material themes on phones use Ext.ActionSheet
+         * which does not support menu items so we need
+         * to remove the xtype to let it use the default.
+         */
+        return Ext.theme.is.Material
+            ? oldParser
+            : function(theme) {
+                theme = oldParser.call(this, theme);
+
+                delete theme.xtype;
+
+                return theme;
+            };
     }
 });

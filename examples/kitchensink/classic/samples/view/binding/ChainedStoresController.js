@@ -4,6 +4,7 @@ Ext.define('KitchenSink.view.binding.ChainedStoresController', {
 
     onRemoveClick: function(btn) {
         var rec = btn.getWidgetRecord();
+
         this.getStore('everyone').remove(rec);
     },
 

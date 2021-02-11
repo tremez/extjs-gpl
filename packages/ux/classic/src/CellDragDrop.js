@@ -1,19 +1,20 @@
 /**
  * This plugin can enable a cell to cell drag and drop operation within the same grid view.
  *
- * Note that the plugin must be added to the grid view, not to the grid panel. For example, using {@link Ext.panel.Table viewConfig}:
+ * Note that the plugin must be added to the grid view, not to the grid panel. For example,
+ * using {@link Ext.panel.Table viewConfig}:
  *
  *      viewConfig: {
  *          plugins: {
- *              ptype: 'celldragdrop',
+ *              celldragdrop: {
+ *                  // Remove text from source cell and replace with value of emptyText.
+ *                  applyEmptyText: true,
  *
- *              // Remove text from source cell and replace with value of emptyText.
- *              applyEmptyText: true,
+ *                  //emptyText: Ext.String.htmlEncode('<<foo>>'),
  *
- *              //emptyText: Ext.String.htmlEncode('<<foo>>'),
- *
- *              // Will only allow drops of the same type.
- *              enforceType: true
+ *                  // Will only allow drops of the same type.
+ *                  enforceType: true
+ *              }
  *          }
  *      }
  */
@@ -33,23 +34,25 @@ Ext.define('Ext.ux.CellDragDrop', {
 
     /**
      * @cfg {Boolean} applyEmptyText
-     * If `true`, then use the value of {@link #emptyText} to replace the drag record's value after a node drop.
-     * Note that, if dropped on a cell of a different type, it will convert the default text according to its own conversion rules.
+     * If `true`, then use the value of {@link #emptyText} to replace the drag record's value
+     * after a node drop. Note that, if dropped on a cell of a different type, it will convert
+     * the default text according to its own conversion rules.
      *
      * Defaults to `false`.
      */
     applyEmptyText: false,
 
     /**
-     * @cfg {Boolean} emptyText
-     * If {@link #applyEmptyText} is `true`, then this value as the drag record's value after a node drop.
+     * @cfg {String} emptyText
+     * If {@link #applyEmptyText} is `true`, then this value as the drag record's value after
+     * a node drop.
      *
      * Defaults to an empty string.
      */
     emptyText: '',
 
     /**
-     * @cfg {Boolean} dropBackgroundColor
+     * @cfg {String} dropBackgroundColor
      * The default background color for when a drop is allowed.
      *
      * Defaults to green.
@@ -57,14 +60,13 @@ Ext.define('Ext.ux.CellDragDrop', {
     dropBackgroundColor: 'green',
 
     /**
-     * @cfg {Boolean} noDropBackgroundColor
+     * @cfg {String} noDropBackgroundColor
      * The default background color for when a drop is not allowed.
      *
      * Defaults to red.
      */
     noDropBackgroundColor: 'red',
 
-    //<locale>
     /**
      * @cfg {String} dragText
      * The text to show while dragging.
@@ -73,14 +75,15 @@ Ext.define('Ext.ux.CellDragDrop', {
      *
      * - `{0}` The number of selected items.
      * - `{1}` 's' when more than 1 items (only useful for English).
+     * @locale
      */
     dragText: '{0} selected row{1}',
-    //</locale>
 
     /**
      * @cfg {String} ddGroup
-     * A named drag drop group to which this object belongs. If a group is specified, then both the DragZones and
-     * DropZone used by this plugin will only interact with other drag drop objects in the same group.
+     * A named drag drop group to which this object belongs. If a group is specified, then both
+     * the DragZones and DropZone used by this plugin will only interact with other drag drop
+     * objects in the same group.
      */
     ddGroup: "GridDD",
 
@@ -98,12 +101,12 @@ Ext.define('Ext.ux.CellDragDrop', {
 
     /**
      * @cfg {Object/Boolean} containerScroll
-     * True to register this container with the Scrollmanager for auto scrolling during drag operations.
-     * A {@link Ext.dd.ScrollManager} configuration may also be passed.
+     * True to register this container with the Scrollmanager for auto scrolling during drag
+     * operations. A {@link Ext.dd.ScrollManager} configuration may also be passed.
      */
     containerScroll: false,
 
-    init: function (view) {
+    init: function(view) {
         var me = this;
 
         view.on('render', me.onViewRender, me, {
@@ -111,7 +114,7 @@ Ext.define('Ext.ux.CellDragDrop', {
         });
     },
 
-    destroy: function () {
+    destroy: function() {
         var me = this;
 
         me.dragZone = me.dropZone = Ext.destroy(me.dragZone, me.dropZone);
@@ -119,31 +122,35 @@ Ext.define('Ext.ux.CellDragDrop', {
         me.callParent();
     },
 
-    enable: function () {
+    enable: function() {
         var me = this;
 
         if (me.dragZone) {
             me.dragZone.unlock();
         }
+
         if (me.dropZone) {
             me.dropZone.unlock();
         }
+
         me.callParent();
     },
 
-    disable: function () {
+    disable: function() {
         var me = this;
 
         if (me.dragZone) {
             me.dragZone.lock();
         }
+
         if (me.dropZone) {
             me.dropZone.lock();
         }
+
         me.callParent();
     },
 
-    onViewRender: function (view) {
+    onViewRender: function(view) {
         var me = this,
             scrollEl;
 
@@ -158,7 +165,7 @@ Ext.define('Ext.ux.CellDragDrop', {
                 dragText: me.dragText,
                 containerScroll: me.containerScroll,
                 scrollEl: scrollEl,
-                getDragData: function (e) {
+                getDragData: function(e) {
                     var view = this.view,
                         item = e.getTarget(view.getItemSelector()),
                         record = view.getRecord(item),
@@ -168,9 +175,12 @@ Ext.define('Ext.ux.CellDragDrop', {
                     if (item) {
                         dragEl = document.createElement('div');
                         dragEl.className = 'x-form-text';
-                        dragEl.appendChild(document.createTextNode(cell.textContent || cell.innerText));
+                        dragEl.appendChild(
+                            document.createTextNode(cell.textContent || cell.innerText)
+                        );
 
                         header = view.getHeaderByCell(cell);
+
                         return {
                             event: new Ext.EventObjectImpl(e),
                             ddel: dragEl,
@@ -181,7 +191,7 @@ Ext.define('Ext.ux.CellDragDrop', {
                     }
                 },
 
-                onInitDrag: function (x, y) {
+                onInitDrag: function(x, y) {
                     var self = this,
                         data = self.dragData,
                         view = self.view,
@@ -198,6 +208,7 @@ Ext.define('Ext.ux.CellDragDrop', {
                     Ext.fly(self.ddel).update(el.textContent || el.innerText);
                     self.proxy.update(self.ddel);
                     self.onStartDrag(x, y);
+
                     return true;
                 }
             });
@@ -209,7 +220,7 @@ Ext.define('Ext.ux.CellDragDrop', {
                 ddGroup: me.dropGroup || me.ddGroup,
                 containerScroll: true,
 
-                getTargetFromEvent: function (e) {
+                getTargetFromEvent: function(e) {
                     var self = this,
                         view = self.view,
                         cell = e.getTarget(view.cellSelector),
@@ -230,11 +241,13 @@ Ext.define('Ext.ux.CellDragDrop', {
                     }
                 },
 
-                // On Node enter, see if it is valid for us to drop the field on that type of column.
-                onNodeEnter: function (target, dd, e, dragData) {
+                // On Node enter, see if it is valid for us to drop the field on that type of column
+                onNodeEnter: function(target, dd, e, dragData) {
                     var self = this,
-                        destType = target.record.getField(target.columnName).type.toUpperCase(),
-                        sourceType = dragData.record.getField(dragData.columnName).type.toUpperCase();
+                        destType, sourceType;
+
+                    destType = target.record.getField(target.columnName).type.toUpperCase();
+                    sourceType = dragData.record.getField(dragData.columnName).type.toUpperCase();
 
                     delete self.dropOK;
 
@@ -246,12 +259,12 @@ Ext.define('Ext.ux.CellDragDrop', {
                     // Check whether the data type of the column being dropped on accepts the
                     // dragged field type. If so, set dropOK flag, and highlight the target node.
                     if (me.enforceType && destType !== sourceType) {
-
                         self.dropOK = false;
 
                         if (me.noDropCls) {
                             Ext.fly(target.node).addCls(me.noDropCls);
-                        } else {
+                        }
+                        else {
                             Ext.fly(target.node).applyStyles({
                                 backgroundColor: me.noDropBackgroundColor
                             });
@@ -264,7 +277,8 @@ Ext.define('Ext.ux.CellDragDrop', {
 
                     if (me.dropCls) {
                         Ext.fly(target.node).addCls(me.dropCls);
-                    } else {
+                    }
+                    else {
                         Ext.fly(target.node).applyStyles({
                             backgroundColor: me.dropBackgroundColor
                         });
@@ -273,17 +287,18 @@ Ext.define('Ext.ux.CellDragDrop', {
 
                 // Return the class name to add to the drag proxy. This provides a visual indication
                 // of drop allowed or not allowed.
-                onNodeOver: function (target, dd, e, dragData) {
+                onNodeOver: function(target, dd, e, dragData) {
                     return this.dropOK ? this.dropAllowed : this.dropNotAllowed;
                 },
 
                 // Highlight the target node.
-                onNodeOut: function (target, dd, e, dragData) {
+                onNodeOut: function(target, dd, e, dragData) {
                     var cls = this.dropOK ? me.dropCls : me.noDropCls;
 
                     if (cls) {
                         Ext.fly(target.node).removeCls(cls);
-                    } else {
+                    }
+                    else {
                         Ext.fly(target.node).applyStyles({
                             backgroundColor: ''
                         });
@@ -291,12 +306,16 @@ Ext.define('Ext.ux.CellDragDrop', {
                 },
 
                 // Process the drop event if we have previously ascertained that a drop is OK.
-                onNodeDrop: function (target, dd, e, dragData) {
+                onNodeDrop: function(target, dd, e, dragData) {
                     if (this.dropOK) {
-                        target.record.set(target.columnName, dragData.record.get(dragData.columnName));
+                        target.record.set(
+                            target.columnName, dragData.record.get(dragData.columnName)
+                        );
+
                         if (me.applyEmptyText) {
                             dragData.record.set(dragData.columnName, me.emptyText);
                         }
+
                         return true;
                     }
                 },

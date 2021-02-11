@@ -1,0 +1,2378 @@
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-split-button.x-btn-default-medium.x-btn-pressed .x-btn-wrap-default-medium .x-btn-icon-el-default-medium {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-split-button.x-btn-default-medium.x-btn-pressed .x-btn-wrap-default-medium .x-btn-inner-default-medium {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-default-medium.x-btn-pressed .x-btn-wrap-default-medium .x-btn-wrap-default-medium.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-default-medium.x-btn-pressed .x-btn-wrap-default-medium .x-btn-wrap-default-medium.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-split-button.x-btn-default-medium.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-medium.x-btn-split:before {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-split-button.x-btn-default-medium.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-medium .x-btn-icon-el-default-medium {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-split-button.x-btn-default-medium.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-medium .x-btn-inner-default-medium {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-default-medium.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-medium .x-btn-wrap-default-medium.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-default-medium.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-medium .x-btn-wrap-default-medium.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-btn-focus .x-btn-wrap-default-medium.x-btn-split:before {
+    background-color: #42a5f5;
+    background-color: var(--base-focused-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-btn-focus .x-btn-wrap-default-medium .x-btn-icon-el-default-medium {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-btn-focus .x-btn-wrap-default-medium .x-btn-inner-default-medium {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-btn-focus .x-btn-wrap-default-medium .x-btn-wrap-default-medium.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-btn-focus .x-btn-wrap-default-medium .x-btn-wrap-default-medium.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-btn-focus.x-btn-pressed .x-btn-wrap-default-medium.x-btn-split:before {
+    background-color: #6ab8f7;
+    background-color: var(--base-pressed-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-btn-focus.x-btn-pressed .x-btn-wrap-default-medium .x-btn-icon-el-default-medium {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-btn-focus.x-btn-pressed .x-btn-wrap-default-medium .x-btn-inner-default-medium {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-btn-focus.x-btn-pressed .x-btn-wrap-default-medium .x-btn-wrap-default-medium.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-btn-focus.x-btn-pressed .x-btn-wrap-default-medium .x-btn-wrap-default-medium.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-btn-focus.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-medium.x-btn-split-right > .x-btn-button:after {
+    border-right-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-btn-focus.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-medium.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:274 */
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-btn-focus.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-medium.x-btn-split:before {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-split-button.x-btn-default-medium.x-btn-over.x-arrow-over .x-btn-wrap-default-medium.x-btn-split:after {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-split-button.x-btn-default-medium.x-btn-over.x-arrow-over .x-btn-wrap-default-medium.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-split-button.x-btn-default-medium.x-btn-over.x-arrow-over .x-btn-wrap-default-medium.x-btn-split-bottom:after {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-split-button.x-btn-default-medium.x-btn-menu-active .x-btn-wrap-default-medium.x-btn-split:after,
+.x-split-button.x-btn-default-medium.x-arrow-pressed .x-btn-wrap-default-medium.x-btn-split:after {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-split-button.x-btn-default-medium.x-btn-menu-active .x-btn-wrap-default-medium.x-btn-split-right + .x-btn-arrow-el:before,
+.x-split-button.x-btn-default-medium.x-arrow-pressed .x-btn-wrap-default-medium.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: #0c7ce6;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-split-button.x-btn-default-medium.x-btn-menu-active .x-btn-wrap-default-medium.x-btn-split-bottom:after,
+.x-split-button.x-btn-default-medium.x-arrow-pressed .x-btn-wrap-default-medium.x-btn-split-bottom:after {
+    background-color: #0c7ce6;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-split-button.x-btn-default-medium.x-btn-menu-active.x-btn-over.x-arrow-over .x-btn-wrap-default-medium.x-btn-split:after,
+.x-split-button.x-btn-default-medium.x-arrow-pressed.x-btn-over.x-arrow-over .x-btn-wrap-default-medium.x-btn-split:after {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-split-button.x-btn-default-medium.x-btn-menu-active.x-btn-over.x-arrow-over .x-btn-wrap-default-medium.x-btn-split-right + .x-btn-arrow-el:before,
+.x-split-button.x-btn-default-medium.x-arrow-pressed.x-btn-over.x-arrow-over .x-btn-wrap-default-medium.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-split-button.x-btn-default-medium.x-btn-menu-active.x-btn-over.x-arrow-over .x-btn-wrap-default-medium.x-btn-split-bottom:after,
+.x-split-button.x-btn-default-medium.x-arrow-pressed.x-btn-over.x-arrow-over .x-btn-wrap-default-medium.x-btn-split-bottom:after {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-default-medium.x-btn-menu-active .x-btn-wrap-default-medium.x-btn-split-right > .x-btn-button:after {
+    border-right-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-default-medium.x-btn-menu-active .x-btn-wrap-default-medium.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-arrow-focus .x-btn-wrap-default-medium.x-btn-split:after {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-arrow-focus .x-btn-wrap-default-medium.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: #42a5f5;
+    background-color: var(--base-focused-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-arrow-focus .x-btn-wrap-default-medium.x-btn-split-bottom:after {
+    background-color: #42a5f5;
+    background-color: var(--base-focused-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-arrow-focus.x-btn-menu-active .x-btn-wrap-default-medium.x-btn-split:after,
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-arrow-focus.x-arrow-pressed .x-btn-wrap-default-medium.x-btn-split:after {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-arrow-focus.x-btn-menu-active .x-btn-wrap-default-medium.x-btn-split-right + .x-btn-arrow-el:before,
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-arrow-focus.x-arrow-pressed .x-btn-wrap-default-medium.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: #6ab8f7;
+    background-color: var(--base-pressed-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-arrow-focus.x-btn-menu-active .x-btn-wrap-default-medium.x-btn-split-bottom:after,
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-arrow-focus.x-arrow-pressed .x-btn-wrap-default-medium.x-btn-split-bottom:after {
+    background-color: #6ab8f7;
+    background-color: var(--base-pressed-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-arrow-focus.x-btn-pressed .x-btn-wrap-default-medium.x-btn-split-right > .x-btn-button:after {
+    border-right-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-arrow-focus.x-btn-pressed .x-btn-wrap-default-medium.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-arrow-focus.x-btn-over.x-arrow-over .x-btn-wrap-default-medium.x-btn-split-right > .x-btn-button:after {
+    border-right-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-arrow-focus.x-btn-over.x-arrow-over .x-btn-wrap-default-medium.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:290 */
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-arrow-focus.x-btn-over.x-arrow-over .x-btn-wrap-default-medium.x-btn-split-right + .x-btn-arrow-el:before {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:297 */
+.x-keyboard-mode .x-split-button.x-btn-default-medium.x-arrow-focus.x-btn-over.x-arrow-over .x-btn-wrap-default-medium.x-btn-split-bottom:after {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:305 */
+.x-split-button.x-btn-default-large {
+    background-color: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:310 */
+.x-split-button.x-btn-default-large.x-btn-pressed,
+.x-split-button.x-btn-default-large.x-btn-menu-active {
+    background-color: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:314 */
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-btn-focus {
+    background-color: transparent;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:321 */
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-arrow-focus .x-btn-arrow-el {
+    border-width: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:330 */
+.x-split-button.x-btn-default-large .x-btn-wrap-default-large.x-btn-split-right:before {
+    right: 49px;
+    background-color: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:335 */
+.x-split-button.x-btn-default-large .x-btn-wrap-default-large.x-btn-split-right + .x-btn-arrow-el {
+    right: 48px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:338 */
+.x-split-button.x-btn-default-large .x-btn-wrap-default-large.x-btn-split-right + .x-btn-arrow-el:before {
+    right: -48px;
+    width: 48px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:344 */
+.x-split-button.x-btn-default-large .x-btn-wrap-default-large.x-btn-split-right .x-btn-button:before {
+    width: 48px;
+    right: -48px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:350 */
+.x-split-button.x-btn-default-large .x-btn-wrap-default-large.x-btn-split-bottom:before {
+    bottom: 33px;
+    background-color: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:355 */
+.x-split-button.x-btn-default-large .x-btn-wrap-default-large.x-btn-split-bottom:after {
+    background-color: transparent;
+    margin-left: -16px;
+    margin-right: -16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:361 */
+.x-split-button.x-btn-default-large .x-btn-wrap-default-large.x-btn-split:after {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:365 */
+.x-split-button.x-btn-default-large .x-btn-wrap-default-large .x-btn-inner-default-large {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:369 */
+.x-split-button.x-btn-default-large .x-btn-wrap-default-large .x-btn-icon-el-default-large {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:376 */
+.x-ie10p .x-split-button.x-btn-default-large .x-btn-wrap-default-large .x-btn-button.x-btn-icon-top,
+.x-ie10p .x-split-button.x-btn-default-large .x-btn-wrap-default-large .x-btn-button.x-btn-icon-bottom {
+    overflow: visible;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-split-button.x-btn-default-large.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-large.x-btn-split:before {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-split-button.x-btn-default-large.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-large .x-btn-icon-el-default-large {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-split-button.x-btn-default-large.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-large .x-btn-inner-default-large {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-default-large.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-large .x-btn-wrap-default-large.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #2196f3;
+    border-right-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-default-large.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-large .x-btn-wrap-default-large.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #2196f3;
+    border-bottom-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-split-button.x-btn-default-large.x-btn-menu-active .x-btn-wrap-default-large.x-btn-split:before {
+    background-color: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-split-button.x-btn-default-large.x-btn-menu-active .x-btn-wrap-default-large .x-btn-icon-el-default-large {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-split-button.x-btn-default-large.x-btn-menu-active .x-btn-wrap-default-large .x-btn-inner-default-large {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-default-large.x-btn-menu-active .x-btn-wrap-default-large .x-btn-wrap-default-large.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #2196f3;
+    border-right-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-default-large.x-btn-menu-active .x-btn-wrap-default-large .x-btn-wrap-default-large.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #2196f3;
+    border-bottom-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-split-button.x-btn-default-large.x-btn-pressed .x-btn-wrap-default-large.x-btn-split:before {
+    background-color: #0c7ce6;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-split-button.x-btn-default-large.x-btn-pressed .x-btn-wrap-default-large .x-btn-icon-el-default-large {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-split-button.x-btn-default-large.x-btn-pressed .x-btn-wrap-default-large .x-btn-inner-default-large {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-default-large.x-btn-pressed .x-btn-wrap-default-large .x-btn-wrap-default-large.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-default-large.x-btn-pressed .x-btn-wrap-default-large .x-btn-wrap-default-large.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-split-button.x-btn-default-large.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-large.x-btn-split:before {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-split-button.x-btn-default-large.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-large .x-btn-icon-el-default-large {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-split-button.x-btn-default-large.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-large .x-btn-inner-default-large {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-default-large.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-large .x-btn-wrap-default-large.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-default-large.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-large .x-btn-wrap-default-large.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-btn-focus .x-btn-wrap-default-large.x-btn-split:before {
+    background-color: #42a5f5;
+    background-color: var(--base-focused-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-btn-focus .x-btn-wrap-default-large .x-btn-icon-el-default-large {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-btn-focus .x-btn-wrap-default-large .x-btn-inner-default-large {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-btn-focus .x-btn-wrap-default-large .x-btn-wrap-default-large.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-btn-focus .x-btn-wrap-default-large .x-btn-wrap-default-large.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-btn-focus.x-btn-pressed .x-btn-wrap-default-large.x-btn-split:before {
+    background-color: #6ab8f7;
+    background-color: var(--base-pressed-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-btn-focus.x-btn-pressed .x-btn-wrap-default-large .x-btn-icon-el-default-large {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-btn-focus.x-btn-pressed .x-btn-wrap-default-large .x-btn-inner-default-large {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-btn-focus.x-btn-pressed .x-btn-wrap-default-large .x-btn-wrap-default-large.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-btn-focus.x-btn-pressed .x-btn-wrap-default-large .x-btn-wrap-default-large.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-btn-focus.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-large.x-btn-split-right > .x-btn-button:after {
+    border-right-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-btn-focus.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-large.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:274 */
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-btn-focus.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-large.x-btn-split:before {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-split-button.x-btn-default-large.x-btn-over.x-arrow-over .x-btn-wrap-default-large.x-btn-split:after {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-split-button.x-btn-default-large.x-btn-over.x-arrow-over .x-btn-wrap-default-large.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-split-button.x-btn-default-large.x-btn-over.x-arrow-over .x-btn-wrap-default-large.x-btn-split-bottom:after {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-split-button.x-btn-default-large.x-btn-menu-active .x-btn-wrap-default-large.x-btn-split:after,
+.x-split-button.x-btn-default-large.x-arrow-pressed .x-btn-wrap-default-large.x-btn-split:after {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-split-button.x-btn-default-large.x-btn-menu-active .x-btn-wrap-default-large.x-btn-split-right + .x-btn-arrow-el:before,
+.x-split-button.x-btn-default-large.x-arrow-pressed .x-btn-wrap-default-large.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: #0c7ce6;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-split-button.x-btn-default-large.x-btn-menu-active .x-btn-wrap-default-large.x-btn-split-bottom:after,
+.x-split-button.x-btn-default-large.x-arrow-pressed .x-btn-wrap-default-large.x-btn-split-bottom:after {
+    background-color: #0c7ce6;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-split-button.x-btn-default-large.x-btn-menu-active.x-btn-over.x-arrow-over .x-btn-wrap-default-large.x-btn-split:after,
+.x-split-button.x-btn-default-large.x-arrow-pressed.x-btn-over.x-arrow-over .x-btn-wrap-default-large.x-btn-split:after {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-split-button.x-btn-default-large.x-btn-menu-active.x-btn-over.x-arrow-over .x-btn-wrap-default-large.x-btn-split-right + .x-btn-arrow-el:before,
+.x-split-button.x-btn-default-large.x-arrow-pressed.x-btn-over.x-arrow-over .x-btn-wrap-default-large.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-split-button.x-btn-default-large.x-btn-menu-active.x-btn-over.x-arrow-over .x-btn-wrap-default-large.x-btn-split-bottom:after,
+.x-split-button.x-btn-default-large.x-arrow-pressed.x-btn-over.x-arrow-over .x-btn-wrap-default-large.x-btn-split-bottom:after {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-default-large.x-btn-menu-active .x-btn-wrap-default-large.x-btn-split-right > .x-btn-button:after {
+    border-right-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-default-large.x-btn-menu-active .x-btn-wrap-default-large.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-arrow-focus .x-btn-wrap-default-large.x-btn-split:after {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-arrow-focus .x-btn-wrap-default-large.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: #42a5f5;
+    background-color: var(--base-focused-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-arrow-focus .x-btn-wrap-default-large.x-btn-split-bottom:after {
+    background-color: #42a5f5;
+    background-color: var(--base-focused-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-arrow-focus.x-btn-menu-active .x-btn-wrap-default-large.x-btn-split:after,
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-arrow-focus.x-arrow-pressed .x-btn-wrap-default-large.x-btn-split:after {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-arrow-focus.x-btn-menu-active .x-btn-wrap-default-large.x-btn-split-right + .x-btn-arrow-el:before,
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-arrow-focus.x-arrow-pressed .x-btn-wrap-default-large.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: #6ab8f7;
+    background-color: var(--base-pressed-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-arrow-focus.x-btn-menu-active .x-btn-wrap-default-large.x-btn-split-bottom:after,
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-arrow-focus.x-arrow-pressed .x-btn-wrap-default-large.x-btn-split-bottom:after {
+    background-color: #6ab8f7;
+    background-color: var(--base-pressed-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-arrow-focus.x-btn-pressed .x-btn-wrap-default-large.x-btn-split-right > .x-btn-button:after {
+    border-right-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-arrow-focus.x-btn-pressed .x-btn-wrap-default-large.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-arrow-focus.x-btn-over.x-arrow-over .x-btn-wrap-default-large.x-btn-split-right > .x-btn-button:after {
+    border-right-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-arrow-focus.x-btn-over.x-arrow-over .x-btn-wrap-default-large.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:290 */
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-arrow-focus.x-btn-over.x-arrow-over .x-btn-wrap-default-large.x-btn-split-right + .x-btn-arrow-el:before {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:297 */
+.x-keyboard-mode .x-split-button.x-btn-default-large.x-arrow-focus.x-btn-over.x-arrow-over .x-btn-wrap-default-large.x-btn-split-bottom:after {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:305 */
+.x-split-button.x-btn-default-toolbar-small {
+    background-color: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:310 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-pressed,
+.x-split-button.x-btn-default-toolbar-small.x-btn-menu-active {
+    background-color: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:314 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-btn-focus {
+    background-color: transparent;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:321 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-arrow-focus .x-btn-arrow-el {
+    border-width: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:330 */
+.x-split-button.x-btn-default-toolbar-small .x-btn-wrap-default-toolbar-small.x-btn-split-right:before {
+    right: 33px;
+    background-color: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:335 */
+.x-split-button.x-btn-default-toolbar-small .x-btn-wrap-default-toolbar-small.x-btn-split-right + .x-btn-arrow-el {
+    right: 32px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:338 */
+.x-split-button.x-btn-default-toolbar-small .x-btn-wrap-default-toolbar-small.x-btn-split-right + .x-btn-arrow-el:before {
+    right: -32px;
+    width: 32px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:344 */
+.x-split-button.x-btn-default-toolbar-small .x-btn-wrap-default-toolbar-small.x-btn-split-right .x-btn-button:before {
+    width: 32px;
+    right: -32px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:350 */
+.x-split-button.x-btn-default-toolbar-small .x-btn-wrap-default-toolbar-small.x-btn-split-bottom:before {
+    bottom: 17px;
+    background-color: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:355 */
+.x-split-button.x-btn-default-toolbar-small .x-btn-wrap-default-toolbar-small.x-btn-split-bottom:after {
+    background-color: transparent;
+    margin-left: -16px;
+    margin-right: -16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:361 */
+.x-split-button.x-btn-default-toolbar-small .x-btn-wrap-default-toolbar-small.x-btn-split:after {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:365 */
+.x-split-button.x-btn-default-toolbar-small .x-btn-wrap-default-toolbar-small .x-btn-inner-default-toolbar-small {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:369 */
+.x-split-button.x-btn-default-toolbar-small .x-btn-wrap-default-toolbar-small .x-btn-icon-el-default-toolbar-small {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:376 */
+.x-ie10p .x-split-button.x-btn-default-toolbar-small .x-btn-wrap-default-toolbar-small .x-btn-button.x-btn-icon-top,
+.x-ie10p .x-split-button.x-btn-default-toolbar-small .x-btn-wrap-default-toolbar-small .x-btn-button.x-btn-icon-bottom {
+    overflow: visible;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-small.x-btn-split:before {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-small .x-btn-icon-el-default-toolbar-small {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-small .x-btn-inner-default-toolbar-small {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-small .x-btn-wrap-default-toolbar-small.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #2196f3;
+    border-right-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-small .x-btn-wrap-default-toolbar-small.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #2196f3;
+    border-bottom-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-menu-active .x-btn-wrap-default-toolbar-small.x-btn-split:before {
+    background-color: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-menu-active .x-btn-wrap-default-toolbar-small .x-btn-icon-el-default-toolbar-small {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-menu-active .x-btn-wrap-default-toolbar-small .x-btn-inner-default-toolbar-small {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-menu-active .x-btn-wrap-default-toolbar-small .x-btn-wrap-default-toolbar-small.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #2196f3;
+    border-right-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-menu-active .x-btn-wrap-default-toolbar-small .x-btn-wrap-default-toolbar-small.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #2196f3;
+    border-bottom-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-pressed .x-btn-wrap-default-toolbar-small.x-btn-split:before {
+    background-color: #2196f3;
+    background-color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-pressed .x-btn-wrap-default-toolbar-small .x-btn-icon-el-default-toolbar-small {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-pressed .x-btn-wrap-default-toolbar-small .x-btn-inner-default-toolbar-small {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-pressed .x-btn-wrap-default-toolbar-small .x-btn-wrap-default-toolbar-small.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-pressed .x-btn-wrap-default-toolbar-small .x-btn-wrap-default-toolbar-small.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-small.x-btn-split:before {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-small .x-btn-icon-el-default-toolbar-small {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-small .x-btn-inner-default-toolbar-small {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-small .x-btn-wrap-default-toolbar-small.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-small .x-btn-wrap-default-toolbar-small.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-btn-focus .x-btn-wrap-default-toolbar-small.x-btn-split:before {
+    background-color: #42a5f5;
+    background-color: var(--base-focused-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-btn-focus .x-btn-wrap-default-toolbar-small .x-btn-icon-el-default-toolbar-small {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-btn-focus .x-btn-wrap-default-toolbar-small .x-btn-inner-default-toolbar-small {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-btn-focus .x-btn-wrap-default-toolbar-small .x-btn-wrap-default-toolbar-small.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #2196f3;
+    border-right-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-btn-focus .x-btn-wrap-default-toolbar-small .x-btn-wrap-default-toolbar-small.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #2196f3;
+    border-bottom-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-btn-focus.x-btn-pressed .x-btn-wrap-default-toolbar-small.x-btn-split:before {
+    background-color: #2196f3;
+    background-color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-btn-focus.x-btn-pressed .x-btn-wrap-default-toolbar-small .x-btn-icon-el-default-toolbar-small {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-btn-focus.x-btn-pressed .x-btn-wrap-default-toolbar-small .x-btn-inner-default-toolbar-small {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-btn-focus.x-btn-pressed .x-btn-wrap-default-toolbar-small .x-btn-wrap-default-toolbar-small.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #2196f3;
+    border-right-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-btn-focus.x-btn-pressed .x-btn-wrap-default-toolbar-small .x-btn-wrap-default-toolbar-small.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #2196f3;
+    border-bottom-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-btn-focus.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-small.x-btn-split-right > .x-btn-button:after {
+    border-right-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-btn-focus.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-small.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:274 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-btn-focus.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-small.x-btn-split:before {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-small.x-btn-split:after {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-small.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-small.x-btn-split-bottom:after {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-menu-active .x-btn-wrap-default-toolbar-small.x-btn-split:after,
+.x-split-button.x-btn-default-toolbar-small.x-arrow-pressed .x-btn-wrap-default-toolbar-small.x-btn-split:after {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-menu-active .x-btn-wrap-default-toolbar-small.x-btn-split-right + .x-btn-arrow-el:before,
+.x-split-button.x-btn-default-toolbar-small.x-arrow-pressed .x-btn-wrap-default-toolbar-small.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: #2196f3;
+    background-color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-menu-active .x-btn-wrap-default-toolbar-small.x-btn-split-bottom:after,
+.x-split-button.x-btn-default-toolbar-small.x-arrow-pressed .x-btn-wrap-default-toolbar-small.x-btn-split-bottom:after {
+    background-color: #2196f3;
+    background-color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-menu-active.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-small.x-btn-split:after,
+.x-split-button.x-btn-default-toolbar-small.x-arrow-pressed.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-small.x-btn-split:after {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-menu-active.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-small.x-btn-split-right + .x-btn-arrow-el:before,
+.x-split-button.x-btn-default-toolbar-small.x-arrow-pressed.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-small.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-menu-active.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-small.x-btn-split-bottom:after,
+.x-split-button.x-btn-default-toolbar-small.x-arrow-pressed.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-small.x-btn-split-bottom:after {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-menu-active .x-btn-wrap-default-toolbar-small.x-btn-split-right > .x-btn-button:after {
+    border-right-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-default-toolbar-small.x-btn-menu-active .x-btn-wrap-default-toolbar-small.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-arrow-focus .x-btn-wrap-default-toolbar-small.x-btn-split:after {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-arrow-focus .x-btn-wrap-default-toolbar-small.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: #42a5f5;
+    background-color: var(--base-focused-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-arrow-focus .x-btn-wrap-default-toolbar-small.x-btn-split-bottom:after {
+    background-color: #42a5f5;
+    background-color: var(--base-focused-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-arrow-focus.x-btn-menu-active .x-btn-wrap-default-toolbar-small.x-btn-split:after,
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-arrow-focus.x-arrow-pressed .x-btn-wrap-default-toolbar-small.x-btn-split:after {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-arrow-focus.x-btn-menu-active .x-btn-wrap-default-toolbar-small.x-btn-split-right + .x-btn-arrow-el:before,
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-arrow-focus.x-arrow-pressed .x-btn-wrap-default-toolbar-small.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: #2196f3;
+    background-color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-arrow-focus.x-btn-menu-active .x-btn-wrap-default-toolbar-small.x-btn-split-bottom:after,
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-arrow-focus.x-arrow-pressed .x-btn-wrap-default-toolbar-small.x-btn-split-bottom:after {
+    background-color: #2196f3;
+    background-color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-arrow-focus.x-btn-pressed .x-btn-wrap-default-toolbar-small.x-btn-split-right > .x-btn-button:after {
+    border-right-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-arrow-focus.x-btn-pressed .x-btn-wrap-default-toolbar-small.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-arrow-focus.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-small.x-btn-split-right > .x-btn-button:after {
+    border-right-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-arrow-focus.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-small.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:290 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-arrow-focus.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-small.x-btn-split-right + .x-btn-arrow-el:before {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:297 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-small.x-arrow-focus.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-small.x-btn-split-bottom:after {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:305 */
+.x-split-button.x-btn-plain-toolbar-small {
+    background-color: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:310 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-pressed,
+.x-split-button.x-btn-plain-toolbar-small.x-btn-menu-active {
+    background-color: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:314 */
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-btn-focus {
+    background-color: transparent;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:321 */
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-arrow-focus .x-btn-arrow-el {
+    border-width: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:330 */
+.x-split-button.x-btn-plain-toolbar-small .x-btn-wrap-plain-toolbar-small.x-btn-split-right:before {
+    right: 33px;
+    background-color: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:335 */
+.x-split-button.x-btn-plain-toolbar-small .x-btn-wrap-plain-toolbar-small.x-btn-split-right + .x-btn-arrow-el {
+    right: 32px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:338 */
+.x-split-button.x-btn-plain-toolbar-small .x-btn-wrap-plain-toolbar-small.x-btn-split-right + .x-btn-arrow-el:before {
+    right: -32px;
+    width: 32px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:344 */
+.x-split-button.x-btn-plain-toolbar-small .x-btn-wrap-plain-toolbar-small.x-btn-split-right .x-btn-button:before {
+    width: 32px;
+    right: -32px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:350 */
+.x-split-button.x-btn-plain-toolbar-small .x-btn-wrap-plain-toolbar-small.x-btn-split-bottom:before {
+    bottom: 17px;
+    background-color: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:355 */
+.x-split-button.x-btn-plain-toolbar-small .x-btn-wrap-plain-toolbar-small.x-btn-split-bottom:after {
+    background-color: transparent;
+    margin-left: -16px;
+    margin-right: -16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:361 */
+.x-split-button.x-btn-plain-toolbar-small .x-btn-wrap-plain-toolbar-small.x-btn-split:after {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:365 */
+.x-split-button.x-btn-plain-toolbar-small .x-btn-wrap-plain-toolbar-small .x-btn-inner-plain-toolbar-small {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:369 */
+.x-split-button.x-btn-plain-toolbar-small .x-btn-wrap-plain-toolbar-small .x-btn-icon-el-plain-toolbar-small {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:376 */
+.x-ie10p .x-split-button.x-btn-plain-toolbar-small .x-btn-wrap-plain-toolbar-small .x-btn-button.x-btn-icon-top,
+.x-ie10p .x-split-button.x-btn-plain-toolbar-small .x-btn-wrap-plain-toolbar-small .x-btn-button.x-btn-icon-bottom {
+    overflow: visible;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-over:not(.x-arrow-over) .x-btn-wrap-plain-toolbar-small.x-btn-split:before {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-over:not(.x-arrow-over) .x-btn-wrap-plain-toolbar-small .x-btn-icon-el-plain-toolbar-small {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-over:not(.x-arrow-over) .x-btn-wrap-plain-toolbar-small .x-btn-inner-plain-toolbar-small {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-over:not(.x-arrow-over) .x-btn-wrap-plain-toolbar-small .x-btn-wrap-plain-toolbar-small.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #2196f3;
+    border-right-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-over:not(.x-arrow-over) .x-btn-wrap-plain-toolbar-small .x-btn-wrap-plain-toolbar-small.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #2196f3;
+    border-bottom-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-menu-active .x-btn-wrap-plain-toolbar-small.x-btn-split:before {
+    background-color: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-menu-active .x-btn-wrap-plain-toolbar-small .x-btn-icon-el-plain-toolbar-small {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-menu-active .x-btn-wrap-plain-toolbar-small .x-btn-inner-plain-toolbar-small {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-menu-active .x-btn-wrap-plain-toolbar-small .x-btn-wrap-plain-toolbar-small.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #2196f3;
+    border-right-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-menu-active .x-btn-wrap-plain-toolbar-small .x-btn-wrap-plain-toolbar-small.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #2196f3;
+    border-bottom-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-pressed .x-btn-wrap-plain-toolbar-small.x-btn-split:before {
+    background-color: #2196f3;
+    background-color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-pressed .x-btn-wrap-plain-toolbar-small .x-btn-icon-el-plain-toolbar-small {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-pressed .x-btn-wrap-plain-toolbar-small .x-btn-inner-plain-toolbar-small {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-pressed .x-btn-wrap-plain-toolbar-small .x-btn-wrap-plain-toolbar-small.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-pressed .x-btn-wrap-plain-toolbar-small .x-btn-wrap-plain-toolbar-small.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-plain-toolbar-small.x-btn-split:before {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-plain-toolbar-small .x-btn-icon-el-plain-toolbar-small {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-plain-toolbar-small .x-btn-inner-plain-toolbar-small {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-plain-toolbar-small .x-btn-wrap-plain-toolbar-small.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-plain-toolbar-small .x-btn-wrap-plain-toolbar-small.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-btn-focus .x-btn-wrap-plain-toolbar-small.x-btn-split:before {
+    background-color: #42a5f5;
+    background-color: var(--base-focused-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-btn-focus .x-btn-wrap-plain-toolbar-small .x-btn-icon-el-plain-toolbar-small {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-btn-focus .x-btn-wrap-plain-toolbar-small .x-btn-inner-plain-toolbar-small {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-btn-focus .x-btn-wrap-plain-toolbar-small .x-btn-wrap-plain-toolbar-small.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #2196f3;
+    border-right-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-btn-focus .x-btn-wrap-plain-toolbar-small .x-btn-wrap-plain-toolbar-small.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #2196f3;
+    border-bottom-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-btn-focus.x-btn-pressed .x-btn-wrap-plain-toolbar-small.x-btn-split:before {
+    background-color: #2196f3;
+    background-color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-btn-focus.x-btn-pressed .x-btn-wrap-plain-toolbar-small .x-btn-icon-el-plain-toolbar-small {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-btn-focus.x-btn-pressed .x-btn-wrap-plain-toolbar-small .x-btn-inner-plain-toolbar-small {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-btn-focus.x-btn-pressed .x-btn-wrap-plain-toolbar-small .x-btn-wrap-plain-toolbar-small.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #2196f3;
+    border-right-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-btn-focus.x-btn-pressed .x-btn-wrap-plain-toolbar-small .x-btn-wrap-plain-toolbar-small.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #2196f3;
+    border-bottom-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-btn-focus.x-btn-over:not(.x-arrow-over) .x-btn-wrap-plain-toolbar-small.x-btn-split-right > .x-btn-button:after {
+    border-right-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-btn-focus.x-btn-over:not(.x-arrow-over) .x-btn-wrap-plain-toolbar-small.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:274 */
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-btn-focus.x-btn-over:not(.x-arrow-over) .x-btn-wrap-plain-toolbar-small.x-btn-split:before {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-over.x-arrow-over .x-btn-wrap-plain-toolbar-small.x-btn-split:after {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-over.x-arrow-over .x-btn-wrap-plain-toolbar-small.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-over.x-arrow-over .x-btn-wrap-plain-toolbar-small.x-btn-split-bottom:after {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-menu-active .x-btn-wrap-plain-toolbar-small.x-btn-split:after,
+.x-split-button.x-btn-plain-toolbar-small.x-arrow-pressed .x-btn-wrap-plain-toolbar-small.x-btn-split:after {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-menu-active .x-btn-wrap-plain-toolbar-small.x-btn-split-right + .x-btn-arrow-el:before,
+.x-split-button.x-btn-plain-toolbar-small.x-arrow-pressed .x-btn-wrap-plain-toolbar-small.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: #2196f3;
+    background-color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-menu-active .x-btn-wrap-plain-toolbar-small.x-btn-split-bottom:after,
+.x-split-button.x-btn-plain-toolbar-small.x-arrow-pressed .x-btn-wrap-plain-toolbar-small.x-btn-split-bottom:after {
+    background-color: #2196f3;
+    background-color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-menu-active.x-btn-over.x-arrow-over .x-btn-wrap-plain-toolbar-small.x-btn-split:after,
+.x-split-button.x-btn-plain-toolbar-small.x-arrow-pressed.x-btn-over.x-arrow-over .x-btn-wrap-plain-toolbar-small.x-btn-split:after {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-menu-active.x-btn-over.x-arrow-over .x-btn-wrap-plain-toolbar-small.x-btn-split-right + .x-btn-arrow-el:before,
+.x-split-button.x-btn-plain-toolbar-small.x-arrow-pressed.x-btn-over.x-arrow-over .x-btn-wrap-plain-toolbar-small.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-menu-active.x-btn-over.x-arrow-over .x-btn-wrap-plain-toolbar-small.x-btn-split-bottom:after,
+.x-split-button.x-btn-plain-toolbar-small.x-arrow-pressed.x-btn-over.x-arrow-over .x-btn-wrap-plain-toolbar-small.x-btn-split-bottom:after {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-menu-active .x-btn-wrap-plain-toolbar-small.x-btn-split-right > .x-btn-button:after {
+    border-right-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-plain-toolbar-small.x-btn-menu-active .x-btn-wrap-plain-toolbar-small.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-arrow-focus .x-btn-wrap-plain-toolbar-small.x-btn-split:after {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-arrow-focus .x-btn-wrap-plain-toolbar-small.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: #42a5f5;
+    background-color: var(--base-focused-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-arrow-focus .x-btn-wrap-plain-toolbar-small.x-btn-split-bottom:after {
+    background-color: #42a5f5;
+    background-color: var(--base-focused-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-arrow-focus.x-btn-menu-active .x-btn-wrap-plain-toolbar-small.x-btn-split:after,
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-arrow-focus.x-arrow-pressed .x-btn-wrap-plain-toolbar-small.x-btn-split:after {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-arrow-focus.x-btn-menu-active .x-btn-wrap-plain-toolbar-small.x-btn-split-right + .x-btn-arrow-el:before,
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-arrow-focus.x-arrow-pressed .x-btn-wrap-plain-toolbar-small.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: #2196f3;
+    background-color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-arrow-focus.x-btn-menu-active .x-btn-wrap-plain-toolbar-small.x-btn-split-bottom:after,
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-arrow-focus.x-arrow-pressed .x-btn-wrap-plain-toolbar-small.x-btn-split-bottom:after {
+    background-color: #2196f3;
+    background-color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-arrow-focus.x-btn-pressed .x-btn-wrap-plain-toolbar-small.x-btn-split-right > .x-btn-button:after {
+    border-right-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-arrow-focus.x-btn-pressed .x-btn-wrap-plain-toolbar-small.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-arrow-focus.x-btn-over.x-arrow-over .x-btn-wrap-plain-toolbar-small.x-btn-split-right > .x-btn-button:after {
+    border-right-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-arrow-focus.x-btn-over.x-arrow-over .x-btn-wrap-plain-toolbar-small.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:290 */
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-arrow-focus.x-btn-over.x-arrow-over .x-btn-wrap-plain-toolbar-small.x-btn-split-right + .x-btn-arrow-el:before {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:297 */
+.x-keyboard-mode .x-split-button.x-btn-plain-toolbar-small.x-arrow-focus.x-btn-over.x-arrow-over .x-btn-wrap-plain-toolbar-small.x-btn-split-bottom:after {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:305 */
+.x-split-button.x-btn-default-toolbar-medium {
+    background-color: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:310 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-pressed,
+.x-split-button.x-btn-default-toolbar-medium.x-btn-menu-active {
+    background-color: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:314 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-btn-focus {
+    background-color: transparent;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:321 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-arrow-focus .x-btn-arrow-el {
+    border-width: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:330 */
+.x-split-button.x-btn-default-toolbar-medium .x-btn-wrap-default-toolbar-medium.x-btn-split-right:before {
+    right: 41px;
+    background-color: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:335 */
+.x-split-button.x-btn-default-toolbar-medium .x-btn-wrap-default-toolbar-medium.x-btn-split-right + .x-btn-arrow-el {
+    right: 40px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:338 */
+.x-split-button.x-btn-default-toolbar-medium .x-btn-wrap-default-toolbar-medium.x-btn-split-right + .x-btn-arrow-el:before {
+    right: -40px;
+    width: 40px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:344 */
+.x-split-button.x-btn-default-toolbar-medium .x-btn-wrap-default-toolbar-medium.x-btn-split-right .x-btn-button:before {
+    width: 40px;
+    right: -40px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:350 */
+.x-split-button.x-btn-default-toolbar-medium .x-btn-wrap-default-toolbar-medium.x-btn-split-bottom:before {
+    bottom: 25px;
+    background-color: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:355 */
+.x-split-button.x-btn-default-toolbar-medium .x-btn-wrap-default-toolbar-medium.x-btn-split-bottom:after {
+    background-color: transparent;
+    margin-left: -16px;
+    margin-right: -16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:361 */
+.x-split-button.x-btn-default-toolbar-medium .x-btn-wrap-default-toolbar-medium.x-btn-split:after {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:365 */
+.x-split-button.x-btn-default-toolbar-medium .x-btn-wrap-default-toolbar-medium .x-btn-inner-default-toolbar-medium {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:369 */
+.x-split-button.x-btn-default-toolbar-medium .x-btn-wrap-default-toolbar-medium .x-btn-icon-el-default-toolbar-medium {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:376 */
+.x-ie10p .x-split-button.x-btn-default-toolbar-medium .x-btn-wrap-default-toolbar-medium .x-btn-button.x-btn-icon-top,
+.x-ie10p .x-split-button.x-btn-default-toolbar-medium .x-btn-wrap-default-toolbar-medium .x-btn-button.x-btn-icon-bottom {
+    overflow: visible;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-medium.x-btn-split:before {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-medium .x-btn-icon-el-default-toolbar-medium {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-medium .x-btn-inner-default-toolbar-medium {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-medium .x-btn-wrap-default-toolbar-medium.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #2196f3;
+    border-right-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-medium .x-btn-wrap-default-toolbar-medium.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #2196f3;
+    border-bottom-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-menu-active .x-btn-wrap-default-toolbar-medium.x-btn-split:before {
+    background-color: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-menu-active .x-btn-wrap-default-toolbar-medium .x-btn-icon-el-default-toolbar-medium {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-menu-active .x-btn-wrap-default-toolbar-medium .x-btn-inner-default-toolbar-medium {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-menu-active .x-btn-wrap-default-toolbar-medium .x-btn-wrap-default-toolbar-medium.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #2196f3;
+    border-right-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-menu-active .x-btn-wrap-default-toolbar-medium .x-btn-wrap-default-toolbar-medium.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #2196f3;
+    border-bottom-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-pressed .x-btn-wrap-default-toolbar-medium.x-btn-split:before {
+    background-color: #2196f3;
+    background-color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-pressed .x-btn-wrap-default-toolbar-medium .x-btn-icon-el-default-toolbar-medium {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-pressed .x-btn-wrap-default-toolbar-medium .x-btn-inner-default-toolbar-medium {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-pressed .x-btn-wrap-default-toolbar-medium .x-btn-wrap-default-toolbar-medium.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-pressed .x-btn-wrap-default-toolbar-medium .x-btn-wrap-default-toolbar-medium.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-medium.x-btn-split:before {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-medium .x-btn-icon-el-default-toolbar-medium {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-medium .x-btn-inner-default-toolbar-medium {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-medium .x-btn-wrap-default-toolbar-medium.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-medium .x-btn-wrap-default-toolbar-medium.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-btn-focus .x-btn-wrap-default-toolbar-medium.x-btn-split:before {
+    background-color: #42a5f5;
+    background-color: var(--base-focused-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-btn-focus .x-btn-wrap-default-toolbar-medium .x-btn-icon-el-default-toolbar-medium {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-btn-focus .x-btn-wrap-default-toolbar-medium .x-btn-inner-default-toolbar-medium {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-btn-focus .x-btn-wrap-default-toolbar-medium .x-btn-wrap-default-toolbar-medium.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #2196f3;
+    border-right-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-btn-focus .x-btn-wrap-default-toolbar-medium .x-btn-wrap-default-toolbar-medium.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #2196f3;
+    border-bottom-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-btn-focus.x-btn-pressed .x-btn-wrap-default-toolbar-medium.x-btn-split:before {
+    background-color: #2196f3;
+    background-color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-btn-focus.x-btn-pressed .x-btn-wrap-default-toolbar-medium .x-btn-icon-el-default-toolbar-medium {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-btn-focus.x-btn-pressed .x-btn-wrap-default-toolbar-medium .x-btn-inner-default-toolbar-medium {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-btn-focus.x-btn-pressed .x-btn-wrap-default-toolbar-medium .x-btn-wrap-default-toolbar-medium.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #2196f3;
+    border-right-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-btn-focus.x-btn-pressed .x-btn-wrap-default-toolbar-medium .x-btn-wrap-default-toolbar-medium.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #2196f3;
+    border-bottom-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-btn-focus.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-medium.x-btn-split-right > .x-btn-button:after {
+    border-right-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-btn-focus.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-medium.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:274 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-btn-focus.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-medium.x-btn-split:before {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-medium.x-btn-split:after {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-medium.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-medium.x-btn-split-bottom:after {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-menu-active .x-btn-wrap-default-toolbar-medium.x-btn-split:after,
+.x-split-button.x-btn-default-toolbar-medium.x-arrow-pressed .x-btn-wrap-default-toolbar-medium.x-btn-split:after {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-menu-active .x-btn-wrap-default-toolbar-medium.x-btn-split-right + .x-btn-arrow-el:before,
+.x-split-button.x-btn-default-toolbar-medium.x-arrow-pressed .x-btn-wrap-default-toolbar-medium.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: #2196f3;
+    background-color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-menu-active .x-btn-wrap-default-toolbar-medium.x-btn-split-bottom:after,
+.x-split-button.x-btn-default-toolbar-medium.x-arrow-pressed .x-btn-wrap-default-toolbar-medium.x-btn-split-bottom:after {
+    background-color: #2196f3;
+    background-color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-menu-active.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-medium.x-btn-split:after,
+.x-split-button.x-btn-default-toolbar-medium.x-arrow-pressed.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-medium.x-btn-split:after {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-menu-active.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-medium.x-btn-split-right + .x-btn-arrow-el:before,
+.x-split-button.x-btn-default-toolbar-medium.x-arrow-pressed.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-medium.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-menu-active.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-medium.x-btn-split-bottom:after,
+.x-split-button.x-btn-default-toolbar-medium.x-arrow-pressed.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-medium.x-btn-split-bottom:after {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-menu-active .x-btn-wrap-default-toolbar-medium.x-btn-split-right > .x-btn-button:after {
+    border-right-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-default-toolbar-medium.x-btn-menu-active .x-btn-wrap-default-toolbar-medium.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-arrow-focus .x-btn-wrap-default-toolbar-medium.x-btn-split:after {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-arrow-focus .x-btn-wrap-default-toolbar-medium.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: #42a5f5;
+    background-color: var(--base-focused-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-arrow-focus .x-btn-wrap-default-toolbar-medium.x-btn-split-bottom:after {
+    background-color: #42a5f5;
+    background-color: var(--base-focused-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-arrow-focus.x-btn-menu-active .x-btn-wrap-default-toolbar-medium.x-btn-split:after,
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-arrow-focus.x-arrow-pressed .x-btn-wrap-default-toolbar-medium.x-btn-split:after {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-arrow-focus.x-btn-menu-active .x-btn-wrap-default-toolbar-medium.x-btn-split-right + .x-btn-arrow-el:before,
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-arrow-focus.x-arrow-pressed .x-btn-wrap-default-toolbar-medium.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: #2196f3;
+    background-color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-arrow-focus.x-btn-menu-active .x-btn-wrap-default-toolbar-medium.x-btn-split-bottom:after,
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-arrow-focus.x-arrow-pressed .x-btn-wrap-default-toolbar-medium.x-btn-split-bottom:after {
+    background-color: #2196f3;
+    background-color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-arrow-focus.x-btn-pressed .x-btn-wrap-default-toolbar-medium.x-btn-split-right > .x-btn-button:after {
+    border-right-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-arrow-focus.x-btn-pressed .x-btn-wrap-default-toolbar-medium.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-arrow-focus.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-medium.x-btn-split-right > .x-btn-button:after {
+    border-right-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-arrow-focus.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-medium.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:290 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-arrow-focus.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-medium.x-btn-split-right + .x-btn-arrow-el:before {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:297 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-medium.x-arrow-focus.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-medium.x-btn-split-bottom:after {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:305 */
+.x-split-button.x-btn-default-toolbar-large {
+    background-color: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:310 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-pressed,
+.x-split-button.x-btn-default-toolbar-large.x-btn-menu-active {
+    background-color: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:314 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-btn-focus {
+    background-color: transparent;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:321 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-arrow-focus .x-btn-arrow-el {
+    border-width: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:330 */
+.x-split-button.x-btn-default-toolbar-large .x-btn-wrap-default-toolbar-large.x-btn-split-right:before {
+    right: 49px;
+    background-color: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:335 */
+.x-split-button.x-btn-default-toolbar-large .x-btn-wrap-default-toolbar-large.x-btn-split-right + .x-btn-arrow-el {
+    right: 48px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:338 */
+.x-split-button.x-btn-default-toolbar-large .x-btn-wrap-default-toolbar-large.x-btn-split-right + .x-btn-arrow-el:before {
+    right: -48px;
+    width: 48px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:344 */
+.x-split-button.x-btn-default-toolbar-large .x-btn-wrap-default-toolbar-large.x-btn-split-right .x-btn-button:before {
+    width: 48px;
+    right: -48px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:350 */
+.x-split-button.x-btn-default-toolbar-large .x-btn-wrap-default-toolbar-large.x-btn-split-bottom:before {
+    bottom: 33px;
+    background-color: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:355 */
+.x-split-button.x-btn-default-toolbar-large .x-btn-wrap-default-toolbar-large.x-btn-split-bottom:after {
+    background-color: transparent;
+    margin-left: -16px;
+    margin-right: -16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:361 */
+.x-split-button.x-btn-default-toolbar-large .x-btn-wrap-default-toolbar-large.x-btn-split:after {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:365 */
+.x-split-button.x-btn-default-toolbar-large .x-btn-wrap-default-toolbar-large .x-btn-inner-default-toolbar-large {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:369 */
+.x-split-button.x-btn-default-toolbar-large .x-btn-wrap-default-toolbar-large .x-btn-icon-el-default-toolbar-large {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:376 */
+.x-ie10p .x-split-button.x-btn-default-toolbar-large .x-btn-wrap-default-toolbar-large .x-btn-button.x-btn-icon-top,
+.x-ie10p .x-split-button.x-btn-default-toolbar-large .x-btn-wrap-default-toolbar-large .x-btn-button.x-btn-icon-bottom {
+    overflow: visible;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-large.x-btn-split:before {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-large .x-btn-icon-el-default-toolbar-large {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-large .x-btn-inner-default-toolbar-large {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-large .x-btn-wrap-default-toolbar-large.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #2196f3;
+    border-right-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-large .x-btn-wrap-default-toolbar-large.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #2196f3;
+    border-bottom-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-menu-active .x-btn-wrap-default-toolbar-large.x-btn-split:before {
+    background-color: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-menu-active .x-btn-wrap-default-toolbar-large .x-btn-icon-el-default-toolbar-large {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-menu-active .x-btn-wrap-default-toolbar-large .x-btn-inner-default-toolbar-large {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-menu-active .x-btn-wrap-default-toolbar-large .x-btn-wrap-default-toolbar-large.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #2196f3;
+    border-right-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-menu-active .x-btn-wrap-default-toolbar-large .x-btn-wrap-default-toolbar-large.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #2196f3;
+    border-bottom-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-pressed .x-btn-wrap-default-toolbar-large.x-btn-split:before {
+    background-color: #2196f3;
+    background-color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-pressed .x-btn-wrap-default-toolbar-large .x-btn-icon-el-default-toolbar-large {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-pressed .x-btn-wrap-default-toolbar-large .x-btn-inner-default-toolbar-large {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-pressed .x-btn-wrap-default-toolbar-large .x-btn-wrap-default-toolbar-large.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-pressed .x-btn-wrap-default-toolbar-large .x-btn-wrap-default-toolbar-large.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-large.x-btn-split:before {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-large .x-btn-icon-el-default-toolbar-large {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-large .x-btn-inner-default-toolbar-large {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-large .x-btn-wrap-default-toolbar-large.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-pressed.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-large .x-btn-wrap-default-toolbar-large.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #fff;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-btn-focus .x-btn-wrap-default-toolbar-large.x-btn-split:before {
+    background-color: #42a5f5;
+    background-color: var(--base-focused-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-btn-focus .x-btn-wrap-default-toolbar-large .x-btn-icon-el-default-toolbar-large {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-btn-focus .x-btn-wrap-default-toolbar-large .x-btn-inner-default-toolbar-large {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-btn-focus .x-btn-wrap-default-toolbar-large .x-btn-wrap-default-toolbar-large.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #2196f3;
+    border-right-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-btn-focus .x-btn-wrap-default-toolbar-large .x-btn-wrap-default-toolbar-large.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #2196f3;
+    border-bottom-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:213 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-btn-focus.x-btn-pressed .x-btn-wrap-default-toolbar-large.x-btn-split:before {
+    background-color: #2196f3;
+    background-color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:220 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-btn-focus.x-btn-pressed .x-btn-wrap-default-toolbar-large .x-btn-icon-el-default-toolbar-large {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:225 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-btn-focus.x-btn-pressed .x-btn-wrap-default-toolbar-large .x-btn-inner-default-toolbar-large {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-btn-focus.x-btn-pressed .x-btn-wrap-default-toolbar-large .x-btn-wrap-default-toolbar-large.x-btn-split-right > .x-btn-button:after {
+    border-right-color: #2196f3;
+    border-right-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-btn-focus.x-btn-pressed .x-btn-wrap-default-toolbar-large .x-btn-wrap-default-toolbar-large.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: #2196f3;
+    border-bottom-color: var(--base-color);
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-btn-focus.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-large.x-btn-split-right > .x-btn-button:after {
+    border-right-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-btn-focus.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-large.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:274 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-btn-focus.x-btn-over:not(.x-arrow-over) .x-btn-wrap-default-toolbar-large.x-btn-split:before {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-large.x-btn-split:after {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-large.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-large.x-btn-split-bottom:after {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-menu-active .x-btn-wrap-default-toolbar-large.x-btn-split:after,
+.x-split-button.x-btn-default-toolbar-large.x-arrow-pressed .x-btn-wrap-default-toolbar-large.x-btn-split:after {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-menu-active .x-btn-wrap-default-toolbar-large.x-btn-split-right + .x-btn-arrow-el:before,
+.x-split-button.x-btn-default-toolbar-large.x-arrow-pressed .x-btn-wrap-default-toolbar-large.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: #2196f3;
+    background-color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-menu-active .x-btn-wrap-default-toolbar-large.x-btn-split-bottom:after,
+.x-split-button.x-btn-default-toolbar-large.x-arrow-pressed .x-btn-wrap-default-toolbar-large.x-btn-split-bottom:after {
+    background-color: #2196f3;
+    background-color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-menu-active.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-large.x-btn-split:after,
+.x-split-button.x-btn-default-toolbar-large.x-arrow-pressed.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-large.x-btn-split:after {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-menu-active.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-large.x-btn-split-right + .x-btn-arrow-el:before,
+.x-split-button.x-btn-default-toolbar-large.x-arrow-pressed.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-large.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-menu-active.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-large.x-btn-split-bottom:after,
+.x-split-button.x-btn-default-toolbar-large.x-arrow-pressed.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-large.x-btn-split-bottom:after {
+    background-color: rgba(17, 17, 17, 0.075);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-menu-active .x-btn-wrap-default-toolbar-large.x-btn-split-right > .x-btn-button:after {
+    border-right-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-split-button.x-btn-default-toolbar-large.x-btn-menu-active .x-btn-wrap-default-toolbar-large.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-arrow-focus .x-btn-wrap-default-toolbar-large.x-btn-split:after {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-arrow-focus .x-btn-wrap-default-toolbar-large.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: #42a5f5;
+    background-color: var(--base-focused-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-arrow-focus .x-btn-wrap-default-toolbar-large.x-btn-split-bottom:after {
+    background-color: #42a5f5;
+    background-color: var(--base-focused-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:242 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-arrow-focus.x-btn-menu-active .x-btn-wrap-default-toolbar-large.x-btn-split:after,
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-arrow-focus.x-arrow-pressed .x-btn-wrap-default-toolbar-large.x-btn-split:after {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:249 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-arrow-focus.x-btn-menu-active .x-btn-wrap-default-toolbar-large.x-btn-split-right + .x-btn-arrow-el:before,
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-arrow-focus.x-arrow-pressed .x-btn-wrap-default-toolbar-large.x-btn-split-right + .x-btn-arrow-el:before {
+    background-color: #2196f3;
+    background-color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:254 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-arrow-focus.x-btn-menu-active .x-btn-wrap-default-toolbar-large.x-btn-split-bottom:after,
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-arrow-focus.x-arrow-pressed .x-btn-wrap-default-toolbar-large.x-btn-split-bottom:after {
+    background-color: #2196f3;
+    background-color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-arrow-focus.x-btn-pressed .x-btn-wrap-default-toolbar-large.x-btn-split-right > .x-btn-button:after {
+    border-right-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-arrow-focus.x-btn-pressed .x-btn-wrap-default-toolbar-large.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:192 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-arrow-focus.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-large.x-btn-split-right > .x-btn-button:after {
+    border-right-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:199 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-arrow-focus.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-large.x-btn-split-bottom > .x-btn-button:after {
+    border-bottom-color: transparent;
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:290 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-arrow-focus.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-large.x-btn-split-right + .x-btn-arrow-el:before {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/var/button/Button.scss:297 */
+.x-keyboard-mode .x-split-button.x-btn-default-toolbar-large.x-arrow-focus.x-btn-over.x-arrow-over .x-btn-wrap-default-toolbar-large.x-btn-split-bottom:after {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/panel/Tool.scss:2 */
+.x-tip-header .x-tool-img {
+    color: #111;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/toolbar/Toolbar.scss:1 */
+.x-toolbar.x-toolbar-docked-top,
+.x-toolbar.x-toolbar-docked-left,
+.x-toolbar.x-toolbar-docked-right {
+    box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.12), 2px 2px 5px 0 rgba(0, 0, 0, 0.08);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/toolbar/Toolbar.scss:7 */
+.x-toolbar-default-docked-bottom {
+    background-color: #fafafa;
+    background-color: var(--background-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/toolbar/Toolbar.scss:9 */
+.x-toolbar-default-docked-bottom .x-form-text-field-body-default {
+    min-width: 50px;
+    max-width: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/layout/component/Dock.scss:1 */
+.x-docked {
+    z-index: 4;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/window/Window.scss:1 */
+.x-window {
+    box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.12), 2px 2px 5px 0 rgba(0, 0, 0, 0.08);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/window/Window.scss:5 */
+.x-window .x-window-header .x-tool-close {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Text.scss:8 */
+.x-form-item-no-label .x-form-empty-field::-webkit-input-placeholder,
+.x-form-item-no-label .x-form-empty-field::-moz-placeholder,
+.x-form-item-no-label .x-form-empty-field::-ms-input-placeholder {
+    opacity: 1;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Text.scss:17 */
+.x-form-empty-field::-webkit-input-placeholder,
+.x-form-empty-field::-moz-placeholder,
+.x-form-empty-field::-ms-input-placeholder,
+.x-form-empty-field::-moz-placeholder {
+    /* Chrome/Opera/Safari/Firefox 19+/IE 10+/Firefox 18- */
+    /* Chrome/Opera/Safari/Firefox 19+/IE 10+/Firefox 18- */
+    opacity: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Text.scss:27 */
+.x-form-empty-field::focus::-webkit-input-placeholder,
+.x-form-empty-field::focus::-moz-placeholder,
+.x-form-empty-field::focus::-ms-input-placeholder {
+    opacity: 1;
+    transition: opacity 0.4s;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Text.scss:39 */
+.x-form-type-text .x-form-item-label,
+.x-form-type-password .x-form-item-label {
+    margin-top: 4px;
+    position: relative;
+    height: 16px;
+    line-height: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Text.scss:46 */
+.x-form-type-text .x-form-trigger-default,
+.x-form-type-password .x-form-trigger-default {
+    border-bottom: 1px solid #9e9e9e;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Text.scss:50 */
+.x-form-type-text .x-form-text-default,
+.x-form-type-password .x-form-text-default {
+    font: 400 13px/16px Roboto, sans-serif;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid #9e9e9e;
+    outline: none;
+    width: 100%;
+    padding: 0px;
+    box-shadow: none;
+    box-sizing: content-box;
+    -webkit-transition-duration: 0.3s;
+    -moz-transition-duration: 0.3s;
+    -o-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Text.scss:66 */
+.x-form-type-text .x-form-file-wrap .x-form-trigger-wrap .x-form-text,
+.x-form-type-password .x-form-file-wrap .x-form-trigger-wrap .x-form-text {
+    height: 32px;
+    border: none;
+    border-bottom: 1px solid #9e9e9e;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Text.scss:74 */
+.x-form-type-text .x-form-trigger-wrap-default,
+.x-form-type-password .x-form-trigger-wrap-default {
+    border: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Text.scss:79 */
+.x-form-type-text .x-form-trigger-wrap-invalid .x-form-text-default,
+.x-form-type-password .x-form-trigger-wrap-invalid .x-form-text-default {
+    -webkit-transition-duration: 0.7s;
+    -moz-transition-duration: 0.7s;
+    -o-transition-duration: 0.7s;
+    transition-duration: 0.7s;
+    border-bottom: 1px solid #c62828;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Text.scss:86 */
+.x-webkit .x-form-type-text .x-form-text,
+.x-webkit .x-form-type-password .x-form-text {
+    height: calc(100% - 21px);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Text.scss:91 */
+.x-form-type-text .x-form-type-text,
+.x-form-type-password .x-form-type-text {
+    position: relative;
+    margin-top: 17px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Text.scss:98 */
+.x-colorpicker-field input {
+    padding-left: 32px !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Text.scss:110 */
+.x-form-readonly .x-form-item-label,
+.x-hbox-form-item .x-form-item-label,
+.x-form-fieldcontainer .x-form-item-label,
+.x-colorpicker-field .x-form-item-label,
+.x-form-item[id*=slider] .x-form-item-label,
+.x-field-focus .x-form-item-label {
+    -webkit-transform: translateY(8px);
+    -moz-transform: translateY(8px);
+    -ms-transform: translateY(8px);
+    -o-transform: translateY(8px);
+    transform: translateY(8px);
+    font-size: 12px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Text.scss:119 */
+.x-form-type-checkbox .x-form-item-label,
+.x-form-type-radio .x-form-item-label,
+.x-form-checkboxgroup .x-form-item-label {
+    -webkit-transform: translateY(0px);
+    -moz-transform: translateY(0px);
+    -ms-transform: translateY(0px);
+    -o-transform: translateY(0px);
+    transform: translateY(0px);
+    font-size: 12px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Text.scss:127 */
+.x-form-item-label.x-form-item-label-right,
+.x-form-item-label.x-form-item-label-left {
+    -webkit-transform: translateY(0px);
+    -moz-transform: translateY(0px);
+    -ms-transform: translateY(0px);
+    -o-transform: translateY(0px);
+    transform: translateY(0px);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Text.scss:130 */
+.x-field-focus .x-form-item-label.x-form-item-label-right,
+.x-field-focus .x-form-item-label.x-form-item-label-left {
+    font-size: 13px;
+    -webkit-transform: translateY(0px);
+    -moz-transform: translateY(0px);
+    -ms-transform: translateY(0px);
+    -o-transform: translateY(0px);
+    transform: translateY(0px);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Text.scss:137 */
+.x-form-item-label {
+    -webkit-transition: -webkit-all ease-out;
+    -webkit-transition-delay: 0s;
+    -moz-transition: -moz-all ease-out;
+    -o-transition: -o-all ease-out;
+    transition: all 0s ease-out 0s;
+    -webkit-transition-duration: 0.3s;
+    -moz-transition-duration: 0.3s;
+    -o-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+    -webkit-transform: translateY(32px);
+    -moz-transform: translateY(32px);
+    -ms-transform: translateY(32px);
+    -o-transform: translateY(32px);
+    transform: translateY(32px);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Text.scss:142 */
+.x-field-focus .x-form-item-label,
+.not-empty .x-form-item-label {
+    font-size: 12px;
+    -webkit-transform: translateY(8px);
+    -moz-transform: translateY(8px);
+    -ms-transform: translateY(8px);
+    -o-transform: translateY(8px);
+    transform: translateY(8px);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Text.scss:148 */
+.x-field-focus .x-form-item-label {
+    -webkit-transition-duration: 0.3s;
+    -moz-transition-duration: 0.3s;
+    -o-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Text.scss:153 */
+.x-field-focus .x-form-item-label {
+    -webkit-transition-duration: 0.3s;
+    -moz-transition-duration: 0.3s;
+    -o-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Text.scss:160 */
+.x-field-focus .x-form-text-default,
+.x-field-focus .x-form-trigger-default {
+    -webkit-transition-duration: 0.7s;
+    -moz-transition-duration: 0.7s;
+    -o-transition-duration: 0.7s;
+    transition-duration: 0.7s;
+    border-bottom: 1px solid #2196f3;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Text.scss:169 */
+.x-form-item-label-default.x-form-item-label-top > .x-form-item-label-inner {
+    padding: 0px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Text.scss:175 */
+.x-form-item-label-default {
+    padding: 0px;
+    vertical-align: middle;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Text.scss:180 */
+.x-form-text-field-body-default {
+    min-width: 150px;
+    max-width: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Text.scss:186 */
+.x-form-item-body {
+    display: block;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Checkbox.scss:1 */
+.x-form-checkbox,
+.x-tree-checkbox,
+.x-grid-checkcolumn,
+.x-column-header-checkbox {
+    font-size: 18px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Checkbox.scss:9 */
+.x-form-cb-checked .x-form-checkbox,
+.x-form-cb-checked .x-form-radio {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/FieldSet.scss:1 */
+.x-fieldset {
+    background: #fff;
+    background: var(--reverse-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Radio.scss:1 */
+.x-form-radio {
+    font-size: 18px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/view/View.scss:2 */
+.x-keyboard-mode .x-view-item-focused {
+    outline: 1px solid #2196f3;
+    outline: 1px solid var(--base-color);
+    outline-offset: -1px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/picker/Date.scss:1 */
+.x-datepicker {
+    box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.12), 2px 2px 5px 0 rgba(0, 0, 0, 0.08);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/picker/Date.scss:7 */
+.x-datepicker .x-datepicker-disabled .x-datepicker-date {
+    border-radius: 50%;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/picker/Date.scss:13 */
+.x-datepicker .x-datepicker-selected .x-datepicker-date {
+    border-radius: 50%;
+    padding: 0 15px 0 13px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/picker/Date.scss:19 */
+.x-datepicker .x-datepicker-prevday {
+    visibility: hidden;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/picker/Date.scss:23 */
+.x-datepicker .x-datepicker-column-header {
+    color: #919191;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/tip/Tip.scss:1 */
+.x-tip {
+    -webkit-box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.18), 2px 2px 5px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.18), 2px 2px 5px 0 rgba(0, 0, 0, 0.12);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/form/field/Tag.scss:3 */
+.x-tagfield-item:hover .x-tagfield-item-close {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/panel/Table.scss:1 */
+.x-grid-cell {
+    position: relative;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/view/Table.scss:6 */
+.x-grid-item {
+    font: 400 13px/16px Roboto, sans-serif;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/grid/column/Column.scss:5 */
+.x-column-header-sort-ASC .x-column-header-text-inner:after,
+.x-column-header-sort-DESC .x-column-header-text-inner:after {
+    vertical-align: bottom;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/grid/column/Check.scss:3 */
+.x-grid-item-selected .x-grid-checkcolumn:after,
+.x-grid-cell-selected .x-grid-checkcolumn:after {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/grid/column/Check.scss:8 */
+.x-grid-checkcolumn-checked:after {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/menu/Menu.scss:2 */
+.x-menu-item-arrow {
+    top: 8px;
+    right: 5px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/menu/Menu.scss:8 */
+.x-menu-item-focus .x-menu-item-text,
+.x-menu-item-active .x-menu-item-text {
+    font-weight: 400;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/menu/Menu.scss:11 */
+.x-menu-item-focus .x-menu-item-arrow-default,
+.x-menu-item-active .x-menu-item-arrow-default {
+    top: 8px;
+    right: 5px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/menu/Menu.scss:18 */
+.x-menu-item-checked .x-menu-item-icon-default.x-menu-item-checkbox {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/grid/plugin/Editing.scss:1 */
+.x-grid-editor {
+    background-color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/grid/plugin/Editing.scss:4 */
+.x-grid-editor .x-form-item-body {
+    padding: 9px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/grid/plugin/Editing.scss:9 */
+.x-grid-editor .x-form-type-text.x-form-readonly .x-form-item-body {
+    border-bottom: 0px;
+    padding: 0 9px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/grid/plugin/Editing.scss:16 */
+.x-grid-editor .x-form-type-text .x-form-item-body {
+    border-bottom: 2px solid #2196f3;
+    border-bottom: 2px solid var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/grid/plugin/Editing.scss:18 */
+.x-grid-editor .x-form-type-text .x-form-item-body .x-form-text,
+.x-grid-editor .x-form-type-text .x-form-item-body .x-form-trigger {
+    border-bottom: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/grid/plugin/Editing.scss:28 */
+.x-grid-row-editor .x-panel-body {
+    background: #fff;
+    background: var(--reverse-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/grid/plugin/RowEditing.scss:1 */
+.x-grid-row-editor-wrap,
+.x-grid-row-editor-buttons {
+    box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.12), 2px 2px 5px 0 rgba(0, 0, 0, 0.08);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/grid/plugin/RowEditing.scss:5 */
+.x-grid-row-editor-wrap .x-form-text-field-body-default,
+.x-grid-row-editor-buttons .x-form-text-field-body-default {
+    min-width: 70px;
+    max-width: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/grid/plugin/RowExpander.scss:1 */
+.x-grid-row-expander {
+    font-size: 18px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/slider/Multi.scss:1 */
+.x-item-disabled {
+    opacity: 0.8;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/slider/Multi.scss:3 */
+.x-item-disabled .x-slider-thumb {
+    background-color: #e1e1e1;
+    background-color: var(--faded-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/tab/Tab.scss:1 */
+.x-tab-default {
+    text-transform: uppercase;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/tab/Tab.scss:8 */
+.x-keyboard-mode .x-tab-focus.x-tab-active.x-tab-default {
+    background-color: #2196f3;
+    background-color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/tree/View.scss:1 */
+.x-tree-checkbox-checked {
+    color: #2196f3;
+    color: var(--base-color);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/classic/theme-material/sass/src/view/MultiSelector.scss:1 */
+.x-multiselector-search-input {
+    background: #fff;
+    background: var(--reverse-color);
+    padding: 8px;
+    border: 1px solid #2196f3;
+    border: 1px solid var(--base-color);
+}

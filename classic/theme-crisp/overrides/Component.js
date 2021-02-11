@@ -4,3 +4,4 @@ Ext.define('Ext.theme.crisp.Component', {
     Ext.namespace('Ext.theme.is').Crisp = true;
     Ext.theme.name = 'Crisp';
 });
+

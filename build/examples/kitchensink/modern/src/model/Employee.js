@@ -1,12 +1,21 @@
 Ext.define('KitchenSink.model.Employee', {
     extend: 'KitchenSink.model.Base',
+
+    requires: [
+        'Ext.data.summary.Average'
+    ],
+
+    idField: 'employeeNo',
+
     fields: [{
-        name: 'employeeNo'
+        name: 'employeeNo',
+        type: 'integer'
     }, {
         name: 'rating'
     }, {
         name: 'averageRating',
-        calculate: function (data) {
+
+        calculate: function(data) {
             var average, i,
                 ratings = data.rating || [],
                 count = ratings.length;
@@ -14,6 +23,7 @@ Ext.define('KitchenSink.model.Employee', {
             for (i = 0, average = 0; i < count; i++) {
                 average += data.rating[i];
             }
+
             return average / ratings.length;
         }
     }, {
@@ -25,8 +35,11 @@ Ext.define('KitchenSink.model.Employee', {
         name: 'surname'
     }, {
         name: 'fullName',
-        calculate: function (data) {
-            return data.forename + ' ' + data.surname;
+        calculate: function(data) {
+            var first = data.forename,
+                last = data.surname;
+
+            return (first || last) ? first + ' ' + last : '';
         }
     }, {
         name: 'email'
@@ -44,13 +57,16 @@ Ext.define('KitchenSink.model.Employee', {
         name: 'noticePeriod'
     }, {
         name: 'sickDays',
-        type: 'integer'
+        type: 'integer',
+        summary: 'average'
     }, {
         name: 'holidayDays',
-        type: 'integer'
+        type: 'integer',
+        summary: 'average'
     }, {
         name: 'holidayAllowance',
-        type: 'integer'
+        type: 'integer',
+        summary: 'average'
     }, {
         name: 'avatar'
     }, {
@@ -59,6 +75,8 @@ Ext.define('KitchenSink.model.Employee', {
     }, {
         name: 'ratingThisYear',
         type: 'integer'
-    }],
-    idField: 'employeeNo'
+    }, {
+        name: 'verified',
+        type: 'boolean'
+    }]
 });

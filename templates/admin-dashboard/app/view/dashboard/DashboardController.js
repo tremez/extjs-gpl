@@ -9,23 +9,27 @@ Ext.define('Admin.view.dashboard.DashboardController', {
     onRefreshToggle: function(tool, e, owner) {
         var store, runner;
 
-        if (tool.toggleValue){
+        if (tool.toggleValue) {
             this.clearChartUpdates();
         } else {
             store = this.getStore('networkData');
+
             if (store.getCount()) {
                 runner = this.chartTaskRunner;
+
                 if (!runner) {
                     this.chartTaskRunner = runner = new Ext.util.TaskRunner();
                 }
+
                 runner.start({
-                    run : function () {
+                    interval: 200,
+                    run: function () {
                         // Move the first record to the end
                         var rec = store.first();
+
                         store.remove(rec);
                         store.add(rec);
-                    },
-                    interval : 200
+                    }
                 });
             }
         }
@@ -37,12 +41,12 @@ Ext.define('Admin.view.dashboard.DashboardController', {
     clearChartUpdates : function() {
         this.chartTaskRunner = Ext.destroy(this.chartTaskRunner);
     },
-    
+
     destroy: function () {
         this.clearChartUpdates();
         this.callParent();
     },
-    
+
     onHideView: function () {
         this.clearChartUpdates();
     }

@@ -3,33 +3,34 @@
 /**
  * @class Ext.util.Base64
  *
- * Base64 is a group of similar binary-to-text encoding schemes that represent binary data in an ASCII string format by
- * translating it into a radix-64 representation.
+ * Base64 is a group of similar binary-to-text encoding schemes that represent binary data
+ * in an ASCII string format by translating it into a radix-64 representation.
  *
  * This class is an implementation of base64 encoding and decoding functions and is UTF-8 safe.
  *
  * @singleton
  */
 Ext.define('Ext.util.Base64', {
-    singleton:true,
+    singleton: true,
 
     /**
      * @private
      */
-    _str : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+    _str: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
 
     /**
      * Encodes given string in to base64 formatted string
      * @param input
      * @return {string}
      */
-    encode : function (input) {
-        var me = this;
-        var output = '', chr1, chr2, chr3, enc1, enc2, enc3, enc4,
-            i = 0;
+    encode: function(input) {
+        var me = this,
+            output = '',
+            i = 0,
+            chr1, chr2, chr3, enc1, enc2, enc3, enc4, len;
 
         input = me._utf8_encode(input);
-        var len = input.length;
+        len = input.length;
 
         while (i < len) {
 
@@ -44,7 +45,8 @@ Ext.define('Ext.util.Base64', {
 
             if (isNaN(chr2)) {
                 enc3 = enc4 = 64;
-            } else if (isNaN(chr3)) {
+            }
+            else if (isNaN(chr3)) {
                 enc4 = 64;
             }
 
@@ -62,16 +64,14 @@ Ext.define('Ext.util.Base64', {
      * @param input
      * @return {string}
      */
-    decode : function (input) {
-        var me = this;
-        var output = '',
-            chr1, chr2, chr3,
-            enc1, enc2, enc3, enc4,
-            i = 0;
+    decode: function(input) {
+        var me = this,
+            output = '',
+            i = 0,
+            chr1, chr2, chr3, enc1, enc2, enc3, enc4, len;
 
-        input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
-
-        var len = input.length;
+        input = input.replace(/[^A-Za-z0-9+=\/]/g, ""); // eslint-disable-line no-useless-escape
+        len = input.length;
 
         while (i < len) {
 
@@ -89,6 +89,7 @@ Ext.define('Ext.util.Base64', {
             if (enc3 !== 64) {
                 output = output + String.fromCharCode(chr2);
             }
+
             if (enc4 !== 64) {
                 output = output + String.fromCharCode(chr3);
             }
@@ -104,20 +105,19 @@ Ext.define('Ext.util.Base64', {
      * @private
      * UTF-8 encoding
      */
-    _utf8_encode : function (string) {
-        string = string.replace(/\r\n/g,"\n");
+    _utf8_encode: function(string) {
         var utftext = '',
-            n = 0,
-            len = string.length;
+            c, n, len;
 
-        for (; n < len; n++) {
+        string = string.replace(/\r\n/g, "\n");
 
-            var c = string.charCodeAt(n);
+        for (n = 0, len = string.length; n < len; n++) {
+            c = string.charCodeAt(n);
 
             if (c < 128) {
                 utftext += String.fromCharCode(c);
             }
-            else if((c > 127) && (c < 2048)) {
+            else if ((c > 127) && (c < 2048)) {
                 utftext += String.fromCharCode((c >> 6) | 192);
                 utftext += String.fromCharCode((c & 63) | 128);
             }
@@ -136,7 +136,7 @@ Ext.define('Ext.util.Base64', {
      * @private
      * UTF-8 decoding
      */
-    _utf8_decode : function (utftext) {
+    _utf8_decode: function(utftext) {
         var string = '',
             i = 0,
             c = 0,
@@ -151,14 +151,14 @@ Ext.define('Ext.util.Base64', {
                 string += String.fromCharCode(c);
                 i++;
             }
-            else if((c > 191) && (c < 224)) {
-                c2 = utftext.charCodeAt(i+1);
+            else if ((c > 191) && (c < 224)) {
+                c2 = utftext.charCodeAt(i + 1);
                 string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
                 i += 2;
             }
             else {
-                c2 = utftext.charCodeAt(i+1);
-                c3 = utftext.charCodeAt(i+2);
+                c2 = utftext.charCodeAt(i + 1);
+                c3 = utftext.charCodeAt(i + 2);
                 string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
                 i += 3;
             }

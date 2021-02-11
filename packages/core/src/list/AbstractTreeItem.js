@@ -11,42 +11,42 @@ Ext.define('Ext.list.AbstractTreeItem', {
      * @method setExpandable
      * @ignore
      */
-    
+
     /**
      * @method setExpanded
      * @ignore
      */
-    
+
     /**
      * @method setIconCls
      * @ignore
      */
-    
+
     /**
      * @method setLeaf
      * @ignore
      */
-    
+
     /**
      * @method setOwner
      * @ignore
      */
-    
+
     /**
      * @method setLoading
      * @ignore
      */
-    
+
     /**
      * @method setNode
      * @ignore
      */
-    
+
     /**
      * @method setParentItem
      * @ignore
      */
-    
+
     /**
      * @method setText
      * @ignore
@@ -68,7 +68,7 @@ Ext.define('Ext.list.AbstractTreeItem', {
         expanded: false,
 
         /**
-         * @cfg {String} iconCls
+         * @cfg iconCls
          * @inheritdoc Ext.panel.Header#cfg-iconCls
          * @localdoc **Note:** This value is taken from the underlying {@link #node}.
          */
@@ -155,8 +155,9 @@ Ext.define('Ext.list.AbstractTreeItem', {
         textProperty: 'text'
     },
 
-    updateNode: function (node) {
+    updateNode: function(node) {
         if (node) {
+            // eslint-disable-next-line vars-on-top
             var me = this,
                 map = me.itemMap,
                 childNodes, owner, len, i, item, child;
@@ -167,8 +168,10 @@ Ext.define('Ext.list.AbstractTreeItem', {
                 childNodes = node.childNodes;
                 owner = me.getOwner();
                 me.itemMap = map = {};
+
                 for (i = 0, len = childNodes.length; i < len; ++i) {
                     child = childNodes[i];
+
                     if (child.data.visible) {
                         item = owner.createItem(child, me);
                         map[child.internalId] = item;
@@ -183,8 +186,11 @@ Ext.define('Ext.list.AbstractTreeItem', {
     },
 
     updateSelected: function(selected) {
+        var parent;
+
         if (!this.isConfiguring) {
-            var parent = this.getParentItem();
+            parent = this.getParentItem();
+
             while (parent && !parent.isRootListItem) {
                 parent.setSelectedParent(selected);
                 parent = parent.getParentItem();
@@ -195,14 +201,14 @@ Ext.define('Ext.list.AbstractTreeItem', {
     /**
      * Collapse this item. Does nothing if already collapsed.
      */
-    collapse: function () {
+    collapse: function() {
         this.getNode().collapse();
     },
 
     /**
      * Expand this item. Does nothing if already expanded.
      */
-    expand: function () {
+    expand: function() {
         this.getNode().expand();
     },
 
@@ -233,7 +239,7 @@ Ext.define('Ext.list.AbstractTreeItem', {
      * Check if the current item is expanded.
      * @return {Boolean} `true` if this item is expanded.
      */
-    isExpanded: function () {
+    isExpanded: function() {
         return this.getExpanded();
     },
 
@@ -262,10 +268,10 @@ Ext.define('Ext.list.AbstractTreeItem', {
     /**
      * Handle this node being collapsed.
      * @param {Ext.data.TreeModel} node  The node being collapsed.
-     *
+     * @param collapsingForExpand
      * @protected
      */
-    nodeCollapse: function (node, collapsingForExpand) {
+    nodeCollapse: function(node, collapsingForExpand) {
         var me = this,
             owner = me.getOwner(),
             animation = me.preventAnimation ? null : owner.getAnimation();
@@ -277,7 +283,7 @@ Ext.define('Ext.list.AbstractTreeItem', {
         }
     },
 
-    nodeCollapseBegin: function (animation, collapsingForExpand) {
+    nodeCollapseBegin: function(animation, collapsingForExpand) {
         var me = this,
             owner = me.getOwner();
 
@@ -286,8 +292,8 @@ Ext.define('Ext.list.AbstractTreeItem', {
         owner.fireEvent('itemcollapse', owner, me);
     },
 
-    nodeCollapseEnd: function (collapsingForExpand) {
-        if (!collapsingForExpand) {
+    nodeCollapseEnd: function(collapsingForExpand) {
+        if (!collapsingForExpand && !this.destroying) {
             this.getOwner().updateLayout();
         }
     },
@@ -298,7 +304,7 @@ Ext.define('Ext.list.AbstractTreeItem', {
      *
      * @protected
      */
-    nodeExpand: function (node) {
+    nodeExpand: function(node) {
         var me = this,
             owner = me.getOwner(),
             floated = me.getFloated(),
@@ -311,7 +317,7 @@ Ext.define('Ext.list.AbstractTreeItem', {
         }
     },
 
-    nodeExpandBegin: function (animation) {
+    nodeExpandBegin: function(animation) {
         var me = this,
             owner = me.getOwner();
 
@@ -320,8 +326,10 @@ Ext.define('Ext.list.AbstractTreeItem', {
         owner.fireEvent('itemexpand', owner, me);
     },
 
-    nodeExpandEnd: function () {
-        this.getOwner().updateLayout();
+    nodeExpandEnd: function() {
+        if (!this.destroying) {
+            this.getOwner().updateLayout();
+        }
     },
 
     /**
@@ -332,7 +340,7 @@ Ext.define('Ext.list.AbstractTreeItem', {
      *
      * @protected
      */
-    nodeInsert: function (node, refNode) {
+    nodeInsert: function(node, refNode) {
         var me = this,
             owner = me.getOwner(),
             map = me.itemMap,
@@ -345,13 +353,16 @@ Ext.define('Ext.list.AbstractTreeItem', {
             oldParent = item.getParentItem();
             // May have some kind of custom removal processing, allow it to happen, even if it's us
             oldParent.removeItem(item);
+
             if (oldParent !== me) {
                 oldParent.doUpdateExpandable();
                 item.setParentItem(me);
             }
-        } else {
+        }
+        else {
             item = me.getOwner().createItem(node, me);
         }
+
         map[id] = item;
 
         if (refNode) {
@@ -372,7 +383,7 @@ Ext.define('Ext.list.AbstractTreeItem', {
      *
      * @protected
      */
-    nodeRemove: function (node) {
+    nodeRemove: function(node) {
         var me = this,
             map = me.itemMap,
             owner = me.getOwner(),
@@ -400,8 +411,61 @@ Ext.define('Ext.list.AbstractTreeItem', {
      *
      * @protected
      */
-    nodeUpdate: function (node, modifiedFieldNames) {
+    nodeUpdate: function(node, modifiedFieldNames) {
         this.doNodeUpdate(node);
+    },
+
+    /**
+     * Handle a click on this item.
+     * @param {Ext.event.Event} e The event
+     *
+     * @protected
+     */
+    onClick: function(e) {
+        var me = this,
+            owner = me.getOwner(),
+            node = me.getNode(),
+            info = {
+                event: e,
+                item: me,
+                node: node,
+                tree: owner,
+                select: node.get('selectable') !== false && me.isSelectionEvent(e),
+                toggle: me.isToggleEvent(e)
+            };
+
+        /**
+         * @event itemclick
+         * @member Ext.list.Tree
+         *
+         * @param {Ext.list.Tree} sender The `treelist` that fired this event.
+         *
+         * @param {Object} info
+         * @param {Ext.event.Event} info.event The DOM event that precipitated this
+         * event.
+         * @param {Ext.list.AbstractTreeItem} info.item The tree node that was clicked.
+         * @param {Ext.list.Tree} info.tree The `treelist` that fired this event.
+         * @param {Boolean} info.select On input this is value is the result of the
+         *   {@link #isSelectionEvent} method. On return from event handlers (assuming a
+         *   `false` return does not cancel things) this property is used to determine
+         *   if the clicked node should be selected.
+         * @param {Boolean} info.toggle On input this is value is the result of the
+         *   {@link #isToggleEvent} method. On return from event handlers (assuming a
+         *   `false` return does not cancel things) this property is used to determine
+         *   if the clicked node's expand/collapse state should be toggled.
+         *
+         * @since 6.0.1
+         */
+        if (owner.fireEvent('itemclick', owner, info) !== false) {
+            if (info.toggle) {
+                me.toggleExpanded();
+                e.preventDefault();
+            }
+
+            if (info.select) {
+                owner.setSelection(me.getNode());
+            }
+        }
     },
 
     /**
@@ -416,9 +480,10 @@ Ext.define('Ext.list.AbstractTreeItem', {
     removeItem: Ext.emptyFn,
 
     /**
+     * @method destroy
      * @inheritdoc
      */
-    destroy: function () {
+    destroy: function() {
         var me = this,
             map = me.itemMap,
             owner = me.getOwner(),
@@ -428,6 +493,7 @@ Ext.define('Ext.list.AbstractTreeItem', {
             for (key in map) {
                 map[key].destroy();
             }
+
             me.itemMap = null;
         }
 
@@ -451,7 +517,7 @@ Ext.define('Ext.list.AbstractTreeItem', {
          *
          * @private
          */
-        doNodeUpdate: function (node) {
+        doNodeUpdate: function(node, modifiedFieldNames) {
             var me = this,
                 textProperty = this.getTextProperty(),
                 iconClsProperty = this.getIconClsProperty();
@@ -469,72 +535,22 @@ Ext.define('Ext.list.AbstractTreeItem', {
             me.doUpdateExpandable();
         },
 
-        doUpdateExpandable: function () {
+        doUpdateExpandable: function() {
             var node = this.getNode();
+
             this.setExpandable(node.isExpandable());
-        },
-
-        /**
-         * Handle a click on this item.
-         * @param {Ext.event.Event} e The event
-         *
-         * @private
-         */
-        onClick: function (e) {
-            var me = this,
-                owner = me.getOwner(),
-                node = me.getNode(),
-                info = {
-                    event: e,
-                    item: me,
-                    node: node,
-                    tree: owner,
-                    select: node.get('selectable') !== false && me.isSelectionEvent(e),
-                    toggle: me.isToggleEvent(e)
-                };
-
-            /**
-             * @event itemclick
-             *
-             * @param {Ext.list.Tree} sender The `treelist` that fired this event.
-             *
-             * @param {Object} info
-             * @param {Ext.event.Event} info.event The DOM event that precipitated this
-             * event.
-             * @param {Ext.list.AbstractTreeItem} info.item The tree node that was clicked.
-             * @param {Ext.list.Tree} info.tree The `treelist` that fired this event.
-             * @param {Boolean} info.select On input this is value is the result of the
-             *   {@link #isSelectionEvent} method. On return from event handlers (assuming a
-             *   `false` return does not cancel things) this property is used to determine
-             *   if the clicked node should be selected.
-             * @param {Boolean} info.toggle On input this is value is the result of the
-             *   {@link #isToggleEvent} method. On return from event handlers (assuming a
-             *   `false` return does not cancel things) this property is used to determine
-             *   if the clicked node's expand/collapse state should be toggled.
-             *
-             * @since 6.0.1
-             */
-            if (owner.fireEvent('itemclick', owner, info) !== false) {
-                if (info.toggle) {
-                    me.toggleExpanded();
-                    e.preventDefault();
-                }
-
-                if (info.select) {
-                    owner.setSelection(me.getNode());
-                }
-            }
         },
 
         toggleExpanded: function() {
             if (this.isExpanded()) {
                 this.collapse();
-            } else {
+            }
+            else {
                 this.expand();
             }
         },
 
-        updateIndent: function (value) {
+        updateIndent: function(value) {
             var items = this.itemMap,
                 id;
 

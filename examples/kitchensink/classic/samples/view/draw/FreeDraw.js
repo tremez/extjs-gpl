@@ -13,19 +13,20 @@ Ext.define('KitchenSink.view.draw.FreeDraw', {
     layout: 'anchor',
     width: 650,
 
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     otherContent: [{
         type: 'Component',
         path: 'classic/samples/view/draw/FreeDrawComponent.js'
     }],
-    // </example>
+    //</example>
 
     tbar: ['->', {
         text: 'Clear',
-        handler: function () {
+        handler: function() {
             // Remove all the sprites and redraw.
             var draw = Ext.getCmp('free-draw');
+
             draw.getSurface().removeAll(true);
             draw.renderFrame();
         }
@@ -38,8 +39,8 @@ Ext.define('KitchenSink.view.draw.FreeDraw', {
         height: 500
     }],
 
-    onAdded: function(container, pos, instanced) { 
-        this.callParent([container, pos, instanced]); 
+    onAdded: function(container, pos, instanced) {
+        this.callParent([container, pos, instanced]);
         container.setScrollable(false);
     },
 

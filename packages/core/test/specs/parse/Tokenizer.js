@@ -1,31 +1,33 @@
-describe('Ext.parse.Tokenizer', function () {
+topSuite('Ext.parse.Tokenizer', function() {
     var tokenizer,
         OPERATORS = {
-            '+': { type: 'operator', value: '+', is: { operator: true, plus: true } },
-            '-': { type: 'operator', value: '-', is: { operator: true, minus: true } },
-            '*': { type: 'operator', value: '*', is: { operator: true, multiply: true } },
-            '/': { type: 'operator', value: '/', is: { operator: true, divide: true } },
-            '!': { type: 'operator', value: '!', is: { operator: true, bang: true } },
-            ',': { type: 'operator', value: ',', is: { operator: true, comma: true } },
-            ':': { type: 'operator', value: ':', is: { operator: true, colon: true } },
-            '[': { type: 'operator', value: '[', is: { operator: true, arrayOpen: true } },
-            ']': { type: 'operator', value: ']', is: { operator: true, arrayClose: true } },
-            '{': { type: 'operator', value: '{', is: { operator: true, curlyOpen: true } },
-            '}': { type: 'operator', value: '}', is: { operator: true, curlyClose: true } },
-            '(': { type: 'operator', value: '(', is: { operator: true, parenOpen: true } },
-            ')': { type: 'operator', value: ')', is: { operator: true, parenClose: true } }
+            '+': { type: 'operator', name: 'plus', value: '+', is: { operator: true, plus: true } },
+            '-': { type: 'operator', name: 'minus', value: '-', is: { operator: true, minus: true } },
+            '*': { type: 'operator', name: 'multiple', value: '*', is: { operator: true, multiply: true } },
+            '/': { type: 'operator', name: 'divide', value: '/', is: { operator: true, divide: true } },
+
+            '!': { type: 'operator', name: 'not', value: '!', is: { operator: true, not: true } },
+            ',': { type: 'operator', name: 'comma', value: ',', is: { operator: true, comma: true } },
+            ':': { type: 'operator', name: 'colon', value: ':', is: { operator: true, colon: true } },
+            '[': { type: 'operator', name: 'arrayOpen', value: '[', is: { operator: true, arrayOpen: true } },
+            ']': { type: 'operator', name: 'arrayClose', value: ']', is: { operator: true, arrayClose: true } },
+            '{': { type: 'operator', name: 'curlyOpen', value: '{', is: { operator: true, curlyOpen: true } },
+            '}': { type: 'operator', name: 'curlyClose', value: '}', is: { operator: true, curlyClose: true } },
+            '(': { type: 'operator', name: 'parenOpen', value: '(', is: { operator: true, parenOpen: true } },
+            ')': { type: 'operator', name: 'parenClose', value: ')', is: { operator: true, parenClose: true } }
         };
 
-    beforeEach(function () {
+    beforeEach(function() {
         tokenizer = Ext.parse.Tokenizer.fly();
     });
-    afterEach(function () {
+    afterEach(function() {
         tokenizer.release();
         tokenizer = null;
     });
 
-    function tokenize (tokens, text) {
+    function tokenize(tokens, text) {
         var ret = [];
+
         var tok;
 
         if (!text) {
@@ -42,24 +44,27 @@ describe('Ext.parse.Tokenizer', function () {
         return ret;
     }
 
-    describe('fly', function () {
-        it('should return the same instance', function () {
+    describe('fly', function() {
+        it('should return the same instance', function() {
             var f0 = Ext.parse.Tokenizer.fly();
+
             f0.release();
 
             var f1 = Ext.parse.Tokenizer.fly();
+
             expect(f1).toBe(f0);
             f1.release();
 
             var f2 = Ext.parse.Tokenizer.fly();
+
             expect(f2).toBe(f0);
         });
     });
 
-    describe('peek', function () {
+    describe('peek', function() {
         var t0, t1, t2, t3, t4, t5, t6, t7;
 
-        beforeEach(function () {
+        beforeEach(function() {
             if (!t0) {
                 tokenizer.reset('abc 123');
 
@@ -76,7 +81,7 @@ describe('Ext.parse.Tokenizer', function () {
             }
         });
 
-        it('should return the first token', function () {
+        it('should return the first token', function() {
             expect(t0).toEqual({
                 type: 'ident',
                 is: {
@@ -86,56 +91,61 @@ describe('Ext.parse.Tokenizer', function () {
             });
         });
 
-        it('should return the same first token', function () {
+        it('should return the same first token', function() {
             expect(t1).toBe(t0);
         });
 
-        it('should return and consume the same first token', function () {
+        it('should return and consume the same first token', function() {
             expect(t2).toBe(t0);
         });
 
-        it('should return the second token', function () {
+        it('should return the second token', function() {
             expect(t3).toEqual({
                 type: 'literal',
                 is: {
                     literal: true,
-                    number: true
+                    number: true,
+                    type: 'number'
                 },
                 value: 123
             });
         });
 
-        it('should return the same second token', function () {
+        it('should return the same second token', function() {
             expect(t4).toBe(t3);
         });
 
-        it('should return and consume the same second token', function () {
+        it('should return and consume the same second token', function() {
             expect(t5).toBe(t3);
         });
 
-        it('should detect end of tokens via peek', function () {
+        it('should detect end of tokens via peek', function() {
             expect(t6).toBe(null);
         });
 
-        it('should detect end of tokens via next', function () {
+        it('should detect end of tokens via next', function() {
             expect(t7).toBe(null);
         });
     });
 
-    describe('strings', function () {
-        it('should handle simple strings', function () {
+    describe('strings', function() {
+        it('should handle simple strings', function() {
             tokenizer.reset('"String 1" "String 2"');
 
             var t0 = tokenizer.next();
+
             var t1 = tokenizer.next();
+
             var t3 = tokenizer.next();
+
             var t4 = tokenizer.next();
 
             expect(t0).toEqual({
                 type: 'literal',
                 is: {
                     literal: true,
-                    string: true
+                    string: true,
+                    type: 'string'
                 },
                 value: 'String 1'
             });
@@ -144,7 +154,8 @@ describe('Ext.parse.Tokenizer', function () {
                 type: 'literal',
                 is: {
                     literal: true,
-                    string: true
+                    string: true,
+                    type: 'string'
                 },
                 value: 'String 2'
             });
@@ -153,18 +164,21 @@ describe('Ext.parse.Tokenizer', function () {
             expect(t4).toBe(null);
         });
 
-        it('should handle both types of quotes and escapes', function () {
+        it('should handle both types of quotes and escapes', function() {
             tokenizer.reset('\'String 1"\' "\'String\\\\\\\" 2\'"');
 
             var t0 = tokenizer.next();
+
             var t1 = tokenizer.next();
+
             var t3 = tokenizer.next();
 
             expect(t0).toEqual({
                 type: 'literal',
                 is: {
                     literal: true,
-                    string: true
+                    string: true,
+                    type: 'string'
                 },
                 value: 'String 1"'
             });
@@ -173,7 +187,8 @@ describe('Ext.parse.Tokenizer', function () {
                 type: 'literal',
                 is: {
                     literal: true,
-                    string: true
+                    string: true,
+                    type: 'string'
                 },
                 value: '\'String\\" 2\''
             });
@@ -182,19 +197,22 @@ describe('Ext.parse.Tokenizer', function () {
         });
     });
 
-    describe('booleans', function () {
-        it('should handle true', function () {
+    describe('booleans', function() {
+        it('should handle true', function() {
             tokenizer.reset('true true');
 
             var t0 = tokenizer.next();
+
             var t1 = tokenizer.next();
+
             var t2 = tokenizer.next();
 
             expect(t0).toEqual({
                 type: 'literal',
                 is: {
                     literal: true,
-                    boolean: true
+                    boolean: true,
+                    type: 'boolean'
                 },
                 value: true
             });
@@ -204,18 +222,21 @@ describe('Ext.parse.Tokenizer', function () {
             expect(t2).toBe(null);
         });
 
-        it('should handle false', function () {
+        it('should handle false', function() {
             tokenizer.reset('  false  \t false  ');
 
             var t0 = tokenizer.next();
+
             var t1 = tokenizer.next();
+
             var t2 = tokenizer.next();
 
             expect(t0).toEqual({
                 type: 'literal',
                 is: {
                     literal: true,
-                    boolean: true
+                    boolean: true,
+                    type: 'boolean'
                 },
                 value: false
             });
@@ -225,18 +246,21 @@ describe('Ext.parse.Tokenizer', function () {
             expect(t2).toBe(null);
         });
 
-        it('should handle mixed values', function () {
+        it('should handle mixed values', function() {
             tokenizer.reset('\tfalse\ttrue\t');
 
             var t0 = tokenizer.next();
+
             var t1 = tokenizer.next();
+
             var t2 = tokenizer.next();
 
             expect(t0).toEqual({
                 type: 'literal',
                 is: {
                     literal: true,
-                    boolean: true
+                    boolean: true,
+                    type: 'boolean'
                 },
                 value: false
             });
@@ -245,7 +269,8 @@ describe('Ext.parse.Tokenizer', function () {
                 type: 'literal',
                 is: {
                     literal: true,
-                    boolean: true
+                    boolean: true,
+                    type: 'boolean'
                 },
                 value: true
             });
@@ -254,12 +279,14 @@ describe('Ext.parse.Tokenizer', function () {
         });
     });
 
-    describe('identifiers', function () {
-        it('should handle simple identifiers', function () {
+    describe('identifiers', function() {
+        it('should handle simple identifiers', function() {
             tokenizer.reset('  foo  \tbar');
 
             var t0 = tokenizer.next();
+
             var t1 = tokenizer.next();
+
             var t2 = tokenizer.next();
 
             expect(t0).toEqual({
@@ -281,11 +308,13 @@ describe('Ext.parse.Tokenizer', function () {
             expect(t2).toBe(null);
         });
 
-        it('should handle dotpath identifiers', function () {
+        it('should handle dotpath identifiers', function() {
             tokenizer.reset('foo.bar\t bar.baz.zip ');
 
             var t0 = tokenizer.next();
+
             var t1 = tokenizer.next();
+
             var t2 = tokenizer.next();
 
             expect(t0).toEqual({
@@ -308,12 +337,14 @@ describe('Ext.parse.Tokenizer', function () {
         });
     });
 
-    describe('null', function () {
-        it('should handle null', function () {
+    describe('null', function() {
+        it('should handle null', function() {
             tokenizer.reset('  null  \tnull');
 
             var t0 = tokenizer.next();
+
             var t1 = tokenizer.next();
+
             var t2 = tokenizer.next();
 
             expect(t0).toEqual({
@@ -331,19 +362,22 @@ describe('Ext.parse.Tokenizer', function () {
         });
     });
 
-    describe('numbers', function () {
-        it('should be able to parse integers', function () {
+    describe('numbers', function() {
+        it('should be able to parse integers', function() {
             tokenizer.reset('  427  \t23');
 
             var t0 = tokenizer.next();
+
             var t1 = tokenizer.next();
+
             var t2 = tokenizer.next();
 
             expect(t0).toEqual({
                 type: 'literal',
                 is: {
                     literal: true,
-                    number: true
+                    number: true,
+                    type: 'number'
                 },
                 value: 427
             });
@@ -352,7 +386,8 @@ describe('Ext.parse.Tokenizer', function () {
                 type: 'literal',
                 is: {
                     literal: true,
-                    number: true
+                    number: true,
+                    type: 'number'
                 },
                 value: 23
             });
@@ -360,14 +395,19 @@ describe('Ext.parse.Tokenizer', function () {
             expect(t2).toBe(null);
         });
 
-        it('should be able to parse signed integers', function () {
+        it('should be able to parse signed integers', function() {
             tokenizer.reset('  +427  \t-23 21');
 
             var t0 = tokenizer.next();
+
             var t1 = tokenizer.next();
+
             var t2 = tokenizer.next();
+
             var t3 = tokenizer.next();
+
             var t4 = tokenizer.next();
+
             var t5 = tokenizer.next();
 
             expect(t0).toEqual(OPERATORS['+']);
@@ -375,7 +415,8 @@ describe('Ext.parse.Tokenizer', function () {
                 type: 'literal',
                 is: {
                     literal: true,
-                    number: true
+                    number: true,
+                    type: 'number'
                 },
                 value: 427
             });
@@ -385,7 +426,8 @@ describe('Ext.parse.Tokenizer', function () {
                 type: 'literal',
                 is: {
                     literal: true,
-                    number: true
+                    number: true,
+                    type: 'number'
                 },
                 value: 23
             });
@@ -394,7 +436,8 @@ describe('Ext.parse.Tokenizer', function () {
                 type: 'literal',
                 is: {
                     literal: true,
-                    number: true
+                    number: true,
+                    type: 'number'
                 },
                 value: 21
             });
@@ -402,14 +445,19 @@ describe('Ext.parse.Tokenizer', function () {
             expect(t5).toBe(null);
         });
 
-        it('should be able to parse decimals', function () {
+        it('should be able to parse decimals', function() {
             tokenizer.reset('  +.427  \t-23.234 2.1');
 
             var t0 = tokenizer.next();
+
             var t1 = tokenizer.next();
+
             var t2 = tokenizer.next();
+
             var t3 = tokenizer.next();
+
             var t4 = tokenizer.next();
+
             var t5 = tokenizer.next();
 
             expect(t0).toEqual(OPERATORS['+']);
@@ -417,7 +465,8 @@ describe('Ext.parse.Tokenizer', function () {
                 type: 'literal',
                 is: {
                     literal: true,
-                    number: true
+                    number: true,
+                    type: 'number'
                 },
                 value: 0.427
             });
@@ -427,7 +476,8 @@ describe('Ext.parse.Tokenizer', function () {
                 type: 'literal',
                 is: {
                     literal: true,
-                    number: true
+                    number: true,
+                    type: 'number'
                 },
                 value: 23.234
             });
@@ -436,7 +486,8 @@ describe('Ext.parse.Tokenizer', function () {
                 type: 'literal',
                 is: {
                     literal: true,
-                    number: true
+                    number: true,
+                    type: 'number'
                 },
                 value: 2.1
             });
@@ -444,14 +495,19 @@ describe('Ext.parse.Tokenizer', function () {
             expect(t5).toBe(null);
         });
 
-        it('should be able to parse exponentials', function () {
+        it('should be able to parse exponentials', function() {
             tokenizer.reset('  +.42e7  \t-23.234e+2 2.1e-21');
 
             var t0 = tokenizer.next();
+
             var t1 = tokenizer.next();
+
             var t2 = tokenizer.next();
+
             var t3 = tokenizer.next();
+
             var t4 = tokenizer.next();
+
             var t5 = tokenizer.next();
 
             expect(t0).toEqual(OPERATORS['+']);
@@ -459,7 +515,8 @@ describe('Ext.parse.Tokenizer', function () {
                 type: 'literal',
                 is: {
                     literal: true,
-                    number: true
+                    number: true,
+                    type: 'number'
                 },
                 value: 0.42e7
             });
@@ -469,7 +526,8 @@ describe('Ext.parse.Tokenizer', function () {
                 type: 'literal',
                 is: {
                     literal: true,
-                    number: true
+                    number: true,
+                    type: 'number'
                 },
                 value: 23.234e2
             });
@@ -478,7 +536,8 @@ describe('Ext.parse.Tokenizer', function () {
                 type: 'literal',
                 is: {
                     literal: true,
-                    number: true
+                    number: true,
+                    type: 'number'
                 },
                 value: 2.1e-21
             });
@@ -487,190 +546,175 @@ describe('Ext.parse.Tokenizer', function () {
         });
     });
 
-    describe('operators', function () {
-        it('should be able to parse exclamation', function () {
-            tokenizer.reset(' ! ! ');
+    describe('operators', function() {
+        it('should be able to parse numbers and operators w/o spaces', function() {
+            tokenizer.reset('1+2');
 
             var t0 = tokenizer.next();
+
             var t1 = tokenizer.next();
+
             var t2 = tokenizer.next();
 
             expect(t0).toEqual({
-                type: 'operator',
-                value: '!',
+                type: 'literal',
                 is: {
-                    operator: true,
-                    bang: true
-                }
+                    literal: true,
+                    number: true,
+                    type: 'number'
+                },
+                value: 1
             });
+
+            expect(t1).toEqual(OPERATORS['+']);
+
+            expect(t2).toEqual({
+                type: 'literal',
+                is: {
+                    literal: true,
+                    number: true,
+                    type: 'number'
+                },
+                value: 2
+            });
+        });
+
+        it('should be able to parse exclamation', function() {
+            tokenizer.reset(' ! ! ');
+
+            var t0 = tokenizer.next(),
+                t1 = tokenizer.next(),
+                t2 = tokenizer.next();
+
+            expect(t0).toEqual(OPERATORS['!']);
 
             expect(t0).toBe(t1);  // should reuse the same token instance
 
             expect(t2).toBe(null);
         });
 
-        it('should be able to parse comma', function () {
+        it('should be able to parse comma', function() {
             tokenizer.reset(',,');
 
             var t0 = tokenizer.next();
+
             var t1 = tokenizer.next();
+
             var t2 = tokenizer.next();
 
-            expect(t0).toEqual({
-                type: 'operator',
-                value: ',',
-                is: {
-                    operator: true,
-                    comma: true
-                }
-            });
+            expect(t0).toEqual(OPERATORS[',']);
 
             expect(t0).toBe(t1);  // should reuse the same token instance
 
             expect(t2).toBe(null);
         });
 
-        it('should be able to parse colon', function () {
+        it('should be able to parse colon', function() {
             tokenizer.reset('\t:\t: ');
 
             var t0 = tokenizer.next();
+
             var t1 = tokenizer.next();
+
             var t2 = tokenizer.next();
 
-            expect(t0).toEqual({
-                type: 'operator',
-                value: ':',
-                is: {
-                    operator: true,
-                    colon: true
-                }
-            });
+            expect(t0).toEqual(OPERATORS[':']);
 
             expect(t0).toBe(t1);  // should reuse the same token instance
 
             expect(t2).toBe(null);
         });
 
-        it('should be able to parse array open', function () {
+        it('should be able to parse array open', function() {
             tokenizer.reset('[ [');
 
             var t0 = tokenizer.next();
+
             var t1 = tokenizer.next();
+
             var t2 = tokenizer.next();
 
-            expect(t0).toEqual({
-                type: 'operator',
-                value: '[',
-                is: {
-                    operator: true,
-                    arrayOpen: true
-                }
-            });
+            expect(t0).toEqual(OPERATORS['[']);
 
             expect(t0).toBe(t1);  // should reuse the same token instance
 
             expect(t2).toBe(null);
         });
 
-        it('should be able to parse array close', function () {
+        it('should be able to parse array close', function() {
             tokenizer.reset(' ]] ');
 
             var t0 = tokenizer.next();
+
             var t1 = tokenizer.next();
+
             var t2 = tokenizer.next();
 
-            expect(t0).toEqual({
-                type: 'operator',
-                value: ']',
-                is: {
-                    operator: true,
-                    arrayClose: true
-                }
-            });
+            expect(t0).toEqual(OPERATORS[']']);
 
             expect(t0).toBe(t1);  // should reuse the same token instance
 
             expect(t2).toBe(null);
         });
 
-        it('should be able to parse brace open', function () {
+        it('should be able to parse brace open', function() {
             tokenizer.reset('\t  {{\t');
 
             var t0 = tokenizer.next();
+
             var t1 = tokenizer.next();
+
             var t2 = tokenizer.next();
 
-            expect(t0).toEqual({
-                type: 'operator',
-                value: '{',
-                is: {
-                    operator: true,
-                    curlyOpen: true
-                }
-            });
+            expect(t0).toEqual(OPERATORS['{']);
 
             expect(t0).toBe(t1);  // should reuse the same token instance
 
             expect(t2).toBe(null);
         });
 
-        it('should be able to parse brace close', function () {
+        it('should be able to parse brace close', function() {
             tokenizer.reset(' }}');
 
             var t0 = tokenizer.next();
+
             var t1 = tokenizer.next();
+
             var t2 = tokenizer.next();
 
-            expect(t0).toEqual({
-                type: 'operator',
-                value: '}',
-                is: {
-                    operator: true,
-                    curlyClose: true
-                }
-            });
+            expect(t0).toEqual(OPERATORS['}']);
 
             expect(t0).toBe(t1);  // should reuse the same token instance
 
             expect(t2).toBe(null);
         });
 
-        it('should be able to parse paren open', function () {
+        it('should be able to parse paren open', function() {
             tokenizer.reset(' ( (\t');
 
             var t0 = tokenizer.next();
+
             var t1 = tokenizer.next();
+
             var t2 = tokenizer.next();
 
-            expect(t0).toEqual({
-                type: 'operator',
-                value: '(',
-                is: {
-                    operator: true,
-                    parenOpen: true
-                }
-            });
+            expect(t0).toEqual(OPERATORS['(']);
 
             expect(t0).toBe(t1);  // should reuse the same token instance
 
             expect(t2).toBe(null);
         });
 
-        it('should be able to parse paren close', function () {
+        it('should be able to parse paren close', function() {
             tokenizer.reset('))');
 
             var t0 = tokenizer.next();
+
             var t1 = tokenizer.next();
+
             var t2 = tokenizer.next();
 
-            expect(t0).toEqual({
-                type: 'operator',
-                value: ')',
-                is: {
-                    operator: true,
-                    parenClose: true
-                }
-            });
+            expect(t0).toEqual(OPERATORS[')']);
 
             expect(t0).toBe(t1);  // should reuse the same token instance
 
@@ -678,11 +722,11 @@ describe('Ext.parse.Tokenizer', function () {
         });
     });
 
-    describe('custom operators', function () {
+    describe('custom operators', function() {
         var customTokenizer,
             tokens;
 
-        beforeEach(function () {
+        beforeEach(function() {
             customTokenizer = new Ext.parse.Tokenizer({
                 operators: {
                     '!': null,  // disable ! operator
@@ -693,10 +737,11 @@ describe('Ext.parse.Tokenizer', function () {
             tokens = tokenize(customTokenizer, '$!');
         });
 
-        it('should tokenize custom operator', function () {
+        it('should tokenize custom operator', function() {
             expect(tokens[0]).toEqual({
                 type: 'operator',
                 value: '$',
+                name: 'dollar',
                 is: {
                     operator: true,
                     dollar: true
@@ -704,7 +749,7 @@ describe('Ext.parse.Tokenizer', function () {
             });
         });
 
-        it('should disable standard operator', function () {
+        it('should disable standard operator', function() {
             var tok = tokens[1];
 
             expect(tok instanceof Error).toBe(true);
@@ -714,18 +759,33 @@ describe('Ext.parse.Tokenizer', function () {
         });
     });
 
-    describe('multi-character operators', function () {
+    describe('multi-character operators', function() {
+        /* eslint-disable key-spacing */
+        var MULTIOP = {
+            '!=': { type: 'operator', name: 'ne', value: '!=', is: { operator: true, ne: true } },
+            '==': { type: 'operator', name: 'eq', value: '==', is: { operator: true, eq: true } },
+
+            '<=': { type: 'operator', name: 'le', value: '<=', is: { operator: true, le: true } },
+            '<':  { type: 'operator', name: 'lt', value: '<', is: { operator: true, lt: true } },
+            '>':  { type: 'operator', name: 'gt', value: '>', is: { operator: true, gt: true } },
+            '>=': { type: 'operator', name: 'ge', value: '>=', is: { operator: true, ge: true } },
+
+            '=':   { type: 'operator', name: 'assign', value: '=', is: { operator: true, assign: true } },
+            '===': { type: 'operator', name: 'seq', value: '===', is: { operator: true, seq: true } },
+            '!==': { type: 'operator', name: 'sne', value: '!==', is: { operator: true, sne: true } }
+        };
+
         var multiOpTokenizer,
             tokens;
 
-        beforeEach(function () {
+        beforeEach(function() {
             multiOpTokenizer = new Ext.parse.Tokenizer({
                 operators: {
                     '!=': 'ne',
                     '==': 'eq',
                     '<=': 'le',
-                    '<':  'lt',
-                    '>':  'gt',
+                    '<': 'lt',
+                    '>': 'gt',
                     '>=': 'ge',
                     '=': 'assign',
                     '===': 'seq',
@@ -736,272 +796,247 @@ describe('Ext.parse.Tokenizer', function () {
             tokens = tokenize(multiOpTokenizer, '< <= > >= \t=\t!= == === !==');
         });
 
-        it('should tokenize less-than operator', function () {
-            expect(tokens[0]).toEqual({
-                type: 'operator',
-                value: '<',
-                is: {
-                    operator: true,
-                    lt: true
-                }
-            });
+        it('should tokenize less-than operator', function() {
+            expect(tokens[0]).toEqual(MULTIOP['<']);
         });
 
-        it('should tokenize less-than-or-equal operator', function () {
-            expect(tokens[1]).toEqual({
-                type: 'operator',
-                value: '<=',
-                is: {
-                    operator: true,
-                    le: true
-                }
-            });
+        it('should tokenize less-than-or-equal operator', function() {
+            expect(tokens[1]).toEqual(MULTIOP['<=']);
         });
 
-        it('should tokenize greater-than operator', function () {
-            expect(tokens[2]).toEqual({
-                type: 'operator',
-                value: '>',
-                is: {
-                    operator: true,
-                    gt: true
-                }
-            });
+        it('should tokenize greater-than operator', function() {
+            expect(tokens[2]).toEqual(MULTIOP['>']);
         });
 
-        it('should tokenize greater-than-or-equal operator', function () {
-            expect(tokens[3]).toEqual({
-                type: 'operator',
-                value: '>=',
-                is: {
-                    operator: true,
-                    ge: true
-                }
-            });
+        it('should tokenize greater-than-or-equal operator', function() {
+            expect(tokens[3]).toEqual(MULTIOP['>=']);
         });
 
-        it('should tokenize assignment operator', function () {
-            expect(tokens[4]).toEqual({
-                type: 'operator',
-                value: '=',
-                is: {
-                    operator: true,
-                    assign: true
-                }
-            });
+        it('should tokenize assignment operator', function() {
+            expect(tokens[4]).toEqual(MULTIOP['=']);
         });
 
-        it('should tokenize not-equals operator', function () {
-            expect(tokens[5]).toEqual({
-                type: 'operator',
-                value: '!=',
-                is: {
-                    operator: true,
-                    ne: true
-                }
-            });
+        it('should tokenize not-equals operator', function() {
+            expect(tokens[5]).toEqual(MULTIOP['!=']);
         });
 
-        it('should tokenize equals operator', function () {
-            expect(tokens[6]).toEqual({
-                type: 'operator',
-                value: '==',
-                is: {
-                    operator: true,
-                    eq: true
-                }
-            });
+        it('should tokenize equals operator', function() {
+            expect(tokens[6]).toEqual(MULTIOP['==']);
         });
 
-        it('should tokenize strict equality operator', function () {
-            expect(tokens[7]).toEqual({
-                type: 'operator',
-                value: '===',
-                is: {
-                    operator: true,
-                    seq: true
-                }
-            });
+        it('should tokenize strict equality operator', function() {
+            expect(tokens[7]).toEqual(MULTIOP['===']);
         });
 
-        it('should tokenize strict inequality operator', function () {
-            expect(tokens[8]).toEqual({
-                type: 'operator',
-                value: '!==',
-                is: {
-                    operator: true,
-                    sne: true
-                }
-            });
+        it('should tokenize strict inequality operator', function() {
+            expect(tokens[8]).toEqual(MULTIOP['!==']);
         });
     });
 
-    describe('all the things', function () {
+    describe('all the things', function() {
         var tokens;
 
-        beforeEach(function () {
+        beforeEach(function() {
             if (tokens) {
                 return;
             }
 
             tokens = tokenize('foo: bar ( ' +
-                    '"\\"a\\\\b\'):\\"" , '+
+                    '"\\"a\\\\b\'):\\"" , ' +
                     '32,' +
-                    '! zip.fiz:woot(true,null)'+
+                    '! zip.fiz:woot(true,null)' +
                 '):ack(\'x\\\'"y\', 32e-21 , -3.14e0 )');
         });
 
-        it('should parse token 0', function () {
+        it('should parse token 0', function() {
             expect(tokens[0]).toEqual(
                 { type: 'ident', is: { ident: true }, value: 'foo' }
             );
         });
 
-        it('should parse token 1', function () {
+        it('should parse token 1', function() {
             expect(tokens[1]).toEqual(OPERATORS[':']);
         });
 
-        it('should parse token 2', function () {
+        it('should parse token 2', function() {
             expect(tokens[2]).toEqual(
                 { type: 'ident', is: { ident: true }, value: 'bar' }
             );
         });
 
-        it('should parse token 3', function () {
+        it('should parse token 3', function() {
             expect(tokens[3]).toEqual(OPERATORS['(']);
         });
 
-        it('should parse token 4', function () {
-            expect(tokens[4]).toEqual(
-                { type: 'literal', is: { literal: true, string: true }, value: '"a\\b\'):"' }
-            );
+        it('should parse token 4', function() {
+            expect(tokens[4]).toEqual({
+                type: 'literal',
+                is: {
+                    literal: true,
+                    string: true,
+                    type: 'string'
+                },
+                value: '"a\\b\'):"'
+            });
         });
 
-        it('should parse token 5', function () {
+        it('should parse token 5', function() {
             expect(tokens[5]).toEqual(OPERATORS[',']);
         });
 
-        it('should parse token 6', function () {
-            expect(tokens[6]).toEqual(
-                { type: 'literal', is: { literal: true, number: true }, value: 32 }
-            );
+        it('should parse token 6', function() {
+            expect(tokens[6]).toEqual({
+                type: 'literal',
+                is: {
+                    literal: true,
+                    number: true,
+                    type: 'number'
+                },
+                value: 32
+            });
         });
 
-        it('should parse token 7', function () {
+        it('should parse token 7', function() {
             expect(tokens[7]).toEqual(OPERATORS[',']);
         });
 
-        it('should parse token 8', function () {
+        it('should parse token 8', function() {
             expect(tokens[8]).toEqual(OPERATORS['!']);
         });
 
-        it('should parse token 9', function () {
+        it('should parse token 9', function() {
             expect(tokens[9]).toEqual(
                 { type: 'ident', is: { ident: true }, value: 'zip.fiz' }
             );
         });
 
-        it('should parse token 10', function () {
+        it('should parse token 10', function() {
             expect(tokens[10]).toEqual(OPERATORS[':']);
         });
 
-        it('should parse token 11', function () {
+        it('should parse token 11', function() {
             expect(tokens[11]).toEqual(
                 { type: 'ident', is: { ident: true }, value: 'woot' }
             );
         });
 
-        it('should parse token 12', function () {
+        it('should parse token 12', function() {
             expect(tokens[12]).toEqual(OPERATORS['(']);
         });
 
-        it('should parse token 13', function () {
-            expect(tokens[13]).toEqual(
-                { type: 'literal', is: { literal: true, boolean: true }, value: true }
-            );
+        it('should parse token 13', function() {
+            expect(tokens[13]).toEqual({
+                type: 'literal',
+                is: {
+                    literal: true,
+                    boolean: true,
+                    type: 'boolean'
+                },
+                value: true
+            });
         });
 
-        it('should parse token 14', function () {
+        it('should parse token 14', function() {
             expect(tokens[14]).toEqual(OPERATORS[',']);
         });
 
-        it('should parse token 15', function () {
+        it('should parse token 15', function() {
             expect(tokens[15]).toEqual(
                 { type: 'literal', is: { literal: true, nil: true }, value: null }
             );
         });
 
-        it('should parse token 16', function () {
+        it('should parse token 16', function() {
             expect(tokens[16]).toEqual(OPERATORS[')']);
         });
 
-        it('should parse token 17', function () {
+        it('should parse token 17', function() {
             expect(tokens[17]).toEqual(OPERATORS[')']);
         });
 
-        it('should parse token 18', function () {
+        it('should parse token 18', function() {
             expect(tokens[18]).toEqual(OPERATORS[':']);
         });
 
-        it('should parse token 19', function () {
+        it('should parse token 19', function() {
             expect(tokens[19]).toEqual(
                 { type: 'ident', is: { ident: true }, value: 'ack' }
             );
         });
 
-        it('should parse token 20', function () {
+        it('should parse token 20', function() {
             expect(tokens[20]).toEqual(OPERATORS['(']);
         });
 
-        it('should parse token 21', function () {
-            expect(tokens[21]).toEqual(
-                { type: 'literal', is: { literal: true, string: true }, value: 'x\'"y' }
-            );
+        it('should parse token 21', function() {
+            expect(tokens[21]).toEqual({
+                type: 'literal',
+                is: {
+                    literal: true,
+                    string: true,
+                    type: 'string'
+                },
+                value: 'x\'"y'
+            });
         });
 
-        it('should parse token 22', function () {
+        it('should parse token 22', function() {
             expect(tokens[22]).toEqual(OPERATORS[',']);
         });
 
-        it('should parse token 23', function () {
-            expect(tokens[23]).toEqual(
-                { type: 'literal', is: { literal: true, number: true }, value: 32e-21 }
-            );
+        it('should parse token 23', function() {
+            expect(tokens[23]).toEqual({
+                type: 'literal',
+                is: {
+                    literal: true,
+                    number: true,
+                    type: 'number'
+                },
+                value: 32e-21
+            });
         });
 
-        it('should parse token 24', function () {
+        it('should parse token 24', function() {
             expect(tokens[24]).toEqual(OPERATORS[',']);
         });
 
-        it('should parse token 25', function () {
+        it('should parse token 25', function() {
             expect(tokens[24]).toEqual(OPERATORS[',']);
         });
 
-        it('should parse token 26', function () {
-            expect(tokens[26]).toEqual(
-                { type: 'literal', is: { literal: true, number: true }, value: 3.14 }
-            );
+        it('should parse token 26', function() {
+            expect(tokens[26]).toEqual({
+                type: 'literal',
+                is: {
+                    literal: true,
+                    number: true,
+                    type: 'number'
+                },
+                value: 3.14
+            });
         });
 
-        it('should parse token 27', function () {
+        it('should parse token 27', function() {
             expect(tokens[27]).toEqual(OPERATORS[')']);
         });
 
-        it('should parse token 28', function () {
+        it('should parse token 28', function() {
             expect(tokens[28]).toBe(null);
         });
 
-        it('should parse all the tokens', function () {
+        it('should parse all the tokens', function() {
             expect(tokens.length).toBe(29);
         });
     });
 
-    describe('syntax errors', function () {
-        it('should catch invalid characters', function () {
+    describe('syntax errors', function() {
+        it('should catch invalid characters', function() {
             tokenizer.reset('&');
 
             var t0 = tokenizer.next();
+
             var t1 = tokenizer.next();
+
             var t2 = tokenizer.next();
 
             expect(t0 instanceof Error).toBe(true);
@@ -1013,18 +1048,21 @@ describe('Ext.parse.Tokenizer', function () {
             expect(t2).toBe(t0);  // never recovers from error
         });
 
-        it('should catch invalid characters after valid ones', function () {
+        it('should catch invalid characters after valid ones', function() {
             tokenizer.reset('123&');
 
             var t0 = tokenizer.next();
+
             var t1 = tokenizer.next();
+
             var t2 = tokenizer.next();
 
             expect(t0).toEqual({
                 type: 'literal',
                 is: {
                     literal: true,
-                    number: true
+                    number: true,
+                    type: 'number'
                 },
                 value: 123
             });
@@ -1037,11 +1075,13 @@ describe('Ext.parse.Tokenizer', function () {
             expect(t2).toBe(t1);  // never recovers from error
         });
 
-        it('should handle errors after dotpath identifiers', function () {
+        it('should handle errors after dotpath identifiers', function() {
             tokenizer.reset('foo.bar\t bar.baz.zip &');
 
             var t0 = tokenizer.next();
+
             var t1 = tokenizer.next();
+
             var t2 = tokenizer.next();
 
             expect(t0).toEqual({
@@ -1066,10 +1106,11 @@ describe('Ext.parse.Tokenizer', function () {
             expect(t2.at).toBe(21);
         });
 
-        it('should report dotpaths with adjacent dots', function () {
+        it('should report dotpaths with adjacent dots', function() {
             tokenizer.reset('foo..bar');
 
             var t0 = tokenizer.next();
+
             var t1 = tokenizer.next();
 
             expect(t0 instanceof Error).toBe(true);
@@ -1080,10 +1121,11 @@ describe('Ext.parse.Tokenizer', function () {
             expect(t1).toBe(t0);
         });
 
-        it('should report dotpaths that start with a dot', function () {
+        it('should report dotpaths that start with a dot', function() {
             tokenizer.reset(' .foo');
 
             var t0 = tokenizer.next();
+
             var t1 = tokenizer.next();
 
             expect(t0 instanceof Error).toBe(true);
@@ -1094,10 +1136,11 @@ describe('Ext.parse.Tokenizer', function () {
             expect(t1).toBe(t0);
         });
 
-        it('should report dotpaths that end with a dot', function () {
+        it('should report dotpaths that end with a dot', function() {
             tokenizer.reset('foo.');
 
             var t0 = tokenizer.next();
+
             var t1 = tokenizer.next();
 
             expect(t0 instanceof Error).toBe(true);

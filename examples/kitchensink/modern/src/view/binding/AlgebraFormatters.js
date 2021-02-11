@@ -2,13 +2,8 @@
  * This example shows data binding using formatters in expressions.
  */
 Ext.define('KitchenSink.view.binding.AlgebraFormatters', {
-    extend: 'Ext.panel.Panel',
-    alias: 'widget.binding-algebra-formatters',
-
-    bodyPadding: 10,
-
-    shadow: true,
-    cls: 'demo-solid-background',
+    extend: 'Ext.Container',
+    xtype: 'binding-algebra-formatters',
 
     viewModel: {
         type: 'default',
@@ -17,7 +12,26 @@ Ext.define('KitchenSink.view.binding.AlgebraFormatters', {
             y: 10.52
         }
     },
-    
+
+    //<example>
+    profiles: {
+        defaults: {
+            width: 400
+        },
+        phone: {
+            defaults: {
+                width: undefined
+            }
+        }
+    },
+
+    cls: 'demo-solid-background',
+    //</example>
+
+    padding: 20,
+    width: '${width}',
+    autoSize: true,
+
     defaults: {
         xtype: 'textfield',
         readOnly: true

@@ -63,13 +63,46 @@ Ext.define('Ext.view.MultiSelectorSearch', {
 
     xtype: 'multiselector-search',
 
+    /**
+     * @cfg layout
+     * @inheritdoc
+     */
     layout: 'fit',
 
+    /**
+     * @cfg floating
+     * @inheritdoc
+     */
     floating: true,
+
+    /**
+     * @cfg alignOnScroll
+     * @inheritdoc
+     */
     alignOnScroll: false,
+
+    /**
+     * @cfg minWidth
+     * @inheritdoc
+     */
     minWidth: 200,
+
+    /**
+     * @cfg minHeight
+     * @inheritdoc
+     */
     minHeight: 200,
+
+    /**
+     * @cfg border
+     * @inheritdoc
+     */
     border: true,
+
+    /**
+     * @cfg keyMap
+     * @inheritdoc
+     */
     keyMap: {
         scope: 'this',
         ESC: 'hide'
@@ -91,7 +124,16 @@ Ext.define('Ext.view.MultiSelectorSearch', {
         }
     },
 
+    /**
+     * @cfg defaultListenerScope
+     * @inheritdoc
+     */
     defaultListenerScope: true,
+
+    /**
+     * @cfg referenceHolder
+     * @inheritdoc
+     */
     referenceHolder: true,
 
     /**
@@ -101,7 +143,7 @@ Ext.define('Ext.view.MultiSelectorSearch', {
 
     /**
      * @cfg store
-     * @inheritdoc Ext.panel.Table#store
+     * @inheritdoc Ext.panel.Table#cfg-store
      */
 
     /**
@@ -110,7 +152,7 @@ Ext.define('Ext.view.MultiSelectorSearch', {
      */
     searchText: 'Search...',
 
-    initComponent: function () {
+    initComponent: function() {
         var me = this,
             owner = me.owner,
             items = me.makeItems(),
@@ -121,7 +163,7 @@ Ext.define('Ext.view.MultiSelectorSearch', {
 
         store = Ext.data.StoreManager.lookup(me.store);
 
-        for (i = items.length; i--; ) {
+        for (i = items.length; i--;) {
             if ((item = items[i]).xtype === 'grid') {
                 item.store = store;
                 item.isSearchGrid = true;
@@ -150,8 +192,9 @@ Ext.define('Ext.view.MultiSelectorSearch', {
         me.callParent();
 
         records = me.getOwnerStore().getRange();
+
         if (!owner.convertSelectionRecord.$nullFn) {
-            for (i = records.length; i--; ) {
+            for (i = records.length; i--;) {
                 records[i] = owner.convertSelectionRecord(records[i]);
             }
         }
@@ -165,8 +208,9 @@ Ext.define('Ext.view.MultiSelectorSearch', {
                 if (!me.destroyed) {
                     me.selectRecords(records);
                 }
-            }, null, {single: true});
-        } else {
+            }, null, { single: true });
+        }
+        else {
             me.selectRecords(records);
         }
     },
@@ -175,16 +219,20 @@ Ext.define('Ext.view.MultiSelectorSearch', {
         return this.owner.getStore();
     },
 
-    afterShow: function () {
+    afterShow: function() {
+        var searchField;
+
         this.callParent(arguments);
 
         // Do not focus if this was invoked by a touch gesture
         if (!this.invocationEvent || this.invocationEvent.pointerType !== 'touch') {
-            var searchField = this.lookupReference('searchField');
+            searchField = this.lookupReference('searchField');
+
             if (searchField) {
                 searchField.focus();
             }
         }
+
         this.invocationEvent = null;
     },
 
@@ -195,18 +243,20 @@ Ext.define('Ext.view.MultiSelectorSearch', {
      * store.
      * @return {Ext.data.Store}
      */
-    getSearchStore: function () {
+    getSearchStore: function() {
         var searchGrid = this.lookupReference('searchGrid');
+
         return searchGrid.getStore();
     },
 
-    makeDockedItems: function () {
+    makeDockedItems: function() {
         return [{
             xtype: 'textfield',
             reference: 'searchField',
             dock: 'top',
             hideFieldLabel: true,
             emptyText: this.searchText,
+            cls: Ext.baseCSSPrefix + 'multiselector-search-input',
             triggers: {
                 clear: {
                     cls: Ext.baseCSSPrefix + 'form-clear-trigger',
@@ -228,10 +278,10 @@ Ext.define('Ext.view.MultiSelectorSearch', {
         if (event.getKey() === event.TAB && event.shiftKey) {
             event.preventDefault();
             this.owner.searchTool.focus();
-        };
+        }
     },
 
-    makeItems: function () {
+    makeItems: function() {
         return [{
             xtype: 'grid',
             reference: 'searchGrid',
@@ -244,7 +294,7 @@ Ext.define('Ext.view.MultiSelectorSearch', {
         }];
     },
 
-    getMatchingRecords: function (records) {
+    getMatchingRecords: function(records) {
         var searchGrid = this.lookupReference('searchGrid'),
             store = searchGrid.getStore(),
             selections = [],
@@ -263,23 +313,27 @@ Ext.define('Ext.view.MultiSelectorSearch', {
         return selections;
     },
 
-    selectRecords: function (records) {
+    selectRecords: function(records) {
         var searchGrid = this.lookupReference('searchGrid');
-        // match up passed records to the records in the search store so that the right internal ids are used
+
+        // match up passed records to the records in the search store so that the right
+        // internal ids are used
         records = this.getMatchingRecords(records);
-        
+
         return searchGrid.getSelectionModel().select(records);
     },
 
     deselectRecords: function(records) {
         var searchGrid = this.lookupReference('searchGrid');
-        // match up passed records to the records in the search store so that the right internal ids are used
+
+        // match up passed records to the records in the search store so that the right
+        // internal ids are used
         records = this.getMatchingRecords(records);
 
         return searchGrid.getSelectionModel().deselect(records);
     },
 
-    search: function (text) {
+    search: function(text) {
         var me = this,
             filter = me.searchFilter,
             filters = me.getSearchStore().getFilters();
@@ -289,7 +343,8 @@ Ext.define('Ext.view.MultiSelectorSearch', {
 
             if (filter) {
                 filter.setValue(text);
-            } else {
+            }
+            else {
                 me.searchFilter = filter = new Ext.util.Filter({
                     id: 'search',
                     property: me.field,
@@ -300,19 +355,21 @@ Ext.define('Ext.view.MultiSelectorSearch', {
             filters.add(filter);
 
             filters.endUpdate();
-        } else if (filter) {
+        }
+        else if (filter) {
             filters.remove(filter);
         }
     },
 
     privates: {
-        onClearSearch: function () {
+        onClearSearch: function() {
             var searchField = this.lookupReference('searchField');
+
             searchField.setValue(null);
             searchField.focus();
         },
 
-        onSearchChange: function (searchField) {
+        onSearchChange: function(searchField) {
             var value = searchField.getValue(),
                 trigger = searchField.getTrigger('clear');
 
@@ -320,7 +377,7 @@ Ext.define('Ext.view.MultiSelectorSearch', {
             this.search(value);
         },
 
-        onSelectionChange: function (selModel, selection) {
+        onSelectionChange: function(selModel, selection) {
             var owner = this.owner,
                 store = owner.getStore(),
                 data = store.data,
@@ -328,7 +385,7 @@ Ext.define('Ext.view.MultiSelectorSearch', {
                 map = {},
                 add, i, id, record;
 
-            for (i = selection.length; i--; ) {
+            for (i = selection.length; i--;) {
                 record = selection[i];
                 id = record.id;
                 map[id] = record;
@@ -338,8 +395,9 @@ Ext.define('Ext.view.MultiSelectorSearch', {
                 }
             }
 
-            for (i = data.length; i--; ) {
+            for (i = data.length; i--;) {
                 record = data.getAt(i);
+
                 if (!map[record.id]) {
                     (remove || (remove = [])).push(record);
                 }

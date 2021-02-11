@@ -7,7 +7,6 @@
 Ext.onReady(function() {
     if (Ext.Date) {
         Ext.Date.monthNames = ["januari", "februari", "mars", "april", "maj", "juni", "juli", "augusti", "september", "oktober", "november", "december"];
-
         Ext.Date.dayNames = ["söndag", "måndag", "tisdag", "onsdag", "torsdag", "fredag", "lördag"];
 
         Ext.Date.formatCodes.a = "(m.getHours() < 12 ? 'em' : 'fm')";

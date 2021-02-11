@@ -1,4 +1,4 @@
-describe('Ext.util.CSS', function() {
+topSuite("Ext.util.CSS", 'Ext.dom.Element', function() {
     var div;
 
     beforeEach(function() {
@@ -8,14 +8,16 @@ describe('Ext.util.CSS', function() {
         });
         div.dom.className = 'ext-css-test';
     });
+
     afterEach(function() {
         div.destroy();
     });
 
     it('should create a stylesheet, and apply and update rules', function() {
-        
+
         // Create a stylesheet with a single rule in it
         var stylesheet = Ext.util.CSS.createStyleSheet('.ext-css-test { background-color:red}', 'unit-test-stylesheet');
+
         expect(div.getStyle('background-color') === "rgb(255, 0, 0)" || div.getStyle('background-color') === "red").toBe(true);
 
         // Update the single rule in the above stylesheet
@@ -31,13 +33,14 @@ describe('Ext.util.CSS', function() {
         expect(div.getStyle('color') === "rgb(255, 0, 0)" || div.getStyle('color') === "red").toBe(true);
     });
 
-    describe('createStyleSheet', function () {
-        afterEach(function () {
+    describe('createStyleSheet', function() {
+        afterEach(function() {
             var node = document.getElementById('createStyleSheetSpec');
+
             node.parentNode.removeChild(node);
         });
 
-        it('should append a style accessible in the stylesheets collection', function () {
+        it('should append a style accessible in the stylesheets collection', function() {
             var isIE = Ext.isIE8m,
                 cssText = !isIE ? 'body { background-color: red; }' : 'BODY {\r\n\tBACKGROUND-COLOR: red\r\n}\r\n',
                 ss, cssRules;
@@ -46,7 +49,8 @@ describe('Ext.util.CSS', function() {
 
             if (isIE) {
                 expect(ss.cssText).toBe(cssText);
-            } else {
+            }
+            else {
                 cssRules = ss.cssRules;
                 expect(cssRules.length).toBe(1);
                 expect(cssRules[0].cssText).toBe(cssText);

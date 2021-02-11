@@ -5,7 +5,7 @@ Ext.define('KitchenSink.view.gauge.DefaultGauge', {
     xtype: 'default-gauge',
 
     requires: [
-        'Ext.ux.Gauge'
+        'Ext.ux.gauge.Gauge'
     ],
 
     //<example>
@@ -21,7 +21,7 @@ Ext.define('KitchenSink.view.gauge.DefaultGauge', {
     },
     //</example>
 
-    title: 'Gauge',
+    title: 'Basic gauge',
     width: 560,
     height: 400,
     layout: {
@@ -40,7 +40,8 @@ Ext.define('KitchenSink.view.gauge.DefaultGauge', {
         width: 300,
         fieldLabel: 'Value',
         labelWidth: 60,
-        bind: '{value}'
+        bind: '{value}',
+        publishOnComplete: false
     }],
 
     defaults: {
@@ -60,4 +61,5 @@ Ext.define('KitchenSink.view.gauge.DefaultGauge', {
         trackStart: 180,
         trackLength: 360
     }]
+
 });

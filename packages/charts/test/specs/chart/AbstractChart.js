@@ -1,10 +1,10 @@
-describe('Ext.chart.AbstractChart', function() {
-    var chart, store;
-
-    var Model = Ext.define(null, {
-        extend: 'Ext.data.Model',
-        fields: ['label', 'value']
-    });
+/* global topSuite */
+topSuite("Ext.chart.AbstractChart", ['Ext.chart.*', 'Ext.data.ArrayStore'], function() {
+    var chart, store,
+        Model = Ext.define(null, {
+            extend: 'Ext.data.Model',
+            fields: ['label', 'value']
+        });
 
     function makeStore(rows) {
         var data = [],
@@ -22,6 +22,11 @@ describe('Ext.chart.AbstractChart', function() {
             data: data
         });
     }
+
+    beforeEach(function() {
+        // Tons of warnings regarding Sencha download server in the console
+        spyOn(Ext.log, 'warn');
+    });
 
     afterEach(function() {
         store = chart = Ext.destroy(chart, store);
@@ -51,15 +56,18 @@ describe('Ext.chart.AbstractChart', function() {
                     yField: 'value'
                 }, seriesCfg)
             }, chartCfg);
+
             if (storeOnSeries) {
                 if (!cfg.series.store) {
                     cfg.series.store = makeStore(3);
                 }
-            } else {
+            }
+            else {
                 if (!cfg.store) {
                     cfg.store = makeStore(3);
                 }
             }
+
             chart = new Ext.chart.CartesianChart(cfg);
         }
 
@@ -70,8 +78,10 @@ describe('Ext.chart.AbstractChart', function() {
             for (key in o) {
                 ret[key] = o[key];
             }
+
             delete ret._decr_;
             delete ret._incr_;
+
             return ret;
         }
 
@@ -115,7 +125,9 @@ describe('Ext.chart.AbstractChart', function() {
             describe("destruction", function() {
                 it("should remove all listeners", function() {
                     makeStore(3);
+
                     var listeners = extractHasListeners(store.hasListeners);
+
                     makeStoreChart({
                         store: store
                     });
@@ -143,8 +155,8 @@ describe('Ext.chart.AbstractChart', function() {
                 });
             });
 
-            describe("change", function () {
-                it("should fire 'storechange' event", function () {
+            describe("change", function() {
+                it("should fire 'storechange' event", function() {
                     var isFired = false,
                         store1 = new Ext.data.Store({
                             model: Model
@@ -158,7 +170,7 @@ describe('Ext.chart.AbstractChart', function() {
                         store: store1
                     });
 
-                    chart.on('storechange', function (chart, newStore, oldStore) {
+                    chart.on('storechange', function(chart, newStore, oldStore) {
                         isFired = true;
                         param1 = chart;
                         param2 = newStore;
@@ -218,7 +230,9 @@ describe('Ext.chart.AbstractChart', function() {
             describe("destruction", function() {
                 it("should remove all listeners", function() {
                     makeStore(3);
+
                     var listeners = extractHasListeners(store.hasListeners);
+
                     makeSeriesChart(null, {
                         store: store
                     });
@@ -273,8 +287,8 @@ describe('Ext.chart.AbstractChart', function() {
                 });
             });
 
-            describe("change", function () {
-                it("should fire 'storechange' event", function () {
+            describe("change", function() {
+                it("should fire 'storechange' event", function() {
                     var isFired = false,
                         store1 = new Ext.data.Store({
                             model: Model
@@ -290,7 +304,7 @@ describe('Ext.chart.AbstractChart', function() {
 
                     series = chart.getSeries()[0];
 
-                    series.on('storechange', function (series, newStore, oldStore) {
+                    series.on('storechange', function(series, newStore, oldStore) {
                         isFired = true;
                         param1 = series;
                         param2 = newStore;
@@ -310,15 +324,21 @@ describe('Ext.chart.AbstractChart', function() {
     });
 
     describe('adding and removing series', function() {
+
+        var layoutDone;
+
         beforeEach(function() {
             store = new Ext.data.Store({
                 fields: ['x', 'y', 'z'],
                 data: [
-                    {x: 0, y: 0, z: 0},
-                    {x: 1, y: 1, z: 1}
+                    { x: 0, y: 0, z: 0 },
+                    { x: 1, y: 1, z: 1 }
                 ]
             });
             chart = new Ext.chart.CartesianChart({
+                renderTo: Ext.getBody(),
+                width: 400,
+                height: 400,
                 store: store,
                 axes: [{
                     position: 'left',
@@ -326,8 +346,17 @@ describe('Ext.chart.AbstractChart', function() {
                 }, {
                     position: 'bottom',
                     type: 'numeric'
-                }]
+                }],
+                listeners: {
+                    layout: function() {
+                        layoutDone = true;
+                    }
+                }
             });
+        });
+
+        afterEach(function() {
+            layoutDone = false;
         });
 
         it('should start with no series', function() {
@@ -337,90 +366,177 @@ describe('Ext.chart.AbstractChart', function() {
         it('should add and remove series using setSeries', function() {
             var series;
 
-            chart.setSeries([{
-                type: 'line',
-                xField: 'x',
-                yField: 'y',
-                id: 'xySeries'
-            }]);
-            series = chart.getSeries();
+            waitsFor(function() {
+                return layoutDone;
+            });
 
-            expect(series.length).toBe(1);
-            expect(series[0].getId()).toBe('xySeries');
+            runs(function() {
+                layoutDone = false;
 
-            chart.setSeries([{
-                type: 'line',
-                xField: 'x',
-                yField: 'z',
-                id: 'xzSeries'
-            }]);
-            series = chart.getSeries();
+                chart.setSeries([{
+                    type: 'line',
+                    xField: 'x',
+                    yField: 'y',
+                    id: 'xySeries'
+                }]);
+            });
 
-            expect(series.length).toBe(1);
-            expect(series[0].getId()).toBe('xzSeries');
+            waitsFor(function() {
+                return layoutDone;
+            });
+
+            runs(function() {
+                layoutDone = false;
+
+                series = chart.getSeries();
+
+                expect(series.length).toBe(1);
+                expect(series[0].getId()).toBe('xySeries');
+
+                chart.setSeries([{
+                    type: 'line',
+                    xField: 'x',
+                    yField: 'z',
+                    id: 'xzSeries'
+                }]);
+            });
+
+            waitsFor(function() {
+                return layoutDone;
+            });
+
+            runs(function() {
+                layoutDone = false;
+
+                series = chart.getSeries();
+
+                expect(series.length).toBe(1);
+                expect(series[0].getId()).toBe('xzSeries');
+            });
         });
 
         it('should add series using addSeries', function() {
             var series;
 
-            chart.addSeries([{
-                type: 'line',
-                xField: 'x',
-                yField: 'y',
-                id: 'xySeries'
-            }]);
-            series = chart.getSeries();
-
-            expect(series.length).toBe(1);
-            expect(series[0].getId()).toBe('xySeries');
-
-            chart.addSeries({
-                type: 'line',
-                xField: 'x',
-                yField: 'z',
-                id: 'xzSeries'
+            waitsFor(function() {
+                return layoutDone;
             });
-            series = chart.getSeries();
 
-            expect(series.length).toBe(2);
-            expect(series[0].getId()).toBe('xySeries');
-            expect(series[1].getId()).toBe('xzSeries');
+            runs(function() {
+                layoutDone = false;
+
+                chart.addSeries([{
+                    type: 'line',
+                    xField: 'x',
+                    yField: 'y',
+                    id: 'xySeries'
+                }]);
+            });
+
+            waitsFor(function() {
+                return layoutDone;
+            });
+
+            runs(function() {
+                layoutDone = false;
+
+                series = chart.getSeries();
+
+                expect(series.length).toBe(1);
+                expect(series[0].getId()).toBe('xySeries');
+
+                chart.addSeries({
+                    type: 'line',
+                    xField: 'x',
+                    yField: 'z',
+                    id: 'xzSeries'
+                });
+            });
+
+            waitsFor(function() {
+                return layoutDone;
+            });
+
+            runs(function() {
+                layoutDone = false;
+
+                series = chart.getSeries();
+
+                expect(series.length).toBe(2);
+                expect(series[0].getId()).toBe('xySeries');
+                expect(series[1].getId()).toBe('xzSeries');
+            });
         });
 
         it('should remove series using removeSeries', function() {
             var series;
 
-            chart.addSeries([{
-                type: 'line',
-                xField: 'x',
-                yField: 'y',
-                id: 'xySeries'
-            }, {
-                type: 'line',
-                xField: 'x',
-                yField: 'z',
-                id: 'xzSeries'
-            }]);
-            series = chart.getSeries();
+            waitsFor(function() {
+                return layoutDone;
+            });
 
-            expect(series.length).toBe(2);
-            expect(series[0].getId()).toBe('xySeries');
-            expect(series[1].getId()).toBe('xzSeries');
+            runs(function() {
+                layoutDone = false;
 
-            // Remove Series id "xySeries", should leave only "xzSeries"
-            chart.removeSeries('xySeries');
-            series = chart.getSeries();
-            expect(series.length).toBe(1);
-            expect(series[0].getId()).toBe('xzSeries');
+                chart.addSeries([{
+                    type: 'line',
+                    xField: 'x',
+                    yField: 'y',
+                    id: 'xySeries'
+                }, {
+                    type: 'line',
+                    xField: 'x',
+                    yField: 'z',
+                    id: 'xzSeries'
+                }]);
+            });
 
-            // Remove a Series by specifying the instance should leav no Series
-            chart.removeSeries(series[0]);
-            expect(chart.getSeries().length).toBe(0);
+            waitsFor(function() {
+                return layoutDone;
+            });
+
+            runs(function() {
+                layoutDone = false;
+
+                series = chart.getSeries();
+
+                expect(series.length).toBe(2);
+                expect(series[0].getId()).toBe('xySeries');
+                expect(series[1].getId()).toBe('xzSeries');
+
+                // Remove Series id "xySeries", should leave only "xzSeries"
+                chart.removeSeries('xySeries');
+            });
+
+            waitsFor(function() {
+                return layoutDone;
+            });
+
+            runs(function() {
+                layoutDone = false;
+
+                series = chart.getSeries();
+                expect(series.length).toBe(1);
+                expect(series[0].getId()).toBe('xzSeries');
+
+                // Remove a Series by specifying the instance should leav no Series
+                chart.removeSeries(series[0]);
+            });
+
+            waitsFor(function() {
+                return layoutDone;
+            });
+
+            runs(function() {
+                layoutDone = false;
+
+                expect(chart.getSeries().length).toBe(0);
+            });
         });
     });
 
-    describe('getInteraction', function () {
-        it("should return a correct interaction based on its type", function () {
+    describe('getInteraction', function() {
+        it("should return a correct interaction based on its type", function() {
             makeStore(3);
             chart = new Ext.chart.CartesianChart({
                 store: store,
@@ -459,8 +575,65 @@ describe('Ext.chart.AbstractChart', function() {
         });
     });
 
-    describe("update gradients", function () {
-        beforeEach(function () {
+    describe('processData', function() {
+        it('should refresh legend store', function() {
+            var layoutEnd, processDataSpy;
+
+            runs(function() {
+                chart = new Ext.chart.PolarChart({
+                    animation: false,
+                    renderTo: document.body,
+                    width: 400,
+                    height: 400,
+                    legend: {
+                        docked: 'right'
+                    },
+                    store: {
+                        data: [{
+                            "name": "A",
+                            "data1": 1
+                        }, {
+                            "name": "B",
+                            "data1": 2
+                        }]
+                    },
+                    series: {
+                        type: 'pie3d',
+                        angleField: 'data1',
+                        label: {
+                            field: 'name'
+                        }
+                    },
+                    listeners: {
+                        layout: function() {
+                            layoutEnd = true;
+                        }
+                    }
+                });
+            });
+            waitsFor(function() {
+                return layoutEnd;
+            });
+            runs(function() {
+                layoutEnd = false;
+
+                expect(chart.getLegend().getStore().getAt(0).get('name')).toBe('A');
+                processDataSpy = spyOn(chart, 'processData').andCallThrough();
+                chart.getStore().loadData([{
+                    name: 'X',
+                    data1: 24
+                }, {
+                    name: 'Y',
+                    data1: 25
+                }]);
+                expect(processDataSpy).toHaveBeenCalled();
+                expect(chart.getLegend().getStore().getAt(0).get('name')).toBe('X');
+            });
+        });
+    });
+
+    describe("update gradients", function() {
+        beforeEach(function() {
             makeStore(3);
             chart = new Ext.chart.CartesianChart({
                 store: store,
@@ -497,7 +670,7 @@ describe('Ext.chart.AbstractChart', function() {
             });
         });
 
-        it("should create sprites with the correct gradient applied", function () {
+        it("should create sprites with the correct gradient applied", function() {
             var seriesSprite = chart.getSeries()[0].sprites[0],
                 fillStyle = seriesSprite.attr.fillStyle;
 
@@ -505,7 +678,7 @@ describe('Ext.chart.AbstractChart', function() {
             expect(fillStyle.isGradient).toBe(true);
         });
 
-        it("should update sprites when gradient has been updated", function () {
+        it("should update sprites when gradient has been updated", function() {
             var seriesSprite = chart.getSeries()[0].sprites[0],
                 fillStyle = seriesSprite.attr.fillStyle,
                 newGradient = [{
@@ -533,6 +706,60 @@ describe('Ext.chart.AbstractChart', function() {
             fillStyle = seriesSprite.attr.fillStyle;
             // should have different colors for updated gradient
             expect(fillStyle.getStops()[0].color).toBe('#000000');
+        });
+    });
+
+    describe('legend render checking if legend is getting rendered along with Chart', function() {
+
+        afterEach(function() {
+            chart = Ext.destroy(chart);
+        });
+
+        it("legend should be rendered", function() {
+            runs(function() {
+                chart = Ext.create({
+                    xtype: 'cartesian',
+                    renderTo: Ext.getBody(),
+                    width: 400,
+                    height: 400,
+                    innerPadding: 10,
+                    store: {
+                        fields: ['name', 'data1'],
+                        data: [[{
+                            age: '0',
+                            value: 400
+                        }, {
+                            age: '2',
+                            value: 150
+                        }, {
+                            age: '4',
+                            value: 120
+                        }, {
+                            age: '6',
+                            value: 100
+                        }, {
+                            age: '8',
+                            value: 1500
+                        }]]
+                    },
+                    legend: {
+                        type: 'dom',
+                        docked: 'right'
+                    },
+                    series: {
+                        type: 'pie',
+                        highlight: true,
+                        angleField: 'data1',
+                        donut: 30
+                    }
+                });
+            });
+
+            runs(function() {
+                var legend = chart.getLegend();
+
+                expect(legend.rendered).toBe(true);
+            });
         });
     });
 });

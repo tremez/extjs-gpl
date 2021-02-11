@@ -4,36 +4,49 @@
 Ext.define('KitchenSink.view.form.LoginForm', {
     extend: 'Ext.form.Panel',
     xtype: 'form-login',
-    
+
     //<example>
     profiles: {
         classic: {
-            labelWidth: 100
+            labelWidth: 100,
+            width: 320
         },
         neptune: {
-            labelWidth: 120
+            labelWidth: 120,
+            width: 320
         },
         gray: {
-            labelWidth: 100
+            labelWidth: 100,
+            width: 320
         },
         "neptune-touch": {
-            labelWidth: 120
+            labelWidth: 120,
+            width: 320
+        },
+        graphite: {
+            labelWidth: 150,
+            width: 420
+        },
+        'classic-material': {
+            labelWidth: 150,
+            width: 420
         }
     },
     //</example>
-    
+
     title: 'Login',
-    frame:true,
-    width: 320,
+    frame: true,
+    width: '${width}',
     bodyPadding: 10,
-    
+
     defaultType: 'textfield',
-    
+
     items: [{
         allowBlank: false,
         fieldLabel: 'User ID',
         name: 'user',
-        emptyText: 'user id'
+        emptyText: 'user id',
+        msgTarget: 'under'
     }, {
         allowBlank: false,
         fieldLabel: 'Password',
@@ -41,16 +54,16 @@ Ext.define('KitchenSink.view.form.LoginForm', {
         emptyText: 'password',
         inputType: 'password'
     }, {
-        xtype:'checkbox',
+        xtype: 'checkbox',
         fieldLabel: 'Remember me',
         name: 'remember'
     }],
-    
+
     buttons: [
-        { text:'Register' },
-        { text:'Login' }
+        { text: 'Register' },
+        { text: 'Login' }
     ],
-    
+
     defaults: {
         anchor: '100%',
         labelWidth: '${labelWidth}'

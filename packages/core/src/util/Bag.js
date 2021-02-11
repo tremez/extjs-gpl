@@ -10,7 +10,7 @@
 Ext.define('Ext.util.Bag', {
     isBag: true,
 
-    constructor: function () {
+    constructor: function() {
         /**
          * @property {Object[]} items
          * An array containing the items.
@@ -48,7 +48,7 @@ Ext.define('Ext.util.Bag', {
 
     endUpdate: Ext.emptyFn,
 
-    add: function (item) {
+    add: function(item) {
         var me = this,
             items = me.items,
             map = me.map,
@@ -67,27 +67,34 @@ Ext.define('Ext.util.Bag', {
             if (idx === undefined) {
                 items.push(it);
                 map[id] = me.length++;
+
                 if (old) {
                     old.push(it);
-                } else {
+                }
+                else {
                     ret = it;
                 }
-            } else {
+            }
+            else {
                 was = items[idx];
+
                 if (old) {
                     old.push(was);
-                } else {
+                }
+                else {
                     ret = was;
                 }
+
                 items[idx] = it;
             }
         }
 
         ++me.generation;
+
         return ret;
     },
 
-    clear: function () {
+    clear: function() {
         var me = this,
             needsClear = me.generation || me.length,
             ret = needsClear ? me.items : [];
@@ -102,7 +109,7 @@ Ext.define('Ext.util.Bag', {
         return ret;
     },
 
-    clone: function () {
+    clone: function() {
         var me = this,
             ret = new me.self(),
             len = me.length;
@@ -123,6 +130,7 @@ Ext.define('Ext.util.Bag', {
 
         if (item != null) {
             key = this.getKey(item);
+
             if (key in map) {
                 ret = this.items[map[key]] === item;
             }
@@ -135,12 +143,12 @@ Ext.define('Ext.util.Bag', {
         return key in this.map;
     },
 
-    destroy: function () {
+    destroy: function() {
         this.items = this.map = null;
         this.callParent();
     },
 
-    each: function (fn, scope) {
+    each: function(fn, scope) {
         var items = this.items,
             len = items.length,
             i, ret;
@@ -151,6 +159,7 @@ Ext.define('Ext.util.Bag', {
 
             for (i = 0; i < len; i++) {
                 ret = fn.call(scope, items[i], i, len);
+
                 if (ret === false) {
                     break;
                 }
@@ -162,9 +171,11 @@ Ext.define('Ext.util.Bag', {
 
     getAt: function(index) {
         var out = null;
+
         if (index < this.length) {
             out = this.items[index];
         }
+
         return out;
     },
 
@@ -234,18 +245,19 @@ Ext.define('Ext.util.Bag', {
         return this.length;
     },
 
-    getKey: function (item) {
+    getKey: function(item) {
         return item.id || item.getId();
     },
 
-    getRange: function (begin, end) {
+    getRange: function(begin, end) {
         var items = this.items,
             length = items.length,
             range;
 
         if (!length) {
             range = [];
-        } else {
+        }
+        else {
             range = Ext.Number.clipIndices(length, [begin, end]);
             range = items.slice(range[0], range[1]);
         }
@@ -253,7 +265,7 @@ Ext.define('Ext.util.Bag', {
         return range;
     },
 
-    remove: function (item) {
+    remove: function(item) {
         var me = this,
             map = me.map,
             items = me.items,
@@ -269,26 +281,29 @@ Ext.define('Ext.util.Bag', {
         if (me.length) {
             for (i = 0; i < n; i++) {
                 idx = map[id = me.getKey(old ? item[i] : item)];
-    
+
                 if (idx !== undefined) {
                     delete map[id];
                     was = items[idx];
+
                     if (old) {
                         old.push(was);
-                    } else {
+                    }
+                    else {
                         ret = was;
                     }
 
                     last = items.pop();
+
                     if (idx < --me.length) {
                         items[idx] = last;
                         map[me.getKey(last)] = idx;
                     }
-    
+
                     changed = true;
                 }
             }
-            
+
             if (changed) {
                 ++me.generation;
             }
@@ -299,18 +314,21 @@ Ext.define('Ext.util.Bag', {
 
     removeByKey: function(key) {
         var item = this.getByKey(key);
+
         if (item) {
             this.remove(item);
         }
+
         return item || null;
     },
 
-    replace: function (item) {
+    replace: function(item) {
         this.add(item);
+
         return item;
     },
 
-    sort: function (fn) {
+    sort: function(fn) {
         var me = this,
             items = me.items,
             n = items.length,

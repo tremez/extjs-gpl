@@ -1,12 +1,21 @@
 /**
- * The slider is a way to allow the user to select a value from a given numerical range. You might use it for choosing
+ * The slider is a way to allow the user to select a value from a given numerical range. 
+ * You might use it for choosing
  */
 Ext.define('Ext.field.SingleSlider', {
-    extend  : 'Ext.field.Slider',
-    xtype   : 'singlesliderfield',
+    extend: 'Ext.field.Slider',
+    xtype: 'singlesliderfield',
 
     /**
-     * @event dragchange
+     * @cfg twoWayBindable
+     * @inheritdoc
+     */
+    twoWayBindable: {
+        value: 1
+    },
+
+    /**
+     * @event change
      * Fires when the value changes.
      * @param {Ext.field.Slider} me
      * @param {Number} newValue The new value.
@@ -50,37 +59,44 @@ Ext.define('Ext.field.SingleSlider', {
     * @param {Array} value The end value.
     * @param {Ext.event.Event} e
     */
-   
+
     /**
-     * @inheritdoc Ext.slider.Slider#value
-     * @cfg {Number} value
+     * @cfg value
+     * @inheritdoc Ext.slider.Slider#cfg-value
      * @accessor
      */
-   
+
+    /**
+     * @property defaultBindProperty
+     * @inheritdoc
+     */
     defaultBindProperty: 'value',
 
+    /**
+     * @cfg publishes
+     * @inheritdoc
+     */
     publishes: {
         value: 1
     },
 
-    initialize: function() {
-        this.callParent();
-        this.publishState('value', this.getValue());
-    },  
-
     applyValue: function(value, oldValue) {
         value = this.callParent([value, oldValue]);
+
         if (value && Ext.isArray(value)) {
             value = value[0];
         }
+
         return value;
     },
 
     getValue: function() {
         var value = this.callParent();
+
         if (value && Ext.isArray(value)) {
             value = value[0];
         }
+
         return value;
     },
 
@@ -95,9 +111,11 @@ Ext.define('Ext.field.SingleSlider', {
 
     onSliderDrag: function(slider, thumb, value, e) {
         var me = this;
+
         if (me.getLiveUpdate()) {
             me.setValue(value);
         }
+
         me.fireEvent('drag', me, slider, value, e);
     },
 

@@ -1,6 +1,9 @@
-describe("mixed layout tests", function() {
+topSuite("Ext.layout.mixed",
+    [false, 'Ext.container.Viewport', 'Ext.layout.*', 'Ext.tab.Panel'],
+function() {
     it("mixed test 1 - no failure", function() {
         var vp;
+
         expect(function() {
             vp = new Ext.container.Viewport({
                 renderTo: Ext.getBody(),
@@ -74,6 +77,7 @@ describe("mixed layout tests", function() {
                 }]
             });
         }).not.toThrow();
+
         vp.destroy();
     });
 });

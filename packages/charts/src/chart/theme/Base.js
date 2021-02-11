@@ -27,6 +27,7 @@
  * 'fontStyle', 'fontVariant', 'fontWeight', 'fontSize' and 'fontFamily'.
  */
 Ext.define('Ext.chart.theme.Base', {
+    extend: 'Ext.chart.theme.BaseTheme',
 
     mixins: {
         factoryable: 'Ext.mixin.Factoryable'
@@ -39,6 +40,7 @@ Ext.define('Ext.chart.theme.Base', {
     },
 
     isTheme: true,
+    isBase: true,
 
     config: {
         /**
@@ -88,14 +90,49 @@ Ext.define('Ext.chart.theme.Base', {
          *     }
          *
          * The values from the chart.defaults and chart.*type* configs (where *type* is a valid
-         * chart xtype, e.g. '{@link Ext.chart.CartesianChart cartesian}' or '{@link Ext.chart.PolarChart polar}')
-         * will be applied to corresponding chart configs.
-         * E.g., the chart.defaults.background config will set the {@link Ext.chart.AbstractChart#background}
-         * config of all charts, where the chart.cartesian.flipXY config will only set the
+         * chart xtype, e.g. '{@link Ext.chart.CartesianChart cartesian}' or
+         * '{@link Ext.chart.PolarChart polar}') will be applied to corresponding chart configs.
+         * E.g., the chart.defaults.background config will set the
+         * {@link Ext.chart.AbstractChart#background} config of all charts, where the
+         * chart.cartesian.flipXY config will only set the
          * {@link Ext.chart.CartesianChart#flipXY} config of all cartesian charts.
          */
         chart: {
             defaults: {
+                captions: {
+                    title: {
+                        docked: 'top',
+                        padding: 5,
+                        style: {
+                            textAlign: 'center',
+                            fontFamily: 'default',
+                            fontWeight: '500',
+                            fillStyle: 'black',
+                            fontSize: 'default*1.6'
+                        }
+                    },
+                    subtitle: {
+                        docked: 'top',
+                        style: {
+                            textAlign: 'center',
+                            fontFamily: 'default',
+                            fontWeight: 'normal',
+                            fillStyle: 'black',
+                            fontSize: 'default*1.3'
+                        }
+                    },
+                    credits: {
+                        docked: 'bottom',
+                        padding: 5,
+                        style: {
+                            textAlign: 'left',
+                            fontFamily: 'default',
+                            fontWeight: 'lighter',
+                            fillStyle: 'black',
+                            fontSize: 'default'
+                        }
+                    }
+                },
                 background: 'white'
             }
         },
@@ -182,8 +219,9 @@ Ext.define('Ext.chart.theme.Base', {
          * The values from the series.defaults and series.*type* configs (where *type*
          * is a valid series {@link Ext.chart.series.Series#type}, e.g. 'line') will be
          * applied to corresponding series configs.
-         * E.g., the series.defaults.label config will apply to the {@link Ext.chart.series.Series#label}
-         * config of all series, where the series.line.step config will only apply to the
+         * E.g., the series.defaults.label config will apply to the
+         * {@link Ext.chart.series.Series#label} config of all series, where the series.line.step
+         * config will only apply to the
          * {@link Ext.chart.series.Line#step} config of {@link Ext.chart.series.Line line} series.
          */
         series: {
@@ -267,42 +305,73 @@ Ext.define('Ext.chart.theme.Base', {
         },
 
         /**
-         * @deprecated Use the {@link Ext.draw.Container#gradients} config instead.
-         * @since 5.0.1
+         * @deprecated 5.0.1 Use the {@link Ext.draw.Container#gradients} config instead.
          */
         useGradients: false,
 
         /**
-         * @deprecated Use the {@link Ext.chart.AbstractChart#background} config instead.
-         * @since 5.0.1
+         * @deprecated 5.0.1 Use the {@link Ext.chart.AbstractChart#background} config instead.
          */
         background: null
     },
 
-    colorDefaults: [ '#94ae0a', '#115fa6', '#a61120', '#ff8809', '#ffd13e', '#a61187', '#24ad9a', '#7c7474', '#a66111' ],
+    colorDefaults: [
+        '#94ae0a',
+        '#115fa6',
+        '#a61120',
+        '#ff8809',
+        '#ffd13e',
+        '#a61187',
+        '#24ad9a',
+        '#7c7474',
+        '#a66111'
+    ],
 
-    constructor: function (config) {
+    constructor: function(config) {
         this.initConfig(config);
         this.resolveDefaults();
     },
 
-    defaultRegEx: /^default([+\-/\*]\d+(?:\.\d+)?)?$/,
+    defaultRegEx: /^default([+\-/*]\d+(?:\.\d+)?)?$/,
 
     defaultOperators: {
-        '*': function (v1, v2) {
+        '*': function(v1, v2) {
             return v1 * v2;
         },
-        '+': function (v1, v2) {
+        '+': function(v1, v2) {
             return v1 + v2;
         },
-        '-': function (v1, v2) {
+        '-': function(v1, v2) {
             return v1 - v2;
         }
     },
 
-    resolveDefaults: function () {
+    resolveChartDefaults: function() {
+        var chart = Ext.clone(this.getChart()),
+            chartType, captionName,
+            chartConfig, captionConfig;
+
+        for (chartType in chart) {
+            chartConfig = chart[chartType];
+
+            if ('captions' in chartConfig) {
+                for (captionName in chartConfig.captions) {
+                    captionConfig = chartConfig.captions[captionName];
+
+                    if (captionConfig) {
+                        this.replaceDefaults(captionConfig.style);
+                    }
+                }
+            }
+        }
+
+        this.setChart(chart);
+    },
+
+    resolveDefaults: function() {
         var me = this;
-        Ext.onReady(function () {
+
+        Ext.onInternalReady(function() {
             var sprites = Ext.clone(me.getSprites()),
                 legend = Ext.clone(me.getLegend()),
                 axis = Ext.clone(me.getAxis()),
@@ -310,7 +379,10 @@ Ext.define('Ext.chart.theme.Base', {
                 div, key, config;
 
             if (!me.superclass.defaults) {
-                div = Ext.getBody().createChild({tag: 'div', cls: 'x-component'});
+                div = Ext.getBody().createChild({
+                    tag: 'div',
+                    cls: me.defaultsDivCls
+                });
                 me.superclass.defaults = {
                     fontFamily: div.getStyle('fontFamily'),
                     fontWeight: div.getStyle('fontWeight'),
@@ -320,6 +392,8 @@ Ext.define('Ext.chart.theme.Base', {
                 };
                 div.destroy();
             }
+
+            me.resolveChartDefaults();
 
             me.replaceDefaults(sprites.text);
             me.setSprites(sprites);
@@ -332,17 +406,19 @@ Ext.define('Ext.chart.theme.Base', {
                 me.replaceDefaults(config.label);
                 me.replaceDefaults(config.title);
             }
+
             me.setAxis(axis);
 
             for (key in series) {
                 config = series[key];
                 me.replaceDefaults(config.label);
             }
+
             me.setSeries(series);
         });
     },
 
-    replaceDefaults: function (target) {
+    replaceDefaults: function(target) {
         var me = this,
             defaults = me.superclass.defaults,
             defaultRegEx = me.defaultRegEx,
@@ -351,33 +427,42 @@ Ext.define('Ext.chart.theme.Base', {
         if (Ext.isObject(target)) {
             for (key in defaults) {
                 match = defaultRegEx.exec(target[key]);
+
                 if (match) {
                     value = defaults[key];
                     match = match[1];
+
                     if (match) {
                         binaryFn = me.defaultOperators[match.charAt(0)];
                         value = Math.round(binaryFn(value, parseFloat(match.substr(1))));
                     }
+
                     target[key] = value;
                 }
             }
         }
     },
 
-    applyBaseColor: function (baseColor) {
+    applyBaseColor: function(baseColor) {
         var midColor, midL;
+
         if (baseColor) {
             midColor = baseColor.isColor ? baseColor : Ext.util.Color.fromString(baseColor);
             midL = midColor.getHSL()[2];
+
             if (midL < 0.15) {
                 midColor = midColor.createLighter(0.3);
-            } else if (midL < 0.3) {
+            }
+            else if (midL < 0.3) {
                 midColor = midColor.createLighter(0.15);
-            } else if (midL > 0.85) {
+            }
+            else if (midL > 0.85) {
                 midColor = midColor.createDarker(0.3);
-            } else if (midL > 0.7) {
+            }
+            else if (midL > 0.7) {
                 midColor = midColor.createDarker(0.15);
             }
+
             this.setColors([
                 midColor.createDarker(0.3).toString(),
                 midColor.createDarker(0.15).toString(),
@@ -387,14 +472,15 @@ Ext.define('Ext.chart.theme.Base', {
                 midColor.createLighter(0.31).toString()
             ]);
         }
+
         return baseColor;
     },
 
-    applyColors: function (newColors) {
+    applyColors: function(newColors) {
         return newColors || this.colorDefaults;
     },
 
-    updateUseGradients: function (useGradients) {
+    updateUseGradients: function(useGradients) {
         if (useGradients) {
             this.updateGradients({
                 type: 'linear',
@@ -403,23 +489,28 @@ Ext.define('Ext.chart.theme.Base', {
         }
     },
 
-    updateBackground: function (background) {
+    updateBackground: function(background) {
+        var chart;
+
         if (background) {
-            var chart = this.getChart();
+            chart = this.getChart();
+
             chart.defaults.background = background;
             this.setChart(chart);
         }
     },
 
-    updateGradients: function (gradients) {
+    updateGradients: function(gradients) {
         var colors = this.getColors(),
-            items = [], gradient,
+            items = [],
+            gradient,
             midColor, color,
             i, ln;
 
         if (Ext.isObject(gradients)) {
             for (i = 0, ln = colors && colors.length || 0; i < ln; i++) {
                 midColor = Ext.util.Color.fromString(colors[i]);
+
                 if (midColor) {
                     color = midColor.createLighter(0.15).toString();
                     gradient = Ext.apply(Ext.Object.chain(gradients), {
@@ -434,32 +525,41 @@ Ext.define('Ext.chart.theme.Base', {
                             }
                         ]
                     });
+
                     items.push(gradient);
                 }
             }
+
             this.setColors(items);
         }
     },
 
-    applySeriesThemes: function (newSeriesThemes) {
+    applySeriesThemes: function(newSeriesThemes) {
+        var colors, color;
+
         // Init the 'colors' config with solid colors generated from the 'baseColor'.
         this.getBaseColor();
+
         // Init the 'gradients' config with a hardcoded value, if the legacy 'useGradients'
         // config was set to 'true'. This in turn updates the 'colors' config.
         this.getUseGradients();
+
         // Init the 'gradients' config normally. This also updates the 'colors' config.
         this.getGradients();
-        var colors = this.getColors(); // Final colors.
+
+        colors = this.getColors(); // Final colors.
+
         if (!newSeriesThemes) {
             newSeriesThemes = {
                 fillStyle: Ext.Array.clone(colors),
-                strokeStyle: Ext.Array.map(colors, function (value) {
-                    var color = Ext.util.Color.fromString(value.stops ? value.stops[0].color : value);
+                strokeStyle: Ext.Array.map(colors, function(value) {
+                    color = Ext.util.Color.fromString(value.stops ? value.stops[0].color : value);
+
                     return color.createDarker(0.15).toString();
                 })
             };
         }
+
         return newSeriesThemes;
     }
-
 });

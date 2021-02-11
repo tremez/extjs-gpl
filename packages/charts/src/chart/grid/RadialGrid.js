@@ -31,13 +31,14 @@ Ext.define('Ext.chart.grid.RadialGrid', {
         }
     },
 
-    render: function () {
+    render: function() {
         this.callParent(arguments);
     },
 
-    updatePath: function (path, attr) {
+    updatePath: function(path, attr) {
         var startRadius = attr.startRadius,
             endRadius = attr.endRadius;
+
         path.moveTo(startRadius, 0);
         path.lineTo(endRadius, 0);
     }

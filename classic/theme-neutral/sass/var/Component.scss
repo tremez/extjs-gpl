@@ -75,4 +75,5 @@ $enable-font-icons: dynamic(false);
  * {@link Global_CSS#$enable-font-icons} is `true`.
  * @private
  */
-$font-icon-font-family: dynamic(FontAwesome);
+$font-icon-font-family: dynamic('Font Awesome 5 Free');
+$font-icon-font-family-regular: dynamic('Font Awesome 5 Free Regular');

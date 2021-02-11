@@ -1,6 +1,3 @@
-.stretch-html .x-innerhtml {
-    height: 100%;
-}
 
 .constrain-source {
     width: 80px;
@@ -12,6 +9,12 @@
     @include border-radius(5px);
     @include user-select(none);
     cursor: move;
+}
+
+@if $theme-name == 'theme-graphite' {
+    .constrain-source {
+        width: 100px;     
+    }
 }
 
 .constrain-drag-ct {

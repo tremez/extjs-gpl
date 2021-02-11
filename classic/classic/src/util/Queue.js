@@ -8,7 +8,7 @@ Ext.define('Ext.util.Queue', {
         this.clear();
     },
 
-    add : function(obj, replace) {
+    add: function(obj, replace) {
         var me = this,
             key = me.getKey(obj),
             prevEntry;
@@ -17,7 +17,8 @@ Ext.define('Ext.util.Queue', {
             ++me.length;
             me.items.push(obj);
             me.map[key] = obj;
-        } else if (replace) {
+        }
+        else if (replace) {
             me.map[key] = obj;
             me.items[Ext.Array.indexOf(me.items, prevEntry)] = obj;
         }
@@ -28,7 +29,7 @@ Ext.define('Ext.util.Queue', {
     /**
      * Removes all items from the collection.
      */
-    clear : function(){
+    clear: function() {
         var me = this,
             items = me.items;
 
@@ -39,7 +40,7 @@ Ext.define('Ext.util.Queue', {
         return items;
     },
 
-    contains: function (obj) {
+    contains: function(obj) {
         var key = this.getKey(obj);
 
         return this.map.hasOwnProperty(key);
@@ -49,12 +50,12 @@ Ext.define('Ext.util.Queue', {
      * Returns the number of items in the collection.
      * @return {Number} the number of items in the collection.
      */
-    getCount : function(){
+    getCount: function() {
         return this.length;
     },
 
-    getKey : function(obj){
-         return obj.id;
+    getKey: function(obj) {
+        return obj.id;
     },
 
     /**
@@ -62,7 +63,7 @@ Ext.define('Ext.util.Queue', {
      * @param {Object} obj The item to remove.
      * @return {Object} The item removed or false if no item was removed.
      */
-    remove : function(obj){
+    remove: function(obj) {
         var me = this,
             key = me.getKey(obj),
             items = me.items,

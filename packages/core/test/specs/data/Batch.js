@@ -1,20 +1,24 @@
-describe("Ext.data.Batch", function() {
+topSuite("Ext.data.Batch", ['Ext.data.operation.*', 'Ext.data.Request'], function() {
     var batch, op1, op2, op3, ops;
-    
+
     function makeOperation(type, cfg) {
         type = Ext.String.capitalize(type || 'create');
+
         var o = new Ext.data.operation[type](cfg);
-        o.doExecute = function() {
+
+        o.doExecute = jasmine.createSpy('doExecute').andCallFake(function() {
             return new Ext.data.Request();
-        };
+        });
+
         return o;
     }
-    
+
     function makeBatch(cfg) {
         batch = new Ext.data.Batch(cfg);
     }
-    
+
     afterEach(function() {
+        Ext.destroy(op1, op2, op3, batch);
         batch = op1 = op2 = op3 = ops = null;
     });
 
@@ -50,7 +54,7 @@ describe("Ext.data.Batch", function() {
         it("should have no operations", function() {
             expect(batch.getOperations()).toEqual([]);
         });
-        
+
         it("should have no exceptions", function() {
             expect(batch.getExceptions()).toEqual([]);
         });
@@ -76,7 +80,7 @@ describe("Ext.data.Batch", function() {
                 expect(batch.getOperations()[0]).toBe(op1);
             });
         });
-        
+
         describe("arrays", function() {
             beforeEach(function() {
                 op1 = makeOperation();
@@ -86,23 +90,24 @@ describe("Ext.data.Batch", function() {
                 makeBatch();
                 batch.add(ops);
             });
-            
+
             it("should set the total", function() {
                 expect(batch.getTotal()).toBe(3);
             });
-            
+
             it("should set the batch on each operation", function() {
                 expect(op1.getBatch()).toBe(batch);
                 expect(op2.getBatch()).toBe(batch);
-                expect(op3.getBatch()).toBe(batch);    
-            });  
-            
+                expect(op3.getBatch()).toBe(batch);
+            });
+
             it("should add them in order", function() {
                 var items = batch.getOperations();
+
                 expect(items[0]).toBe(op1);
                 expect(items[1]).toBe(op2);
                 expect(items[2]).toBe(op3);
-            })
+            });
         });
     });
 
@@ -110,10 +115,10 @@ describe("Ext.data.Batch", function() {
         beforeEach(function() {
             makeBatch();
         });
-        
+
         it("should not run if there are no operations", function() {
             batch.start();
-            expect(batch.isRunning()).toBe(false);    
+            expect(batch.isRunning()).toBe(false);
         });
 
         it("should set isRunning to true", function() {
@@ -130,111 +135,116 @@ describe("Ext.data.Batch", function() {
             expect(op1.execute).toHaveBeenCalled();
         });
     });
-    
+
     describe("running multiple operations", function() {
-        
+
         beforeEach(function() {
             ops = [];
+
             for (var i = 1; i <= 4; ++i) {
-                ops.push(makeOperation('destroy', {id: i}));
+                ops.push(makeOperation('destroy', { id: i }));
             }
-            
+
             makeBatch();
             batch.add(ops);
         });
-        
+
         describe("basic processing", function() {
             it("should execute in order", function() {
                 var values = [];
-                
+
                 Ext.Array.forEach(ops, function(op) {
                     spyOn(op, 'execute').andCallFake(function() {
                         values.push(this.getId());
                         this.execute.originalValue.apply(this, arguments);
                         this.setSuccessful(true);
-                    });    
+                    });
                 });
-                
+
                 batch.start();
-                expect(values).toEqual([1, 2, 3, 4]);           
+                expect(values).toEqual([1, 2, 3, 4]);
             });
-            
+
             it("should wait until the previous operation completes before continuing", function() {
                 var values = [];
-                
+
                 Ext.Array.forEach(ops, function(op) {
                     spyOn(op, 'execute').andCallFake(function() {
                         values.push(this.getId());
                         this.execute.originalValue.apply(this, arguments);
-                    });    
+                    });
                 });
-                
+
                 batch.start();
                 expect(values).toEqual([1]);
-                ops[0].setSuccessful(true); 
+                ops[0].setSuccessful(true);
                 expect(values).toEqual([1, 2]);
-                ops[1].setSuccessful(true); 
+                ops[1].setSuccessful(true);
                 expect(values).toEqual([1, 2, 3]);
                 ops[2].setSuccessful(true);
-                expect(values).toEqual([1, 2, 3, 4]); 
+                expect(values).toEqual([1, 2, 3, 4]);
             });
-            
+
             it("should be able to run an operation added during the batch start", function() {
                 var other = makeOperation();
+
                 spyOn(other, 'execute');
-                
+
                 batch.start();
                 ops[0].setSuccessful(true);
                 ops[1].setSuccessful(true);
                 batch.add(other);
                 ops[2].setSuccessful(true);
-                ops[3].setSuccessful(true)
-                
-                expect(other.execute).toHaveBeenCalled();    
+                ops[3].setSuccessful(true);
+
+                expect(other.execute).toHaveBeenCalled();
             });
-            
+
             it("should keep track of exceptions and continue on", function() {
                 batch.start();
                 ops[0].setException('Failed1');
                 ops[1].setSuccessful(true);
                 ops[2].setSuccessful(true);
                 ops[3].setException('Failed2');
-                
+
                 expect(batch.isComplete()).toBe(true);
                 expect(batch.getExceptions()).toEqual([ops[0], ops[3]]);
             });
         });
-        
+
         describe("events", function() {
             it("should fire the operationcomplete event when an operation completes", function() {
                 var spy = jasmine.createSpy();
+
                 batch.on('operationcomplete', spy);
-                
+
                 batch.start();
                 ops[0].setSuccessful(true);
-                expect(spy.mostRecentCall.args[0]).toBe(batch); 
+                expect(spy.mostRecentCall.args[0]).toBe(batch);
                 expect(spy.mostRecentCall.args[1]).toBe(ops[0]);
                 ops[1].setSuccessful(true);
-                expect(spy.mostRecentCall.args[0]).toBe(batch); 
-                expect(spy.mostRecentCall.args[1]).toBe(ops[1]);    
+                expect(spy.mostRecentCall.args[0]).toBe(batch);
+                expect(spy.mostRecentCall.args[1]).toBe(ops[1]);
             });
-            
+
             it("should fire the complete event when we have completed", function() {
                 var spy = jasmine.createSpy();
+
                 batch.on('complete', spy);
-                
+
                 batch.start();
                 Ext.Array.forEach(ops, function(op) {
-                    op.setSuccessful(true);    
-                });  
+                    op.setSuccessful(true);
+                });
                 expect(spy.mostRecentCall.args[0]).toBe(batch);
                 expect(spy.mostRecentCall.args[1]).toBe(ops[3]);
             });
-            
+
             it("should fire the exception event when an operation fails", function() {
                 var spy = jasmine.createSpy();
+
                 batch.on('exception', spy);
-                
+
                 batch.start();
                 ops[0].setSuccessful(true);
                 ops[1].setException('Failed1');
@@ -243,49 +253,49 @@ describe("Ext.data.Batch", function() {
                 ops[2].setSuccessful(true);
                 ops[3].setException('Failed2');
                 expect(spy.mostRecentCall.args[0]).toBe(batch);
-                expect(spy.mostRecentCall.args[1]).toBe(ops[3]);   
+                expect(spy.mostRecentCall.args[1]).toBe(ops[3]);
             });
-        });  
-        
+        });
+
     });
-    
+
     describe("getCurrent", function() {
         beforeEach(function() {
             makeBatch();
-        });    
-        
+        });
+
         it("should return null if the batch has not started", function() {
             expect(batch.getCurrent()).toBeNull();
         });
-        
+
         it("should return null if the batch is complete", function() {
             op1 = makeOperation();
             op2 = makeOperation();
             batch.add([op1, op2]);
-            
+
             batch.start();
             op1.setSuccessful(true);
             op2.setSuccessful(true);
             expect(batch.getCurrent()).toBeNull();
         });
-        
+
         it("should return the active operation", function() {
             op1 = makeOperation();
             op2 = makeOperation();
             batch.add([op1, op2]);
-            
+
             batch.start();
             expect(batch.getCurrent()).toBe(op1);
             op1.setSuccessful(true);
             expect(batch.getCurrent()).toBe(op2);
             op2.setSuccessful(true);
         });
-        
+
         it("should return the operation even if paused", function() {
             op1 = makeOperation();
             op2 = makeOperation();
             batch.add([op1, op2, makeOperation()]);
-            
+
             batch.start();
             op1.setSuccessful(true);
             batch.pause();
@@ -301,57 +311,57 @@ describe("Ext.data.Batch", function() {
             batch.pause();
             expect(batch.isRunning()).toBe(false);
         });
-        
+
         it("should not continue running if paused", function() {
             op1 = makeOperation();
             op2 = makeOperation();
-            
+
             spyOn(op2, 'execute');
-            
+
             makeBatch();
             batch.add(op1);
             batch.add(op2);
-            
+
             batch.start();
             batch.pause();
-            
-            op1.setSuccessful(true);  
-            expect(op2.execute).not.toHaveBeenCalled();  
+
+            op1.setSuccessful(true);
+            expect(op2.execute).not.toHaveBeenCalled();
         });
-        
+
         it("should continue on after we start after pausing", function() {
             op1 = makeOperation();
             op2 = makeOperation();
-            
+
             spyOn(op2, 'execute');
-            
+
             makeBatch();
             batch.add(op1);
             batch.add(op2);
-            
+
             batch.start();
             batch.pause();
-            
-            op1.setSuccessful(true);  
+
+            op1.setSuccessful(true);
             batch.start();
-            expect(op2.execute).toHaveBeenCalled();  
+            expect(op2.execute).toHaveBeenCalled();
         });
     });
-    
+
     describe("pauseOnException/retry", function() {
         beforeEach(function() {
             makeBatch({
                 pauseOnException: true
             });
         });
-        
+
         it("should pause if an operation has an exception", function() {
             op1 = makeOperation();
             batch.start();
             op1.setException('Failed');
             expect(batch.isRunning()).toBe(false);
         });
-        
+
         it("should have the current item as the failed operation", function() {
             op1 = makeOperation();
             batch.add(op1);
@@ -359,7 +369,7 @@ describe("Ext.data.Batch", function() {
             op1.setException('Failed');
             expect(batch.getCurrent()).toBe(op1);
         });
-        
+
         it("should be able to retry on exception", function() {
             op1 = makeOperation();
             batch.add(op1);
@@ -367,7 +377,136 @@ describe("Ext.data.Batch", function() {
             op1.setException('Failed');
             spyOn(op1, 'execute');
             batch.retry();
-            expect(op1.execute).toHaveBeenCalled();    
+            expect(op1.execute).toHaveBeenCalled();
+        });
+    });
+
+    describe("abort", function() {
+        beforeEach(function() {
+            makeBatch();
+
+            batch.add(op1 = makeOperation());
+            batch.add(op2 = makeOperation());
+            batch.add(op3 = makeOperation());
+
+            spyOn(op1, 'abort').andCallThrough();
+            spyOn(op2, 'abort').andCallThrough();
+            spyOn(op3, 'abort').andCallThrough();
+        });
+
+        describe("before starting", function() {
+            beforeEach(function() {
+                batch.abort();
+            });
+
+            it("should not execute any operation", function() {
+                expect(op1.doExecute).not.toHaveBeenCalled();
+                expect(op2.doExecute).not.toHaveBeenCalled();
+                expect(op3.doExecute).not.toHaveBeenCalled();
+            });
+
+            it("should not abort any operation", function() {
+                expect(op1.abort).not.toHaveBeenCalled();
+                expect(op2.abort).not.toHaveBeenCalled();
+                expect(op3.abort).not.toHaveBeenCalled();
+            });
+        });
+
+        describe("after starting 1st operation", function() {
+            beforeEach(function() {
+                batch.start();
+                batch.abort();
+            });
+
+            it("should execute 1st operation", function() {
+                expect(op1.doExecute).toHaveBeenCalled();
+            });
+
+            it("should call abort on 1st operation", function() {
+                expect(op1.abort).toHaveBeenCalled();
+            });
+
+            it("should not execute 2nd and 3rd operation", function() {
+                expect(op2.doExecute).not.toHaveBeenCalled();
+                expect(op3.doExecute).not.toHaveBeenCalled();
+            });
+
+            it("should not call abort on 2nd and 3rd operation", function() {
+                expect(op2.abort).not.toHaveBeenCalled();
+                expect(op3.abort).not.toHaveBeenCalled();
+            });
+        });
+
+        describe("after starting 2nd operation", function() {
+            beforeEach(function() {
+                batch.start();
+                op1.setSuccessful(true);
+                batch.abort();
+            });
+
+            it("should complete 1st operation", function() {
+                expect(op1.complete).toBe(true);
+            });
+
+            it("should not call abort on 1st operation", function() {
+                expect(op1.abort).not.toHaveBeenCalled();
+            });
+
+            it("should execute 2nd operation", function() {
+                expect(op2.doExecute).toHaveBeenCalled();
+            });
+
+            it("should abort 2nd operation", function() {
+                expect(op2.abort).toHaveBeenCalled();
+            });
+
+            it("should not execute 3rd operation", function() {
+                expect(op3.doExecute).not.toHaveBeenCalled();
+            });
+
+            it("should not abort 3rd operation", function() {
+                expect(op3.abort).not.toHaveBeenCalled();
+            });
+        });
+
+        describe("after completing the sequence", function() {
+            beforeEach(function() {
+                batch.start();
+                op1.setSuccessful(true);
+                op2.setSuccessful(true);
+                op3.setSuccessful(true);
+            });
+
+            it("should not call abort on any operation", function() {
+                expect(op1.abort).not.toHaveBeenCalled();
+                expect(op2.abort).not.toHaveBeenCalled();
+                expect(op3.abort).not.toHaveBeenCalled();
+            });
+        });
+    });
+
+    describe("destruction", function() {
+        beforeEach(function() {
+            makeBatch();
+
+            batch.add(op1 = makeOperation());
+            batch.add(op2 = makeOperation());
+            batch.add(op3 = makeOperation());
+        });
+
+        it("should abort before destruction", function() {
+            batch.start();
+            batch.destroy();
+
+            expect(batch.aborted).toBe(true);
+        });
+
+        it("should destroy every operation", function() {
+            batch.destroy();
+
+            expect(op1.destroyed).toBe(true);
+            expect(op2.destroyed).toBe(true);
+            expect(op3.destroyed).toBe(true);
         });
     });
 });

@@ -35,3 +35,33 @@
     display: block;
     clear: none;
 }
+
+@if $theme-name == 'theme-graphite' {
+    .search-item {
+        a, a:visited {
+            color: #fff;
+        }
+    }
+    
+    .search-item p {
+        color: #fff;
+    }
+    
+    .search-item h3 span {
+        color: #fff;
+    }
+}
+
+@if $theme-name == 'theme-material' {
+    .search-item {
+        font: normal 11px $font-family;
+        border: 0px;
+        color: #111111;
+    }
+
+    .forum-searchIcon {
+        .x-form-trigger-default:before {
+            content: $fa-var-search;
+        }
+    }
+}

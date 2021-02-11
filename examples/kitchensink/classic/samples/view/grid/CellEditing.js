@@ -19,7 +19,7 @@ Ext.define('KitchenSink.view.grid.CellEditing', {
         path: 'classic/samples/view/grid/CellEditingController.js'
     }, {
         type: 'Model',
-        path: 'classic/samples/model/grid/Plant.js'
+        path: 'app/model/Plant.js'
     }],
     profiles: {
         classic: {
@@ -27,18 +27,42 @@ Ext.define('KitchenSink.view.grid.CellEditing', {
             height: 300,
             indoorWidth: 55,
             priceWidth: 70,
-            availableWidth: 95
+            availableWidth: 95,
+            lightWidth: 130,
+            selectOnFocus: false
         },
         neptune: {
             width: 680,
             height: 350,
             indoorWidth: 90,
             priceWidth: 70,
-            availableWidth: 95
+            availableWidth: 95,
+            lightWidth: 130,
+            selectOnFocus: false
+        },
+        graphite: {
+            width: 800,
+            height: 600,
+            indoorWidth: 150,
+            priceWidth: 110,
+            availableWidth: 150,
+            lightWidth: 150,
+            selectOnFocus: false
+        },
+        'classic-material': {
+            width: 850,
+            height: 600,
+            indoorWidth: 150,
+            priceWidth: 150,
+            availableWidth: 150,
+            lightWidth: 150,
+            selectOnFocus: true
         },
         'neptune-touch': {
             priceWidth: 115,
-            availableWidth: 120
+            availableWidth: 120,
+            lightWidth: 130,
+            selectOnFocus: false
         }
     },
     //</example>
@@ -73,12 +97,13 @@ Ext.define('KitchenSink.view.grid.CellEditing', {
     },
 
     plugins: {
-        ptype: 'cellediting',
-        clicksToEdit: 1
+        cellediting: {
+            clicksToEdit: 1
+        }
     },
 
     store: {
-        model: 'KitchenSink.model.grid.Plant',
+        model: 'KitchenSink.model.Plant',
 
         proxy: {
             type: 'ajax',
@@ -92,7 +117,7 @@ Ext.define('KitchenSink.view.grid.CellEditing', {
 
         sorters: [{
             property: 'common',
-            direction:'ASC'
+            direction: 'ASC'
         }]
     },
 
@@ -102,23 +127,25 @@ Ext.define('KitchenSink.view.grid.CellEditing', {
 
         flex: 1,
         editor: {
-            allowBlank: false
+            allowBlank: false,
+            selectOnFocus: '${selectOnFocus}'
         }
     }, {
         header: 'Light',
         dataIndex: 'light',
 
-        width: 130,
+        width: '${lightWidth}',
         editor: {
             xtype: 'combo',
             typeAhead: true,
             triggerAction: 'all',
+            selectOnFocus: '${selectOnFocus}',
             store: [
-                ['Shade','Shade'],
-                ['Mostly Shady','Mostly Shady'],
-                ['Sun or Shade','Sun or Shade'],
-                ['Mostly Sunny','Mostly Sunny'],
-                ['Sunny','Sunny']
+                ['Shade', 'Shade'],
+                ['Mostly Shady', 'Mostly Shady'],
+                ['Sun or Shade', 'Sun or Shade'],
+                ['Mostly Sunny', 'Mostly Sunny'],
+                ['Sunny', 'Sunny']
             ]
         }
     }, {
@@ -130,7 +157,7 @@ Ext.define('KitchenSink.view.grid.CellEditing', {
         formatter: 'usMoney',
         editor: {
             xtype: 'numberfield',
-
+            selectOnFocus: '${selectOnFocus}',
             allowBlank: false,
             minValue: 0,
             maxValue: 100000
@@ -144,6 +171,7 @@ Ext.define('KitchenSink.view.grid.CellEditing', {
         format: 'M d, Y',
         editor: {
             xtype: 'datefield',
+            selectOnFocus: '${selectOnFocus}',
             format: 'm/d/y',
             minValue: '01/01/06',
             disabledDays: [0, 6],

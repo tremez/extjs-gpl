@@ -1,15 +1,15 @@
-describe("Ext.panel.Header", function() {
+topSuite("Ext.panel.Header", ['Ext.Panel'], function() {
     var header;
-    
+
     function makeHeader(cfg) {
         cfg = Ext.apply({
             title: 'foo',
             renderTo: Ext.getBody()
         }, cfg);
-        
+
         return header = new Ext.panel.Header(cfg);
     }
-    
+
     afterEach(function() {
         Ext.destroy(header);
         header = null;
@@ -23,7 +23,7 @@ describe("Ext.panel.Header", function() {
             expect(header.title.getText()).toBe(10);
         });
     });
-    
+
     describe("setTitlePosition", function() {
         beforeEach(function() {
             makeHeader({
@@ -50,120 +50,120 @@ describe("Ext.panel.Header", function() {
             expect(header.titlePosition).toBe(2);
         });
     });
-    
+
     describe("ARIA", function() {
         it("should have el as ariaEl", function() {
             makeHeader();
-            
+
             expect(header.ariaEl).toBe(header.el);
         });
-        
+
         describe("no tools", function() {
             describe("ordinary header", function() {
                 beforeEach(function() {
                     makeHeader();
                 });
-                
+
                 it("should have presentation ariaRole", function() {
                     expect(header.ariaRole).toBe('presentation');
                 });
-                
+
                 it("should have presentation role on header el", function() {
                     expect(header).toHaveAttribute('role', 'presentation');
                 });
-                
+
                 it("should have presentation role on titleCmp el", function() {
                     expect(header.titleCmp).toHaveAttribute('role', 'presentation');
                 });
-                
+
                 it("should have presentation role on titleCmp textEl", function() {
                     expect(header.titleCmp.textEl).toHaveAttribute('role', 'presentation');
                 });
-                
+
                 it("should have FocusableContainer disabled", function() {
-                    expect(header.enableFocusableContainer).toBe(false);
+                    expect(header.focusableContainer).toBe(false);
                 });
-                
+
                 describe("after adding tools", function() {
                     beforeEach(function() {
                         header.addTool({ type: 'expand' });
                     });
-                    
+
                     it("should change ariaRole to toolbar", function() {
                         expect(header.ariaRole).toBe('toolbar');
                     });
-                    
+
                     it("should change header el role to toolbar", function() {
                         expect(header).toHaveAttribute('role', 'toolbar');
                     });
-                    
+
                     it("should not change titleCmp el role", function() {
                         expect(header.titleCmp).toHaveAttribute('role', 'presentation');
                     });
-                    
+
                     it("should not change titleCmp textEl role", function() {
                         expect(header.titleCmp.textEl).toHaveAttribute('role', 'presentation');
                     });
-                    
+
                     it("should enable FocusableContainer", function() {
-                        expect(header.enableFocusableContainer).toBe(true);
+                        expect(header.focusableContainer).toBe(true);
                     });
                 });
             });
-            
+
             describe("accordion header", function() {
                 beforeEach(function() {
                     makeHeader({ isAccordionHeader: true });
                 });
-                
+
                 it("should have presentation ariaRole", function() {
                     expect(header.ariaRole).toBe('presentation');
                 });
-                
+
                 it("should have presentation role on header el", function() {
                     expect(header).toHaveAttribute('role', 'presentation');
                 });
-                
+
                 it("should have tab role on titleCmp el", function() {
                     expect(header.titleCmp).toHaveAttribute('role', 'tab');
                 });
-                
+
                 it("should have no role on titleCmp textEl", function() {
                     expect(header.titleCmp.textEl).not.toHaveAttribute('role');
                 });
-                
+
                 it("should have FocusableContainer disabled", function() {
-                    expect(header.enableFocusableContainer).toBe(false);
+                    expect(header.focusableContainer).toBe(false);
                 });
-                
+
                 describe("after adding tools", function() {
                     beforeEach(function() {
                         header.addTool({ type: 'pin' });
                     });
-                    
+
                     it("should not change ariaRole", function() {
                         expect(header.ariaRole).toBe('presentation');
                     });
-                    
+
                     it("should not change header el role", function() {
                         expect(header).toHaveAttribute('role', 'presentation');
                     });
-                    
+
                     it("should not change titleCmp el role", function() {
                         expect(header.titleCmp).toHaveAttribute('role', 'tab');
                     });
-                    
+
                     it("should not change titleCmp textEl role", function() {
                         expect(header.titleCmp.textEl).not.toHaveAttribute('role');
                     });
-                    
+
                     it("should not enable FocusableContainer", function() {
-                        expect(header.enableFocusableContainer).toBe(false);
+                        expect(header.focusableContainer).toBe(false);
                     });
                 });
             });
         });
-        
+
         describe("with tools", function() {
             describe("ordinary header", function() {
                 describe("with focusable tool(s)", function() {
@@ -174,28 +174,28 @@ describe("Ext.panel.Header", function() {
                             }]
                         });
                     });
-                    
+
                     it("should have toolbar ariaRole", function() {
                         expect(header.ariaRole).toBe('toolbar');
                     });
-                    
+
                     it("should have toolbar role on header el", function() {
                         expect(header).toHaveAttribute('role', 'toolbar');
                     });
-                    
+
                     it("should have presentation role on titleCmp", function() {
                         expect(header.titleCmp).toHaveAttribute('role', 'presentation');
                     });
-                    
+
                     it("should have presentation role on titleCmp textEl", function() {
                         expect(header.titleCmp.textEl).toHaveAttribute('role', 'presentation');
                     });
-                    
+
                     it("should have FocusableContainer enabled", function() {
-                        expect(header.enableFocusableContainer).toBe(true);
+                        expect(header.focusableContainer).toBe(true);
                     });
                 });
-                
+
                 describe("with non-focusable tools", function() {
                     beforeEach(function() {
                         makeHeader({
@@ -206,29 +206,29 @@ describe("Ext.panel.Header", function() {
                             }]
                         });
                     });
-                    
+
                     it("should have presentation role", function() {
                         expect(header.ariaRole).toBe('presentation');
                     });
-                    
+
                     it("should have presentation role on header el", function() {
                         expect(header).toHaveAttribute('role', 'presentation');
                     });
-                    
+
                     it("should have presentation role on titleCmp", function() {
                         expect(header.titleCmp).toHaveAttribute('role', 'presentation');
                     });
-                    
+
                     it("should have presentation role on titleCmp textEl", function() {
                         expect(header.titleCmp.textEl).toHaveAttribute('role', 'presentation');
                     });
-                    
+
                     it("should have FocusableContainer disabled", function() {
-                        expect(header.enableFocusableContainer).toBe(false);
+                        expect(header.focusableContainer).toBe(false);
                     });
                 });
             });
-            
+
             describe("accordion header", function() {
                 beforeEach(function() {
                     makeHeader({
@@ -238,25 +238,25 @@ describe("Ext.panel.Header", function() {
                         }]
                     });
                 });
-                
+
                 it("should have presentation ariaRole", function() {
                     expect(header.ariaRole).toBe('presentation');
                 });
-                
+
                 it("should have presentation role on header el", function() {
                     expect(header).toHaveAttribute('role', 'presentation');
                 });
-                
+
                 it("should have tab role on titleCmp el", function() {
                     expect(header.titleCmp).toHaveAttribute('role', 'tab');
                 });
-                
+
                 it("should have no role on titleCmp textEl", function() {
                     expect(header.titleCmp.textEl).not.toHaveAttribute('role');
                 });
-                
+
                 it("should have FocusableContainer disabled", function() {
-                    expect(header.enableFocusableContainer).toBe(false);
+                    expect(header.focusableContainer).toBe(false);
                 });
             });
         });

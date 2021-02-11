@@ -56,10 +56,9 @@ Ext.define('Ext.data.matrix.Matrix', {
      *      }
      */
 
-    constructor: function (session, matrix) {
+    constructor: function(session, matrix) {
         var me = this,
-            association = matrix.isManyToMany ? matrix
-                                : session.getSchema().getAssociation(matrix),
+            association = matrix.isManyToMany ? matrix : session.getSchema().getAssociation(matrix),
             Side = Ext.data.matrix.Side,
             left = new Side(me, 0, association.left),
             right = new Side(me, 1, association.right);
@@ -83,7 +82,7 @@ Ext.define('Ext.data.matrix.Matrix', {
         this.right.commit();
     },
 
-    update: function (id1, id2, state) {
+    update: function(id1, id2, state) {
         return this.left.update(id1, id2, state);
     },
 

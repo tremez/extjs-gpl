@@ -1,7 +1,7 @@
 Ext.define('KitchenSink.view.ProfileSwitcher', {
     extend: 'Ext.Component',
     xtype: 'profileSwitcher',
-    cls: [ 'ks-profile-switcher', 'x-fa', 'fa-bars' ],
+    cls: ['ks-profile-switcher', 'x-fa', 'fa-bars'],
 
     readProfileInfo: function() {
         // These come from index.html
@@ -9,16 +9,18 @@ Ext.define('KitchenSink.view.ProfileSwitcher', {
         this.locale = KitchenSink.locale;
     },
 
-    setQueryParam: function (name, value, preserveHash) {
+    setQueryParam: function(name, value, preserveHash) {
         var query = Ext.Object.fromQueryString(location.search),
             queryString;
 
         query[name] = value;
 
         queryString = Ext.Object.toQueryString(query);
+
         if (preserveHash) {
             location.search = queryString;
-        } else {
+        }
+        else {
             window.location = location.pathname + '?' + queryString;
         }
     },
@@ -33,26 +35,36 @@ Ext.define('KitchenSink.view.ProfileSwitcher', {
                 crisp: 'Crisp',
                 'crisp-touch': 'Crisp Touch',
                 classic: 'Classic',
-                gray: 'Gray'
+                gray: 'Gray',
+                aria: 'ARIA',
+                graphite: 'Graphite',
+                'classic-material': 'Classic Material'
             },
             menu, profileId;
 
         me.readProfileInfo();
 
         function makeItem(value, text, paramName) {
+            var checked;
+
             paramName = paramName || "profile";
 
-            var checked = value === (paramName === "profile" ? me.profile : me.locale);
+            checked = value === (
+                paramName === "profile"
+                    ? me.profile
+                    : me.locale
+            );
 
             return {
                 text: text,
                 group: (paramName === 'profile' ? 'profilegroup' : 'localegroup'),
                 checked: checked,
-                handler: function () {
+                handler: function() {
                     if (!checked) {
                         if (paramName === 'profile') {
                             me.setQueryParam('profile', value, value in classicProfiles);
-                        } else {
+                        }
+                        else {
                             me.setQueryParam('locale', value);
                         }
                     }
@@ -70,8 +82,8 @@ Ext.define('KitchenSink.view.ProfileSwitcher', {
 
         menuItems.push('-', {
             text: 'Modern Toolkit',
-            iconCls: 'x-fa fa-external-link',
-            handler: function () {
+            iconCls: 'x-fa fa-external-link-alt',
+            handler: function() {
                 window.location = location.pathname + '?modern';
             }
         });
@@ -82,7 +94,7 @@ Ext.define('KitchenSink.view.ProfileSwitcher', {
 
         this.on({
             scope: this,
-            click: function (e) {
+            click: function(e) {
                 menu.showBy(this);
             },
             element: 'el'

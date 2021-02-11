@@ -20,12 +20,12 @@ Ext.define('KitchenSink.view.drag.Handle', {
     bodyPadding: 5,
 
     html:
-        '<div class="handle-handles handle-source">' +
-            '<div class="handle">Drag</div>' +
-        '</div>' +
-        '<div class="handle-repeat handle-source">' +
+        '<div class="handle-source handle-repeat ">' +
             '<div class="handle">Foo</div>' +
             '<div class="handle">Bar</div>' +
             '<div class="handle">Baz</div>' +
+        '</div>' +
+        '<div class="handle-source handle-handles">' +
+            '<div class="handle">Drag</div>' +
         '</div>'
 });

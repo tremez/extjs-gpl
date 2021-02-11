@@ -130,11 +130,11 @@ $calendar-header-cell-border-style: dynamic(solid);
  * @param {number} [$cell-border-width]
  * The border width for the headers.
  *
- * @param {string} [$cell-border-style]
- * The border style for the headers.
- *
  * @param {color} [$cell-border-color]
  * The border color for the headers.
+ *
+ * @param {string} [$cell-border-style]
+ * The border style for the headers.
  */
 @mixin calendar-header-ui(
     $ui: null,

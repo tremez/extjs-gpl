@@ -93,12 +93,12 @@ Ext.define('Ext.ux.layout.ResponsiveColumn', {
 
     _responsiveCls: Ext.baseCSSPrefix + 'responsivecolumn',
 
-    initLayout: function () {
+    initLayout: function() {
         this.innerCtCls += ' ' + this._responsiveCls;
         this.callParent();
     },
 
-    beginLayout: function (ownerContext) {
+    beginLayout: function(ownerContext) {
         var me = this,
             viewportWidth = Ext.Element.getViewportWidth(),
             states = me.states,
@@ -124,21 +124,22 @@ Ext.define('Ext.ux.layout.ResponsiveColumn', {
         me.callParent(arguments);
     },
 
-    onAdd: function (item) {
+    onAdd: function(item) {
+        var responsiveCls;
+
         this.callParent([item]);
 
-        var responsiveCls = item.responsiveCls;
+        responsiveCls = item.responsiveCls;
 
         if (responsiveCls) {
             item.addCls(responsiveCls);
         }
     }
-},
-//--------------------------------------------------------------------------------------
-// IE8 does not support CSS calc expressions, so we have to fallback to more traditional
-// for of layout. This is very similar but much simpler than Column layout.
-//
-function (Responsive) {
+}, function(Responsive) {
+    //--------------------------------------------------------------------------------------
+    // IE8 does not support CSS calc expressions, so we have to fallback to more traditional
+    // for of layout. This is very similar but much simpler than Column layout.
+    //
     if (Ext.isIE8) {
         Responsive.override({
             responsiveSizePolicy: {
@@ -150,20 +151,22 @@ function (Responsive) {
 
             setsItemSize: true,
 
-            calculateItems: function (ownerContext, containerSize) {
+            calculateItems: function(ownerContext, containerSize) {
                 var me = this,
                     targetContext = ownerContext.targetContext,
                     items = ownerContext.childItems,
                     len = items.length,
                     gotWidth = containerSize.gotWidth,
                     contentWidth = containerSize.width,
-                    blocked, availableWidth, i, itemContext, itemMarginWidth, itemWidth;
+                    i, itemContext, itemMarginWidth, itemWidth;
 
                 // No parallel measurement, cannot lay out boxes.
                 if (gotWidth === false) {
                     targetContext.domBlock(me, 'width');
-                    return false;;
+
+                    return false;
                 }
+
                 if (!gotWidth) {
                     // gotWidth is undefined, which means we must be width shrink wrap.
                     // Cannot calculate item widths if we're shrink wrapping.
@@ -176,9 +179,12 @@ function (Responsive) {
                     // The mixin encodes these in background-position syles since it is
                     // unlikely a component will have a background-image.
                     itemWidth = parseInt(itemContext.el.getStyle('background-position-x'), 10);
-                    itemMarginWidth = parseInt(itemContext.el.getStyle('background-position-y'), 10);
+                    itemMarginWidth =
+                        parseInt(itemContext.el.getStyle('background-position-y'), 10);
 
-                    itemContext.setWidth((itemWidth / 100 * (contentWidth - itemMarginWidth)) - itemMarginWidth);
+                    itemContext.setWidth(
+                        (itemWidth / 100 * (contentWidth - itemMarginWidth)) - itemMarginWidth
+                    );
                 }
 
                 ownerContext.setContentWidth(contentWidth +
@@ -187,7 +193,7 @@ function (Responsive) {
                 return true;
             },
 
-            getItemSizePolicy: function () {
+            getItemSizePolicy: function() {
                 return this.responsiveSizePolicy;
             }
         });

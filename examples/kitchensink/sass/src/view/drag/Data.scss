@@ -1,29 +1,22 @@
-.stretch-html .x-innerhtml {
-    height: 100%;
-}
-
 .data-source {
     width: 120px;
     height: 120px;
     text-align: center;
-    position: absolute;
-    left: 10px;
-    top: 10px;
     color: #FFF;
+    background-color: #FF5722;
+    float: left;
+    margin-right: 10px;
+    margin-bottom: 10px;
     @include border-radius(5px);
     @include user-select(none);
-
-    background-color: #FF5722;
-    top: 10px;
-    left: 10px;
 
     .handle {
         cursor: move;
         background-color: #43A047;
-        @include border-radius(5px);
         padding: 3px;
         width: 90px;
         margin: 10px 0 10px 15px;
+        @include border-radius(5px);
     }
 
     .x-phone & {
@@ -35,16 +28,12 @@
 .data-target {
     width: 200px;
     height: 120px;
-    left: 200px;
-    top: 10px;
-    position: absolute;
     padding: 5px;
     border: 5px dotted #2196F3;
+    float: left;
     @include user-select(none);
 
     .x-phone & {
-        left: 40vw;
-        margin-left: 10px;
         width: 55vw;
     }
 }
@@ -61,4 +50,14 @@
     background-color: #43A047;
     padding: 5px;
     @include border-radius(5px);
+}
+
+@if $theme-name == 'theme-graphite' {
+    .data-source {
+        height: 140px;
+    }
+
+    .data-proxy{
+        width: 100px;
+    }
 }

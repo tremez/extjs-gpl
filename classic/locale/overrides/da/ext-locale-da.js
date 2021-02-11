@@ -7,7 +7,7 @@
  * December, 2007.
  */
 Ext.onReady(function() {
-    
+
     if (Ext.Date) {
         Ext.Date.monthNames = ["januar", "februar", "marts", "april", "maj", "juni", "juli", "august", "september", "oktober", "november", "december"];
 
@@ -164,13 +164,13 @@ Ext.define("Ext.locale.da.form.field.HtmlEditor", {
         buttonTips: {
             bold: {
                 title: 'Fed (Ctrl+B)',
-                //Can I change this to Ctrl+F?
+                // Can I change this to Ctrl+F?
                 text: 'Formater det markerede tekst med fed.',
                 cls: Ext.baseCSSPrefix + 'html-editor-tip'
             },
             italic: {
                 title: 'Kursiv (Ctrl+I)',
-                //Ctrl+K
+                // Ctrl+K
                 text: 'Formater det markerede tekst med kursiv.',
                 cls: Ext.baseCSSPrefix + 'html-editor-tip'
             },
@@ -251,7 +251,7 @@ Ext.define("Ext.locale.da.grid.GroupingFeature", {
     override: "Ext.grid.feature.Grouping",
     emptyGroupText: '(Ingen)',
     groupByText: 'Gruppér efter dette felt',
-    showGroupsText: 'Vis i grupper' //should this be sort in groups?
+    showGroupsText: 'Vis i grupper' // should this be sort in groups?
 });
 
 Ext.define("Ext.locale.da.grid.PropertyColumnModel", {
@@ -268,10 +268,10 @@ Ext.define("Ext.locale.da.window.MessageBox", {
         cancel: "Fortryd",
         yes: "Ja",
         no: "Nej"
-    }    
+    }
 });
 
 // This is needed until we can refactor all of the locales into individual files
-Ext.define("Ext.locale.da.Component", {	
+Ext.define("Ext.locale.da.Component", {
     override: "Ext.Component"
 });

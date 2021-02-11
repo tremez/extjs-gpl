@@ -4,8 +4,9 @@
  * ## Validity of drag operations
  *
  * There are certain conditions that govern whether a {@link Ext.drag.Source source}
- * and a target can interact. By default (without configuration), all {@link Ext.drag.Source sources}
- * and targets can interact with each other, the conditions are evaluated in this order:
+ * and a target can interact. By default (without configuration), all
+ * {@link Ext.drag.Source sources} and targets can interact with each other, the conditions
+ * are evaluated in this order:
  *
  * ### {@link #isDisabled Disabled State}
  * If the target is disabled, the {@link Ext.drag.Source source} 
@@ -17,7 +18,7 @@
  * - Neither has a group
  * - Both have one (or more) of the same group
  *
- * ### {@link #accepts Accept}
+ * ### {@link #method!accepts Accept}
  * This method is called each time a {@link Ext.drag.Source source} enters this
  * target. If the method returns `false`, the drag is not considered valid.
  *
@@ -115,7 +116,7 @@ Ext.define('Ext.drag.Target', {
         invalidCls: '',
 
         /**
-         * @cfg {String} invalidCls
+         * @cfg {String} validCls
          * A class to add to the {@link #element} when an
          * invalid drag is over this target.
          */
@@ -126,7 +127,7 @@ Ext.define('Ext.drag.Target', {
      * @cfg {Function} accepts
      * See {@link #method-accepts}.
      */
-    
+
     /**
      * @event beforedrop
      * Fires before a valid drop occurs. Return `false` to prevent the drop from
@@ -135,7 +136,7 @@ Ext.define('Ext.drag.Target', {
      * @param {Ext.drag.Target} this This target.
      * @param {Ext.drag.Info} info The drag info.
      */
-    
+
     /**
      * @event drop
      * Fires when a valid drop occurs.
@@ -143,7 +144,7 @@ Ext.define('Ext.drag.Target', {
      * @param {Ext.drag.Target} this This target.
      * @param {Ext.drag.Info} info The drag info.
      */
-    
+
     /**
      * @event dragenter
      * Fires when a drag enters this target.
@@ -151,7 +152,7 @@ Ext.define('Ext.drag.Target', {
      * @param {Ext.drag.Target} this This target.
      * @param {Ext.drag.Info} info The drag info.
      */ 
-    
+
     /**
      * @event dragleave
      * Fires when a source leaves this target.
@@ -159,7 +160,7 @@ Ext.define('Ext.drag.Target', {
      * @param {Ext.drag.Target} this This target.
      * @param {Ext.drag.Info} info The drag info.
      */ 
-    
+
     /**
      * @event dragmove
      * Fires when a drag moves while inside this target.
@@ -180,7 +181,9 @@ Ext.define('Ext.drag.Target', {
             config = Ext.apply({}, config);
             delete config.accepts;
         }
+
         me.callParent([config]);
+
         Ext.drag.Manager.register(me);
     },
 
@@ -203,6 +206,7 @@ Ext.define('Ext.drag.Target', {
     },
 
     /**
+     * @method disable
      * @inheritdoc
      */
     disable: function() {
@@ -211,6 +215,7 @@ Ext.define('Ext.drag.Target', {
     },
 
     /**
+     * @method enable
      * @inheritdoc
      */
     enable: function() {
@@ -238,7 +243,7 @@ Ext.define('Ext.drag.Target', {
      * @protected
      * @template
      */
-    onDrop: Ext.emptyFn, 
+    onDrop: Ext.emptyFn,
 
     /**
      * @method
@@ -272,16 +277,19 @@ Ext.define('Ext.drag.Target', {
 
     updateInvalidCls: function(invalidCls, oldInvalidCls) {
         var info = this.info;
+
         this.doUpdateCls(info && !info.valid, invalidCls, oldInvalidCls);
     },
 
     updateValidCls: function(validCls, oldValidCls) {
         var info = this.info;
+
         this.doUpdateCls(info && info.valid, validCls, oldValidCls);
     },
 
     destroy: function() {
         Ext.drag.Manager.unregister(this);
+
         this.callParent();
     },
 
@@ -309,6 +317,7 @@ Ext.define('Ext.drag.Target', {
         },
 
         /**
+         * @method getElListeners
          * @inheritdoc
          */
         getElListeners: function() {
@@ -337,14 +346,17 @@ Ext.define('Ext.drag.Target', {
                 if (hasListeners.beforedrop && me.fireEvent('beforedrop', me, info) === false) {
                     return false;
                 }
+
                 me.onDrop(info);
+
                 if (hasListeners.drop) {
                     me.fireEvent('drop', me, info);
                 }
-            } else {
+            }
+            else {
                 return false;
             }
-        }, 
+        },
 
         /**
          * Called when a drag enters this target.
@@ -361,6 +373,7 @@ Ext.define('Ext.drag.Target', {
             }
 
             me.onDragEnter(info);
+
             if (me.hasListeners.dragenter) {
                 me.fireEvent('dragenter', me, info);
             }
@@ -377,6 +390,7 @@ Ext.define('Ext.drag.Target', {
 
             me.getElement().removeCls([me.getInvalidCls(), me.getValidCls()]);
             me.onDragLeave(info);
+
             if (me.hasListeners.dragleave) {
                 me.fireEvent('dragleave', me, info);
             }
@@ -390,8 +404,9 @@ Ext.define('Ext.drag.Target', {
          */
         handleDragMove: function(info) {
             var me = this;
-            
+
             me.onDragMove(info);
+
             if (me.hasListeners.dragmove) {
                 me.fireEvent('dragmove', me, info);
             }
@@ -425,7 +440,7 @@ Ext.define('Ext.drag.Target', {
                 info = Ext.drag.Manager.getNativeDragInfo(e);
 
             info.onNativeDragLeave(me, e);
-            
+
             if (me.hasListeners.dragleave) {
                 me.fireEvent('dragleave', me, info);
             }
@@ -466,6 +481,7 @@ Ext.define('Ext.drag.Target', {
                 if (hasListeners.beforedrop && me.fireEvent('beforedrop', me, info) === false) {
                     return;
                 }
+
                 if (hasListeners.drop) {
                     me.fireEvent('drop', me, info);
                 }

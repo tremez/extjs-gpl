@@ -1,4 +1,4 @@
-/*!
+/* !
  * Ext JS Library
  * Copyright(c) 2006-2014 Sencha Inc.
  * licensing@sencha.com
@@ -22,7 +22,7 @@ Ext.define('Desktop.App', {
         'Desktop.BogusMenuModule',
         'Desktop.BogusModule',
 
-//        'Desktop.Blockalanche',
+        //        'Desktop.Blockalanche',
         'Desktop.Settings'
     ],
 
@@ -34,10 +34,10 @@ Ext.define('Desktop.App', {
         // now ready...
     },
 
-    getModules : function(){
+    getModules: function() {
         return [
             new Desktop.VideoWindow(),
-            //new Desktop.Blockalanche(),
+            // new Desktop.Blockalanche(),
             new Desktop.SystemStatus(),
             new Desktop.GridWindow(),
             new Desktop.TabWindow(),
@@ -48,11 +48,12 @@ Ext.define('Desktop.App', {
         ];
     },
 
-    getDesktopConfig: function () {
-        var me = this, ret = me.callParent();
+    getDesktopConfig: function() {
+        var me = this,
+            ret = me.callParent();
 
         return Ext.apply(ret, {
-            //cls: 'ux-desktop-black',
+            // cls: 'ux-desktop-black',
 
             contextMenuItems: [
                 { text: 'Change Settings', handler: me.onSettings, scope: me }
@@ -64,7 +65,7 @@ Ext.define('Desktop.App', {
                     { name: 'Grid Window', iconCls: 'grid-shortcut', module: 'grid-win' },
                     { name: 'Accordion Window', iconCls: 'accordion-shortcut', module: 'acc-win' },
                     { name: 'Notepad', iconCls: 'notepad-shortcut', module: 'notepad' },
-                    { name: 'System Status', iconCls: 'cpu-shortcut', module: 'systemstatus'}
+                    { name: 'System Status', iconCls: 'cpu-shortcut', module: 'systemstatus' }
                 ]
             }),
 
@@ -74,8 +75,9 @@ Ext.define('Desktop.App', {
     },
 
     // config for the start menu
-    getStartConfig : function() {
-        var me = this, ret = me.callParent();
+    getStartConfig: function() {
+        var me = this,
+            ret = me.callParent();
 
         return Ext.apply(ret, {
             title: 'Don Griffin',
@@ -85,15 +87,15 @@ Ext.define('Desktop.App', {
                 width: 100,
                 items: [
                     {
-                        text:'Settings',
-                        iconCls:'settings',
+                        text: 'Settings',
+                        iconCls: 'settings',
                         handler: me.onSettings,
                         scope: me
                     },
                     '-',
                     {
-                        text:'Logout',
-                        iconCls:'logout',
+                        text: 'Logout',
+                        iconCls: 'logout',
                         handler: me.onLogout,
                         scope: me
                     }
@@ -102,7 +104,7 @@ Ext.define('Desktop.App', {
         });
     },
 
-    getTaskbarConfig: function () {
+    getTaskbarConfig: function() {
         var ret = this.callParent();
 
         return Ext.apply(ret, {
@@ -116,14 +118,15 @@ Ext.define('Desktop.App', {
         });
     },
 
-    onLogout: function () {
+    onLogout: function() {
         Ext.Msg.confirm('Logout', 'Are you sure you want to logout?');
     },
 
-    onSettings: function () {
+    onSettings: function() {
         var dlg = new Desktop.Settings({
             desktop: this.desktop
         });
+
         dlg.show();
     }
 });

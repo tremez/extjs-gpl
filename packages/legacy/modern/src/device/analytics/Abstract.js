@@ -2,17 +2,17 @@
  * @private
  */
 Ext.define('Ext.device.analytics.Abstract', {
-	config: {
-		accountID: null
-	},
+    config: {
+        accountID: null
+    },
 
-	updateAccountID: function(newID) {
-		if (newID) {
-			window.plugins.googleAnalyticsPlugin.startTrackerWithAccountID(newID);
-		}
-	},
+    updateAccountID: function(newID) {
+        if (newID) {
+            window.plugins.googleAnalyticsPlugin.startTrackerWithAccountID(newID);
+        }
+    },
 
-	/**
+    /**
 	 * Registers yur Google Analytics account.
 	 * 
 	 * @param {String} accountID Your Google Analytics account ID

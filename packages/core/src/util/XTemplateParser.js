@@ -3,12 +3,12 @@
  * @private
  */
 Ext.define('Ext.util.XTemplateParser', {
-    
+    /* eslint-disable dot-notation */
     requires: [
         'Ext.String'
     ],
 
-    constructor: function (config) {
+    constructor: function(config) {
         Ext.apply(this, config);
     },
 
@@ -137,7 +137,7 @@ Ext.define('Ext.util.XTemplateParser', {
      */
     doTpl: Ext.emptyFn,
 
-    parse: function (str) {
+    parse: function(str) {
         var me = this,
             len = str.length,
             aliases = { elseif: 'elif' },
@@ -166,6 +166,7 @@ Ext.define('Ext.util.XTemplateParser', {
                 // However, if we have spaces they will get matched as plaintext, so
                 // we want to skip over them here.
                 s = str.substring(index, begin);
+
                 if (!(expectTplNext && Ext.String.trim(s) === '')) {
                     me.doText(s);
                 }
@@ -174,19 +175,24 @@ Ext.define('Ext.util.XTemplateParser', {
             expectTplNext = false;
 
             if (m[1]) {
-                end = str.indexOf('%}', begin+2);
-                me.doEval(str.substring(begin+2, end));
+                end = str.indexOf('%}', begin + 2);
+                me.doEval(str.substring(begin + 2, end));
                 end += 2;
-            } else if (m[2]) {
-                end = str.indexOf(']}', begin+2);
-                me.doExpr(str.substring(begin+2, end));
+            }
+            else if (m[2]) {
+                end = str.indexOf(']}', begin + 2);
+                me.doExpr(str.substring(begin + 2, end));
                 end += 2;
-            } else if (m[3]) { // if ('{' token)
+            }
+            else if (m[3]) { // if ('{' token)
                 me.doTag(m[3]);
-            } else if (m[4]) { // content of a <tpl xxxxxx xxx> tag
+            }
+            else if (m[4]) { // content of a <tpl xxxxxx xxx> tag
                 actions = null;
+
                 while ((subMatch = actionsRe.exec(m[4])) !== null) {
                     s = subMatch[2] || subMatch[3];
+
                     if (s) {
                         s = Ext.String.htmlDecode(s); // decode attr value
                         t = subMatch[1];
@@ -194,11 +200,13 @@ Ext.define('Ext.util.XTemplateParser', {
                         actions = actions || {};
                         prev = actions[t];
 
-                        if (typeof prev == 'string') {
+                        if (typeof prev === 'string') {
                             actions[t] = [prev, s];
-                        } else if (prev) {
+                        }
+                        else if (prev) {
                             actions[t].push(s);
-                        } else {
+                        }
+                        else {
                             actions[t] = s;
                         }
                     }
@@ -207,9 +215,11 @@ Ext.define('Ext.util.XTemplateParser', {
                 if (!actions) {
                     if (me.elseRe.test(m[4])) {
                         me.doElse();
-                    } else if (me.defaultRe.test(m[4])) {
+                    }
+                    else if (me.defaultRe.test(m[4])) {
                         me.doDefault();
-                    } else {
+                    }
+                    else {
                         me.doTpl();
                         stack.push({ type: 'tpl' });
                     }
@@ -233,9 +243,11 @@ Ext.define('Ext.util.XTemplateParser', {
                     ++me.level;
 
                     // Extract property name to use from indexed item
+                    // eslint-disable-next-line no-cond-assign
                     if (prop = me.propRe.exec(m[4])) {
                         actions.propName = prop[1] || prop[2];
                     }
+
                     me.doFor(actions['for'], actions);
                     stack.push({ type: 'for', actions: actions });
                 }
@@ -243,9 +255,11 @@ Ext.define('Ext.util.XTemplateParser', {
                     ++me.level;
 
                     // Extract property name to use from indexed item
+                    // eslint-disable-next-line no-cond-assign
                     if (prop = me.propRe.exec(m[4])) {
                         actions.propName = prop[1] || prop[2];
                     }
+
                     me.doForEach(actions['foreach'], actions);
                     stack.push({ type: 'foreach', actions: actions });
                 }
@@ -258,14 +272,18 @@ Ext.define('Ext.util.XTemplateParser', {
                     // todo - error
                 }
                 */
-            } else if (m[0].length === 5) {
-                // if the length of m[0] is 5, assume that we're dealing with an opening tpl tag with no attributes (e.g. <tpl>...</tpl>)
+            }
+            else if (m[0].length === 5) {
+                // if the length of m[0] is 5, assume that we're dealing with an opening tpl tag
+                // with no attributes (e.g. <tpl>...</tpl>)
                 // in this case no action is needed other than pushing it on to the stack
                 stack.push({ type: 'tpl' });
-            } else {
+            }
+            else {
                 frame = stack.pop();
                 me.doEnd(frame.type, frame.actions);
-                if (frame.type == 'for' || frame.type == 'foreach') {
+
+                if (frame.type === 'for' || frame.type === 'foreach') {
                     --me.level;
                 }
             }
@@ -273,10 +291,11 @@ Ext.define('Ext.util.XTemplateParser', {
     },
 
     // Internal regexes
-    
-    topRe:     /(?:(\{\%)|(\{\[)|\{([^{}]+)\})|(?:<tpl([^>]*)\>)|(?:<\/tpl>)/g,
+
+    /* eslint-disable no-useless-escape */
+    topRe: /(?:(\{\%)|(\{\[)|\{([^{}]+)\})|(?:<tpl([^>]*)\>)|(?:<\/tpl>)/g,
     actionsRe: /\s*(elif|elseif|if|for|foreach|exec|switch|case|eval|between)\s*\=\s*(?:(?:"([^"]*)")|(?:'([^']*)'))\s*/g,
-    propRe:    /prop=(?:(?:"([^"]*)")|(?:'([^']*)'))/,
+    propRe: /prop=(?:(?:"([^"]*)")|(?:'([^']*)'))/,
     defaultRe: /^\s*default\s*$/,
-    elseRe:    /^\s*else\s*$/
+    elseRe: /^\s*else\s*$/
 });

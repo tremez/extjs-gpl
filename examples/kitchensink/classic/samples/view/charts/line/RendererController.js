@@ -2,13 +2,13 @@ Ext.define('KitchenSink.view.charts.line.RendererController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.line-renderer',
 
-    onSeriesRender: function (sprite, config, rendererData, index) {
+    onSeriesRender: function(sprite, config, rendererData, index) {
         var store = rendererData.store,
             storeItems = store.getData().items,
             currentRecord = storeItems[index],
-            previousRecord = (index > 0 ? storeItems[index-1] : currentRecord),
-            current = currentRecord && currentRecord.data['g1'],
-            previous = previousRecord && previousRecord.data['g1'],
+            previousRecord = (index > 0 ? storeItems[index - 1] : currentRecord),
+            current = currentRecord && currentRecord.data.g1,
+            previous = previousRecord && previousRecord.data.g1,
             isUp = current >= previous,
             changes = {};
 
@@ -26,24 +26,29 @@ Ext.define('KitchenSink.view.charts.line.RendererController', {
         return changes;
     },
 
-    onAxisRangeChange: function (axis, range) {
+    onAxisRangeChange: function(axis, range) {
+        var max;
+
         if (!range) {
             return;
         }
+
         // expand the range slightly to make sure markers aren't clipped
-        var max = range[1];
+        max = range[1];
 
         if (max >= 1000) {
             range[1] = max - max % 100 + 100;
-        } else if (max >= 500) {
+        }
+        else if (max >= 500) {
             range[1] = max - max % 50 + 50;
-        } else {
+        }
+        else {
             range[1] = max - max % 20 + 20;
         }
     },
 
-    onRefresh: function () {
-        var chart = this.lookupReference('chart'),
+    onRefresh: function() {
+        var chart = this.lookup('chart'),
             store = chart.getStore();
 
         store.refreshData();

@@ -11,6 +11,7 @@ Ext.define('Ext.device.Storage', {
 
     constructor: function() {
         var browserEnv = Ext.browser.is;
+
         if (browserEnv.WebView) {
             if (browserEnv.Cordova) {
                 return Ext.create('Ext.device.storage.Cordova');

@@ -1,9 +1,9 @@
-describe("Ext.tip.Tip", function() {
-
+topSuite("Ext.tip.Tip", function() {
     var tip;
 
     function createTip(config) {
         tip = new Ext.tip.Tip(config || {});
+
         return tip;
     }
 
@@ -13,7 +13,6 @@ describe("Ext.tip.Tip", function() {
             tip = null;
         }
     });
-
 
     describe("basic", function() {
         it("should extend Ext.Panel", function() {
@@ -33,12 +32,13 @@ describe("Ext.tip.Tip", function() {
         });
     });
 
-
     describe("showAt", function() {
         it("should show the tip at the specified x/y coordinates", function() {
             var tip = createTip();
+
             tip.showAt([100, 50]);
             var xy = tip.el.getXY();
+
             expect(xy[0]).toEqual(100);
             expect(xy[1]).toEqual(50);
         });
@@ -46,8 +46,10 @@ describe("Ext.tip.Tip", function() {
         it("should not be constrained to the viewport if constrainPosition config is false", function() {
             var viewportWidth = Ext.Element.getViewportWidth(),
                 viewportHeight = Ext.Element.getViewportHeight();
-            createTip({constrainPosition: false}).showAt([viewportWidth + 1, viewportHeight + 1]);
+
+            createTip({ constrainPosition: false }).showAt([viewportWidth + 1, viewportHeight + 1]);
             var xy = tip.el.getXY();
+
             expect(xy[0]).toEqual(viewportWidth + 1);
             expect(xy[1]).toEqual(viewportHeight + 1);
         });
@@ -55,8 +57,10 @@ describe("Ext.tip.Tip", function() {
         it("should be constrained to the viewport by default", function() {
             var viewportWidth = Ext.Element.getViewportWidth(),
                 viewportHeight = Ext.Element.getViewportHeight();
+
             createTip({}).showAt([viewportWidth + 1, viewportHeight + 1]);
             var xy = tip.el.getXY();
+
             expect(xy[0]).not.toEqual(viewportWidth + 1);
             expect(xy[1]).not.toEqual(viewportHeight + 1);
         });
@@ -64,18 +68,17 @@ describe("Ext.tip.Tip", function() {
 
     describe("draggable", function() {
         it("should attach a Ext.util.ComponentDragger instance to the tip", function() {
-            createTip({draggable: true, title: 'Title'}).showAt(0, 0);
+            createTip({ draggable: true, title: 'Title' }).showAt(0, 0);
             expect(tip.dd).toBeDefined();
             expect(tip.dd instanceof Ext.util.ComponentDragger).toBeTruthy();
             expect(tip.dd.handle.id).toEqual(tip.header.el.id);
         });
 
         it("should add an 'x-header-draggable' class to the tip header", function() {
-            createTip({draggable: true, title: 'Title'}).show();
+            createTip({ draggable: true, title: 'Title' }).show();
             expect(tip.header.el).toHaveCls('x-header-draggable');
         });
     });
-
 
     describe("closable", function() {
         it("should not have a close button by default", function() {
@@ -84,7 +87,7 @@ describe("Ext.tip.Tip", function() {
         });
 
         it("should add a close button when 'closable' config is true", function() {
-            createTip({closable: true}).show();
+            createTip({ closable: true }).show();
             expect(tip.header).toBeDefined();
             expect(tip.header.items.findBy(function(item) {
                 return item.toolEl && item.type === 'close';
@@ -92,11 +95,10 @@ describe("Ext.tip.Tip", function() {
         });
 
         it("should give the main tip element a class of 'x-tip-closable'", function() {
-            createTip({closable: true}).show();
+            createTip({ closable: true }).show();
             expect(tip.el).toHaveCls('x-tip-closable');
         });
     });
-
 
     describe("title", function() {
         it("should have no title by default", function() {
@@ -105,39 +107,37 @@ describe("Ext.tip.Tip", function() {
         });
 
         it("should display a configured title as header text", function() {
-            createTip({title: 'Tip Title'}).show();
+            createTip({ title: 'Tip Title' }).show();
             expect(tip.header.getTitle().textEl.dom).hasHTML('Tip Title');
         });
     });
 
-
     xdescribe("content", function() {
         it("should display the configured html value", function() {
-            createTip({html: 'Tip Body Text'}).show();
+            createTip({ html: 'Tip Body Text' }).show();
             expect(tip.body.dom).hasHTML('Tip Body Text');
         });
     });
 
-
     xdescribe("widths", function() {
         it("should allow setting an explicit width", function() {
-            createTip({width: 200}).show();
+            createTip({ width: 200 }).show();
             expect(tip.el.getWidth()).toEqual(200);
         });
 
         it("should default to automatic width", function() {
-            createTip({html: '<div style="width: 200px;">x</div>'}).show();
+            createTip({ html: '<div style="width: 200px;">x</div>' }).show();
 
             expect(tip.body.getWidth(true) + tip.body.getBorderWidth('lr')).toEqual(200);
         });
 
         it("should constrain the automatic width to at or above the configured minWidth", function() {
-            createTip({html: '<div style="width: 20px;">x</div>', minWidth: 60}).show();
+            createTip({ html: '<div style="width: 20px;">x</div>', minWidth: 60 }).show();
             expect(tip.el.getWidth()).toEqual(tip.minWidth);
         });
-        
+
         it("should constrain the automatic width to at or below the configured maxWidth", function() {
-            createTip({html: '<div style="width: 2000px;">x</div>'}).show();
+            createTip({ html: '<div style="width: 2000px;">x</div>' }).show();
             expect(tip.el.getWidth()).toEqual(tip.maxWidth);
         });
     });
@@ -151,6 +151,5 @@ describe("Ext.tip.Tip", function() {
             expect(tip.getWidth()).toBe(212);
         });
     });
-
 
 });

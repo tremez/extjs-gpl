@@ -4,11 +4,12 @@
  */
 Ext.define('Ext.grid.plugin.HeaderResizer', {
     extend: 'Ext.plugin.Abstract',
+    alias: 'plugin.gridheaderresizer',
+
     requires: [
         'Ext.dd.DragTracker',
         'Ext.util.Region'
     ],
-    alias: 'plugin.gridheaderresizer',
 
     disabled: false,
 
@@ -31,7 +32,7 @@ Ext.define('Ext.grid.plugin.HeaderResizer', {
         var me = this;
 
         me.headerCt = headerCt;
-        headerCt.on('render', me.afterHeaderRender, me, {single: me});
+        headerCt.on('render', me.afterHeaderRender, me, { single: me });
 
         // Pull minColWidth from the minWidth in the Column prototype
         if (!me.minColWidth) {
@@ -42,16 +43,16 @@ Ext.define('Ext.grid.plugin.HeaderResizer', {
     destroy: function() {
         var me = this,
             tracker = me.tracker;
-        
+
         if (tracker) {
             tracker.destroy();
             me.tracker = null;
         }
-        
+
         // The grid may happen to never render
         me.headerCt.un('render', me.afterHeaderRender, me);
         me.headerCt = null;
-        
+
         me.callParent();
     },
 
@@ -89,7 +90,8 @@ Ext.define('Ext.grid.plugin.HeaderResizer', {
                 me.activeHd.el.dom.style.cursor = '';
                 delete me.activeHd;
             }
-        } else if (e.pointerType !== 'touch') {
+        }
+        else if (e.pointerType !== 'touch') {
             me.findActiveHeader(e);
         }
     },
@@ -103,17 +105,18 @@ Ext.define('Ext.grid.plugin.HeaderResizer', {
             overHeader, resizeHeader, headers, header;
 
         me.activeHd = null;
+
         if (headerEl) {
             overHeader = Ext.getCmp(headerEl.id);
 
             // If near the right edge, we're resizing the column we are over.
             if (overHeader.isAtEndEdge(e)) {
-                
+
                 // Cannot resize the only column in a forceFit grid.
                 if (headerCt.visibleColumnManager.getColumns().length === 1 && headerCt.forceFit) {
                     return;
                 }
-                
+
                 resizeHeader = overHeader;
             }
             // Else... we might be near the right edge
@@ -130,6 +133,7 @@ Ext.define('Ext.grid.plugin.HeaderResizer', {
                     resizeHeader = headers[headers.length - 1];
                 }
             }
+
             // We *are* resizing
             if (resizeHeader) {
 
@@ -141,33 +145,38 @@ Ext.define('Ext.grid.plugin.HeaderResizer', {
                     resizeHeader = headers[headers.length - 1];
                 }
 
-                // Check if the header is resizable. Continue checking the old "fixed" property, bug also
-                // check whether the resizable property is set to false.
+                // Check if the header is resizable. Continue checking the old "fixed" property,
+                // but also check whether the resizable property is set to false.
                 if (resizeHeader && !(resizeHeader.fixed || (resizeHeader.resizable === false))) {
                     me.activeHd = resizeHeader;
                     overHeader.el.dom.style.cursor = me.eResizeCursor;
+
                     if (overHeader.triggerEl) {
                         overHeader.triggerEl.dom.style.cursor = me.eResizeCursor;
                     }
                 }
+            }
             // reset
-            } else {
+            else {
                 overHeader.el.dom.style.cursor = '';
+
                 if (overHeader.triggerEl) {
                     overHeader.triggerEl.dom.style.cursor = '';
                 }
             }
         }
+
         return me.activeHd;
     },
 
     // only start when there is an activeHd
-    onBeforeStart : function(e) {
+    onBeforeStart: function(e) {
         var me = this;
 
         // If on touch, we will have received no mouseover, so we have to
-        // decide whether the touchstart is in a resize zone, and if so, which header is to be sized.
-        // Cache any activeHd because it will be cleared on subsequent mousemoves outside the resize zone.
+        // decide whether the touchstart is in a resize zone, and if so, which header
+        // is to be sized. Cache any activeHd because it will be cleared on subsequent
+        // mousemoves outside the resize zone.
         me.dragHd = me.activeHd || e.pointerType === 'touch' && me.findActiveHeader(e);
 
         if (me.dragHd && !me.headerCt.dragging) {
@@ -178,9 +187,12 @@ Ext.define('Ext.grid.plugin.HeaderResizer', {
             // This will be the xDelta during the following drag operation.
             me.xDelta = me.dragHd.getX() + me.dragHd.getWidth() - me.tracker.getXY()[0];
             me.tracker.constrainTo = me.getConstrainRegion();
+
             return true;
-        } else {
+        }
+        else {
             me.headerCt.dragging = false;
+
             return false;
         }
     },
@@ -194,11 +206,13 @@ Ext.define('Ext.grid.plugin.HeaderResizer', {
 
     // get the region to constrain to, takes into account max and min col widths
     getConstrainRegion: function() {
-        var me       = this,
+        var me = this,
             dragHdEl = me.dragHd.el,
             nextHd,
             ownerGrid = me.ownerGrid,
             widthModel = ownerGrid.getSizeModel().width,
+
+            // eslint-disable-next-line max-len
             maxColWidth = widthModel.shrinkWrap ? me.headerCt.getWidth() - me.headerCt.visibleColumnManager.getColumns().length * me.minColWidth : me.maxColWidth,
             result;
 
@@ -206,34 +220,35 @@ Ext.define('Ext.grid.plugin.HeaderResizer', {
         // beyond the minColWidth. If there is no next header, then the header may not be expanded.
         if (me.headerCt.forceFit) {
             nextHd = me.dragHd.nextNode('gridcolumn:not([hidden]):not([isGroupHeader])');
+
             if (nextHd && me.headerInSameGrid(nextHd)) {
                 maxColWidth = dragHdEl.getWidth() + (nextHd.getWidth() - me.minColWidth);
             }
         }
 
-        // If resize header is in a locked grid, the maxWidth has to be 30px within the available locking grid's width
+        // If resize header is in a locked grid, the maxWidth has to be 30px
+        // within the available locking grid's width.
         // But only if the locked grid shrinkwraps its columns
         else if (ownerGrid.isLocked && widthModel.shrinkWrap) {
-            maxColWidth = me.dragHd.up('[scrollerOwner]').getTargetEl().getWidth(true) - ownerGrid.getWidth() - (ownerGrid.ownerLockable.normalGrid.visibleColumnManager.getColumns().length * me.minColWidth + Ext.getScrollbarSize().width);
+            maxColWidth =
+                me.dragHd.up('[scrollerOwner]').getTargetEl().getWidth(true) -
+                ownerGrid.getWidth() -
+                (ownerGrid.ownerLockable.normalGrid.visibleColumnManager.getColumns().length *
+                    me.minColWidth + Ext.scrollbar.width());
         }
 
-        result =  me.adjustConstrainRegion(
-            dragHdEl.getRegion(),
-            0,
-            0,
-            0,
-            me.minColWidth
-        );
+        result = me.adjustConstrainRegion(dragHdEl.getRegion(), 0, 0, 0, me.minColWidth);
         result.right = dragHdEl.getX() + maxColWidth;
+
         return result;
     },
 
     // initialize the left and right hand side markers around
     // the header that we are resizing
     onStart: function(e) {
-        var me       = this,
-            dragHd   = me.dragHd,
-            width    = dragHd.el.getWidth(),
+        var me = this,
+            dragHd = me.dragHd,
+            width = dragHd.el.getWidth(),
             headerCt = dragHd.getRootHeaderCt(),
             x, y, markerOwner, lhsMarker, rhsMarker, markerHeight;
 
@@ -245,18 +260,21 @@ Ext.define('Ext.grid.plugin.HeaderResizer', {
             markerOwner = me.markerOwner;
 
             // https://sencha.jira.com/browse/EXTJSIV-11299
-            // In Neptune (and other themes with wide frame borders), resize handles are embedded in borders,
-            // *outside* of the outer element's content area, therefore the outer element is set to overflow:visible.
-            // During column resize, we should not see the resize markers outside the grid, so set to overflow:hidden.
+            // In Neptune (and other themes with wide frame borders), resize handles are embedded
+            // in borders, *outside* of the outer element's content area, therefore
+            // the outer element is set to overflow:visible.
+            // During column resize, we should not see the resize markers outside the grid,
+            // so set to overflow:hidden.
             if (markerOwner.frame && markerOwner.resizable) {
                 me.gridOverflowSetting = markerOwner.el.dom.style.overflow;
                 markerOwner.el.dom.style.overflow = 'hidden';
             }
-            x            = me.getLeftMarkerX(markerOwner);
-            lhsMarker    = markerOwner.getLhsMarker();
-            rhsMarker    = markerOwner.getRhsMarker();
+
+            x = me.getLeftMarkerX(markerOwner);
+            lhsMarker = markerOwner.getLhsMarker();
+            rhsMarker = markerOwner.getRhsMarker();
             markerHeight = me.ownerGrid.body.getHeight() + headerCt.getHeight();
-            y            = headerCt.getOffsetsTo(markerOwner)[1] - markerOwner.el.getBorderWidth('t');
+            y = headerCt.getOffsetsTo(markerOwner)[1] - markerOwner.el.getBorderWidth('t');
 
             // Ensure the markers have the correct cursor in case the cursor is *exactly* over
             // this single pixel line, not just within the active resize zone
@@ -273,17 +291,18 @@ Ext.define('Ext.grid.plugin.HeaderResizer', {
     },
 
     // synchronize the rhsMarker with the mouse movement
-    onDrag: function(e){
+    onDrag: function(e) {
         var me = this;
-            
+
         if (me.dynamic) {
             me.doResize();
-        } else {
+        }
+        else {
             me.setMarkerX(me.getMovingMarker(me.markerOwner), me.calculateDragX(me.markerOwner));
         }
     },
-    
-    getMovingMarker: function(markerOwner){
+
+    getMovingMarker: function(markerOwner) {
         return markerOwner.getRhsMarker();
     },
 
@@ -292,6 +311,7 @@ Ext.define('Ext.grid.plugin.HeaderResizer', {
             markerOwner = me.markerOwner;
 
         me.headerCt.dragging = false;
+
         if (me.dragHd) {
             if (!me.dynamic) {
                 // If we had saved the gridOverflowSetting, restore it
@@ -303,6 +323,7 @@ Ext.define('Ext.grid.plugin.HeaderResizer', {
                 me.setMarkerX(markerOwner.getLhsMarker(), -9999);
                 me.setMarkerX(markerOwner.getRhsMarker(), -9999);
             }
+
             me.doResize();
 
             // On mouseup (a real mouseup), we must be ready to start dragging again immediately -
@@ -310,7 +331,8 @@ Ext.define('Ext.grid.plugin.HeaderResizer', {
             if (e.pointerType !== 'touch') {
                 me.dragHd = null;
                 me.activeHd.el.dom.style.cursor = me.eResizeCursor;
-            } else {
+            }
+            else {
                 me.dragHd = me.activeHd = null;
             }
         }
@@ -335,16 +357,20 @@ Ext.define('Ext.grid.plugin.HeaderResizer', {
             Ext.suspendLayouts();
 
             // Set the new column width.
-            // Adjusted for the offset from the actual column border that the mousedownb too place at.
+            // Adjusted for the offset from the actual column border that the mousedown
+            // too place at.
             me.adjustColumnWidth(offset[0] - me.xDelta);
- 
+
             // In the case of forceFit, change the following Header width.
-            // Constraining so that neither neighbour can be sized to below minWidth is handled in getConstrainRegion
+            // Constraining so that neither neighbour can be sized to below minWidth is handled
+            // in getConstrainRegion
             if (me.headerCt.forceFit) {
                 nextHd = dragHd.nextNode('gridcolumn:not([hidden]):not([isGroupHeader])');
+
                 if (nextHd && !me.headerInSameGrid(nextHd)) {
                     nextHd = null;
                 }
+
                 if (nextHd) {
                     delete nextHd.flex;
                     nextHd.setWidth(nextHd.getWidth() - offset[0]);
@@ -355,17 +381,19 @@ Ext.define('Ext.grid.plugin.HeaderResizer', {
             Ext.resumeLayouts(true);
         }
     },
-    
+
     // nextNode can traverse out of this grid, possibly to others on the page, so limit it here
     headerInSameGrid: function(header) {
         var grid = this.dragHd.up('tablepanel');
-        
+
         return !!header.up(grid);
     },
 
     disable: function() {
         var tracker = this.tracker;
+
         this.disabled = true;
+
         if (tracker) {
             tracker.disable();
         }
@@ -373,14 +401,17 @@ Ext.define('Ext.grid.plugin.HeaderResizer', {
 
     enable: function() {
         var tracker = this.tracker;
+
         this.disabled = false;
+
         if (tracker) {
             tracker.enable();
         }
     },
 
     calculateDragX: function(markerOwner) {
-        return this.tracker.getXY('point')[0] + this.xDelta - markerOwner.getX() - markerOwner.el.getBorderWidth('l');
+        return this.tracker.getXY('point')[0] + this.xDelta - markerOwner.getX() -
+               markerOwner.el.getBorderWidth('l');
     },
 
     getLeftMarkerX: function(markerOwner) {

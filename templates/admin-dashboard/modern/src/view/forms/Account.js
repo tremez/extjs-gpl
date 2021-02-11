@@ -1,33 +1,38 @@
 Ext.define('Admin.view.forms.Account', {
     extend: 'Ext.form.Panel',
     xtype: 'accountform',
-    cls: 'wizardform',
 
     requires: [
-        'Ext.field.Password',
-        'Ext.field.Text'
+        'Ext.field.Email',
+        'Ext.field.Password'
     ],
 
-    title: 'Account',
-    iconCls: 'x-fa fa-info',
-
     bodyPadding: '0 20 10 20',
+    cls: 'wizardform',
+    iconCls: 'x-fa fa-info',
+    title: 'Account',
+
     defaults: {
-        margin: '0 0 10 0'
+        margin: '0 0 10 0',
+        required: true
     },
 
     items: [{
         xtype: 'textfield',
-        placeHolder: 'Username must be unique'
+        placeholder: 'Username must be unique'
     }, {
-        xtype: 'textfield',
-        placeHolder: 'Email (ex: me@somewhere.com)',
-        vtype: 'email'
-    }, {
-        xtype: 'passwordfield',
-        placeHolder: 'Enter a password'
+        xtype: 'emailfield',
+        placeholder: 'Email (ex: me@somewhere.com)'
     }, {
         xtype: 'passwordfield',
-        placeHolder: 'Passwords must match'
+        reference: 'password',
+        placeholder: 'Enter a password'
+    }, {
+        xtype: 'passwordfield',
+        placeholder: 'Passwords must match',
+        validators: {
+            type: 'controller',
+            fn: 'passwordValidator'
+        }
     }]
 });

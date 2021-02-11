@@ -12,6 +12,13 @@
 
     <link rel="apple-touch-icon" href="resources/images/apple-touch-icon.png"/>
 
+    <!--[if gt IE 9]><!-->
+    <link href="resources/loader.css"  rel="stylesheet" type="text/css"/>
+    <!--<![endif]-->
+    <!--[if lte IE 9]>
+    <link href="resources/loader_ie.css" rel="stylesheet" type="text/css"/>
+    <![endif]-->
+
     <!-- The line below must be kept intact for Sencha Command to build your application -->
     <script type="text/javascript">
         var Ext = Ext || {};
@@ -80,5 +87,30 @@
 
     <script id="microloader" type="text/javascript" src="bootstrap.js"></script>
 </head>
-<body></body>
+<body>
+    <div id="loadingSplash">
+        <div id="loadingSplashTop"></div>
+        <div id="loadingSplashBottom"></div>
+        <div class="loading-fading-circle" id="loadingSplashCircles">
+            <div class="loading-circle-1 loading-circle"></div>
+            <div class="loading-circle-2 loading-circle"></div>
+            <div class="loading-circle-3 loading-circle"></div>
+            <div class="loading-circle-4 loading-circle"></div>
+            <div class="loading-circle-5 loading-circle"></div>
+            <div class="loading-circle-6 loading-circle"></div>
+            <div class="loading-circle-7 loading-circle"></div>
+            <div class="loading-circle-8 loading-circle"></div>
+            <div class="loading-circle-9 loading-circle"></div>
+            <div class="loading-circle-10 loading-circle"></div>
+            <div class="loading-circle-11 loading-circle"></div>
+            <div class="loading-circle-12 loading-circle"></div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var loading = document.getElementById('loadingSplash');
+
+        loading.className = KitchenSink.profileName;
+    </script>
+</body>
 </html>

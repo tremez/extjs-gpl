@@ -12,11 +12,11 @@ Ext.define('KitchenSink.view.tab.NavigationTabs', {
         type: 'Styles',
         path: 'classic/sass/src/view/tab/NavigationTabs.scss'
     }],
+    cls: Ext.baseCSSPrefix + 'shadow',
     //</example>
 
     height: 400,
     width: 600,
-
 
     ui: 'navigation',
     tabBar: {

@@ -12,8 +12,8 @@ Ext.application({
 
     name: 'KitchenSink'
 
-    //autoCreateViewport: 'KitchenSink.view.main.Main'
-	
+    // autoCreateViewport: 'KitchenSink.view.main.Main'
+
     //-------------------------------------------------------------------------
     // Most customizations should be made to KitchenSink.Application. If you need to
     // customize this file, doing so below this section reduces the likelihood

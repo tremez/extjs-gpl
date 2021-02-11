@@ -11,13 +11,14 @@ Ext.define('Ext.parse.Symbol', {
      * @property {String} defaultProperty
      */
 
-    constructor: function (id, config) {
+    constructor: function(id, config) {
         var me = this,
             defaultProperty = me.defaultProperty;
 
         if (config && typeof config === 'object') {
             Ext.apply(me, config);
-        } else if (config !== undefined && defaultProperty) {
+        }
+        else if (config !== undefined && defaultProperty) {
             me[defaultProperty] = config;
         }
 
@@ -25,7 +26,7 @@ Ext.define('Ext.parse.Symbol', {
     },
 
     //<debug>
-    dump: function () {
+    dump: function() {
         var me = this,
             ret = {
                 at: me.at,
@@ -41,11 +42,14 @@ Ext.define('Ext.parse.Symbol', {
             ret.lhs = me.lhs.dump();
             ret.rhs = me.rhs.dump();
         }
+
         if (me.operand) {
             ret.operand = me.operand.dump();
         }
+
         if (me.args) {
             ret.args = [];
+
             for (i = 0; i < me.args.length; ++i) {
                 ret.args.push(me.args[i].dump());
             }
@@ -62,7 +66,7 @@ Ext.define('Ext.parse.Symbol', {
      *
      * @param {Ext.parse.Symbol} left
      */
-    led: function () {
+    led: function() {
         this.parser.syntaxError(this.at, 'Missing operator');
     },
 
@@ -71,7 +75,7 @@ Ext.define('Ext.parse.Symbol', {
      * a unary operator). When the symbol is encountered in an expression this method
      * is called. The name "nud" stands for "null denotation".
      */
-    nud: function () {
+    nud: function() {
         this.parser.syntaxError(this.at, 'Undefined');
     },
 
@@ -83,8 +87,9 @@ Ext.define('Ext.parse.Symbol', {
      *
      * @param {Object} config
      */
-    update: function (config) {
+    update: function(config) {
         if (config && typeof config === 'object') {
+            // eslint-disable-next-line vars-on-top
             var me = this,
                 priority = config.priority,
                 led = config.led,
@@ -93,9 +98,11 @@ Ext.define('Ext.parse.Symbol', {
             if (me.priority <= priority) {
                 me.priority = priority;
             }
+
             if (led) {
                 me.led = led;
             }
+
             if (nud) {
                 me.nud = nud;
             }

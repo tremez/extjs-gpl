@@ -26,6 +26,7 @@ Ext.define('Ext.util.Observable', {
     Observable.capture = Super.capture;
 
     /**
+     * @member Ext.util.Observable
      * @private
      */
     Observable.captureArgs = Super.captureArgs;

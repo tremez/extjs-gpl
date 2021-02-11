@@ -7,10 +7,10 @@ Ext.application({
     name: 'Ticket',
 
     requires: [
-        //'Ext.app.*',
+        // 'Ext.app.*',
         'Ticket.*'
     ],
-    
+
     extend: 'Ticket.Application'
 
     //-------------------------------------------------------------------------

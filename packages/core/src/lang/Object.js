@@ -7,19 +7,19 @@
  */
 
 (function() {
-
 // The "constructor" for chain:
-var TemplateClass = function(){},
+var TemplateClass = function() {},
     queryRe = /^\?/,
     keyRe = /(\[):?([^\]]*)\]/g,
-    nameRe = /^([^\[]+)/,
+    nameRe = /^([^\[]+)/, // eslint-disable-line no-useless-escape
     plusRe = /\+/g,
-    ExtObject = Ext.Object = {
+    ExtObject;
+
 // @define Ext.lang.Object
 // @define Ext.Object
 // @require Ext
 // @require Ext.lang.Date
-
+ExtObject = Ext.Object = {
     /**
      * @method
      * Returns a new object with the given object as the prototype chain. This method is
@@ -31,10 +31,13 @@ var TemplateClass = function(){},
      * 
      * @param {Object} object The prototype chain for the new object.
      */
-    chain: Object.create || function (object) {
+    chain: Object.create || function(object) {
+        var result;
+
         TemplateClass.prototype = object;
-        var result = new TemplateClass();
+        result = new TemplateClass();
         TemplateClass.prototype = null;
+
         return result;
     },
 
@@ -43,9 +46,11 @@ var TemplateClass = function(){},
      * @param {Object} object The object from which to remove all keys.
      * @return {Object} The given object.
      */
-    clear: function (object) {
+    clear: function(object) {
+        var key;
+
         // Safe to delete during iteration
-        for (var key in object) {
+        for (key in object) {
             delete object[key];
         }
 
@@ -61,22 +66,27 @@ var TemplateClass = function(){},
      * @param {Boolean} [deep=false] Pass `true` to freeze sub-objects recursively.
      * @return {Object} The given object `obj`.
      */
-    freeze: Object.freeze ? function (obj, deep) {
-        if (obj && typeof obj === 'object' && !Object.isFrozen(obj)) {
-            Object.freeze(obj);
+    freeze: Object.freeze
+        ? function(obj, deep) {
+            var name;
 
-            if (deep) {
-                for (var name in obj) {
-                    ExtObject.freeze(obj[name], deep);
+            if (obj && typeof obj === 'object' && !Object.isFrozen(obj)) {
+                Object.freeze(obj);
+
+                if (deep) {
+                    for (name in obj) {
+                        ExtObject.freeze(obj[name], deep);
+                    }
                 }
             }
+
+            return obj;
         }
-        return obj;
-    } : Ext.identityFn,
+        : Ext.identityFn,
 
     /**
-     * Converts a `name` - `value` pair to an array of objects with support for nested structures. Useful to construct
-     * query strings. For example:
+     * Converts a `name` - `value` pair to an array of objects with support for nested structures.
+     * Useful to construct query strings. For example:
      *
      *     var objects = Ext.Object.toQueryObjects('hobbies', ['reading', 'cooking', 'swimming']);
      *
@@ -154,6 +164,7 @@ var TemplateClass = function(){},
         return objects;
     },
 
+    /* eslint-disable max-len */
     /**
      * Takes an object and converts it to an encoded query string.
      *
@@ -202,7 +213,8 @@ var TemplateClass = function(){},
 
             if (Ext.isEmpty(value)) {
                 value = '';
-            } else if (Ext.isDate(value)) {
+            }
+            else if (Ext.isDate(value)) {
                 value = Ext.Date.toString(value);
             }
 
@@ -263,10 +275,12 @@ var TemplateClass = function(){},
                 name = decodeURIComponent(name);
 
                 value = components[1];
+
                 if (value !== undefined) {
                     value = value.replace(plusRe, '%20');
                     value = decodeURIComponent(value);
-                } else {
+                }
+                else {
                     value = '';
                 }
 
@@ -323,7 +337,7 @@ var TemplateClass = function(){},
                         }
                         else {
                             if (temp[key] === undefined || typeof temp[key] === 'string') {
-                                nextKey = keys[j+1];
+                                nextKey = keys[j + 1];
 
                                 temp[key] = (Ext.isNumeric(nextKey) || nextKey === '') ? [] : {};
                             }
@@ -337,6 +351,7 @@ var TemplateClass = function(){},
 
         return object;
     },
+    /* eslint-enable max-len */
 
     /**
      * Iterates through an object and invokes the given callback function for each iteration.
@@ -379,7 +394,7 @@ var TemplateClass = function(){},
             }
 
             if (enumerables) {
-                for (i = enumerables.length; i--; ) {
+                for (i = enumerables.length; i--;) {
                     if (object.hasOwnProperty(property = enumerables[i])) {
                         if (fn.call(scope, property, object[property], object) === false) {
                             return;
@@ -399,7 +414,7 @@ var TemplateClass = function(){},
      *         2: 'World'
      *     };
      *
-     *     Ext.Object.eachValue(items, function (value) {
+     *     Ext.Object.eachValue(items, function(value) {
      *         console.log("Value: " + value);
      *     });
      *
@@ -426,7 +441,7 @@ var TemplateClass = function(){},
         }
 
         if (enumerables) {
-            for (i = enumerables.length; i--; ) {
+            for (i = enumerables.length; i--;) {
                 if (object.hasOwnProperty(property = enumerables[i])) {
                     if (fn.call(scope, object[property]) === false) {
                         return;
@@ -438,6 +453,7 @@ var TemplateClass = function(){},
 
     /**
      * Merges any number of objects recursively without referencing them or their children.
+     * Note: It will reference arrays if they are only present in one of the objects being merged.
      *
      *     var extjs = {
      *         companyName: 'Ext JS',
@@ -479,24 +495,29 @@ var TemplateClass = function(){},
      */
     merge: function(destination) {
         var i = 1,
-            ln = arguments.length,
+            args = arguments,
+            ln = args.length,
             mergeFn = ExtObject.merge,
             cloneFn = Ext.clone,
             object, key, value, sourceKey;
 
         for (; i < ln; i++) {
-            object = arguments[i];
+            object = args[i];
 
             for (key in object) {
                 value = object[key];
+
                 if (value && value.constructor === Object) {
                     sourceKey = destination[key];
+
                     if (sourceKey && sourceKey.constructor === Object) {
                         mergeFn(sourceKey, value);
-                    } else {
+                    }
+                    else {
                         destination[key] = cloneFn(value);
                     }
-                } else {
+                }
+                else {
                     destination[key] = value;
                 }
             }
@@ -542,7 +563,7 @@ var TemplateClass = function(){},
      * @return {String[]} An array of keys from the object or any of its prototypes.
      * @method
      */
-    getAllKeys: function (object) {
+    getAllKeys: function(object) {
         var keys = [],
             property;
 
@@ -568,7 +589,9 @@ var TemplateClass = function(){},
      * @param {Object} value The value to find
      */
     getKey: function(object, value) {
-        for (var property in object) {
+        var property;
+
+        for (property in object) {
             if (object.hasOwnProperty(property) && object[property] === value) {
                 return property;
             }
@@ -613,11 +636,12 @@ var TemplateClass = function(){},
      * @return {String[]} An array of keys from the object
      * @method
      */
-    getKeys: (typeof Object.keys == 'function')
-        ? function(object){
+    getKeys: (typeof Object.keys === 'function')
+        ? function(object) {
             if (!object) {
                 return [];
             }
+
             return Object.keys(object);
         }
         : function(object) {
@@ -656,21 +680,24 @@ var TemplateClass = function(){},
 
         return size;
     },
-    
+
     /**
      * Checks if there are any properties on this object.
      * @param {Object} object
      * @return {Boolean} `true` if there no properties on the object.
      */
-    isEmpty: function(object){
-        for (var key in object) {
+    isEmpty: function(object) {
+        var key;
+
+        for (key in object) {
             if (object.hasOwnProperty(key)) {
                 return false;
             }
         }
-        return true;    
+
+        return true;
     },
-    
+
     /**
      * @method
      * Shallow compares the contents of 2 objects using strict equality. Objects are
@@ -693,29 +720,33 @@ var TemplateClass = function(){},
     equals: (function() {
         var check = function(o1, o2) {
             var key;
-        
+
             for (key in o1) {
                 if (o1.hasOwnProperty(key)) {
                     if (o1[key] !== o2[key]) {
                         return false;
-                    }    
+                    }
                 }
-            }    
+            }
+
             return true;
         };
-        
+
         return function(object1, object2) {
-            
             // Short circuit if the same object is passed twice
             if (object1 === object2) {
                 return true;
-            } if (object1 && object2) {
+            }
+
+            if (object1 && object2) {
                 // Do the second check because we could have extra keys in
                 // object2 that don't exist in object1.
-                return check(object1, object2) && check(object2, object1);  
-            } else if (!object1 && !object2) {
+                return check(object1, object2) && check(object2, object1);
+            }
+            else if (!object1 && !object2) {
                 return object1 === object2;
-            } else {
+            }
+            else {
                 return false;
             }
         };
@@ -724,7 +755,7 @@ var TemplateClass = function(){},
     /**
      * @private
      */
-    fork: function (obj) {
+    fork: function(obj) {
         var ret, key, value;
 
         if (obj && obj.constructor === Object) {
@@ -736,31 +767,35 @@ var TemplateClass = function(){},
                 if (value) {
                     if (value.constructor === Object) {
                         ret[key] = ExtObject.fork(value);
-                    } else if (value instanceof Array) {
+                    }
+                    else if (value instanceof Array) {
                         ret[key] = Ext.Array.clone(value);
                     }
                 }
             }
-        } else {
+        }
+        else {
             ret = obj;
         }
 
         return ret;
     },
 
-    defineProperty: ('defineProperty' in Object) ? Object.defineProperty :
-                function(object, name, descriptor) {
-                    if (!Object.prototype.__defineGetter__) {
-                        return;
-                    }
-                    if (descriptor.get) {
-                        object.__defineGetter__(name, descriptor.get);
-                    }
+    defineProperty: ('defineProperty' in Object)
+        ? Object.defineProperty
+        : function(object, name, descriptor) {
+            if (!Object.prototype.__defineGetter__) {
+                return;
+            }
 
-                    if (descriptor.set) {
-                        object.__defineSetter__(name, descriptor.set);
-                    }
-                },
+            if (descriptor.get) {
+                object.__defineGetter__(name, descriptor.get);
+            }
+
+            if (descriptor.set) {
+                object.__defineSetter__(name, descriptor.set);
+            }
+        },
 
     /**
      * @private
@@ -769,17 +804,16 @@ var TemplateClass = function(){},
         var prototype = object,
             objectProperties = [],
             propertyClassesMap = {},
-            objectClass = function() {
-                var i = 0,
-                    ln = objectProperties.length,
-                    property;
+            objectClass, key, value;
 
-                for (; i < ln; i++) {
-                    property = objectProperties[i];
-                    this[property] = new propertyClassesMap[property]();
-                }
-            },
-            key, value;
+        objectClass = function() {
+            var property, i, ln;
+
+            for (i = 0, ln = objectProperties.length; i < ln; i++) {
+                property = objectProperties[i];
+                this[property] = new propertyClassesMap[property]();
+            }
+        };
 
         for (key in object) {
             if (object.hasOwnProperty(key)) {

@@ -1,2 +1,4 @@
-# theme-crisp - Read Me
+# theme-crisp 
+
+Minimalistic Theme.
 

@@ -1,6 +1,6 @@
 Ext.define('KitchenSink.view.main.Main', {
     extend: 'Ext.container.Viewport',
-    requires:[
+    requires: [
         'Ext.tab.Panel',
         'Ext.layout.container.Border'
     ],

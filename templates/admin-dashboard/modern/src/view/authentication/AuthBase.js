@@ -1,5 +1,6 @@
 Ext.define('Admin.view.authentication.AuthBase', {
     extend: 'Ext.Panel',
+    controller: 'auth',
 
     requires: [
         'Ext.layout.VBox'

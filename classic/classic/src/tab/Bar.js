@@ -6,17 +6,13 @@ Ext.define('Ext.tab.Bar', {
     extend: 'Ext.panel.Bar',
     xtype: 'tabbar',
 
-    baseCls: Ext.baseCSSPrefix + 'tab-bar',
-
     requires: [
         'Ext.tab.Tab',
         'Ext.util.Point',
         'Ext.layout.component.Body'
     ],
-    
-    mixins: [
-        'Ext.util.FocusableContainer'
-    ],
+
+    baseCls: Ext.baseCSSPrefix + 'tab-bar',
 
     componentLayout: 'body',
 
@@ -51,7 +47,7 @@ Ext.define('Ext.tab.Bar', {
          * docked vertically.
          */
         tabStretchMax: true,
-        
+
         // NB: This option is named this way for the intent, but in fact activation
         // happens in arrow key handler, not in focus handler. In IE focus events are
         // asynchronous, so activation happens before the tab's focus handler is fired.
@@ -84,8 +80,9 @@ Ext.define('Ext.tab.Bar', {
      * @since 5.1.1
      */
     ensureActiveVisibleOnChange: true,
-    
+
     ariaRole: 'tablist',
+    focusableContainer: true,
 
     childEls: [
         'body', 'strip'
@@ -94,9 +91,7 @@ Ext.define('Ext.tab.Bar', {
     _stripCls: Ext.baseCSSPrefix + 'tab-bar-strip',
     _baseBodyCls: Ext.baseCSSPrefix + 'tab-bar-body',
 
-    /**
-     * @private
-     */
+    /* eslint-disable max-len */
     renderTpl:
         '<tpl if="hasTabGuard">{% this.renderTabGuard(out, values, \'before\'); %}</tpl>' +
         '<div id="{id}-body" data-ref="body" role="presentation" class="{baseBodyCls} {baseBodyCls}-{ui} ' +
@@ -105,17 +100,22 @@ Ext.define('Ext.tab.Bar', {
         '</div>' +
         '<tpl if="hasTabGuard">{% this.renderTabGuard(out, values, \'after\'); %}</tpl>' +
         '<div id="{id}-strip" data-ref="strip" role="presentation" class="{stripCls} {stripCls}-{ui}{childElCls}"></div>',
+    /* eslint-enable max-len */
 
     /**
      * @cfg {Number} minTabWidth
-     * The minimum width for a tab in this tab Bar. Defaults to the tab Panel's {@link Ext.tab.Panel#minTabWidth minTabWidth} value.
-     * @deprecated This config is deprecated. It is much easier to use the {@link Ext.tab.Panel#minTabWidth minTabWidth} config on the TabPanel.
+     * The minimum width for a tab in this tab Bar. Defaults to the tab Panel's
+     * {@link Ext.tab.Panel#minTabWidth minTabWidth} value.
+     * @deprecated 6.5.0 This config is deprecated. Please use the
+     * {@link Ext.tab.Panel#minTabWidth minTabWidth} config on the TabPanel.
      */
 
     /**
      * @cfg {Number} maxTabWidth
-     * The maximum width for a tab in this tab Bar. Defaults to the tab Panel's {@link Ext.tab.Panel#maxTabWidth maxTabWidth} value.
-     * @deprecated This config is deprecated. It is much easier to use the {@link Ext.tab.Panel#maxTabWidth maxTabWidth} config on the TabPanel.
+     * The maximum width for a tab in this tab Bar. Defaults to the tab Panel's
+     * {@link Ext.tab.Panel#maxTabWidth maxTabWidth} value.
+     * @deprecated 6.5.0 This config is deprecated. Please use the
+     * {@link Ext.tab.Panel#maxTabWidth maxTabWidth} config on the TabPanel.
      */
 
     _reverseDockNames: {
@@ -151,13 +151,14 @@ Ext.define('Ext.tab.Bar', {
             me.addCls(me.baseCls + '-plain');
         }
 
-        me.callParent();
-
-        me.setLayout({
-            align: initialAlign || (me.getTabStretchMax() ? 'stretchmax' :
-                    me._layoutAlign[me.dock]),
+        // Will be applied to Ext.panel.Bar's layout config in parent initComponent
+        me.layout = Ext.apply({
+            align: initialAlign ||
+                   (me.getTabStretchMax() ? 'stretchmax' : me._layoutAlign[me.dock]),
             overflowHandler: initialOverflowHandler || 'scroller'
-        });
+        }, me.layout);
+
+        me.callParent();
 
         me.on({
             click: me.onClick,
@@ -168,8 +169,8 @@ Ext.define('Ext.tab.Bar', {
 
     /**
      * Ensure the passed tab is visible if using overflow scrolling 
-     * @param {Ext.tab.Tab/Ext.Component/Number} [tab] The tab, item in the owning {@link Ext.tab.Panel} or
-     * the index of the item to scroll to. Defaults to the active tab.
+     * @param {Ext.tab.Tab/Ext.Component/Number} [tab] The tab, item in the owning
+     * {@link Ext.tab.Panel} or the index of the item to scroll to. Defaults to the active tab.
      */
     ensureTabVisible: function(tab) {
         var me = this,
@@ -181,7 +182,8 @@ Ext.define('Ext.tab.Bar', {
                 if (!tab.isTab) {
                     if (Ext.isNumber(tab)) {
                         tab = this.items.getAt(tab);
-                    } else if (tab.isComponent && tabPanel && tabPanel.items.contains(tab)) {
+                    }
+                    else if (tab.isComponent && tabPanel && tabPanel.items.contains(tab)) {
                         tab = tab.tab;
                     }
                 }
@@ -220,6 +222,7 @@ Ext.define('Ext.tab.Bar', {
         if (items) {
             for (i = 0, ln = items.length; i < ln; i++) {
                 item = items[i];
+
                 if (item.isTab) {
                     item.setTabPosition(dock);
                 }
@@ -229,11 +232,14 @@ Ext.define('Ext.tab.Bar', {
         if (me.rendered) {
             // TODO: remove resetItemMargins once EXTJS-13359 is fixed
             me.resetItemMargins();
+
             if (ownerCt && ownerCt.isHeader) {
                 ownerCt.resetItemMargins();
             }
+
             me.needsScroll = true;
         }
+
         me.callParent([dock]);
     },
 
@@ -247,6 +253,7 @@ Ext.define('Ext.tab.Bar', {
         if (items) {
             for (i = 0, ln = items.length; i < ln; i++) {
                 item = items[i];
+
                 if (item.isTab) {
                     item.setRotation(tabRotation);
                 }
@@ -270,7 +277,7 @@ Ext.define('Ext.tab.Bar', {
 
         if (Ext.isIE8 && me.vertical) {
             me.el.on({
-                mousemove: me.onMouseMove, 
+                mousemove: me.onMouseMove,
                 scope: me
             });
         }
@@ -279,7 +286,7 @@ Ext.define('Ext.tab.Bar', {
             overflowHandler.menu.on('click', 'onOverflowMenuItemClick', me);
         }
     },
-    
+
     afterLayout: function() {
         this.adjustTabPositions();
         this.callParent(arguments);
@@ -297,6 +304,7 @@ Ext.define('Ext.tab.Bar', {
                 textchange: fn
             });
         }
+
         this.callParent([tab, pos]);
     },
 
@@ -304,6 +312,7 @@ Ext.define('Ext.tab.Bar', {
         if (container.isHeader) {
             this.addCls(container.baseCls + '-' + container.ui + '-tab-bar');
         }
+
         this.callParent([container, pos, instanced]);
     },
 
@@ -316,12 +325,14 @@ Ext.define('Ext.tab.Bar', {
             if (!destroying) {
                 tab.barListeners.destroy();
             }
+
             tab.barListeners = null;
         }
 
         if (tab === me.previousTab) {
             me.previousTab = null;
         }
+
         me.callParent([tab, destroying]);
     },
 
@@ -331,6 +342,7 @@ Ext.define('Ext.tab.Bar', {
         if (ownerCt.isHeader) {
             this.removeCls(ownerCt.baseCls + '-' + ownerCt.ui + '-tab-bar');
         }
+
         this.callParent([destroying]);
     },
 
@@ -344,12 +356,13 @@ Ext.define('Ext.tab.Bar', {
         var me = this,
             needsScroll = me.needsScroll,
             overflowHandler = me.layout.overflowHandler;
-        
+
         me.callParent(arguments);
-            
+
         if (overflowHandler && needsScroll && me.tooNarrow && overflowHandler.scrollToItem) {
             overflowHandler.scrollToItem(me.activeTab);
         }
+
         delete me.needsScroll;
     },
 
@@ -373,13 +386,16 @@ Ext.define('Ext.tab.Bar', {
                 overTab.onMouseLeave(e);
                 me._overTab = null;
             }
+
             if (tab) {
                 tab.onMouseEnter(e);
                 me._overTab = tab;
+
                 if (!tab.disabled) {
                     me.el.setStyle('cursor', 'pointer');
                 }
-            } else {
+            }
+            else {
                 me.el.setStyle('cursor', 'default');
             }
         }
@@ -416,11 +432,13 @@ Ext.define('Ext.tab.Bar', {
         for (; i < length; i++) {
             tab = tabs[i];
             lastBox = tab.lastBox;
+
             if (!lastBox || !tab.isTab) {
                 // avoid looping hidden or not laid out, or if the item
                 // is not a tab
                 continue;
             }
+
             tabX = innerCtXY[0] + lastBox.x;
             tabY = innerCtXY[1] - innerCt.dom.scrollTop + lastBox.y;
             tabWidth = lastBox.width;
@@ -431,8 +449,10 @@ Ext.define('Ext.tab.Bar', {
                 tabY + tabHeight,
                 tabX
             );
+
             if (tabRegion.contains(point)) {
                 closeEl = tab.closeEl;
+
                 if (closeEl) {
                     // Read the dom to determine if the contents of the tab are reversed
                     // (rotated 180 degrees).  If so, we can cache the result becuase
@@ -448,8 +468,12 @@ Ext.define('Ext.tab.Bar', {
 
                     closeWidth = closeEl.getWidth();
                     closeHeight = closeEl.getHeight();
-                    closeXY = me.getCloseXY(closeEl, tabX, tabY, tabWidth, tabHeight,
-                        closeWidth, closeHeight, direction);
+
+                    closeXY = me.getCloseXY(
+                        closeEl, tabX, tabY, tabWidth, tabHeight,
+                        closeWidth, closeHeight, direction
+                    );
+
                     closeX = closeXY[0];
                     closeY = closeXY[1];
 
@@ -462,6 +486,7 @@ Ext.define('Ext.tab.Bar', {
 
                     close = closeRegion.contains(point);
                 }
+
                 break;
             }
         }
@@ -475,14 +500,15 @@ Ext.define('Ext.tab.Bar', {
     /**
      * @private
      */
-    getCloseXY: function(closeEl, tabX, tabY, tabWidth, tabHeight, closeWidth, closeHeight, direction) {
+    getCloseXY: function(closeEl, tabX, tabY, tabWidth, tabHeight, closeWidth, closeHeight, direction) { // eslint-disable-line max-len
         var closeXY = closeEl.getXY(),
             closeX, closeY;
 
         if (direction === 'right') {
-            closeX = tabX + tabWidth - ((closeXY[1] - tabY) + closeHeight); 
-            closeY = tabY + (closeXY[0] - tabX); 
-        } else {
+            closeX = tabX + tabWidth - ((closeXY[1] - tabY) + closeHeight);
+            closeY = tabY + (closeXY[0] - tabX);
+        }
+        else {
             closeX = tabX + (closeXY[1] - tabY);
             closeY = tabY + tabX + tabHeight - closeXY[0] - closeWidth;
         }
@@ -492,7 +518,8 @@ Ext.define('Ext.tab.Bar', {
 
     /**
      * @private
-     * Closes the given tab by removing it from the TabBar and removing the corresponding card from the TabPanel
+     * Closes the given tab by removing it from the TabBar and removing the corresponding card
+     * from the TabPanel
      * @param {Ext.tab.Tab} toClose The tab to close
      */
     closeTab: function(toClose) {
@@ -504,14 +531,16 @@ Ext.define('Ext.tab.Bar', {
         if (card && card.fireEvent('beforeclose', card) === false) {
             return false;
         }
-        
-        // If we are closing the active tab, revert to the previously active tab (or the previous or next enabled sibling if
-        // there *is* no previously active tab, or the previously active tab is the one that's being closed or the previously
-        // active tab has since been disabled)
+
+        // If we are closing the active tab, revert to the previously active tab (or the previous
+        // or next enabled sibling if there *is* no previously active tab, or the previously
+        // active tab is the one that's being closed or the previously active tab has since
+        // been disabled)
         toActivate = me.findNextActivatable(toClose);
 
-        // We are going to remove the associated card, and then, if that was sucessful, remove the Tab,
-        // And then potentially activate another Tab. We should not layout for each of these operations.
+        // We are going to remove the associated card, and then, if that was sucessful,
+        // remove the Tab, and then potentially activate another Tab.
+        // We should not layout for each of these operations.
         Ext.suspendLayouts();
 
         // If we are closing the active tab, revert to the previously active tab
@@ -522,9 +551,11 @@ Ext.define('Ext.tab.Bar', {
             // in some other context (unlikely)
             if (tabPanel) {
                 tabPanel.setActiveTab(toActivate.card);
-            } else {
+            }
+            else {
                 me.setActiveTab(toActivate);
             }
+
             toActivate.focus();
         }
 
@@ -532,12 +563,12 @@ Ext.define('Ext.tab.Bar', {
             // Remove the ownerCt so the tab doesn't get destroyed if the remove is successful
             // We need this so we can have the tab fire it's own close event.
             delete toClose.ownerCt;
-            
+
             // we must fire 'close' before removing the card from panel, otherwise
             // the event will no loger have any listener
             card.fireEvent('close', card);
             tabPanel.remove(card);
-            
+
             // Remove succeeded
             if (card.ownerCt !== tabPanel) {
                 /*
@@ -547,10 +578,12 @@ Ext.define('Ext.tab.Bar', {
                  */
                 toClose.fireClose();
                 me.remove(toClose);
-            } else {
+            }
+            else {
                 // Restore the ownerCt from above
                 toClose.ownerCt = me;
                 Ext.resumeLayouts(true);
+
                 return false;
             }
         }
@@ -566,16 +599,17 @@ Ext.define('Ext.tab.Bar', {
         var me = this,
             previousTab = me.previousTab,
             nextTab;
-        
+
         if (toClose.active && me.items.getCount() > 1) {
             if (previousTab && previousTab !== toClose && !previousTab.disabled) {
                 nextTab = previousTab;
             }
             else {
-                nextTab = toClose.next('tab[disabled=false]') || toClose.prev('tab[disabled=false]');
+                nextTab = toClose.next('tab[disabled=false]') ||
+                          toClose.prev('tab[disabled=false]');
             }
         }
-        
+
         // If we couldn't find the next tab to activate, fall back
         // to the currently active one. We need to have a focused tab
         // at all times.
@@ -596,7 +630,8 @@ Ext.define('Ext.tab.Bar', {
             if (me.activeTab) {
                 if (me.activeTab.destroyed) {
                     me.previousTab = null;
-                } else {
+                }
+                else {
                     me.previousTab = me.activeTab;
                     me.activeTab.deactivate();
                     me.deactivateFocusable(me.activeTab);
@@ -609,12 +644,14 @@ Ext.define('Ext.tab.Bar', {
 
             me.activeTab = tab;
             me.needsScroll = true;
-            
+
             // We don't fire the change event when setting the first tab.
             // Also no need to run a layout
             if (!initial) {
                 me.fireEvent('change', me, tab, tab.card);
-                // Ensure that after the currently in progress layout, the active tab is scrolled into view
+
+                // Ensure that after the currently in progress layout,
+                // the active tab is scrolled into view
                 me.updateLayout();
             }
         }
@@ -641,11 +678,13 @@ Ext.define('Ext.tab.Bar', {
                     el = tab.el;
                     lastBox = tab.lastBox;
                     rotation = tab.isTab ? tab.getActualRotation() : 0;
+
                     if (rotation === 1 && tab.isVisible()) {
                         // rotated 90 degrees using the top left corner as the axis.
                         // tabs need to be shifted to the right by their width
                         el.setStyle(prop, (lastBox.x + lastBox.width) + 'px');
-                    } else if (rotation === 2 && tab.isVisible()) {
+                    }
+                    else if (rotation === 2 && tab.isVisible()) {
                         // rotated 270 degrees using the bottom right corner as the axis.
                         // tabs need to be shifted to the left by their height
                         el.setStyle(prop, (lastBox.x - lastBox.height) + 'px');
@@ -679,7 +718,8 @@ Ext.define('Ext.tab.Bar', {
                 tabInfo = me.getTabInfoFromPoint(e.getXY());
                 tab = tabInfo.tab;
                 isCloseClick = tabInfo.close;
-            } else {
+            }
+            else {
                 // The target might not be a valid tab el.
                 tabEl = e.getTarget('.' + Ext.tab.Tab.prototype.baseCls);
                 tab = tabEl && Ext.getCmp(tabEl.id);
@@ -689,14 +729,14 @@ Ext.define('Ext.tab.Bar', {
             if (isCloseClick) {
                 e.preventDefault();
             }
-            
+
             if (tab && tab.isDisabled && !tab.isDisabled()) {
                 // This will focus the tab; we do it before activating the card
                 // because the card may attempt to focus itself or a child item.
                 // We need to focus the tab explicitly because click target is
                 // the Bar, not the Tab.
                 tab.beforeClick(isCloseClick);
-                
+
                 if (tab.closable && isCloseClick) {
                     tab.onCloseClick();
                 }
@@ -706,63 +746,65 @@ Ext.define('Ext.tab.Bar', {
             }
         },
 
-        onOverflowMenuItemClick: function (menu, item, e, eOpts) {
+        onOverflowMenuItemClick: function(menu, item, e, eOpts) {
             var tab = item && item.masterComponent,
                 overflowHandler = this.layout.overflowHandler;
 
             if (tab && !tab.isDisabled()) {
                 this.doActivateTab(tab);
+
                 // set focus to menuTrigger so that it doesn't revert to previous activeTab
                 if (overflowHandler.menuTrigger) {
                     overflowHandler.menuTrigger.focus();
                 }
             }
         },
-        
+
         doActivateTab: function(tab) {
             var tabPanel = this.tabPanel;
-            
+
             if (tabPanel) {
                 // TabPanel will call setActiveTab of the TabBar
                 if (!tab.disabled) {
                     tabPanel.setActiveTab(tab.card);
                 }
-            } else {
+            }
+            else {
                 this.setActiveTab(tab);
             }
         },
-        
+
         onFocusableContainerFocus: function(e) {
             var me = this,
                 mixin = me.mixins.focusablecontainer,
                 child;
-            
+
             child = mixin.onFocusableContainerFocus.call(me, e);
-            
+
             if (child && child.isTab) {
                 me.doActivateTab(child);
             }
         },
-        
+
         onFocusableContainerFocusEnter: function(e) {
             var me = this,
                 mixin = me.mixins.focusablecontainer,
                 child;
-            
+
             child = mixin.onFocusableContainerFocusEnter.call(me, e);
-            
+
             if (child && child.isTab) {
                 me.doActivateTab(child);
             }
         },
-        
+
         focusChild: function(child, forward) {
             var me = this,
                 mixin = me.mixins.focusablecontainer,
                 nextChild;
-            
+
             nextChild = mixin.focusChild.call(me, child, forward);
-            
+
             if (me.activateOnFocus && nextChild && nextChild.isTab) {
                 me.doActivateTab(nextChild);
             }

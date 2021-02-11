@@ -20,13 +20,15 @@ Ext.define('Neptune.view.grid.Grids', {
             title: "Grid with Cell Editing and D'n'D reordering",
             viewConfig: {
                 plugins: {
-                    ptype: 'gridviewdragdrop',
-                    dragGroup: 'firstGridDDGroup',
-                    dropGroup: 'firstGridDDGroup'
+                    gridviewdragdrop: {
+                        dragGroup: 'firstGridDDGroup',
+                        dropGroup: 'firstGridDDGroup'
+                    }
                 },
                 listeners: {
                     drop: function(node, data, dropRec, dropPosition) {
                         var dropOn = dropRec ? ' ' + dropPosition + ' ' + dropRec.get('company') : ' on empty view';
+
                         Ext.Msg.alert("Drag from right to left", 'Dropped ' + data.records[0].get('company') + dropOn);
                     }
                 }
@@ -35,7 +37,7 @@ Ext.define('Neptune.view.grid.Grids', {
         {
             xtype: 'basicGrid',
             plugins: {
-                ptype: 'rowediting'
+                rowediting: true
             },
             rowLines: false,
             title: 'Grid with Row Editing, and no Row Lines'
@@ -43,7 +45,6 @@ Ext.define('Neptune.view.grid.Grids', {
         {
             xtype: 'basicGrid',
             selModel: Ext.create('Ext.selection.CheckboxModel'),
-            plugins: null,
             dockedItems: [{
                 xtype: 'pagingtoolbar',
                 store: 'Company',
@@ -63,19 +64,21 @@ Ext.define('Neptune.view.grid.Grids', {
         },
         {
             xtype: 'basicGrid',
-            plugins: [{
-                ptype: 'rowexpander',
-                rowBodyTpl : new Ext.XTemplate(
-                    '<p><b>Company:</b> {company}</p>',
-                    '<p><b>Change:</b> {change:this.formatChange}</p><br>',
-                    '<p><b>Summary:</b> {desc}</p>',
-                {
-                    formatChange: function(v){
-                        var color = v >= 0 ? 'green' : 'red';
-                        return '<span style="color: ' + color + ';">' + Ext.util.Format.usMoney(v) + '</span>';
-                    }
-                })
-            }],
+            plugins: {
+                rowexpander: {
+                    rowBodyTpl: new Ext.XTemplate(
+                        '<p><b>Company:</b> {company}</p>',
+                        '<p><b>Change:</b> {change:this.formatChange}</p><br>',
+                        '<p><b>Summary:</b> {desc}</p>',
+                        {
+                            formatChange: function(v) {
+                                var color = v >= 0 ? 'green' : 'red';
+
+                                return '<span style="color: ' + color + ';">' + Ext.util.Format.usMoney(v) + '</span>';
+                            }
+                        })
+                }
+            },
             title: 'Grid with RowExpander'
         }
     ]

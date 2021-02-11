@@ -2,6 +2,8 @@ Ext.define('Admin.view.email.Actions', {
     extend: 'Ext.ActionSheet',
     xtype: 'emailactions',
 
+    defaultType: 'button',
+
     items: [{
         text: 'Compose',
         handler: 'onComposeMessage'

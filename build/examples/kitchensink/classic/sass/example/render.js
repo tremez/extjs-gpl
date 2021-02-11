@@ -22,10 +22,11 @@ Ext.theme = {
      */
     _shortcuts: {},
 
-    doRequire : function(xtype) {
-        if(xtype.indexOf("widget.") != 0) {
+    doRequire: function(xtype) {
+        if (xtype.indexOf("widget.") !== 0) {
             xtype = "widget." + xtype;
         }
+
         Ext.require([xtype]);
     },
 
@@ -84,18 +85,20 @@ Ext.theme = {
      * background at then opposite "end" (right or bottom) and apply the stretch to the
      * area before it (left or top). Only applies to Ext JS 4.1 (removed in 4.2).
      */
-    addManifest: function (manifest) {
-        var all = Ext.theme._manifest;
-        var add = Ext.isArray(manifest) ? manifest : arguments;
+    addManifest: function(manifest) {
+        var all = Ext.theme._manifest,
+            add = Ext.isArray(manifest) ? manifest : arguments,
+            i, n;
 
-        if(manifest.xtype) {
+        if (manifest.xtype) {
             Ext.theme.doRequire(manifest.xtype);
         }
 
-        for (var i = 0, n = add.length; i < n; ++i) {
-            if(add[i].xtype) {
+        for (i = 0, n = add.length; i < n; ++i) {
+            if (add[i].xtype) {
                 Ext.theme.doRequire(add[i].xtype);
             }
+
             all.push(add[i]);
         }
     },
@@ -127,19 +130,22 @@ Ext.theme = {
      *          'widget.bar': [ ... ]
      *      });
      */
-    addShortcuts: function (shortcuts) {
-        var all = Ext.theme._shortcuts;
+    addShortcuts: function(shortcuts) {
+        var all = Ext.theme._shortcuts,
+            add, config, i, key, xtype, existing;
 
-        for (var key in shortcuts) {
+        for (key in shortcuts) {
 
-            var add = shortcuts[key];
-            var xtype = Ext.theme.addWidget(key);
-            var existing = all[xtype];
+            add = shortcuts[key];
+            xtype = Ext.theme.addWidget(key);
+            existing = all[xtype];
 
             Ext.theme.doRequire(xtype);
-            for(var i=0; i < add.length; i++) {
-                var config = add[i];
-                if(config.xtype) {
+
+            for (i = 0; i < add.length; i++) {
+                config = add[i];
+
+                if (config.xtype) {
                     Ext.theme.doRequire(config.xtype);
                 }
             }
@@ -156,10 +162,11 @@ Ext.theme = {
      * This method ensures that a given string has the specified prefix (e.g., "widget.").
      * @private
      */
-    addPrefix: function (prefix, s) {
-        if (!s || (s.length > prefix.length && s.substring(0,prefix.length) === prefix)) {
+    addPrefix: function(prefix, s) {
+        if (!s || (s.length > prefix.length && s.substring(0, prefix.length) === prefix)) {
             return s;
         }
+
         return prefix + s;
     },
 
@@ -168,7 +175,7 @@ Ext.theme = {
      * not already present.
      * @private
      */
-    addWidget: function (str) {
+    addWidget: function(str) {
         return Ext.theme.addPrefix('widget.', str);
     },
 
@@ -177,22 +184,26 @@ Ext.theme = {
      * version.
      * @private
      */
-    applyShortcut: function (manifestEntry, shortcut) {
-        var ui = manifestEntry.ui;
-        var config = Ext.theme.copyProps({}, manifestEntry.config);
-        var entry = Ext.theme.copyProps({}, manifestEntry);
+    applyShortcut: function(manifestEntry, shortcut) {
+        var ui = manifestEntry.ui,
+            config = Ext.theme.copyProps({}, manifestEntry.config),
+            entry = Ext.theme.copyProps({}, manifestEntry),
+            tpl;
 
         if (ui && !config.ui) {
             config.ui = ui;
         }
+
         if (shortcut) {
-            var tpl = { ui: ui };
+            tpl = { ui: ui };
+
             Ext.theme.copyProps(entry, shortcut, tpl);
             Ext.theme.copyProps(config, shortcut.config, tpl);
         }
 
         entry.xtype = Ext.theme.addWidget(entry.xtype);
         entry.config = config; // both guys have "config" so smash merged one on now...
+
         return entry;
     },
 
@@ -211,10 +222,10 @@ Ext.theme = {
      * @return {Object} The `dest` object or a new object (if `dest` was null).
      * @private
      */
-    copyProps: function (dest, src, tpl) {
-        var out = dest || {};
-        var replacements = [];
-        var token;
+    copyProps: function(dest, src, tpl) {
+        var out = dest || {},
+            replacements = [],
+            key, val, token, i;
 
         if (src) {
             if (tpl) {
@@ -226,13 +237,15 @@ Ext.theme = {
                 }
             }
 
-            for (var key in src) {
-                var val = src[key];
+            for (key in src) {
+                val = src[key];
+
                 if (tpl && typeof val === 'string') {
-                    for (var i = 0; i < replacements.length; ++ i) {
+                    for (i = 0; i < replacements.length; ++ i) {
                         val = val.replace(replacements[i].re, replacements[i].value);
                     }
                 }
+
                 out[key] = val;
             }
         }
@@ -244,32 +257,37 @@ Ext.theme = {
      * Renders a component given its manifest and shortcut entries.
      * @private
      */
-    renderWidget: function (manifestEntry, shortcut) {
-        var entry = Ext.theme.applyShortcut(manifestEntry, shortcut);
-        var config = entry.config;
-        var widget = Ext.create(entry.xtype, config);
-        var ct = Ext.fly(document.body).createChild({ cls: 'widget-container' });
+    renderWidget: function(manifestEntry, shortcut) {
+        var entry = Ext.theme.applyShortcut(manifestEntry, shortcut),
+            config = entry.config,
+            widget = Ext.create(entry.xtype, config),
+            ct = Ext.fly(document.body).createChild({ cls: 'widget-container' }),
+            el, data;
 
         Ext.theme.currentWidget = widget;
 
         if (widget.floating === true) {
             widget.floating = { shadow: false };
         }
+
         if (widget.floating) {
             widget.focusOnToFront = false;
         }
 
         if (entry.setup) {
             entry.setup.call(widget, widget, ct);
-        } else {
+        }
+        else {
             widget.render(ct);
+
             if (widget.floating) {
                 widget.showAt(0, 0);
                 ct.setHeight(widget.getHeight());
             }
         }
 
-        var el = widget.el;
+        el = widget.el;
+
         if (entry.delegate) {
             el = el.down(entry.delegate);
         }
@@ -279,6 +297,7 @@ Ext.theme = {
         if (entry.over) {
             widget.addOverCls();
         }
+
         if (config.parentCls) {
             el.parent().addCls(config.parentCls);
         }
@@ -286,16 +305,20 @@ Ext.theme = {
         if (Ext.theme.legacy) {
             // The 4.1 approach has some interesting extra pieces
             //
-            var data = {};
+            data = {};
+
             if (entry.reverse) {
                 data.reverse = true;
             }
+
             if (entry.filename) {
                 data.filename = entry.filename;
             }
+
             if (entry.folder) {
                 data.folder = entry.folder;
             }
+
             if (entry.offsets) {
                 data.offsets = entry.offsets;
             }
@@ -310,21 +333,24 @@ Ext.theme = {
      * Renders all of the components that have been added to the manifest.
      * @private
      */
-    render: function () {
-        console.log("rendering widgets...")
-        var manifest = Ext.theme._manifest;
-        var shortcuts = Ext.theme._shortcuts;
+    render: function() {
+        var manifest = Ext.theme._manifest,
+            shortcuts = Ext.theme._shortcuts,
+            i, k, n, manifestEntry, xtype, widgetShortcuts;
 
-        for (var k = 0, n = manifest ? manifest.length : 0; k < n; ++k) {
-            var manifestEntry = manifest[k];
-            var xtype = Ext.theme.addWidget(manifestEntry.xtype);
-            var widgetShortcuts = xtype ? shortcuts[xtype] : null;
+        console.log("rendering widgets...");
+
+        for (k = 0, n = manifest ? manifest.length : 0; k < n; ++k) {
+            manifestEntry = manifest[k];
+            xtype = Ext.theme.addWidget(manifestEntry.xtype);
+            widgetShortcuts = xtype ? shortcuts[xtype] : null;
 
             if (xtype && manifestEntry.ui && widgetShortcuts) {
-                for (var i = 0; i < widgetShortcuts.length; i++) {
+                for (i = 0; i < widgetShortcuts.length; i++) {
                     Ext.theme.renderWidget(manifestEntry, widgetShortcuts[i]);
                 }
-            } else {
+            }
+            else {
                 Ext.theme.renderWidget(manifestEntry);
             }
         }
@@ -334,18 +360,20 @@ Ext.theme = {
      * Renders all components (see `render`) and notifies the Slicer that things are ready.
      * @private
      */
-    run: function () {
-        var extjsVer = Ext.versions.extjs;
-        var globalData = {};
+    run: function() {
+        var extjsVer = Ext.versions.extjs,
+            globalData = {};
 
         if (Ext.layout.Context) {
             Ext.override(Ext.layout.Context, {
-                run: function () {
+                run: function() {
                     var ok = this.callParent(),
                         widget = Ext.theme.currentWidget;
+
                     if (!ok && widget) {
                         Ext.Error.raise("Layout run failed: " + widget.id);
                     }
+
                     return ok;
                 }
             });
@@ -365,9 +393,11 @@ Ext.theme = {
             if (Ext.manifest && Ext.manifest.widgets) {
                 Ext.theme.addManifest(Ext.manifest.widgets);
             }
+
             if (Ext.shortcuts) {
                 Ext.theme.addShortcuts(Ext.shortcuts);
             }
+
             if (Ext.userManifest && Ext.userManifest.widgets) {
                 Ext.theme.addManifest(Ext.userManifest.widgets);
             }
@@ -381,16 +411,17 @@ Ext.theme = {
     generateSlicerManifest: function() {
         var now = new Date().getTime(),
             me = Ext.theme,
-        // This function is defined by slicer.js (the framework-independent piece)
-            gsm = window && window['generateSlicerManifest'],
+            // This function is defined by slicer.js (the framework-independent piece)
+            gsm = window && window.generateSlicerManifest,
             delta;
 
         me.generateStart = me.generateStart || now;
         delta = now - me.generateStart;
 
-        if(gsm) {
+        if (gsm) {
             gsm();
-        } else if(delta < (10 * 1000)){
+        }
+        else if (delta < (10 * 1000)) {
             // allow the outer script wrapper a chance to inject the capture function
             // but stop trying after 10 seconds
             Ext.defer(Ext.theme.generateSlicerManifest, 100);
@@ -401,9 +432,12 @@ Ext.theme = {
      * Sets the `data-slicer` attribute to the JSON-encoded value of the provided data.
      * @private
      */
-    setData: function (el, data) {
+    setData: function(el, data) {
+        var json;
+
         if (data) {
-            var json = Ext.encode(data);
+            json = Ext.encode(data);
+
             if (json !== '{}') {
                 el.setAttribute('data-slicer', json);
             }
@@ -414,7 +448,7 @@ Ext.theme = {
      * This used to be `loadExtStylesheet`.
      * @private
      */
-    loadCss: function  (src, callback) {
+    loadCss: function(src, callback) {
         var xhr = new XMLHttpRequest();
 
         xhr.open('GET', src);

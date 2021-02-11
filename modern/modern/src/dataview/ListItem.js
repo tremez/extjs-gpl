@@ -1,258 +1,121 @@
 /**
- * A ListItem is a container for {@link Ext.dataview.List} with 
- * useSimpleItems: false. 
+ * A ListItem is a container for {@link Ext.dataview.List}.
  * 
  * ListItem configures and updates the {@link Ext.data.Model records} for  
  * the sub-component items in a list. 
- *   
- * Overwrite the `updateRecord()` method to set a sub-component's value. 
- * the framework calls `updateRecord()` whenever the data in the list updates.
- *
- * The `updatedata` event fires after `updateRecord()` runs.
  *
  * *Note*: Use of ListItem increases overhead since it generates more markup than
- * using the List class with useSimpleItems: true. This overhead is more
- * noticeable in Internet Explorer. If at all possible, use
- * {@link Ext.dataview.SimpleListItem} instead via the List's
- * {@link Ext.dataview.List#useSimpleItems useSimpleItems} config.
+ * using the `SimpleListItem`. This overhead is more noticeable in Internet Explorer. If
+ * possible, use the default {@link Ext.dataview.SimpleListItem}. To use the additional
+ * features of this class, use the {@link Ext.dataview.List#itemConfig itemConfig} config:
+ *
+ *      {
+ *          xtype: 'list',
+ *          itemConfig: {
+ *              xtype: 'listitem'
+ *          }
+ *      }
  *
  * The following example shows how to configure and update sub-component items
  * in a list:
  *
- *     Ext.define('Twitter.view.TweetListItem', {
- *         extend: 'Ext.dataview.ListItem',
- *         xtype : 'tweetlistitem',
- *         requires: [
- *             'Ext.Img'
- *         ],
- *         config: {
- *             userName: {
- *                 cls: 'username'
- *             },
- *             text: {
- *                 cls: 'text'
- *             },
- *             avatar: {
- *                 docked: 'left',
- *                 xtype : 'image',
- *                 cls   : 'avatar',
- *                 width: '48px',
- *                 height: '48px'
- *             },
- *             layout: {
- *                 type: 'vbox'
- *             }
- *         },
- *     
- *         applyUserName: function(config) {
- *             return Ext.factory(config, Ext.Component, this.getUserName());
- *         },
- *     
- *         updateUserName: function(newUserName) {
- *             if (newUserName) {
- *                 this.insert(0, newUserName);
- *             }
- *         },
- *     
- *         applyText: function(config) {
- *             return Ext.factory(config, Twitter.view.TweetListItemText, this.getText());
- *         },
- *     
- *         updateText: function(newText) {
- *             if (newText) {
- *                 this.add(newText);
- *             }
- *         },
- *     
- *         applyAvatar: function(config) {
- *             return Ext.factory(config, Ext.Img, this.getAvatar());
- *         },
- *     
- *         updateAvatar: function(newAvatar) {
- *             if (newAvatar) {
- *                 this.add(newAvatar);
- *             }
- *         },
- *     
- *         updateRecord: function(record) {     
- *             if (!record) {
- *                 return;
- *             }
+ *      Ext.define('App.view.twitter.TweetListItem', {
+ *          extend: 'Ext.dataview.ListItem',
+ *          xtype : 'tweetlistitem',
  *
- *             this.getUserName().setHtml(record.get('username'));
- *             this.getText().setHtml(record.get('text'));
- *             this.getAvatar().setSrc(record.get('avatar_url'));
- *             this.callParent(arguments);
+ *          requires: [
+ *              'Ext.Img'
+ *          ],
  *
- *         }
- *     });
+ *          layout: 'vbox',
+ *
+ *          items: [{
+ *              xtype: 'component',
+ *              cls: 'username',
+ *              reference: 'userName'
+ *          }, {
+ *              xtype: 'component',
+ *              cls: 'text',
+ *              reference: 'textCmp'
+ *          }, {
+ *              xtype : 'image',
+ *              reference: 'avatarImg',
+ *              docked: 'left',
+ *              cls: 'avatar',
+ *              width: 48,
+ *              height: 48
+ *          }],
+ *
+ *          dataMap: {
+ *              // Set "html" config of component w/reference "userName"
+ *              // to the "username" field from the associated record.
+ *              //
+ *              userName: {
+ *                  html: 'username'
+ *              },
+ *
+ *              textCmp: {
+ *                  html: 'text'
+ *              },
+ *
+ *              avatarImg: {
+ *                  src: 'avatar_url'
+ *              }
+ *          }
+ *      });
  *
  */
 Ext.define('Ext.dataview.ListItem', {
-    extend: 'Ext.dataview.component.DataItem',
+    extend: 'Ext.dataview.DataItem',
     alternateClassName: 'Ext.dataview.component.ListItem',
     xtype: 'listitem',
 
     requires: [
-        'Ext.dataview.ListItemBody',
-        'Ext.dataview.ListItemDisclosure'
+        'Ext.dataview.ItemHeader'
     ],
 
-    config: {
-        dataMap: null,
+    mixins: [
+        'Ext.dataview.Disclosable', // must come before Toolable
+        'Ext.mixin.Toolable',
+        'Ext.dataview.Pinnable'
+    ],
 
-        body: {
-            xtype: 'listitembody'
-        },
+    classCls: [
+        // ListItem is classClsRoot so that it can opt out of inheriting styles from
+        // DataItem, but it still needs to inherit container and component styles
+        Ext.baseCSSPrefix + 'listitem',
+        Ext.baseCSSPrefix + 'container',
+        Ext.baseCSSPrefix + 'component'
+    ],
 
-        disclosure: {
-            xtype: 'listitemdisclosure',
-            hidden: true,
-            docked: 'right'
-        },
-
-        header: {
-            xtype: 'itemheader'
-        },
-
-        tpl: null,
-        items: null
-    },
-
-    classCls: Ext.baseCSSPrefix + 'listitem',
     classClsRoot: true,
 
-    initialize: function() {
-        var me = this,
-            body, disclosure;
+    inheritUi: true,
 
-        me.callParent();
-
-        this.syncUi();
-
-        body = me.getBody();
-        disclosure = me.getDisclosure();
-
-        if (body) {
-            me.add(body);
-        }
-
-        if (disclosure) {
-            me.add(disclosure);
-        }
-    },
-
-    applyBody: function(body) {
-        if (body && !body.isComponent) {
-            body = Ext.factory(body, Ext.Component, this.getBody());
-        }
-
-        return body;
-    },
-
-    updateBody: function(body, oldBody) {
-        if (body && !this.isConfiguring) {
-            this.add(body);
-        }
-
-        if (oldBody) {
-            oldBody.destroy();
-        }
-    },
-
-    applyHeader: function(header) {
-        if (header && !header.isComponent) {
-            header = Ext.factory(header, Ext.Component, this.getHeader());
-        }
-
-        return header;
-    },
-
-    updateHeader: function(header, oldHeader) {
-        if (oldHeader) {
-            oldHeader.destroy();
-        }
-    },
-
-    applyDisclosure: function(disclosure) {
-        if (disclosure && !disclosure.isComponent) {
-            disclosure = Ext.factory(disclosure, Ext.Component, this.getDisclosure());
-        }
-
-        return disclosure;
-    },
-
-    updateDisclosure: function(disclosure, oldDisclosure) {
-        if (disclosure && !this.isConfiguring) {
-            this.add(disclosure);
-        }
-
-        if (oldDisclosure) {
-            oldDisclosure.destroy();
-        }
-    },
-
-    updateTpl: function(tpl) {
-        this.getBody().setTpl(tpl);
-    },
-
-    updateUi: function(ui, oldUi) {
-        this.callParent([ui, oldUi]);
-
-        if (!this.isConfiguring) {
-            this.syncUi();
-        }
-    },
+    items: null,  // base class has one item by default
 
     updateRecord: function(record) {
-        var me = this,
-            dataview = me.dataview || this.getDataview(),
-            data = record && dataview.prepareData(record.getData(true), dataview.getStore().indexOf(record), record),
-            dataMap = me.getDataMap(),
-            body = this.getBody(),
-            disclosure = this.getDisclosure();
+        var me = this;
 
-        me._record = record;
+        if (!me.destroying && !me.destroyed) {
+            me.callParent([record]);
 
-        if (dataMap) {
-            me.doMapData(dataMap, data, body);
-        } else if (body) {
-            body.updateData(data || null);
+            me.syncDisclosure(record);
         }
-
-        if (disclosure && record && dataview.getOnItemDisclosure()) {
-            var disclosureProperty = dataview.getDisclosureProperty();
-            disclosure[(data.hasOwnProperty(disclosureProperty) && data[disclosureProperty] === false) ? 'hide' : 'show']();
-        }
-
-        /**
-         * @event updatedata
-         * Fires whenever the data of the DataItem is updated.
-         * @param {Ext.dataview.component.DataItem} this The DataItem instance.
-         * @param {Object} newData The new data.
-         */
-        me.fireEvent('updatedata', me, data);
     },
 
     doDestroy: function() {
-        Ext.destroy(this.getHeader());
+        this.mixins.toolable.doDestroy.call(this);
         this.callParent();
     },
 
     privates: {
-        syncUi: function() {
-            var me = this,
-                ui = me.getUi(),
-                body = me.getBody(),
-                disclosure = me.getDisclosure();
-
-            if (body) {
-                body.setUi(ui);
+        invokeToolHandler: function(tool, handler, scope, args, e) {
+            if (this.invokeDisclosure(tool, handler, e)) {
+                return false;
             }
 
-            if (disclosure) {
-                disclosure.setUi(ui);
-            }
+            return tool.invokeToolHandler(tool, handler, scope, args, e);
         }
     }
 });

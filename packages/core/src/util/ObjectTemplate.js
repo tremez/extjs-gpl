@@ -35,7 +35,7 @@ Ext.define('Ext.util.ObjectTemplate', {
 
     excludeProperties: {},
 
-    valueRe: /^[{][a-z\.]+[}]$/i,
+    valueRe: /^[{][a-z.]+[}]$/i,
 
     statics: {
         /**
@@ -45,15 +45,16 @@ Ext.define('Ext.util.ObjectTemplate', {
          * @return {Ext.util.ObjectTemplate}
          * @since 5.0.0
          */
-        create: function (template, options) {
+        create: function(template, options) {
             //<debug>
             if (!Ext.isObject(template)) {
                 Ext.raise('The template is not an Object');
             }
             //</debug>
 
-            return template.isObjectTemplate ? template
-                                : new Ext.util.ObjectTemplate(template, options);
+            return template.isObjectTemplate
+                ? template
+                : new Ext.util.ObjectTemplate(template, options);
         }
     },
 
@@ -64,7 +65,7 @@ Ext.define('Ext.util.ObjectTemplate', {
      * @param {Object} [options]
      * @since 5.0.0
      */
-    constructor: function (template, options) {
+    constructor: function(template, options) {
         Ext.apply(this, options);
 
         this.template = template;
@@ -77,7 +78,7 @@ Ext.define('Ext.util.ObjectTemplate', {
      * @return {Object}
      * @since 5.0.0
      */
-    apply: function (context) {
+    apply: function(context) {
         var me = this;
 
         delete me.apply;
@@ -95,7 +96,7 @@ Ext.define('Ext.util.ObjectTemplate', {
          * @return {Function}
          * @since 5.0.0
          */
-        compile: function (template) {
+        compile: function(template) {
             var me = this,
                 exclude = me.excludeProperties,
                 compiled, i, len, fn;
@@ -104,37 +105,44 @@ Ext.define('Ext.util.ObjectTemplate', {
 
             if (Ext.isString(template)) {
                 if (template.indexOf('{') < 0) {
-                    fn = function () {
+                    fn = function() {
                         return template;
                     };
-                } else if (me.valueRe.test(template)) {
+                }
+                else if (me.valueRe.test(template)) {
                     template = template.substring(1, template.length - 1).split('.');
 
-                    fn = function (context) {
-                        for (var v = context, i = 0; v && i < template.length; ++i) {
+                    fn = function(context) {
+                        var v, i;
+
+                        for (v = context, i = 0; v && i < template.length; ++i) {
                             v = v[template[i]];
                         }
+
                         return v;
                     };
-                } else {
+                }
+                else {
                     template = new Ext.XTemplate(template);
 
-                    fn = function (context) {
+                    fn = function(context) {
                         return template.apply(context);
                     };
                 }
-            } else if (!template || Ext.isPrimitive(template) || Ext.isFunction(template)) {
-                fn = function () {
+            }
+            else if (!template || Ext.isPrimitive(template) || Ext.isFunction(template)) {
+                fn = function() {
                     return template;
                 };
-            } else if (template instanceof Array) {
+            }
+            else if (template instanceof Array) {
                 compiled = [];
 
                 for (i = 0, len = template.length; i < len; ++i) {
                     compiled[i] = me.compile(template[i]);
                 }
 
-                fn = function (context) {
+                fn = function(context) {
                     var ret = [],
                         i;
 
@@ -144,7 +152,8 @@ Ext.define('Ext.util.ObjectTemplate', {
 
                     return ret;
                 };
-            } else {
+            }
+            else {
                 compiled = {};
 
                 for (i in template) {
@@ -153,12 +162,13 @@ Ext.define('Ext.util.ObjectTemplate', {
                     }
                 }
 
-                fn = function (context) {
+                fn = function(context) {
                     var ret = {},
                         i, v;
 
                     for (i in template) {
                         v = exclude[i] ? template[i] : compiled[i](context);
+
                         if (v !== undefined) {
                             ret[i] = v;
                         }

@@ -1,15 +1,278 @@
-describe("Ext.plugin.Abstract", function() {
+topSuite("Ext.plugin.Abstract",
+    ['Ext.Container', 'Ext.app.ViewController', 'Ext.plugin.Responsive'],
+function() {
+    var PTYPE = Ext.isClassic ? 'ptype' : 'type',
+        Plugin, Component, component, spies;
 
-    describe("listener scope resolution", function() {
-        var spies, Plugin, plugin, Component, component, Parent, parent,
-            Controller, Controller, ParentController;
+    function defineComponent(cfg) {
+        Component = Ext.define(null, Ext.apply({
+            extend: 'Ext.Component',
+            onFoo: spies && spies.component
+        }, cfg));
+    }
 
-        function defineComponent(cfg) {
-            Component = Ext.define(null, Ext.apply({
-                extend: 'Ext.Component',
-                onFoo: spies.component
+    afterEach(function() {
+        component = Ext.destroy(component);
+
+        Plugin = Component = null;
+    });
+
+    describe('creation', function() {
+        var Plugin1, Plugin2;
+
+        function definePlugin(cfg) {
+            var className = cfg && cfg.xclass;
+
+            if (className) {
+                delete cfg.xclass;
+            }
+
+            return Plugin = Ext.define(className || 'Ext.test.plugin.Abstract', Ext.merge({
+                extend: 'Ext.plugin.Abstract',
+                alias: 'plugin.plugintest'
             }, cfg));
         }
+
+        beforeEach(function() {
+            Plugin1 = definePlugin();
+            Plugin2 = definePlugin({
+                xclass: 'Ext.test.plugin.Abstract2',
+                alias: 'plugin.plg'
+            });
+        });
+
+        afterEach(function() {
+            Ext.undefine('Ext.test.plugin.Abstract');
+            Ext.undefine('Ext.test.plugin.Abstract2');
+
+            Plugin1 = Plugin2 = null;
+        });
+
+        describe('plugins: config object', function() {
+            it('should create a plugin defined on the class', function() {
+                var p2 = {};
+
+                p2[PTYPE] = 'plugintest';
+
+                defineComponent({
+                    plugins: p2
+                });
+
+                component = new Component();
+
+                var plugins = component.getPlugins();
+
+                expect(plugins.length).toBe(1);
+                expect(plugins[0] instanceof Plugin1).toBe(true);
+            });
+        });
+
+        describe('plugins: string', function() {
+            it('should create a plugin defined on the class', function() {
+                defineComponent({
+                    plugins: 'plugintest'
+                });
+
+                component = new Component();
+
+                var plugin = component.findPlugin('plugintest');
+
+                expect(plugin instanceof Plugin1).toBe(true);
+            });
+        });
+
+        describe('plugins: string[]', function() {
+            it('should create plugins defined on the class', function() {
+                defineComponent({
+                    plugins: ['plugintest', 'plg']
+                });
+
+                component = new Component();
+
+                var plugin = component.findPlugin('plugintest');
+
+                expect(plugin instanceof Plugin1).toBe(true);
+
+                plugin = component.findPlugin('plg');
+                expect(plugin instanceof Plugin2).toBe(true);
+            });
+        });
+
+        describe('plugins: mixed[]', function() {
+            it('should create plugins defined on the class', function() {
+                var p2 = {};
+
+                p2[PTYPE] = 'plg';
+
+                defineComponent({
+                    plugins: ['plugintest', p2]
+                });
+
+                component = new Component();
+
+                var plugin = component.findPlugin('plugintest');
+
+                expect(plugin instanceof Plugin1).toBe(true);
+
+                plugin = component.findPlugin('plg');
+                expect(plugin instanceof Plugin2).toBe(true);
+            });
+        });
+
+        describe('plugins: keyed object', function() {
+            it('should create plugins defined on the class', function() {
+                defineComponent({
+                    plugins: {
+                        plugintest: true,
+                        plg: {
+                            id: 'foo'
+                        }
+                    }
+                });
+
+                component = new Component();
+
+                var plugin = component.findPlugin('plugintest');
+
+                expect(plugin instanceof Plugin1).toBe(true);
+
+                plugin = component.getPlugin('plugintest');
+                expect(plugin instanceof Plugin1).toBe(true);
+
+                plugin = component.findPlugin('plg');
+                expect(plugin instanceof Plugin2).toBe(true);
+
+                plugin = component.getPlugin('foo');
+                expect(plugin instanceof Plugin2).toBe(true);
+            });
+
+            it('should create and order plugins defined on the class', function() {
+                defineComponent({
+                    plugins: {
+                        plugintest: true,
+                        plg: {
+                            weight: 1
+                        }
+                    }
+                });
+
+                component = new Component();
+
+                var plugins = component.getPlugins();
+
+                expect(plugins.length).toBe(2);
+                expect(plugins[0] instanceof Plugin1).toBe(true);
+                expect(plugins[1] instanceof Plugin2).toBe(true);
+            });
+
+            it('should create and reverse order plugins defined on the class', function() {
+                defineComponent({
+                    plugins: {
+                        plugintest: true,
+                        plg: {
+                            weight: -1
+                        }
+                    }
+                });
+
+                component = new Component();
+
+                var plugins = component.getPlugins();
+
+                expect(plugins.length).toBe(2);
+                expect(plugins[0] instanceof Plugin2).toBe(true);
+                expect(plugins[1] instanceof Plugin1).toBe(true);
+            });
+
+            if (Ext.isModern) {
+                it('should override plugins defined on the class by instance config', function() {
+                    defineComponent({
+                        plugins: {
+                            plugintest: true,
+                            plg: {
+                                weight: -1
+                            }
+                        }
+                    });
+
+                    component = new Component({
+                        plugins: {
+                            plg: {
+                                weight: 1
+                            }
+                        }
+                    });
+
+                    var plugins = component.getPlugins();
+
+                    expect(plugins.length).toBe(2);
+                    expect(plugins[0] instanceof Plugin1).toBe(true);
+                    expect(plugins[1] instanceof Plugin2).toBe(true);
+
+                    component.destroy();
+
+                    component = new Component({
+                        plugins: {
+                            plugintest: null
+                        }
+                    });
+
+                    plugins = component.getPlugins();
+
+                    expect(plugins.length).toBe(1);
+                    expect(plugins[0] instanceof Plugin2).toBe(true);
+                });
+
+                it('should be able to activate a plugin early', function() {
+                    defineComponent({
+                        config: {
+                            foo: null,
+                            bar: null
+                        },
+
+                        plugins: {
+                            plugintest: true,
+                            plg: {
+                                weight: -1
+                            }
+                        }
+                    });
+
+                    component = new Component({
+                        plugins: {
+                            responsive: true,
+                            plg: {
+                                weight: 1
+                            }
+                        },
+
+                        responsiveConfig: {
+                            'true': {
+                                foo: 1
+                            },
+                            'false': {
+                                bar: 2
+                            }
+                        }
+                    });
+
+                    var plugins = component.getPlugins();
+
+                    expect(component.getFoo()).toBe(1);
+                    expect(component.getBar()).toBe(null);
+
+                    expect(plugins.length).toBe(3);
+                    expect(plugins[0] instanceof Ext.plugin.Responsive).toBe(true);
+                    expect(plugins[1] instanceof Plugin1).toBe(true);
+                    expect(plugins[2] instanceof Plugin2).toBe(true);
+                });
+            }
+        });
+    });
+
+    describe("listener scope resolution", function() {
+        var plugin, Parent, parent,
+            Controller, ParentController;
 
         function defineParent(cfg) {
             Parent = Ext.define(null, Ext.apply({
@@ -34,7 +297,8 @@ describe("Ext.plugin.Abstract", function() {
                 if (name === scope) {
                     expect(spy).toHaveBeenCalled();
                     expect(spy.mostRecentCall.object).toBe(scopes[name]);
-                } else {
+                }
+                else {
                     expect(spy).not.toHaveBeenCalled();
                 }
             }
@@ -64,14 +328,13 @@ describe("Ext.plugin.Abstract", function() {
             if (plugin) {
                 plugin.destroy();
             }
-            if (component) {
-                component.destroy();
-            }
+
             if (parent) {
                 parent.destroy();
             }
-            Plugin = Component = Parent = Controller = ParentController = null;
-            plugin = component = parent = null;
+
+            Parent = Controller = ParentController = null;
+            plugin = parent = null;
         });
 
         describe("listener declared on class body", function() {
@@ -498,7 +761,7 @@ describe("Ext.plugin.Abstract", function() {
                         listeners: {
                             foo: handler
                         }
-                    }, cfg))
+                    }, cfg));
                 }
 
                 beforeEach(function() {
@@ -1268,5 +1531,5 @@ describe("Ext.plugin.Abstract", function() {
                 });
             });
         });
-    });
+    }); // listener scope resolution
 });

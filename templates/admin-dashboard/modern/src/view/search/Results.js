@@ -2,32 +2,26 @@ Ext.define('Admin.view.search.Results', {
     extend: 'Ext.tab.Panel',
     xtype:'searchresults',
 
-    activeTab: 0,
     viewModel: {
         type: 'searchresults'
     },
 
     items: [{
-        title: 'All',
         xtype: 'allresults',
+        title: 'All',
         bind: {
             store: '{results}'
         }
-    },{
-        title: 'Users',
+    }, {
         xtype: 'searchusers',
-
+        title: 'Users',
         bind: {
             store: '{users}'
         }
-    },{
+    }, {
+        xtype: 'inbox',
         title: 'Messages',
-        xtype: 'container',
-        layout: 'fit',
-        items: [{
-            xtype: 'inbox',
-            hideHeaders: true,
-            bind: '{inbox}'
-        }]
+        hideHeaders: true,
+        bind: '{inbox}'
     }]
 });

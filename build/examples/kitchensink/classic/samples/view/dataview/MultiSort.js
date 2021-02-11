@@ -21,15 +21,15 @@ Ext.define('KitchenSink.view.dataview.MultiSort', {
     layout: 'fit',
     width: 540,
     height: '${height}',
-    
+
     //<example>
     otherContent: [{
         type: 'Controller',
         path: 'classic/samples/view/dataview/MultiSortController.js'
-    },{
+    }, {
         type: 'SortButton',
         path: 'classic/samples/view/dataview/MultiSortButton.js'
-    },{
+    }, {
         type: 'Data',
         path: 'data/sencha-touch-examples.json'
     }],
@@ -39,15 +39,22 @@ Ext.define('KitchenSink.view.dataview.MultiSort', {
         },
         neptune: {
             height: 620
+        },
+        graphite: {
+            height: 700
+        },
+        'classic-material': {
+            height: 700
         }
     },
     //</example>
 
     tbar: {
         plugins: {
-            ptype: 'boxreorderer',
-            listeners: {
-                drop: 'updateStoreSorters'
+            boxreorderer: {
+                listeners: {
+                    drop: 'updateStoreSorters'
+                }
             }
         },
 
@@ -63,11 +70,11 @@ Ext.define('KitchenSink.view.dataview.MultiSort', {
             reorderable: false
         }, {
             xtype: 'dataview-multisort-sortbutton',
-            text : 'Type',
+            text: 'Type',
             dataIndex: 'type'
         }, {
             xtype: 'dataview-multisort-sortbutton',
-            text : 'Name',
+            text: 'Name',
             dataIndex: 'name'
         }]
     },
@@ -76,16 +83,16 @@ Ext.define('KitchenSink.view.dataview.MultiSort', {
         xtype: 'dataview',
         reference: 'dataview',
         plugins: {
-            ptype: 'ux-animated-dataview'
+            'ux-animated-dataview': true
         },
 
         itemSelector: 'div.dataview-multisort-item',
         tpl: [
             '<tpl for=".">',
-                '<div class="dataview-multisort-item">',
-                    '<img src="classic/resources/images/touch-icons/{thumb}" />',
-                    '<h3>{name}</h3>',
-                '</div>',
+            '<div class="dataview-multisort-item">',
+            '<img src="classic/resources/images/touch-icons/{thumb}" />',
+            '<h3>{name}</h3>',
+            '</div>',
             '</tpl>'
         ],
 
@@ -95,7 +102,7 @@ Ext.define('KitchenSink.view.dataview.MultiSort', {
             fields: ['name', 'thumb', 'url', 'type'],
             proxy: {
                 type: 'ajax',
-                url : 'data/sencha-touch-examples.json',
+                url: 'data/sencha-touch-examples.json',
                 reader: {
                     type: 'json',
                     rootProperty: ''

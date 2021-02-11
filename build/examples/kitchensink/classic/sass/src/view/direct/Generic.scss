@@ -1,0 +1,15 @@
+@if $theme-name == 'theme-material'  {
+    .generic-text-input {
+        input {
+            border-bottom: 1px solid #ffffff !important;  
+            color: #ffffff !important;
+        }
+    }
+
+    .generic-btn.#{$prefix}btn-default-small,
+    .generic-btn.#{$prefix}btn-default-small.#{$prefix}btn-hover {
+        .#{$prefix}btn-inner {
+            color: #ffffff !important;
+        }
+    }
+}

@@ -1,5 +1,4 @@
-describe("Ext.layout.component.field.FieldContainer", function() {
-
+topSuite("Ext.layout.component.field.FieldContainer", ['Ext.form.field.*'], function() {
     var fc;
 
     afterEach(function() {
@@ -29,7 +28,7 @@ describe("Ext.layout.component.field.FieldContainer", function() {
 
                 expect(fc.items.first().getWidth()).toBe(298);
             });
-            
+
             it("should account for vertical padding supplied by the fieldBodyCls", function() {
                 fc = new Ext.form.FieldContainer({
                     renderTo: Ext.getBody(),
@@ -58,7 +57,7 @@ describe("Ext.layout.component.field.FieldContainer", function() {
                     renderTo: document.body,
                     width: 500,
                     hideLabel: true,
-                    msgTarget : 'side',
+                    msgTarget: 'side',
                     layout: 'hbox',
                     items: {
                         flex: 1,
@@ -86,7 +85,7 @@ describe("Ext.layout.component.field.FieldContainer", function() {
                     hideLabel: true,
                     width: 200,
                     height: 200,
-                    msgTarget : 'under',
+                    msgTarget: 'under',
                     layout: 'vbox',
                     items: {
                         flex: 1,
@@ -187,7 +186,7 @@ describe("Ext.layout.component.field.FieldContainer", function() {
 
                 ct.destroy();
             });
-            
+
             it("should account for vertical padding supplied by the fieldBodyCls", function() {
                 var ct = new Ext.container.Container({
                     floating: true,
@@ -235,7 +234,7 @@ describe("Ext.layout.component.field.FieldContainer", function() {
                         xtype: 'fieldcontainer',
                         hideLabel: true,
                         margin: 0,
-                        msgTarget : 'side',
+                        msgTarget: 'side',
                         items: {
                             xtype: 'component',
                             width: 50
@@ -273,7 +272,7 @@ describe("Ext.layout.component.field.FieldContainer", function() {
                         xtype: 'fieldcontainer',
                         hideLabel: true,
                         margin: 0,
-                        msgTarget : 'under',
+                        msgTarget: 'under',
                         items: {
                             xtype: 'component',
                             height: 50

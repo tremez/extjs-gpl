@@ -4,11 +4,13 @@ Ext.define('KitchenSink.view.calendar.ValidationController', {
 
     onBeforeDragStart: function(view, o) {
         var notAllowed = ['Not draggable', 'Not draggable/resizable'];
+
         return !Ext.Array.contains(notAllowed, o.event.getTitle());
     },
 
     onBeforeResizeStart: function(view, o) {
         var notAllowed = ['Not resizable', 'Not draggable/resizable'];
+
         return !Ext.Array.contains(notAllowed, o.event.getTitle());
     },
 

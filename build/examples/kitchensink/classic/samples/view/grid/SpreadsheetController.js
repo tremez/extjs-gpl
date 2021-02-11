@@ -6,21 +6,23 @@ Ext.define('KitchenSink.view.grid.SpreadsheetController', {
 
     alias: 'controller.spreadsheet',
 
-    formatDays: function (value) {
+    formatDays: function(value) {
         return (value === 1) ? '1 day' : (value + ' days');
     },
 
-    getSelectionModel: function () {
+    getSelectionModel: function() {
         var grid = this.getView();
+
         return grid.getSelectionModel();
     },
 
-    onRefresh: function () {
+    onRefresh: function() {
         var grid = this.getView();
+
         grid.store.reload();
     },
 
-    onSelectionChange: function (grid, selection) {
+    onSelectionChange: function(grid, selection) {
         var status = this.lookupReference('status'),
             message = '??',
             firstRowIndex,
@@ -52,16 +54,19 @@ Ext.define('KitchenSink.view.grid.SpreadsheetController', {
 
     toggleRowSelect: function(button, pressed) {
         var sel = this.getSelectionModel();
+
         sel.setRowSelect(pressed);
     },
 
     toggleCellSelect: function(button, pressed) {
         var sel = this.getSelectionModel();
+
         sel.setCellSelect(pressed);
     },
 
     toggleColumnSelect: function(button, pressed) {
         var sel = this.getSelectionModel();
+
         sel.setColumnSelect(pressed);
     }
 });

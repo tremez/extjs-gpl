@@ -13,27 +13,28 @@ Ext.define('KitchenSink.view.layout.Card', {
     layout: 'card',
     width: 500,
     height: 400,
+    cls: Ext.baseCSSPrefix + 'shadow',
 
     bodyPadding: 15,
-    
+
     defaults: {
-        border:false
+        border: false
     },
 
     defaultListenerScope: true,
 
     bbar: ['->',
-        {
-            itemId: 'card-prev',
-            text: '&laquo; Previous',
-            handler: 'showPrevious',
-            disabled: true
-        },
-        {
-            itemId: 'card-next',
-            text: 'Next &raquo;',
-            handler: 'showNext'
-        }
+           {
+               itemId: 'card-prev',
+               text: '&laquo; Previous',
+               handler: 'showPrevious',
+               disabled: true
+           },
+           {
+               itemId: 'card-next',
+               text: 'Next &raquo;',
+               handler: 'showNext'
+           }
     ],
 
     items: [
@@ -51,23 +52,24 @@ Ext.define('KitchenSink.view.layout.Card', {
         }
     ],
 
-    showNext: function () {
+    showNext: function() {
         this.doCardNavigation(1);
     },
 
-    showPrevious: function (btn) {
+    showPrevious: function(btn) {
         this.doCardNavigation(-1);
     },
 
-    doCardNavigation: function (incr) {
-        var me = this;
-        var l = me.getLayout();
-        var i = l.activeItem.id.split('card-')[1];
-        var next = parseInt(i, 10) + incr;
+    doCardNavigation: function(incr) {
+        var me = this,
+            l = me.getLayout(),
+            i = l.activeItem.id.split('card-')[1],
+            next = parseInt(i, 10) + incr;
+
         l.setActiveItem(next);
 
-        me.down('#card-prev').setDisabled(next===0);
-        me.down('#card-next').setDisabled(next===2);
+        me.down('#card-prev').setDisabled(next === 0);
+        me.down('#card-next').setDisabled(next === 2);
     }
 
 });

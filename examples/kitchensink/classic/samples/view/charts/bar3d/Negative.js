@@ -7,18 +7,18 @@ Ext.define('KitchenSink.view.charts.bar3d.Negative', {
     xtype: 'bar-negative-3d',
     requires: ['Ext.chart.theme.Muted'],
     controller: 'bar-negative-3d',
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     otherContent: [{
         type: 'Controller',
         path: 'classic/samples/view/charts/bar3d/NegativeController.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/Earnings.js'
+        path: 'app/store/Earnings.js'
     }],
     bodyStyle: 'background: transparent !important',
     layout: 'fit',
-    // </example>
+    //</example>
 
     width: 650,
     height: 600,
@@ -35,11 +35,14 @@ Ext.define('KitchenSink.view.charts.bar3d.Negative', {
         xtype: 'cartesian',
         flipXY: true,
         reference: 'chart',
+        captions: {
+            title: 'Profits and Losses'
+        },
         theme: 'muted',
         store: {
             type: 'earnings'
         },
-        insetPadding: '40 40 40 20',
+        downloadServerUrl: '//svg.sencha.io',
         innerPadding: '8 0 0 0',
         interactions: ['itemhighlight'],
         animation: false,
@@ -75,15 +78,6 @@ Ext.define('KitchenSink.view.charts.bar3d.Negative', {
                 display: 'insideEnd'
             },
             renderer: 'onSeriesRender'
-        }],
-        sprites: [{
-            type: 'text',
-            text: 'Profits and Losses',
-            fontSize: 22,
-            width: 100,
-            height: 30,
-            x: 40, // the sprite x position
-            y: 20  // the sprite y position
         }]
     }
 

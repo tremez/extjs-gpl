@@ -1,0 +1,12 @@
+@if $theme-name == 'theme-material' {
+    .dark-mode {
+        .child-session-form {
+            .#{$prefix}window-header {
+                background-color: #3a3a3a;
+                .#{$prefix}title-text {
+                    color: $focus-font-color;
+                }
+            }
+        }
+    }
+}

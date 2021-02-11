@@ -1,11 +1,12 @@
-describe("Ext.data.reader.Reader", function() {
+/* global ActiveXObject */
+topSuite("Ext.data.reader.Reader", ['Ext.data.ArrayStore', 'Ext.data.reader.Xml'], function() {
     var reader, proxy;
-    
+
     afterEach(function() {
         Ext.data.Model.schema.clear();
         Ext.undefine('spec.User');
     });
-    
+
     function makeReader(cfg) {
         Ext.define('spec.User', {
             extend: 'Ext.data.Model',
@@ -15,7 +16,7 @@ describe("Ext.data.reader.Reader", function() {
         proxy = {
             setModel: Ext.emptyFn
         };
-        
+
         cfg = Ext.apply({
             rootProperty: null,
             totalProperty: null,
@@ -23,19 +24,19 @@ describe("Ext.data.reader.Reader", function() {
             successProperty: null,
             proxy: proxy
         }, cfg);
-        
+
         reader = new Ext.data.reader.Reader(cfg);
-        
+
         reader.buildExtractors = Ext.emptyFn;
         reader.setModel(spec.User);
-        
+
         return reader;
     }
-    
+
     it("should have the nullResultSet defined on the prototype", function() {
-        expect(Ext.data.reader.Reader.prototype.nullResultSet).toBeDefined();    
+        expect(Ext.data.reader.Reader.prototype.nullResultSet).toBeDefined();
     });
-    
+
     describe("reading", function() {
         var response, responseData;
 
@@ -93,7 +94,7 @@ describe("Ext.data.reader.Reader", function() {
 
         describe("if the response was falsy", function() {
             var nullSet = Ext.data.reader.Reader.prototype.nullResultSet;
-            
+
             it("should return the nullResultSet if the response is undefined", function() {
                 response = undefined;
 
@@ -113,94 +114,97 @@ describe("Ext.data.reader.Reader", function() {
             });
         });
     });
-        
+
     describe("transform", function() {
         it("should invoke the transform function", function() {
             var o = {
                 id: 1
             };
-            
+
             var transformFn = function(data) {
-                data[0] = {id: 2};
+                data[0] = { id: 2 };
+
                 return data;
             };
-            
+
             makeReader({
                 transform: transformFn
             });
-            
-            reader.extractData = function(root, readOptions) {return root;};
+
+            reader.extractData = function(root, readOptions) { return root; };
             var rec = reader.readRecords([o]).getRecords()[0];
-            
+
             expect(rec.id).not.toEqual(o.id);
             expect(rec.id).toEqual(2);
         });
-        
+
         it("should invoke the transform function with the specified scope", function() {
             var o = {
                 id: 1
             };
-            
+
             var mockScope = {};
-            
+
             var transformFn = function(data) {
                 expect(this).toEqual(mockScope);
-                data[0] = {id: 2}
+                data[0] = { id: 2 };
+
                 return data;
             };
-            
+
             makeReader({
                 transform: {
                     fn: transformFn,
                     scope: mockScope
                 }
             });
-            
-            reader.extractData = function(root, readOptions) {return root;};
+
+            reader.extractData = function(root, readOptions) { return root; };
             var rec = reader.readRecords([o]).getRecords()[0];
-            
+
             expect(rec.id).not.toEqual(o.id);
             expect(rec.id).toEqual(2);
         });
-        
+
         it("should accept method name instead of function", function() {
             var o = {
                 id: 1
             };
-            
+
             var transformFn = function(data) {
-                data[0] = {id: 2};
+                data[0] = { id: 2 };
+
                 return data;
             };
-            
+
             makeReader({
                 fooFn: transformFn,
                 transform: 'fooFn'
             });
-            
-            reader.extractData = function(root, readOptions) {return root;};
+
+            reader.extractData = function(root, readOptions) { return root; };
             var rec = reader.readRecords([o]).getRecords()[0];
-            
+
             expect(rec.id).not.toEqual(o.id);
             expect(rec.id).toEqual(2);
         });
     });
-        
+
     describe("raw data", function() {
         beforeEach(function() {
             makeReader();
         });
-        
+
         it("should NOT keep rawData by default", function() {
             reader.readRecords([{ foo: 'bar' }]);
-            
+
             expect(reader.rawData).not.toBeDefined();
         });
-        
+
         it("should keep rawData when told to", function() {
             reader.setKeepRawData(true);
             reader.readRecords([{ foo: 'bar' }]);
-            
+
             expect(reader.rawData).toEqual([{ foo: 'bar' }]);
         });
     });
@@ -210,10 +214,10 @@ describe("Ext.data.reader.Reader", function() {
 
         beforeEach(function() {
             makeReader();
-            
+
             meta = {
-                root           : 'someRootProperty',
-                totalProperty  : 'someTotalProperty',
+                root: 'someRootProperty',
+                totalProperty: 'someTotalProperty',
                 successProperty: 'someSuccessProperty'
             };
 
@@ -224,7 +228,7 @@ describe("Ext.data.reader.Reader", function() {
             Ext.data.Model.schema.clear();
             Ext.undefine('spec.User');
         });
-        
+
         it("should set the root property", function() {
             reader.onMetaChange(meta);
 
@@ -253,8 +257,8 @@ describe("Ext.data.reader.Reader", function() {
             beforeEach(function() {
                 Ext.apply(meta, {
                     fields: [
-                        {name: 'uniqueId', type: 'int'},
-                        {name: 'name',     type: 'string'}
+                        { name: 'uniqueId', type: 'int' },
+                        { name: 'name',     type: 'string' }
                     ]
                 });
 
@@ -263,10 +267,10 @@ describe("Ext.data.reader.Reader", function() {
 
             it("should create a new model with fields", function() {
                 var fields = reader.getModel().getFields();
-                
+
                 expect(fields.length).toBe(1);
                 expect(fields.items[0].getName()).toBe('id');
-                
+
                 reader.onMetaChange(meta);
 
                 fields = reader.getModel().getFields();
@@ -279,9 +283,50 @@ describe("Ext.data.reader.Reader", function() {
         describe("if fields are not present in the meta data", function() {
             it("should leave the existing model in place", function() {
                 var model = reader.getModel();
+
                 reader.onMetaChange(meta);
                 expect(reader.getModel()).toBe(model);
             });
+        });
+    });
+
+    describe("caching", function() {
+        function parseXml(str) {
+            if (window.ActiveXObject) {
+                var doc = new ActiveXObject('Microsoft.XMLDOM');
+
+                doc.loadXML(str);
+
+                return doc;
+            }
+            else if (window.DOMParser) {
+                return (new DOMParser()).parseFromString(str, 'text/xml');
+            }
+
+            return '';
+        }
+
+        it("should read data correctly when using anonymous classes", function() {
+            var M = Ext.define(null, {
+                extend: 'Ext.data.Model'
+            });
+
+            var xml = new (Ext.define(null, {
+                extend: 'Ext.data.reader.Xml',
+                model: M,
+                record: 'foo'
+            }))();
+
+            var json = new (Ext.define(null, {
+                extend: 'Ext.data.reader.Json',
+                model: M
+            }))();
+
+            expect(json.read({
+                success: true
+            }).success).toBe(true);
+
+            expect(xml.read(parseXml('<success>true</success>')).success).toBe(true);
         });
     });
 });

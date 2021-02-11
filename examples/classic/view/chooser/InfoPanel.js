@@ -8,7 +8,7 @@
  */
 Ext.define('Ext.chooser.InfoPanel', {
     extend: 'Ext.panel.Panel',
-    alias : 'widget.infopanel',
+    alias: 'widget.infopanel',
     id: 'img-detail-panel',
 
     width: 150,
@@ -16,27 +16,28 @@ Ext.define('Ext.chooser.InfoPanel', {
 
     tpl: [
         '<div class="details">',
-            '<tpl for=".">',
-                '<img src="icons/{thumb}" />',
-                '<div class="details-info">',
-                    '<b>Example Name:</b>',
-                    '<span>{name}</span>',
-                    '<b>Example URL:</b>',
-                    '<span><a href="http://dev.sencha.com/deploy/touch/examples/{url}" target="_blank">{url}.html</a></span>',
-                    '<b>Type:</b>',
-                    '<span>{type}</span>',
-                '</div>',
-            '</tpl>',
+        '<tpl for=".">',
+        '<img src="icons/{thumb}" />',
+        '<div class="details-info">',
+        '<b>Example Name:</b>',
+        '<span>{name}</span>',
+        '<b>Example URL:</b>',
+        '<span><a href="http://dev.sencha.com/deploy/touch/examples/{url}" target="_blank">{url}.html</a></span>',
+        '<b>Type:</b>',
+        '<span>{type}</span>',
+        '</div>',
+        '</tpl>',
         '</div>'
     ],
-    
-    afterRender: function(){
+
+    afterRender: function() {
         this.callParent();
+
         if (!Ext.isWebKit) {
-            this.el.on('click', function(){
+            this.el.on('click', function() {
                 alert('The Sencha Touch examples are intended to work on WebKit browsers. They may not display correctly in other browsers.');
-            }, this, {delegate: 'a'});
-        }    
+            }, this, { delegate: 'a' });
+        }
     },
 
     /**
@@ -49,8 +50,8 @@ Ext.define('Ext.chooser.InfoPanel', {
             duration: 250
         });
     },
-    
-    clear: function(){
+
+    clear: function() {
         this.body.update('');
     }
 });

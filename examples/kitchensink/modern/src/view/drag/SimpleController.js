@@ -5,19 +5,24 @@ Ext.define('KitchenSink.view.drag.SimpleController', {
     init: function(view) {
         this.source = new Ext.drag.Source({
             element: view.element.down('.simple-source'),
-            constrain: true,
+            constrain: view.el,
             listeners: {
-                dragmove: function(source, info) {
-                    var pos = info.element.current,
-                        html = Ext.String.format('X: {0}, Y: {1}', Math.round(pos.x), Math.round(pos.y));
-
-                    source.getElement().setHtml(html);
-                },
-                dragend: function(source) {
-                    source.getElement().setHtml('Drag Me!');
-                }
+                scope: this,
+                dragmove: this.onDragMove,
+                dragend: this.onDragEnd
             }
         });
+    },
+
+    onDragMove: function(source, info) {
+        var pos = info.element.current,
+            html = Ext.String.format('X: {0}, Y: {1}', Math.round(pos.x), Math.round(pos.y));
+
+        source.getElement().setHtml(html);
+    },
+
+    onDragEnd: function(source) {
+        source.getElement().setHtml('Drag Me!');
     },
 
     destroy: function() {

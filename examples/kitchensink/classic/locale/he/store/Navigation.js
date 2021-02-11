@@ -11,7 +11,7 @@ Ext.define('KitchenSink.locale.store.Navigation', {
         'Basic Panel': 'פנל בסיסי',
         'Framed Panel': 'פנל ממוסגר',
         'Header Positioning': 'מיצוב כותרת',
-        
+
         'Grids': 'רשתות',
         'Basic Grid': 'רשת מערך',
         'Grouped Grid': 'רשת מקובצת ',
@@ -28,7 +28,7 @@ Ext.define('KitchenSink.locale.store.Navigation', {
         'Row Expander': 'מרחיב שורות',
         'Big Data': 'נתונים גדולים',
         'Widget grid': 'רשת יישומון',
-        //{ id: 'customer-grid', text: 'רשת לקוחות / סדר', leaf: true },
+        // { id: 'customer-grid', text: 'רשת לקוחות / סדר', leaf: true },
         'Grid Plugins': 'רשת תוספים',
 
         'Data Binding': 'נתונים מחייבים',
@@ -143,22 +143,23 @@ Ext.define('KitchenSink.locale.store.Navigation', {
         'AMF Grid': 'AMF רשת',
         'SOAP Grid': 'רשת SOAP'
     },
-    
-    fixUp: function (items, tier, parent) {
+
+    fixUp: function(items, tier, parent) {
         var me = this,
             descriptions = me.descriptions,
             translations = me.translations,
             item = items,
             s;
-        
+
         me.callParent([ items, tier, parent ]);
-        
+
         if (!Ext.isArray(item)) {
             s = descriptions[item.id];
+
             if (s) {
                 item.description = s;
             }
-            
+
             s = item.text;
             item.text = translations[s] || s;
         }

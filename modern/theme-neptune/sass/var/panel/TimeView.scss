@@ -1,0 +1,222 @@
+/**
+ * @class Ext.panel.TimeView
+ */
+
+/**
+ * @var {color}
+ * Analog Time View background color
+ */
+$timeview-background-color: dynamic($background-color);
+
+/**
+ * @var {color}
+ * Analog Time View Analog Picker background color
+ */
+$timeview-analog-picker-background-color: dynamic(#E0E0E0);
+
+/**
+ * @var {color}
+ * Analog Time View Analog Picker text color
+ */
+$timeview-analog-picker-color: dynamic($color);
+
+/**
+ * @var {color}
+ * Analog Time View Analog Picker text color for active items
+ */
+$timeview-analog-picker-active-color: dynamic($light-color);
+
+/**
+ * @var {color}
+ * Analog Time View Analog Picker Clock hand color
+ */
+$timeview-analog-picker-hand-color: dynamic($base-color);
+
+/**
+ * @var {color}
+ * Analog Time View Analog Picker Clock hand color
+ */
+$timeview-analog-picker-hand-dot-color: dynamic($background-color);
+
+@mixin timeview-ui(
+    $ui: null,
+    $background-color: null,
+    $analog-picker-background-color: null,
+    $analog-picker-color: null,
+    $analog-picker-active-color: null,
+    $analog-picker-hand-background-color: null,
+    $analog-picker-hand-dot-color: null,
+    $analog-picker-hand-color: null,
+    $xtype: analogtime
+) {
+
+    // Bug in edge with psuedo and css properties. using this will de-property the variable
+    $edge-analog-time-hand-background-color: mix(#fff, $analog-picker-hand-color, 0%);
+    $ui-suffix: ui-suffix($ui);
+    .#{$prefix}#{$xtype}#{$ui-suffix} {
+        background-color: $background-color;
+        width: 280px;
+        height: 420px;
+
+        &:not(.#{$prefix}vertical) {
+            width: 420px;
+            height: 280px;
+        }
+
+        .#{$prefix}inner-el {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .#{$prefix}wide & {
+            .#{$prefix}inner-el {
+                flex-direction: row;
+                width: 100%;
+                height: auto;
+            }
+        }
+
+        .#{$prefix}picker-wrap-el {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            width: 100%;
+            height: 100%;
+        }
+
+        .#{$prefix}analog-picker-el {
+            position: relative;
+            width: 90%;
+            background-color: $analog-picker-background-color;
+            border-radius: 1000000px;
+
+            // Required for touch dragging in IE11 and Edge
+            touch-action: none;
+            &:before {
+                content: "";
+                display: block;
+                padding-top: 100%;
+            }
+
+            &.animated .#{$prefix}analog-picker-hand-el {
+                transition: transform 300ms ease-out;
+            }
+
+            &.animated-delayed .#{$prefix}analog-picker-hand-el {
+                transition: transform 300ms 200ms ease-out;
+            }
+        }
+
+        .#{$prefix}analog-picker-face-el {
+            @include no-select;
+            & > div {
+                color: $analog-picker-color;
+                position: absolute;
+                width: 19px;
+                text-align: center;
+                top: 50%;
+                left: 50%;
+                margin: -10px;
+                user-select: none;
+                cursor: pointer;
+                transition: color 200ms ease-out;
+                &.active {
+                    color: $analog-picker-active-color;
+                }
+            }
+        }
+
+        $size: 2px;
+        $centerSize: 8px;
+        $outerSize: 30px;
+        $dotSize: 4px;
+
+        .#{$prefix}analog-picker-12hr-format {
+            display: block;
+            padding-left: 12px
+        }
+
+         .#{$prefix}analog-picker-24hr-format {
+            display: none;
+            padding-left: 0
+        }
+
+        .hour-picker-el {
+            &.align-pm-inside {
+                font-size: 14px;
+            }
+
+            &.inner-track {
+                opacity: 0.7;
+            }
+        }
+
+        &.#{$prefix}header-position-left {
+            .#{$prefix}analog-picker-hand-el {
+                &.inner-dial {
+                    width: 30%;
+                }
+            }  
+        }
+
+        .#{$prefix}analog-picker-hand-el {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            background-color: $analog-picker-hand-color;
+            height: $size;
+            transform-origin: center left;
+            transform: rotate(0deg);
+            margin-top: -$size/2;
+            width: 46%;
+
+            .#{$prefix}edge & {
+                background-color: $edge-analog-time-hand-background-color;
+
+                &:before, &:after {
+                    background-color: $edge-analog-time-hand-background-color;
+                }
+            }
+
+            &.inner-dial {
+                width: 32%;
+            }
+
+            &.format-24hr {
+                &:after {
+                    box-shadow: 0 0 0 14px $analog-picker-hand-color;
+                }
+            }
+
+            &:before {
+                position: absolute;
+                top: -($centerSize/2) + ($size/2);
+                left: -($centerSize/2);
+                content: "";
+                width: $centerSize;
+                height: $centerSize;
+                background-color: $analog-picker-hand-color;
+                border-radius: $centerSize;
+            }
+            &:after {
+                position: absolute;
+                top: 0;
+                right: ($outerSize/2) + ($size/2) - ($dotSize / 2);
+                content: "";
+                width: $dotSize;
+                height: $dotSize;
+                border-radius: $outerSize;
+                background-color: $analog-picker-hand-color;
+                box-shadow: 0 0 0 ($outerSize/2) $analog-picker-hand-color;
+            }
+        }
+
+        .#{$prefix}analog-picker-el.#{$prefix}analog-picker-dot-indicator .#{$prefix}analog-picker-hand-el:after {
+            background-color: $analog-picker-hand-dot-color;
+        }
+    }
+}

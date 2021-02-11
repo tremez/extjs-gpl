@@ -45,6 +45,13 @@
     white-space: nowrap;
 }
 
+// Allow sort arrow to appear when column narrowed.
+// Will not overflow column header itself
+.#{$prefix}column-header-sort-DESC .#{$prefix}column-header-text,
+.#{$prefix}column-header-sort-ASC .#{$prefix}column-header-text {
+    overflow: visible;
+}
+
 // Make the text a block element, so the checkbox wraps
 // If there is NO text, hide the empty text element
 .#{$prefix}column-header-text-inner {

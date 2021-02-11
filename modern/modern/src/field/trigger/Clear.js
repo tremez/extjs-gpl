@@ -1,6 +1,6 @@
 /**
  * A "clear" trigger.  Used in {@link Ext.field.Text Text Fields} when
- * `{@link Ext.field.Text#clearIcon clearIcon}` is `true`.
+ * `{@link Ext.field.Text#clearable clearable}` is `true`.
  */
 Ext.define('Ext.field.trigger.Clear', {
     extend: 'Ext.field.trigger.Trigger',

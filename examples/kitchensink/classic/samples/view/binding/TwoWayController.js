@@ -4,6 +4,7 @@ Ext.define('KitchenSink.view.binding.TwoWayController', {
 
     onTitleButtonClick: function() {
         var title = 'Title' + Ext.Number.randomInt(1, 100);
+
         this.getViewModel().set('title', title);
     }
 });

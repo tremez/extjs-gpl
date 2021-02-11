@@ -1,0 +1,8 @@
+.#{$prefix}keyboard-mode {
+    .#{$prefix}splitter-focus {
+        .#{$prefix}collapse-el {
+            color: $splitter-focus-color;
+            background-color: $splitter-focus-background-color;
+        }
+    }
+}

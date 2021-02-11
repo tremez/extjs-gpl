@@ -40,8 +40,9 @@ Ext.define('Ext.mixin.ComponentDelegation', {
 
             //<debug>
             if (options.target) {
-                Ext.raise("Cannot add '" + eventName + "' listener to component: '"
-                + me.id + "' - 'delegate' and 'target' event options are incompatible.");
+                Ext.raise("Cannot add '" + eventName + "' listener to component: '" +
+                          me.id +
+                          "' - 'delegate' and 'target' event options are incompatible.");
             }
             //</debug>
 
@@ -103,7 +104,8 @@ Ext.define('Ext.mixin.ComponentDelegation', {
 
                 while (owner) {
                     delegatedEvents = owner.$delegatedEvents;
-                    if (delegatedEvents ) {
+
+                    if (delegatedEvents) {
                         event = delegatedEvents[eventName];
 
                         if (event) {
@@ -114,6 +116,7 @@ Ext.define('Ext.mixin.ComponentDelegation', {
                             }
                         }
                     }
+
                     owner = owner.getRefOwner();
                 }
             }
@@ -132,8 +135,9 @@ Ext.define('Ext.mixin.ComponentDelegation', {
                 delegatedEvents = me.$delegatedEvents,
                 event;
 
-            if (delegatedEvents ) {
+            if (delegatedEvents) {
                 event = delegatedEvents[eventName];
+
                 if (event && event.removeListener(fn, scope)) {
                     me.$hasDelegatedListeners._decr_(eventName);
 
@@ -143,7 +147,7 @@ Ext.define('Ext.mixin.ComponentDelegation', {
                 }
             }
         },
-        
+
         destroyComponentDelegation: function() {
             if (this.clearPropertiesOnDestroy) {
                 this.$delegatedEvents = null;
@@ -161,8 +165,10 @@ Ext.define('Ext.mixin.ComponentDelegation', {
         // to the single $hasDelegatedListeners object (see class-creation callback
         // of this class for more info)
         function HasListeners() {}
+
         T.prototype.HasListeners = T.HasListeners = HasListeners;
-        HasListeners.prototype = T.hasListeners = new Ext.mixin.ComponentDelegation.HasDelegatedListeners();
+        HasListeners.prototype = T.hasListeners =
+            new Ext.mixin.ComponentDelegation.HasDelegatedListeners();
     }
 }, function(ComponentDelegation) {
     // Here We set up a HasListeners instance ($hasDelegatedListeners) that will be incremented

@@ -1,15 +1,15 @@
-describe("Ext.data.proxy.Rest", function() {
+topSuite("Ext.data.proxy.Rest", ['Ext.data.ArrayStore'], function() {
     var proxy;
 
     beforeEach(function() {
-        Ext.ClassManager.enableNamespaceParseCache = false; 
+        Ext.ClassManager.enableNamespaceParseCache = false;
         proxy = new Ext.data.proxy.Rest({});
     });
-    
+
     afterEach(function() {
         Ext.ClassManager.enableNamespaceParseCache = true;
     });
-    
+
     describe("instantiation", function() {
         it("should extend Ext.data.proxy.Ajax", function() {
             expect(proxy.superclass).toEqual(Ext.data.proxy.Ajax.prototype);
@@ -17,9 +17,9 @@ describe("Ext.data.proxy.Rest", function() {
 
         it("should have correct actionMethods", function() {
             var actionMethods =  {
-                create : 'POST',
-                read   : 'GET',
-                update : 'PUT',
+                create: 'POST',
+                read: 'GET',
+                update: 'PUT',
                 destroy: 'DELETE'
             };
 
@@ -48,8 +48,8 @@ describe("Ext.data.proxy.Rest", function() {
             });
 
             record1 = new User({
-                id   : 2,
-                name : 'Ed Spencer',
+                id: 2,
+                name: 'Ed Spencer',
                 email: 'ed@sencha.com'
             });
 
@@ -71,7 +71,7 @@ describe("Ext.data.proxy.Rest", function() {
             });
         });
 
-        afterEach(function(){
+        afterEach(function() {
             Ext.data.Model.schema.clear();
             Ext.undefine('spec.User');
         });
@@ -86,7 +86,7 @@ describe("Ext.data.proxy.Rest", function() {
                     action: collectionOperation.getAction()
                 });
 
-                proxy = createProxy({appendId: false});
+                proxy = createProxy({ appendId: false });
 
                 expect(stripCache(proxy.buildUrl(collectionRequest))).toEqual('/users');
             });
@@ -94,7 +94,7 @@ describe("Ext.data.proxy.Rest", function() {
 
         describe("if appendId is false", function() {
             beforeEach(function() {
-                proxy = createProxy({appendId: false});
+                proxy = createProxy({ appendId: false });
             });
 
             it("should not append the ID to a single Operation", function() {
@@ -108,7 +108,7 @@ describe("Ext.data.proxy.Rest", function() {
 
         describe("if appendId is true", function() {
             beforeEach(function() {
-                proxy = createProxy({appendId: true});
+                proxy = createProxy({ appendId: true });
             });
 
             it("should not append the ID to a collection Operation", function() {
@@ -127,31 +127,32 @@ describe("Ext.data.proxy.Rest", function() {
             it("should not append a phantom record", function() {
                 record1.setId('User-1');
                 record1.phantom = true;
-                expect(stripCache(proxy.buildUrl(singleRequest))).toBe('/users');   
+                expect(stripCache(proxy.buildUrl(singleRequest))).toBe('/users');
             });
-            
-            it("should append an id of 0", function(){
+
+            it("should append an id of 0", function() {
                 record1.setId(0);
-                expect(stripCache(proxy.buildUrl(singleRequest))).toBe('/users/0');    
+                expect(stripCache(proxy.buildUrl(singleRequest))).toBe('/users/0');
             });
-            
-            it("should not append an empty string", function(){
+
+            it("should not append an empty string", function() {
                 record1.setId('');
-                expect(stripCache(proxy.buildUrl(singleRequest))).toBe('/users');    
+                expect(stripCache(proxy.buildUrl(singleRequest))).toBe('/users');
             });
-            
-            it("should not append null", function(){
+
+            it("should not append null", function() {
                 record1.setId(null);
-                expect(stripCache(proxy.buildUrl(singleRequest))).toBe('/users');    
+                expect(stripCache(proxy.buildUrl(singleRequest))).toBe('/users');
             });
-            
-            it("should not append undefined", function(){
+
+            it("should not append undefined", function() {
                 record1.setId(undefined);
-                expect(stripCache(proxy.buildUrl(singleRequest))).toBe('/users');    
+                expect(stripCache(proxy.buildUrl(singleRequest))).toBe('/users');
             });
 
             it("should not have id=foo in the params", function() {
                 var url = proxy.buildUrl(singleRequest);
+
                 expect(url.indexOf('id=2')).toBe(-1);
             });
         });
@@ -159,8 +160,8 @@ describe("Ext.data.proxy.Rest", function() {
         describe("if format is undefined", function() {
             beforeEach(function() {
                 proxy = createProxy({
-                    appendId: false, 
-                    format  : undefined
+                    appendId: false,
+                    format: undefined
                 });
             });
 
@@ -177,7 +178,7 @@ describe("Ext.data.proxy.Rest", function() {
             beforeEach(function() {
                 proxy = createProxy({
                     appendId: true,
-                    format  : 'json'
+                    format: 'json'
                 });
             });
 
@@ -189,8 +190,8 @@ describe("Ext.data.proxy.Rest", function() {
                 expect(stripCache(proxy.buildUrl(singleRequest))).toEqual('/users/2.json');
             });
         });
-        
-        it("should respect the api configuration", function(){
+
+        it("should respect the api configuration", function() {
             proxy = createProxy({
                 api: {
                     read: '/users1'

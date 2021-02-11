@@ -10,7 +10,7 @@ Ext.define('Admin.view.dashboard.TopMovie', {
 
     title: 'Top Movie',
     ui: 'light',
-    iconCls: 'x-fa fa-video-camera',
+    iconCls: 'x-fa fa-video',
     headerPosition: 'bottom',
 
     cls: 'quick-graph-panel shadow',

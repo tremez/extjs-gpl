@@ -1,0 +1,9 @@
+$grid-column-header-color: dynamic($font-color);
+$grid-column-header-focus-background-color: dynamic($focus-background-color);
+$grid-column-header-focus-border-color: dynamic($focus-background-color);
+$grid-column-header-focus-border-width: dynamic(0px);
+$grid-column-header-focus-color: dynamic($focus-font-color);
+$grid-column-header-focus-over-border-color: dynamic($focus-over-border-color);
+$grid-column-header-focus-over-border-width: dynamic($focus-over-border-width);
+$grid-column-header-line-height: dynamic(36px);
+$grid-header-sorted-background-color: dynamic(#e6e6e6);

@@ -1,0 +1,41 @@
+{
+    "name": "@extjs/ext-classic-theme-graphite",
+    "ext-react-name": "@extjs/ext-react-classic-theme-graphite",
+    "ext-name": "@extjs/ext-classic-theme-graphite",
+    "SenchaExtName": "@sencha/ext-classic-theme-graphite",
+    "SenchaExtReactName": "@sencha/ext-react-classic-theme-graphite",
+    "version": "7.0.0.168",
+    "sencha": {
+        "name": "theme-graphite",
+        "namespace": "Ext",
+        "type": "theme",
+        "extend": "theme-triton",
+        "alternateName": [
+            "ext-theme-graphite"
+        ],
+        "framework": "ext",
+        "toolkit": "classic",
+        "creator": "Sencha",
+        "summary": "Ext JS Graphite Theme",
+        "detailedDescription": "A high-contrast accessibility theme based on Triton",
+        "version": "7.0.0.168",
+        "compatVersion": "7.0.0",
+        "format": "1",
+        "output": "${workspace.subpkg.prefix}/${package.name}",
+        "local": true,
+        "sass": {
+            "namespace": "Ext",
+            "etc": "${package.dir}/sass/etc/all.scss",
+            "var": "${package.dir}/sass/var",
+            "src": "${package.dir}/sass/src"
+        },
+        "classpath": "${package.dir}/src",
+        "overrides": "${package.dir}/overrides",
+        "slicer": {
+            "js": []
+        },
+        "properties": {
+            "skip.pkg": 1
+        }
+    }
+}

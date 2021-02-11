@@ -1,15 +1,16 @@
 /**
  * @class Ext.dom.Helper
  */
+
 Ext.define('Ext.overrides.dom.Helper', (function() {
     var tableRe = /^(?:table|thead|tbody|tr|td)$/i,
         tableElRe = /td|tr|tbody|thead/i,
         ts = '<table>',
         te = '</table>',
-        tbs = ts+'<tbody>',
-        tbe = '</tbody>'+te,
+        tbs = ts + '<tbody>',
+        tbe = '</tbody>' + te,
         trs = tbs + '<tr>',
-        tre = '</tr>'+tbe;
+        tre = '</tr>' + tbe;
 
     return {
         override: 'Ext.dom.Helper',
@@ -21,6 +22,7 @@ Ext.define('Ext.overrides.dom.Helper', (function() {
             if (Ext.isIE9m && tableRe.test(el.tagName)) {
                 frag = this.insertIntoTable(el.tagName.toLowerCase(), where, el, html);
             }
+
             return frag;
         },
 
@@ -32,13 +34,14 @@ Ext.define('Ext.overrides.dom.Helper', (function() {
                 while (el.firstChild) {
                     el.removeChild(el.firstChild);
                 }
+
                 if (html) {
                     return this.insertHtml('afterbegin', el, html);
                 }
-            } 
+            }
         },
 
-        ieTable: function(depth, openingTags, htmlContent, closingTags){
+        ieTable: function(depth, openingTags, htmlContent, closingTags) {
             var i = -1,
                 el = this.detachedDiv,
                 ns, nx;
@@ -48,19 +51,21 @@ Ext.define('Ext.overrides.dom.Helper', (function() {
             while (++i < depth) {
                 el = el.firstChild;
             }
+
             // If the result is multiple siblings, then encapsulate them into one fragment.
             ns = el.nextSibling;
 
             if (ns) {
                 ns = el;
                 el = document.createDocumentFragment();
-                
+
                 while (ns) {
-                     nx = ns.nextSibling;
-                     el.appendChild(ns);
-                     ns = nx;
+                    nx = ns.nextSibling;
+                    el.appendChild(ns);
+                    ns = nx;
                 }
             }
+
             return el;
         },
 
@@ -82,9 +87,13 @@ Ext.define('Ext.overrides.dom.Helper', (function() {
             if (tag === 'td' && (ab || be) || !tableElRe.test(tag) && (bb || ae)) {
                 return null;
             }
-            before = bb ? destinationEl :
-                     ae ? destinationEl.nextSibling :
-                     ab ? destinationEl.firstChild : null;
+
+            /* eslint-disable indent, multiline-ternary, no-multi-spaces */
+            before = bb ? destinationEl
+                   : ae ? destinationEl.nextSibling
+                   : ab ? destinationEl.firstChild
+                   :      null;
+            /* eslint-enable indent, multiline-ternary, no-multi-spaces */
 
             if (bb || ae) {
                 destinationEl = destinationEl.parentNode;
@@ -92,13 +101,17 @@ Ext.define('Ext.overrides.dom.Helper', (function() {
 
             if (tag === 'td' || (tag === 'tr' && (be || ab))) {
                 node = this.ieTable(4, trs, html, tre);
-            } else if (((tag === 'tbody' || tag === 'thead') && (be || ab)) ||
+            }
+            else if (((tag === 'tbody' || tag === 'thead') && (be || ab)) ||
                     (tag === 'tr' && (bb || ae))) {
                 node = this.ieTable(3, tbs, html, tbe);
-            } else {
+            }
+            else {
                 node = this.ieTable(2, ts, html, te);
             }
+
             destinationEl.insertBefore(node, before);
+
             return node;
         }
     };

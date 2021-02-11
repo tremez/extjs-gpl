@@ -10,12 +10,12 @@ Ext.define('KitchenSink.view.charts.scatter.Bubble', {
     extend: 'Ext.Panel',
     xtype: 'scatter-bubble',
     controller: 'scatter-bubble',
-    // <example>
+    //<example>
     otherContent: [{
         type: 'Controller',
         path: 'classic/samples/view/charts/scatter/BubbleController.js'
     }],
-    // </example>
+    //</example>
 
     requires: [
         'Ext.draw.Color',
@@ -27,6 +27,8 @@ Ext.define('KitchenSink.view.charts.scatter.Bubble', {
 
     layout: 'fit',
     width: 650,
+    border: true,
+    resizable: true,
 
     tbar: [
         '->',
@@ -74,7 +76,7 @@ Ext.define('KitchenSink.view.charts.scatter.Bubble', {
                 miterLimit: 1,
                 lineCap: 'butt',
                 lineWidth: 1,
-                fx: {
+                animation: {
                     duration: 200
                 }
             },

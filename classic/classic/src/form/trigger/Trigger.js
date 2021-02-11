@@ -4,9 +4,11 @@
  */
 Ext.define('Ext.form.trigger.Trigger', {
     alias: 'trigger.trigger',
+
     requires: [
         'Ext.util.ClickRepeater'
     ],
+
     mixins: [
         'Ext.mixin.Factoryable'
     ],
@@ -22,8 +24,8 @@ Ext.define('Ext.form.trigger.Trigger', {
     repeatClick: false,
 
     /**
-     * @cfg {String} cls
-     * @inheritdoc Ext.panel.Header#iconCls
+     * @cfg cls
+     * @inheritdoc Ext.panel.Header#cfg-iconCls
      */
 
     /**
@@ -47,12 +49,13 @@ Ext.define('Ext.form.trigger.Trigger', {
 
     /**
      * @cfg {Boolean} [hideOnReadOnly=true]
-     * Set 'false' to prevent trigger from being hidden even though the related field is set {@link Ext.form.field.Text#readOnly readOnly}
+     * Set 'false' to prevent trigger from being hidden even though the related field is
+     * set {@link Ext.form.field.Text#readOnly readOnly}
      */
-    hideOnReadOnly : undefined,
+    hideOnReadOnly: undefined,
 
     /**
-     * @cfg {Object} [scope]
+     * @cfg {Object} scope
      * Execution context for the {@link #handler} function.
      */
 
@@ -80,7 +83,7 @@ Ext.define('Ext.form.trigger.Trigger', {
      */
 
     /**
-     * @cfg {Boolean} [preventMouseDown=true]
+     * @cfg {Boolean} preventMouseDown
      * @private
      * If true, preventDefault() will be called on the mousedown event.  This prevents
      * a click on the trigger from blurring the field, which is desirable in most cases.
@@ -88,7 +91,7 @@ Ext.define('Ext.form.trigger.Trigger', {
      * prevents the browser's file dialog from opening.
      */
     preventMouseDown: true,
-    
+
     /**
      * @cfg {Boolean} [focusOnMouseDown=false] If `true`, the field will be focused upon
      * mousedown on the trigger. This should be used only for main Picker field triggers
@@ -137,6 +140,7 @@ Ext.define('Ext.form.trigger.Trigger', {
      * Useful for creating more complex triggers such as {@link Ext.form.trigger.Spinner}.
      */
 
+    /* eslint-disable indent */
     renderTpl: [
         '<div id="{triggerId}" class="{baseCls} {baseCls}-{ui} {cls} {cls}-{ui} {extraCls} ',
                 '{childElCls}"<tpl if="triggerStyle"> style="{triggerStyle}"</tpl>',
@@ -145,20 +149,7 @@ Ext.define('Ext.form.trigger.Trigger', {
             '{[values.$trigger.renderBody(values)]}',
         '</div>'
     ],
-
-    statics: {
-        /**
-         * Comparison function for sorting an array of triggers in ascending order
-         * @param {Ext.form.field.Trigger} triggerA
-         * @param {Ext.form.field.Trigger} triggerB
-         * @return {Number}
-         * @private
-         * @static
-         */
-        weightComparator: function(triggerA, triggerB) {
-            return triggerA.weight - triggerB.weight;
-        }
-    },
+    /* eslint-enable indent */
 
     constructor: function(config) {
         var me = this,
@@ -199,6 +190,7 @@ Ext.define('Ext.form.trigger.Trigger', {
 
     destroy: function() {
         var me = this;
+
         me.clickRepeater = me.el = Ext.destroy(me.clickRepeater, me.el);
         me.callParent();
     },
@@ -236,6 +228,7 @@ Ext.define('Ext.form.trigger.Trigger', {
             el = me.el;
 
         me.hidden = true;
+
         if (el) {
             el.hide();
         }
@@ -261,7 +254,8 @@ Ext.define('Ext.form.trigger.Trigger', {
                 },
                 scope: me
             });
-        } else {
+        }
+        else {
             me.field.mon(el, {
                 click: me.onClick,
                 mousedown: me.onMouseDown,
@@ -289,8 +283,9 @@ Ext.define('Ext.form.trigger.Trigger', {
             hidden = false;
 
         if (me.hidden || !field || !me.rendered || me.destroyed) {
-           hidden = true;
+            hidden = true;
         }
+
         return !hidden;
     },
 
@@ -348,7 +343,7 @@ Ext.define('Ext.form.trigger.Trigger', {
         e.preventDefault();
     },
 
-    onClickRepeaterMouseUp: function(e) {
+    onClickRepeaterMouseUp: function(clickRepeater, e) {
         var me = this,
             field = me.field;
 
@@ -434,13 +429,13 @@ Ext.define('Ext.form.trigger.Trigger', {
         });
     },
 
-    setHidden: function (hidden) {
+    setHidden: function(hidden) {
         if (hidden !== this.hidden) {
             this[hidden ? 'hide' : 'show']();
         }
     },
 
-    setTooltip: function (tip) {
+    setTooltip: function(tip) {
         var me = this,
             el = me.el,
             was = me.tooltip;
@@ -454,7 +449,7 @@ Ext.define('Ext.form.trigger.Trigger', {
         }
     },
 
-    setVisible: function (visible) {
+    setVisible: function(visible) {
         this.setHidden(!visible);
     },
 
@@ -466,6 +461,7 @@ Ext.define('Ext.form.trigger.Trigger', {
             el = me.el;
 
         me.hidden = false;
+
         if (el) {
             el.show();
         }

@@ -5,18 +5,19 @@ Ext.define('KitchenSink.view.tab.FramedTabs', {
     extend: 'Ext.tab.Panel',
     xtype: 'framed-tabs',
     controller: 'tab-view',
-    
+
     //<example>
     requires: [
         'KitchenSink.view.tab.TabController'
     ],
     otherContent: [{
-        type: 'ViewController',
+        type: 'Controller',
         path: 'classic/samples/view/tab/TabController.js'
     }],
     exampleTitle: 'Framed Tabs',
+    cls: Ext.baseCSSPrefix + 'shadow',
     //</example>
-    
+
     frame: true,
     width: 400,
     height: 300,

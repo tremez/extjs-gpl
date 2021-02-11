@@ -14,26 +14,48 @@ Ext.define('KitchenSink.view.grid.SlidingPager', {
     //<example>
     otherContent: [{
         type: 'Model',
-        path: 'classic/samples/model/Company.js'
+        path: 'app/model/Company.js'
     }],
     profiles: {
         classic: {
             width: 600,
+            priceWidth: 75,
+            pricechangeWidth: 80,
             percentChangeColumnWidth: 75,
             lastUpdatedColumnWidth: 85,
-            green: 'green',
-            red: 'red'
+            gainColor: 'green',
+            lossColor: 'red'
         },
         neptune: {
             width: 650,
+            priceWidth: 75,
+            pricechangeWidth: 80,
             percentChangeColumnWidth: 100,
             lastUpdatedColumnWidth: 115,
-            green: '#73b51e',
-            red: '#cf4c35'
+            gainColor: '#73b51e',
+            lossColor: '#cf4c35'
+        },
+        graphite: {
+            width: 750,
+            priceWidth: 100,
+            pricechangeWidth: 110,
+            percentChangeColumnWidth: 120,
+            lastUpdatedColumnWidth: 150,
+            gainColor: 'unset',
+            lossColor: 'unset'
+        },
+        'classic-material': {
+            width: 750,
+            priceWidth: 100,
+            pricechangeWidth: 110,
+            percentChangeColumnWidth: 120,
+            lastUpdatedColumnWidth: 150,
+            gainColor: 'unset',
+            lossColor: 'unset'
         }
     },
     //</example>
-    
+
     title: 'Sliding Pager',
     height: 460,
     width: '${width}',
@@ -46,7 +68,7 @@ Ext.define('KitchenSink.view.grid.SlidingPager', {
         remoteSort: true
     },
     signTpl: '<span style="' +
-            'color:{value:sign(\'${red}\',\'${green}\')}"' +
+            'color:{value:sign(\'${lossColor}\',\'${gainColor}\')}"' +
         '>{text}</span>',
 
     columns: [{
@@ -55,30 +77,30 @@ Ext.define('KitchenSink.view.grid.SlidingPager', {
 
         sortable: true,
         flex: 1
-    },{
+    }, {
         text: 'Price',
         dataIndex: 'price',
 
         sortable: true,
         formatter: 'usMoney',
-        width: 75
-    },{
+        width: '${priceWidth}'
+    }, {
         text: 'Change',
-        dataIndex: 'change',
+        dataIndex: 'priceChange',
 
         sortable: true,
         renderer: 'renderChange',
-        width: 80
-    },{
+        width: '${pricechangeWidth}'
+    }, {
         text: '% Change',
-        dataIndex: 'pctChange',
+        dataIndex: 'priceChangePct',
 
         sortable: true,
         renderer: 'renderPercent',
         width: '${percentChangeColumnWidth}'
-    },{
+    }, {
         text: 'Last Updated',
-        dataIndex: 'lastChange',
+        dataIndex: 'priceLastChange',
 
         sortable: true,
         formatter: 'date("m/d/Y")',
@@ -89,7 +111,7 @@ Ext.define('KitchenSink.view.grid.SlidingPager', {
         xtype: 'pagingtoolbar',
         displayInfo: true,
         plugins: {
-            ptype: 'ux-slidingpager'
+            'ux-slidingpager': true
         }
     }
 });

@@ -15,7 +15,7 @@ Ext.define('Ext.dashboard.Column', {
 
     layout: 'anchor',
 
-    isDashboardColumn : true,
+    isDashboardColumn: true,
 
     defaultType: 'dashboard-panel',
 
@@ -23,7 +23,7 @@ Ext.define('Ext.dashboard.Column', {
 
     synthetic: true, // not user-defined
 
-    onRemove: function (dashPanel, isDestroying) {
+    onRemove: function(dashPanel, isDestroying) {
         var me = this,
             ownerCt = me.ownerCt,
             remainingSiblings,
@@ -35,9 +35,13 @@ Ext.define('Ext.dashboard.Column', {
         // If we've just emptied this column.
         if (ownerCt && me.items.getCount() === 0) {
             // Collect remaining column siblings of the same row, when this one has gone.
-            remainingSiblings = Ext.Array.filter(ownerCt.query('>' + me.xtype+ '[rowIndex=' + me.rowIndex + ']'), function(c){
-                return c !== me;
-            });
+            remainingSiblings = Ext.Array.filter(
+                ownerCt.query('>' + me.xtype + '[rowIndex=' + me.rowIndex + ']'),
+                function(c) {
+                    return c !== me;
+                }
+            );
+
             numRemaining = remainingSiblings.length;
 
             // If this column is not destroyed, then remove this column (unless it is the last one!)
@@ -48,19 +52,22 @@ Ext.define('Ext.dashboard.Column', {
                 if (numRemaining === 1) {
                     remainingSiblings[0].columnWidth = 1;
                 }
-                // If more than one remaining sibling, redistribute columnWidths proportionally so that they
-                // still total 1.0
+                // If more than one remaining sibling, redistribute columnWidths proportionally
+                // so that they still total 1.0
                 else {
                     for (i = 0; i < numRemaining; i++) {
                         totalColumnWidth += remainingSiblings[i].columnWidth || 0;
                     }
+
                     for (i = 0; i < numRemaining; i++) {
                         columnWidth = remainingSiblings[i].columnWidth;
-                        remainingSiblings[i].columnWidth = Math.floor(columnWidth / totalColumnWidth * 100) / 100;
+                        remainingSiblings[i].columnWidth =
+                            Math.floor(columnWidth / totalColumnWidth * 100) / 100;
                     }
                 }
 
-                // Needed if user is *closing* the last portlet in a column as opposed to just dragging it to another place
+                // Needed if user is *closing* the last portlet in a column as opposed
+                // to just dragging it to another place.
                 // The destruction will not force a layout
                 if (isDestroying) {
                     ownerCt.updateLayout();

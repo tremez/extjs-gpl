@@ -6,7 +6,7 @@
  * Access the global instance stored in {@link Ext.browser} instead.
  * @private
  */
-(Ext.env || (Ext.env = {})).Browser = function (userAgent, publish) {
+(Ext.env || (Ext.env = {})).Browser = function(userAgent, publish) {
 // @define Ext.env.Browser
 // @define Ext.browser
 // @require Ext.Object
@@ -27,7 +27,9 @@
         engineVersion = '',
         majorVer = '',
         isWebView = false,
-        i, prefix, mode, name, maxIEVersion;
+        edgeRE = /(Edge\/)([\w.]+)/,
+        ripple = '',
+        i, prefix, name;
 
     /**
      * @property {String}
@@ -54,8 +56,9 @@
      *         // Equivalent to (Ext.browser.is.IE && Ext.browser.version.equals(10))
      *     }
      *
-     * __Note:__ Only {@link Ext.Version#getMajor major component}  and {@link Ext.Version#getShortVersion simplified}
-     * value of the version are available via direct property checking.
+     * __Note:__ Only {@link Ext.Version#getMajor major component} and
+     * {@link Ext.Version#getShortVersion simplified} value of the version are available via
+     * direct property checking.
      *
      * Supported values are:
      *
@@ -74,25 +77,29 @@
      * @param {String} name The OS name to check.
      * @return {Boolean}
      */
-    this.is = function (name) {
+    this.is = function(name) {
         // Since this function reference also acts as a map, we do not want it to be
         // shared between instances, so it is defined here, not on the prototype.
         return !!this.is[name];
     };
 
     // Edge has a userAgent with All browsers so we manage it separately
-    // "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.10240"
+    // "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)
+    // Chrome/42.0.2311.135 Safari/537.36 Edge/12.10240"
     if (/Edge\//.test(userAgent)) {
-        browserMatch = userAgent.match(/(Edge\/)([\w.]+)/);
+        browserMatch = userAgent.match(edgeRE);
+        engineMatch = userAgent.match(edgeRE);
     }
 
     if (browserMatch) {
         browserName = browserNames[Ext.Object.getKey(browserPrefixes, browserMatch[1])];
+
         //<feature legacyBrowser>
         if (browserName === 'Safari' && /^Opera/.test(userAgent)) {
             // Prevent Opera 12 and earlier from being incorrectly reported as Safari
             browserName = 'Opera';
         }
+
         //</feature>
         browserVersion = new Ext.Version(browserMatch[2]);
     }
@@ -104,17 +111,19 @@
 
     if (engineName === 'Trident' && browserName !== 'IE') {
         browserName = 'IE';
-        var version = userAgent.match(/.*rv:(\d+.\d+)/);
+
+        var version = userAgent.match(/.*rv:(\d+.\d+)/); // eslint-disable-line vars-on-top
+
         if (version && version.length) {
             version = version[1];
             browserVersion = new Ext.Version(version);
         }
     }
-    
+
     if (browserName && browserVersion) {
         Ext.setVersion(browserName, browserVersion);
     }
-    
+
     /**
      * @property chromeVersion
      * The current version of Chrome (0 if the browser is not Chrome).
@@ -344,21 +353,24 @@
      * @member Ext
      */
 
-    // Facebook changes the userAgent when you view a website within their iOS app. For some reason, the strip out information
-    // about the browser, so we have to detect that and fake it...
-    if (userAgent.match(/FB/) && browserName === "Other") {
+    // Facebook changes the userAgent when you view a website within their iOS app.
+    // For some reason, the strip out information about the browser, so we have to detect
+    // that and fake it...
+    if (userAgent.match(/FB/) && browserName === 'Other') {
         browserName = browserNames.safari;
         engineName = engineNames.webkit;
     }
-
-    if (userAgent.match(/Android.*Chrome/g)) {
+    // Detect chrome first as Chrome in Android 8.0 introduced OPR in the user agent
+    else if (userAgent.match(/Android.*Chrome/g)) {
         browserName = 'ChromeMobile';
     }
-
-    if (userAgent.match(/OPR/)) {
-        browserName = 'Opera';
+    else {
         browserMatch = userAgent.match(/OPR\/(\d+.\d+)/);
-        browserVersion = new Ext.Version(browserMatch[1]);
+
+        if (browserMatch) {
+            browserName = 'Opera';
+            browserVersion = new Ext.Version(browserMatch[1]);
+        }
     }
 
     Ext.apply(this, {
@@ -372,43 +384,17 @@
 
     if (browserVersion) {
         majorVer = browserVersion.getMajor() || '';
+
         //<feature legacyBrowser>
         if (me.is.IE) {
-            majorVer = parseInt(majorVer, 10);
-            mode = document.documentMode;
+            majorVer = document.documentMode || parseInt(majorVer, 10);
 
-            // IE's Developer Tools allows switching of Browser Mode (userAgent) and
-            // Document Mode (actual behavior) independently. While this makes no real
-            // sense, the bottom line is that document.documentMode holds the key to
-            // getting the proper "version" determined. That value is always 5 when in
-            // Quirks Mode.
+            for (i = 7; i <= 11; ++i) {
+                prefix = 'isIE' + i;
 
-            if (mode === 7 || (majorVer === 7 && mode !== 8 && mode !== 9 && mode !== 10)) {
-                majorVer = 7;
-            } else if (mode === 8 || (majorVer === 8 && mode !== 8 && mode !== 9 && mode !== 10)) {
-                majorVer = 8;
-            } else if (mode === 9 || (majorVer === 9 && mode !== 7 && mode !== 8 && mode !== 10)) {
-                majorVer = 9;
-            } else if (mode === 10 || (majorVer === 10 && mode !== 7 && mode !== 8 && mode !== 9)) {
-                majorVer = 10;
-            } else if (mode === 11 || (majorVer === 11 && mode !== 7 && mode !== 8 && mode !== 9 && mode !== 10)) {
-                majorVer = 11;
-            }
-
-            maxIEVersion = Math.max(majorVer, Ext.Boot.maxIEVersion);
-            for (i = 7; i <= maxIEVersion; ++i) {
-                prefix = 'isIE' + i; 
-                if (majorVer <= i) {
-                    Ext[prefix + 'm'] = true;
-                }
-
-                if (majorVer === i) {
-                    Ext[prefix] = true;
-                }
-
-                if (majorVer >= i) {
-                    Ext[prefix + 'p'] = true;
-                }
+                Ext[prefix] = majorVer === i;
+                Ext[prefix + 'm'] = majorVer <= i;
+                Ext[prefix + 'p'] = majorVer >= i;
             }
         }
 
@@ -453,10 +439,20 @@
 
     this.setFlag('Standalone', !!navigator.standalone);
 
-    this.setFlag('Ripple', !!document.getElementById("tinyhippos-injected") && !Ext.isEmpty(window.top.ripple));
+    // Cross domain access could throw an error
+    try {
+        ripple = window.top.ripple;
+    }
+    catch (e) {
+        // Do nothing, can't access cross frame so leave it empty
+    }
+
+    /* eslint-disable-next-line max-len */
+    this.setFlag('Ripple', !!document.getElementById("tinyhippos-injected") && !Ext.isEmpty(ripple));
     this.setFlag('WebWorks', !!window.blackberry);
 
-    if (window.PhoneGap !== undefined || window.Cordova !== undefined || window.cordova !== undefined) {
+    if (window.PhoneGap !== undefined || window.Cordova !== undefined ||
+        window.cordova !== undefined) {
         isWebView = true;
         this.setFlag('PhoneGap');
         this.setFlag('Cordova');
@@ -490,6 +486,7 @@ Ext.env.Browser.prototype = {
     constructor: Ext.env.Browser,
 
     engineNames: {
+        edge: 'Edge',
         webkit: 'WebKit',
         gecko: 'Gecko',
         presto: 'Presto',
@@ -498,6 +495,7 @@ Ext.env.Browser.prototype = {
     },
 
     enginePrefixes: {
+        edge: 'Edge/',
         webkit: 'AppleWebKit/',
         gecko: 'Gecko/',
         presto: 'Presto/',
@@ -580,6 +578,7 @@ Ext.env.Browser.prototype = {
 
         this.is[name] = value;
         this.is[name.toLowerCase()] = value;
+
         if (publish) {
             Ext['is' + name] = value;
         }
@@ -603,16 +602,7 @@ Ext.env.Browser.prototype = {
         }
 
         return name;
-    },
-
-    getPreferredTranslationMethod: function(config) {
-        if (typeof config === 'object' && 'translationMethod' in config && config.translationMethod !== 'auto') {
-            return config.translationMethod;
-        } else {
-            return 'csstransform';
-        }
     }
-
 };
 
 /**
@@ -636,16 +626,16 @@ Ext.env.Browser.prototype = {
  * For a full list of supported values, refer to {@link #is} property/method.
  *
  */
-(function (userAgent) {
-    Ext.browser = new Ext.env.Browser(userAgent, true);
-    Ext.userAgent = userAgent.toLowerCase();
+(function(userAgent) {
+Ext.browser = new Ext.env.Browser(userAgent, true);
+Ext.userAgent = userAgent.toLowerCase();
 
-    /**
-     * @property {String} SSL_SECURE_URL
-     * URL to a blank file used by Ext when in secure mode for iframe src and onReady src
-     * to prevent the IE insecure content warning (`'about:blank'`, except for IE
-     * in secure mode, which is `'javascript:""'`).
-     * @member Ext
-     */
-    Ext.SSL_SECURE_URL = Ext.isSecure && Ext.isIE ? 'javascript:\'\'' : 'about:blank'; // jshint ignore:line
+/**
+ * @property {String} SSL_SECURE_URL
+ * URL to a blank file used by Ext when in secure mode for iframe src and onReady src
+ * to prevent the IE insecure content warning (`'about:blank'`, except for IE
+ * in secure mode, which is `'javascript:""'`).
+ * @member Ext
+ */
+Ext.SSL_SECURE_URL = Ext.isSecure && Ext.isIE ? 'javascript:\'\'' : 'about:blank';
 }(Ext.global.navigator.userAgent));

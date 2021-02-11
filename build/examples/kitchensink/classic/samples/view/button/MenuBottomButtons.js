@@ -27,6 +27,12 @@ Ext.define('KitchenSink.view.button.MenuBottomButtons', {
         },
         'neptune-touch': {
             width: 585
+        },
+        graphite: {
+            width: 680
+        },
+        'classic-material': {
+            width: 680
         }
     },
     //</example>
@@ -48,11 +54,11 @@ Ext.define('KitchenSink.view.button.MenuBottomButtons', {
         defaults: {
             arrowAlign: 'bottom',
             menu: [{
-                text:'Menu Item 1'
-            },{
-                text:'Menu Item 2'
-            },{
-                text:'Menu Item 3'
+                text: 'Menu Item 1'
+            }, {
+                text: 'Menu Item 2'
+            }, {
+                text: 'Menu Item 3'
             }]
         },
 

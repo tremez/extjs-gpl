@@ -10,7 +10,6 @@ Ext.define('Ext.list.TreeItem', {
 
     collapsedCls: Ext.baseCSSPrefix + 'treelist-item-collapsed',
     expandedCls: Ext.baseCSSPrefix + 'treelist-item-expanded',
-    floatedCls: [Ext.Widget.prototype.floatedCls, Ext.baseCSSPrefix + 'treelist-item-floated'],
     floatedToolCls: Ext.baseCSSPrefix + 'treelist-item-tool-floated',
     leafCls: Ext.baseCSSPrefix + 'treelist-item-leaf',
     expandableCls: Ext.baseCSSPrefix + 'treelist-item-expandable',
@@ -79,39 +78,44 @@ Ext.define('Ext.list.TreeItem', {
         }]
     },
 
-    constructor: function (config) {
+    constructor: function(config) {
+        var toolDom;
+
         this.callParent([config]);
 
-        var toolDom = this.toolElement.dom;
+        toolDom = this.toolElement.dom;
 
         // We don't want the tool in the normal <li> structure but it is simpler to let
         // that process create the toolElement.
         toolDom.parentNode.removeChild(toolDom);
     },
 
-    getToolElement: function () {
+    getToolElement: function() {
         return this.toolElement;
     },
 
-    insertItem: function (item, refItem) {
+    insertItem: function(item, refItem) {
         if (refItem) {
             item.element.insertBefore(refItem.element);
-        } else {
+        }
+        else {
             this.itemContainer.appendChild(item.element);
         }
     },
 
     isSelectionEvent: function(e) {
         var owner = this.getOwner();
+
         return (!this.isToggleEvent(e) || !owner.getExpanderOnly() || owner.getSelectOnExpander());
     },
 
-    isToggleEvent: function (e) {
+    isToggleEvent: function(e) {
         var isExpand = false;
 
         if (this.getOwner().getExpanderOnly()) {
             isExpand = e.target === this.expanderElement.dom;
-        } else {
+        }
+        else {
             // contains also includes the element itself
             isExpand = !this.itemContainer.contains(e.target);
         }
@@ -119,7 +123,7 @@ Ext.define('Ext.list.TreeItem', {
         return isExpand;
     },
 
-    nodeCollapseBegin: function (animation, collapsingForExpand) {
+    nodeCollapseBegin: function(animation, collapsingForExpand) {
         var me = this,
             itemContainer = me.itemContainer,
             height;
@@ -152,18 +156,22 @@ Ext.define('Ext.list.TreeItem', {
         }
     },
 
-    nodeCollapseDone: function (animation) {
+    nodeCollapseDone: function(animation) {
         var me = this,
             itemContainer = me.itemContainer;
 
-        me.collapsing = null;
-        itemContainer.dom.style.display = '';
-        itemContainer.setHeight(null);
+        // stopAnimation is called on destroy, so don't
+        // bother continuing if we don't need to
+        if (!me.destroying && !me.destroyed) {
+            me.collapsing = null;
+            itemContainer.dom.style.display = '';
+            itemContainer.setHeight(null);
 
-        me.nodeCollapseEnd(me.collapsingForExpand);
+            me.nodeCollapseEnd(me.collapsingForExpand);
+        }
     },
 
-    nodeExpandBegin: function (animation) {
+    nodeExpandBegin: function(animation) {
         var me = this,
             itemContainer = me.itemContainer,
             height;
@@ -189,33 +197,46 @@ Ext.define('Ext.list.TreeItem', {
         }
     },
 
-    nodeExpandDone: function () {
+    nodeExpandDone: function() {
         this.expanding = null;
         this.itemContainer.setHeight(null);
         this.nodeExpandEnd();
     },
 
-    removeItem: function (item) {
+    removeItem: function(item) {
         this.itemContainer.removeChild(item.element);
     },
 
     //-------------------------------------------------------------------------
     // Updaters
 
-    updateNode: function (node, oldNode) {
+    updateNode: function(node, oldNode) {
         this.syncIndent();
         this.callParent([ node, oldNode ]);
     },
 
-    updateExpandable: function () {
+    updateExpandable: function(expandable) {
         this.updateExpandCls();
+
+        // We need not to set the expandable attribute of node here, 
+        // Refer to isExapndable() function of the node. 
+        // This function may get called on removal of child, and thus setting expandable to false
+        // But we may not need to set same to node as isExapndable() will be deciding function 
+        // not the 'Exapndable' attribute. Fase 'Exapndable' attribute means node will never
+        // be expandable irrespective of the child values
     },
 
-    updateExpanded: function () {
+    updateExpanded: function(expanded) {
+        var node = this.getNode();
+
         this.updateExpandCls();
+
+        if (node) {
+            node.set('expanded', expanded);
+        }
     },
 
-    updateIconCls: function (iconCls, oldIconCls) {
+    updateIconCls: function(iconCls, oldIconCls) {
         var me = this,
             el = me.element;
 
@@ -223,25 +244,26 @@ Ext.define('Ext.list.TreeItem', {
         me.doIconCls(me.toolElement, iconCls, oldIconCls);
 
         el.toggleCls(me.withIconCls, !!iconCls);
+        // Blank iconCls leaves room for icon to line up w/sibling items
         el.toggleCls(me.hideIconCls, iconCls === null);
     },
 
-    updateLeaf: function (leaf) {
+    updateLeaf: function(leaf) {
         this.element.toggleCls(this.leafCls, leaf);
     },
 
-    updateLoading: function (loading) {
+    updateLoading: function(loading) {
         this.element.toggleCls(this.loadingCls, loading);
     },
 
-    updateOver: function (over) {
+    updateOver: function(over) {
         var me = this;
 
         me.element.toggleCls(me.hoverCls, !! over); // off if over==0, on otherwise
         me.rowElement.toggleCls(me.rowHoverCls, over > 1); // off if over = 0 or 1
     },
 
-    updateRowCls: function (value, oldValue) {
+    updateRowCls: function(value, oldValue) {
         this.rowElement.replaceCls(oldValue, value);
     },
 
@@ -260,16 +282,18 @@ Ext.define('Ext.list.TreeItem', {
     },
 
     updateSelectedParent: function(selectedParent) {
-        var me = this;
-        
+        var me = this,
+            tool;
+
         me.element.toggleCls(me.selectedParentCls, selectedParent);
-        var tool = me.getToolElement();
+        tool = me.getToolElement();
+
         if (tool) {
             tool.toggleCls(me.selectedCls, selectedParent);
         }
     },
 
-    updateText: function (text) {
+    updateText: function(text) {
         this.textElement.update(text);
     },
 
@@ -277,13 +301,13 @@ Ext.define('Ext.list.TreeItem', {
     // Private
 
     privates: {
-        doNodeUpdate: function (node) {
+        doNodeUpdate: function(node) {
             this.callParent([ node ]);
 
             this.setRowCls(node && node.data[this.rowClsProperty]);
         },
 
-        doIconCls: function (element, iconCls, oldIconCls) {
+        doIconCls: function(element, iconCls, oldIconCls) {
             if (oldIconCls) {
                 element.removeCls(oldIconCls);
             }
@@ -293,7 +317,7 @@ Ext.define('Ext.list.TreeItem', {
             }
         },
 
-        syncIndent: function () {
+        syncIndent: function() {
             var me = this,
                 indent = me.getIndent(),
                 node = me.getNode(),
@@ -306,8 +330,9 @@ Ext.define('Ext.list.TreeItem', {
             }
         },
 
-        updateExpandCls: function () {
+        updateExpandCls: function() {
             if (!this.updatingExpandCls) {
+                // eslint-disable-next-line vars-on-top
                 var me = this,
                     expandable = me.getExpandable(),
                     element = me.element,
@@ -322,7 +347,8 @@ Ext.define('Ext.list.TreeItem', {
                 if (expandable) {
                     element.toggleCls(expandedCls, expanded);
                     element.toggleCls(collapsedCls, !expanded);
-                } else {
+                }
+                else {
                     element.removeCls([expandedCls, collapsedCls]);
                 }
 
@@ -330,9 +356,14 @@ Ext.define('Ext.list.TreeItem', {
             }
         },
 
-        updateIndent: function (value, oldValue) {
+        updateIndent: function(value, oldValue) {
             this.syncIndent();
             this.callParent([ value, oldValue ]);
         }
     }
+}, function(TreeItem) {
+    TreeItem.prototype.floatedCls = [
+        Ext.Widget.prototype.floatedCls,
+        Ext.baseCSSPrefix + 'treelist-item-floated'
+    ];
 });

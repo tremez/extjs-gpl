@@ -6,17 +6,15 @@ Ext.define('Admin.view.pages.BlankPage', {
         'Ext.layout.VBox'
     ],
 
-    layout:{
+    layout: {
         type: 'vbox',
-        pack:'center',
-        align:'center'
+        pack: 'center',
+        align: 'center'
     },
 
-    items: [
-        {
-            cls: 'blank-page-container',
-            html: '<div class=\'fa-outer-class\'><span class=\'x-fa fa-clock-o\'></span></div>' +
+    items: [{
+        cls: 'blank-page-container',
+        html: '<div class=\'fa-outer-class\'><span class=\'x-fa fa-clock\'></span></div>' +
             '<h1>Coming Soon!</h1><span class=\'blank-page-text\'>Stay tuned for updates</span>'
-        }
-    ]
+    }]
 });

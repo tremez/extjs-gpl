@@ -36,22 +36,29 @@ Ext.onReady(function() {
 
         Ext.Date.getShortDayName = function(day) {
             switch (day) {
-            case 0:
-                return 'ndz';
-            case 1:
-                return 'pon';
-            case 2:
-                return 'wt';
-            case 3:
-                return 'śr';
-            case 4:
-                return 'czw';
-            case 5:
-                return 'pt';
-            case 6:
-                return 'sob';
-            default:
-                return '';
+                case 0:
+                    return 'ndz';
+
+                case 1:
+                    return 'pon';
+
+                case 2:
+                    return 'wt';
+
+                case 3:
+                    return 'śr';
+
+                case 4:
+                    return 'czw';
+
+                case 5:
+                    return 'pt';
+
+                case 6:
+                    return 'sob';
+
+                default:
+                    return '';
             }
         };
     }
@@ -105,8 +112,7 @@ Ext.define("Ext.locale.pl.picker.Date", {
     prevText: "Poprzedni miesiąc (Control+StrzałkaWLewo)",
     monthYearText: "Wybierz miesiąc (Control+Up/Down aby zmienić rok)",
     todayTip: "{0} (Spacja)",
-    format: "Y-m-d",
-    startDay: 1
+    format: "Y-m-d"
 });
 
 Ext.define("Ext.locale.pl.picker.Month", {
@@ -282,10 +288,10 @@ Ext.define("Ext.locale.pl.window.MessageBox", {
         cancel: "Anuluj",
         yes: "Tak",
         no: "Nie"
-    }    
+    }
 });
 
 // This is needed until we can refactor all of the locales into individual files
-Ext.define("Ext.locale.pl.Component", {	
+Ext.define("Ext.locale.pl.Component", {
     override: "Ext.Component"
 });

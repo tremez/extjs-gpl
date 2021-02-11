@@ -1,6 +1,7 @@
 /**
- * Creates an HTML file input field on the page. This is usually used to upload files to remote server. File fields are usually
- * created inside a form like this:
+ * Creates an HTML file input field on the page. This is usually used to upload files 
+ * to remote server.
+ * File fields are usually created inside a form like this:
  *
  *     @example
  *     Ext.create('Ext.form.Panel', {
@@ -22,74 +23,152 @@
  *     });
  */
 Ext.define('Ext.field.File', {
-    extend: 'Ext.field.Field',
-    xtype : 'filefield',
-    requires: ["Ext.field.FileInput"],
+    extend: 'Ext.field.Text',
+    xtype: 'filefield',
 
-    /**
-     * @event change
-     * Fires when a file has been selected
-     * @param {Ext.field.File} this This field
-     * @param {Mixed} newValue The new value
-     * @param {Mixed} oldValue The original value
-     */
-
-    config : {
-        component: {
-            xtype : 'fileinput',
-            fastFocus: false
-        }
-    },
-
-    proxyConfig: {
-        name: null,
-        value: null,
-        files:null,
-
-        /**
-         * @cfg {Boolean} multiple Allow selection of multiple files
-         *
-         * @accessor
-         */
-        multiple: false,
-
-        /**
-         * @cfg {String} accept File input accept attribute documented here (http://www.w3schools.com/tags/att_input_accept.asp)
-         * Also can be simple strings -- e.g. audio, video, image
-         *
-         * @accessor
-         */
-        accept: null,
-        /**
-         * @cfg {String} capture File input capture attribute. Accepts values such as "camera", "camcorder", "microphone"
-         *
-         * @accessor
-         */
-        capture: null
-    },
-
-    classCls: Ext.baseCSSPrefix + 'filefield',
+    mixins: [
+        'Ext.mixin.ConfigProxy'
+    ],
 
     /**
      * @private
      */
     isFile: true,
 
-    /**
-     * @private
-     */
-    initialize: function() {
-        var me = this;
+    proxyConfig: {
+        fileButton: [
+            /**
+             * @cfg multiple
+             * @inheritdoc Ext.field.FileButton#multiple
+             */
+            'multiple',
 
-        me.callParent();
+            /**
+             * @cfg accept
+             * @inheritdoc Ext.field.FileButton#accept
+             */
+            'accept',
 
-        me.getComponent().on({
-            scope: this,
-            change      : 'onChange'
-        });
+            /**
+             * @cfg capture
+             * @inheritdoc Ext.field.FileButton#capture
+             */
+            'capture'
+        ]
+    },
+
+    readOnly: true,
+    editable: false,
+    focusable: false,
+    inputTabIndex: -1,
+
+    triggers: {
+        file: {
+            type: 'file'
+        }
+    },
+
+    classCls: Ext.baseCSSPrefix + 'filefield',
+
+    captureLookup: {
+        video: "camcorder",
+        image: "camera",
+        audio: "microphone"
     },
 
     onChange: function(me, value, startValue) {
         me.fireEvent('change', this, value, startValue);
+    },
+
+    applyName: function(name) {
+        var multiple;
+
+        if (name) {
+            if (multiple && name.substr(-2, 2) !== "[]") {
+                name += "[]";
+            }
+            else if ((!multiple) && name.substr(-2, 2) === "[]") {
+                name = name.substr(0, name.length - 2);
+            }
+        }
+
+        return name;
+    },
+
+    updateName: function(name) {
+        var fileTrigger = this.getTriggers().file,
+            inputElement = fileTrigger && fileTrigger.getComponent().buttonElement.dom;
+
+        if (name && inputElement) {
+            inputElement.name = name;
+        }
+    },
+
+    updateMultiple: function() {
+        var name = this.getName();
+
+        if (!Ext.isEmpty(name)) {
+            this.setName(name);
+        }
+    },
+
+    updateTriggers: function(triggers, oldTriggers) {
+        this.callParent([triggers, oldTriggers]);
+        this.getFileButton().on('change', 'onFileButtonChange', this);
+    },
+
+    updateValue: function(value, oldValue) {
+        this.callParent([value, oldValue]);
+
+        this.getFileButton().setValue(value);
+    },
+
+    getFileButton: function() {
+        return this.getTriggers().file.getComponent();
+    },
+
+    /**
+     * Resets the fileField values & input values
+     * Along with fileButton dom files.
+     */
+    reset: function() {
+        var me = this,
+            original = me.originalValue;
+
+        if (original == null) {
+            me.setInputValue('');
+            me._value = '';
+        }
+
+        me.getFileButton().buttonElement.dom.value = '';
+    },
+
+    /**
+     * Returns the field files.
+     * @return {FileList} List of the files selected.
+     */
+    getFiles: function() {
+        return this.getFileButton().getFiles();
+    },
+
+    privates: {
+        onFileButtonChange: function(fileButton, value) {
+            var buttonElement = fileButton.buttonElement.dom,
+                files = buttonElement.files,
+                len, i, file;
+
+            if (files) {
+                value = [];
+
+                for (i = 0, len = files.length; i < len; i++) {
+                    file = files[i];
+                    value.push(file.name);
+                }
+
+                value = value.join(', ');
+            }
+
+            this.setValue(value);
+        }
     }
 });

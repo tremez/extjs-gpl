@@ -2,7 +2,7 @@ Ext.define('KitchenSink.view.charts.column.MultiAxisController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.column-multi-axis',
 
-    onAxisRangeChange: function (axis, range) {
+    onAxisRangeChange: function(axis, range) {
         var cAxis = axis.getChart().getAxis('celsius-axis');
 
         if (cAxis) {
@@ -11,10 +11,10 @@ Ext.define('KitchenSink.view.charts.column.MultiAxisController', {
         }
     },
 
-    onAfterRender: function () {
-        var chart = this.lookupReference('chart');
+    onAfterRender: function() {
+        var chart = this.lookup('chart'),
 
-        var highSeries = {
+            highSeries = {
                 type: 'bar',
                 xField: 'month',
                 yField: 'highF',

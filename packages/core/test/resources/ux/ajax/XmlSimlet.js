@@ -1,6 +1,7 @@
 /**
  * This class simulates XML-based requests.
  */
+/* global ActiveXObject */
 Ext.define('Ext.ux.ajax.XmlSimlet', {
     extend: 'Ext.ux.ajax.DataSimlet',
     alias: 'simlet.xml',
@@ -23,7 +24,7 @@ Ext.define('Ext.ux.ajax.XmlSimlet', {
         '</{root}>'
     ],
 
-    doGet: function (ctx) {
+    doGet: function(ctx) {
         var me = this,
             data = me.getData(ctx),
             page = me.getPage(ctx, data),
@@ -46,13 +47,15 @@ Ext.define('Ext.ux.ajax.XmlSimlet', {
         if (me.xmlTpl) {
             tpl = Ext.XTemplate.getTpl(me, 'xmlTpl');
             xml = tpl.apply(response);
-        } else {
+        }
+        else {
             xml = data;
         }
 
-        if (typeof DOMParser != 'undefined') {
+        if (typeof DOMParser !== 'undefined') {
             doc = (new DOMParser()).parseFromString(xml, "text/xml");
-        } else {
+        }
+        else {
             // IE doesn't have DOMParser, but fortunately, there is an ActiveX for XML
             doc = new ActiveXObject("Microsoft.XMLDOM");
             doc.async = false;
@@ -61,6 +64,7 @@ Ext.define('Ext.ux.ajax.XmlSimlet', {
 
         ret.responseText = xml;
         ret.responseXML = doc;
+
         return ret;
     }
 });

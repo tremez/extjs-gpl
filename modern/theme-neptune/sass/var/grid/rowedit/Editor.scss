@@ -1,0 +1,160 @@
+/**
+ * @class Ext.grid.plugin.RowEditor
+ */
+
+/**
+ * @var {color}
+ * Row editor background-color
+ */
+$roweditor-background-color: dynamic($neutral-light-color);
+
+/**
+ * @var {number}
+ * Row editor border-width
+ */
+$roweditor-border-width: dynamic($listitem-border-width);
+
+/**
+ * @var {string}
+ * Row editor border-style
+ */
+$roweditor-border-style: dynamic($listitem-border-style);
+
+/**
+ * @var {color}
+ * Row editor border-color
+ */
+$roweditor-border-color: dynamic($listitem-border-color);
+
+/**
+ * @var {list}
+ * RowEditor box-shadow
+ */
+$roweditor-box-shadow: dynamic($listitem-pinned-box-shadow);
+
+/**
+ * @var {list}
+ * RowEditor box-shadow when positioned at the bottom of the grid.
+ */
+$roweditor-bottom-box-shadow: dynamic($listitem-pinned-bottom-box-shadow);
+
+/**
+ * @var {color}
+ * Padding around row editor Update/Cancel buttons.
+ */
+$roweditor-buttons-border-width: dynamic(top($listitem-border-width));
+
+/**
+ * @var {color}
+ * Padding around row editor Update/Cancel buttons.
+ */
+$roweditor-buttons-padding: dynamic(4px);
+
+/**
+ * @var {string}
+ * CSS transition value for repositioning the row editor.
+ */
+$roweditor-transition: dynamic(top 0.3s);
+
+/**
+ * Creates a visual theme for a grid summary row.
+ *
+ * @param {string} $ui
+ * The name of the UI being created. Can not included spaces or special punctuation
+ * (used in CSS class names).
+ *
+ * @param {String} [$xtype=roweditor] (protected) The {@link Ext.Class#xtype} to use
+ * in CSS selectors.  For use by UI mixins of derived classes.
+ *
+ * @param {color} $color
+ * Row editor text color
+ *
+ * @param {color} $background-color
+ * Row editor background-color
+ *
+ * @param {number} $border-width
+ * Row editor border-width
+ *
+ * @param {string} $border-style
+ * Row editor border-style
+ *
+ * @param {color} $border-color
+ * Row editor border-color
+ */
+@mixin roweditor-ui(
+    $ui: null,
+    $xtype: roweditor,
+    $background-color: null,
+    $border-width: null,
+    $border-style: null,
+    $border-color: null,
+    $box-shadow: $listitem-pinned-box-shadow,
+    $bottom-box-shadow: $listitem-pinned-bottom-box-shadow,
+    $buttons-border-width: null,
+    $buttons-padding: null,
+    $transition: null
+) {
+    $ui-suffix: ui-suffix($ui);
+
+    @include panel-ui(
+        $ui: roweditor#{$ui-suffix},
+        $background-color: $background-color,
+        $body-background-color: $background-color,
+        $border-color: $border-color,
+        $border-width: $border-width,
+        $border-style: $border-style
+    );
+
+    @include panel-ui(
+        $ui: roweditor-buttons#{$ui-suffix},
+        $background-color: $background-color,
+        $body-background-color: $background-color,
+        $body-padding: top($buttons-padding) right($buttons-padding) bottom($buttons-padding) 0,
+        $border-color: $border-color,
+        $border-width: $buttons-border-width,
+        $border-style: $border-style
+    );
+
+    $arguments: intersect-arguments(roweditor-ui, listitem-base);
+
+    .#{$prefix}roweditor#{$ui-suffix} {
+        @include listitem-base($arguments...);
+        margin-bottom: 0;  // to replace listitem
+
+        transition: $transition;
+
+        &.#{$prefix}roweditor-button-ct-above {
+            box-shadow: $bottom-box-shadow;
+
+            .#{$prefix}roweditor-button-ct {
+                box-shadow: $bottom-box-shadow;
+            }
+        }
+
+        &.#{$prefix}roweditor-button-ct-below {
+            box-shadow: $box-shadow;
+
+            .#{$prefix}roweditor-button-ct {
+                box-shadow: $box-shadow;
+            }
+        }
+
+        &.#{$prefix}roweditor-button-ct-above {
+            box-shadow: $bottom-box-shadow;
+        }
+
+        &.#{$prefix}roweditor-button-ct-below {
+            box-shadow: $box-shadow;
+        }
+
+        .#{$prefix}roweditor-inner-el {
+            padding: 0;
+        }
+
+        .#{$prefix}roweditor-button-ct {
+            .#{$prefix}button {
+                margin-left: left($buttons-padding);
+            }
+        }
+    }
+}

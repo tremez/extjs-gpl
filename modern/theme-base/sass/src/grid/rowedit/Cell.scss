@@ -1,0 +1,15 @@
+.#{$prefix}roweditorcell {
+    @extend .#{$prefix}gridcell-body-el;
+}
+
+.#{$prefix}roweditorcell.#{$prefix}align-center {
+    text-align: center;
+}
+
+.#{$prefix}roweditorcell.#{$prefix}align-left {
+    text-align: left;
+}
+
+.#{$prefix}roweditorcell.#{$prefix}align-right {
+    text-align: right;
+}

@@ -50,7 +50,19 @@
          * root namespace, change this to "". Doing so would change the mapping of
          * "Desktop.view.Foo" to "sass/src/Desktop/view/Foo.scss".
          */
-        "namespace": "Desktop"
+        "namespace": "Desktop",
+
+        "src": [
+            "${app.dir}/sass/src"
+        ],
+
+        "var": [
+            "${app.dir}/sass/var"
+        ],
+
+        "etc": [
+            "${app.dir}/sass/etc/all.scss"
+        ]
     },
 
     /**

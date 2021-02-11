@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-global-assign
 Ext = window.Ext || {};
 Ext.samples = {
     samplesCatalog: [
@@ -23,7 +24,7 @@ Ext.samples = {
             "items": [
                 {
                     "text": "Kitchen Sink (Classic)",
-                    "url": "kitchensink/",
+                    "url": "kitchensink/?classic",
                     "icon": "kitchensink",
                     "desc": "Showcase of Ext JS components and features in the Classic Toolkit"
                 },
@@ -32,12 +33,6 @@ Ext.samples = {
                     "url": "kitchensink/?modern",
                     "icon": "kitchensink",
                     "desc": "Showcase of Ext JS components and features in the Modern Toolkit"
-                },
-                {
-                    "text": "Feed Viewer",
-                    "url": "feed-viewer/",
-                    "icon": "feeds",
-                    "desc": "RSS feed reader example application"
                 },
                 {
                     "text": "Ext JS Calendar",

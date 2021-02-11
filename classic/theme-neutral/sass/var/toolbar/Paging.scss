@@ -48,4 +48,4 @@ $grid-paging-toolbar-last-glyph: dynamic($ext-var-double-chevron-right $grid-pag
  * @var {string/list}
  * Glyph for the "refresh" icon when {@link Global_CSS#$enable-font-icons} is `true`.
  */
-$grid-paging-toolbar-refresh-glyph: dynamic($fa-var-refresh $grid-paging-toolbar-glyph-font-size $font-icon-font-family);
+$grid-paging-toolbar-refresh-glyph: dynamic($fa-var-sync $grid-paging-toolbar-glyph-font-size $font-icon-font-family);

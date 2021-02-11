@@ -10,18 +10,21 @@
     }
 } @else {
     .array-grid-buy-col:before {
-        font: 18px/1 FontAwesome;
+        font: 18px/1 'Font Awesome 5 Free';
         color: $green-icon-color;
         content: $fa-var-check-circle;
     }
     .array-grid-sell-col:before {
-        font: 18px/1 FontAwesome;
+        font: 18px/1 'Font Awesome 5 Free';
         color: $red-icon-color;
         content: $fa-var-minus-circle;
     }
     .array-grid-alert-col:before {
-        font: 18px/1 FontAwesome;
+        font: 18px/1 'Font Awesome 5 Free';
         color: $yellow-icon-color;
         content: $fa-var-exclamation-triangle;
     }
+}
+.icon-margin {
+    margin-right: 5px;
 }

@@ -7,21 +7,36 @@ Ext.define('KitchenSink.view.charts.column3d.Negative', {
     xtype: 'column-negative-3d',
     requires: ['Ext.chart.theme.Muted'],
     controller: 'column-negative-3d',
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     otherContent: [{
         type: 'Controller',
         path: 'classic/samples/view/charts/column3d/NegativeController.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/Earnings.js'
+        path: 'app/store/Earnings.js'
     }],
     bodyStyle: 'background: transparent !important',
     layout: 'fit',
-    // </example>
+    //</example>
 
     width: 650,
-    height: 500,
+    height: '${height}',
+
+    profiles: {
+        classic: {
+            height: 500
+        },
+        neptune: {
+            height: 500
+        },
+        graphite: {
+            height: 650
+        },
+        'classic-material': {
+            height: 650
+        }
+    },
 
     tbar: [
         '->',
@@ -34,17 +49,22 @@ Ext.define('KitchenSink.view.charts.column3d.Negative', {
     items: {
         xtype: 'cartesian',
         reference: 'chart',
+        captions: {
+            title: 'Profits and Losses'
+        },
         theme: 'muted',
         store: {
             type: 'earnings'
         },
-        insetPadding: '40 40 40 20',
+        downloadServerUrl: '//svg.sencha.io',
         innerPadding: '0 3 0 0',
         interactions: ['itemhighlight'],
-        animation: Ext.isIE8 ? false : {
-            easing: 'backOut',
-            duration: 500
-        },
+        animation: Ext.isIE8
+            ? false
+            : {
+                easing: 'backOut',
+                duration: 500
+            },
         axes: [{
             type: 'numeric3d',
             position: 'left',
@@ -74,15 +94,6 @@ Ext.define('KitchenSink.view.charts.column3d.Negative', {
             yField: 'gaming',
             highlight: true,
             renderer: 'onSeriesRender'
-        }],
-        sprites: [{
-            type: 'text',
-            text: 'Profits and Losses',
-            fontSize: 22,
-            width: 100,
-            height: 30,
-            x: 40, // the sprite x position
-            y: 20  // the sprite y position
         }]
     }
 

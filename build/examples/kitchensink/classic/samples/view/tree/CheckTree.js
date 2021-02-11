@@ -10,7 +10,7 @@
 Ext.define('KitchenSink.view.tree.CheckTree', {
     extend: 'Ext.tree.Panel',
     xtype: 'check-tree',
-    
+
     //<example>
     exampleTitle: 'Checkbox Selection in a TreePanel',
     otherContent: [{

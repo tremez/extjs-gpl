@@ -18,45 +18,66 @@ Ext.define('Ext.dashboard.DropZone', {
     // wrap by triggering overflow.
     overClass: Ext.baseCSSPrefix + 'dashboard-dd-over',
 
-    constructor: function (dashboard, cfg) {
+    constructor: function(dashboard, cfg) {
         this.dashboard = dashboard;
         dashboard.body.ddScrollConfig = this.ddScrollConfig;
 
         this.callParent([dashboard.body, cfg]);
     },
 
-    getOverEvent: function (dd, e, data) {
+    getOverEvent: function(dd, e, data) {
         var dashboard = this.dashboard,
             dbody = dashboard.body,
             items = dashboard.items.items,
             bodyBox = dbody.getBox(),
             count = items.length,
             xy = e.getXY(),
-            x = xy[0] - bodyBox.x + dbody.getScrollLeft(),
-            y = xy[1] - bodyBox.y + dbody.getScrollTop(),
+            orginalX = xy[0] - bodyBox.x + dbody.getScrollLeft(),
+            orginalY = xy[1] - bodyBox.y + dbody.getScrollTop(),
+            x = orginalX,
+            y = orginalY,
+            yOffset = 0,
+            rowIterationIndex = 0,
             over = {
                 columnIndex: 0,
                 column: null,
                 dashboard: dashboard,
                 above: null,
-                extensible : false,
-                beforeAfter : 0,
+                extensible: false,
+                beforeAfter: 0,
                 data: data,
                 panel: data.panel,
                 rawEvent: e,
                 source: dd,
                 status: this.dropAllowed
             },
-            t, ht, i, k, item, w, childCount, childItems, childItem;
+            t, ht, i, k, item, w, h, childCount, childItems, childItem;
 
         for (i = 0; i < count; i += 2) {
             item = items[i];
-            w = item.lastBox.width;
-            if (items[i+1]) {
-                w += items[i+1].lastBox.width;
+
+            if (rowIterationIndex !== item.rowIndex) {
+                rowIterationIndex = item.rowIndex;
+                x = orginalX;
+
+                if (rowIterationIndex > 0) {
+                    y -= yOffset;
+                    yOffset = 0;
+                }
             }
 
-            //if (x < w) {
+            w = item.lastBox.width;
+            h = item.lastBox.height;
+
+            if (yOffset <= h) {
+                yOffset = h;
+            }
+
+            if (items[i + 1]) {
+                // This is for splitter
+                w += items[i + 1].lastBox.width;
+            }
+
             if (e.within(item.el)) {
                 over.columnIndex = i;
                 over.column = item;
@@ -67,21 +88,22 @@ Ext.define('Ext.dashboard.DropZone', {
 
                 if (!t || !over.extensible) {
                     childItems = item.items.items;
-                    // if we are not on an edge OR reached maxColumns (which means "insert the panel in
-                    // between the columns"), we need to dig one more level down
-                    //console.log('inside of column ' + i + ': x=' + x + ', y=' + y);
+
+                    // if we are not on an edge OR reached maxColumns
+                    // (which means "insert the panel in between the columns"),
+                    // we need to dig one more level down
                     for (k = 0, childCount = childItems.length; k < childCount; ++k) {
                         childItem = childItems[k];
                         ht = childItem.el.getHeight();
-                        //console.log(childItem.id + '.ht = ' + ht);
+
                         if (y < ht / 2) {
-                            //console.log('above child ' + k);
                             // if mouse is above the current child's top, Y coord, it
                             // is considered as "above" the previous child
                             over.above = childItem;
+
                             break;
                         }
-                        //console.log('below child ' + k);
+
                         y -= ht;
                     }
 
@@ -96,32 +118,29 @@ Ext.define('Ext.dashboard.DropZone', {
         return over;
     },
 
-    notifyOver: function (dd, e, data) {
+    notifyOver: function(dd, e, data) {
         var me = this,
             dashboard = me.dashboard,
+            hasListeners = dashboard.hasListeners,
             over = me.getOverEvent(dd, e, data),
             colEl = over.column && over.column.el,
             proxy = dd.proxy,
-            proxyProxy,
             aboveItem = over.above,
-            colWidth, width = 0,
-            padding,
-            hasListeners = dashboard.hasListeners;
+            width = 0,
+            proxyProxy, colWidth, padding;
 
         data.lastOver = over;
 
         if ((!hasListeners.validatedrop || dashboard.fireEvent('validatedrop', over) !== false) &&
-            (!hasListeners.beforedragover || dashboard.fireEvent('beforedragover', over) !== false ))
-            {
-
+            (!hasListeners.beforedragover || dashboard.fireEvent('beforedragover', over) !== false)) { // eslint-disable-line max-len
             proxyProxy = dd.panelProxy.getProxy();
 
             // make sure proxy width is fluid in different width columns
             proxy.getProxy().setWidth('auto');
 
-            if ( colEl) {
-
+            if (colEl) {
                 width = colWidth = colEl.getWidth();
+
                 // A floating column was targeted
                 if (over.beforeAfter) {
 
@@ -129,33 +148,37 @@ Ext.define('Ext.dashboard.DropZone', {
 
                     width = colWidth / 2;
                     proxyProxy.setWidth(width);
-
-                } else {
+                }
+                else {
                     if (aboveItem) {
                         dd.panelProxy.moveProxy(aboveItem.el.dom.parentNode, aboveItem.el.dom);
-                    } else {
+                    }
+                    else {
                         dd.panelProxy.moveProxy(colEl.dom, null);
                     }
+
                     proxyProxy.setWidth('auto');
 
                 }
-                if (width) {
-                    //proxy.getProxy().setWidth(width);
-                }
+
                 proxyProxy.setStyle({
                     'float': 'none',
-                    'clear' : 'none',
-                    'margin-left': (over.beforeAfter > 0) ? (colWidth - width - colEl.getPadding('lr')) + 'px' : '',
-                    'margin-top' : '7px'
+                    'clear': 'none',
+                    'margin-left': (over.beforeAfter > 0)
+                        ? (colWidth - width - colEl.getPadding('lr')) + 'px'
+                        : '',
+                    'margin-top': '7px'
                 });
-
-            } else {
+            }
+            else {
                 padding = dashboard.body.getPadding('lr');
+
                 proxyProxy.setStyle({
-                    'float' : 'left',
-                    'clear' : 'left',
+                    'float': 'left',
+                    'clear': 'left',
                     'margin': '0 7px 0 7px'
                 });
+
                 proxyProxy.setWidth(dashboard.body.getWidth() - padding);
 
                 // Target the innerCt for the move
@@ -172,17 +195,21 @@ Ext.define('Ext.dashboard.DropZone', {
         return over.status;
     },
 
-    isRowExtensible : function(rowIndex) {
-      var me = this,
-          dashboard = me.dashboard,
-          maxColumns = dashboard.getMaxColumns() || 1;
+    isRowExtensible: function(rowIndex) {
+        var me = this,
+            dashboard = me.dashboard,
+            maxColumns = dashboard.getMaxColumns() || 1,
+            items;
 
-      return Ext.Array.from(dashboard.query('>dashboard-column[rowIndex=' + rowIndex + ']')).length < maxColumns;
+        items = dashboard.query('>dashboard-column[rowIndex=' + rowIndex + ']');
+
+        return Ext.Array.from(items).length < maxColumns;
     },
 
-    notifyDrop: function (dd, e, data) {
+    notifyDrop: function(dd, e, data) {
         this.callParent(arguments);
 
+        // eslint-disable-next-line vars-on-top
         var dashboard = this.dashboard,
             over = data.lastOver,
             panel = over.panel,
@@ -190,29 +217,24 @@ Ext.define('Ext.dashboard.DropZone', {
             toCt = over.column,
             side = toCt ? over.beforeAfter : 1,
             currentIndex = fromCt.items.indexOf(panel),
-            newIndex = toCt ? (over.above ? toCt.items.indexOf(over.above) : toCt.items.getCount()) : 0,
+            newIndex = toCt
+                ? (over.above ? toCt.items.indexOf(over.above) : toCt.items.getCount())
+                : 0,
             colIndex, newCol,
             hasListeners = dashboard.hasListeners;
 
-//        console.log('DROP: ' + panel.id + '@' + currentIndex +
-//                // ' from ' + fromCt.id +
-//                (side ? ((side < 0) ? ' BEFORE ' : ' AFTER ')
-//                      : (' AT ' + newIndex + ' IN ')) + toCt.id +
-//                (over.above ? ' ABOVE ' + over.above.id : ' AT END'));
-
-        //Same column tests
+        // Same column tests
         if (fromCt === toCt) {
             if (fromCt.items.getCount() === 1) {
-                //console.log('Null op');
                 return;
             }
+
             if (!side) {
                 if (currentIndex < newIndex) {
                     --newIndex;
-                    //console.log('Adjusted newIndex=' + newIndex);
                 }
+
                 if (currentIndex === newIndex) {
-                    //console.log('No change');
                     return;
                 }
             }
@@ -226,13 +248,15 @@ Ext.define('Ext.dashboard.DropZone', {
         Ext.suspendLayouts();
 
         panel.isMoving = true;
+
         if (side) {
             colIndex = dashboard.items.indexOf(toCt);
 
             // inserting into new Row ?
             if (colIndex < 0) {
                 colIndex = dashboard.items.getCount();
-            } else if (side > 0) {
+            }
+            else if (side > 0) {
                 ++colIndex;
             }
 
@@ -241,8 +265,9 @@ Ext.define('Ext.dashboard.DropZone', {
             if (toCt) {
                 newCol.columnWidth = toCt.columnWidth = toCt.columnWidth / 2;
                 delete toCt.width;
-            } else {
-                newCol.columnWidth = 1;  //full row
+            }
+            else {
+                newCol.columnWidth = 1; // full row
             }
 
             toCt = dashboard.insert(colIndex, newCol);

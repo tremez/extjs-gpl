@@ -1,4 +1,4 @@
-describe("Ext.util.Sorter", function() {
+topSuite("Ext.util.Sorter", ['Ext.data.SortTypes', 'Ext.data.Model'], function() {
     var sorter;
 
     describe("instantiation", function() {
@@ -13,14 +13,14 @@ describe("Ext.util.Sorter", function() {
         });
 
         it("should accept a property config", function() {
-            expect(createSorter({property: 'test'})).not.toThrow();
+            expect(createSorter({ property: 'test' })).not.toThrow();
         });
 
         it("should accept a sorter function", function() {
-            expect(createSorter({sorterFn: Ext.emptyFn})).not.toThrow();
+            expect(createSorter({ sorterFn: Ext.emptyFn })).not.toThrow();
         });
 
-        it("should have no transform method", function(){
+        it("should have no transform method", function() {
             expect(createSorter().transform).toBeUndefined();
         });
     });
@@ -31,8 +31,8 @@ describe("Ext.util.Sorter", function() {
                 property: 'age'
             });
 
-            var rec1   = {age: 24},
-                rec2   = {age: 25},
+            var rec1   = { age: 24 },
+                rec2   = { age: 25 },
                 result = sorter.sort(rec1, rec2);
 
             expect(result).toEqual(-1);
@@ -40,12 +40,12 @@ describe("Ext.util.Sorter", function() {
 
         it("should accept DESC direction", function() {
             sorter = new Ext.util.Sorter({
-                property : 'age',
+                property: 'age',
                 direction: 'DESC'
             });
 
-            var rec1   = {age: 24},
-                rec2   = {age: 25},
+            var rec1   = { age: 24 },
+                rec2   = { age: 25 },
                 result = sorter.sort(rec1, rec2);
 
             expect(result).toEqual(1);
@@ -53,28 +53,28 @@ describe("Ext.util.Sorter", function() {
 
         it("should allow specification of the root property", function() {
             sorter = new Ext.util.Sorter({
-                root    : 'data',
+                root: 'data',
                 property: 'age'
             });
 
-            var rec1   = {data: {age: 24}},
-                rec2   = {data: {age: 25}},
+            var rec1   = { data: { age: 24 } },
+                rec2   = { data: { age: 25 } },
                 result = sorter.sort(rec1, rec2);
 
             expect(result).toEqual(-1);
         });
     });
 
-    it("should accept some custom transform function", function(){
+    it("should accept some custom transform function", function() {
         sorter = new Ext.util.Sorter({
             property: 'age',
-            transform: function(v){
+            transform: function(v) {
                 return v * -1;
             }
         });
 
-        var rec1 = {age: 18},
-            rec2 = {age: 21},
+        var rec1 = { age: 18 },
+            rec2 = { age: 21 },
             result = sorter.sort(rec1, rec2);
 
         expect(result).toBe(1);
@@ -82,22 +82,22 @@ describe("Ext.util.Sorter", function() {
 
     // https://sencha.jira.com/browse/EXTJS-18836
     it('should sort an array of Records by multiple sorters where the first returns equality', function() {
-        var edRaw = {name: 'Ed Spencer',   email: 'ed@sencha.com',    evilness: 100, group: 'code',  old: false, age: 25, valid: 'yes'},
-            abeRaw = {name: 'Abe Elias',    email: 'abe@sencha.com',   evilness: 70,  group: 'admin', old: false, age: 20, valid: 'yes'},
-            aaronRaw = {name: 'Aaron Conran', email: 'aaron@sencha.com', evilness: 5,   group: 'admin', old: true, age: 26, valid: 'yes'},
-            tommyRaw = {name: 'Tommy Maintz', email: 'tommy@sencha.com', evilness: -15, group: 'code',  old: true, age: 70, valid: 'yes'},
+        var edRaw = { name: 'Ed Spencer',   email: 'ed@sencha.com',    evilness: 100, group: 'code',  old: false, age: 25, valid: 'yes' },
+            abeRaw = { name: 'Abe Elias',    email: 'abe@sencha.com',   evilness: 70,  group: 'admin', old: false, age: 20, valid: 'yes' },
+            aaronRaw = { name: 'Aaron Conran', email: 'aaron@sencha.com', evilness: 5,   group: 'admin', old: true, age: 26, valid: 'yes' },
+            tommyRaw = { name: 'Tommy Maintz', email: 'tommy@sencha.com', evilness: -15, group: 'code',  old: true, age: 70, valid: 'yes' },
             User = Ext.define(null, {
                 extend: 'Ext.data.Model',
                 idProperty: 'email',
 
                 fields: [
-                    {name: 'name',      type: 'string'},
-                    {name: 'email',     type: 'string'},
-                    {name: 'evilness',  type: 'int'},
-                    {name: 'group',     type: 'string'},
-                    {name: 'old',       type: 'boolean'},
-                    {name: 'valid',     type: 'string'},
-                    {name: 'age',       type: 'int'}
+                    { name: 'name',      type: 'string' },
+                    { name: 'email',     type: 'string' },
+                    { name: 'evilness',  type: 'int' },
+                    { name: 'group',     type: 'string' },
+                    { name: 'old',       type: 'boolean' },
+                    { name: 'valid',     type: 'string' },
+                    { name: 'age',       type: 'int' }
                 ]
             }),
             records = [
@@ -108,18 +108,18 @@ describe("Ext.util.Sorter", function() {
             ],
             sorters = [
                 new Ext.util.Sorter({
-                    sorterFn : function() {
+                    sorterFn: function() {
                         return 0;
                     }
                 }),
-                new Ext.util.Sorter({root: 'data', property: 'age'})
+                new Ext.util.Sorter({ root: 'data', property: 'age' })
             ];
 
         // Should not throw error.
         Ext.Array.sort(records, Ext.util.Sortable.createComparator(sorters));
     });
 
-    describe('sorting null values', function () {
+    describe('sorting null values', function() {
         // See EXTJS-13694.
         var SortTypes = Ext.data.SortTypes;
 
@@ -130,20 +130,25 @@ describe("Ext.util.Sorter", function() {
                 transform: candidate.transform
             });
 
-            return function (v1, v2) {
+            return function(v1, v2) {
                 return sorter.sort(v1, v2);
             };
         }
 
-        function nullFirstComparator(nullFirst) {
-            return function (v1, v2) {
+        function nullFirstComparator(nullFirst, transform) {
+            return function(v1, v2) {
                 if (v1 === null) {
                     return nullFirst ? -1 : 1;
-                } else if (v2 === null) {
-                    return nullFirst ? 1 : -1;
-                } else {
-                    return v1 > v2 ? 1 : (v1 < v2 ? -1 : 0);
                 }
+                else if (v2 === null) {
+                    return nullFirst ? 1 : -1;
+                }
+                else if (transform) {
+                    v1 = transform(v1);
+                    v2 = transform(v2);
+                }
+
+                return v1 > v2 ? 1 : (v1 < v2 ? -1 : 0);
             };
         }
 
@@ -151,7 +156,7 @@ describe("Ext.util.Sorter", function() {
         // had to do this b/c we're testing simple arrays and didn't need to specify a `property` value.
         function defaultSorterFn(v1, v2) {
             var me = this,
-                transform = me.transform;
+                transform = me._transform;
 
             if (v1 === v2) {
                 return 0;
@@ -159,9 +164,11 @@ describe("Ext.util.Sorter", function() {
 
             if (v1 === null) {
                 return me.nullFirst ? -1 : 1;
-            } else if (v2 === null) {
+            }
+            else if (v2 === null) {
                 return me.nullFirst ? 1 : -1;
-            } else if (transform) {
+            }
+            else if (transform) {
                 v1 = transform(v1);
                 v2 = transform(v2);
             }
@@ -195,21 +202,21 @@ describe("Ext.util.Sorter", function() {
         function sortIt(method, nullFirst) {
             var candidate = candidates[method],
                 testArr = candidate.test,
-                compare = createComparator(candidates[method], nullFirst);
+                compare = createComparator(candidate, nullFirst);
 
-            describe(method + (nullFirst ? ' first' : ' last'), function () {
-                it('should sort null values ' + (nullFirst ? 'first' : 'last'), function () {
-                    expect(testArr.concat().sort(nullFirstComparator(nullFirst))).toEqual(testArr.concat().sort(compare));
+            describe(method + (nullFirst ? ' first' : ' last'), function() {
+                it('should sort null values ' + (nullFirst ? 'first' : 'last'), function() {
+                    expect(testArr.concat().sort(nullFirstComparator(nullFirst, candidate.transform))).toEqual(testArr.concat().sort(compare));
                 });
             });
         }
 
-        describe('asUCString', function () {
+        describe('asUCString', function() {
             sortIt('asUCString');
             sortIt('asUCString', true);
         });
 
-        describe('numbers', function () {
+        describe('numbers', function() {
             sortIt('asFloat');
             sortIt('asInt');
 
@@ -217,7 +224,7 @@ describe("Ext.util.Sorter", function() {
             sortIt('asInt', true);
         });
 
-        describe('text', function () {
+        describe('text', function() {
             sortIt('asText');
             sortIt('asUCText');
 

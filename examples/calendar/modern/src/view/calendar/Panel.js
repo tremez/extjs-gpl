@@ -26,6 +26,7 @@ Ext.define('Calendar.view.calendar.Panel', {
             // we need to initialize the header within the panel scope (instead of
             // the sheet one) to ensure that bindings are correctly resolved.
             c.items.unshift(this.getSideBarHeader());
+
             return c;
         },
 

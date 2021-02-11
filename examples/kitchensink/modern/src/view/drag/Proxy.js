@@ -4,19 +4,35 @@
 Ext.define('KitchenSink.view.drag.Proxy', {
     extend: 'Ext.Component',
     xtype: 'drag-proxy',
+    controller: 'drag-proxy',
 
-    // <example>
-    requires: ['KitchenSink.view.drag.ProxyController'],
+    //<example>
     otherContent: [{
         type: 'Controller',
         path: 'modern/src/view/drag/ProxyController.js'
     }],
-    // </example>
 
-    controller: 'drag-proxy',
-    cls: 'stretch-html',
+    profiles: {
+        defaults: {
+            height: 500,
+            width: 500
+        },
+        phone: {
+            defaults: {
+                height: undefined,
+                width: undefined
+            }
+        }
+    },
+
+    cls: 'demo-solid-background',
+    //</example>
+
+    height: '${height}',
     padding: 5,
-    html: '<div class="proxy-none proxy-source">No proxy</div>' + 
-          '<div class="proxy-original proxy-source">Element as proxy with revert: true</div>' + 
+    width: '${width}',
+
+    html: '<div class="proxy-none proxy-source">No proxy</div>' +
+          '<div class="proxy-original proxy-source">Element as proxy with revert: true</div>' +
           '<div class="proxy-placeholder proxy-source">Placeholder</div>'
 });

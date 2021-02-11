@@ -6,7 +6,6 @@
  * http://developer.yahoo.net/yui/license.txt
  */
 
-
 /**
  * A DragDrop implementation where the linked element follows the
  * mouse cursor during a drag.
@@ -44,6 +43,7 @@ Ext.define('Ext.dd.DD', {
     autoOffset: function(iPageX, iPageY) {
         var x = iPageX - this.startPageX,
             y = iPageY - this.startPageY;
+
         this.setDelta(x, y);
     },
 
@@ -70,8 +70,8 @@ Ext.define('Ext.dd.DD', {
     setDragElPos: function(iPageX, iPageY) {
         // the first time we do this, we are going to check to make sure
         // the element has css positioning
-
         var el = this.getDragEl();
+
         this.alignElWithMouse(el, iPageX, iPageY);
     },
 
@@ -89,23 +89,26 @@ Ext.define('Ext.dd.DD', {
             fly = el.dom ? el : Ext.fly(el, '_dd'),
             elSize = fly.getSize(),
             EL = Ext.Element,
-            vpSize,
-            aCoord,
-            newLeft,
-            newTop;
+            vpSize, aCoord, newLeft, newTop;
 
         if (!this.deltaSetXY) {
-            vpSize = this.cachedViewportSize = { width: EL.getDocumentWidth(), height: EL.getDocumentHeight() };
+            vpSize = this.cachedViewportSize =
+                { width: EL.getDocumentWidth(), height: EL.getDocumentHeight() };
+
             aCoord = [
                 Math.max(0, Math.min(oCoord.x, vpSize.width - elSize.width)),
                 Math.max(0, Math.min(oCoord.y, vpSize.height - elSize.height))
             ];
+
             fly.setXY(aCoord);
             newLeft = this.getLocalX(fly);
-            newTop  = fly.getLocalY();
+            newTop = fly.getLocalY();
+
             this.deltaSetXY = [newLeft - oCoord.x, newTop - oCoord.y];
-        } else {
+        }
+        else {
             vpSize = this.cachedViewportSize;
+
             this.setLocalXY(
                 fly,
                 Math.max(0, Math.min(oCoord.x + this.deltaSetXY[0], vpSize.width - elSize.width)),
@@ -115,6 +118,7 @@ Ext.define('Ext.dd.DD', {
 
         this.cachePosition(oCoord.x, oCoord.y);
         this.autoScroll(oCoord.x, oCoord.y, el.offsetHeight, el.offsetWidth);
+
         return oCoord;
     },
 
@@ -129,11 +133,15 @@ Ext.define('Ext.dd.DD', {
      * don't have to look it up again)
      */
     cachePosition: function(iPageX, iPageY) {
+        var aCoord;
+
         if (iPageX) {
             this.lastPageX = iPageX;
             this.lastPageY = iPageY;
-        } else {
-            var aCoord = Ext.fly(this.getEl()).getXY();
+        }
+        else {
+            aCoord = Ext.fly(this.getEl()).getXY();
+
             this.lastPageX = aCoord[0];
             this.lastPageY = aCoord[1];
         }
@@ -149,55 +157,65 @@ Ext.define('Ext.dd.DD', {
      * @private
      */
     autoScroll: function(x, y, h, w) {
+        var clientH, clientW, st, sl, bot, right, toBot, toRight, thresh, scrAmt;
 
         if (this.scroll) {
             // The client height
-            var clientH = Ext.Element.getViewportHeight(),
-                // The client width
-                clientW = Ext.Element.getViewportWidth(),
-                // The amt scrolled down
-                st = this.DDMInstance.getScrollTop(),
-                // The amt scrolled right
-                sl = this.DDMInstance.getScrollLeft(),
-                // Location of the bottom of the element
-                bot = h + y,
-                // Location of the right of the element
-                right = w + x,
-                // The distance from the cursor to the bottom of the visible area,
-                // adjusted so that we don't scroll if the cursor is beyond the
-                // element drag constraints
-                toBot = (clientH + st - y - this.deltaY),
-                // The distance from the cursor to the right of the visible area
-                toRight = (clientW + sl - x - this.deltaX),
-                // How close to the edge the cursor must be before we scroll
-                // var thresh = (document.all) ? 100 : 40;
-                thresh = 40,
-                // How many pixels to scroll per autoscroll op.  This helps to reduce
-                // clunky scrolling. IE is more sensitive about this ... it needs this
-                // value to be higher.
-                scrAmt = (document.all) ? 80 : 30;
+            clientH = Ext.Element.getViewportHeight();
+
+            // The client width
+            clientW = Ext.Element.getViewportWidth();
+
+            // The amt scrolled down
+            st = this.DDMInstance.getScrollTop();
+
+            // The amt scrolled right
+            sl = this.DDMInstance.getScrollLeft();
+
+            // Location of the bottom of the element
+            bot = h + y;
+
+            // Location of the right of the element
+            right = w + x;
+
+            // The distance from the cursor to the bottom of the visible area,
+            // adjusted so that we don't scroll if the cursor is beyond the
+            // element drag constraints
+            toBot = (clientH + st - y - this.deltaY);
+
+            // The distance from the cursor to the right of the visible area
+            toRight = (clientW + sl - x - this.deltaX);
+
+            // How close to the edge the cursor must be before we scroll
+            // var thresh = (document.all) ? 100 : 40;
+            thresh = 40;
+
+            // How many pixels to scroll per autoscroll op.  This helps to reduce
+            // clunky scrolling. IE is more sensitive about this ... it needs this
+            // value to be higher.
+            scrAmt = (document.all) ? 80 : 30;
 
             // Scroll down if we are near the bottom of the visible page and the
             // obj extends below the crease
-            if ( bot > clientH && toBot < thresh ) {
+            if (bot > clientH && toBot < thresh) {
                 window.scrollTo(sl, st + scrAmt);
             }
 
             // Scroll up if the window is scrolled down and the top of the object
             // goes above the top border
-            if ( y < st && st > 0 && y - st < thresh ) {
+            if (y < st && st > 0 && y - st < thresh) {
                 window.scrollTo(sl, st - scrAmt);
             }
 
             // Scroll right if the obj is beyond the right border and the cursor is
             // near the border.
-            if ( right > clientW && toRight < thresh ) {
+            if (right > clientW && toRight < thresh) {
                 window.scrollTo(sl + scrAmt, st);
             }
 
             // Scroll left if the window has been scrolled to the right and the obj
             // extends past the left border
-            if ( x < sl && sl > 0 && x - sl < thresh ) {
+            if (x < sl && sl > 0 && x - sl < thresh) {
                 window.scrollTo(sl - scrAmt, st);
             }
         }
@@ -221,6 +239,7 @@ Ext.define('Ext.dd.DD', {
             if (x < this.minX) {
                 x = this.minX;
             }
+
             if (x > this.maxX) {
                 x = this.maxX;
             }
@@ -230,6 +249,7 @@ Ext.define('Ext.dd.DD', {
             if (y < this.minY) {
                 y = this.minY;
             }
+
             if (y > this.maxY) {
                 y = this.maxY;
             }
@@ -238,8 +258,7 @@ Ext.define('Ext.dd.DD', {
         x = this.getTick(x, this.xTicks);
         y = this.getTick(y, this.yTicks);
 
-
-        return {x: x, y: y};
+        return { x: x, y: y };
     },
 
     /**
@@ -249,6 +268,7 @@ Ext.define('Ext.dd.DD', {
      */
     applyConfig: function() {
         this.callParent();
+
         this.scroll = (this.config.scroll !== false);
     },
 
@@ -259,6 +279,7 @@ Ext.define('Ext.dd.DD', {
     b4MouseDown: function(e) {
         // this.resetConstraints();
         var xy = e.getXY();
+
         this.autoOffset(xy[0], xy[1]);
     },
 
@@ -268,13 +289,14 @@ Ext.define('Ext.dd.DD', {
      */
     b4Drag: function(e) {
         var xy = e.getXY();
+
         this.setDragElPos(xy[0], xy[1]);
     },
 
     toString: function() {
         return ("DD " + this.id);
     },
-    
+
     getLocalX: function(el) {
         return el.getLocalX();
     },
@@ -283,9 +305,9 @@ Ext.define('Ext.dd.DD', {
         el.setLocalXY(x, y);
     }
 
-    //////////////////////////////////////////////////////////////////////////
+    // ////////////////////////////////////////////////////////////////////////
     // Debugging ygDragDrop events that can be overridden
-    //////////////////////////////////////////////////////////////////////////
+    // ////////////////////////////////////////////////////////////////////////
     /*
     startDrag: function(x, y) {
     },
@@ -309,5 +331,4 @@ Ext.define('Ext.dd.DD', {
     }
 
     */
-
 });

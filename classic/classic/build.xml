@@ -5,7 +5,63 @@
     a great idea to read that file to understand how the process works, but it is best to
     limit your changes to this file.
     -->
-    <import file="${basedir}/.sencha/package/build-impl.xml"/>
+    <script language="javascript">
+        <![CDATA[
+            var dir = project.getProperty("basedir"),
+                cmdDir = project.getProperty("cmd.dir"),
+                cmdLoaded = project.getReference("senchaloader");
+            
+            if (!cmdLoaded) {
+                function echo(message, file) {
+                    var e = project.createTask("echo");
+                    e.setMessage(message);
+                    if (file) {
+                        e.setFile(file);
+                    }
+                    e.execute();
+                };
+
+                if (!cmdDir) {
+                    
+                    function exec(args) {
+                        var process = java.lang.Runtime.getRuntime().exec(args),
+                            input = new java.io.BufferedReader(new java.io.InputStreamReader(process.getInputStream())),
+                            headerFound = false,
+                            line;
+
+                        while (line = input.readLine()) {
+                            line = line + '';
+                            java.lang.System.out.println(line);
+                            if (line.indexOf("Sencha Cmd") > -1) {
+                                headerFound = true;
+                            }
+                            else if (headerFound && !cmdDir) {
+                                cmdDir = line;
+                                project.setProperty("cmd.dir", cmdDir);
+                            }
+                        }
+                        process.waitFor();
+                        return !!cmdDir;
+                    }
+                    
+                    if (!exec(["sencha", "which"])) {
+                        var tmpFile = "tmp.sh";
+                        echo("source ~/.bash_profile; sencha " + whichArgs.join(" "), tmpFile);
+                        exec(["/bin/sh", tmpFile]);
+                        new java.io.File(tmpFile)['delete'](); 
+                    }
+                }
+            }
+            
+            if (cmdDir && !project.getTargets().containsKey("init-cmd")) {
+                var importTask = project.createTask("import");
+                importTask.setOwningTarget(self.getOwningTarget());
+                importTask.setLocation(self.getLocation());
+                importTask.setFile(cmdDir + "/ant/build/package/build-impl.xml");
+                importTask.execute();
+            }
+        ]]>
+    </script>
     <import file="${basedir}/.sencha/test/test-impl.xml"/>
 
     <target name="-js" depends="init">
@@ -178,6 +234,34 @@ var Ext = Ext || {};
         <property name="skip.post.compress" value="1"/>
     </target>
 
+    <target name="calendar" depends="init">
+        <x-compile refid="${compiler.ref.id}">
+            <![CDATA[
+            classpath
+                +new
+                -name=calendar
+                -path=${framework.dir}/../packages/calendar/classic/src
+            and
+            classpath
+                -name=calendar
+                -path=${framework.dir}/../packages/calendar/src
+            and
+            classpath
+                -name=calendar
+                -path=${framework.dir}/../packages/calendar/classic/overrides
+                -tags=overrides
+            and
+            classpath
+                -name=calendar
+                -path=${framework.dir}/../packages/calendar/overrides
+                -tags=overrides
+            and
+            include
+                -all
+        ]]>
+        </x-compile>
+    </target>
+
     <target name="charts" depends="init">
         <x-compile refid="${compiler.ref.id}">
             <![CDATA[
@@ -267,20 +351,20 @@ var Ext = Ext || {};
             <![CDATA[
             classpath
                 +new
-                -name=ux
+                -name=exporter
                 -path=${framework.dir}/../packages/exporter/classic/src
             and
             classpath
-                -name=ux
+                -name=exporter
                 -path=${framework.dir}/../packages/exporter/src
             and
             classpath
-                -name=ux
+                -name=exporter
                 -path=${framework.dir}/../packages/exporter/classic/overrides
                 -tags=overrides
             and
             classpath
-                -name=ux
+                -name=exporter
                 -path=${framework.dir}/../packages/exporter/overrides
                 -tags=overrides
             and
@@ -295,21 +379,49 @@ var Ext = Ext || {};
             <![CDATA[
             classpath
                 +new
-                -name=ux
+                -name=pivot
                 -path=${framework.dir}/../packages/pivot/classic/src
             and
             classpath
-                -name=ux
+                -name=pivot
                 -path=${framework.dir}/../packages/pivot/src
             and
             classpath
-                -name=ux
+                -name=pivot
                 -path=${framework.dir}/../packages/pivot/classic/overrides
                 -tags=overrides
             and
             classpath
-                -name=ux
+                -name=pivot
                 -path=${framework.dir}/../packages/pivot/overrides
+                -tags=overrides
+            and
+            include
+                -all
+        ]]>
+        </x-compile>
+    </target>
+
+    <target name="pivot-d3" depends="init,pivot,d3">
+        <x-compile refid="${compiler.ref.id}">
+            <![CDATA[
+            classpath
+                +new
+                -name=pivot-d3
+                -path=${framework.dir}/../packages/pivot-d3/classic/src
+            and
+            classpath
+                -name=pivot-d3
+                -path=${framework.dir}/../packages/pivot-d3/src
+            and
+            classpath
+                -name=pivot-d3
+                -path=${framework.dir}/../packages/pivot-d3/classic/overrides
+                -tags=overrides
+            and
+            classpath
+                -name=pivot-d3
+                -path=${framework.dir}/../packages/pivot-d3/overrides
                 -tags=overrides
             and
             include
@@ -390,5 +502,5 @@ Ext.Boot.loadSyncBasePrefix([
 
     <target name="bootstrap"
             description="*** Regenerate files needed by standalone examples and unit tests ***"
-            depends="charts,d3,ux,exporter,pivot,core-bootstrap,test-bootstrap"/>
+            depends="calendar,charts,d3,ux,exporter,pivot,pivot-d3,core-bootstrap,test-bootstrap"/>
 </project>

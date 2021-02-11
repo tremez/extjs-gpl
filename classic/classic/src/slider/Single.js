@@ -1,6 +1,6 @@
 /**
- * Slider which supports vertical or horizontal orientation, keyboard adjustments, configurable snapping, axis clicking
- * and animation. Can be added as an item to any container.
+ * Slider which supports vertical or horizontal orientation, keyboard adjustments,
+ * configurable snapping, axis clicking and animation. Can be added as an item to any container.
  *
  *     @example
  *     Ext.create('Ext.slider.Single', {
@@ -17,6 +17,7 @@
 Ext.define('Ext.slider.Single', {
     extend: 'Ext.slider.Multi',
     alias: ['widget.slider', 'widget.sliderfield'],
+
     alternateClassName: [
         'Ext.Slider',
         'Ext.form.SliderField',
@@ -24,15 +25,11 @@ Ext.define('Ext.slider.Single', {
         'Ext.slider.Slider'
     ],
 
-    /**
-     * @inheritdoc
-     */
-    defaultBindProperty: 'value',
-
     initComponent: function() {
         if (this.publishOnComplete) {
             this.valuePublishEvent = 'changecomplete';
         }
+
         this.callParent();
     },
 
@@ -51,25 +48,28 @@ Ext.define('Ext.slider.Single', {
      * @return {Number} The current value of the slider
      */
     getValue: function() {
-        // just returns the value of the first thumb, which should be the only one in a single slider
+        // just returns the value of the first thumb,
+        // which should be the only one in a single slider
         return this.callParent([0]);
     },
 
     /**
-     * Programmatically sets the value of the Slider. Ensures that the value is constrained within the minValue and
-     * maxValue.
-     * @param {Number} value The value to set the slider to. (This will be constrained within minValue and maxValue)
-     * @param {Object/Boolean} [animate] `false` to not animate. `true` to use the default animation. This may also be an
-     * animate configuration object, see {@link #cfg-animate}. If this configuration is omitted, the {@link #cfg-animate} configuration
-     * will be used.
+     * Programmatically sets the value of the Slider. Ensures that the value is constrained within
+     * the minValue and maxValue.
+     * @param {Number} value The value to set the slider to. (This will be constrained within
+     * minValue and maxValue)
+     * @param {Object/Boolean} [animate] `false` to not animate. `true` to use the default
+     * animation. This may also be an animate configuration object, see {@link #cfg-animate}.
+     * If this configuration is omitted, the {@link #cfg-animate} configuration will be used.
      */
     setValue: function(value, animate) {
         var args = arguments,
-            len  = args.length;
+            len = args.length;
 
-        // this is to maintain backwards compatibility for sliders with only one thumb. Usually you must pass the thumb
-        // index to setValue, but if we only have one thumb we inject the index here first if given the multi-slider
-        // signature without the required index. The index will always be 0 for a single slider
+        // this is to maintain backwards compatibility for sliders with only one thumb.
+        // Usually you must pass the thumb index to setValue, but if we only have one thumb
+        // we inject the index here first if given the multi-slider signature
+        // without the required index. The index will always be 0 for a single slider
         if (len === 1 || (len <= 3 && typeof args[1] !== 'number')) {
             args = Ext.toArray(args);
             args.unshift(0);
@@ -81,7 +81,7 @@ Ext.define('Ext.slider.Single', {
     /**
      * @private
      */
-    getNearest : function(){
+    getNearest: function() {
         // Since there's only 1 thumb, it's always the nearest
         return this.thumbs[0];
     }

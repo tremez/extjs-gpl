@@ -1,6 +1,7 @@
 /**
  * @private
- * This class is a factory class that will create and return an animation class based on the {@link #type} configuration.
+ * This class is a factory class that will create and return an animation class based on the
+ * {@link #type} configuration.
  */
 Ext.define('Ext.fx.Animation', {
 
@@ -30,7 +31,7 @@ Ext.define('Ext.fx.Animation', {
         var defaultClass = Ext.fx.animation.Abstract,
             type;
 
-        if (typeof config == 'string') {
+        if (typeof config === 'string') {
             type = config;
             config = {};
         }

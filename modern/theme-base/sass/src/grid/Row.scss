@@ -1,12 +1,14 @@
-.#{$prefix}grid.#{$prefix}infinite .#{$prefix}gridrow {
-    width: auto;
-}
+.#{$prefix}gridrow {
+    display: block;
 
-.#{$prefix}gridrow .#{$prefix}cells-el {
-    display: table;
-    table-layout: fixed;
-    // An explicit width is required for table-layout: fixed to be applied, even if the columns
-    // have their own explicit widths set
-    // http://www.w3.org/TR/CSS21/tables.html#fixed-table-layout
-    width: 0;
+    .#{$prefix}cells-el {
+        display: table;
+        table-layout: fixed;
+        // width: 0 allows the cells in a fixed table layout, which are individually sized
+        // in response to header container layout, to be allowed to shrink smaller than
+        // their content.
+        width: 0;
+        // inherit background-color so color of listswiper items doesn't show through
+        background-color: inherit;
+    }
 }

@@ -1,7 +1,7 @@
 /**
  * Wraps a Google Map in an Ext.Component using the [Google Maps API](http://code.google.com/apis/maps/documentation/v3/introduction.html).
  *
- * This component will automatically include the google maps API script from: 
+ * This component will automatically include the google maps API script from:
  * `//maps.google.com/maps/api/js`
  *
  * ## Example
@@ -13,56 +13,163 @@
  */
 Ext.define('Ext.ux.google.Map', {
     extend: 'Ext.Container',
-    xtype : ['map', 'google-map'],
+    xtype: ['map', 'google-map'],
     alternateClassName: 'Ext.Map',
     requires: ['Ext.util.Geolocation'],
     mixins: ['Ext.mixin.Mashup'],
 
+    requires: [
+        'Ext.data.StoreManager'
+    ],
+
     requiredScripts: [
-        '//maps.googleapis.com/maps/api/js'
+        '//maps.googleapis.com/maps/api/js{options}'
     ],
 
     isMap: true,
 
+    /**
+     * @event maprender
+     * Fired when Map initially rendered.
+     * @param {Ext.ux.google.Map} this
+     * @param {google.maps.Map} map The rendered google.map.Map instance
+     */
+
+    /**
+     * @event centerchange
+     * Fired when map is panned around.
+     * @param {Ext.ux.google.Map} this
+     * @param {google.maps.Map} map The rendered google.map.Map instance
+     * @param {google.maps.LatLng} center The current LatLng center of the map
+     */
+
+    /**
+     * @event typechange
+     * Fired when display type of the map changes.
+     * @param {Ext.ux.google.Map} this
+     * @param {google.maps.Map} map The rendered google.map.Map instance
+     * @param {Number} mapType The current display type of the map
+     */
+
+    /**
+     * @event zoomchange
+     * Fired when map is zoomed.
+     * @param {Ext.ux.google.Map} this
+     * @param {google.maps.Map} map The rendered google.map.Map instance
+     * @param {Number} zoomLevel The current zoom level of the map
+     */
+
+    /**
+     * @event markerclick
+     * Fired when the marker icon was clicked.
+     * @param {Ext.ux.google.Map} map This map instance
+     * @param {Object} info Information about this event
+     * @param {Number} info.index The index of the marker record
+     * @param {Ext.data.Model} info.record The record associated to the marker
+     * @param {google.maps.Marker} info.marker The [Google Map marker](https://developers.google.com/maps/documentation/javascript/3.exp/reference#Marker)
+     * @param {google.maps.MouseEvent} info.event The [Google Map event](https://developers.google.com/maps/documentation/javascript/3.exp/reference#MouseEvent)
+     */
+
+    /**
+     * @event markerdblclick
+     * Fired when the marker icon was double clicked.
+     * @param {Ext.ux.google.Map} map This map instance
+     * @param {Object} info Information about this event
+     * @param {Number} info.index The index of the marker record
+     * @param {Ext.data.Model} info.record The record associated to the marker
+     * @param {google.maps.Marker} info.marker The [Google Map marker](https://developers.google.com/maps/documentation/javascript/3.exp/reference#Marker)
+     * @param {google.maps.MouseEvent} info.event The [Google Map event](https://developers.google.com/maps/documentation/javascript/3.exp/reference#MouseEvent)
+     */
+
+    /**
+     * @event markerdrag
+     * Repeatedly fired while the user drags the marker.
+     * @param {Ext.ux.google.Map} map This map instance
+     * @param {Object} info Information about this event
+     * @param {Number} info.index The index of the marker record
+     * @param {Ext.data.Model} info.record The record associated to the marker
+     * @param {google.maps.Marker} info.marker The [Google Map marker](https://developers.google.com/maps/documentation/javascript/3.exp/reference#Marker)
+     * @param {google.maps.MouseEvent} info.event The [Google Map event](https://developers.google.com/maps/documentation/javascript/3.exp/reference#MouseEvent)
+     */
+
+    /**
+     * @event markerdragend
+     * Fired when the user stops dragging the marker.
+     * @param {Ext.ux.google.Map} map This map instance
+     * @param {Object} info Information about this event
+     * @param {Number} info.index The index of the marker record
+     * @param {Ext.data.Model} info.record The record associated to the marker
+     * @param {google.maps.Marker} info.marker The [Google Map marker](https://developers.google.com/maps/documentation/javascript/3.exp/reference#Marker)
+     * @param {google.maps.MouseEvent} info.event The [Google Map event](https://developers.google.com/maps/documentation/javascript/3.exp/reference#MouseEvent)
+     */
+
+    /**
+     * @event markerdragstart
+     * Fired when the user starts dragging the marker.
+     * @param {Ext.ux.google.Map} map This map instance
+     * @param {Object} info Information about this event
+     * @param {Number} info.index The index of the marker record
+     * @param {Ext.data.Model} info.record The record associated to the marker
+     * @param {google.maps.Marker} info.marker The [Google Map marker](https://developers.google.com/maps/documentation/javascript/3.exp/reference#Marker)
+     * @param {google.maps.MouseEvent} info.event The [Google Map event](https://developers.google.com/maps/documentation/javascript/3.exp/reference#MouseEvent)
+     */
+
+    /**
+     * @event markermousedown
+     * Fired for a mousedown on the marker.
+     * @param {Ext.ux.google.Map} map This map instance
+     * @param {Object} info Information about this event
+     * @param {Number} info.index The index of the marker record
+     * @param {Ext.data.Model} info.record The record associated to the marker
+     * @param {google.maps.Marker} info.marker The [Google Map marker](https://developers.google.com/maps/documentation/javascript/3.exp/reference#Marker)
+     * @param {google.maps.MouseEvent} info.event The [Google Map event](https://developers.google.com/maps/documentation/javascript/3.exp/reference#MouseEvent)
+     */
+
+    /**
+     * @event markermouseout
+     * Fired when the mouse leaves the area of the marker icon.
+     * @param {Ext.ux.google.Map} map This map instance
+     * @param {Object} info Information about this event
+     * @param {Number} info.index The index of the marker record
+     * @param {Ext.data.Model} info.record The record associated to the marker
+     * @param {google.maps.Marker} info.marker The [Google Map marker](https://developers.google.com/maps/documentation/javascript/3.exp/reference#Marker)
+     * @param {google.maps.MouseEvent} info.event The [Google Map event](https://developers.google.com/maps/documentation/javascript/3.exp/reference#MouseEvent)
+     */
+
+    /**
+     * @event markermouseover
+     * Fired when the mouse enters the area of the marker icon.
+     * @param {Ext.ux.google.Map} map This map instance
+     * @param {Object} info Information about this event
+     * @param {Number} info.index The index of the marker record
+     * @param {Ext.data.Model} info.record The record associated to the marker
+     * @param {google.maps.Marker} info.marker The [Google Map marker](https://developers.google.com/maps/documentation/javascript/3.exp/reference#Marker)
+     * @param {google.maps.MouseEvent} info.event The [Google Map event](https://developers.google.com/maps/documentation/javascript/3.exp/reference#MouseEvent)
+     */
+
+    /**
+     * @event markermouseup
+     * Fired for a mouseup on the marker.
+     * @param {Ext.ux.google.Map} map This map instance
+     * @param {Object} info Information about this event
+     * @param {Number} info.index The index of the marker record
+     * @param {Ext.data.Model} info.record The record associated to the marker
+     * @param {google.maps.Marker} info.marker The [Google Map marker](https://developers.google.com/maps/documentation/javascript/3.exp/reference#Marker)
+     * @param {google.maps.MouseEvent} info.event The [Google Map event](https://developers.google.com/maps/documentation/javascript/3.exp/reference#MouseEvent)
+     */
+
+    /**
+     * @event markerrightclick
+     * Fired for a rightclick on the marker.
+     * @param {Ext.ux.google.Map} map This map instance
+     * @param {Object} info Information about this event
+     * @param {Number} info.index The index of the marker record
+     * @param {Ext.data.Model} info.record The record associated to the marker
+     * @param {google.maps.Marker} info.marker The [Google Map marker](https://developers.google.com/maps/documentation/javascript/3.exp/reference#Marker)
+     * @param {google.maps.MouseEvent} info.event The [Google Map event](https://developers.google.com/maps/documentation/javascript/3.exp/reference#MouseEvent)
+     */
+
     config: {
-        /**
-         * @event maprender
-         * Fired when Map initially rendered.
-         * @param {Ext.ux.google.Map} this
-         * @param {google.maps.Map} map The rendered google.map.Map instance
-         */
-
-        /**
-         * @event centerchange
-         * Fired when map is panned around.
-         * @param {Ext.ux.google.Map} this
-         * @param {google.maps.Map} map The rendered google.map.Map instance
-         * @param {google.maps.LatLng} center The current LatLng center of the map
-         */
-
-        /**
-         * @event typechange
-         * Fired when display type of the map changes.
-         * @param {Ext.ux.google.Map} this
-         * @param {google.maps.Map} map The rendered google.map.Map instance
-         * @param {Number} mapType The current display type of the map
-         */
-
-        /**
-         * @event zoomchange
-         * Fired when map is zoomed.
-         * @param {Ext.ux.google.Map} this
-         * @param {google.maps.Map} map The rendered google.map.Map instance
-         * @param {Number} zoomLevel The current zoom level of the map
-         */
-
-        /**
-         * @cfg {String} baseCls
-         * The base CSS class to apply to the Map's element
-         * @accessor
-         */
-        baseCls: Ext.baseCSSPrefix + 'map',
-
         /**
          * @cfg {Boolean/Ext.util.Geolocation} useCurrentLocation
          * Pass in true to center the map based on the geolocation coordinates or pass a
@@ -100,8 +207,33 @@ Ext.define('Ext.ux.google.Map', {
          *
          * @accessor
          */
-        mapListeners: null
+        mapListeners: null,
+
+        /**
+         * @cfg {Ext.data.Store/Object/Ext.data.Model[]/Ext.ux.google.map.Marker} markers
+         * Can be either a Store instance, a configuration object that will be turned into a
+         * store, an array of model or a single model (in which case a store will be created).
+         * The Store is used to populate the set of markers that will be rendered in the map.
+         * Marker options are read through the {@link #markerTemplate} config.
+         */
+        markers: null,
+
+        /**
+         * @cfg {Object/Ext.util.ObjectTemplate} markerTemplate
+         * This is a template used to produce marker options from the {@link #markers} records.
+         * See {@link Ext.ux.google.map.Marker} for details.
+         */
+        markerTemplate: {
+            title: '{title}',
+            position: '{position}',
+            animation: '{animation}',       // google.maps.Animation.DROP
+            clickable: '{clickable}',
+            draggable: '{draggable}',
+            visible: '{visible}'
+        }
     },
+
+    baseCls: Ext.baseCSSPrefix + 'map',
 
     constructor: function(config) {
         this.callParent([config]);
@@ -116,24 +248,28 @@ Ext.define('Ext.ux.google.Map', {
         this.initMap();
 
         this.on({
-            painted: 'doResize',
+            painted: 'onPainted',
             scope: this
         });
-        this.innerElement.on('touchstart', 'onTouchStart', this);
+        this.bodyElement.on('touchstart', 'onTouchStart', this);
     },
 
     initMap: function() {
         var map = this.getMap();
-        if(!map) {
+
+        if (!map) {
             var gm = (window.google || {}).maps;
-            if(!gm) return null;
+
+            if (!gm) {
+                return null;
+            }
 
             var element = this.mapContainer,
                 mapOptions = this.getMapOptions(),
                 event = gm.event,
                 me = this;
 
-            //Remove the API Required div
+            // Remove the API Required div
             if (element.dom.firstChild) {
                 Ext.fly(element.dom.firstChild).destroy();
             }
@@ -164,6 +300,7 @@ Ext.define('Ext.ux.google.Map', {
             event.addListenerOnce(map, 'tilesloaded', Ext.bind(me.onTilesLoaded, me));
             this.addMapListeners();
         }
+
         return this.getMap();
     },
 
@@ -177,7 +314,7 @@ Ext.define('Ext.ux.google.Map', {
             reference: 'element',
             className: 'x-container',
             children: [{
-                reference: 'innerElement',
+                reference: 'bodyElement',
                 className: 'x-inner',
                 children: [{
                     reference: 'mapContainer',
@@ -189,6 +326,20 @@ Ext.define('Ext.ux.google.Map', {
 
     onTouchStart: function(e) {
         e.makeUnpreventable();
+    },
+
+    updateMap: function(map) {
+        var markers = this.getMarkers();
+
+        if (markers) {
+            markers.each(function(record) {
+                var marker = this.getMarkerForRecord(record);
+
+                if (marker) {
+                    marker.setMap(map);
+                }
+            }, this);
+        }
     },
 
     applyMapOptions: function(options) {
@@ -204,6 +355,57 @@ Ext.define('Ext.ux.google.Map', {
         }
     },
 
+    applyMarkers: function(value) {
+        if (!value) {
+            return null;
+        }
+
+        if (value.isStore) {
+            return value;
+        }
+
+        if (Ext.isArray(value)) {
+            value = { data: value };
+        }
+        else if (Ext.isObject(value)) {
+            value = { data: [value] };
+        }
+
+        return Ext.getStore(value);
+    },
+
+    updateMarkers: function(curr, prev) {
+        var me = this,
+            listeners = {
+                add: 'onMarkersAdd',
+                remove: 'onMarkersRemove',
+                itemchange: 'onMarkerChange',
+                scope: this
+            };
+
+        if (prev && prev.isStore) {
+            prev.getData().un(listeners);
+            me.removeMarkers(prev.getRange());
+        }
+
+        if (curr && curr.isStore) {
+            me.addMarkers(curr.getRange());
+            curr.getData().on(listeners);
+        }
+    },
+
+    applyMarkerTemplate: function(value) {
+        return Ext.util.ObjectTemplate.create(value);
+    },
+
+    updateMarkerTemplate: function(value) {
+        var markers = this.getMarkers();
+
+        if (markers) {
+            this.refreshMarkers(markers.getRange());
+        }
+    },
+
     doMapCenter: function() {
         this.setMapCenter(this.getMapOptions().center);
     },
@@ -214,6 +416,7 @@ Ext.define('Ext.ux.google.Map', {
 
     updateUseCurrentLocation: function(useCurrentLocation) {
         this.setGeo(useCurrentLocation);
+
         if (!useCurrentLocation) {
             this.setMapCenter();
         }
@@ -225,9 +428,9 @@ Ext.define('Ext.ux.google.Map', {
 
     updateGeo: function(newGeo, oldGeo) {
         var events = {
-            locationupdate : 'onGeoUpdate',
-            locationerror : 'onGeoError',
-            scope : this
+            locationupdate: 'onGeoUpdate',
+            locationerror: 'onGeoError',
+            scope: this
         };
 
         if (oldGeo) {
@@ -240,21 +443,31 @@ Ext.define('Ext.ux.google.Map', {
         }
     },
 
-    doResize: function() {
+    /**
+     * @private
+     */
+    onPainted: function() {
         var gm = (window.google || {}).maps,
-            map = this.getMap();
+            map = this.getMap(),
+            center;
 
         if (gm && map) {
-            gm.event.trigger(map, "resize");
+            center = map.getCenter();
+
+            gm.event.trigger(map, 'resize');
+
+            if (center) {
+                map.setCenter(center);
+            }
         }
     },
 
     /**
      * @private
      */
-	onTilesLoaded: function() {
-		this.fireEvent('maprender', this, this.getMap());
-	},
+    onTilesLoaded: function() {
+        this.fireEvent('maprender', this, this.getMap());
+    },
 
     /**
      * @private
@@ -264,18 +477,20 @@ Ext.define('Ext.ux.google.Map', {
             map = this.getMap(),
             mapListeners = this.getMapListeners();
 
-
         if (gm) {
             var event = gm.event,
                 me = this,
                 listener, scope, fn, callbackFn, handle;
+
             if (Ext.isSimpleObject(mapListeners)) {
                 for (var eventType in mapListeners) {
                     listener = mapListeners[eventType];
+
                     if (Ext.isSimpleObject(listener)) {
                         scope = listener.scope;
                         fn = listener.fn;
-                    } else if (Ext.isFunction(listener)) {
+                    }
+                    else if (Ext.isFunction(listener)) {
                         scope = null;
                         fn = listener;
                     }
@@ -283,17 +498,22 @@ Ext.define('Ext.ux.google.Map', {
                     if (fn) {
                         callbackFn = function() {
                             this.fn.apply(this.scope, [me]);
-                            if(this.handle) {
+
+                            if (this.handle) {
                                 event.removeListener(this.handle);
                                 delete this.handle;
                                 delete this.fn;
                                 delete this.scope;
                             }
                         };
+
                         handle = event.addListener(map, eventType, Ext.bind(callbackFn, callbackFn));
                         callbackFn.fn = fn;
                         callbackFn.scope = scope;
-                        if(listener.single === true) callbackFn.handle = handle;
+
+                        if (listener.single === true) {
+                            callbackFn.handle = handle;
+                        }
                     }
                 }
             }
@@ -316,20 +536,22 @@ Ext.define('Ext.ux.google.Map', {
     onGeoError: Ext.emptyFn,
 
     /**
-     * Moves the map center to the designated coordinates hash of the form:
+     * Moves the map center to a google.maps.LatLng object representing to the target location,
+     * a marker record from the {@link #cfg-markers markers} store, or to the designated
+     * coordinates hash of the form:
      *
      *     { latitude: 37.381592, longitude: -122.135672 }
      *
-     * or a google.maps.LatLng object representing to the target location.
-     *
-     * @param {Object/google.maps.LatLng} coordinates Object representing the desired Latitude and
-     * longitude upon which to center the map.
+     * @param {Object/Ext.data.Model/google.maps.LatLng} coordinates Object representing the
+     * desired latitude and longitude upon which to center the map.
      */
     setMapCenter: function(coordinates) {
         var me = this,
             map = me.getMap(),
             mapOptions = me.getMapOptions(),
-            gm = (window.google || {}).maps;
+            gm = (window.google || {}).maps,
+            marker;
+
         if (gm) {
             if (!coordinates) {
                 if (map && map.getCenter) {
@@ -341,6 +563,11 @@ Ext.define('Ext.ux.google.Map', {
                 else {
                     coordinates = new gm.LatLng(37.381592, -122.135672); // Palo Alto
                 }
+            }
+            else if (coordinates.isModel) {
+                var marker = me.getMarkerForRecord(coordinates);
+
+                coordinates = marker && marker.position;
             }
 
             if (coordinates && !(coordinates instanceof gm.LatLng) && 'longitude' in coordinates) {
@@ -365,9 +592,56 @@ Ext.define('Ext.ux.google.Map', {
     },
 
     /**
+     * Scales and pans the view to ensure that the given markers fits inside the map view.
+     * @param {Ext.data.Model[]} records The markers records to fit in view.
+     */
+    fitMarkersInView: function(records) {
+        var me = this,
+            map = me.getMap(),
+            b2 = map.getBounds(),
+            markers = me.getMarkers(),
+            gm = (window.google || {}).maps,
+            b1, b1ne, b1sw, b2ne, b2sw;
+
+        if (!map || !b2 || !markers) {
+            return;
+        }
+
+        if (Ext.isEmpty(records)) {
+            records = markers.getRange();
+
+            if (Ext.isEmpty(records)) {
+                return;
+            }
+        }
+
+        b1 = new gm.LatLngBounds();
+        Ext.each(records, function(record) {
+            var marker = me.getMarkerForRecord(record);
+
+            if (marker) {
+                b1.extend(marker.getPosition());
+            }
+        });
+
+        b1ne = b1.getNorthEast();
+        b1sw = b1.getSouthWest();
+        b2ne = b2.getNorthEast();
+        b2sw = b2.getSouthWest();
+
+        if ((b1ne.lat() - b1sw.lat()) > (b2ne.lat() - b2sw.lat()) ||
+            (b1ne.lng() - b1sw.lng()) > (b2ne.lng() - b2sw.lng())) {
+            map.fitBounds(b1);
+        }
+        else {
+            map.panToBounds(b1);
+        }
+    },
+
+    /**
      * @private
      */
-    onZoomChange : function() {
+    onZoomChange: function() {
         var mapOptions = this.getMapOptions(),
             map = this.getMap(),
             zoom;
@@ -384,7 +658,7 @@ Ext.define('Ext.ux.google.Map', {
     /**
      * @private
      */
-    onTypeChange : function() {
+    onTypeChange: function() {
         var mapOptions = this.getMapOptions(),
             map = this.getMap(),
             mapTypeId;
@@ -425,5 +699,119 @@ Ext.define('Ext.ux.google.Map', {
         }
 
         this.callParent();
+    },
+
+    privates: {
+
+        // See google.map.Marker API
+        // https://developers.google.com/maps/documentation/javascript/3.exp/reference#Marker
+
+        markerEvents: [
+            'click',
+            'dblclick',
+            'drag',
+            'dragend',
+            'dragstart',
+            'mousedown',
+            'mouseout',
+            'mouseover',
+            'mouseup',
+            'rightclick'
+        ],
+
+        getMarkerForRecord: function(record) {
+            var expando = record && Ext.getExpando(record, this.getId());
+
+            return (expando && expando.marker) || null;
+        },
+
+        buildMarkerOptions: function(record, tpl) {
+            var options = tpl.apply(record.getData(true)),
+                gm = (window.google || {}).maps,
+                animation = options.animation;
+
+            if (typeof animation === 'string') {
+                options.animation = gm.Animation[animation] || null;
+            }
+
+            return options;
+        },
+
+        addMarkers: function(records) {
+            var me = this,
+                eid = me.getId(),
+                map = me.getMap(),
+                tpl = me.getMarkerTemplate(),
+                gm = (window.google || {}).maps,
+                store = me.getMarkers(),
+                events = me.markerEvents;
+
+            Ext.each(records, function(record) {
+                var index = store.indexOf(record),
+                    options = me.buildMarkerOptions(record, tpl),
+                    marker = new gm.Marker(Ext.apply(options, { map: map })),
+                    listeners = events.map(function(type) {
+                        return marker.addListener(type, function(event) {
+                            me.fireEvent('marker' + type, me, {
+                                index: index,
+                                record: record,
+                                marker: marker,
+                                event: event
+                            });
+                        });
+                    });
+
+                Ext.setExpando(record, eid, {
+                    listeners: listeners,
+                    marker: marker
+                });
+            });
+        },
+
+        removeMarkers: function(records) {
+            var eid = this.getId();
+
+            Ext.each(records, function(record) {
+                var expando = Ext.getExpando(record, eid),
+                    marker = expando && expando.marker;
+
+                if (marker) {
+                    marker.setMap(null);
+                    Ext.each(expando.listeners || [], function(listener) {
+                        listener.remove();
+                    });
+                }
+
+                Ext.setExpando(record, eid, undefined);
+            });
+        },
+
+        refreshMarkers: function(records) {
+            var me = this,
+                tpl = me.getMarkerTemplate(),
+                count = records.length,
+                record, marker, i;
+
+            for (i = 0; i < count; ++i) {
+                record = records[i];
+                marker = me.getMarkerForRecord(record);
+
+                if (marker) {
+                    marker.setOptions(me.buildMarkerOptions(record, tpl));
+                }
+            }
+        },
+
+        onMarkersAdd: function(collection, details) {
+            this.addMarkers(details.items);
+        },
+
+        onMarkersRemove: function(collection, details) {
+            this.removeMarkers(details.items);
+        },
+
+        onMarkerChange: function(collection, details) {
+            this.refreshMarkers([details.item]);
+        }
     }
 });

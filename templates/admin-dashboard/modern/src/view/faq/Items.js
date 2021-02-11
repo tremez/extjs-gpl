@@ -6,9 +6,10 @@ Ext.define('Admin.view.faq.Items', {
         'Ext.dataview.DataView'
     ],
 
-    controller: 'faqitems',
-
     bodyPadding: '0 20 20 20',
+    controller: 'faqitems',
+    ui: 'light',
+    userCls: 'faq-item',
 
     config: {
         store: null
@@ -16,12 +17,11 @@ Ext.define('Admin.view.faq.Items', {
 
     items: [{
         xtype: 'dataview',
+        reference: 'dataview',
         scrollable: false,
-
         listeners: {
-            itemtap: 'onItemTap'
+            childtap: 'onChildTap'
         },
-
         itemTpl: '<div class="faq-item">' +
                 '<div class="faq-title">' +
                     '<div class="faq-expander x-fa"></div>' +
@@ -34,7 +34,8 @@ Ext.define('Admin.view.faq.Items', {
     }],
 
     updateStore: function (store) {
-        var grid = this.down('dataview');
+        var grid = this.lookup('dataview');
+
         grid.setStore(store);
     }
 });

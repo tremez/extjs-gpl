@@ -3,12 +3,12 @@ Ext.define('KitchenSink.view.button.SegmentedButtonsController', {
 
     alias: 'controller.segmented-buttons',
 
-    toggleDisabled: function (checkbox, checked) {
+    toggleDisabled: function(checkbox, checked) {
         var view = this.getView(),
             stateFn = checked ? 'disable' : 'enable',
             buttons = view.query('segmentedbutton');
 
-        Ext.each(buttons, function (btn) {
+        Ext.each(buttons, function(btn) {
             btn[stateFn]();
         });
     }

@@ -9,25 +9,25 @@
 Ext.define('Ext.chooser.IconBrowser', {
     extend: 'Ext.view.View',
     alias: 'widget.iconbrowser',
-    
+
     uses: 'Ext.data.Store',
-    
-	singleSelect: true,
+
+    singleSelect: true,
     overItemCls: 'x-view-over',
     itemSelector: 'div.thumb-wrap',
     tpl: [
         // '<div class="details">',
-            '<tpl for=".">',
-                '<div class="thumb-wrap">',
-                    '<div class="thumb">',
-                        '<img src="icons/{thumb}" />',
-                    '</div>',
-                    '<span>{name}</span>',
-                '</div>',
-            '</tpl>'
+        '<tpl for=".">',
+        '<div class="thumb-wrap">',
+        '<div class="thumb">',
+        '<img src="icons/{thumb}" />',
+        '</div>',
+        '<span>{name}</span>',
+        '</div>',
+        '</tpl>'
         // '</div>'
     ],
-    
+
     initComponent: function() {
         this.store = Ext.create('Ext.data.Store', {
             autoLoad: true,
@@ -36,13 +36,13 @@ Ext.define('Ext.chooser.IconBrowser', {
             sorters: 'type',
             proxy: {
                 type: 'ajax',
-                url : 'icons.json',
+                url: 'icons.json',
                 reader: {
                     type: 'json'
                 }
             }
         });
-        
+
         this.callParent(arguments);
     }
 });

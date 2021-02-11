@@ -31,8 +31,8 @@ Ext.define('Ext.ux.Spotlight', {
      * True if the spotlight is active on the element
      */
     active: false,
-    
-    constructor: function(config){
+
+    constructor: function(config) {
         Ext.apply(this, config);
     },
 
@@ -65,23 +65,24 @@ Ext.define('Ext.ux.Spotlight', {
      */
     show: function(el, callback, scope) {
         var me = this;
-        
-        //get the target element
+
+        // get the target element
         me.el = Ext.get(el);
 
-        //create the elements if they don't already exist
+        // create the elements if they don't already exist
         if (!me.right) {
             me.createElements();
         }
 
         if (!me.active) {
-            //if the spotlight is not active, show it
+            // if the spotlight is not active, show it
             me.all.setDisplayed('');
             me.active = true;
             Ext.on('resize', me.syncSize, me);
             me.applyBounds(me.animate, false);
-        } else {
-            //if the spotlight is currently active, just move it
+        }
+        else {
+            // if the spotlight is currently active, just move it
             me.applyBounds(false, false);
         }
     },
@@ -91,7 +92,7 @@ Ext.define('Ext.ux.Spotlight', {
      */
     hide: function(callback, scope) {
         var me = this;
-        
+
         Ext.un('resize', me.syncSize, me);
 
         me.applyBounds(me.animate, true);
@@ -112,14 +113,12 @@ Ext.define('Ext.ux.Spotlight', {
     applyBounds: function(animate, reverse) {
         var me = this,
             box = me.el.getBox(),
-            //get the current view width and height
+            // get the current view width and height
             viewWidth = Ext.Element.getViewportWidth(),
             viewHeight = Ext.Element.getViewportHeight(),
-            i = 0,
-            config = false,
             from, to, clone;
-            
-        //where the element should start (if animation)
+
+        // where the element should start (if animation)
         from = {
             right: {
                 x: box.right,
@@ -147,7 +146,7 @@ Ext.define('Ext.ux.Spotlight', {
             }
         };
 
-        //where the element needs to finish
+        // where the element needs to finish
         to = {
             right: {
                 x: box.right,
@@ -175,7 +174,7 @@ Ext.define('Ext.ux.Spotlight', {
             }
         };
 
-        //reverse the objects
+        // reverse the objects
         if (reverse) {
             clone = Ext.clone(from);
             from = to;
@@ -190,14 +189,13 @@ Ext.define('Ext.ux.Spotlight', {
                     easing: me.easing,
                     to: to[side]
                 });
-            },
-            this);
-        } else {
+            }, this);
+        }
+        else {
             Ext.Array.forEach(['right', 'left', 'top', 'bottom'], function(side) {
                 me[side].setBox(Ext.apply(from[side], to[side]));
                 me[side].repaint();
-            },
-            this);
+            }, this);
         }
     },
 
@@ -206,7 +204,7 @@ Ext.define('Ext.ux.Spotlight', {
      */
     destroy: function() {
         var me = this;
-        
+
         Ext.destroy(me.right, me.left, me.top, me.bottom);
         delete me.el;
         delete me.all;

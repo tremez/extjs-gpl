@@ -1,20 +1,24 @@
 /**
  * @alternateClassName Ext.DomHelper
+ * @alternateClassName Ext.core.DomHelper
+ *
  * @singleton
  *
- * The DomHelper class provides a layer of abstraction from DOM and transparently supports creating elements via DOM or
- * using HTML fragments. It also has the ability to create HTML fragment templates from your DOM building code.
+ * The DomHelper class provides a layer of abstraction from DOM and transparently supports creating
+ * elements via DOM or using HTML fragments. It also has the ability to create HTML fragment
+ * templates from your DOM building code.
  *
  * ## DomHelper element specification object
  *
- * A specification object is used when creating elements. Attributes of this object are assumed to be element
- * attributes, except for 4 special attributes:
+ * A specification object is used when creating elements. Attributes of this object are assumed
+ * to be element attributes, except for 4 special attributes:
  *
  * * **tag**: The tag name of the element
- * * **children (or cn)**: An array of the same kind of element definition objects to be created and appended. These
- * can be nested as deep as you want.
- * * **cls**: The class attribute of the element. This will end up being either the "class" attribute on a HTML
- * fragment or className for a DOM node, depending on whether DomHelper is using fragments or DOM.
+ * * **children (or cn)**: An array of the same kind of element definition objects to be created
+ * and appended. These can be nested as deep as you want.
+ * * **cls**: The class attribute of the element. This will end up being either the "class"
+ * attribute on a HTML fragment or className for a DOM node, depending on whether DomHelper is using
+ * fragments or DOM.
  * * **html**: The innerHTML for the element
  *
  * ## Insertion methods
@@ -29,8 +33,8 @@
  *
  * ## Example
  *
- * This is an example, where an unordered list with 3 children items is appended to an existing element with id
- * 'my-div':
+ * This is an example, where an unordered list with 3 children items is appended to an existing
+ * element with id 'my-div':
  *
  *     var dh = Ext.DomHelper; // create shorthand alias
  *     // specification object
@@ -50,9 +54,9 @@
  *         spec      // the specification object
  *     );
  *
- * Element creation specification parameters in this class may also be passed as an Array of specification objects.
- * This can be used to insert multiple sibling nodes into an existing container very efficiently. For example, to add
- * more list items to the example above:
+ * Element creation specification parameters in this class may also be passed as an Array
+ * of specification objects. This can be used to insert multiple sibling nodes into an existing
+ * container very efficiently. For example, to add more list items to the example above:
  *
  *     dh.append('my-ul', [
  *         {tag: 'li', id: 'item3', html: 'List Item 3'},
@@ -61,9 +65,9 @@
  *
  * ## Templating
  *
- * The real power is in the built-in templating. Instead of creating or appending any elements, createTemplate returns
- * a Template object which can be used over and over to insert new elements. Revisiting the example above, we could
- * utilize templating this time:
+ * The real power is in the built-in templating. Instead of creating or appending any elements,
+ * createTemplate returns a Template object which can be used over and over to insert new elements.
+ * Revisiting the example above, we could utilize templating this time:
  *
  *     // create the node
  *     var list = dh.append('my-div', {tag: 'ul', cls: 'my-list'});
@@ -100,11 +104,12 @@
  *
  * ## Compiling Templates
  *
- * Templates are applied using regular expressions. The performance is great, but if you are adding a bunch of DOM
- * elements using the same template, you can increase performance even further by "compiling" the template. The way
- * "compile()" works is the template is parsed and broken up at the different variable points and a dynamic function is
- * created and eval'ed. The generated function performs string concatenation of these parts and the passed variables
- * instead of using regular expressions.
+ * Templates are applied using regular expressions. The performance is great, but if you are adding
+ * a bunch of DOM elements using the same template, you can increase performance even further by
+ * "compiling" the template. The way "compile()" works is the template is parsed and broken up
+ * at the different variable points and a dynamic function is created and eval'ed. The generated
+ * function performs string concatenation of these parts and the passed variables instead of using
+ * regular expressions.
  *
  *     var html = '"{id}" href="{url}" class="nav">{text}';
  *
@@ -115,8 +120,8 @@
  *
  * ## Performance Boost
  *
- * DomHelper will transparently create HTML fragments when it can. Using HTML fragments instead of DOM can
- * significantly boost performance.
+ * DomHelper will transparently create HTML fragments when it can. Using HTML fragments instead of
+ * DOM can significantly boost performance.
  *
  * Element creation specification parameters may also be strings which are used as innerHTML.
  */
@@ -151,21 +156,21 @@ Ext.define('Ext.dom.Helper', function() {
         endRe: /end/i,
 
         // Since cls & for are reserved words, we need to transform them
-        attributeTransform: { cls : 'class', htmlFor : 'for' },
+        attributeTransform: { cls: 'class', htmlFor: 'for' },
 
         closeTags: {},
 
         detachedDiv: document.createElement('div'),
 
-        decamelizeName: function () {
+        decamelizeName: function() {
             var camelCaseRe = /([a-z])([A-Z])/g,
                 cache = {};
 
-            function decamel (match, p1, p2) {
+            function decamel(match, p1, p2) {
                 return p1 + '-' + p2.toLowerCase();
             }
 
-            return function (s) {
+            return function(s) {
                 return cache[s] || (cache[s] = s.replace(camelCaseRe, decamel));
             };
         }(),
@@ -177,28 +182,34 @@ Ext.define('Ext.dom.Helper', function() {
 
             if (specType === "string" || specType === "number") {
                 buffer.push(spec);
-            } else if (Ext.isArray(spec)) {
+            }
+            else if (Ext.isArray(spec)) {
                 for (i = 0; i < spec.length; i++) {
                     if (spec[i]) {
                         me.generateMarkup(spec[i], buffer);
                     }
                 }
-            } else {
+            }
+            else {
                 tag = spec.tag || 'div';
                 buffer.push('<', tag);
 
                 for (attr in spec) {
                     if (spec.hasOwnProperty(attr)) {
                         val = spec[attr];
+
                         if (val !== undefined && !me.confRe.test(attr)) {
                             if (val && val.join) {
                                 val = val.join(' ');
                             }
+
                             if (typeof val === "object") {
                                 buffer.push(' ', attr, '="');
                                 me.generateStyles(val, buffer, true).push('"');
-                            } else {
-                                buffer.push(' ', me.attributeTransform[attr] || attr, '="', val, '"');
+                            }
+                            else {
+                                buffer.push(' ', me.attributeTransform[attr] || attr, '="', val,
+                                            '"');
                             }
                         }
                     }
@@ -207,16 +218,19 @@ Ext.define('Ext.dom.Helper', function() {
                 // Now either just close the tag or try to add children and close the tag.
                 if (me.emptyTags.test(tag)) {
                     buffer.push('/>');
-                } else {
+                }
+                else {
                     buffer.push('>');
 
                     // Apply the tpl html, and cn specifications
                     if ((val = spec.tpl)) {
                         val.applyOut(spec.tplData, buffer);
                     }
+
                     if ((val = spec.html)) {
                         buffer.push(val);
                     }
+
                     if ((val = spec.cn || spec.children)) {
                         me.generateMarkup(val, buffer);
                     }
@@ -261,7 +275,7 @@ Ext.define('Ext.dom.Helper', function() {
          * @return {String/String[]} If buffer is passed, it is returned. Otherwise the style
          * string is returned.
          */
-        generateStyles: function (styles, buffer, encode) {
+        generateStyles: function(styles, buffer, encode) {
             var a = buffer || [],
                 name, val;
 
@@ -272,9 +286,11 @@ Ext.define('Ext.dom.Helper', function() {
                     // restricted to fonts), we'll check first before we try and encode it
                     // because it's less expensive and this method gets called a lot.
                     name = this.decamelizeName(name);
+
                     if (encode && Ext.String.hasHtmlCharacters(val)) {
                         val = Ext.String.htmlEncode(val);
                     }
+
                     a.push(name, ':', val, ';');
                 }
             }
@@ -288,11 +304,14 @@ Ext.define('Ext.dom.Helper', function() {
          * @return {String}
          */
         markup: function(spec) {
+            var buf;
+
             if (typeof spec === "string") {
                 return spec;
             }
 
-            var buf = this.generateMarkup(spec, []);
+            buf = this.generateMarkup(spec, []);
+
             return buf.join('');
         },
 
@@ -324,8 +343,8 @@ Ext.define('Ext.dom.Helper', function() {
          *     });
          * 
          * @param {String/HTMLElement/Ext.dom.Element} el The element to apply styles to
-         * @param {String/Object/Function} styles A style specification string e.g. 'width:100px', or object in the form {width:'100px'}, or
-         * a function which returns such a specification.
+         * @param {String/Object/Function} styles A style specification string e.g. 'width:100px',
+         * or object in the form {width:'100px'}, or a function which returns such a specification.
          */
         applyStyles: function(el, styles) {
             Ext.fly(el).applyStyles(styles);
@@ -335,7 +354,7 @@ Ext.define('Ext.dom.Helper', function() {
          * @private
          * Fix for browsers which do not support createContextualFragment
          */
-        createContextualFragment: function(html){
+        createContextualFragment: function(html) {
             var div = this.detachedDiv,
                 fragment = document.createDocumentFragment(),
                 length, childNodes;
@@ -348,15 +367,16 @@ Ext.define('Ext.dom.Helper', function() {
             while (length--) {
                 fragment.appendChild(childNodes[0]);
             }
+
             return fragment;
         },
 
         /**
          * Creates new DOM element(s) without inserting them to the document.
          * @param {Object/String} o The DOM object spec (and children) or raw HTML blob
-         * @return {HTMLElement} The new uninserted node
+         * @return {HTMLElement} The new un-inserted node
          */
-        createDom: function(o, parentNode){
+        createDom: function(o) {
             var me = this,
                 markup = me.markup(o),
                 div = me.detachedDiv,
@@ -375,12 +395,15 @@ Ext.define('Ext.dom.Helper', function() {
             //     b = ct.firstChild;
             //     console.log(a.innerHTML, b.innerHTML);
 
-            return Ext.supports.ChildContentClearedWhenSettingInnerHTML ? child.cloneNode(true) : child;
+            return Ext.supports.ChildContentClearedWhenSettingInnerHTML
+                ? child.cloneNode(true)
+                : child;
         },
 
         /**
          * Inserts an HTML fragment into the DOM.
-         * @param {String} where Where to insert the html in relation to el - beforeBegin, afterBegin, beforeEnd, afterEnd.
+         * @param {String} where Where to insert the html in relation to el - beforeBegin,
+         * afterBegin, beforeEnd, afterEnd.
          *
          * For example take the following HTML: `<div>Contents</div>`
          *
@@ -397,50 +420,59 @@ Ext.define('Ext.dom.Helper', function() {
          */
         insertHtml: function(where, el, html) {
             var me = this,
-                hashVal,
-                range,
-                rangeEl,
-                setStart,
-                frag;
+                hashVal, range, rangeEl, setStart, frag;
 
             where = where.toLowerCase();
 
             // Has fast HTML insertion into existing DOM: http://www.w3.org/TR/html5/apis-in-html-documents.html#insertadjacenthtml
             if (el.insertAdjacentHTML) {
-
                 if (me.ieInsertHtml) {
                     // hook for IE table hack - impl in ext package override
                     frag = me.ieInsertHtml(where, el, html);
+
                     if (frag) {
                         return frag;
                     }
                 }
 
                 hashVal = fullPositionHash[where];
+
                 if (hashVal) {
                     el.insertAdjacentHTML(hashVal[0], html);
+
                     return el[hashVal[1]];
                 }
                 // if (not IE and context element is an HTMLElement) or TextNode
-            } else {
+            }
+            else {
                 // we cannot insert anything inside a textnode so...
                 if (el.nodeType === 3) {
                     where = where === afterbegin ? beforebegin : where;
                     where = where === beforeend ? afterend : where;
                 }
-                range = Ext.supports.CreateContextualFragment ? el.ownerDocument.createRange() : undefined;
+
+                range = Ext.supports.CreateContextualFragment
+                    ? el.ownerDocument.createRange()
+                    : undefined;
+
                 setStart = 'setStart' + (this.endRe.test(where) ? 'After' : 'Before');
+
                 if (bb_ae_PositionHash[where]) {
                     if (range) {
                         range[setStart](el);
                         frag = range.createContextualFragment(html);
-                    } else {
+                    }
+                    else {
                         frag = this.createContextualFragment(html);
                     }
+
                     el.parentNode.insertBefore(frag, where === beforebegin ? el : el.nextSibling);
+
                     return el[(where === beforebegin ? 'previous' : 'next') + 'Sibling'];
-                } else {
+                }
+                else {
                     rangeEl = (where === afterbegin ? 'first' : 'last') + 'Child';
+
                     if (el.firstChild) {
                         if (range) {
                             // Creating ranges on a hidden element throws an error, checking for
@@ -450,24 +482,29 @@ Ext.define('Ext.dom.Helper', function() {
                                 range[setStart](el[rangeEl]);
                                 frag = range.createContextualFragment(html);
                             }
-                            catch(e) {
+                            catch (e) {
                                 frag = this.createContextualFragment(html);
                             }
-                        } else {
+                        }
+                        else {
                             frag = this.createContextualFragment(html);
                         }
 
                         if (where === afterbegin) {
                             el.insertBefore(frag, el.firstChild);
-                        } else {
+                        }
+                        else {
                             el.appendChild(frag);
                         }
-                    } else {
+                    }
+                    else {
                         el.innerHTML = html;
                     }
+
                     return el[rangeEl];
                 }
             }
+
             //<debug>
             Ext.raise({
                 sourceClass: 'Ext.DomHelper',
@@ -526,7 +563,7 @@ Ext.define('Ext.dom.Helper', function() {
         /**
          * Creates new DOM element(s) and overwrites the contents of el with them.
          * @param {String/HTMLElement/Ext.dom.Element} el The context element
-         * @param {Object/String} o The DOM object spec (and children) or raw HTML blob
+         * @param {Object/String} html The DOM object spec (and children) or raw HTML blob
          * @param {Boolean} [returnElement=false] true to return an Ext.Element
          * @return {HTMLElement/Ext.dom.Element} The new node
          */
@@ -541,10 +578,12 @@ Ext.define('Ext.dom.Helper', function() {
                 // hook for IE table hack - impl in ext package override
                 newNode = me.ieOverwrite(el, html);
             }
+
             if (!newNode) {
                 el.innerHTML = html;
                 newNode = el.firstChild;
             }
+
             return returnElement ? Ext.get(newNode) : newNode;
         },
 
@@ -560,7 +599,8 @@ Ext.define('Ext.dom.Helper', function() {
                 // createElement/appenChild because it is much faster in all versions of
                 // IE: https://fiddle.sencha.com/#fiddle/tj
                 newNode = me.insertHtml(where, el, me.markup(o));
-            } else {
+            }
+            else {
                 // document fragment does not support innerHTML
                 newNode = me.createDom(o, null);
 
@@ -569,11 +609,14 @@ Ext.define('Ext.dom.Helper', function() {
                     where = where === afterbegin ? beforebegin : where;
                     where = where === beforeend ? afterend : where;
                 }
+
                 if (bb_ae_PositionHash[where]) {
-                    el.parentNode.insertBefore(newNode, where === beforebegin ? el : el.nextSibling);
-                } else if (el.firstChild && where === afterbegin) {
+                    el.parentNode.insertBefore(newNode, where === beforebegin ? el : el.nextSibling); // eslint-disable-line max-len
+                }
+                else if (el.firstChild && where === afterbegin) {
                     el.insertBefore(newNode, el.firstChild);
-                } else {
+                }
+                else {
                     el.appendChild(newNode);
                 }
             }
@@ -588,13 +631,14 @@ Ext.define('Ext.dom.Helper', function() {
          */
         createTemplate: function(o) {
             var html = this.markup(o);
+
             return new Ext.Template(html);
         },
 
         /**
          * @method createHtml
          * Alias for {@link #markup}.
-         * @deprecated 5.0.0
+         * @deprecated 5.0.0 Please use {@link #markup} instead.
          */
         createHtml: function(spec) {
             return this.markup(spec);

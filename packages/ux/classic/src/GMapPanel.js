@@ -1,13 +1,13 @@
 /**
  * The GMap Panel UX extends `Ext.panel.Panel` in order to display Google Maps.
  *
- * It is important to note that you must include the following Google Maps API above bootstrap.js in your 
- * application's index.html file (or equivilant).
+ * It is important to note that you must include the following Google Maps API above
+ * bootstrap.js in your  application's index.html file (or equivalent).
  *
  *     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
  *
  * It is important to note that due to the Google Maps loader, you cannot currently include
- * the above JS resource in the Cmd generated app.json file.  Doing so interferes with the loading of
+ * the above JS resource in the Cmd generated app.json file. Doing so interferes with the loading of
  * Ext JS and Google Maps. 
  *
  * The following example creates a window containing a GMap Panel.  In this case, the center 
@@ -36,96 +36,109 @@
  */
 Ext.define('Ext.ux.GMapPanel', {
     extend: 'Ext.panel.Panel',
-    
+
     alias: 'widget.gmappanel',
-    
+
     requires: ['Ext.window.MessageBox'],
-    
-    initComponent : function(){
-        Ext.applyIf(this,{
+
+    initComponent: function() {
+        Ext.applyIf(this, {
             plain: true,
             gmapType: 'map',
             border: false
         });
-        
-        this.callParent();        
+
+        this.callParent();
     },
-    
-    onBoxReady : function(){
+
+    onBoxReady: function() {
         var center = this.center;
-        this.callParent(arguments);       
-        
+
+        this.callParent(arguments);
+
         if (center) {
             if (center.geoCodeAddr) {
                 this.lookupCode(center.geoCodeAddr, center.marker);
-            } else {
+            }
+            else {
                 this.createMap(center);
             }
-        } else {
+        }
+        else {
             Ext.raise('center is required');
         }
-              
+
     },
-    
+
     createMap: function(center, marker) {
         var options = Ext.apply({}, this.mapOptions);
-        
+
+        /* global google */
         options = Ext.applyIf(options, {
             zoom: 14,
             center: center,
             mapTypeId: google.maps.MapTypeId.HYBRID
         });
         this.gmap = new google.maps.Map(this.body.dom, options);
+
         if (marker) {
             this.addMarker(Ext.applyIf(marker, {
                 position: center
             }));
         }
-        
+
         Ext.each(this.markers, this.addMarker, this);
         this.fireEvent('mapready', this, this.gmap);
     },
-    
+
     addMarker: function(marker) {
+        var o;
+
         marker = Ext.apply({
             map: this.gmap
         }, marker);
-        
+
         if (!marker.position) {
             marker.position = new google.maps.LatLng(marker.lat, marker.lng);
         }
-        var o =  new google.maps.Marker(marker);
-        Ext.Object.each(marker.listeners, function(name, fn){
-            google.maps.event.addListener(o, name, fn);    
+
+        o = new google.maps.Marker(marker);
+
+        Ext.Object.each(marker.listeners, function(name, fn) {
+            google.maps.event.addListener(o, name, fn);
         });
+
         return o;
     },
-    
-    lookupCode : function(addr, marker) {
+
+    lookupCode: function(addr, marker) {
         this.geocoder = new google.maps.Geocoder();
         this.geocoder.geocode({
             address: addr
         }, Ext.Function.bind(this.onLookupComplete, this, [marker], true));
     },
-    
-    onLookupComplete: function(data, response, marker){
-        if (response != 'OK') {
+
+    onLookupComplete: function(data, response, marker) {
+        if (response !== 'OK') {
             Ext.MessageBox.alert('Error', 'An error occured: "' + response + '"');
+
             return;
         }
+
         this.createMap(data[0].geometry.location, marker);
     },
-    
-    afterComponentLayout : function(w, h){
+
+    afterComponentLayout: function(w, h) {
         this.callParent(arguments);
         this.redraw();
     },
-    
-    redraw: function(){
+
+    redraw: function() {
         var map = this.gmap;
+
         if (map) {
             google.maps.event.trigger(map, 'resize');
         }
     }
- 
+
 });

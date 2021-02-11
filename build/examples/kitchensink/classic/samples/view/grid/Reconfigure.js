@@ -19,19 +19,49 @@ Ext.define('KitchenSink.view.grid.Reconfigure', {
         type: 'Controller',
         path: 'classic/samples/view/grid/ReconfigureController.js'
     }],
+
     profiles: {
         classic: {
-            employeeWidth: 100    
+            width: 500,
+            height: 330,
+            firstNameWidth: 100,
+            lastNameWidth: 110,
+            totalEmployeesWidth: 140,
+            employeeWidth: 100,
+            managerWidth: 120
         },
         neptune: {
-            employeeWidth: 130
+            width: 500,
+            height: 330,
+            firstNameWidth: 100,
+            lastNameWidth: 110,
+            totalEmployeesWidth: 140,
+            employeeWidth: 130,
+            managerWidth: 120
+        },
+        graphite: {
+            width: 850,
+            height: 430,
+            firstNameWidth: 150,
+            lastNameWidth: 150,
+            totalEmployeesWidth: 180,
+            employeeWidth: 150,
+            managerWidth: 120
+        },
+        'classic-material': {
+            width: 850,
+            height: 430,
+            firstNameWidth: 150,
+            lastNameWidth: 150,
+            totalEmployeesWidth: 180,
+            employeeWidth: 150,
+            managerWidth: 120
         }
     },
     //</example>
-    
-    width: 500,
-    height: 330,
 
+    width: '${width}',
+    height: '${height}',
     layout: {
         type: 'vbox',
         align: 'stretch'
@@ -41,7 +71,6 @@ Ext.define('KitchenSink.view.grid.Reconfigure', {
             nowShowing: 'Click a button...'
         }
     },
-    
     items: [{
         xtype: 'container',
         layout: 'hbox',
@@ -66,53 +95,47 @@ Ext.define('KitchenSink.view.grid.Reconfigure', {
         bind: {
             title: '{nowShowing}'
         },
-
         columns: [],
         viewConfig: {
             emptyText: 'Click a button to show a dataset',
             deferEmptyText: false
         }
     }],
-    
     etc: {
         Employees: {
             store: 'createEmployeeStore',
             columns: [{
                 text: 'First Name',
-                dataIndex: 'forename'
+                dataIndex: 'forename',
+                width: '${firstNameWidth}'
             }, {
                 text: 'Last Name',
-                dataIndex: 'surname'
+                dataIndex: 'surname',
+                width: '${lastNameWidth}'
             }, {
                 text: 'Employee No.',
                 dataIndex: 'employeeNo',
-                
                 width: '${employeeWidth}'
             }, {
                 text: 'Department',
                 dataIndex: 'department',
-                
                 flex: 1
             }]
         },
-
         Offices: {
             store: 'createOfficeStore',
             columns: [{
                 text: 'City',
                 dataIndex: 'city',
-                
                 flex: 1
             }, {
                 text: 'Total Employees',
                 dataIndex: 'totalEmployees',
-                
-                width: 140
+                width: '${totalEmployeesWidth}'
             }, {
                 text: 'Manager',
                 dataIndex: 'manager',
-                
-                width: 120
+                width: '${managerWidth}'
             }]
         }
     }

@@ -11,21 +11,35 @@ Ext.define('KitchenSink.view.charts.column3d.Basic', {
     xtype: 'column-basic-3d',
     requires: ['Ext.chart.theme.Muted'],
     controller: 'column-basic-3d',
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     otherContent: [{
         type: 'Controller',
         path: 'classic/samples/view/charts/column3d/BasicController.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/EconomySectors.js'
+        path: 'app/store/EconomySectors.js'
     }],
     bodyStyle: 'background: transparent !important',
     layout: 'fit',
-    // </example>
+    //</example>
 
-    width: 650,
+    width: '${width}',
     height: 500,
+    profiles: {
+        classic: {
+            width: 650
+        },
+        neptune: {
+            width: 650
+        },
+        graphite: {
+            width: 800
+        },
+        'classic-material': {
+            width: 800
+        }
+    },
 
     tbar: [
         '->',
@@ -38,17 +52,23 @@ Ext.define('KitchenSink.view.charts.column3d.Basic', {
     items: {
         xtype: 'cartesian',
         reference: 'chart',
+        captions: {
+            title: 'Industry size in major economies (2011)',
+            credits: 'Source: http://en.wikipedia.org/wiki/List_of_countries_by_GDP_sector_composition'
+        },
         theme: {
             type: 'muted'
         },
         store: {
             type: 'economy-sectors'
         },
-        insetPadding: '40 40 40 20',
-        animation: Ext.isIE8 ? false : {
-            easing: 'backOut',
-            duration: 500
-        },
+        downloadServerUrl: '//svg.sencha.io',
+        animation: Ext.isIE8
+            ? false
+            : {
+                easing: 'backOut',
+                duration: 500
+            },
         axes: [{
             type: 'numeric3d',
             position: 'left',
@@ -93,21 +113,6 @@ Ext.define('KitchenSink.view.charts.column3d.Basic', {
                 trackMouse: true,
                 renderer: 'onTooltipRender'
             }
-        }],
-        sprites: [{
-            type: 'text',
-            text: 'Industry size in major economies (2011)',
-            fontSize: 22,
-            width: 100,
-            height: 30,
-            x: 40, // the sprite x position
-            y: 20  // the sprite y position
-        }, {
-            type: 'text',
-            text: 'Source: http://en.wikipedia.org/wiki/List_of_countries_by_GDP_sector_composition',
-            fontSize: 10,
-            x: 12,
-            y: 490
         }]
     }
 

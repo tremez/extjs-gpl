@@ -1,13 +1,14 @@
-describe("Ext-more", function() {
-    describe("Ext.id", function(){
+topSuite("Ext-more", ['Ext.dom.Element', 'Ext.app.Application'], function() {
+    describe("Ext.id", function() {
         var el;
+
         describe("if element passed as first argument is different of document or window", function() {
             beforeEach(function() {
                 el = document.createElement("div");
                 document.body.appendChild(el);
             });
 
-            afterEach(function(){
+            afterEach(function() {
                 Ext.getBody().dom.removeChild(el);
             });
 
@@ -17,11 +18,13 @@ describe("Ext-more", function() {
 
             it("should generate an unique id for the element with custom prefix", function() {
                 var prefix = "nico-yhwh";
+
                 expect(Ext.id(el, prefix)).toEqual(prefix + Ext.idSeed);
             });
 
             it("should not override existing id", function() {
                 var id = "unchanged";
+
                 el.id = id;
                 expect(Ext.id(el)).toEqual(id);
             });
@@ -45,22 +48,26 @@ describe("Ext-more", function() {
             expect(Ext.getDoc()).toEqual(Ext.get(document));
         });
     });
+
     if (Ext.Component) {
         describe("Ext.getCmp", function() {
             it("should return a component", function() {
-                var cmp = new Ext.Component({id: 'foobar'});
+                var cmp = new Ext.Component({ id: 'foobar' });
+
                 expect(Ext.getCmp('foobar')).toBe(cmp);
                 cmp.destroy();
             });
         });
     }
+
     if (!Ext.isWindows && !Ext.isMac && !Ext.isLinux) {
-        describe("Ext.getOrientation", function() {
+        describe("Ext.dom.Element.getOrientation", function() {
             it("should return the current orientation of the mobile device", function() {
                 if (window.innerHeight <= window.innerWidth) {
-                    expect(Ext.getOrientation()).toEqual("landscape");
-                } else {
-                    expect(Ext.getOrientation()).toEqual("portrait");
+                    expect(Ext.dom.Element.getOrientation()).toEqual("landscape");
+                }
+                else {
+                    expect(Ext.dom.Element.getOrientation()).toEqual("portrait");
                 }
             });
         });
@@ -107,7 +114,7 @@ describe("Ext-more", function() {
         });
 
         it("should remove dom if object is an Ext.element", function() {
-            var el = Ext.getBody().createChild({id: "to_destroy"});
+            var el = Ext.getBody().createChild({ id: "to_destroy" });
 
             Ext.destroy(el);
 
@@ -123,7 +130,7 @@ describe("Ext-more", function() {
         });
 
         it("should manage ampersand", function() {
-            expect(Ext.urlAppend(url + "?test=1","foo=2")).toEqual("http://example.com/?test=1&foo=2");
+            expect(Ext.urlAppend(url + "?test=1", "foo=2")).toEqual("http://example.com/?test=1&foo=2");
         });
 
         it("should return directly url if content is empty", function() {
@@ -135,7 +142,7 @@ describe("Ext-more", function() {
         var el1;
 
         beforeEach(function() {
-            el1 = Ext.getBody().createChild({id: "elone"});
+            el1 = Ext.getBody().createChild({ id: "elone" });
         });
 
         afterEach(function() {
@@ -153,40 +160,40 @@ describe("Ext-more", function() {
 
     describe("Ext.removeNode", function() {
         var el, id, dom;
-        
+
         beforeEach(function() {
             el = Ext.getBody().createChild({
                 tag: 'span',
                 html: 'foobar'
             });
-            
+
             id = el.id;
             dom = el.dom;
         });
-        
+
         afterEach(function() {
             el = id = dom = null;
         });
-        
+
         if (Ext.isIE8) {
             it("should schedule element for garbage collection", function() {
                 var queue = Ext.Element.destroyQueue,
                     len = queue.length;
-                
+
                 Ext.removeNode(dom);
-                
+
                 expect(queue.length).toBe(len + 1);
                 expect(queue[len]).toBe(dom);
             });
-            
+
             it("should finally destroy the element after a timeout", function() {
                 runs(function() {
                     Ext.removeNode(dom);
                 });
-                
+
                 // The timeout is hardcoded in Element override
                 waits(32);
-                
+
                 runs(function() {
                     expect(dom.parentNode).toBeFalsy();
                 });
@@ -204,14 +211,16 @@ describe("Ext-more", function() {
             Ext.removeNode(el.dom);
             expect(Ext.cache[id]).toBeUndefined();
         });
-        
+
         it("should remove all listeners from the dom element", function() {
             var listener = jasmine.createSpy();
 
             el.on('mouseup', listener);
             Ext.removeNode(dom);
+            jasmine.fireMouseEvent(document, 'mousedown');
             jasmine.fireMouseEvent(dom, 'mouseup');
             expect(listener).not.toHaveBeenCalled();
+            jasmine.fireMouseEvent(document, 'mouseup');
         });
     });
 
@@ -245,8 +254,12 @@ describe("Ext-more", function() {
                 'span @mouseup': listener
             });
 
+            // Touch platforms won't fire a touch end without a touch start.
+            jasmine.fireMouseEvent(span1.dom, 'mousedown');
             jasmine.fireMouseEvent(span1.dom, 'mouseup');
+            jasmine.fireMouseEvent(span2.dom, 'mousedown');
             jasmine.fireMouseEvent(span2.dom, 'mouseup');
+            jasmine.fireMouseEvent(div1.dom, 'mousedown');
             jasmine.fireMouseEvent(div1.dom, 'mouseup');
 
             expect(listener.calls.length).toEqual(2);
@@ -256,9 +269,12 @@ describe("Ext-more", function() {
             Ext.addBehaviors({
                 'span, div.foo @mouseup': listener
             });
-
+            // Touch platforms won't fire a touch end without a touch start.
+            jasmine.fireMouseEvent(span1.dom, 'mousedown');
             jasmine.fireMouseEvent(span1.dom, 'mouseup');
+            jasmine.fireMouseEvent(span2.dom, 'mousedown');
             jasmine.fireMouseEvent(span2.dom, 'mouseup');
+            jasmine.fireMouseEvent(div1.dom, 'mousedown');
             jasmine.fireMouseEvent(div1.dom, 'mouseup');
 
             expect(listener.calls.length).toEqual(3);
@@ -278,6 +294,7 @@ describe("Ext-more", function() {
                 a: 1,
                 b: undefined
             };
+
             Ext.copyToIf(dest, {
                 a: 2,
                 b: 3,
@@ -300,6 +317,7 @@ describe("Ext-more", function() {
                 a: 1,
                 b: undefined
             };
+
             Ext.copyIf(dest, {
                 a: 2,
                 b: 3,
@@ -354,9 +372,9 @@ describe("Ext-more", function() {
                 });
             });
         });
-        
+
         describe('including prototype properties', function() {
-            var CopyToSource = function(obj){
+            var CopyToSource = function(obj) {
                 Ext.apply(this, obj);
             };
 
@@ -441,10 +459,10 @@ describe("Ext-more", function() {
                 });
             });
         });
-        
+
         describe('including prototype properties', function() {
-            var CopyToSource = function(obj){
-                Ext.apply(this, obj)
+            var CopyToSource = function(obj) {
+                Ext.apply(this, obj);
             };
 
             CopyToSource.prototype = {
@@ -490,7 +508,7 @@ describe("Ext-more", function() {
     describe("Ext.destroyMembers", function() {
         var obj, destroyable;
 
-        beforeEach(function(){
+        beforeEach(function() {
             destroyable = {
                 destroy: jasmine.createSpy()
             };
@@ -499,7 +517,7 @@ describe("Ext-more", function() {
                 b: 2,
                 c: 3,
                 d: 4,
-                me : destroyable
+                me: destroyable
             };
         });
 
@@ -521,8 +539,8 @@ describe("Ext-more", function() {
         });
     });
 
-    describe('Ext.escapeId', function(){
-        it("should escape element id sequences with special characters", function(){
+    describe('Ext.escapeId', function() {
+        it("should escape element id sequences with special characters", function() {
             expect(Ext.escapeId('abcdef')).toBe('abcdef');
             expect(Ext.escapeId('.abcdef')).toBe('\\.abcdef');
             expect(Ext.escapeId('0a...')).toBe('\\0030 a\\.\\.\\.');
@@ -532,17 +550,18 @@ describe("Ext-more", function() {
             expect(Ext.escapeId('1<>234.567')).toBe('\\0031 \\<\\>234\\.567');
         });
     });
-    
+
     describe("Ext.application", function() {
         beforeEach(function() {
             spyOn(Ext.Loader, 'setPath').andReturn();
         });
-        
+
         afterEach(function() {
             Ext.app.Application.instance.destroy();
-            
+
             Ext.undefine('Test.$application');
             Ext.undefine('Test');
+
             try {
                 delete window.Test;
             }
@@ -550,16 +569,16 @@ describe("Ext-more", function() {
                 window.Test = undefined;
             }
         });
-        
+
         it("should set application path", function() {
             Ext.application({
                 name: 'Test',
                 appFolder: 'fooFolder'
             });
-            
+
             expect(Ext.Loader.setPath).toHaveBeenCalledWith('Test', 'fooFolder');
         });
-        
+
         it("should process appFolder and paths array", function() {
             Ext.application({
                 name: 'Test',
@@ -569,9 +588,9 @@ describe("Ext-more", function() {
                     qux: 'quxFolder'
                 }
             });
-            
+
             var args = Ext.Loader.setPath.argsForCall;
-            
+
             expect(args).toEqual([
                 ['Test', 'barFolder'],
                 ['baz', 'bazFolder'],
@@ -611,7 +630,7 @@ describe("Ext-more", function() {
         it("should not choke on a mix of escaped and unescaped delimiters", function() {
             result = fn('foo\\,bar,baz\\,qux', ',');
 
-            expect(result).toEqual(['foo,bar','baz,qux']);
+            expect(result).toEqual(['foo,bar', 'baz,qux']);
         });
 
         it("should allow front unescaped delimiter", function() {

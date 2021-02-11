@@ -9,6 +9,7 @@ Ext.define('Ext.rtl.view.NavigationModel', {
             me.onKeyLeft = proto.onKeyRight;
             me.onKeyRight = proto.onKeyLeft;
         }
+
         me.callParent([view]);
     }
 });

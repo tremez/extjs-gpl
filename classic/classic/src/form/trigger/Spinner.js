@@ -30,7 +30,7 @@ Ext.define('Ext.form.trigger.Spinner', {
      */
 
     /**
-     * @cfg
+     * @cfg {Boolean} vertical
      * True to layout the spinner in a vertical format.
      *
      * **Note:** This is not intended to be configured on an instance level, but is
@@ -79,7 +79,7 @@ Ext.define('Ext.form.trigger.Spinner', {
         return this.spinnerEl;
     },
 
-    onClick: function () {
+    onClick: function() {
         var me = this,
             args = arguments,
             e = me.clickRepeater ? args[1] : args[0],
@@ -88,7 +88,8 @@ Ext.define('Ext.form.trigger.Spinner', {
         if (!field.readOnly && !field.disabled) {
             if (me.upEl.contains(e.target)) {
                 Ext.callback(me.upHandler, me.scope, [field, me, e], 0, field);
-            } else if (me.downEl.contains(e.target)) {
+            }
+            else if (me.downEl.contains(e.target)) {
                 Ext.callback(me.downHandler, me.scope, [field, me, e], 0, field);
             }
         }
@@ -128,5 +129,4 @@ Ext.define('Ext.form.trigger.Spinner', {
     setDownEnabled: function(enabled) {
         this.downEl[enabled ? 'removeCls' : 'addCls'](this.spinnerDownCls + '-disabled');
     }
-
 });

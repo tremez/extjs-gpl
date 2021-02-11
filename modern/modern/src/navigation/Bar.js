@@ -1,6 +1,6 @@
 /**
- * This component is used in {@link Ext.navigation.View} to control animations in the toolbar. You should never need to
- * interact with the component directly, unless you are subclassing it.
+ * This component is used in {@link Ext.navigation.View} to control animations in the toolbar. 
+ * You should never need to interact with the component directly, unless you are subclassing it.
  * @private
  */
 Ext.define('Ext.navigation.Bar', {
@@ -18,13 +18,7 @@ Ext.define('Ext.navigation.Bar', {
 
     config: {
         /**
-         * @cfg
-         * @inheritdoc
-         */
-        baseCls: Ext.baseCSSPrefix + 'toolbar',
-
-        /**
-         * @cfg
+         * @cfg cls
          * @inheritdoc
          */
         cls: Ext.baseCSSPrefix + 'navigation-bar',
@@ -38,22 +32,23 @@ Ext.define('Ext.navigation.Bar', {
 
         /**
          * @cfg {String} title
-         * The title of the toolbar. You should NEVER set this, it is used internally. You set the title of the
-         * navigation bar by giving a navigation views children a title configuration.
+         * The title of the toolbar. You should NEVER set this, it is used internally.
+         * You set the title of the navigation bar by giving a navigation views children
+         * a title configuration.
          * @private
          * @accessor
          */
         title: null,
 
         /**
-         * @cfg
+         * @cfg defaultType
          * @hide
          * @accessor
          */
         defaultType: 'button',
 
         /**
-         * @cfg
+         * @cfg layout
          * @ignore
          * @accessor
          */
@@ -62,12 +57,13 @@ Ext.define('Ext.navigation.Bar', {
         },
 
         /**
-         * @cfg {Array/Object} items The child items to add to this NavigationBar. The {@link #cfg-defaultType} of
-         * a NavigationBar is {@link Ext.Button}, so you do not need to specify an `xtype` if you are adding
-         * buttons.
+         * @cfg {Array/Object} items
+         * The child items to add to this NavigationBar. The {@link #cfg-defaultType} of
+         * a NavigationBar is {@link Ext.Button}, so you do not need to specify an
+         * `xtype` if you are adding buttons.
          *
-         * You can also give items a `align` configuration which will align the item to the `left` or `right` of
-         * the NavigationBar.
+         * You can also give items a `align` configuration which will align the item to
+         * the `left` or `right` of the NavigationBar.
          * @hide
          * @accessor
          */
@@ -93,22 +89,25 @@ Ext.define('Ext.navigation.Bar', {
 
         /**
          * @cfg {Boolean} useTitleForBackButtonText
-         * Set to false if you always want to display the {@link #defaultBackButtonText} as the text
-         * on the back button. True if you want to use the previous views title.
+         * Set to false if you always want to display the {@link #defaultBackButtonText}
+         * as the text on the back button. True if you want to use the previous views
+         * title.
          * @private
          * @accessor
          */
         useTitleForBackButtonText: null,
 
         /**
-         * @cfg {Ext.navigation.View} view A reference to the navigation view this bar is linked to.
+         * @cfg {Ext.navigation.View} view
+         * A reference to the navigation view this bar is linked to.
          * @private
          * @accessor
          */
         view: null,
 
         /**
-         * @cfg {Boolean} androidAnimation Optionally enable CSS transforms on Android 2
+         * @cfg {Boolean} android2Transforms
+         * Optionally enable CSS transforms on Android 2
          * for NavigationBar animations.  Note that this may cause flickering if the
          * NavigationBar is hidden.
          * @accessor
@@ -116,7 +115,8 @@ Ext.define('Ext.navigation.Bar', {
         android2Transforms: false,
 
         /**
-         * @cfg {Ext.Button/Object} backButton The configuration for the back button
+         * @cfg {Ext.Button/Object} backButton
+         * The configuration for the back button
          * @private
          * @accessor
          */
@@ -128,12 +128,18 @@ Ext.define('Ext.navigation.Bar', {
     },
 
     /**
+     * @property baseCls
+     * @inheritdoc
+     */
+    baseCls: Ext.baseCSSPrefix + 'toolbar',
+
+    /**
      * @event back
      * Fires when the back button was tapped.
      * @param {Ext.navigation.Bar} this This bar
      */
 
-    constructor: function (config) {
+    constructor: function(config) {
         config = config || {};
 
         if (!config.items) {
@@ -149,14 +155,14 @@ Ext.define('Ext.navigation.Bar', {
     /**
      * @private
      */
-    applyBackButton: function (config) {
+    applyBackButton: function(config) {
         return Ext.factory(config, Ext.Button, this.getBackButton());
     },
 
     /**
      * @private
      */
-    updateBackButton: function (newBackButton, oldBackButton) {
+    updateBackButton: function(newBackButton, oldBackButton) {
         if (oldBackButton) {
             this.remove(oldBackButton);
         }
@@ -171,14 +177,14 @@ Ext.define('Ext.navigation.Bar', {
         }
     },
 
-    onBackButtonTap: function () {
+    onBackButtonTap: function() {
         this.fireEvent('back', this);
     },
 
     /**
      * @private
      */
-    updateView: function (newView) {
+    updateView: function(newView) {
         var me = this,
             backButton, innerItems, i, backButtonText, item, title, titleText;
 
@@ -187,8 +193,9 @@ Ext.define('Ext.navigation.Bar', {
         backButton = me.getBackButton();
 
         if (newView) {
-            //update the back button stack with the current inner items of the view
+            // update the back button stack with the current inner items of the view
             innerItems = newView.getInnerItems();
+
             for (i = 0; i < innerItems.length; i++) {
                 item = innerItems[i];
                 title = (item.getTitle) ? item.getTitle() : item.config.title;
@@ -205,6 +212,7 @@ Ext.define('Ext.navigation.Bar', {
             me.setTitle(titleText);
 
             backButtonText = me.getBackButtonText();
+
             if (backButtonText) {
                 backButton.setText(backButtonText);
                 backButton.show();
@@ -215,7 +223,7 @@ Ext.define('Ext.navigation.Bar', {
     /**
      * @private
      */
-    onViewAdd: function (view, item) {
+    onViewAdd: function(view, item) {
         var me = this,
             backButtonStack = me.backButtonStack,
             hasPrevious, title;
@@ -233,7 +241,7 @@ Ext.define('Ext.navigation.Bar', {
     /**
      * @private
      */
-    onViewRemove: function (view) {
+    onViewRemove: function(view) {
         var me = this,
             backButtonStack = me.backButtonStack,
             hasPrevious;
@@ -248,7 +256,7 @@ Ext.define('Ext.navigation.Bar', {
     /**
      * @private
      */
-    doChangeView: function (view, hasPrevious, reverse) {
+    doChangeView: function(view, hasPrevious, reverse) {
         var me = this,
             leftBox = me.leftBox,
             leftBoxElement = leftBox.element,
@@ -277,14 +285,14 @@ Ext.define('Ext.navigation.Bar', {
 
             me.isAnimating = true;
             me.animate(leftBoxElement, leftProps.element);
-            me.animate(titleElement, titleProps.element, function () {
+            me.animate(titleElement, titleProps.element, function() {
                 titleElement.setLeft(properties.titleLeft);
                 me.isAnimating = false;
                 me.refreshTitlePosition();
             });
 
             me.animate(leftGhost.ghost, leftProps.ghost);
-            me.animate(titleGhost.ghost, titleProps.ghost, function () {
+            me.animate(titleGhost.ghost, titleProps.ghost, function() {
                 leftGhost.ghost.destroy();
                 titleGhost.ghost.destroy();
             });
@@ -297,15 +305,17 @@ Ext.define('Ext.navigation.Bar', {
             else {
                 backButton.hide();
             }
+
             me.setTitle(titleText);
         }
     },
 
     /**
-     * Calculates and returns the position values needed for the back button when you are pushing a title.
+     * Calculates and returns the position values needed for the back button when you 
+     * are pushing a title.
      * @private
      */
-    measureView: function (oldLeft, oldTitle, reverse) {
+    measureView: function(oldLeft, oldTitle, reverse) {
         var me = this,
             barElement = me.element,
             newLeftElement = me.leftBox.element,
@@ -323,10 +333,12 @@ Ext.define('Ext.navigation.Bar', {
             newOffset, oldOffset, leftAnims, titleAnims, omega, theta;
 
         theta = barX - oldLeftX - oldLeftWidth;
+
         if (reverse) {
             newOffset = theta;
             oldOffset = Math.min(titleX - oldLeftWidth, minOffset);
-        } else {
+        }
+        else {
             oldOffset = theta;
             newOffset = Math.min(titleX - barX, minOffset);
         }
@@ -357,6 +369,7 @@ Ext.define('Ext.navigation.Bar', {
         };
 
         theta = barX - titleX + newLeftWidth;
+
         if ((oldLeftLeft + titleWidth) > titleX) {
             omega = barX - titleX - titleWidth;
         }
@@ -368,15 +381,18 @@ Ext.define('Ext.navigation.Bar', {
 
             if (omega !== undefined) {
                 newOffset = omega;
-            } else {
+            }
+            else {
                 newOffset = theta;
             }
-        } else {
+        }
+        else {
             newOffset = barX + barWidth - titleX - titleWidth;
 
             if (omega !== undefined) {
                 oldOffset = omega;
-            } else {
+            }
+            else {
                 oldOffset = theta;
             }
 
@@ -417,20 +433,22 @@ Ext.define('Ext.navigation.Bar', {
 
     /**
      * Helper method used to animate elements.
-     * You pass it an element, objects for the from and to positions an option onEnd callback called when the animation is over.
-     * Normally this method is passed configurations returned from the methods such as #measureTitle(true) etc.
-     * It is called from the #pushLeftBoxAnimated, #pushTitleAnimated, #popBackButtonAnimated and #popTitleAnimated
-     * methods.
+     * You pass it an element, objects for the from and to positions an option onEnd callback 
+     * called when the animation is over.
+     * Normally this method is passed configurations returned from the methods such as 
+     * #measureTitle(true) etc.
+     * It is called from the #pushLeftBoxAnimated, #pushTitleAnimated, #popBackButtonAnimated 
+     * and #popTitleAnimated methods.
      *
      * If the current device is Android, it will use top/left to animate.
      * If it is anything else, it will use transform.
      * @private
      */
-    animate: function (element, config, callback) {
+    animate: function(element, config, callback) {
         var me = this,
             animation;
 
-        //reset the left of the element
+        // reset the left of the element
         element.setLeft(0);
 
         config = Ext.apply(config, {
@@ -441,7 +459,7 @@ Ext.define('Ext.navigation.Bar', {
         });
 
         animation = new Ext.fx.Animation(config);
-        animation.on('animationend', function () {
+        animation.on('animationend', function() {
             if (callback) {
                 callback.call(me);
             }
@@ -451,14 +469,16 @@ Ext.define('Ext.navigation.Bar', {
         me.activeAnimations.push(animation);
     },
 
-    endAnimation: function () {
+    endAnimation: function() {
         var activeAnimations = this.activeAnimations,
             animation, i, ln;
 
         if (activeAnimations) {
             ln = activeAnimations.length;
+
             for (i = 0; i < ln; i++) {
                 animation = activeAnimations[i];
+
                 if (animation.isAnimating) {
                     animation.stopAnimation();
                 }
@@ -466,11 +486,12 @@ Ext.define('Ext.navigation.Bar', {
                     animation.destroy();
                 }
             }
+
             this.activeAnimations = [];
         }
     },
 
-    refreshTitlePosition: function () {
+    refreshTitlePosition: function() {
         if (!this.isAnimating) {
             this.callParent();
         }
@@ -480,7 +501,7 @@ Ext.define('Ext.navigation.Bar', {
      * Returns the text needed for the current back button at anytime.
      * @private
      */
-    getBackButtonText: function () {
+    getBackButtonText: function() {
         var text = this.backButtonStack[this.backButtonStack.length - 2],
             useTitleForBackButtonText = this.getUseTitleForBackButtonText();
 
@@ -497,7 +518,7 @@ Ext.define('Ext.navigation.Bar', {
      * Returns the text needed for the current title at anytime.
      * @private
      */
-    getTitleText: function () {
+    getTitleText: function() {
         return this.backButtonStack[this.backButtonStack.length - 1];
     },
 
@@ -505,20 +526,24 @@ Ext.define('Ext.navigation.Bar', {
      * Handles removing back button stacks from this bar
      * @private
      */
-    beforePop: function (count) {
+    beforePop: function(count) {
+        var i;
+
         count--;
-        for (var i = 0; i < count; i++) {
+
+        for (i = 0; i < count; i++) {
             this.backButtonStack.pop();
         }
     },
 
     /**
-     * We override the hidden method because we don't want to remove it from the view using display:none. Instead we just position it off
-     * the screen, much like the navigation bar proxy. This means that all animations, pushing, popping etc. all still work when if you hide/show
-     * this bar at any time.
+     * We override the hidden method because we don't want to remove it from the view using 
+     * display:none. Instead we just position it off the screen, much like the navigation 
+     * bar proxy. This means that all animations, pushing, popping etc. all still work when 
+     * if you hide/show this bar at any time.
      * @private
      */
-    updateHidden: function (hidden) {
+    updateHidden: function(hidden) {
         if (!hidden) {
             this.element.setStyle({
                 position: 'relative',
@@ -526,7 +551,8 @@ Ext.define('Ext.navigation.Bar', {
                 left: 'auto',
                 width: 'auto'
             });
-        } else {
+        }
+        else {
             this.element.setStyle({
                 position: 'absolute',
                 top: '-1000px',
@@ -537,20 +563,21 @@ Ext.define('Ext.navigation.Bar', {
     },
 
     /**
-     * Creates a proxy element of the passed element, and positions it in the same position, using absolute positioning.
-     * The createNavigationBarProxy method uses this to create proxies of the backButton and the title elements.
+     * Creates a proxy element of the passed element, and positions it in the same position, 
+     * using absolute positioning. The createNavigationBarProxy method uses this to create proxies 
+     * of the backButton and the title elements.
      * @private
      */
-    createProxy: function (element) {
+    createProxy: function(element) {
         var ghost, x, y, left, width;
 
         ghost = element.dom.cloneNode(true);
         ghost.id = element.id + '-proxy';
 
-        //insert it into the toolbar
+        // insert it into the toolbar
         element.getParent().dom.appendChild(ghost);
 
-        //set the x/y
+        // set the x/y
         ghost = Ext.get(ghost);
         x = element.getX();
         y = element.getY();

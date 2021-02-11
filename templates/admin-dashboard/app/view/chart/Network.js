@@ -46,9 +46,7 @@ Ext.define('Admin.view.chart.Network', {
             ],
             useDarkerStrokeColor: false,
             xField: 'xvalue',
-            yField: [
-                'y1value'
-            ],
+            yField: 'y1value',
             fill: true,
             smooth: true
         },
@@ -59,9 +57,7 @@ Ext.define('Admin.view.chart.Network', {
             ],
             useDarkerStrokeColor: false,
             xField: 'xvalue',
-            yField: [
-                'y2value'
-            ],
+            yField: 'y2value',
             fill: true,
             smooth: true
         }

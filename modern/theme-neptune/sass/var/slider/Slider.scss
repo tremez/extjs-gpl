@@ -6,13 +6,13 @@
  * @var {number}
  * The height of the slider track
  */
-$slider-track-height: dynamic(0.6925rem);
+$slider-track-height: dynamic(9px);
 
 /**
  * @var {number}
  * The height of the slider track in the {@link Global_CSS#$enable-big big} sizing scheme
  */
-$slider-track-height-big: dynamic(1.2rem);
+$slider-track-height-big: dynamic(18px);
 
 /**
  * @var {color/list}

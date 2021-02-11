@@ -9,57 +9,59 @@ Ext.define('Admin.view.dashboard.Todos', {
         'Ext.Button'
     ],
 
-    cls: 'todo-list shadow',
-
-    title: 'TODO List',
-    bodyPadding:15,
+    cls: 'todo-list',
+    controller: 'todo',
+    bodyPadding: 15,
     layout: 'vbox',
-    items: [
-        {
-            xtype: 'grid',
-            flex: 1,
-            width: '100%',
-            userCls: 'dashboard-todo-list',
-            hideHeaders: true,
-            bind: {
-                store: '{todos}'
-            },
+    shadow: true,
+    title: 'TODO List',
 
-            plugins: {
-                type: 'multiselection',
-
+    items: [{
+        xtype: 'grid',
+        reference: 'taskGrid',
+        flex: 1,
+        userCls: 'dashboard-todo-list',
+        hideHeaders: true,
+        bind: '{todos}',
+        plugins: {
+            multiselection: {
                 selectionColumn: {
                     hidden: false,
                     width: 40  // Change column width from the default of 60px
                 }
-            },
-
-            columns: [
-                {
-                    text: 'Task',
-                    flex: 1,
-                    dataIndex: 'task'
-                }
-            ]
+            }
         },
-        {
-            xtype: 'toolbar',
-            padding: '10 0 0 0',
-            items: [
-                {
-                    xtype: 'textfield',
-                    flex: 1,
-                    fieldLabel: 'Add Task',
-                    hideLabel: true,
-                    placeHolder: 'Add New Task'
-                },
-                {
-                    xtype: 'button',
-                    ui: 'soft-green',
-                    iconCls: 'x-fa fa-plus',
-                    margin:'0 0 0 10'
+        columns: [{
+            text: 'Task',
+            flex: 1,
+            dataIndex: 'task',
+            cell: {
+                tools: {
+                    close: {
+                        handler: 'removeTodo',
+                        tooltip: 'Delete TODO',
+                        zone: 'end'
+                    }
                 }
-            ]
-        }
-    ]
+            }
+        }]
+    }, {
+        xtype: 'toolbar',
+        padding: '10 0 0 0',
+        items: [{
+            xtype: 'textfield',
+            reference: 'taskField',
+            flex: 1,
+            label: 'Add Task',
+            placeholder: 'Add New Task',
+            listeners: {
+                keyup: 'onTaskKeyUp'
+            }
+        }, {
+            ui: 'soft-green',
+            handler: 'addTodo',
+            iconCls: 'x-fa fa-plus',
+            margin: '0 0 0 10'
+        }]
+    }]
 });

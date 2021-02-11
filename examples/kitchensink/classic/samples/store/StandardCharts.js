@@ -4,12 +4,11 @@ Ext.define('KitchenSink.store.StandardCharts', {
 
     storeId: 'StandardCharts',
 
-    generateData: function (n, floor) {
+    generateData: function(n, floor) {
         var data = [],
-                p = (Math.random() *  11) + 1,
-                i;
+            i;
 
-        floor = (!floor && floor !== 0)? 20 : floor;
+        floor = (!floor && floor !== 0) ? 20 : floor;
 
         for (i = 0; i < (n || 12); i++) {
             data.push({
@@ -25,6 +24,7 @@ Ext.define('KitchenSink.store.StandardCharts', {
                 data9: Math.floor(Math.max((Math.random() * 100), floor))
             });
         }
+
         return data;
     },
 

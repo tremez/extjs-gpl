@@ -3,25 +3,37 @@
  */
 
 /**
- * @var {color} $sheet-background-color
- * Background-color for action sheets.
+ * @var {color}
+ * Sheet background-color
  */
 $sheet-background-color: dynamic($background-color);
 
 /**
- * @var {color} $sheet-border-color
- * Border color for action sheets.
+ * @var {color}
+ * Sheet border-color
  */
 $sheet-border-color: dynamic($neutral-color);
 
 /**
- * @var {measurement} $sheet-button-spacing
- * Vertical spacing between sheet buttons.
+ * @var {number}
+ * Sheet border-width
  */
-$sheet-button-spacing: dynamic(.5em);
+$sheet-border-width: dynamic($panel-border-width);
 
 /**
- * @var {measurement} $sheet-padding
- * Overall padding in a sheet.
+ * @var {number}
+ * Sheet border-style
  */
-$sheet-padding: dynamic(.6em);
+$sheet-border-style: dynamic($panel-border-style);
+
+/**
+ * @var {number}
+ * Space between vertically aligned sheet buttons
+ */
+$sheet-button-spacing: dynamic(6px);
+
+/**
+ * @var {number}
+ * Sheet padding
+ */
+$sheet-padding: dynamic(null);

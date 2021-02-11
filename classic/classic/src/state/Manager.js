@@ -1,7 +1,8 @@
 /**
- * This is the global state manager. By default all components that are "state aware" check this class
- * for state information if you don't pass them a custom state provider. In order for this class
- * to be useful, it must be initialized with a provider when your application initializes. Example usage:
+ * This is the global state manager. By default all components that are "state aware"
+ * check this class for state information if you don't pass them a custom state provider.
+ * In order for this class to be useful, it must be initialized with a provider
+ * when your application initializes. Example usage:
  *
  *      // in your initialization function
  *      init: function() {
@@ -9,8 +10,8 @@
  *      }
  *
  * This class passes on calls from components to the underlying {@link Ext.state.Provider} so that
- * there is a common interface that can be used without needing to refer to a specific provider instance
- * in every component.
+ * there is a common interface that can be used without needing to refer to a specific provider
+ * instance in every component.
  */
 Ext.define('Ext.state.Manager', {
     singleton: true,
@@ -20,12 +21,12 @@ Ext.define('Ext.state.Manager', {
     constructor: function() {
         this.provider = new Ext.state.Provider();
     },
-    
+
     /**
      * Configures the default state provider for your application
      * @param {Ext.state.Provider} stateProvider The state provider to set
      */
-    setProvider: function (stateProvider) {
+    setProvider: function(stateProvider) {
         this.provider = stateProvider;
     },
 
@@ -35,7 +36,7 @@ Ext.define('Ext.state.Manager', {
      * @param {Object} defaultValue The default value to return if the key lookup does not match
      * @return {Object} The state data
      */
-    get: function (key, defaultValue) {
+    get: function(key, defaultValue) {
         return this.provider.get(key, defaultValue);
     },
 
@@ -44,7 +45,7 @@ Ext.define('Ext.state.Manager', {
      * @param {String} key The key name
      * @param {Object} value The state data
      */
-    set: function (key, value) {
+    set: function(key, value) {
         this.provider.set(key, value);
     },
 
@@ -52,7 +53,7 @@ Ext.define('Ext.state.Manager', {
      * Clears a value from the state
      * @param {String} key The key name
      */
-    clear: function (key) {
+    clear: function(key) {
         this.provider.clear(key);
     },
 
@@ -60,7 +61,7 @@ Ext.define('Ext.state.Manager', {
      * Gets the currently configured state provider
      * @return {Ext.state.Provider} The state provider
      */
-    getProvider: function () {
+    getProvider: function() {
         return this.provider;
     }
 });

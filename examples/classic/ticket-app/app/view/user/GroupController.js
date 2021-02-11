@@ -3,16 +3,17 @@ Ext.define('Ticket.view.user.GroupController', {
 
     alias: 'controller.user-group',
 
-    onAddGroup: function () {
+    onAddGroup: function() {
         var me = this;
 
-        Ext.Msg.prompt('Add Group', 'Group name', function (action, value) {
-            if (action === 'ok') {
-                var session = me.getSession(),
-                    viewModel = me.getViewModel(),
-                    groups;
+        Ext.Msg.prompt('Add Group', 'Group name', function(action, value) {
+            var session, viewModel, groups, group;
 
-                var group = session.createRecord('Group', {
+            if (action === 'ok') {
+                session = me.getSession();
+                viewModel = me.getViewModel();
+
+                group = session.createRecord('Group', {
                     name: value
                 });
 

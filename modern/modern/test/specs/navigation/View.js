@@ -1,15 +1,17 @@
-describe('Ext.navigation.View', function() {
+/* global jasmine, Ext, expect */
+
+topSuite("Ext.navigation.View", ['Ext.layout.Card'], function() {
     var view,
         createView = function(config) {
-            config = Ext.apply(config, {
+            config = Ext.apply({
                 renderTo: Ext.getBody(),
                 width: 300,
                 height: 400
-            });
+            }, config);
 
             view = Ext.create('Ext.navigation.View', config);
         },
-        listener = function(){};
+        listener = function() {};
 
     afterEach(function() {
         if (view) {
@@ -21,7 +23,7 @@ describe('Ext.navigation.View', function() {
     describe("items", function() {
         var spy = jasmine.createSpy();
 
-        afterEach(function(){
+        afterEach(function() {
             spy.reset();
         });
 
@@ -34,7 +36,7 @@ describe('Ext.navigation.View', function() {
             createView({
                 items: [{
                     html: 'item 1'
-                },{
+                }, {
                     html: 'item 2'
                 }],
                 listeners: {
@@ -42,16 +44,16 @@ describe('Ext.navigation.View', function() {
                 }
             });
             // in EXTJS-21865 this throws an error
-            view.setActiveItem(1);
-            waitsFor(function(){
+            view.setActiveItem(0);
+            waitsFor(function() {
                 return !!spy.callCount;
             });
-            runs(function(){
-                expect(view.getActiveItem().getHtml()).toEqual('item 2');
+            runs(function() {
+                expect(view.getActiveItem().getHtml()).toEqual('item 1');
             });
         });
 
-        it("should be able to add a new child item", function(){
+        it("should be able to add a new child item", function() {
             createView({
                 items: [{
                     html: 'item 1'
@@ -64,7 +66,7 @@ describe('Ext.navigation.View', function() {
             view.add({
                 html: 'item 4'
             });
-            waitsFor(function(){
+            waitsFor(function() {
                 return !!spy.callCount;
             });
             runs(function() {
@@ -72,13 +74,13 @@ describe('Ext.navigation.View', function() {
             });
         });
 
-        it("should be able to remove all items and add a new item", function(){
+        it("should be able to remove all items and add a new item", function() {
             createView({
                 items: [{
                     html: 'item 1'
-                },{
+                }, {
                     html: 'item 2'
-                },{
+                }, {
                     html: 'item 3'
                 }],
                 listeners: {
@@ -89,7 +91,7 @@ describe('Ext.navigation.View', function() {
             view.add({
                 html: 'item 4'
             });
-            waitsFor(function(){
+            waitsFor(function() {
                 return !!spy.callCount;
             });
             runs(function() {

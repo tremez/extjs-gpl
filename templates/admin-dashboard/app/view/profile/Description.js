@@ -19,19 +19,19 @@ Ext.define('Admin.view.profile.Description', {
     items: [
         {
             xtype: 'component',
-            baseCls: 'box x-fa fa-home',
+            userCls: 'box x-fa fa-home',
             html: 'San Jose, CA',
             padding: '0 0 12 0'
         },
         {
             xtype: 'component',
-            baseCls: 'box x-fa fa-clock-o',
+            userCls: 'box x-fa fa-clock',
             html: 'Member since 1 years ago',
             padding: '0 0 12 0'
         },
         {
             xtype: 'component',
-            baseCls: 'box x-fa fa-globe',
+            userCls: 'box x-fa fa-globe',
             html: '<a href="#"\'>http://www.sencha-dash.com/</a>',
             padding: '0 0 12 0'
         },
@@ -53,7 +53,7 @@ Ext.define('Admin.view.profile.Description', {
                 {
                     xtype: 'component',
                     cls: 'large-icon icon-padding',
-                    baseCls:'x-fa fa-thumbs-up',
+                    userCls:'x-fa fa-thumbs-up',
                     padding: '8 0 8 0'
                 },
                 {
@@ -80,14 +80,14 @@ Ext.define('Admin.view.profile.Description', {
                 {
                     xtype: 'component',
                     cls: 'icon-padding',
-                    baseCls:'x-fa fa-ellipsis-v',
+                    userCls:'x-fa fa-ellipsis-v',
                     padding: '8 0 8 0'
                 },
 
                 {
                     xtype: 'component',
                     cls: 'large-icon icon-padding',
-                    baseCls:'x-fa fa-user-plus',
+                    userCls:'x-fa fa-user-plus',
                     padding: '8 0 8 0'
                 },
                 {

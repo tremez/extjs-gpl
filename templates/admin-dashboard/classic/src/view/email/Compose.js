@@ -67,7 +67,7 @@ Ext.define('Admin.view.email.Compose', {
                 buttonConfig: {
                     xtype: 'filebutton',
                     glyph:'',
-                    iconCls: 'x-fa fa-cloud-upload',
+                    iconCls: 'x-fa fa-cloud-upload-alt',
                     text: 'Browse'
                 }
             },

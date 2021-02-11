@@ -17,21 +17,43 @@ Ext.define('KitchenSink.view.toolbar.StatusBar', {
         'Ext.ux.statusbar.ValidationStatus'
     ],
     otherContent: [{
-        type: 'ViewController',
+        type: 'Controller',
         path: 'classic/samples/view/toolbar/StatusBarController.js'
     }],
     //</example>
 
     // Base container layout using a <center> tag gives us centering.
+    profiles: {
+        classic: {
+            width: 600,
+            anchor: '95%'
+        },
+        neptune: {
+            width: 600,
+            anchor: '95%'
+        },
+        graphite: {
+            width: 850,
+            anchor: '95%'
+        },
+        'classic-material': {
+            width: 800,
+            anchor: '100%'
+        }
+    },
     layout: 'container',
     autoEl: 'center',
+    // including class to change textAlign for fieldLabel
+    // as its aligning center in theme-material because of 
+    // @autoEl property aligned to center
+    cls: 'status-bar-container',
     defaults: {
         style: 'margin-bottom: 20px'
     },
     items: [{
         xtype: 'panel',
         title: 'Basic StatusBar',
-        width: 600,
+        width: '${width}',
         manageHeight: false,
         bodyPadding: 10,
         bodyStyle: 'text-align:left',
@@ -46,8 +68,8 @@ Ext.define('KitchenSink.view.toolbar.StatusBar', {
 
             // defaults to use when the status is cleared:
             defaultText: 'Default status text',
-            //defaultIconCls: 'default-icon',
-        
+            // defaultIconCls: 'default-icon',
+
             // values to set initially:
             text: 'Ready',
             iconCls: 'x-status-valid',
@@ -66,30 +88,30 @@ Ext.define('KitchenSink.view.toolbar.StatusBar', {
                 text: 'Clear status',
                 handler: 'clearStatus'
             },
-            '-',
-            'Plain Text'
+                    '-',
+                    'Plain Text'
             ]
         }
     }, {
         xtype: 'form',
         title: 'StatusBar with Integrated Form Validation',
-        width: 600,
+        width: '${width}',
         autoHeight: true,
         reference: 'status-form',
         labelWidth: 75,
         bodyPadding: 10,
         waitMsgTarget: true,
         defaults: {
-            anchor: '95%',
+            anchor: '${anchor}',
             allowBlank: false,
             selectOnFocus: true,
             msgTarget: 'side'
         },
-        items:[{
+        items: [{
             xtype: 'textfield',
             fieldLabel: 'Name',
             blankText: 'Name is required'
-        },{
+        }, {
             xtype: 'datefield',
             fieldLabel: 'Birthdate',
             blankText: 'Birthdate is required'
@@ -108,13 +130,14 @@ Ext.define('KitchenSink.view.toolbar.StatusBar', {
             reference: 'form-statusbar',
             defaultText: 'Ready',
             plugins: {
-                ptype: 'validationstatus',
-                form: 'status-form'
+                validationstatus: {
+                    form: 'status-form'
+                }
             }
         }]
     }, {
         title: 'Ext Word Processor',
-        width: 600,
+        width: '${width}',
         bodyPadding: 5,
         layout: 'fit',
         bbar: {

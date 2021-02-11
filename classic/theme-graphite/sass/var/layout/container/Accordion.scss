@@ -1,0 +1,14 @@
+$accordion-background-color: dynamic($body-background-color);
+$accordion-header-background-color: dynamic(#d9d9d9);
+$accordion-header-color: dynamic($base-color);
+$accordion-header-focus-background-color: dynamic($focus-background-color);
+$accordion-header-focus-outline-color: dynamic($focus-background-color);
+$accordion-header-focus-outline-width: dynamic($focus-border-width);
+$accordion-header-focus-over-outline-color: dynamic($focus-over-border-color);
+$accordion-header-focus-over-outline-style: dynamic(solid);
+$accordion-header-focus-over-outline-width: dynamic($focus-over-border-width);
+$accordion-header-over-background-color: dynamic(#fff);
+$accordion-tool-focus-background-color: dynamic($focus-background-color);
+$accordion-tool-focus-outline-color: dynamic($focus-background-color);
+$accordion-tool-focus-outline-width: dynamic($focus-border-width);
+$accordion-tool-glyph-font-size: dynamic(18px);

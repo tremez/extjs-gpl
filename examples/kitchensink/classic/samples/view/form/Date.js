@@ -31,6 +31,9 @@ Ext.define('KitchenSink.view.form.Date', {
         },
         'triton': {
             width: 750
+        },
+        'classic-material': {
+            width: 700
         }
     },
     //</example>

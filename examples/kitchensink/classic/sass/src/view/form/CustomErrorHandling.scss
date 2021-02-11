@@ -12,3 +12,9 @@
 .errors-tip .error {
     font-style: italic;
 }
+
+@if $theme-name == 'theme-graphite' {
+    a.terms, a.terms:visited {
+        color: $form-label-font-color;
+    }
+}

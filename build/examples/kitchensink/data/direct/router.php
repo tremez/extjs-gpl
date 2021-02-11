@@ -10,17 +10,20 @@ class BogusAction {
 
 $isForm = false;
 $isUpload = false;
+
 if(isset($HTTP_RAW_POST_DATA)){
 	header('Content-Type: text/javascript');
 	$data = json_decode($HTTP_RAW_POST_DATA);
-}else if(isset($_POST['extAction'])){ // form post
-	$isForm = true;
-	$isUpload = $_POST['extUpload'] == 'true';
-	$data = new BogusAction();
-	$data->action = $_POST['extAction'];
-	$data->method = $_POST['extMethod'];
+}else if(isset($_POST['extAction'])) { // form post
+    $isForm = true;
+    $isUpload = $_POST['extUpload'] == 'true';
+    $data = new BogusAction();
+    $data->action = $_POST['extAction'];
+    $data->method = $_POST['extMethod'];
     $data->tid = isset($_POST['extTID']) ? $_POST['extTID'] : null; // not set for upload
-	$data->data = array($_POST, $_FILES);
+    $data->data = array($_POST, $_FILES);
+}else if (($data = file_get_contents('php://input')) !== '') {
+    $data = json_decode($data);
 }else{
 	die('Invalid request.');
 }

@@ -1,0 +1,38 @@
+@if $theme-name == 'theme-material' {
+    .#{$prefix}form-form-item.#{$prefix}form-item-no-label.segmented-btn-disable:before {
+            display: block;
+    }
+
+    .segmented-buttons {
+        .#{$prefix}btn.#{$prefix}split-button {
+            &.#{$prefix}btn-default-small.#{$prefix}btn-over.#{$prefix}arrow-over,
+            &.#{$prefix}btn-focus {
+                .#{$prefix}btn-arrow-el::before {
+                    background-color: $base-color !important;
+                }
+            }
+            &.#{$prefix}btn-menu-active.#{$prefix}btn-default-small {
+                .#{$prefix}btn-inner {
+                    color: #FFFFFF;
+                }  
+            }
+        }
+    }
+
+    .dark-mode {
+        .segmented-buttons {
+            .#{$prefix}btn-icon-el,
+            .#{$prefix}btn-inner,
+            .#{$prefix}btn-arrow-right::after,
+            .#{$prefix}btn-split-right::after{
+                color: #DDDDDD !important;
+            }
+        }
+    }
+
+    .x-btn-focus {
+        .x-btn-arrow-el::before {
+            background-color: $base-color;
+        }
+    }
+}

@@ -1,11 +1,13 @@
-describe("Ext.form.action.Submit", function() {
+topSuite("Ext.form.action.Submit", ['Ext.form.Basic', 'Ext.form.field.*'], function() {
     var action;
 
     function createAction(config) {
         config = config || {};
+
         if (!config.form) {
             config.form = {};
         }
+
         Ext.applyIf(config.form, {
             isValid: function() { return true; },
             afterAction: Ext.emptyFn,
@@ -20,14 +22,25 @@ describe("Ext.form.action.Submit", function() {
         action = undefined;
     });
 
+    describe("alternate class name", function() {
+        it("should have Ext.form.Action.Submit as the alternate class name", function() {
+            expect(Ext.form.action.Submit.prototype.alternateClassName).toEqual("Ext.form.Action.Submit");
+        });
+
+        it("should allow the use of Ext.form.Action.Submit", function() {
+            expect(Ext.form.Action.Submit).toBeDefined();
+        });
+    });
+
     it("should be registered in the action manager under the alias 'formaction.submit'", function() {
         var inst = Ext.ClassManager.instantiateByAlias('formaction.submit', {});
+
         expect(inst instanceof Ext.form.action.Submit).toBeTruthy();
     });
 
     describe("validation", function() {
         beforeEach(function() {
-            spyOn(Ext.Ajax, 'request'); //block ajax request
+            spyOn(Ext.Ajax, 'request'); // block ajax request
         });
 
         it("should validate by default", function() {
@@ -72,7 +85,7 @@ describe("Ext.form.action.Submit", function() {
 
         beforeEach(function() {
             formBase = {
-                getValues: function() { return {field1: 'foo', field2: 'bar'}; }
+                getValues: function() { return { field1: 'foo', field2: 'bar' }; }
             };
 
             spyOn(Ext.Ajax, 'request').andCallFake(function() {
@@ -95,7 +108,7 @@ describe("Ext.form.action.Submit", function() {
         });
 
         it("should use the BasicForm's 'method' config as the ajax call method if specified", function() {
-            createAction({ form: Ext.apply({}, {method: 'FORMMETHOD'}, formBase) });
+            createAction({ form: Ext.apply({}, { method: 'FORMMETHOD' }, formBase) });
             action.run();
             expect(ajaxRequestCfg.method).toEqual('FORMMETHOD');
         });
@@ -107,7 +120,7 @@ describe("Ext.form.action.Submit", function() {
         });
 
         it("should use the BasicForm's 'url' config as the ajax call url if specified", function() {
-            createAction({ form: Ext.apply({}, {url: '/url-from-form'}, formBase) });
+            createAction({ form: Ext.apply({}, { url: '/url-from-form' }, formBase) });
             action.run();
             expect(ajaxRequestCfg.url).toEqual('/url-from-form');
         });
@@ -119,7 +132,8 @@ describe("Ext.form.action.Submit", function() {
         });
 
         it("should use the Action's 'headers' config as the ajax call headers if specified", function() {
-            var headers = {foo: 'bar'};
+            var headers = { foo: 'bar' };
+
             createAction({ headers: headers, form: formBase });
             action.run();
             expect(ajaxRequestCfg.headers).toBe(headers);
@@ -129,54 +143,57 @@ describe("Ext.form.action.Submit", function() {
             it("should add all the form's field values to the ajax call params", function() {
                 createAction({ form: formBase });
                 action.run();
-                expect(ajaxRequestCfg.params).toEqual({field1: 'foo', field2: 'bar'});
+                expect(ajaxRequestCfg.params).toEqual({ field1: 'foo', field2: 'bar' });
             });
 
             it("should add the BasicForm's 'baseParams' config to the ajax call params if specified", function() {
-                var params = {one: '1', two: '2'};
-                createAction({ form: Ext.apply({}, {baseParams: params}, formBase) });
+                var params = { one: '1', two: '2' };
+
+                createAction({ form: Ext.apply({}, { baseParams: params }, formBase) });
                 action.run();
-                expect(ajaxRequestCfg.params).toEqual({field1: 'foo', field2: 'bar', one: '1', two: '2'});
+                expect(ajaxRequestCfg.params).toEqual({ field1: 'foo', field2: 'bar', one: '1', two: '2' });
             });
 
             it("should use the Action's 'params' config for the ajax call params if specfied (as an Object)", function() {
-                var params = {one: '1', two: '2'};
+                var params = { one: '1', two: '2' };
+
                 createAction({ params: params, form: formBase });
                 action.run();
-                expect(ajaxRequestCfg.params).toEqual({field1: 'foo', field2: 'bar', one: '1', two: '2'});
+                expect(ajaxRequestCfg.params).toEqual({ field1: 'foo', field2: 'bar', one: '1', two: '2' });
             });
 
             it("should use the Action's 'params' config for the ajax call params if specfied (as a String)", function() {
                 var params = 'one=1&two=2';
+
                 createAction({ params: params, form: formBase });
                 action.run();
-                expect(ajaxRequestCfg.params).toEqual({field1: 'foo', field2: 'bar', one: '1', two: '2'});
+                expect(ajaxRequestCfg.params).toEqual({ field1: 'foo', field2: 'bar', one: '1', two: '2' });
             });
 
             it("should concatenate the Action's 'params' config (as an Object) with the BasicForm's 'baseParams' config", function() {
-                createAction({ params: {one: '1', two: '2'}, form: Ext.apply({}, {baseParams: {three: '3', four: '4'} }, formBase) });
+                createAction({ params: { one: '1', two: '2' }, form: Ext.apply({}, { baseParams: { three: '3', four: '4' } }, formBase) });
                 action.run();
-                expect(ajaxRequestCfg.params).toEqual({field1: 'foo', field2: 'bar', one: '1', two: '2', three: '3', four: '4'});
+                expect(ajaxRequestCfg.params).toEqual({ field1: 'foo', field2: 'bar', one: '1', two: '2', three: '3', four: '4' });
             });
 
             it("should concatenate the Action's 'params' config (as a String) with the BasicForm's 'baseParams' config", function() {
-                createAction({ params: 'one=1&two=2', form: Ext.apply({}, {baseParams: {three: '3', four: '4'} }, formBase) });
+                createAction({ params: 'one=1&two=2', form: Ext.apply({}, { baseParams: { three: '3', four: '4' } }, formBase) });
                 action.run();
-                expect(ajaxRequestCfg.params).toEqual({field1: 'foo', field2: 'bar', one: '1', two: '2', three: '3', four: '4'});
+                expect(ajaxRequestCfg.params).toEqual({ field1: 'foo', field2: 'bar', one: '1', two: '2', three: '3', four: '4' });
             });
-            
-            it("should set the jsonData if using jsonSubmit", function(){
-                createAction({ 
+
+            it("should set the jsonData if using jsonSubmit", function() {
+                createAction({
                     form: formBase,
-                    jsonSubmit: true 
+                    jsonSubmit: true
                 });
                 action.run();
-                expect(ajaxRequestCfg.jsonData).toEqual({field1: 'foo', field2: 'bar'});
+                expect(ajaxRequestCfg.jsonData).toEqual({ field1: 'foo', field2: 'bar' });
             });
         });
 
         it("should use the BasicForm's 'timeout' config as the ajax call timeout if specified", function() {
-            createAction({ form: Ext.apply({}, {timeout: 123}, formBase) });
+            createAction({ form: Ext.apply({}, { timeout: 123 }, formBase) });
             action.run();
             expect(ajaxRequestCfg.timeout).toEqual(123000);
         });
@@ -195,42 +212,42 @@ describe("Ext.form.action.Submit", function() {
 
         describe("jsonSubmit", function() {
             it("should bind the BasicForm's field values to ajaxRequestCfg.jsonData", function() {
-                createAction({ form: Ext.apply({jsonSubmit: true}, formBase) });
+                createAction({ form: Ext.apply({ jsonSubmit: true }, formBase) });
                 action.run();
                 expect(ajaxRequestCfg.params).toBe(undefined);
                 expect(ajaxRequestCfg.jsonData).not.toBe(undefined);
             });
 
             it("should not bind the BasicForm's field values to ajaxRequestCfg.jsonData", function() {
-                createAction({ form: Ext.apply({jsonSubmit: false}, formBase) });
+                createAction({ form: Ext.apply({ jsonSubmit: false }, formBase) });
                 action.run();
                 expect(ajaxRequestCfg.params).not.toBe(undefined);
                 expect(ajaxRequestCfg.jsonData).toBe(undefined);
             });
 
             it("should not bind the BasicForm's field values to ajaxRequestCfg.params", function() {
-                createAction({ form: Ext.apply({jsonSubmit: true}, formBase) });
+                createAction({ form: Ext.apply({ jsonSubmit: true }, formBase) });
                 action.run();
                 expect(ajaxRequestCfg.jsonData).not.toBe(undefined);
                 expect(ajaxRequestCfg.params).toBe(undefined);
             });
 
             it("should add all the BasicForm's field values to the ajax call parameters", function() {
-                createAction({ form: Ext.apply({jsonSubmit: true}, formBase) });
+                createAction({ form: Ext.apply({ jsonSubmit: true }, formBase) });
                 action.run();
-                expect(ajaxRequestCfg.jsonData).toEqual({field1: 'foo', field2: 'bar'});
+                expect(ajaxRequestCfg.jsonData).toEqual({ field1: 'foo', field2: 'bar' });
             });
 
             it("should concatenate the Action's 'params' config (as an Object) with the BasicForm's 'baseParams' config", function() {
-                createAction({ params: {one: '1', two: '2'}, form: Ext.apply({jsonSubmit: true, baseParams: {three: '3', four: '4'} }, formBase) });
+                createAction({ params: { one: '1', two: '2' }, form: Ext.apply({ jsonSubmit: true, baseParams: { three: '3', four: '4' } }, formBase) });
                 action.run();
-                expect(ajaxRequestCfg.jsonData).toEqual({field1: 'foo', field2: 'bar', one: '1', two: '2', three: '3', four: '4'});
+                expect(ajaxRequestCfg.jsonData).toEqual({ field1: 'foo', field2: 'bar', one: '1', two: '2', three: '3', four: '4' });
             });
 
             it("should concatenate the Action's 'params' config (as a String) with the BasicForm's 'baseParams' config", function() {
-                createAction({ params: 'one=1&two=2', form: Ext.apply({jsonSubmit: true, baseParams: {three: '3', four: '4'} }, formBase) });
+                createAction({ params: 'one=1&two=2', form: Ext.apply({ jsonSubmit: true, baseParams: { three: '3', four: '4' } }, formBase) });
                 action.run();
-                expect(ajaxRequestCfg.jsonData).toEqual({field1: 'foo', field2: 'bar', one: '1', two: '2', three: '3', four: '4'});
+                expect(ajaxRequestCfg.jsonData).toEqual({ field1: 'foo', field2: 'bar', one: '1', two: '2', three: '3', four: '4' });
             });
         });
     });
@@ -240,7 +257,7 @@ describe("Ext.form.action.Submit", function() {
 
         function run(response, form) {
             response = response || wantResponse;
-            
+
             spyOn(Ext.Ajax, 'request').andCallFake(function(config) {
                 // call the configured failure handler
                 config.failure.call(config.scope, response);
@@ -256,31 +273,31 @@ describe("Ext.form.action.Submit", function() {
 
         it("should set the Action's failureType property to CONNECT_FAILURE", function() {
             run();
-            
+
             expect(action.failureType).toEqual(Ext.form.action.Action.CONNECT_FAILURE);
         });
 
         it("should set the Action's response property to the ajax response", function() {
             run();
-            
+
             expect(action.response).toEqual(wantResponse);
         });
 
         it("should call the BasicForm's afterAction method with a false success param", function() {
             run();
-            
+
             expect(action.form.afterAction).toHaveBeenCalledWith(action, false);
         });
-        
+
         it("should not call afterAction if the form is destroying", function() {
             run(null, { destroying: true });
-            
+
             expect(action.form.afterAction).not.toHaveBeenCalled();
         });
-        
+
         it("should not call afterAction if the form is already destroyed", function() {
             run(null, { destroyed: true });
-            
+
             expect(action.form.afterAction).not.toHaveBeenCalled();
         });
     });
@@ -301,23 +318,24 @@ describe("Ext.form.action.Submit", function() {
         }
 
         it("should parse the responseText as JSON if no errorReader is configured", function() {
-            run({responseText: '{"success":false,"errors":{"from":"responseText"}}'}, undefined);
-            expect(action.form.markInvalid).toHaveBeenCalledWith({from: "responseText"});
+            run({ responseText: '{"success":false,"errors":{"from":"responseText"}}' }, undefined);
+            expect(action.form.markInvalid).toHaveBeenCalledWith({ from: "responseText" });
         });
 
         it("should use the configured errorReader to parse the response if present", function() {
-            var response = {responseText: '{"success":false,"errors":[]}'};
+            var response = { responseText: '{"success":false,"errors":[]}' };
+
             run(response, {
                 read: jasmine.createSpy().andReturn({
                     success: false,
                     records: [
-                        {data: {id: 'field1', msg: 'message 1'}},
-                        {data: {id: 'field2', msg: 'message 2'}}
+                        { data: { id: 'field1', msg: 'message 1' } },
+                        { data: { id: 'field2', msg: 'message 2' } }
                     ]
                 })
             });
             expect(action.form.errorReader.read).toHaveBeenCalledWith(response);
-            expect(action.form.markInvalid).toHaveBeenCalledWith([{id: 'field1', msg: 'message 1'}, {id: 'field2', msg: 'message 2'}]);
+            expect(action.form.markInvalid).toHaveBeenCalledWith([{ id: 'field1', msg: 'message 1' }, { id: 'field2', msg: 'message 2' }]);
         });
     });
 
@@ -339,33 +357,33 @@ describe("Ext.form.action.Submit", function() {
 
         // causes
         it("should require the result object to have success=true", function() {
-            run({responseText: '{"success":false}'});
+            run({ responseText: '{"success":false}' });
             expect(action.failureType).toBeDefined();
         });
 
         // effects
         it("should set the Action's failureType property to SERVER_INVALID", function() {
-            run({responseText: '{"success":false}'});
+            run({ responseText: '{"success":false}' });
             expect(action.failureType).toEqual(Ext.form.action.Action.SERVER_INVALID);
         });
         it("should call the BasicForm's afterAction method with a false success param", function() {
-            run({responseText: '{"success":false}'});
+            run({ responseText: '{"success":false}' });
             expect(action.form.afterAction).toHaveBeenCalledWith(action, false);
         });
         it("should call the BasicForm's markInvalid method with any errors in the result", function() {
-            run({responseText: '{"success":false,"errors":{"foo":"bar"}}'});
-            expect(action.form.markInvalid).toHaveBeenCalledWith({foo:"bar"});
+            run({ responseText: '{"success":false,"errors":{"foo":"bar"}}' });
+            expect(action.form.markInvalid).toHaveBeenCalledWith({ foo: "bar" });
         });
-        
+
         it("should not call afterAction if the form is destroying", function() {
-            run({responseText: '{"success":false}'}, { destroying: true });
-            
+            run({ responseText: '{"success":false}' }, { destroying: true });
+
             expect(action.form.afterAction).not.toHaveBeenCalled();
         });
-        
+
         it("should not call afterAction if the form is already destroyed", function() {
-            run({responseText: '{"success":false}'}, { destroyed: true });
-            
+            run({ responseText: '{"success":false}' }, { destroyed: true });
+
             expect(action.form.afterAction).not.toHaveBeenCalled();
         });
     });
@@ -386,34 +404,34 @@ describe("Ext.form.action.Submit", function() {
         }
 
         it("should treat empty responseText and responseXML as success", function() {
-            run({responseText: '', responseXML: ''});
+            run({ responseText: '', responseXML: '' });
             expect(action.failureType).not.toBeDefined();
         });
 
         it("should treat a result with success:true as success", function() {
-            run({responseText: '{"success":true}'});
+            run({ responseText: '{"success":true}' });
             expect(action.failureType).not.toBeDefined();
         });
 
         it("should invoke the BasicForm's afterAction method with a true success param", function() {
-            run({responseText: '{"success":true,"data":{"from":"responseText"}}'});
+            run({ responseText: '{"success":true,"data":{"from":"responseText"}}' });
             expect(action.form.afterAction).toHaveBeenCalledWith(action, true);
         });
-        
+
         it("should not call afterAction if the form is destroying", function() {
-            run({responseText: '{"success":true,"data":{"from":"responseText"}}'}, { destroying: true });
-            
+            run({ responseText: '{"success":true,"data":{"from":"responseText"}}' }, { destroying: true });
+
             expect(action.form.afterAction).not.toHaveBeenCalled();
         });
-        
+
         it("should not call afterAction if the form is already destroyed", function() {
-            run({responseText: '{"success":true,"data":{"from":"responseText"}}'}, { destroyed: true });
-            
+            run({ responseText: '{"success":true,"data":{"from":"responseText"}}' }, { destroyed: true });
+
             expect(action.form.afterAction).not.toHaveBeenCalled();
         });
     });
 
-    describe('file uploads', function () {
+    describe('file uploads', function() {
         var ctr;
 
         function makeCtr(items) {
@@ -422,18 +440,19 @@ describe("Ext.form.action.Submit", function() {
             });
         }
 
-        afterEach(function () {
+        afterEach(function() {
             Ext.destroy(ctr);
             ctr = null;
         });
 
-        describe('doSubmit method', function () {
+        describe('doSubmit method', function() {
             var ctx, ajaxRequestCfg;
 
-            beforeEach(function () {
+            beforeEach(function() {
                 spyOn(Ext.Ajax, 'request').andCallFake(function() {
                     // store what was passed to the request call for later inspection
                     expect(arguments.length).toEqual(1);
+
                     // Specs were failing in IE < 9 before I cloned the args. The following was failing:
                     //
                     //      expect(ajaxRequestCfg.form.childNodes.length).toBe(2);
@@ -443,17 +462,18 @@ describe("Ext.form.action.Submit", function() {
                     // This does not occur in modern browsers and must be some weird IE bug?
                     if (Ext.isIE8) {
                         ajaxRequestCfg = Ext.clone(arguments[0]);
-                    } else {
+                    }
+                    else {
                         ajaxRequestCfg = arguments[0];
                     }
                 });
             });
 
-            afterEach(function () {
+            afterEach(function() {
                 ctx = ajaxRequestCfg = null;
             });
 
-            it('should call buildForm and through to the getParams method', function () {
+            it('should call buildForm and through to the getParams method', function() {
                 makeCtr([
                     new Ext.form.field.Base({
                         name: 'field1',
@@ -477,7 +497,7 @@ describe("Ext.form.action.Submit", function() {
                 expect(action.getParams).toHaveBeenCalled();
             });
 
-            it('should return an object that contains the form dom element', function () {
+            it('should return an object that contains the form dom element', function() {
                 makeCtr([
                     new Ext.form.field.Base({
                         name: 'field1',
@@ -498,7 +518,7 @@ describe("Ext.form.action.Submit", function() {
                 expect(ajaxRequestCfg.form.nodeName.toLowerCase()).toBe('form');
             });
 
-            it('should return an object with a form that contains the form elements', function () {
+            it('should return an object with a form that contains the form elements', function() {
                 makeCtr([
                     new Ext.form.field.Base({
                         name: 'field1',
@@ -518,7 +538,7 @@ describe("Ext.form.action.Submit", function() {
                 expect(ajaxRequestCfg.form.childNodes.length).toBe(2);
             });
 
-            it('should add an isUpload property that is used by Connection', function () {
+            it('should add an isUpload property that is used by Connection', function() {
                 makeCtr([
                     new Ext.form.field.Base({
                         name: 'field1',
@@ -539,14 +559,14 @@ describe("Ext.form.action.Submit", function() {
             });
         });
 
-        describe('getParams method', function () {
+        describe('getParams method', function() {
             var params;
 
-            afterEach(function () {
+            afterEach(function() {
                 params = null;
             });
 
-            it('should not include any file fields', function () {
+            it('should not include any file fields', function() {
                 makeCtr([
                     new Ext.form.field.Base({
                         name: 'field1',
@@ -563,10 +583,10 @@ describe("Ext.form.action.Submit", function() {
 
                 params = action.getParams();
 
-                expect(params).toEqual({field1: 'foo'});
+                expect(params).toEqual({ field1: 'foo' });
             });
 
-            it('should call getValues method on the form', function () {
+            it('should call getValues method on the form', function() {
                 makeCtr([
                     new Ext.form.field.Base({
                         name: 'field1',
@@ -588,7 +608,7 @@ describe("Ext.form.action.Submit", function() {
                 expect(action.form.getValues).toHaveBeenCalled();
             });
 
-            it('should call through to getSubmitData on each field', function () {
+            it('should call through to getSubmitData on each field', function() {
                 makeCtr([
                     new Ext.form.field.Base({
                         name: 'field1',
@@ -611,7 +631,7 @@ describe("Ext.form.action.Submit", function() {
                 expect(Ext.form.field.Base.prototype.getSubmitData.callCount).toBe(2);
             });
 
-            it('should not call through to getModelData on each field', function () {
+            it('should not call through to getModelData on each field', function() {
                 makeCtr([
                     new Ext.form.field.Base({
                         name: 'field1',
@@ -635,15 +655,15 @@ describe("Ext.form.action.Submit", function() {
             });
         });
 
-        describe('specifying a target config', function () {
+        describe('specifying a target config', function() {
             var returnVal;
 
-            afterEach(function () {
+            afterEach(function() {
                 returnVal.formEl.parentNode.removeChild(returnVal.formEl);
                 returnVal = null;
             });
 
-            it('should honor the config', function () {
+            it('should honor the config', function() {
                 makeCtr([
                     new Ext.form.field.Base({
                         name: 'field1',
@@ -664,7 +684,7 @@ describe("Ext.form.action.Submit", function() {
                 expect(returnVal.formEl.target).toBe('foo');
             });
 
-            it('should use the "name" property if passed a dom node', function () {
+            it('should use the "name" property if passed a dom node', function() {
                 var iframe = document.createElement('iframe');
 
                 iframe.setAttribute('name', 'foo');

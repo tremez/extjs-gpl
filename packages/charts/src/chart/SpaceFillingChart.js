@@ -14,16 +14,19 @@ Ext.define('Ext.chart.SpaceFillingChart', {
 
     },
 
-    performLayout: function () {
+    performLayout: function() {
         var me = this;
 
         try {
-            me.animationSuspendCount++;
+            me.chartLayoutCount++;
+            me.suspendAnimation();
+
             if (me.callParent() === false) {
                 // animationSuspendCount will still be decremented
                 return;
             }
 
+            // eslint-disable-next-line vars-on-top, one-var
             var chartRect = me.getSurface('chart').getRect(),
                 padding = me.getInsetPadding(),
                 width = chartRect[2] - padding.left - padding.right,
@@ -38,18 +41,24 @@ Ext.define('Ext.chart.SpaceFillingChart', {
             for (i = 0, ln = seriesList.length; i < ln; i++) {
                 series = seriesList[i];
                 series.getSurface().setRect(mainRect);
+
                 if (series.setRect) {
                     series.setRect(mainRect);
                 }
+
                 series.getOverlaySurface().setRect(chartRect);
             }
+
             me.redraw();
-        } finally {
-            me.animationSuspendCount--;
+        }
+        finally {
+            me.resumeAnimation();
+            me.chartLayoutCount--;
+            me.checkLayoutEnd();
         }
     },
 
-    redraw: function () {
+    redraw: function() {
         var me = this,
             seriesList = me.getSeries(),
             series, i, ln;

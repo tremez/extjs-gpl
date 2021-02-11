@@ -14,20 +14,20 @@ Ext.define('Ext.device.globalization.Abstract', {
     },
 
     getPreferredLanguage: function(config) {
-        // <debug>
+        //<debug>
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #getPreferredLanguage');
         }
-        // </debug>
+        //</debug>
 
         return config;
     },
     getLocaleName: function(config) {
-        // <debug>
+        //<debug>
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #getLocaleName');
         }
-        // </debug>
+        //</debug>
 
         return config;
     },
@@ -40,11 +40,11 @@ Ext.define('Ext.device.globalization.Abstract', {
             selector: defaultConfig.selector
         });
 
-        // <debug>
+        //<debug>
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #dateToString');
         }
-        // </debug>
+        //</debug>
 
         return config;
     },
@@ -57,11 +57,11 @@ Ext.define('Ext.device.globalization.Abstract', {
             selector: defaultConfig.selector
         });
 
-        // <debug>
+        //<debug>
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #stringToDate');
         }
-        // </debug>
+        //</debug>
 
         return config;
     },
@@ -73,11 +73,11 @@ Ext.define('Ext.device.globalization.Abstract', {
             selector: defaultConfig.selector
         });
 
-        // <debug>
+        //<debug>
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #getDatePattern');
         }
-        // </debug>
+        //</debug>
 
         return config;
     },
@@ -89,11 +89,11 @@ Ext.define('Ext.device.globalization.Abstract', {
             items: defaultConfig.items
         });
 
-        // <debug>
+        //<debug>
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #getDateNames');
         }
-        // </debug>
+        //</debug>
 
         return config;
     },
@@ -102,20 +102,20 @@ Ext.define('Ext.device.globalization.Abstract', {
             date: new Date()
         });
 
-        // <debug>
+        //<debug>
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #isDayLightSavingsTime');
         }
-        // </debug>
+        //</debug>
 
         return config;
     },
     getFirstDayOfWeek: function(config) {
-        // <debug>
+        //<debug>
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #getFirstDayOfWeek');
         }
-        // </debug>
+        //</debug>
 
         return config;
     },
@@ -127,7 +127,7 @@ Ext.define('Ext.device.globalization.Abstract', {
             type: defaultConfig.numberType
         });
 
-        // <debug>
+        //<debug>
         if (!config.number) {
             Ext.Logger.warn('You need to specify a `number` for #numberToString');
         }
@@ -135,7 +135,7 @@ Ext.define('Ext.device.globalization.Abstract', {
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #numberToString');
         }
-        // </debug>
+        //</debug>
 
         return config;
     },
@@ -146,7 +146,7 @@ Ext.define('Ext.device.globalization.Abstract', {
             type: defaultConfig.numberType
         });
 
-        // <debug>
+        //<debug>
         if (!config.number) {
             Ext.Logger.warn('You need to specify a `string` for #stringToNumber');
         }
@@ -154,7 +154,7 @@ Ext.define('Ext.device.globalization.Abstract', {
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #stringToNumber');
         }
-        // </debug>
+        //</debug>
 
         return config;
     },
@@ -168,7 +168,7 @@ Ext.define('Ext.device.globalization.Abstract', {
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #getNumberPattern');
         }
-        // </debug>
+        //</debug>
 
         return config;
     },
@@ -182,7 +182,7 @@ Ext.define('Ext.device.globalization.Abstract', {
         if (!config.success) {
             Ext.Logger.warn('You need to specify a `success` function for #getCurrency');
         }
-        // </debug>
+        //</debug>
 
         return config;
     }

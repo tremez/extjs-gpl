@@ -59,7 +59,7 @@ Ext.onReady(function() {
         Ext.Date.firstDayOfWeek = 0;
         Ext.Date.weekendDays = [6, 0];
     }
-    
+
     if (Ext.util && Ext.util.Format) {
         Ext.apply(Ext.util.Format, {
             thousandSeparator: ',',
@@ -371,7 +371,7 @@ Ext.define("Ext.locale.en.window.MessageBox", {
         cancel: "Cancel",
         yes: "Yes",
         no: "No"
-    }    
+    }
 });
 
 Ext.define("Ext.locale.en.grid.filters.Filters", {
@@ -388,9 +388,9 @@ Ext.define("Ext.locale.en.grid.filters.filter.Boolean", {
 Ext.define("Ext.locale.en.grid.filters.filter.Date", {
     override: "Ext.grid.filters.filter.Date",
     fields: {
-        lt: {text: 'Before'},
-        gt: {text: 'After'},
-        eq: {text: 'On'}
+        lt: { text: 'Before' },
+        gt: { text: 'After' },
+        eq: { text: 'On' }
     },
     // Defaults to Ext.Date.defaultFormat
     dateFormat: null
@@ -412,7 +412,7 @@ Ext.define("Ext.locale.en.grid.filters.filter.String", {
 });
 
 Ext.define("Ext.locale.en.view.MultiSelectorSearch", {
-    override: 'Ext.view.MultiSelectorSearch' ,
+    override: 'Ext.view.MultiSelectorSearch',
     searchText: 'Search...'
 });
 
@@ -424,6 +424,6 @@ Ext.define("Ext.locale.en.view.MultiSelector", {
 });
 
 // This is needed until we can refactor all of the locales into individual files
-Ext.define("Ext.locale.en.Component", {	
+Ext.define("Ext.locale.en.Component", {
     override: "Ext.Component"
 });

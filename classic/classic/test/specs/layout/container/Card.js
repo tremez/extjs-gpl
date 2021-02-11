@@ -1,4 +1,6 @@
-describe("Ext.layout.container.Card", function() {
+topSuite("Ext.layout.container.Card",
+    ['Ext.grid.Panel', 'Ext.tab.Panel', 'Ext.layout.container.Border'],
+function() {
     var comp;
 
     function createCardContainer(config) {
@@ -12,6 +14,7 @@ describe("Ext.layout.container.Card", function() {
             },
             renderTo: document.body
         }, config));
+
         return comp;
     }
 
@@ -28,7 +31,7 @@ describe("Ext.layout.container.Card", function() {
 
     function makeData(len) {
         var res = [],
-            i, len;
+            i;
 
         for (i = 0, len = len || 100; i < len; i++) {
             res.push({
@@ -51,8 +54,18 @@ describe("Ext.layout.container.Card", function() {
         return text.join('');
     }
 
-    afterEach(function(){
+    afterEach(function() {
         comp = Ext.destroy(comp);
+    });
+
+    describe("alternate class name", function() {
+        it("should have Ext.layout.CardLayout as the alternate class name", function() {
+            expect(Ext.layout.container.Card.prototype.alternateClassName).toEqual("Ext.layout.CardLayout");
+        });
+
+        it("should allow the use of Ext.layout.CardLayout", function() {
+            expect(Ext.layout.CardLayout).toBeDefined();
+        });
     });
 
     describe("visibility", function() {
@@ -115,14 +128,14 @@ describe("Ext.layout.container.Card", function() {
                         itemId: 'a'
                     }, {
                         xtype: 'container',
-                        listeners: {added: function(){}},
+                        listeners: { added: function() {} },
                         items: {
                             xtype: 'component',
                             itemId: 'b'
                         }
                     }, {
                         xtype: 'container',
-                        listeners: {added: function() {}},
+                        listeners: { added: function() {} },
                         items: {
                             xtype: 'component',
                             itemId: 'c'
@@ -145,7 +158,7 @@ describe("Ext.layout.container.Card", function() {
             expect(comp.items.items[0].getWidth()).toEqual(100);
             expect(comp.items.items[0].getHeight()).toEqual(100);
         });
-        
+
         it("should size the child using height and shrinkWrap width", function() {
             createCardContainer({
                 height: 100,
@@ -173,9 +186,9 @@ describe("Ext.layout.container.Card", function() {
             expect(comp.getHeight()).toEqual(200);
         });
     });
-    
+
     describe('Deferred render', function() {
-        it("should render all children", function(){
+        it("should render all children", function() {
             createCardContainer({
                 items: [{
                     xtype: 'component'
@@ -201,10 +214,11 @@ describe("Ext.layout.container.Card", function() {
             expect(comp.items.items[1].el).toBeDefined();
         });
     });
-    
+
     describe('Events', function() {
         it("should fire beforeactivate and activate on item 1", function() {
             var comp1BeforeActivated, comp1Activated;
+
             createCardContainer({
                 activeItem: 1,
                 deferredRender: true,
@@ -230,6 +244,7 @@ describe("Ext.layout.container.Card", function() {
 
         it("should veto activation of item 1", function() {
             var comp1BeforeActivated, comp1Activated;
+
             createCardContainer({
                 activeItem: 1,
                 deferredRender: true,
@@ -240,6 +255,7 @@ describe("Ext.layout.container.Card", function() {
                     listeners: {
                         beforeactivate: function() {
                             comp1BeforeActivated = true;
+
                             return false;
                         },
                         activate: function() {
@@ -255,9 +271,9 @@ describe("Ext.layout.container.Card", function() {
         });
     });
 
-    describe('Active Item', function () {
-        describe('calling getActiveItem()', function () {
-            it('should return a default item when activeItem is set', function () {
+    describe('Active Item', function() {
+        describe('calling getActiveItem()', function() {
+            it('should return a default item when activeItem is set', function() {
                 comp = createCardContainer({
                     activeItem: 0,
                     items: {
@@ -268,7 +284,7 @@ describe("Ext.layout.container.Card", function() {
                 expect(comp.layout.getActiveItem()).toBe(comp.items.items[0]);
             });
 
-            it('should return a default item if activeItem is not defined', function () {
+            it('should return a default item if activeItem is not defined', function() {
                 comp = createCardContainer({
                     items: {
                         xtype: 'component'
@@ -278,7 +294,7 @@ describe("Ext.layout.container.Card", function() {
                 expect(comp.layout.getActiveItem()).toBe(comp.items.items[0]);
             });
 
-            it('should return a default item if activeItem is undefined', function () {
+            it('should return a default item if activeItem is undefined', function() {
                 comp = createCardContainer({
                     activeItem: undefined,
                     items: {
@@ -289,7 +305,7 @@ describe("Ext.layout.container.Card", function() {
                 expect(comp.layout.getActiveItem()).toBe(comp.items.items[0]);
             });
 
-            it('should not return a default item if activeItem is null', function () {
+            it('should not return a default item if activeItem is null', function() {
                 comp = createCardContainer({
                     activeItem: null,
                     items: {
@@ -300,7 +316,7 @@ describe("Ext.layout.container.Card", function() {
                 expect(comp.layout.getActiveItem()).toBe(null);
             });
 
-            it('should return the specified active item', function () {
+            it('should return the specified active item', function() {
                 comp = createCardContainer({
                     activeItem: 1,
                     items: [{
@@ -313,7 +329,7 @@ describe("Ext.layout.container.Card", function() {
                 expect(comp.layout.getActiveItem()).toBe(comp.items.items[1]);
             });
 
-            it('should return the specified active item if deferred render', function () {
+            it('should return the specified active item if deferred render', function() {
                 comp = createCardContainer({
                     activeItem: 1,
                     deferredRender: true,
@@ -328,7 +344,7 @@ describe("Ext.layout.container.Card", function() {
             });
         });
 
-        it('should display the first item as active item when active item is not set', function () {
+        it('should display the first item as active item when active item is not set', function() {
             var items, item0;
 
             comp = createCardContainer({
@@ -340,7 +356,7 @@ describe("Ext.layout.container.Card", function() {
             });
 
             items = comp.items;
-            item0 = items.getAt(0)
+            item0 = items.getAt(0);
 
             expect(item0.hidden).toBe(false);
             expect(items.getAt(1).hidden).toBe(true);
@@ -348,7 +364,7 @@ describe("Ext.layout.container.Card", function() {
             expect(comp.layout.getActiveItem()).toBe(item0);
         });
 
-        it('should not display any item as active item when active item is null', function () {
+        it('should not display any item as active item when active item is null', function() {
             var items, item0;
 
             comp = createCardContainer({
@@ -369,7 +385,7 @@ describe("Ext.layout.container.Card", function() {
         });
     });
 
-    describe('scroll position when changing cards', function () {
+    describe('scroll position when changing cards', function() {
         var c, scrollable;
 
         function removeCard() {
@@ -380,11 +396,11 @@ describe("Ext.layout.container.Card", function() {
             c.destroy();
         }
 
-        afterEach(function () {
+        afterEach(function() {
             c = scrollable = null;
         });
 
-        it('should not inherit old scroll positions from previously deleted cards', function () {
+        it('should not inherit old scroll positions from previously deleted cards', function() {
             // This may seem odd, but there's a FF bug that will preserve the scroll position
             // of a destroyed card and reapply it to the next created one.
             // See EXTJS-16173.
@@ -404,16 +420,16 @@ describe("Ext.layout.container.Card", function() {
             expect(c.getScrollable().getElement().dom.scrollTop).toBe(0);
         });
 
-        describe('preserving scroll position', function () {
+        describe('preserving scroll position', function() {
             // See EXTJS-17978.
             var scrollPosition;
 
-            afterEach(function () {
+            afterEach(function() {
                 scrollPosition = null;
             });
 
-            describe('when card items are not nested', function () {
-                it('should keep scroll position, simple layout', function () {
+            describe('when card items are not nested', function() {
+                it('should keep scroll position, simple layout', function() {
                     createCardContainer({
                         items: [makeCard('Foo'), {
                             title: "The Owl's Nest Farm"
@@ -433,8 +449,8 @@ describe("Ext.layout.container.Card", function() {
                 });
             });
 
-            describe('when card items are nested', function () {
-                it('should keep scroll position, simple layout', function () {
+            describe('when card items are nested', function() {
+                it('should keep scroll position, simple layout', function() {
                     createCardContainer({
                         items: [{
                             title: 'The Owl House',
@@ -464,14 +480,16 @@ describe("Ext.layout.container.Card", function() {
                 });
             });
 
-            describe('when items are derived panels', function () {
+            describe('when items are derived panels', function() {
                 var synchronousLoad = true,
                     proxyStoreLoad = Ext.data.ProxyStore.prototype.load,
                     loadStore = function() {
                         proxyStoreLoad.apply(this, arguments);
+
                         if (synchronousLoad) {
                             this.flushLoad.apply(this, arguments);
                         }
+
                         return this;
                     };
 
@@ -486,8 +504,8 @@ describe("Ext.layout.container.Card", function() {
                 });
 
                 function doTest(isBuffered, isLocked) {
-                    describe('buffered = ' + isBuffered + ', locked = ' + isLocked, function () {
-                        it('should keep scroll position, simple layout', function () {
+                    describe('buffered = ' + isBuffered + ', locked = ' + isLocked, function() {
+                        it('should keep scroll position, simple layout', function() {
                             createCardContainer({
                                 height: 300,
                                 width: 300,
@@ -525,7 +543,7 @@ describe("Ext.layout.container.Card", function() {
                             expect(scrollable.getPosition().y).toBe(scrollPosition.y);
                         });
 
-                        it('should keep scroll position, complex layout', function () {
+                        it('should keep scroll position, complex layout', function() {
                             var p;
 
                             createCardContainer({
@@ -603,11 +621,11 @@ describe("Ext.layout.container.Card", function() {
         });
     });
 
-    describe('hideMode', function () {
+    describe('hideMode', function() {
         // See EXTJS-17978.
         var item;
 
-        beforeEach(function () {
+        beforeEach(function() {
             createCardContainer({
                 items: [makeCard('Foo'), {
                     title: "The Owl's Nest Farm"
@@ -617,30 +635,30 @@ describe("Ext.layout.container.Card", function() {
             item = comp.items.getAt(0);
         });
 
-        afterEach(function () {
+        afterEach(function() {
             item = null;
         });
 
-        it('should be automatically set to use offsets', function () {
+        it('should be automatically set to use offsets', function() {
             expect(item.hideMode).toBe('offsets');
         });
 
-        it('should cache the original hideMode value', function () {
+        it('should cache the original hideMode value', function() {
             expect(item.originalHideMode).toBe('display');
         });
 
-        it('should restore the original hideMode value when the item is removed from the layout', function () {
+        it('should restore the original hideMode value when the item is removed from the layout', function() {
             comp.remove(item);
             expect(item.hideMode).toBe('display');
         });
 
-        it('should remove the cached hideMode value when the item is removed from the layout', function () {
+        it('should remove the cached hideMode value when the item is removed from the layout', function() {
             comp.remove(item);
             expect(item.originalHideMode).toBe(undefined);
         });
     });
 
-    describe('different xtypes as containers', function () {
+    describe('different xtypes as containers', function() {
         // Behavior should be the same regardless of the xtype.
         var item, scrollable, scrollPosition;
 
@@ -658,20 +676,19 @@ describe("Ext.layout.container.Card", function() {
             expect(comp.xtype).toBe(xtype);
         }
 
-
-        afterEach(function () {
+        afterEach(function() {
             item = scrollable = scrollPosition = null;
         });
 
         function runTests(xtype) {
-            describe('should work for ' + xtype + ' as the container', function () {
-                it('should set proper hideMode value', function () {
+            describe('should work for ' + xtype + ' as the container', function() {
+                it('should set proper hideMode value', function() {
                     makeIt(xtype);
 
                     expect(item.hideMode).toBe('offsets');
                 });
 
-                it('should preserve scroll position', function () {
+                it('should preserve scroll position', function() {
                     makeIt(xtype);
 
                     scrollable.scrollTo(0, 7000);

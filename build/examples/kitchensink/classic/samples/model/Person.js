@@ -9,6 +9,7 @@ Ext.define('KitchenSink.model.Person', {
 
             function getRandom(array) {
                 var index = Ext.Number.randomInt(0, array.length - 1);
+
                 return array[index];
             }
 
@@ -20,7 +21,8 @@ Ext.define('KitchenSink.model.Person', {
 
                 if (seen[name.first + name.last]) {
                     return getName(seen);
-                } else {
+                }
+                else {
                     return name;
                 }
             }
@@ -30,19 +32,23 @@ Ext.define('KitchenSink.model.Person', {
                     seenNames = {},
                     adultsUndef = adults === undefined,
                     childrenUndef = children === undefined,
-                    name;
+                    name, i;
 
                 if (!adultsUndef && !childrenUndef) {
                     total = adults + children;
-                } else {
+                }
+                else {
                     // We rely on total now
                     total = total || 15;
+
                     if (adultsUndef && childrenUndef) {
                         adults = Ext.Number.randomInt(Math.floor(total * 0.25), Math.floor(total * 0.75));
                         children = total - adults;
-                    } else if (adultsUndef) {
+                    }
+                    else if (adultsUndef) {
                         adults = total - children;
-                    } else {
+                    }
+                    else {
                         children = total - adults;
                     }
                 }
@@ -59,6 +65,6 @@ Ext.define('KitchenSink.model.Person', {
 
                 return out;
             };
-            })()
+        })()
     }
 });

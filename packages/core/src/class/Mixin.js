@@ -9,7 +9,7 @@
  * Starting with a basic class we might have:
  * 
  *      Ext.define('Foo.bar.Base', {
- *          destroy: function () {
+ *          destroy: function() {
  *              console.log('B');
  *              // cleanup
  *          }
@@ -20,7 +20,7 @@
  *      Ext.define('Foo.bar.Derived', {
  *          extend: 'Foo.bar.Base',
  *
- *          destroy: function () {
+ *          destroy: function() {
  *              console.log('D');
  *              // more cleanup
  *
@@ -33,7 +33,7 @@
  * them. For example:
  * 
  *      Ext.define('Foo.bar.Util', {
- *          destroy: function () {
+ *          destroy: function() {
  *              console.log('U');
  *          }
  *      });
@@ -45,7 +45,7 @@
  *              util: 'Foo.bar.Util'
  *          },
  *
- *          destroy: function () {
+ *          destroy: function() {
  *              console.log('D');
  *              // more cleanup
  *
@@ -77,7 +77,7 @@
  *              }
  *          },
  *          
- *          destroyUtil: function () {
+ *          destroyUtil: function() {
  *              console.log('U');
  *          }
  *      });
@@ -87,7 +87,7 @@
  *              util: 'Foo.bar.Util'
  *          },
  *
- *          destroy: function () {
+ *          destroy: function() {
  *              console.log('D');
  *          }
  *      });
@@ -108,7 +108,7 @@
  *              }
  *          },
  *          
- *          destroyUtil: function () {
+ *          destroyUtil: function() {
  *              console.log('U');
  *          }
  *      });
@@ -118,7 +118,7 @@
  *              util: 'Foo.bar.Util'
  *          },
  *
- *          destroy: function () {
+ *          destroy: function() {
  *              console.log('D');
  *          }
  *      });
@@ -127,6 +127,38 @@
  *
  *      obj.destroy();
  *      // logs U then D
+ *
+ * ### Configs
+ *
+ * Normally when a mixin defines `config` properties and the class into which the mixin is
+ * initially mixed needs to specify values for those configs, the class processor does not
+ * yet recognize these config and instead retains the properties on te target class
+ * prototype.
+ *
+ * Changing the above behavior would potentially break application code, so this class
+ * provides a way to remedy this:
+ *
+ *      Ext.define('Foo.bar.Util', {
+ *          extend: 'Ext.Mixin',
+ *
+ *          mixinConfig: {
+ *              configs: true
+ *          },
+ *
+ *          config: {
+ *              foo: null
+ *          }
+ *      });
+ *
+ * Now the direct user class can correctly specify `foo` config properties:
+ *
+ *      Ext.define('Some.other.Class', {
+ *          mixins: [
+ *              'Foo.bar.Util'
+ *          ],
+ *
+ *          foo: 'bar'  // recognized as the foo config form Foo.bar.Util
+ *      });
  *
  * ### Chaining
  *
@@ -139,7 +171,7 @@
  *
  *          mixinConfig: {
  *              on: {
- *                  destroy: function () {
+ *                  destroy: function() {
  *                      console.log('M');
  *                  }
  *              }
@@ -147,7 +179,7 @@
  *      });
  *
  *      Ext.define('Foo.bar.Base', {
- *          destroy: function () {
+ *          destroy: function() {
  *              console.log('B');
  *          }
  *      });
@@ -159,7 +191,7 @@
  *              util: 'Foo.bar.Util'
  *          },
  *
- *          destroy: function () {
+ *          destroy: function() {
  *              this.callParent();
  *              console.log('D');
  *          }
@@ -181,7 +213,7 @@
  *              }
  *          }
  *
- *          onDestroy: function () {
+ *          onDestroy: function() {
  *              console.log('M');
  *          }
  *      });
@@ -198,7 +230,7 @@
  *          extend: 'Ext.Mixin',
  *
  *          mixinConfig: {
- *              extended: function (baseClass, derivedClass, classBody) {
+ *              extended: function(baseClass, derivedClass, classBody) {
  *                  // This function is called whenever a new "derivedClass" is created
  *                  // that extends a "baseClass" in to which this mixin was mixed.
  *              }
@@ -207,16 +239,17 @@
  *
  * @protected
  */
-Ext.define('Ext.Mixin', function (Mixin) { return {
-
+Ext.define('Ext.Mixin', function(Mixin) { return { // eslint-disable-line brace-style
     statics: {
-        addHook: function (hookFn, targetClass, methodName, mixinClassPrototype) {
+        addHook: function(hookFn, targetClass, methodName, mixinClassPrototype) {
             var isFunc = Ext.isFunction(hookFn),
-                hook = function () {
+                hook = function() {
                     var a = arguments,
                         fn = isFunc ? hookFn : mixinClassPrototype[hookFn],
                         result = this.callParent(a);
+
                     fn.apply(this, a);
+
                     return result;
                 },
                 existingFn = targetClass.hasOwnProperty(methodName) &&
@@ -232,7 +265,8 @@ Ext.define('Ext.Mixin', function (Mixin) { return {
             if (existingFn) {
                 hook.$previous = existingFn.$previous;
                 existingFn.$previous = hook;
-            } else {
+            }
+            else {
                 targetClass[methodName] = hook;
             }
         }
@@ -243,8 +277,8 @@ Ext.define('Ext.Mixin', function (Mixin) { return {
             hooks = data.xhooks,
             superclass = cls.superclass,
             onClassMixedIn = data.onClassMixedIn,
-            parentMixinConfig,
-            befores, afters, extended;
+            afterClassMixedIn = data.afterClassMixedIn,
+            afters, befores, configs, extended, mixed, parentMixinConfig;
 
         if (hooks) {
             // Legacy way
@@ -265,30 +299,34 @@ Ext.define('Ext.Mixin', function (Mixin) { return {
             if (mixinConfig.beforeHooks) {
                 Ext.raise('Use of "beforeHooks" is deprecated - use "before" instead');
             }
+
             if (mixinConfig.hooks) {
                 Ext.raise('Use of "hooks" is deprecated - use "after" instead');
             }
+
             if (mixinConfig.afterHooks) {
                 Ext.raise('Use of "afterHooks" is deprecated - use "after" instead');
             }
             //</debug>
 
-            befores = mixinConfig.before;
             afters = mixinConfig.after;
-            hooks = mixinConfig.on;
+            befores = mixinConfig.before;
+            configs = mixinConfig.configs;
             extended = mixinConfig.extended;
+            hooks = mixinConfig.on;
+            mixed = mixinConfig.mixed;
         }
 
-        if (befores || afters || hooks || extended) {
+        if (afters || befores || hooks || extended) {
             // Note: tests are with Ext.Class
-            data.onClassMixedIn = function (targetClass) {
+            data.onClassMixedIn = function(targetClass) {
                 var mixin = this.prototype,
                     targetProto = targetClass.prototype,
                     key;
 
                 if (befores) {
-                    Ext.Object.each(befores, function (key, value) {
-                        targetClass.addMember(key, function () {
+                    Ext.Object.each(befores, function(key, value) {
+                        targetClass.hookMember(key, function() {
                             if (mixin[value].apply(this, arguments) !== false) {
                                 return this.callParent(arguments);
                             }
@@ -297,10 +335,12 @@ Ext.define('Ext.Mixin', function (Mixin) { return {
                 }
 
                 if (afters) {
-                    Ext.Object.each(afters, function (key, value) {
-                        targetClass.addMember(key, function () {
+                    Ext.Object.each(afters, function(key, value) {
+                        targetClass.hookMember(key, function() {
                             var ret = this.callParent(arguments);
+
                             mixin[value].apply(this, arguments);
+
                             return ret;
                         });
                     });
@@ -313,9 +353,11 @@ Ext.define('Ext.Mixin', function (Mixin) { return {
                 }
 
                 if (extended) {
-                    targetClass.onExtended(function () {
+                    targetClass.onExtended(function() {
                         var args = Ext.Array.slice(arguments, 0);
+
                         args.unshift(targetClass);
+
                         return extended.apply(this, args);
                     }, this);
                 }
@@ -325,5 +367,37 @@ Ext.define('Ext.Mixin', function (Mixin) { return {
                 }
             };
         }
+
+        if (configs || mixed) {
+            data.afterClassMixedIn = function(targetClass) {
+                if (configs) {
+                    // eslint-disable-next-line vars-on-top
+                    var proto = targetClass.prototype,
+                        hoistable = this.$config.configs,
+                        cfg, name, hoist;
+
+                    for (name in proto) {
+                        cfg = hoistable[name];
+
+                        if (cfg && cfg.isConfig && proto.hasOwnProperty(name)) {
+                            (hoist || (hoist = {}))[name] = proto[name];
+                            delete proto[name];
+                        }
+                    }
+
+                    if (hoist) {
+                        targetClass.$config.add(hoist);
+                    }
+                }
+
+                if (afterClassMixedIn) {
+                    afterClassMixedIn.apply(this, arguments);
+                }
+
+                if (mixed) {
+                    mixed.apply(this, arguments);
+                }
+            };
+        }
     }
-};});
+};}); // eslint-disable-line block-spacing, brace-style

@@ -4,21 +4,29 @@
 $material-shadow-1: dynamic(2px 2px 5px 0 rgba(0, 0, 0, 0.12), 2px 2px 5px 0 rgba(0, 0, 0, 0.08));
 $material-shadow-2: dynamic(2px 2px 5px 0 rgba(0, 0, 0, 0.18), 2px 2px 5px 0 rgba(0, 0, 0, 0.12));
 $material-shadow-3: dynamic(2px 2px 5px 0 rgba(0, 0, 0, 0.21), 2px 2px 6px 0 rgba(0, 0, 0, 0.18));
-$material-shadow-transition: dynamic(box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1));
+$material-shadow-4: dynamic(2px 2px 6px 0 rgba(0, 0, 0, 0.25), 2px 2px 7px 0 rgba(0, 0, 0, 0.21));
 
-@mixin material-shadow($level: 1) {
-  @if $level == 1 {
-    box-shadow: $material-shadow-1;
-  } @else if $level == 2 {
-    box-shadow: $material-shadow-2;
-  } @else if $level == 3 {
-    box-shadow: $material-shadow-3;
-  } @else {
-    box-shadow: none;
-  }
+$material-shadow-above-1: dynamic(0 -6px 6px -4px rgba(0,0,0,.2));
+$material-shadow-below-1: dynamic(0 8px 6px -6px rgba(0,0,0,.2));
 
-  @if( $level >= 1) {
-    transition: $material-shadow-transition;
-    z-index: #{$level};
-  }
+@mixin material-shadow($level: 1, $index: null) {
+    @if $level == 1 {
+        box-shadow: $material-shadow-1;
+    } @else if $level == 2 {
+        box-shadow: $material-shadow-2;
+    } @else if $level == 3 {
+        box-shadow: $material-shadow-3;
+    } @else if $level == 4 {
+        box-shadow: $material-shadow-4;
+    } @else {
+        box-shadow: none;
+    }
+
+    @if ($level >= 1) {
+        @if ($index) {
+            z-index: #{$index};
+        } @else {
+            z-index: #{$level};
+        }
+    }
 }

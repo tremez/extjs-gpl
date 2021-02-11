@@ -4,48 +4,48 @@
  * @private
  */
 Ext.define('Ext.ux.colorpick.ColorMap', {
-    extend     : 'Ext.container.Container',
-    alias      : 'widget.colorpickercolormap',
-    controller : 'colorpickercolormapcontroller',
+    extend: 'Ext.container.Container',
+    alias: 'widget.colorpickercolormap',
+    controller: 'colorpickercolormapcontroller',
 
     requires: [
         'Ext.ux.colorpick.ColorMapController'
     ],
 
-    cls  : Ext.baseCSSPrefix + 'colorpicker-colormap',
+    cls: Ext.baseCSSPrefix + 'colorpicker-colormap',
 
     // This is the drag "circle"; note it's 1x1 in size to allow full
     // travel around the color map; the inner div has the bigger image
     items: [{
-        xtype     : 'component',
-        cls       : Ext.baseCSSPrefix + 'colorpicker-colormap-draghandle-container',
-        itemId    : 'dragHandle',
-        width     : 1,
-        height    : 1,
-        draggable : true,
-        html      : '<div class="' + Ext.baseCSSPrefix + 'colorpicker-colormap-draghandle"></div>'
+        xtype: 'component',
+        cls: Ext.baseCSSPrefix + 'colorpicker-colormap-draghandle-container',
+        itemId: 'dragHandle',
+        width: 1,
+        height: 1,
+        draggable: true,
+        html: '<div class="' + Ext.baseCSSPrefix + 'colorpicker-colormap-draghandle"></div>'
     }],
 
-    listeners : {
-        boxready : {
-            single  : true,
-            fn      : 'onFirstBoxReady',
-            scope   : 'controller'
+    listeners: {
+        boxready: {
+            single: true,
+            fn: 'onFirstBoxReady',
+            scope: 'controller'
         },
         colorbindingchanged: {
-            fn    : 'onColorBindingChanged',
-            scope : 'controller'
+            fn: 'onColorBindingChanged',
+            scope: 'controller'
         },
         huebindingchanged: {
-            fn    : 'onHueBindingChanged',
-            scope : 'controller'
+            fn: 'onHueBindingChanged',
+            scope: 'controller'
         }
     },
 
-    afterRender: function () {
-        var me  = this,
+    afterRender: function() {
+        var me = this,
             src = me.mapGradientUrl,
-            el  = me.el;
+            el = me.el;
 
         me.callParent();
 
@@ -57,7 +57,7 @@ Ext.define('Ext.ux.colorpick.ColorMap', {
 
             // In IE8 this path will have quotes around it
             if (src.indexOf('"') === 0) {
-                src = src.substring(1, src.length-1);
+                src = src.substring(1, src.length - 1);
             }
 
             // Then remember it on our prototype for any subsequent instances.
@@ -80,7 +80,7 @@ Ext.define('Ext.ux.colorpick.ColorMap', {
 
     // Called via data binding whenever selectedColor changes; fires "colorbindingchanged"
     setPosition: function(data) {
-        var me         = this,
+        var me = this,
             dragHandle = me.down('#dragHandle');
 
         // Too early in the render cycle? Skip event

@@ -1,0 +1,17 @@
+.#{$prefix}grid-item-selected .#{$prefix}grid-row-expander {
+    color: $grid-row-cell-selected-color;
+}
+
+.#{$prefix}grid-item-focused .#{$prefix}grid-row-expander {
+    color: $row-expander-glyph-color-focus;
+}
+
+.#{$prefix}grid-row-expander:focus {
+    color: $row-expander-glyph-color-focus;
+    background: $grid-row-cell-focus-background-color;
+}
+
+.#{$prefix}grid-row-expander:before {
+    line-height: $row-expander-height + 1;
+    text-align: center;
+}

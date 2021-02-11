@@ -6,12 +6,13 @@
  * - Basic math function support
  * - Execute arbitrary inline code with special built-in template variables
  * - Custom member functions
- * - Many special tags and built-in operators that aren't defined as part of the API, but are supported in the templates that can be created
+ * - Many special tags and built-in operators that aren't defined as part of the API, but are
+ * supported in the templates that can be created
  *
  * XTemplate provides the templating mechanism built into {@link Ext.view.View}.
  *
- * The {@link Ext.Template} describes the acceptable parameters to pass to the constructor. The following examples
- * demonstrate all of the supported features.
+ * The {@link Ext.Template} describes the acceptable parameters to pass to the constructor.
+ * The following examples demonstrate all of the supported features.
  *
  * # Sample Data
  *
@@ -35,19 +36,27 @@
  *
  * The **tpl** tag and the **for** operator are used to process the provided data object:
  *
- * - If the value specified in for is an array, it will auto-fill, repeating the template block inside the tpl
- *   tag for each item in the array.
+ * - If the value specified in for is an array, it will auto-fill, repeating the template block
+ * inside the tpl tag for each item in the array.
  * - If for="." is specified, the data object provided is examined.
  * - If between="..." is specified, the provided value will be inserted between the items.
  *   This is also supported in the "foreach" looping template.
- * - While processing an array, the special variable {#} will provide the current array index + 1 (starts at 1, not 0).
+ * - While processing an array, the special variable {#} will provide the current array index + 1
+ * (starts at 1, not 0).
  *
  * Examples:
  *
- *     <tpl for=".">...</tpl>       // loop through array at root node
- *     <tpl for="foo">...</tpl>     // loop through array at foo node
- *     <tpl for="foo.bar">...</tpl> // loop through array at foo.bar node
- *     <tpl for="." between=",">...</tpl> // loop through array at root node and insert ',' between each item
+ *     // loop through array at root node
+ *     <tpl for=".">...</tpl>
+ *
+ *     // loop through array at foo node
+ *     <tpl for="foo">...</tpl>
+ *
+ *     // loop through array at foo.bar node
+ *     <tpl for="foo.bar">...</tpl>
+ *
+ *     // loop through array at root node and insert ',' between each item
+ *     <tpl for="." between=",">...</tpl>
  *
  * Using the sample data above:
  *
@@ -59,8 +68,8 @@
  *     );
  *     tpl.overwrite(panel.body, data.kids); // pass the kids property of the data object
  *
- * An example illustrating how the **for** property can be leveraged to access specified members of the provided data
- * object to populate the template:
+ * An example illustrating how the **for** property can be leveraged to access specified members
+ * of the provided data object to populate the template:
  *
  *     var tpl = new Ext.XTemplate(
  *         '<p>Name: {name}</p>',
@@ -73,8 +82,9 @@
  *     );
  *     tpl.overwrite(panel.body, data);  // pass the root node of the data object
  *
- * Flat arrays that contain values (and not objects) can be auto-rendered using the special **`{.}`** variable inside a
- * loop. This variable will represent the value of the array at the current index:
+ * Flat arrays that contain values (and not objects) can be auto-rendered using the special
+ * **`{.}`** variable inside a loop. This variable will represent the value of the array
+ * at the current index:
  *
  *     var tpl = new Ext.XTemplate(
  *         '<p>{name}\'s favorite beverages:</p>',
@@ -84,8 +94,8 @@
  *     );
  *     tpl.overwrite(panel.body, data);
  *
- * When processing a sub-template, for example while looping through a child array, you can access the parent object's
- * members via the **parent** object:
+ * When processing a sub-template, for example while looping through a child array, you can access
+ * the parent object's members via the **parent** object:
  *
  *     var tpl = new Ext.XTemplate(
  *         '<p>Name: {name}</p>',
@@ -105,8 +115,10 @@
  *     var tpl = new Ext.XTemplate(
  *         '<dl>',
  *             '<tpl foreach=".">',
- *                 '<dt>{$}</dt>', // the special **`{$}`** variable contains the property name
- *                 '<dd>{.}</dd>', // within the loop, the **`{.}`** variable is set to the property value
+ *                 // the special **`{$}`** variable contains the property name
+ *                 '<dt>{$}</dt>',
+ *                 // within the loop, the **`{.}`** variable is set to the property value
+ *                 '<dd>{.}</dd>',
  *             '</tpl>',
  *         '</dl>'
  *     );
@@ -114,8 +126,8 @@
  *
  * # Conditional processing with basic comparison operators
  *
- * The **tpl** tag and the **if** operator are used to provide conditional checks for deciding whether or not to render
- * specific parts of the template.
+ * The **tpl** tag and the **if** operator are used to provide conditional checks for deciding
+ * whether or not to render specific parts of the template.
  *
  * Using the sample data above:
  *
@@ -209,8 +221,10 @@
  * - **values**: The values in the current scope. If you are using scope changing sub-templates,
  *   you can change what values is.
  * - **parent**: The scope (values) of the ancestor template.
- * - **xindex**: If you are in a "for" or "foreach" looping template, the index of the loop you are in (1-based).
- * - **xcount**: If you are in a "for" looping template, the total length of the array you are looping.
+ * - **xindex**: If you are in a "for" or "foreach" looping template, the index of the loop you
+ *  are in (1-based).
+ * - **xcount**: If you are in a "for" looping template, the total length of the array you are
+ *  looping.
  * - **xkey**: If you are in a "foreach" looping template, the key of the current property
  * being examined.
  *
@@ -246,8 +260,8 @@
  *
  * # Template member functions
  *
- * One or more member functions can be specified in a configuration object passed into the XTemplate constructor for
- * more complex processing:
+ * One or more member functions can be specified in a configuration object passed into the
+ * XTemplate constructor for more complex processing:
  *
  *     var tpl = new Ext.XTemplate(
  *         '<p>Name: {name}</p>',
@@ -337,7 +351,12 @@ Ext.define('Ext.XTemplate', {
     strict: false,
 
     apply: function(values, parent, xindex, xcount) {
-        return this.applyOut(values, [], parent, xindex, xcount).join('');
+        var buffer = this.applyOut(values, [], parent, xindex, xcount);
+
+        // If only one token, return it as its uncoerced data type.
+        // This will allow things like ObjectTemplate to use
+        // formatters on non-string values.
+        return buffer.length === 1 ? buffer[0] : buffer.join('');
     },
 
     applyOut: function(values, out, parent, xindex, xcount) {
@@ -356,15 +375,18 @@ Ext.define('Ext.XTemplate', {
 
         // xindex is 1-based, so 0 is impossible
         xindex = xindex || 1;
+
         // likewise, this tpl exists in the parent, so xcount==0 is not possible
         xcount = xcount || 1;
 
         if (me.strict) {
             me.fn(out, values, parent || me.emptyObj, xindex, xcount);
-        } else {
+        }
+        else {
             try {
                 me.fn(out, values, parent || me.emptyObj, xindex, xcount);
-            } catch (e) {
+            }
+            catch (e) {
                 //<debug>
                 Ext.log.warn('XTemplate evaluation exception: ' + e.message);
                 //</debug>
@@ -383,6 +405,21 @@ Ext.define('Ext.XTemplate', {
     },
 
     statics: {
+        get: function(config, source, defaultTpl) {
+            var ret = config;
+
+            if (config == null) {
+                if (source && defaultTpl) {
+                    ret = this.getTpl(source, defaultTpl);
+                }
+            }
+            else if ((config || config === '') && !config.isTemplate) {
+                ret = new this(config);
+            }
+
+            return ret;
+        },
+
         /**
          * Gets an `XTemplate` from an object (an instance of an {@link Ext#define}'d class).
          * Many times, templates are configured high in the class hierarchy and are to be
@@ -420,23 +457,32 @@ Ext.define('Ext.XTemplate', {
          * @protected
          * @static
          */
-        getTpl: function (instance, name) {
+        getTpl: function(instance, name) {
             var tpl = instance[name], // go for it! 99% of the time we will get it!
                 owner;
 
-            if (tpl && !tpl.isTemplate) { // tpl is just a configuration (not an instance)
-                // create the template instance from the configuration:
-                tpl = Ext.ClassManager.dynInstantiate('Ext.XTemplate', tpl);
-
-                // and replace the reference with the new instance:
-                if (instance.hasOwnProperty(name)) { // the tpl is on the instance
-                    owner = instance;
-                } else { // must be somewhere in the prototype chain
-                    for (owner = instance.self.prototype; owner && !owner.hasOwnProperty(name); owner = owner.superclass) {
-                    }
+            if (tpl) {
+                // tpl is just a configuration (not an instance)
+                if (!tpl.isTemplate) {
+                    // create the template instance from the configuration:
+                    tpl = Ext.XTemplate.get(tpl);
                 }
-                owner[name] = tpl;
-                tpl.owner = owner;
+
+                if (!tpl.owner) {
+                    // and replace the reference with the new instance:
+                    if (instance.hasOwnProperty(name)) { // the tpl is on the instance
+                        owner = instance;
+                    }
+                    else {
+                        // must be somewhere in the prototype chain
+                        /* eslint-disable-next-line max-len, no-empty */
+                        for (owner = instance.self.prototype; owner && !owner.hasOwnProperty(name); owner = owner.superclass) {
+                        }
+                    }
+
+                    owner[name] = tpl;
+                    tpl.owner = owner;
+                }
             }
             // else !tpl (no such tpl) or the tpl is an instance already... either way, tpl
             // is ready to return

@@ -1,42 +1,43 @@
 .pivotRowHeader {
-  .x-gridcell {
-    .x-inner-el {
-      font-weight: bold;
-      color: blue;
+    .x-gridcell {
+        .x-body-el {
+            font-weight: bold;
+            color: blue;
+        }
     }
-  }
 }
 
 .pivotRowTotal {
-  .x-gridcell {
-    .x-inner-el {
-      font-weight: bold;
+    .x-gridcell {
+        .x-body-el {
+            font-weight: bold;
+        }
     }
-  }
 }
 
 .pivotRowGrandTotal {
-  .x-gridcell {
-    .x-inner-el {
-      color: brown;
-      font-weight: bold;
+    .x-gridcell {
+        .x-body-el {
+            color: brown;
+            font-weight: bold;
+        }
     }
-  }
 }
 
 .x-gridcell.pivotCellGrandTotal {
-  .x-inner-el {
-    color: brown;
-  }
+    .x-body-el {
+        color: brown;
+    }
 }
 
 .x-gridcell.pivotCellNegative {
-  .x-inner-el {
-    color: red;
-  }
+    .x-body-el {
+        color: red;
+    }
 }
+
 .x-gridcell.pivotCellPositive {
-  .x-inner-el {
-    color: green;
-  }
+    .x-body-el {
+        color: green;
+    }
 }

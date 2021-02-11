@@ -1,6 +1,6 @@
-Ext.define('KitchenSink.store.States', {
+Ext.define('KitchenSink.store.USCanadaStates', {
     extend: 'Ext.data.Store',
-    alias: 'store.states',
+    alias: 'store.us-canada-states',
 
     fields: ['countryId', 'name'],
 

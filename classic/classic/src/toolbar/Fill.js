@@ -17,18 +17,20 @@
  */
 Ext.define('Ext.toolbar.Fill', {
     extend: 'Ext.Component',
+    alias: 'widget.tbfill',
+    alternateClassName: 'Ext.Toolbar.Fill',
+
     // Toolbar required here because we'll try to decorate it's alternateClassName
     // with this class' alternate name
     requires: ['Ext.toolbar.Toolbar'],
-    alias: 'widget.tbfill',
-    alternateClassName: 'Ext.Toolbar.Fill',
-    
+
     ariaRole: 'presentation',
-    
+
     /**
      * @property {Boolean} isFill
      * `true` in this class to identify an object as an instantiated Fill, or subclass thereof.
      */
-    isFill : true,
+    isFill: true,
+
     flex: 1
 });

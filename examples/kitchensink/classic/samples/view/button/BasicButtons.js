@@ -30,6 +30,12 @@ Ext.define('KitchenSink.view.button.BasicButtons', {
         },
         'neptune-touch': {
             width: 585
+        },
+        graphite: {
+            width: 680
+        },
+        'classic-material': {
+            width: 680
         }
     },
     //</example>

@@ -79,11 +79,11 @@ Ext.define('Ext.ux.ajax.SimManager', {
      */
     ready: false,
 
-    constructor: function () {
+    constructor: function() {
         this.simlets = {};
     },
 
-    getSimlet: function (url) {
+    getSimlet: function(url) {
         // Strip down to base URL (no query parameters or hash):
         var me = this,
             index = url.indexOf('?');
@@ -91,6 +91,7 @@ Ext.define('Ext.ux.ajax.SimManager', {
         if (index < 0) {
             index = url.indexOf('#');
         }
+
         if (index > 0) {
             url = url.substring(0, index);
         }
@@ -98,7 +99,7 @@ Ext.define('Ext.ux.ajax.SimManager', {
         return me.simlets[url] || me.defaultSimlet;
     },
 
-    getXhr: function (method, url, options, async) {
+    getXhr: function(method, url, options, async) {
         var simlet = this.getSimlet(url);
 
         if (simlet) {
@@ -113,7 +114,7 @@ Ext.define('Ext.ux.ajax.SimManager', {
      * @param {Object} config An optional object with configuration properties to apply.
      * @return {Ext.ux.ajax.SimManager} this
      */
-    init: function (config) {
+    init: function(config) {
         var me = this;
 
         Ext.apply(me, config);
@@ -131,19 +132,21 @@ Ext.define('Ext.ux.ajax.SimManager', {
             me._openRequest = Ext.data.Connection.prototype.openRequest;
 
             Ext.data.Connection.override({
-                openRequest: function (options, requestOptions, async) {
+                openRequest: function(options, requestOptions, async) {
                     var xhr = !options.nosim &&
                               me.getXhr(requestOptions.method, requestOptions.url, options, async);
+
                     if (!xhr) {
                         xhr = this.callParent(arguments);
                     }
+
                     return xhr;
                 }
             });
 
             if (Ext.data.JsonP) {
                 Ext.data.JsonP.self.override({
-                    createScript: function (url, params, options) {
+                    createScript: function(url, params, options) {
                         var fullUrl = Ext.urlAppend(url, Ext.Object.toQueryString(params)),
                             script = !options.nosim &&
                                      me.getXhr('GET', fullUrl, options, true);
@@ -155,12 +158,14 @@ Ext.define('Ext.ux.ajax.SimManager', {
                         return script;
                     },
 
-                    loadScript: function (request) {
+                    loadScript: function(request) {
                         var script = request.script;
+
                         if (script.simlet) {
                             script.jsonpCallback = request.params[request.callbackKey];
                             script.send(null);
-                        } else {
+                        }
+                        else {
                             this.callParent(arguments);
                         }
                     }
@@ -171,11 +176,12 @@ Ext.define('Ext.ux.ajax.SimManager', {
         return me;
     },
 
-    openRequest: function (method, url, async) {
+    openRequest: function(method, url, async) {
         var opt = {
             method: method,
             url: url
         };
+
         return this._openRequest.call(Ext.data.Connection.prototype, {}, opt, async);
     },
 
@@ -185,26 +191,30 @@ Ext.define('Ext.ux.ajax.SimManager', {
      * of such elements or an Object keyed by URL with values that are {@link Ext.ux.ajax.Simlet}
      * instances or configs.
      */
-    register: function (simlet) {
+    register: function(simlet) {
         var me = this;
 
         me.init();
 
-        function reg (one) {
+        function reg(one) {
             var simlet = one;
+
             if (!simlet.isSimlet) {
                 simlet = Ext.create('simlet.' + (simlet.stype || me.defaultType), one);
             }
+
             me.simlets[one.url] = simlet;
             simlet.manager = me;
         }
 
         if (Ext.isArray(simlet)) {
             Ext.each(simlet, reg);
-        } else if (simlet.isSimlet || simlet.url) {
+        }
+        else if (simlet.isSimlet || simlet.url) {
             reg(simlet);
-        } else {
-            Ext.Object.each(simlet, function (url, s) {
+        }
+        else {
+            Ext.Object.each(simlet, function(url, s) {
                 s.url = url;
                 reg(s);
             });

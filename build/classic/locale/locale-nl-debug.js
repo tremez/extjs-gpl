@@ -12,9 +12,11 @@ Ext.onReady(function() {
         Ext.Date.monthNames = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
 
         Ext.Date.getShortMonthName = function(month) {
+            // eslint-disable-next-line eqeqeq
             if (month == 2) {
                 return 'mrt';
             }
+
             return Ext.Date.monthNames[month].substring(0, 3);
         };
 
@@ -35,9 +37,11 @@ Ext.onReady(function() {
 
         Ext.Date.getMonthNumber = function(name) {
             var sname = name.substring(0, 3).toLowerCase();
-            if (sname == 'maa') {
+
+            if (sname === 'maa') {
                 return 2;
             }
+
             return Ext.Date.monthNumbers[sname];
         };
 
@@ -288,10 +292,10 @@ Ext.define("Ext.locale.nl.window.MessageBox", {
         cancel: 'Annuleren',
         yes: 'Ja',
         no: 'Nee'
-    }    
+    }
 });
 
 // This is needed until we can refactor all of the locales into individual files
-Ext.define("Ext.locale.nl.Component", {	
+Ext.define("Ext.locale.nl.Component", {
     override: "Ext.Component"
 });

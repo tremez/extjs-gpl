@@ -1,4 +1,4 @@
-describe("Ext.dom.Layer", function() {
+topSuite("Ext.dom.Layer", function() {
     var layer;
 
     afterEach(function() {
@@ -37,6 +37,7 @@ describe("Ext.dom.Layer", function() {
 
     it("should allow the parent node to be configured", function() {
         var parent = Ext.getBody().createChild();
+
         layer = new Ext.dom.Layer({
             parentEl: parent
         });
@@ -138,5 +139,4 @@ describe("Ext.dom.Layer", function() {
 
         expect(layer.getVisibilityMode()).toBe(Ext.Element.OFFSETS);
     });
-
 });

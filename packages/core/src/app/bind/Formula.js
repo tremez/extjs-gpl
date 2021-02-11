@@ -166,12 +166,15 @@ Ext.define('Ext.app.bind.Formula', {
             }
 
             parser = cache.get(name);
+
             if (!parser) {
                 // Unescaped: [^\.a-z0-9_]NAMEHERE\(\s*(['"])(.*?)\1\s*\)
-                s = '[^\\.a-z0-9_]' + name + '\\(\\s*([\'"])(.*?)\\1\\s*\\)';
+                s = '[^\\.a-z0-9_]' + Ext.String.escapeRegex(name) +
+                    '\\(\\s*([\'"])(.*?)\\1\\s*\\)';
                 parser = new RegExp(s, 'gi');
                 cache.add(name, parser);
             }
+
             return parser;
         }
     },
@@ -186,15 +189,16 @@ Ext.define('Ext.app.bind.Formula', {
      * @cfg {Object} [bind]
      * An explicit bind request to produce data to provide the `get` function. If this is
      * specified, the result of this bind is the first argument to `get`. If not given,
-     * then `get` receives a getter function that can retrieve bind expressions. For details on what can
-     * be specified for this property see `{@link Ext.app.ViewModel#bind}`.
+     * then `get` receives a getter function that can retrieve bind expressions. For details
+     * on what can be specified for this property see `{@link Ext.app.ViewModel#bind}`.
      * @since 5.0.0
      */
 
     /**
      * @cfg {Function} get
      * The function to call to calculate the formula's value. The `get` method executes
-     * with a `this` pointer of the `ViewModel` and receives a getter function or the result of a configured `bind`.
+     * with a `this` pointer of the `ViewModel` and receives a getter function or the result of
+     * a configured `bind`.
      * @since 5.0.0
      */
 
@@ -216,9 +220,15 @@ Ext.define('Ext.app.bind.Formula', {
      */
     single: false,
 
-    argumentNamesRe: /^function\s*\(\s*([^,\)\s]+)/,
+    /* eslint-disable-next-line no-useless-escape */
+    fnKeywordArgumentNamesRe: /^function\s*[^\(]*\(\s*([^,\)\s]+)/,
 
-    constructor: function (stub, formula) {
+    fnKeywordRe: /^\s*function/,
+
+    /* eslint-disable-next-line no-useless-escape */
+    replaceParenRe: /[\(\)]/g,
+
+    constructor: function(stub, formula) {
         var me = this,
             owner = stub.owner,
             bindTo, expressions, getter, options;
@@ -230,7 +240,8 @@ Ext.define('Ext.app.bind.Formula', {
 
         if (formula instanceof Function) {
             me.get = getter = formula;
-        } else {
+        }
+        else {
             me.get = getter = formula.get;
             me.set = formula.set;
             expressions = formula.bind;
@@ -258,14 +269,15 @@ Ext.define('Ext.app.bind.Formula', {
 
         if (expressions) {
             me.explicit = true;
-        } else {
+        }
+        else {
             expressions = getter.$expressions || me.parseFormula(getter);
         }
 
         me.binding = owner.bind(expressions, me.onChange, me, options);
     },
 
-    destroy: function () {
+    destroy: function() {
         var me = this,
             binding = me.binding,
             stub = me.stub;
@@ -285,30 +297,46 @@ Ext.define('Ext.app.bind.Formula', {
         me.getterFn = me.owner = null;
     },
 
-    getFullName: function () {
+    getFullName: function() {
         return this.fullName ||
-              (this.fullName = this.stub.getFullName() + '=' + this.callParent() + ')');
+               (this.fullName = this.stub.getFullName() + '=' + this.callParent() + ')');
     },
 
-    getRawValue: function () {
+    getRawValue: function() {
         return this.calculation;
     },
 
-    onChange: function () {
+    onChange: function() {
         if (!this.scheduled) {
             this.schedule();
         }
     },
 
-    parseFormula: function (formula) {
-        var str = formula.toString(),
+    parseFormula: function(formula) {
+        var str = Ext.Function.toCode(formula),
+            defaultProp = 'get',
             expressions = {
                 $literal: true
             },
             match, getterProp, formulaRe, expr;
 
-        match = this.argumentNamesRe.exec(str);
-        getterProp = match ? match[1] : 'get';
+        if (this.fnKeywordRe.test(str)) {
+            match = this.fnKeywordArgumentNamesRe.exec(str);
+
+            if (match) {
+                getterProp = match[1];
+            }
+        }
+        else {
+            match = str.split('=>')[0];
+
+            if (match) {
+                match = Ext.String.trim(match.replace(this.replaceParenRe, '')).split(',');
+                getterProp = match[0];
+            }
+        }
+
+        getterProp = getterProp || defaultProp;
         formulaRe = Ext.app.bind.Formula.getFormulaParser(getterProp);
 
         while ((match = formulaRe.exec(str))) {
@@ -325,18 +353,19 @@ Ext.define('Ext.app.bind.Formula', {
         return expressions;
     },
 
-    react: function () {
+    react: function() {
         var me = this,
             owner = me.owner,
             data = me.binding.lastValue,
-            getterFn = me.getterFn,
             arg;
 
         if (me.explicit) {
             arg = data;
-        } else {
+        }
+        else {
             arg = owner.getFormulaFn(data);
         }
+
         me.settingValue = true;
         me.stub.set(me.calculation = me.get.call(owner, arg));
         me.settingValue = false;
@@ -351,12 +380,13 @@ Ext.define('Ext.app.bind.Formula', {
     },
 
     privates: {
-        getScheduler: function () {
+        getScheduler: function() {
             var owner = this.owner;
+
             return owner && owner.getScheduler();
         },
-        
-        sort: function () {
+
+        sort: function() {
             var me = this,
                 binding = me.binding;
 
@@ -366,7 +396,7 @@ Ext.define('Ext.app.bind.Formula', {
             }
 
             // Schedulable#sort === emptyFn
-            //me.callParent();
+            // me.callParent();
         }
     }
 });

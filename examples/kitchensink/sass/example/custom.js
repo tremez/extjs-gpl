@@ -7,6 +7,6 @@
  * ./packages/theme-base/sass/example/render.js.
  */
 
-//Ext.theme.addManifest();
+// Ext.theme.addManifest();
 
-//Ext.theme.addShortcuts();
+// Ext.theme.addShortcuts();

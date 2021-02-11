@@ -2,14 +2,15 @@ Ext.define('KitchenSink.view.d3.TreeMapTooltipController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.treemap-tooltip',
 
-    onTooltip: function (component, tooltip, node, element, event) {
+    onTooltip: function(component, tooltip, node, element, event) {
         var view = this.getView(),
-            tpl = view.lookupTpl(node.isLeaf() ? 'leafTpl' : 'parentTpl'),
+            record = node.data,
+            tpl = view.lookupTpl(record.isLeaf() ? 'leafTpl' : 'parentTpl'),
             html;
 
-        component.setSelection(node);
+        component.setSelection(record);
 
-        html = tpl.apply(node);
+        html = tpl.apply(record);
         tooltip.setHtml(html);
     }
 });

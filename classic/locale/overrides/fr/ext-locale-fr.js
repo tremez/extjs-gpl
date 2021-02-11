@@ -27,7 +27,7 @@ Ext.onReady(function() {
             "Mai": 4,
             "Juin": 5,
             "Juillet": 6,
-            "Juil": 6, 
+            "Juil": 6,
             "Août": 7,
             "Septembre": 8,
             "Sept": 8,
@@ -52,6 +52,7 @@ Ext.onReady(function() {
         Ext.Date.parseCodes.S.s = "(?:er)";
 
         Ext.Date.getSuffix = function() {
+            // eslint-disable-next-line eqeqeq
             return (this.getDate() == 1) ? "er" : "";
         };
     }
@@ -147,12 +148,12 @@ Ext.define("Ext.locale.fr.form.field.Number", {
     minText: "La valeur minimum de ce champ doit être de {0}",
     maxText: "La valeur maximum de ce champ doit être de {0}",
     nanText: "{0} n'est pas un nombre valide",
-    negativeText: "La valeur de ce champ ne peut être négative"    
+    negativeText: "La valeur de ce champ ne peut être négative"
 });
 
-Ext.define("Ext.locale.fr.form.field.File", { 
-    override: "Ext.form.field.File", 
-    buttonText: "Parcourir..." 
+Ext.define("Ext.locale.fr.form.field.File", {
+    override: "Ext.form.field.File",
+    buttonText: "Parcourir..."
 });
 
 Ext.define("Ext.locale.fr.form.field.Date", {
@@ -312,10 +313,15 @@ Ext.define("Ext.locale.fr.window.MessageBox", {
         cancel: "Annuler",
         yes: "Oui",
         no: "Non"
-    }    
+    }
+});
+
+Ext.define('Ext.locale.fr.data.validator.Presence', {
+    override: 'Ext.data.validator.Presence',
+    message: 'Ce champ est obligatoire'
 });
 
 // This is needed until we can refactor all of the locales into individual files
-Ext.define("Ext.locale.fr.Component", {	
+Ext.define("Ext.locale.fr.Component", {
     override: "Ext.Component"
 });

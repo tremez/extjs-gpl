@@ -69,3 +69,16 @@
     position: relative;
     float: left;
 }
+
+// Best effort to not scroll scroll indicators.
+// But do not hide scrollable component inside the box
+.#{$prefix}box-scroller-body-vertical,
+.#{$prefix}box-scroller-body-horizontal {
+    -ms-overflow-style: none;
+    .#{$prefix}scroller {
+        -ms-overflow-style: auto;
+    }
+    :not(.#{$prefix}scroller)::-webkit-scrollbar {
+        display: none;
+    }
+}

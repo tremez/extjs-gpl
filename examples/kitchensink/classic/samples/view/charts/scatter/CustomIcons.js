@@ -15,16 +15,16 @@ Ext.define('KitchenSink.view.charts.scatter.CustomIcons', {
         'Ext.chart.interactions.ItemHighlight'
     ],
 
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     otherContent: [{
         type: 'Controller',
         path: 'classic/samples/view/charts/scatter/CustomIconsController.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/Pie.js'
+        path: 'app/store/Pie.js'
     }],
-    // </example>
+    //</example>
     layout: 'fit',
     width: 650,
 
@@ -63,7 +63,7 @@ Ext.define('KitchenSink.view.charts.scatter.CustomIcons', {
                 marker: {
                     type: 'path',
                     path: [
-                        ['M' , 0, 1],
+                        ['M', 0, 1],
                         ['L', 1, 0],
                         ['L', 0, -1],
                         ['L', -1, 0],
@@ -81,16 +81,16 @@ Ext.define('KitchenSink.view.charts.scatter.CustomIcons', {
                 marker: {
                     type: 'path',
                     path: [
-                        ['M',0,-145],
-                        ['L',48,-50],
-                        ['L',153,-36],
-                        ['L',76,39],
-                        ['L',93,143],
-                        ['L',0,95],
-                        ['L',-93,143],
-                        ['L',-76,39],
-                        ['L',-153,-36],
-                        ['L',-48,-50],
+                        ['M', 0, -145],
+                        ['L', 48, -50],
+                        ['L', 153, -36],
+                        ['L', 76, 39],
+                        ['L', 93, 143],
+                        ['L', 0, 95],
+                        ['L', -93, 143],
+                        ['L', -76, 39],
+                        ['L', -153, -36],
+                        ['L', -48, -50],
                         ['Z']
                     ],
                     scalingX: 0.1,
@@ -120,5 +120,5 @@ Ext.define('KitchenSink.view.charts.scatter.CustomIcons', {
     listeners: {
         afterrender: 'onAfterRender'
     }
-    
+
 });

@@ -2,12 +2,8 @@
  * This example shows data binding using ternary operators in expressions.
  */
 Ext.define('KitchenSink.view.binding.AlgebraTernary', {
-    extend: 'Ext.panel.Panel',
-    alias: 'widget.binding-algebra-ternary',
-
-    bodyPadding: 10,
-    shadow: true,
-    cls: 'demo-solid-background',
+    extend: 'Ext.Container',
+    xtype: 'binding-algebra-ternary',
 
     viewModel: {
         type: 'default',
@@ -16,6 +12,25 @@ Ext.define('KitchenSink.view.binding.AlgebraTernary', {
             y: 11
         }
     },
+
+    //<example>
+    profiles: {
+        defaults: {
+            width: 400
+        },
+        phone: {
+            defaults: {
+                width: undefined
+            }
+        }
+    },
+
+    cls: 'demo-solid-background',
+    //</example>
+
+    padding: 20,
+    width: '${width}',
+    autoSize: true,
 
     items: [{
         xtype: 'spinnerfield',

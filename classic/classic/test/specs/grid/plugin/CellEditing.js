@@ -1,25 +1,29 @@
-/* global Ext, MockAjaxManager, expect, jasmine, spyOn, xit */
-
-describe('Ext.grid.plugin.CellEditing', function () {
-    var store, plugin, grid, view, navModel, record, column, field,
-        TAB = 9,
+topSuite("Ext.grid.plugin.CellEditing",
+    ['Ext.grid.Panel', 'Ext.grid.column.Widget', 'Ext.Button', 'Ext.Window',
+     'Ext.form.field.*', 'Ext.form.FieldSet', 'Ext.EventManager'],
+function() {
+    var TAB = 9,
         synchronousLoad = true,
         proxyStoreLoad = Ext.data.ProxyStore.prototype.load,
+        store, plugin, grid, view, node, record, column, field,
         loadStore = function() {
             proxyStoreLoad.apply(this, arguments);
+
             if (synchronousLoad) {
                 this.flushLoad.apply(this, arguments);
             }
+
             return this;
         };
 
     function spyOnEvent(object, eventName, fn) {
         var obj = {
-            fn: fn || Ext.emptyFn
-        },
-        spy = spyOn(obj, 'fn');
+                fn: fn || Ext.emptyFn
+            },
+            spy = spyOn(obj, 'fn');
 
         object.addListener(eventName, obj.fn);
+
         return spy;
     }
 
@@ -34,10 +38,10 @@ describe('Ext.grid.plugin.CellEditing', function () {
         store = new Ext.data.Store(Ext.apply({
             fields: ['name', 'email', 'phone'],
             data: [
-                {'name': 'Lisa', 'email': 'lisa@simpsons.com', 'phone': '555-111-1224', 'age': 14},
-                {'name': 'Bart', 'email': 'bart@simpsons.com', 'phone': '555-222-1234', 'age': 12},
-                {'name': 'Homer', 'email': 'homer@simpsons.com', 'phone': '555-222-1244', 'age': 44},
-                {'name': 'Marge', 'email': 'marge@simpsons.com', 'phone': '555-222-1254', 'age': 41}
+                { 'name': 'Lisa', 'email': 'lisa@simpsons.com', 'phone': '555-111-1224', 'age': 14 },
+                { 'name': 'Bart', 'email': 'bart@simpsons.com', 'phone': '555-222-1234', 'age': 12 },
+                { 'name': 'Homer', 'email': 'homer@simpsons.com', 'phone': '555-222-1244', 'age': 44 },
+                { 'name': 'Marge', 'email': 'marge@simpsons.com', 'phone': '555-222-1254', 'age': 41 }
             ],
             autoDestroy: true
         }, storeCfg));
@@ -46,16 +50,16 @@ describe('Ext.grid.plugin.CellEditing', function () {
 
         grid = new Ext.grid.Panel(Ext.apply({
             columns: [
-                {header: 'Name',  dataIndex: 'name', editor: 'textfield', locked: locked},
-                {header: 'Email', dataIndex: 'email', flex:1,
+                { header: 'Name',  dataIndex: 'name', editor: 'textfield', locked: locked },
+                { header: 'Email', dataIndex: 'email', flex: 1,
                     editor: {
                         xtype: 'textareafield',
                         allowBlank: false,
                         grow: true
                     }
                 },
-                {header: 'Phone', dataIndex: 'phone', editor: 'textfield'},
-                {header: 'Age', dataIndex: 'age', editor: 'textfield'}
+                { header: 'Phone', dataIndex: 'phone', editor: 'textfield' },
+                { header: 'Age', dataIndex: 'age', editor: 'textfield' }
             ],
             store: store,
             selModel: 'cellmodel',
@@ -66,7 +70,8 @@ describe('Ext.grid.plugin.CellEditing', function () {
         }, gridCfg));
 
         view = grid.view;
-        navModel = grid.getNavigationModel();
+
+        return grid;
     }
 
     function startEdit(recId, colId) {
@@ -103,14 +108,14 @@ describe('Ext.grid.plugin.CellEditing', function () {
     describe("Events", function() {
         it("it should fire cellactivate event", function() {
             makeGrid(
-                {clicksToEdit: 1}, 
-                { 
+                { clicksToEdit: 1 },
+                {
                     width: 600
                 });
             var spy = spyOnEvent(grid, 'cellactivate'),
                 cell = findCell(0, 0),
                 ed;
-           
+
             jasmine.fireMouseEvent(cell, 'click');
             ed = plugin.getActiveEditor();
             triggerEditorKey(ed.field.inputEl, TAB);
@@ -120,9 +125,51 @@ describe('Ext.grid.plugin.CellEditing', function () {
         });
     });
 
+    describe('Widget column', function() {
+        it('should work while editing', function() {
+            var plugin, columnManager, cell, widget;
+
+            makeGrid({
+                clicksToEdit: 1
+            }, {
+                columns: [
+                    { header: 'Name',  dataIndex: 'name', editor: 'textfield' },
+                    {
+                        xtype: 'widgetcolumn',
+                        widget: {
+                            xtype: 'button'
+                        }
+                    }
+                ]
+            });
+
+            columnManager = grid.getColumnManager();
+
+            record = grid.store.getAt(0);
+            column = columnManager.getColumns()[0];
+            cell = grid.view.getCell(record, column);
+
+            view.getNavigationModel().setPosition(cell);
+            jasmine.fireMouseEvent(cell, 'click');
+
+            plugin = grid.findPlugin('cellediting');
+
+            waitsFor(function() {
+                return plugin.editing;
+            });
+
+            runs(function() {
+                widget = columnManager.getColumns()[1].getWidget(record);
+                expect(function() {
+                    jasmine.fireMouseEvent(widget.el, 'click');
+                }).not.toThrow();
+            });
+        });
+    });
+
     describe('finding the cell editing plugin in a locking grid', function() {
         beforeEach(function() {
-            makeGrid({pluginId:'test-cell-editing'}, null, null, true);
+            makeGrid({ pluginId: 'test-cell-editing' }, null, null, true);
         });
 
         it('should find it by id', function() {
@@ -133,17 +180,17 @@ describe('Ext.grid.plugin.CellEditing', function () {
         });
     });
 
-    describe('effect of hiding columns on cell editing selection', function () {
+    describe('effect of hiding columns on cell editing selection', function() {
         // These specs show that hiding columns pre- or post- cell edit will not place the x-grid-cell-selected class on the wrong
         // cell in the wrong column when the row is updated since Ext.view.Table:renderCell is now looking up the cell context by
         // header rather than by index. See EXTJSIV-11653.
         var wasEdited = false,
             columnManager, cell;
 
-        beforeEach(function () {
+        beforeEach(function() {
             makeGrid({
                 listeners: {
-                    edit: function (editor) {
+                    edit: function(editor) {
                         wasEdited = true;
                     }
                 }
@@ -154,12 +201,12 @@ describe('Ext.grid.plugin.CellEditing', function () {
             columnManager = grid.getColumnManager();
         });
 
-        afterEach(function () {
+        afterEach(function() {
             wasEdited = false;
             columnManager = null;
         });
 
-        it('should give the edited cell the selected class after initially hiding columns', function () {
+        it('should give the edited cell the selected class after initially hiding columns', function() {
             // First hide the columns.
             columnManager.getColumns()[0].hide();
             columnManager.getColumns()[1].hide();
@@ -167,46 +214,46 @@ describe('Ext.grid.plugin.CellEditing', function () {
             // Then do the edit.
             record = grid.store.getAt(0);
             column = columnManager.getColumns()[2];
-            cell = grid.view.getCell(record, column);
+            cell = grid.view.getCell(record, column, true);
 
             jasmine.fireMouseEvent(cell, 'dblclick');
             plugin.getEditor(record, column).setValue('111-111-1111');
             plugin.completeEdit();
 
-            waitsFor(function () {
+            waitsFor(function() {
                 return wasEdited;
             });
 
-            runs(function () {
+            runs(function() {
                 // Finally show that the selected cell is in the correct column.
-                cell = Ext.fly(grid.view.getNode(record)).down('.x-grid-cell-selected');
-                expect(cell.hasCls('x-grid-cell-' + column.id)).toBe(true);
+                cell = Ext.fly(grid.view.getNode(record)).down('.x-grid-cell-selected', true);
+                expect(cell).toHaveCls('x-grid-cell-' + column.id);
             });
         });
 
-        it('should move the selected cell along with its column when other columns are hidden', function () {
+        it('should move the selected cell along with its column when other columns are hidden', function() {
             record = grid.store.getAt(0);
             column = columnManager.columns[2];
-            cell = grid.view.getCell(record, column);
+            cell = grid.view.getCell(record, column, true);
 
             jasmine.fireMouseEvent(cell, 'dblclick');
             plugin.getEditor(record, column).setValue('111-111-1111');
             plugin.completeEdit();
 
-            waitsFor(function () {
+            waitsFor(function() {
                 return wasEdited;
             });
 
-            runs(function () {
+            runs(function() {
                 // First simply show that the selected cell is in the correct column.
-                cell = Ext.fly(grid.view.getNode(record)).down('.x-grid-cell-selected');
-                expect(cell.hasCls('x-grid-cell-' + column.id)).toBe(true);
+                cell = Ext.fly(grid.view.getNode(record)).down('.x-grid-cell-selected', true);
+                expect(cell).toHaveCls('x-grid-cell-' + column.id);
 
                 columnManager.columns[0].hide();
 
                 // Now show that the selected cell is still in the correct column.
-                cell = Ext.fly(grid.view.getNode(record)).down('.x-grid-cell-selected');
-                expect(cell.hasCls('x-grid-cell-' + column.id)).toBe(true);
+                cell = Ext.fly(grid.view.getNode(record)).down('.x-grid-cell-selected', true);
+                expect(cell).toHaveCls('x-grid-cell-' + column.id);
             });
         });
     });
@@ -239,23 +286,23 @@ describe('Ext.grid.plugin.CellEditing', function () {
             waitsFor(function() {
                 return plugin.activeEditor && plugin.activeEditor.field.hasFocus && plugin.activeEditor.field.getValue() === 'lisa@milhouse.com';
             });
-            
+
         });
     });
 
-    describe('events', function () {
+    describe('events', function() {
         var editorContext, cancelEditFired;
 
-        afterEach(function () {
+        afterEach(function() {
             editorContext = null;
         });
 
-        describe('beforeedit', function () {
-            it('should retain changes to the editing context in the event handler', function () {
+        describe('beforeedit', function() {
+            it('should retain changes to the editing context in the event handler', function() {
                 // See EXTJSIV-11643.
                 makeGrid({
                     listeners: {
-                        beforeedit: function (editor, context) {
+                        beforeedit: function(editor, context) {
                             context.value = 'motley';
                             editorContext = context;
                         }
@@ -268,18 +315,18 @@ describe('Ext.grid.plugin.CellEditing', function () {
             });
         });
 
-        describe('canceledit', function () {
-            beforeEach(function () {
+        describe('canceledit', function() {
+            beforeEach(function() {
 
                 // Must wait for async focus events from previous suite to complete.
                 waits(10);
-                
+
                 runs(function() {
                     cancelEditFired = false;
 
                     makeGrid({
                         listeners: {
-                            canceledit: function (editor, context) {
+                            canceledit: function(editor, context) {
                                 cancelEditFired = true;
                                 editorContext = context;
                             }
@@ -334,7 +381,7 @@ describe('Ext.grid.plugin.CellEditing', function () {
                 expect(editorContext.value).toBe('bar');
             });
 
-            describe('falsey values', function () {
+            describe('falsey values', function() {
                 it('should be able to capture falsey values when canceled by the plugin', function() {
                     expect(plugin.editing).toBe(true);
 
@@ -363,49 +410,46 @@ describe('Ext.grid.plugin.CellEditing', function () {
             });
         });
 
-        describe('selecting ranges', function () {
+        describe('selecting ranges', function() {
             // See EXTJS-16608.
             var selModel;
 
             function fireEvent(rowNum, eventName, shift) {
-                jasmine.fireMouseEvent(view.getNode(rowNum).getElementsByTagName('td')[0],eventName, null, null, null, !!shift);
+                jasmine.fireMouseEvent(findCell(rowNum, 0), eventName, null, null, null, !!shift);
             }
 
             function expectSelected(rec) {
                 var i, len;
 
                 if (arguments.length === 1) {
-                    if (typeof rec == 'number') {
+                    if (typeof rec === 'number') {
                         rec = store.getAt(rec);
                     }
+
                     expect(selModel.isSelected(rec)).toBe(true);
-                } else {
+                }
+                else {
                     for (i = 0, len = arguments.length; i < len; ++i) {
                         expectSelected(arguments[i]);
                     }
                 }
             }
 
-            afterEach(function () {
-                selModel = null;
-            });
-
             function selectRange(eventName) {
-                describe('MULTI, on event: ' + eventName, function () {
-                    beforeEach(function () {
+                describe('MULTI, on event: ' + eventName, function() {
+                    beforeEach(function() {
                         makeGrid({
-                            clicksToEdit: eventName === 'click' ? 1: 2
+                            clicksToEdit: eventName === 'click' ? 1 : 2
                         }, {
                             selModel: {
                                 type: 'rowmodel',
                                 mode: 'MULTI'
                             }
                         });
-
                         selModel = grid.selModel;
                     });
 
-                    it('should select a range if we have a selection start point and shift is pressed', function () {
+                    it('should select a range if we have a selection start point and shift is pressed', function() {
                         fireEvent(0, eventName);
                         fireEvent(3, eventName, true);
                         expectSelected(0, 1, 2, 3);
@@ -431,13 +475,20 @@ describe('Ext.grid.plugin.CellEditing', function () {
                 });
             }
 
-            selectRange('click');
-            selectRange('dblclick');
+            afterEach(function() {
+                selModel = null;
+            });
+
+            // No SHIFT+touch on tablets, and this test uses shiftKey: true
+            if (!jasmine.supportsTouch) {
+                selectRange('click');
+                selectRange('dblclick');
+            }
         });
     });
 
-    describe('sorting', function () {
-        it('should complete the edit when sorting same column as contains the editor', function () {
+    describe('sorting', function() {
+        it('should complete the edit when sorting same column as contains the editor', function() {
             makeGrid();
             startEdit();
             jasmine.fireMouseEvent(column.titleEl, 'click');
@@ -445,7 +496,7 @@ describe('Ext.grid.plugin.CellEditing', function () {
             expect(plugin.editing).toBe(false);
         });
 
-        it('should complete the edit when sorting a different column than contains the editor', function () {
+        it('should complete the edit when sorting a different column than contains the editor', function() {
             // Will sort the second column.
             makeGrid();
             startEdit();
@@ -455,14 +506,14 @@ describe('Ext.grid.plugin.CellEditing', function () {
         });
     });
 
-    describe('making multiple selections with checkbox model', function () {
+    describe('making multiple selections with checkbox model', function() {
         var store, selModel;
 
-        afterEach(function () {
+        afterEach(function() {
             store = selModel = null;
         });
 
-        it('should keep existing selections when editing a cell in an previously-selected row', function () {
+        it('should keep existing selections when editing a cell in an previously-selected row', function() {
             makeGrid(null, {
                 selModel: new Ext.selection.CheckboxModel({})
             });
@@ -480,7 +531,7 @@ describe('Ext.grid.plugin.CellEditing', function () {
             expect(selModel.getSelection().length).toBe(store.data.length);
         });
 
-        it('should expect that the correct records have been selected', function () {
+        it('should expect that the correct records have been selected', function() {
             var contains = Ext.Array.contains,
                 selections;
 
@@ -506,7 +557,7 @@ describe('Ext.grid.plugin.CellEditing', function () {
             expect(contains(selections, store.getAt(3))).toBe(true);
         });
 
-        it('should keep existing selections when editing a cell in an unselected row', function () {
+        it('should keep existing selections when editing a cell in an unselected row', function() {
             makeGrid(null, {
                 selModel: new Ext.selection.CheckboxModel({})
             });
@@ -526,7 +577,7 @@ describe('Ext.grid.plugin.CellEditing', function () {
         });
     });
 
-    describe('setting value while remote querying', function () {
+    describe('setting value while remote querying', function() {
         // These tests simulates a test case where a value is entered in the editor (either as .value or .rawValue) and then
         // is tabbed out of the editor (and completing the edit) before the response returns and the combo store is loaded.
         // See EXTJS-13127.
@@ -561,7 +612,7 @@ describe('Ext.grid.plugin.CellEditing', function () {
                 columns: [{
                     header: 'State',
                     dataIndex: 'id',
-                    renderer: function (value, metaData, record) {
+                    renderer: function(value, metaData, record) {
                         return record.get('state');
                     },
                     editor: {
@@ -592,20 +643,20 @@ describe('Ext.grid.plugin.CellEditing', function () {
             });
         }
 
-        describe('only one editable column', function () {
+        describe('only one editable column', function() {
             function initiateTests(expectation, loadStore) {
-                describe(expectation, function () {
+                describe(expectation, function() {
                     function forceSelection(force) {
-                        describe('forceSelection = ' + force, function () {
-                            beforeEach(function () {
+                        describe('forceSelection = ' + force, function() {
+                            beforeEach(function() {
                                 createUI(force);
                             });
 
-                            afterEach(function () {
+                            afterEach(function() {
                                 Ext.destroy(comboStore);
                                 comboStore = ed = null;
                             });
-                            
+
                             function tabToNextRow() {
                                 var curRowIdx = ed.context.rowIdx;
 
@@ -626,6 +677,7 @@ describe('Ext.grid.plugin.CellEditing', function () {
                                 // Wait for field to acquire focus which is asynchronous in some brwowsers.
                                 waitsFor(function() {
                                     ed = plugin.getActiveEditor();
+
                                     return ed && ed.field.hasFocus;
                                 }, 'first row editing to start', 5000, Ext.isIE ? 50 : undefined);
 
@@ -639,7 +691,8 @@ describe('Ext.grid.plugin.CellEditing', function () {
                                     // Let's then tab out to complete the edit.
                                     if (method === 'setRawValue') {
                                         ed.field.setRawValue('ben');
-                                    } else {
+                                    }
+                                    else {
                                         ed.setValue('ben');
                                     }
 
@@ -651,8 +704,8 @@ describe('Ext.grid.plugin.CellEditing', function () {
                             function setValue(raw) {
                                 var method = raw ? 'setRawValue' : 'setValue';
 
-                                describe(method, function () {
-                                    it('should write the value to the model', function () {
+                                describe(method, function() {
+                                    it('should write the value to the model', function() {
                                         var val = 'ben';
 
                                         setup(force, method);
@@ -668,7 +721,7 @@ describe('Ext.grid.plugin.CellEditing', function () {
                                         });
                                     });
 
-                                    it('should not set any other fields in the model across tabs', function () {
+                                    it('should not set any other fields in the model across tabs', function() {
                                         // There have been bugs which caused the same value to be set in different models across tabs.
                                         setup(force, method);
 
@@ -697,7 +750,7 @@ describe('Ext.grid.plugin.CellEditing', function () {
                                         });
                                     });
 
-                                    it('should give the editor different values across tabs', function () {
+                                    it('should give the editor different values across tabs', function() {
                                         // There have been bugs which caused the editor to keep the same value across tabs.
                                         setup(force, method);
 
@@ -724,7 +777,7 @@ describe('Ext.grid.plugin.CellEditing', function () {
                                         });
                                     });
 
-                                    it('should not give the editor a raw value because the combo store has not been loaded', function () {
+                                    it('should not give the editor a raw value because the combo store has not been loaded', function() {
                                         // There have been bugs which caused the editor to keep the same raw value across tabs.
                                         setup(force, method);
 
@@ -762,18 +815,18 @@ describe('Ext.grid.plugin.CellEditing', function () {
             initiateTests('before store load is initiated', false);
             initiateTests('while store is loading', true);
 
-            describe('when tabbing (down/up to the contiguous row)', function () {
+            describe('when tabbing (down/up to the contiguous row)', function() {
                 var activeEditor;
 
-                beforeEach(function () {
+                beforeEach(function() {
                     makeGrid({
                         clicksToEdit: 1
                     }, {
                         columns: [
-                            {header: 'Name',  dataIndex: 'name', editor: 'textfield'},
-                            {header: 'Email', dataIndex: 'email', flex:1},
-                            {header: 'Phone', dataIndex: 'phone'},
-                            {header: 'Age', dataIndex: 'age'}
+                            { header: 'Name',  dataIndex: 'name', editor: 'textfield' },
+                            { header: 'Email', dataIndex: 'email', flex: 1 },
+                            { header: 'Phone', dataIndex: 'phone' },
+                            { header: 'Age', dataIndex: 'age' }
                         ],
                         selModel: 'rowmodel'
                     });
@@ -789,17 +842,17 @@ describe('Ext.grid.plugin.CellEditing', function () {
                     triggerEditorKey(column.field.inputEl, 'keydown', 9);
                 });
 
-                afterEach(function () {
+                afterEach(function() {
                     activeEditor = null;
                 });
 
-                it('should not complete', function () {
+                it('should not complete', function() {
                     expect(activeEditor).not.toBe(null);
                     expect(plugin.activeColumn).not.toBe(null);
                     expect(plugin.activeRecord).not.toBe(null);
                 });
 
-                it('should hide the editor', function () {
+                it('should hide the editor', function() {
                     expect(activeEditor).not.toBe(null);
                     expect(activeEditor.isVisible()).toBe(true);
 
@@ -811,30 +864,30 @@ describe('Ext.grid.plugin.CellEditing', function () {
         });
     });
 
-    describe('clicksToEdit', function () {
-        describe('2 clicks', function () {
-            beforeEach(function () {
+    describe('clicksToEdit', function() {
+        describe('2 clicks', function() {
+            beforeEach(function() {
                 makeGrid();
             });
 
-            it('should default to 2', function () {
+            it('should default to 2', function() {
                 expect(plugin.clicksToEdit).toBe(2);
             });
 
-            it('should begin editing when double-clicked', function () {
+            it('should begin editing when double-clicked', function() {
                 record = grid.store.getAt(0);
                 node = grid.view.getNodeByRecord(record);
-                jasmine.fireMouseEvent(Ext.fly(node).down('.x-grid-cell'), 'dblclick');
+                jasmine.fireMouseEvent(Ext.fly(node).down('.x-grid-cell', true), 'dblclick');
 
                 waitsFor(function() {
                     return !!plugin.activeEditor;
                 });
             });
 
-            it('should not begin editing when single-clicked', function () {
+            it('should not begin editing when single-clicked', function() {
                 record = grid.store.getAt(0);
                 node = grid.view.getNodeByRecord(record);
-                jasmine.fireMouseEvent(Ext.fly(node).down('.x-grid-cell'), 'click');
+                jasmine.fireMouseEvent(Ext.fly(node).down('.x-grid-cell', true), 'click');
 
                 // Nothing should happen
                 waits(100);
@@ -844,14 +897,14 @@ describe('Ext.grid.plugin.CellEditing', function () {
                 });
             });
 
-            describe('editing a new cell', function () {
+            describe('editing a new cell', function() {
                 var cells, boundEl;
 
-                afterEach(function () {
+                afterEach(function() {
                     cells = boundEl = null;
                 });
 
-                it('should update the activeEditor to point to the new cell, adjacent', function () {
+                it('should update the activeEditor to point to the new cell, adjacent', function() {
                     record = grid.store.getAt(0);
                     node = grid.view.getNodeByRecord(record);
                     cells = Ext.fly(node).query('.x-grid-cell');
@@ -874,10 +927,10 @@ describe('Ext.grid.plugin.CellEditing', function () {
                     });
                 });
 
-                it('should update the activeEditor to point to the new cell, below', function () {
+                it('should update the activeEditor to point to the new cell, below', function() {
                     record = grid.store.getAt(0);
                     node = grid.view.getNodeByRecord(record);
-                    boundEl = Ext.fly(node).down('.x-grid-cell').dom;
+                    boundEl = Ext.fly(node).down('.x-grid-cell', true);
 
                     jasmine.fireMouseEvent(boundEl, 'dblclick');
 
@@ -890,7 +943,7 @@ describe('Ext.grid.plugin.CellEditing', function () {
                         node = grid.view.getNodeByRecord(record);
 
                         // Update the boundEl to our new cell.
-                        boundEl = Ext.fly(node).down('.x-grid-cell').dom;
+                        boundEl = Ext.fly(node).down('.x-grid-cell', true);
 
                         jasmine.fireMouseEvent(boundEl, 'dblclick');
                     });
@@ -902,21 +955,21 @@ describe('Ext.grid.plugin.CellEditing', function () {
             });
         });
 
-        describe('1 click', function () {
-            beforeEach(function () {
+        describe('1 click', function() {
+            beforeEach(function() {
                 makeGrid({
                     clicksToEdit: 1
                 });
             });
 
-            it('should honor a different number than the default', function () {
+            it('should honor a different number than the default', function() {
                 expect(plugin.clicksToEdit).toBe(1);
             });
 
-            it('should begin editing when single-clicked', function () {
+            it('should begin editing when single-clicked', function() {
                 record = grid.store.getAt(0);
                 node = grid.view.getNodeByRecord(record);
-                jasmine.fireMouseEvent(Ext.fly(node).down('.x-grid-cell'), 'click');
+                jasmine.fireMouseEvent(Ext.fly(node).down('.x-grid-cell', true), 'click');
 
                 waitsFor(function() {
                     return !!plugin.activeEditor;
@@ -924,12 +977,12 @@ describe('Ext.grid.plugin.CellEditing', function () {
             });
 
             // Note: I'm disabling this for IE (and new IE!) b/c certain versions (esp. 10 & 11) could not distinguish
-            // between single- and double-click.
-            if (!Ext.isIE && !Ext.isEdge) {
-                it('should not begin editing when double-clicked', function () {
+            // between single- and double-click. Double taps on touch devices also invoke tap handlers.
+            if (!Ext.isIE && !Ext.isEdge && !jasmine.supportsTouch && !Ext.isSafari7) {
+                it('should not begin editing when double-clicked', function() {
                     record = grid.store.getAt(0);
                     node = grid.view.getNodeByRecord(record);
-                    jasmine.fireMouseEvent(Ext.fly(node).down('.x-grid-cell'), 'dblclick');
+                    jasmine.doFireMouseEvent(Ext.fly(node).down('.x-grid-cell', true), 'dblclick');
 
                     // We expect nothing to happen
                     waits(50);
@@ -937,14 +990,14 @@ describe('Ext.grid.plugin.CellEditing', function () {
                 });
             }
 
-            describe('editing a new cell', function () {
+            describe('editing a new cell', function() {
                 var cells, boundEl;
 
-                afterEach(function () {
+                afterEach(function() {
                     cells = boundEl = null;
                 });
 
-                it('should update the activeEditor to point to the new cell, adjacent', function () {
+                it('should update the activeEditor to point to the new cell, adjacent', function() {
                     record = grid.store.getAt(0);
                     node = grid.view.getNodeByRecord(record);
                     cells = Ext.fly(node).query('.x-grid-cell');
@@ -967,10 +1020,10 @@ describe('Ext.grid.plugin.CellEditing', function () {
                     });
                 });
 
-                it('should update the activeEditor to point to the new cell, below', function () {
+                it('should update the activeEditor to point to the new cell, below', function() {
                     record = grid.store.getAt(0);
                     node = grid.view.getNodeByRecord(record);
-                    boundEl = Ext.fly(node).down('.x-grid-cell').dom;
+                    boundEl = Ext.fly(node).down('.x-grid-cell', true);
 
                     jasmine.fireMouseEvent(boundEl, 'click');
 
@@ -983,7 +1036,7 @@ describe('Ext.grid.plugin.CellEditing', function () {
                         node = grid.view.getNodeByRecord(record);
 
                         // Update the boundEl to our new cell.
-                        boundEl = Ext.fly(node).down('.x-grid-cell').dom;
+                        boundEl = Ext.fly(node).down('.x-grid-cell', true);
 
                         jasmine.fireMouseEvent(boundEl, 'click');
                     });
@@ -996,31 +1049,62 @@ describe('Ext.grid.plugin.CellEditing', function () {
         });
     });
 
-    describe('the CellEditor', function () {
-        beforeEach(function () {
+    describe('the CellEditor', function() {
+        beforeEach(function() {
             // Must wait for async focus events from previous suite to complete.
             waits(10);
-            
+
             runs(function() {
                 makeGrid();
                 startEdit();
             });
         });
 
-        it('should get an ownerCmp reference to the grid', function () {
+        it('should get an ownerCmp reference to the grid', function() {
             waitsFor(function() {
                 return plugin.activeEditor && plugin.activeEditor.ownerCmp === grid;
             });
         });
 
-        it('should be able to lookup up its owner in the component hierarchy chain', function () {
+        it('should be able to lookup up its owner in the component hierarchy chain', function() {
             waitsFor(function() {
                 return plugin.activeEditor && plugin.activeEditor.up('grid') === grid;
             });
         });
 
-        describe('positioning the editor', function () {
-            it('should default to "l-l!"', function () {
+        it('should allow custom editors as a config', function() {
+            var spy;
+
+            Ext.define('CustomEditor', {
+                extend: 'Ext.grid.CellEditor',
+                alias: 'widget.customeditor',
+
+                constructor: function(config) { return this.callParent([config]); }
+            });
+
+            // eslint-disable-next-line no-undef
+            spy = spyOn(CustomEditor.prototype, 'constructor').andCallThrough();
+            grid = Ext.destroy(grid);
+
+            makeGrid(null, {
+                columns: [{
+                    header: 'Name',  dataIndex: 'name', editor: {
+                        xtype: 'customeditor',
+                        field: {
+                            xtype: 'textfield'
+                        }
+                    }
+                }]
+            });
+            startEdit();
+
+            waitsForSpy(spy);
+
+            Ext.undefine('CustomEditor');
+        });
+
+        describe('positioning the editor', function() {
+            it('should default to "l-l!"', function() {
                 field = column.field;
 
                 expect(field.xtype).toBe('textfield');
@@ -1029,7 +1113,7 @@ describe('Ext.grid.plugin.CellEditing', function () {
                 });
             });
 
-            it('should constrain to the view if the editor goes out of bounds', function () {
+            it('should constrain to the view if the editor goes out of bounds', function() {
                 // Wait for the beforeEach's startEdit to get started
                 waitsFor(function() {
                     return plugin.activeEditor && plugin.activeEditor.field.hasFocus;
@@ -1041,11 +1125,11 @@ describe('Ext.grid.plugin.CellEditing', function () {
                 });
 
                 waitsFor(function() {
-                    return field.hasFocus && field.getRegion().top === Ext.fly(plugin.activeEditor.container).getRegion().top;
+                    return field.hasFocus && Math.abs(field.getRegion().top - Ext.fly(plugin.activeEditor.container).getRegion().top) < 2;
                 }, 'something funky to happen', 1000);
             });
 
-            it('should not reposition when shown', function () {
+            it('should not reposition when shown', function() {
                 plugin.completeEdit();
 
                 spyOn(Ext.AbstractComponent.prototype, 'setPosition');
@@ -1056,13 +1140,13 @@ describe('Ext.grid.plugin.CellEditing', function () {
             });
 
             describe('within a draggable container', function() {
-                var win;
+                var win, setPositionSpy;
 
                 afterEach(function() {
                     win = Ext.destroy(win);
                 });
 
-                it('should not reposition when within a draggable container', function () {
+                it('should not reposition when within a draggable container', function() {
                     // See EXTJS-15532.
                     tearDown();
 
@@ -1077,20 +1161,20 @@ describe('Ext.grid.plugin.CellEditing', function () {
 
                     startEdit();
 
-                    spyOn(plugin.activeEditor, 'setPosition');
+                    setPositionSpy = spyOn(plugin.activeEditor, 'setPosition');
 
                     jasmine.fireMouseEvent(win.el.dom, 'mousedown');
                     jasmine.fireMouseEvent(win.el.dom, 'mousemove', win.x, win.y);
                     jasmine.fireMouseEvent(win.el.dom, 'mousemove', (win.x - 100), (win.y - 100));
                     jasmine.fireMouseEvent(win.el.dom, 'mouseup', 400);
 
-                    expect(plugin.activeEditor.setPosition).not.toHaveBeenCalled();
+                    expect(setPositionSpy).not.toHaveBeenCalled();
                 });
             });
         });
 
-        describe('as textfield', function () {
-            it('should start the edit when ENTER is pressed', function () {
+        describe('as textfield', function() {
+            it('should start the edit when ENTER is pressed', function() {
                 var node = view.body.query('td', true)[0];
 
                 // Wait for the beforeEach's startEdit to take effect
@@ -1111,7 +1195,7 @@ describe('Ext.grid.plugin.CellEditing', function () {
                 runs(function() {
                     jasmine.fireKeyEvent(node, 'keydown', 13);
                 });
-                
+
                 waitsFor(function() {
                     return plugin.activeEditor && plugin.editing === true;
                 }, 'editing to start on the focused cell');
@@ -1164,12 +1248,12 @@ describe('Ext.grid.plugin.CellEditing', function () {
             });
         });
 
-        describe('as textarea', function () {
-            beforeEach(function () {
+        describe('as textarea', function() {
+            beforeEach(function() {
                 startEdit(0, 1);
             });
 
-            it('should start the edit when ENTER is pressed', function () {
+            it('should start the edit when ENTER is pressed', function() {
                 var node = view.body.query('td', true)[1];
 
                 // Wait for the beforeEach's startEdit to take effect
@@ -1190,14 +1274,14 @@ describe('Ext.grid.plugin.CellEditing', function () {
                 runs(function() {
                     jasmine.fireKeyEvent(node, 'keydown', 13);
                 });
-                
+
                 waitsFor(function() {
                     return plugin.activeEditor && plugin.editing === true;
                 }, 'editing to start on the focused cell');
             });
 
-            describe('when currently editing', function () {
-                it('should not complete the edit when ENTER is pressed', function () {
+            describe('when currently editing', function() {
+                it('should not complete the edit when ENTER is pressed', function() {
                     spyOn(plugin, 'completeEdit').andCallThrough();
 
                     // Wait for the beforeEach's startEdit to take effect
@@ -1213,7 +1297,7 @@ describe('Ext.grid.plugin.CellEditing', function () {
                     });
                 });
 
-                it('should not cancel the edit when ENTER is pressed', function () {
+                it('should not cancel the edit when ENTER is pressed', function() {
                     spyOn(plugin, 'cancelEdit').andCallThrough();
 
                     // Wait for the beforeEach's startEdit to take effect
@@ -1229,7 +1313,7 @@ describe('Ext.grid.plugin.CellEditing', function () {
                     });
                 });
 
-                it('should cancel the edit when ESCAPE is pressed', function () {
+                it('should cancel the edit when ESCAPE is pressed', function() {
                     spyOn(plugin, 'cancelEdit').andCallThrough();
 
                     // Wait for the beforeEach's startEdit to take effect
@@ -1242,19 +1326,58 @@ describe('Ext.grid.plugin.CellEditing', function () {
                         triggerEditorKey(field.inputEl, 27);
                     });
 
-                    waitsFor(function () {
+                    waitsFor(function() {
                         return !plugin.editing;
                     }, 'ESC keydown to have terminated editing');
 
-                    runs(function () {
+                    runs(function() {
                         expect(plugin.editing).toBe(false);
                     });
                 });
 
-                describe('grow and auto-sizing', function () {
+                it('should cancel the edit when ESCAPE is pressed and grid is within a window', function() {
+                    var win;
+
+                    grid.destroy();
+                    win = Ext.create('Ext.window.Window', {
+                        x: 0,
+                        y: 0,
+                        height: 400,
+                        width: 400,
+                        items: [makeGrid()]
+                    });
+
+                    win.on('show', function() {
+                        startEdit(0, 1);
+                    });
+
+                    win.show();
+
+                    waitsFor(function() {
+                        return win.rendered && plugin.activeEditor && plugin.activeEditor.field.hasFocus;
+                    }, 'beforeEach startEdit to take effect');
+
+                    // First complete the edit (we start an edit in the top-level beforeEach).
+                    runs(function() {
+                        triggerEditorKey(field.inputEl, 27);
+                    });
+
+                    waitsFor(function() {
+                        return !plugin.editing;
+                    }, 'ESC keydown to have terminated editing');
+
+                    runs(function() {
+                        expect(plugin.editing).toBe(false);
+                        triggerEditorKey(findCell(0, 0), 27);
+                        expect(win.destroyed).toBe(true);
+                    });
+
+                });
+
+                describe('grow and auto-sizing', function() {
                     var str = 'Attention all planets of the Solar Federation!\nAttention all planets of the Solar Federation!\nWe have assumed control!';
 
-                    it('should auto-size when written to', function () {
+                    it('should auto-size when written to', function() {
                         spyOn(field, 'autoSize');
 
                         field.setValue(str);
@@ -1262,7 +1385,7 @@ describe('Ext.grid.plugin.CellEditing', function () {
                         expect(field.autoSize).toHaveBeenCalled();
                     });
 
-                    it('should grow', function () {
+                    it('should grow', function() {
                         var previousHeight = field.getHeight();
 
                         field.setValue(str);
@@ -1274,8 +1397,8 @@ describe('Ext.grid.plugin.CellEditing', function () {
         });
     });
 
-    describe('key mappings', function () {
-        it('should not stop propagation on the enter key', function () {
+    describe('key mappings', function() {
+        it('should not stop propagation on the enter key', function() {
             var EM = Ext.EventManager;
 
             spyOn(EM, 'stopPropagation');
@@ -1283,7 +1406,7 @@ describe('Ext.grid.plugin.CellEditing', function () {
 
             makeGrid();
             startEdit(0, 1);
-            
+
             waitsFor(function() {
                 return plugin.activeEditor;
             });
@@ -1297,7 +1420,7 @@ describe('Ext.grid.plugin.CellEditing', function () {
         });
     });
 
-    describe('in a collapsed container', function () {
+    describe('in a collapsed container', function() {
         // To reproduce the bug:
         //      1. Start edit
         //      2. Collapse the fieldset
@@ -1308,7 +1431,7 @@ describe('Ext.grid.plugin.CellEditing', function () {
         // See EXTJS-12752.
         var fieldset, editor_1, editor_2;
 
-        beforeEach(function () {
+        beforeEach(function() {
             fieldset = new Ext.form.FieldSet({
                 collapsible: true,
                 items: makeGrid({
@@ -1321,16 +1444,16 @@ describe('Ext.grid.plugin.CellEditing', function () {
             startEdit();
         });
 
-        afterEach(function () {
+        afterEach(function() {
             Ext.destroy(fieldset, editor_1, editor_2);
             fieldset = editor_1 = editor_2 = null;
         });
 
-        it('should not set its hierarchicallyHidden property in response to any hierarchyEvents', function () {
+        it('should not set its hierarchicallyHidden property in response to any hierarchyEvents', function() {
             waitsFor(function() {
                 return (editor_1 = plugin.activeEditor) && editor_1.field.hasFocus;
             }, 'editing to start');
-            
+
             runs(function() {
 
                 // We have to fake a blur here.
@@ -1357,11 +1480,11 @@ describe('Ext.grid.plugin.CellEditing', function () {
             });
         });
 
-        it('should show the CellEditor when the edit is started', function () {
+        it('should show the CellEditor when the edit is started', function() {
             waitsFor(function() {
                 return (editor_1 = plugin.activeEditor) && editor_1.field.hasFocus;
             }, 'editing to start');
-            
+
             runs(function() {
 
                 // We have to fake a blur here.
@@ -1385,80 +1508,72 @@ describe('Ext.grid.plugin.CellEditing', function () {
         });
     });
 
-    describe('selectOnFocus', function () {
-        // I could not get the following spec to pass in the following browsers, although the test case does work.
-        // The dom.select() method in FF seems to be asynchronous (possibly for Opera as well), and IE 11 and Edge always
-        // returned an empty string for the text selection even though it claims to support window.getSelection().
-        ((Ext.isGecko || Ext.isOpera || Ext.isIE11 || Ext.isEdge) ? xit : it)('should select the text in the cell when initiating an edit', function () {
+    describe('selectOnFocus', function() {
+        it('should select the text in the cell when initiating an edit', function() {
             // See EXTJS-12364.
             var node;
 
-            function getSelectionText() {
-                var text;
-
-                if (!Ext.isIE) {
-                    text = window.getSelection().toString();
-                } else if (document.selection) {
-                    text = document.selection.createRange().text;
-                }
-
-                return text;
-            }
-
             makeGrid(null, {
                 columns: [
-                    {header: 'Name',  dataIndex: 'name',
+                    { header: 'Name',  dataIndex: 'name',
                         editor: {
                             xtype: 'textfield',
                             selectOnFocus: true
                         }
                     },
-                    {header: 'Email', dataIndex: 'email', flex:1,
+                    { header: 'Email', dataIndex: 'email', flex: 1,
                         editor: {
                             xtype: 'textfield',
                             selectOnFocus: true
                         }
                     },
-                    {header: 'Phone', dataIndex: 'phone', editor: 'textfield'},
-                    {header: 'Age', dataIndex: 'age', editor: 'textfield'}
+                    { header: 'Phone', dataIndex: 'phone', editor: 'textfield' },
+                    { header: 'Age', dataIndex: 'age', editor: 'textfield' }
                 ]
             });
 
             node = grid.view.getNode(grid.store.getAt(1));
             jasmine.fireMouseEvent(node.getElementsByTagName('td')[0], 'dblclick');
+            var inputEl = plugin.getActiveEditor().field;
 
-            expect(getSelectionText()).toBe('Bart');
+            // focus is async in some browsers so adding a delay here
+            waits(10);
+            runs(function() {
+                expect(inputEl.getTextSelection().slice(0, 2)).toEqual([0, 4]);
+            });
         });
     });
 
-    describe('not completing the edit', function () {
-        it('should preserve the correct editing context', function () {
-            var listener = function () {
+    describe('not completing the edit', function() {
+        it('should preserve the correct editing context', function() {
+            var listener = function() {
                 return false;
-            }, ed, context;
+            },
+            ed, context;
 
             makeGrid(null, {
                 columns: [
-                    {header: 'Name',  dataIndex: 'name',
+                    { header: 'Name',  dataIndex: 'name',
                         editor: {
                             xtype: 'textfield',
                             selectOnFocus: true
                         }
                     },
-                    {header: 'Email', dataIndex: 'email', flex:1,
+                    { header: 'Email', dataIndex: 'email', flex: 1,
                         editor: {
                             xtype: 'textfield',
                             selectOnFocus: true
                         }
                     },
-                    {header: 'Phone', dataIndex: 'phone', editor: 'textfield'},
-                    {header: 'Age', dataIndex: 'age', editor: 'textfield'}
+                    { header: 'Phone', dataIndex: 'phone', editor: 'textfield' },
+                    { header: 'Age', dataIndex: 'age', editor: 'textfield' }
                 ]
             });
 
             startEdit(0, 1);
             waitsFor(function() {
                 ed = plugin.activeEditor;
+
                 return ed.editing;
             }, 'editing to start at cell(0, 1)');
             runs(function() {
@@ -1472,18 +1587,52 @@ describe('Ext.grid.plugin.CellEditing', function () {
                 expect(plugin.context).toBe(context);
             });
         });
+
+        // https://sencha.jira.com/browse/EXTJS-26419
+        describe("don't cache if celleditor is still detaching", function() {
+            var win;
+
+            beforeEach(function() {
+                makeGrid({ clicksToEdit: 1 }, { renderTo: null });
+
+                win = Ext.create('Ext.window.Window', {
+                    title: 'Hello',
+                    height: 300,
+                    width: 400,
+                    layout: 'fit',
+                    items: [grid]
+                }).show();
+            });
+
+            afterEach(function() {
+                win = Ext.destroy(win);
+            });
+
+            /* NotFoundError: Failed to execute 'appendChild' on
+            * 'Node': The node to be removed is no longer 
+            * a child of this node. Perhaps it was moved in a 'blur' 
+            * event handler?
+            */
+            it('should not throw error when window is closed while editing', function() {
+                startEdit(0, 1);
+                expect(function() {
+                    win.close();
+                }).not.toThrow();
+                expect(grid.destroyed).toBe(true);
+            });
+        });
     });
 
-    describe('operations that refresh the view', function () {
+    describe('operations that refresh the view', function() {
         var ed;
 
-        afterEach(function () {
+        afterEach(function() {
             ed = null;
         });
 
-        describe('when editing and tabbing', function () {
+        (Ext.isiOS ? xdescribe : describe)('when editing and tabbing', function() {
             function doIt(autoSync) {
-                it('should not complete the edit in the new position, autoSync ' + autoSync, function () {
+                it('should not complete the edit in the new position, autoSync ' + autoSync, function() {
                     makeGrid(null, null, {
                         autoSync: autoSync
                     });
@@ -1498,11 +1647,11 @@ describe('Ext.grid.plugin.CellEditing', function () {
                     // Now let's tab and check that the editor is still shown and active.
                     triggerEditorKey(ed.field.inputEl, 9);
 
-                    waitsFor(function () {
+                    waitsFor(function() {
                         return !!plugin.activeEditor.editing;
                     }, 'editing to start', 1000);
 
-                    runs(function () {
+                    runs(function() {
                         // ed is the old editor
                         expect(ed.editing).toBe(false);
                         expect(plugin.activeEditor.editing).toBe(true);
@@ -1515,8 +1664,8 @@ describe('Ext.grid.plugin.CellEditing', function () {
             doIt(false);
         });
 
-        describe('when editing and syncing', function () {
-            it('should not complete the edit in the current position', function () {
+        describe('when editing and syncing', function() {
+            it('should not complete the edit in the current position', function() {
                 makeGrid();
 
                 record = grid.store.getAt(0);
@@ -1527,11 +1676,11 @@ describe('Ext.grid.plugin.CellEditing', function () {
                 ed.setValue('Pete the Dog was here');
                 store.sync();
 
-                waitsFor(function () {
+                waitsFor(function() {
                     return !!plugin.activeEditor.editing;
                 }, 'editing to start', 1000);
 
-                runs(function () {
+                runs(function() {
                     expect(ed.editing).toBe(true);
                     expect(plugin.activeColumn.dataIndex).toBe('name');
                 });
@@ -1552,7 +1701,7 @@ describe('Ext.grid.plugin.CellEditing', function () {
                 column = grid.columns[0];
 
                 startEdit(0, 0);
-                waitsFor(function () {
+                waitsFor(function() {
                     return !!plugin.activeEditor.editing;
                 }, 'editing to start', 1000);
 
@@ -1565,7 +1714,7 @@ describe('Ext.grid.plugin.CellEditing', function () {
                 // Wait for the update to have pushed the data into the cell, and the editor to be removed from the cell.
                 // The textual content must be just the current field value.
                 waitsFor(function() {
-                    var cellDom = view.getCell(0, 0).dom,
+                    var cellDom = view.getCell(0, 0),
                         // Need to trim because injecting keypress 13 adds a newline to the textfield.
                         value = Ext.String.trim(cellDom.innerText || cellDom.textContent);
 
@@ -1582,5 +1731,24 @@ describe('Ext.grid.plugin.CellEditing', function () {
             });
         });
     });
-});
 
+    describe("reconfigure", function() {
+        it("should destroy old editors", function() {
+            var editor;
+
+            makeGrid();
+
+            startEdit(0, 0);
+            editor = plugin.getActiveEditor();
+            editor.setValue('111-111-1111');
+            plugin.completeEdit();
+            grid.setColumns([{ header: 'Name',  dataIndex: 'name', editor: 'textfield' }]);
+
+            expect(editor.destroyed).toBe(true);
+
+            if (!editor.destroyed) {
+                editor.destroy();
+            }
+        });
+    });
+});

@@ -1,6 +1,5 @@
 Ext.define('Admin.view.phone.email.EmailController', {
     extend: 'Admin.view.email.EmailController',
-
     alias: 'controller.email-phone',
 
     closeComposer: function () {
@@ -17,8 +16,10 @@ Ext.define('Admin.view.phone.email.EmailController', {
         }
     },
 
-    onPlusButtonTap: function() {
-        if (!this.actionsVisible) {
+    onPlusButtonTap: function () {
+        var actions = this.actions;
+
+        if (!actions || !actions.getDisplayed()) {
             this.doCompose();
         }
     },
@@ -39,7 +40,7 @@ Ext.define('Admin.view.phone.email.EmailController', {
             });
 
             if (to) {
-                toField = me.lookupReference('toField');
+                toField = me.lookup('toField');
                 toField.setValue(to);
             }
 

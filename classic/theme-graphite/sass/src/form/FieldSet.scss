@@ -1,0 +1,19 @@
+.#{$prefix}keyboard-mode {
+    .#{$prefix}fieldset-header-tool-default.#{$prefix}focus {
+        outline: $fieldset-focus-outline;
+
+        > .#{$prefix}tool-toggle {
+            color: $fieldset-tool-toggle-color-focus;
+        }
+    }
+}
+
+.#{$prefix}fieldset-header-tool-default.#{$prefix}tool-over {
+    > .#{$prefix}tool-toggle {
+        color: $fieldset-tool-glyph-color-over;
+    }
+}
+
+.#{$prefix}fieldset-header-tool-default > .#{$prefix}tool-toggle {
+    color: $fieldset-tool-glyph-color-focus;
+}

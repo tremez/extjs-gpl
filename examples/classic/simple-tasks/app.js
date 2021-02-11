@@ -7,9 +7,9 @@ Ext.application({
     name: 'SimpleTasks',
 
     extend: 'SimpleTasks.Application',
-    
+
     autoCreateViewport: true
-	
+
     //-------------------------------------------------------------------------
     // Most customizations should be made to SimpleTasks.Application. If you need to
     // customize this file, doing so below this section reduces the likelihood

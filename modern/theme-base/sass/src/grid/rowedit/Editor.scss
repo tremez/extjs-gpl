@@ -1,0 +1,30 @@
+.#{$prefix}no-transition {
+    transition: none !important;
+}
+
+.#{$prefix}roweditor {
+    overflow: visible;
+
+    &.#{$prefix}listitem {
+        min-width: auto;
+    }
+}
+
+.#{$prefix}roweditor-inner-el {
+    flex: none;
+    width: 100%;
+}
+
+.#{$prefix}roweditor-button-ct {
+    > * > .#{$prefix}panel-body-el {
+        background-color: inherit;
+
+        .#{$prefix}roweditor-button-ct-above & {
+            border-bottom-color: transparent !important;
+        }
+
+        .#{$prefix}roweditor-button-ct-below & {
+            border-top-color: transparent !important;
+        }
+    }
+}

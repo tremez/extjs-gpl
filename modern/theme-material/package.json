@@ -1,34 +1,35 @@
 {
-    "namespace": "Ext",
-
-    "name": "theme-material",
-    "type": "theme",
-    "extend": "theme-neptune",
-
-    "framework": "ext",
-    "toolkit": "modern",
-    //"requires": [
-    //    ...
-    //],
-
-    "creator": "Sencha",
-    "summary": "Ext JS Modern Material Design Theme",
-    "detailedDescription": "Material Design theme for modern browsers",
-
-    "version": "6.2.0.981",
-    "compatVersion": "6.2.0",
-    "format": "1",
-
-    "output": "${workspace.subpkg.prefix}/${package.name}",
-    "local": true,
-
-    "sass": {
+    "name": "@extjs/ext-modern-theme-material",
+    "ext-react-name": "@extjs/ext-react-modern-theme-material",
+    "ext-name": "@extjs/ext-modern-theme-material",
+    "SenchaExtName": "@sencha/ext-modern-theme-material",
+    "SenchaExtReactName": "@sencha/ext-react-modern-theme-material",
+    "version": "7.0.0.168",
+    "sencha": {
+        "name": "theme-material",
         "namespace": "Ext",
-        "etc": "${package.dir}/sass/etc/all.scss",
-        "var": "${package.dir}/sass/var",
-        "src": "${package.dir}/sass/src"
-    },
-
-    "classpath": "${package.dir}/src",
-    "overrides": "${package.dir}/overrides"
+        "type": "theme",
+        "extend": "theme-neptune",
+        "framework": "ext",
+        "toolkit": "modern",
+        "creator": "Sencha",
+        "summary": "Ext JS Modern Material Design Theme",
+        "detailedDescription": "Material Design theme for modern browsers",
+        "version": "7.0.0.168",
+        "compatVersion": "7.0.0",
+        "format": "1",
+        "output": "${workspace.subpkg.prefix}/${package.name}",
+        "local": true,
+        "sass": {
+            "namespace": "Ext",
+            "etc": "${package.dir}/sass/etc/all.scss",
+            "var": "${package.dir}/sass/var",
+            "src": "${package.dir}/sass/src"
+        },
+        "classpath": "${package.dir}/src",
+        "overrides": "${package.dir}/overrides",
+        "properties": {
+            "skip.pkg": 1
+        }
+    }
 }

@@ -1,2 +1,4 @@
-# theme-neptune - Read Me
+# theme-neptune 
+
+Modern borderless theme.
 

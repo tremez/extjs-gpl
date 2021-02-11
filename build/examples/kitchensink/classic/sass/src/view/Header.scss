@@ -14,6 +14,9 @@ $kitchensink-header-use-gradient: true;
 } @else if $theme-name == 'theme-triton' {
     $kitchensink-header-background-color: #28384a;
     $kitchensink-header-use-gradient: false;
+}@else if $theme-name == 'theme-material' {
+    $kitchensink-header-background-color: $base-color;
+    $kitchensink-header-use-gradient: false;
 }
 
 #app-header {
@@ -27,6 +30,22 @@ $kitchensink-header-use-gradient: true;
         .#{$prefix}nlg & {
             background-image: url(get-resource-path('images/header-bg.png', 'toolkit'));
         }
+    }
+}
+
+.button-material-pallete{
+    &:before{
+    content: 'palette';
+    font-family: 'Material Icons';
+    color: #ffffff;
+    font-size: 20px;
+    }
+}
+
+.classic-material-theme-menu-button {
+    background-color: $base-color !important;
+    .#{$prefix}btn-arrow-right:after {
+        display: none;
     }
 }
 

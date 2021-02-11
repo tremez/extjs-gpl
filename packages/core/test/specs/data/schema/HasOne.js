@@ -1,7 +1,8 @@
 // HasOne is not a real class, but is an alternate way of declaring OneToOne.
 // The purpose of these tests is to check that they set everything up correctly,
 // functionality tested in OneToOne.
-describe("Ext.data.schema.HasOne", function() {
+// false in dependencies means don't attempt to load "Ext.data.schema.HasOne"
+topSuite("Ext.data.schema.HasOne", [false, 'Ext.data.ArrayStore'], function() {
 
     var Key, User, Avatar;
 
@@ -48,7 +49,7 @@ describe("Ext.data.schema.HasOne", function() {
         MockAjaxManager.addMethods();
         Ext.data.Model.schema.setNamespace('spec');
     });
-    
+
     afterEach(function() {
         if (Avatar) {
             Ext.undefine('spec.Avatar');
@@ -63,6 +64,7 @@ describe("Ext.data.schema.HasOne", function() {
             Ext.undefine('spec.User');
             User = null;
         }
+
         Ext.data.Model.schema.clear(true);
         MockAjaxManager.removeMethods();
     });
@@ -263,6 +265,7 @@ describe("Ext.data.schema.HasOne", function() {
                 });
 
                 var user = User.load(1);
+
                 Ext.Ajax.mockCompleteWithData({
                     id: 1,
                     key: {
@@ -292,13 +295,13 @@ describe("Ext.data.schema.HasOne", function() {
                     }
                 });
 
-                var user = new User({id: 1}),
-                    key = new Key({id: 101});
+                var user = new User({ id: 1 }),
+                    key = new Key({ id: 101 });
 
                 user.setKey(key);
                 user.drop();
                 expect(key.dropped).toBe(true);
-            }); 
+            });
         });
     });
 
@@ -311,8 +314,8 @@ describe("Ext.data.schema.HasOne", function() {
                     hasOne: 'Key'
                 });
 
-                var user = new User({id: 1}),
-                    key = new Key({id: 101});
+                var user = new User({ id: 1 }),
+                    key = new Key({ id: 101 });
 
                 user.setKey(key);
                 expect(user.get('key_id')).toBe(101);
@@ -328,8 +331,8 @@ describe("Ext.data.schema.HasOne", function() {
                     }
                 });
 
-                var user = new User({id: 1}),
-                    key = new Key({id: 101});
+                var user = new User({ id: 1 }),
+                    key = new Key({ id: 101 });
 
                 user.setKey(key);
                 expect(user.get('customField')).toBe(101);

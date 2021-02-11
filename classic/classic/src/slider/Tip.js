@@ -1,7 +1,7 @@
 /**
- * Simple plugin for using an Ext.tip.Tip with a slider to show the slider value. In general this class is not created
- * directly, instead pass the {@link Ext.slider.Multi#useTips} and {@link Ext.slider.Multi#tipText} configuration
- * options to the slider directly.
+ * Simple plugin for using an Ext.tip.Tip with a slider to show the slider value.
+ * In general this class is not created directly, instead pass the {@link Ext.slider.Multi#useTips}
+ * and {@link Ext.slider.Multi#tipText} configuration options to the slider directly.
  *
  *     @example
  *     Ext.create('Ext.slider.Single', {
@@ -28,23 +28,22 @@
  */
 Ext.define('Ext.slider.Tip', {
     extend: 'Ext.tip.Tip',
-    minWidth: 10,
     alias: 'widget.slidertip',
-    
+
     /**
      * @cfg {Array} [offsets=null]
-     * Offsets for aligning the tip to the slider. See {@link Ext.util.Positionable#alignTo}. Default values
-     * for offsets are provided by specifying the {@link #position} config.
+     * Offsets for aligning the tip to the slider. See {@link Ext.util.Positionable#alignTo}.
+     * Default values for offsets are provided by specifying the {@link #position} config.
      */
-    offsets : null,
-    
+    offsets: null,
+
     /**
      * @cfg {String} [align=null]
-     * Alignment configuration for the tip to the slider. See {@link Ext.util.Positionable#alignTo}. Default
-     * values for alignment are provided by specifying the {@link #position} config.
+     * Alignment configuration for the tip to the slider. See {@link Ext.util.Positionable#alignTo}.
+     * Default values for alignment are provided by specifying the {@link #position} config.
      */
     align: null,
-    
+
     /**
      * @cfg {String} [position=For horizontal sliders, "top", for vertical sliders, "left"] 
      * Sets the position for where the tip will be displayed related to the thumb. This sets
@@ -53,7 +52,9 @@ Ext.define('Ext.slider.Tip', {
      * by position.
      */
     position: '',
-    
+
+    minWidth: 10,
+
     defaultVerticalPosition: 'left',
 
     defaultHorizontalPosition: 'top',
@@ -62,11 +63,11 @@ Ext.define('Ext.slider.Tip', {
 
     init: function(slider) {
         var me = this,
-            align,
-            offsets;
+            align, offsets;
 
         if (!me.position) {
-            me.position = slider.vertical ? me.defaultVerticalPosition : me.defaultHorizontalPosition;
+            me.position =
+                slider.vertical ? me.defaultVerticalPosition : me.defaultHorizontalPosition;
         }
 
         switch (me.position) {
@@ -74,33 +75,37 @@ Ext.define('Ext.slider.Tip', {
                 offsets = [0, -10];
                 align = 'b-t?';
                 break;
+
             case 'bottom':
                 offsets = [0, 10];
                 align = 't-b?';
                 break;
+
             case 'left':
                 offsets = [-10, 0];
                 align = 'r-l?';
                 break;
+
             case 'right':
                 offsets = [10, 0];
                 align = 'l-r?';
+                break;
         }
-        
+
         if (!me.align) {
             me.align = align;
         }
-        
+
         if (!me.offsets) {
             me.offsets = offsets;
         }
 
         slider.on({
-            scope    : me,
+            scope: me,
             dragstart: me.onSlide,
-            drag     : me.onSlide,
-            dragend  : me.hide,
-            destroy  : me.destroy
+            drag: me.onSlide,
+            dragend: me.hide,
+            destroy: me.destroy
         });
     },
     /**
@@ -111,22 +116,24 @@ Ext.define('Ext.slider.Tip', {
      * @param {Ext.event.Event} e The Event object
      * @param {Ext.slider.Thumb} thumb The thumb that the Tip is attached to
      */
-    onSlide : function(slider, e, thumb) {
+    onSlide: function(slider, e, thumb) {
         var me = this;
+
         me.update(me.getText(thumb));
         me.show();
+
         me.el.alignTo(thumb.el, me.align, me.offsets);
     },
 
     /**
-     * Used to create the text that appears in the Tip's body. By default this just returns the value of the Slider
-     * Thumb that the Tip is attached to. Override to customize.
+     * Used to create the text that appears in the Tip's body. By default this just returns
+     * the value of the Slider Thumb that the Tip is attached to. Override to customize.
      * @param {Ext.slider.Thumb} thumb The Thumb that the Tip is attached to
      * @return {String} The text to display in the tip
      * @protected
      * @template
      */
-    getText : function(thumb) {
+    getText: function(thumb) {
         return String(thumb.value);
     }
 });

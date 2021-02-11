@@ -4,18 +4,19 @@
  * The View uses an {@link Ext.XTemplate} as its internal templating mechanism, and is bound to an
  * {@link Ext.data.Store} so that as the data in the store changes the view is automatically updated
  * to reflect the changes. The view also provides built-in behavior for many common events that can
- * occur for its contained items including click, doubleclick, mouseover, mouseout, etc. as well as a
- * built-in selection model. **In order to use these features, an {@link #itemSelector} config must
- * be provided for the View to determine what nodes it will be working with.**
+ * occur for its contained items including click, doubleclick, mouseover, mouseout, etc. as well as
+ * a built-in selection model. **In order to use these features, an {@link #itemSelector} config
+ * must be provided for the View to determine what nodes it will be working with.**
  *
- * The example below binds a View to a {@link Ext.data.Store} and renders it into an {@link Ext.panel.Panel}.
+ * The example below binds a View to a {@link Ext.data.Store} and renders it into an
+ * {@link Ext.panel.Panel}.
  *
  *     @example
  *     Ext.define('Image', {
  *         extend: 'Ext.data.Model',
  *         fields: [
- *             { name:'src', type:'string' },
- *             { name:'caption', type:'string' }
+ *             { name: 'src', type: 'string' },
+ *             { name: 'caption', type: 'string' }
  *         ]
  *     });
  *
@@ -23,10 +24,22 @@
  *         id:'imagesStore',
  *         model: 'Image',
  *         data: [
- *             { src:'http://www.sencha.com/img/20110215-feat-drawing.png', caption:'Drawing & Charts' },
- *             { src:'http://www.sencha.com/img/20110215-feat-data.png', caption:'Advanced Data' },
- *             { src:'http://www.sencha.com/img/20110215-feat-html5.png', caption:'Overhauled Theme' },
- *             { src:'http://www.sencha.com/img/20110215-feat-perf.png', caption:'Performance Tuned' }
+ *             {
+ *                 src: 'http://www.sencha.com/img/20110215-feat-drawing.png',
+ *                 caption: 'Drawing & Charts'
+ *             },
+ *             {
+ *                 src: 'http://www.sencha.com/img/20110215-feat-data.png',
+ *                 caption: 'Advanced Data'
+ *             },
+ *             {
+ *                 src: 'http://www.sencha.com/img/20110215-feat-html5.png',
+ *                 caption: 'Overhauled Theme'
+ *             },
+ *             {
+ *                 src: 'http://www.sencha.com/img/20110215-feat-perf.png',
+ *                 caption: 'Performance Tuned'
+ *             }
  *         ]
  *     });
  *
@@ -79,6 +92,7 @@ Ext.define('Ext.view.View', {
             keypress: 'KeyPress',
             focus: 'Focus'
         },
+
         /**
          * @private
          * @static
@@ -151,7 +165,7 @@ Ext.define('Ext.view.View', {
      * cancel the default action.
      * @inheritdoc #beforeitemmousedown
      */
-    
+
     /**
      * @event beforeitemlongpress
      * @preventable
@@ -165,6 +179,7 @@ Ext.define('Ext.view.View', {
      * @preventable
      * Fires before the keydown event on an item is processed. Return false to cancel 
      * the default action.
+     *
      * @inheritdoc #beforeitemmousedown
      */
 
@@ -179,8 +194,13 @@ Ext.define('Ext.view.View', {
     /**
      * @event beforeitemkeypress
      * @preventable
-     * Fires before the keypress event on an item is processed. Return false to cancel 
+     * Fires before the keypress event on an item before it is processed. Return false to cancel
      * the default action.
+     *
+     * **Note:** beforeitemkeypress is ONLY triggered by characters, numbers, and some action keys
+     * (esc, tab, backspace, space). If you need an event that is triggered by other keys,
+     * like function keys, arrow keys, or shift, ctrl, alt, use beforeitemkeydown.
+     *
      * @inheritdoc #beforeitemmousedown
      */
 
@@ -225,7 +245,7 @@ Ext.define('Ext.view.View', {
      * Fires when an item is right clicked.
      * @inheritdoc #beforeitemmousedown
      */
-    
+
     /**
      * @event itemlongpress
      * Fires on a longpress event on an item.
@@ -247,77 +267,94 @@ Ext.define('Ext.view.View', {
     /**
      * @event itemkeypress
      * Fires when a key is pressed while an item is currently selected.
+     *
+     * **Note:** itemkeypress is ONLY triggered by characters, numbers, and some action keys
+     * (esc, tab, backspace, space). If you need an event that is triggered by other keys,
+     * like function keys, arrow keys, or shift, ctrl, alt, use itemkeydown.
      * @inheritdoc #beforeitemmousedown
      */
 
     /**
      * @event beforecontainermousedown
-     * Fires before the mousedown event on the container is processed. Returns false to cancel the default action.
+     * Fires before the mousedown event on the container is processed.
+     * Returns false to cancel the default action.
      * @param {Ext.view.View} this
      * @param {Ext.event.Event} e The raw event object
      */
 
     /**
      * @event beforecontainermouseup
-     * Fires before the mouseup event on the container is processed. Returns false to cancel the default action.
+     * Fires before the mouseup event on the container is processed.
+     * Returns false to cancel the default action.
      * @param {Ext.view.View} this
      * @param {Ext.event.Event} e The raw event object
      */
 
     /**
      * @event beforecontainermouseover
-     * Fires before the mouseover event on the container is processed. Returns false to cancel the default action.
+     * Fires before the mouseover event on the container is processed.
+     * Returns false to cancel the default action.
      * @param {Ext.view.View} this
      * @param {Ext.event.Event} e The raw event object
      */
 
     /**
      * @event beforecontainermouseout
-     * Fires before the mouseout event on the container is processed. Returns false to cancel the default action.
+     * Fires before the mouseout event on the container is processed.
+     * Returns false to cancel the default action.
      * @param {Ext.view.View} this
      * @param {Ext.event.Event} e The raw event object
      */
 
     /**
      * @event beforecontainerclick
-     * Fires before the click event on the container is processed. Returns false to cancel the default action.
+     * Fires before the click event on the container is processed.
+     * Returns false to cancel the default action.
      * @param {Ext.view.View} this
      * @param {Ext.event.Event} e The raw event object
      */
 
     /**
      * @event beforecontainerdblclick
-     * Fires before the dblclick event on the container is processed. Returns false to cancel the default action.
+     * Fires before the dblclick event on the container is processed.
+     * Returns false to cancel the default action.
      * @param {Ext.view.View} this
      * @param {Ext.event.Event} e The raw event object
      */
 
     /**
      * @event beforecontainercontextmenu
-     * Fires before the contextmenu event on the container is processed. Returns false to cancel the default action.
+     * Fires before the contextmenu event on the container is processed.
+     * Returns false to cancel the default action.
      * @param {Ext.view.View} this
      * @param {Ext.event.Event} e The raw event object
      */
 
     /**
      * @event beforecontainerkeydown
-     * Fires before the keydown event on the container is processed. Returns false to cancel the default action.
+     * Fires before the keydown event on the container is processed.
+     * Returns false to cancel the default action.
      * @param {Ext.view.View} this
-     * @param {Ext.event.Event} e The raw event object. Use {@link Ext.event.Event#getKey getKey()} to retrieve the key that was pressed.
+     * @param {Ext.event.Event} e The raw event object. Use {@link Ext.event.Event#getKey getKey()}
+     * to retrieve the key that was pressed.
      */
 
     /**
      * @event beforecontainerkeyup
-     * Fires before the keyup event on the container is processed. Returns false to cancel the default action.
+     * Fires before the keyup event on the container is processed.
+     * Returns false to cancel the default action.
      * @param {Ext.view.View} this
-     * @param {Ext.event.Event} e The raw event object. Use {@link Ext.event.Event#getKey getKey()} to retrieve the key that was pressed.
+     * @param {Ext.event.Event} e The raw event object. Use {@link Ext.event.Event#getKey getKey()}
+     * to retrieve the key that was pressed.
      */
 
     /**
      * @event beforecontainerkeypress
-     * Fires before the keypress event on the container is processed. Returns false to cancel the default action.
+     * Fires before the keypress event on the container is processed.
+     * Returns false to cancel the default action.
      * @param {Ext.view.View} this
-     * @param {Ext.event.Event} e The raw event object. Use {@link Ext.event.Event#getKey getKey()} to retrieve the key that was pressed.
+     * @param {Ext.event.Event} e The raw event object. Use {@link Ext.event.Event#getKey getKey()}
+     * to retrieve the key that was pressed.
      */
 
     /**
@@ -371,23 +408,29 @@ Ext.define('Ext.view.View', {
 
     /**
      * @event containerkeydown
-     * Fires when a key is pressed down while the container is focused, and no item is currently selected.
+     * Fires when a key is pressed down while the container is focused, and no item
+     * is currently selected.
      * @param {Ext.view.View} this
-     * @param {Ext.event.Event} e The raw event object. Use {@link Ext.event.Event#getKey getKey()} to retrieve the key that was pressed.
+     * @param {Ext.event.Event} e The raw event object. Use {@link Ext.event.Event#getKey getKey()}
+     * to retrieve the key that was pressed.
      */
 
     /**
      * @event containerkeyup
-     * Fires when a key is released while the container is focused, and no item is currently selected.
+     * Fires when a key is released while the container is focused, and no item
+     * is currently selected.
      * @param {Ext.view.View} this
-     * @param {Ext.event.Event} e The raw event object. Use {@link Ext.event.Event#getKey getKey()} to retrieve the key that was pressed.
+     * @param {Ext.event.Event} e The raw event object. Use {@link Ext.event.Event#getKey getKey()}
+     * to retrieve the key that was pressed.
      */
 
     /**
      * @event containerkeypress
-     * Fires when a key is pressed while the container is focused, and no item is currently selected.
+     * Fires when a key is pressed while the container is focused, and no item
+     * is currently selected.
      * @param {Ext.view.View} this
-     * @param {Ext.event.Event} e The raw event object. Use {@link Ext.event.Event#getKey getKey()} to retrieve the key that was pressed.
+     * @param {Ext.event.Event} e The raw event object. Use {@link Ext.event.Event#getKey getKey()}
+     * to retrieve the key that was pressed.
      */
 
     /**
@@ -438,6 +481,7 @@ Ext.define('Ext.view.View', {
         var me = this;
 
         me.callParent();
+
         me.mon(me.el, {
             scope: me,
             click: me.handleEvent,
@@ -455,17 +499,18 @@ Ext.define('Ext.view.View', {
     },
 
     // Can be overridden by features or anything that needs to use a specific selector as a target.
-    getTargetSelector: function () {
+    getTargetSelector: function() {
         return this.dataRowSelector || this.itemSelector;
     },
 
     handleMouseOver: function(e) {
         var me = this,
-        // this.getTargetSelector() can be used as a template method, e.g., in features.
+            // this.getTargetSelector() can be used as a template method, e.g., in features.
             itemSelector = me.getTargetSelector(),
             item = e.getTarget(itemSelector);
 
-        // If mouseover/out handling is buffered, view might have been destyroyed during buffer time.
+        // If mouseover/out handling is buffered, view might have been destyroyed
+        // during buffer time.
         if (!me.destroyed) {
             if (item) {
                 if (me.mouseOverItem !== item && me.el.contains(item)) {
@@ -473,36 +518,39 @@ Ext.define('Ext.view.View', {
                     e.newType = 'mouseenter';
                     me.handleEvent(e);
                 }
-            } else {
+            }
+            else {
                 // We're not over an item, so handle a container event.
                 me.handleEvent(e);
             }
         }
     },
 
-    handleMouseOut: function (e) {
+    handleMouseOut: function(e) {
         var me = this,
             itemSelector = me.getTargetSelector(),
             item = e.getTarget(itemSelector),
             computedRelatedTarget = e.getRelatedTarget(itemSelector),
             sourceView;
 
-        // We can only exit early when mousing within the same row, but we can't simply do an equality check
-        // since it's valid for both item and computedRelatedTarget to be null!
-        if ((item === computedRelatedTarget) && !(item === null && computedRelatedTarget === null)) {
+        // We can only exit early when mousing within the same row, but we can't simply do
+        // an equality check since it's valid for both item and computedRelatedTarget to be null!
+        if ((item === computedRelatedTarget) &&
+            !(item === null && computedRelatedTarget === null)) {
             return;
         }
 
         // Note that a mouseout event can trigger either an item event or a container event.
         // If mouseover/out handling is buffered, view might have been destroyed during buffer time.
         if (!me.destroyed) {
-            // Yes, this is an assignment.
+            // eslint-disable-next-line no-cond-assign
             if (item && (sourceView = me.self.getBoundView(item))) {
                 e.item = item;
                 e.newType = 'mouseleave';
                 sourceView.handleEvent(e);
                 sourceView.mouseOverItem = null;
-            } else {
+            }
+            else {
                 // We're not over an item, so handle a container event.
                 me.handleEvent(e);
             }
@@ -512,17 +560,18 @@ Ext.define('Ext.view.View', {
     handleEvent: function(e) {
         var me = this,
             isKeyEvent = me.keyEventRe.test(e.type);
-        
+
         // We need to know if the event target is an input field to block
         // drag n' drop plugin(s) from stopping pointer events as this makes
         // input fields unfocusable and unselectable. We also need to know
         // this for key events to prevent scrolling, see below.
         e.isInputFieldEvent = Ext.fly(e.target).isInputField();
-        
+
         e.view = me;
 
         // Find the item from the event target.
         e.item = e.getTarget(me.itemSelector);
+
         if (e.item) {
             e.record = me.getRecord(e.item);
         }
@@ -531,17 +580,18 @@ Ext.define('Ext.view.View', {
         if (me.processUIEvent(e) !== false && !me.destroyed) {
             me.processSpecialEvent(e);
         }
-        
+
         // We need to prevent default action on navigation keys
         // that can cause View element scroll unless the event is from an input field.
-        // We MUST prevent browser's default action on SPACE which is to focus the event's target element.
+        // We MUST prevent browser's default action on SPACE which is to focus
+        // the event's target element.
         // Focusing causes the browser to attempt to scroll the element into view.
         if (isKeyEvent && !e.isInputFieldEvent) {
             if (e.getKey() === e.SPACE || e.isNavKeyPress(true)) {
                 e.preventDefault();
             }
         }
-        
+
         e.view = null;
     },
 
@@ -553,13 +603,14 @@ Ext.define('Ext.view.View', {
     processSpecialEvent: Ext.emptyFn,
 
     processUIEvent: function(e) {
-
-        // If the target event has been removed from the body (data update causing view DOM to be updated),
+        // If the target event has been removed from the body (data update causing view DOM
+        // to be updated),
         // do not process. isAncestor uses native methods to check.
         if (!Ext.getBody().isAncestor(e.target)) {
             return;
         }
 
+        // eslint-disable-next-line vars-on-top
         var me = this,
             item = e.item,
             self = me.self,
@@ -600,6 +651,7 @@ Ext.define('Ext.view.View', {
         }
         else {
             type = touchMap[type] || type;
+
             if (
                 (me.processContainerEvent(e) === false) ||
                 (me['onBeforeContainer' + map[type]](e) === false) ||
@@ -627,7 +679,7 @@ Ext.define('Ext.view.View', {
     /**
      * @private
      */
-    onItemMouseLeave : function(record, item, index, e) {
+    onItemMouseLeave: function(record, item, index, e) {
         if (this.trackOver) {
             this.clearHighlight();
         }
@@ -688,14 +740,15 @@ Ext.define('Ext.view.View', {
     /**
      * @private
      */
-    setHighlightedItem: function(item){
+    setHighlightedItem: function(item) {
         var me = this,
             highlighted = me.highlightedItem,
             overItemCls = me.overItemCls;
 
-        if (highlighted !== item){
+        if (highlighted !== item) {
             if (highlighted) {
                 Ext.fly(highlighted).removeCls(overItemCls);
+
                 //<feature legacyBrowser>
                 // Work around for an issue in IE8 where the focus/over/selected borders do not
                 // get updated where applied using adjacent sibling selectors.
@@ -704,6 +757,7 @@ Ext.define('Ext.view.View', {
                     me.repaintBorder(highlighted.nextSibling);
                 }
                 //</feature>
+
                 if (me.hasListeners.unhighlightitem) {
                     me.fireEvent('unhighlightitem', me, highlighted);
                 }
@@ -713,6 +767,7 @@ Ext.define('Ext.view.View', {
 
             if (item) {
                 Ext.fly(item).addCls(me.overItemCls);
+
                 //<feature legacyBrowser>
                 // Work around for an issue in IE8 where the focus/over/selected borders do not
                 // get updated where applied using adjacent sibling selectors.
@@ -720,6 +775,7 @@ Ext.define('Ext.view.View', {
                     me.repaintBorder(item.nextSibling);
                 }
                 //</feature>
+
                 if (me.hasListeners.highlightitem) {
                     me.fireEvent('highlightitem', me, item);
                 }
@@ -728,9 +784,10 @@ Ext.define('Ext.view.View', {
     },
 
     /**
-     * Highlights a given item in the View. This is called by the mouseover handler if {@link #overItemCls}
-     * and {@link #trackOver} are configured, but can also be called manually by other code, for instance to
-     * handle stepping through the list via keyboard navigation.
+     * Highlights a given item in the View. This is called by the mouseover handler
+     * if {@link #overItemCls} and {@link #trackOver} are configured, but can also be called
+     * manually by other code, for instance to handle stepping through the list
+     * via keyboard navigation.
      * @param {HTMLElement} item The item to highlight
      */
     highlightItem: function(item) {
@@ -744,11 +801,9 @@ Ext.define('Ext.view.View', {
         this.setHighlightedItem(undefined);
     },
 
-    handleUpdate: function(store, record){
+    handleUpdate: function(store, record) {
         var me = this,
-            node,
-            newNode,
-            highlighted;
+            node, newNode, highlighted;
 
         if (me.viewReady) {
             node = me.getNode(record);
@@ -757,6 +812,7 @@ Ext.define('Ext.view.View', {
 
             if (highlighted && highlighted === node) {
                 delete me.highlightedItem;
+
                 if (newNode) {
                     me.highlightItem(newNode);
                 }
@@ -773,23 +829,23 @@ Ext.define('Ext.view.View', {
      * Focuses a node in the view.
      * @param {Ext.data.Model} rec The record associated to the node that is to be focused.
      */
-    focusNode: function(rec){
-        var me          = this,
-            node        = Ext.fly(me.getNode(rec)),
-            el          = me.el,
+    focusNode: function(rec) {
+        var me = this,
+            node = Ext.fly(me.getNode(rec)),
+            el = me.el,
             adjustmentY = 0,
             adjustmentX = 0,
-            elRegion    = el.getRegion(),
+            elRegion = el.getRegion(),
             nodeRegion;
 
         // Viewable region must not include scrollbars, so use
         // DOM client dimensions
         elRegion.bottom = elRegion.top + el.dom.clientHeight;
         elRegion.right = elRegion.left + el.dom.clientWidth;
-        
+
         if (node) {
             nodeRegion = node.getRegion();
-            
+
             // node is above
             if (nodeRegion.top < elRegion.top) {
                 adjustmentY = nodeRegion.top - elRegion.top;
@@ -811,7 +867,7 @@ Ext.define('Ext.view.View', {
             if (adjustmentX || adjustmentY) {
                 me.scrollBy(adjustmentX, adjustmentY, false);
             }
-            
+
             // Poke on a tabIndex to make the node focusable.
             node.set({
                 tabIndex: -1
@@ -829,6 +885,7 @@ Ext.define('Ext.view.View', {
             var node = this.getNode(rowIdx);
 
             if (node) {
+                // eslint-disable-next-line no-self-assign
                 node.className = node.className;
             }
         }

@@ -1,0 +1,114 @@
+/**
+ * @class Ext.panel.TimeHeader
+ */
+
+/**
+ * @var {color}
+ * Time Header background color
+ */
+$timeheader-background-color: dynamic($base-color);
+
+/**
+ * @var {color}
+ * Time Header text color
+ */
+$timeheader-color: dynamic($light-color);
+
+/**
+ * @var {number}
+ * Time Header minutes width
+ */
+$timeheader-minutes-width: dynamic(75px);
+
+/**
+ * @var {number}
+ * Time Header padding
+ */
+$timeheader-padding: dynamic(10px 40px);
+
+@mixin timeheader-ui(
+    $ui: null,
+    $background-color: null,
+    $color: null,
+    $minutes-width: null,
+    $padding: null,
+    $xtype: analogtimeheader
+) {
+
+    $ui-suffix: ui-suffix($ui);
+    .#{$prefix}#{$xtype}#{$ui-suffix} {
+
+        .#{$prefix}header-position-left & {
+            // Required for flexbox issue on iOS 10
+            height: 100%;
+
+            .#{$prefix}header-el {
+                flex-direction: column;
+                justify-content: center;
+                height: 100%;
+                width: 190px;
+            }
+
+            .#{$prefix}meridiem-wrapper-el {
+                height: auto;
+                padding-left: 0;
+            }
+
+            .#{$prefix}time-el {
+                font-size: 42px;
+            }
+        }
+
+
+        .#{$prefix}header-el {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            align-items: center;
+            background-color: $background-color;
+            height: 100px;
+            padding: $padding;
+            color: $color;
+            @include no-select;
+        }
+
+        .#{$prefix}meridiem-wrapper-el {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            padding-left: 0;
+            height: 100%;
+        }
+
+        .#{$prefix}time-wrapper-el {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+        }
+
+        .#{$prefix}time-el {
+            font-size: 68px;
+            line-height: normal;
+        }
+
+        .#{$prefix}time-el, .#{$prefix}meridiem-el {
+            user-select: none;
+            cursor: pointer;
+            opacity: .7;
+        }
+
+        .#{$prefix}time-el.active, .#{$prefix}meridiem-el.active {
+            opacity: 1;
+        }
+
+        .#{$prefix}time-el.#{$prefix}minute-el {
+            flex: 1;
+            text-align: left;
+        }
+
+        .#{$prefix}time-el.#{$prefix}hour-el {
+            flex: 1;
+            text-align: right;
+        }
+    }
+}

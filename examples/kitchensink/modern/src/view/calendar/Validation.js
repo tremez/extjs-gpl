@@ -1,6 +1,7 @@
 Ext.define('KitchenSink.view.calendar.Validation', {
     extend: 'Ext.Panel',
     xtype: 'calendar-validation',
+    controller: 'calendar-validation',
 
     requires: [
         'KitchenSink.view.calendar.ValidationController',
@@ -8,17 +9,15 @@ Ext.define('KitchenSink.view.calendar.Validation', {
         'Ext.calendar.panel.Days'
     ],
 
-    // <example>
+    //<example>
     otherContent: [{
         type: 'Controller',
         path: 'modern/src/view/calendar/ValidationController.js'
-    },{
+    }, {
         type: 'Store',
         path: 'samples/data/calendar/Validation.js'
     }],
-    // </example>
-
-    controller: 'calendar-validation',
+    //</example>
 
     viewModel: {
         data: {
@@ -40,14 +39,12 @@ Ext.define('KitchenSink.view.calendar.Validation', {
     },
 
     layout: 'fit',
-    shadow: true,
 
     items: [{
         xtype: 'calendar-days',
         startTime: 8,
         endTime: 18,
         visibleDays: 2,
-        timezoneOffset: 0,
         gestureNavigation: false,
         bind: {
             store: '{calStore}',
@@ -62,4 +59,4 @@ Ext.define('KitchenSink.view.calendar.Validation', {
         }
     }]
 
-})
+});

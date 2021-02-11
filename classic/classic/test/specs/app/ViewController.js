@@ -1,7 +1,6 @@
-describe("Ext.app.ViewController", function() {
-
+topSuite("Ext.app.ViewController", ['Ext.app.ViewModel', 'Ext.Button', 'Ext.Container'], function() {
     var ct, controller, doInit, doBeforeInit;
-    
+
     function makeContainer(cfg) {
         cfg = cfg || {};
         Ext.applyIf(cfg, {
@@ -10,7 +9,7 @@ describe("Ext.app.ViewController", function() {
         ct = new Ext.container.Container(cfg);
         controller = ct.getController();
     }
-    
+
     beforeEach(function() {
         Ext.define('spec.TestController1', {
             extend: 'Ext.app.ViewController',
@@ -21,39 +20,39 @@ describe("Ext.app.ViewController", function() {
                     doBeforeInit(this);
                 }
             },
-            
+
             init: function(view) {
                 if (doInit) {
                     doInit(this);
                 }
             },
-            
+
             method1: function() {},
-            
+
             method2: function() {}
         });
-        
+
         Ext.define('spec.TestController2', {
             extend: 'Ext.app.ViewController',
             alias: 'controller.test2',
 
             init: function() {},
-            
+
             method1: function() {},
-            
+
             method2: function() {}
         });
-        
+
         Ext.define('spec.TestController3', {
             extend: 'Ext.app.ViewController',
             alias: 'controller.test3',
-            
+
             method1: function() {},
-            
+
             method2: function() {}
         });
     });
-    
+
     afterEach(function() {
         Ext.destroy(ct);
         Ext.undefine('spec.TestController1');
@@ -61,33 +60,36 @@ describe("Ext.app.ViewController", function() {
         Ext.undefine('spec.TestController3');
         doBeforeInit = doInit = controller = ct = null;
     });
-    
+
     describe("initializing", function() {
         it("should set the view on the controller", function() {
             makeContainer();
-            expect(controller.getView()).toBe(ct);    
+            expect(controller.getView()).toBe(ct);
         });
-        
+
         it("should should call init once the container has initialized its items", function() {
             var count = 0;
+
             doInit = function(ctrl) {
                 count = ctrl.getView().items.getCount();
             };
-            
+
             makeContainer({
                 items: {
                     xtype: 'component'
                 }
-            });    
+            });
             expect(count).toBe(1);
         });
 
         it("should call the init method and pass the component", function() {
             var ctrl = new spec.TestController2();
+
             spyOn(ctrl, 'init');
             var c = new Ext.Component({
                 controller: ctrl
             });
+
             expect(ctrl.init).toHaveBeenCalledWith(c);
             Ext.destroy(c);
         });
@@ -120,10 +122,12 @@ describe("Ext.app.ViewController", function() {
 
         it("should call the beforeInit method and pass the component", function() {
             var ctrl = new spec.TestController2();
+
             spyOn(ctrl, 'beforeInit');
             var c = new Ext.Component({
                 controller: ctrl
             });
+
             expect(ctrl.beforeInit).toHaveBeenCalledWith(c);
             c.destroy();
         });
@@ -162,19 +166,169 @@ describe("Ext.app.ViewController", function() {
                     vm = new Ext.app.ViewModel(),
                     spy = spyOn(ctrl, 'initViewModel').andCallFake(function() {
                         result = this.getViewModel();
-                    }), result;
+                    }),
+                    result;
 
                 makeContainer({
                     controller: ctrl,
                     viewModel: vm
                 });
+
                 // Force VM creation
                 ct.getViewModel();
                 expect(result).toBe(vm);
             });
         });
     });
-    
+
+    describe("bindings", function() {
+        function defineBindController(bindings) {
+            Ext.define('spec.TestController4', {
+                extend: 'Ext.app.ViewController',
+                alias: 'controller.test4',
+
+                bindings: bindings,
+
+                method1: Ext.emptyFn,
+                method2: Ext.emptyFn
+            });
+        }
+
+        afterEach(function() {
+            Ext.undefine('spec.TestController4');
+        });
+
+        it("should bind to a viewmodel directly on the view", function() {
+            defineBindController({
+                method1: '{x}'
+            });
+
+            var ctrl = new spec.TestController4(),
+                vm = new Ext.app.ViewModel();
+
+            spyOn(ctrl, 'method1');
+
+            makeContainer({
+                renderTo: Ext.getBody(),
+                controller: ctrl,
+                viewModel: vm
+            });
+
+            expect(ctrl.method1).not.toHaveBeenCalled();
+            vm.set('x', 100);
+            vm.notify();
+            expect(ctrl.method1.callCount).toBe(1);
+        });
+
+        it("should bind to a viewmodel above the view", function() {
+            defineBindController({
+                method1: '{x}'
+            });
+
+            var ctrl = new spec.TestController4(),
+                vm = new Ext.app.ViewModel();
+
+            spyOn(ctrl, 'method1');
+
+            makeContainer({
+                renderTo: Ext.getBody(),
+                viewModel: vm,
+                items: {
+                    xtype: 'container',
+                    controller: ctrl
+                }
+            });
+
+            vm.set('x', 200);
+            vm.notify();
+            expect(ctrl.method1.callCount).toBe(1);
+        });
+
+        it("should bind to an object bind", function() {
+            defineBindController({
+                method1: {
+                    x: '{x}',
+                    y: '{y}'
+                }
+            });
+
+            var ctrl = new spec.TestController4(),
+                vm = new Ext.app.ViewModel();
+
+            spyOn(ctrl, 'method1');
+
+            makeContainer({
+                renderTo: Ext.getBody(),
+                viewModel: vm,
+                items: {
+                    xtype: 'container',
+                    controller: ctrl
+                }
+            });
+
+            vm.set('x', 200);
+            vm.set('y', 300);
+            vm.notify();
+            expect(ctrl.method1.callCount).toBe(1);
+        });
+
+        it("should be able to have multiple bindings", function() {
+            defineBindController({
+                method1: '{x}',
+                method2: '{y}'
+            });
+
+            var ctrl = new spec.TestController4(),
+                vm = new Ext.app.ViewModel();
+
+            spyOn(ctrl, 'method1');
+            spyOn(ctrl, 'method2');
+
+            makeContainer({
+                renderTo: Ext.getBody(),
+                controller: ctrl,
+                viewModel: vm
+            });
+
+            vm.set('x', 200);
+            vm.set('y', 300);
+            vm.notify();
+            expect(ctrl.method1.callCount).toBe(1);
+            expect(ctrl.method2.callCount).toBe(1);
+        });
+
+        it("should destroy bindings along with the controller", function() {
+            defineBindController({
+                method1: '{x}'
+            });
+
+            var ctrl = new spec.TestController4(),
+                vm = new Ext.app.ViewModel();
+
+            spyOn(ctrl, 'method1');
+
+            makeContainer({
+                renderTo: Ext.getBody(),
+                viewModel: vm,
+                items: {
+                    xtype: 'container',
+                    controller: ctrl
+                }
+            });
+
+            vm.set('x', 1);
+            vm.notify();
+            expect(ctrl.method1.callCount).toBe(1);
+            ctrl.method1.reset();
+
+            ct.items.first().destroy();
+
+            vm.set('x', 1);
+            vm.notify();
+            expect(ctrl.method1).not.toHaveBeenCalled();
+        });
+    });
+
     describe("references", function() {
         it("should get the same reference as the view", function() {
             makeContainer({
@@ -185,7 +339,8 @@ describe("Ext.app.ViewController", function() {
                 }
             });
             var c = controller.lookupReference('a');
-            expect(c).toBe(ct.down('#compA'));    
+
+            expect(c).toBe(ct.down('#compA'));
         });
     });
 
@@ -197,6 +352,7 @@ describe("Ext.app.ViewController", function() {
 
         it("should return the view model of the view directly", function() {
             var vm = new Ext.app.ViewModel();
+
             makeContainer({
                 viewModel: vm
             });
@@ -205,6 +361,7 @@ describe("Ext.app.ViewController", function() {
 
         it("should return an inherited view model if not specified on the view", function() {
             var vm = new Ext.app.ViewModel();
+
             makeContainer({
                 viewModel: vm,
                 items: [{
@@ -249,6 +406,7 @@ describe("Ext.app.ViewController", function() {
                     }
                 }
             });
+
             makeContainer({
                 renderTo: Ext.getBody(),
                 viewModel: vm
@@ -260,6 +418,7 @@ describe("Ext.app.ViewController", function() {
     describe("getSession", function() {
         it("should return a session attached the view", function() {
             var session = new Ext.data.Session();
+
             makeContainer({
                 renderTo: Ext.getBody(),
                 session: session
@@ -350,6 +509,7 @@ describe("Ext.app.ViewController", function() {
     describe("getViewModel", function() {
         it("should return a viewModel attached the view", function() {
             var vm = new Ext.app.ViewModel();
+
             makeContainer({
                 renderTo: Ext.getBody(),
                 viewModel: vm
@@ -454,18 +614,19 @@ describe("Ext.app.ViewController", function() {
                     xtype: 'container'
                 }
             });
-            
+
             spyOn(controller, 'method1');
             var other = new Ext.container.Container();
+
             other.fireEvent('custom');
             expect(controller.method1).not.toHaveBeenCalled();
             ct.items.first().fireEvent('custom');
             expect(controller.method1).toHaveBeenCalled();
-            
+
             Ext.destroy(other);
         });
     });
-    
+
     describe("listeners", function() {
         describe("direct events", function() {
             it("should call a method on the controller", function() {
@@ -480,8 +641,8 @@ describe("Ext.app.ViewController", function() {
                 spyOn(controller, 'method1');
                 ct.items.first().fireEvent('custom');
                 expect(controller.method1).toHaveBeenCalled();
-            });  
-        
+            });
+
             it("should not call a method if events are suspended", function() {
                 makeContainer({
                     items: [{
@@ -493,11 +654,12 @@ describe("Ext.app.ViewController", function() {
                 });
                 spyOn(controller, 'method1');
                 var c = ct.items.first();
+
                 c.suspendEvents();
                 c.fireEvent('custom');
                 expect(controller.method1).not.toHaveBeenCalled();
             });
-        
+
             it("should encapsulate events", function() {
                 makeContainer({
                     renderTo: Ext.getBody(),
@@ -513,15 +675,16 @@ describe("Ext.app.ViewController", function() {
                     }]
                 });
                 var child = ct.items.first().getController();
+
                 spyOn(controller, 'method1');
                 spyOn(child, 'method1');
-                    
+
                 child.getView().items.first().fireEvent('custom');
                 expect(child.method1).toHaveBeenCalled();
                 expect(controller.method1).not.toHaveBeenCalled();
-            });     
+            });
         });
-        
+
         describe("on the event bus", function() {
             describe("widgets", function() {
                 beforeEach(function() {
@@ -571,14 +734,14 @@ describe("Ext.app.ViewController", function() {
                         }
                     }]
                 });
-                
+
                 var c = ct.down('#a');
-                
-                spyOn(controller, 'method1');    
+
+                spyOn(controller, 'method1');
                 c.fireEvent('custom');
                 expect(controller.method1).toHaveBeenCalled();
             });
-            
+
             it("should not react to non matching selectors", function() {
                 makeContainer({
                     controller: {
@@ -597,14 +760,14 @@ describe("Ext.app.ViewController", function() {
                         }
                     }]
                 });
-                
+
                 var c = ct.down('#a');
-                
-                spyOn(controller, 'method1');    
+
+                spyOn(controller, 'method1');
                 c.fireEvent('custom');
                 expect(controller.method1).not.toHaveBeenCalled();
             });
-            
+
             it("should react to events on itself", function() {
                 makeContainer({
                     controller: {
@@ -615,12 +778,12 @@ describe("Ext.app.ViewController", function() {
                             }
                         }
                     }
-                });                
-                spyOn(controller, 'method1');  
+                });
+                spyOn(controller, 'method1');
                 ct.fireEvent('custom');
                 expect(controller.method1).toHaveBeenCalled();
             });
-            
+
             it("should not react to events outside the hierarchy", function() {
                 makeContainer({
                     controller: {
@@ -631,14 +794,15 @@ describe("Ext.app.ViewController", function() {
                             }
                         }
                     }
-                });                
-                spyOn(controller, 'method1');    
+                });
+                spyOn(controller, 'method1');
                 var other = new Ext.container.Container();
+
                 other.fireEvent('custom');
                 expect(controller.method1).not.toHaveBeenCalled();
                 other.destroy();
             });
-            
+
             it("should remove listeners when the controller is destroyed", function() {
                 makeContainer({
                     controller: {
@@ -652,13 +816,13 @@ describe("Ext.app.ViewController", function() {
                     items: {
                         xtype: 'container'
                     }
-                });                
+                });
                 spyOn(controller, 'method1');
-                controller.destroy();    
+                controller.destroy();
                 ct.items.first().fireEvent('custom');
                 expect(controller.method1).not.toHaveBeenCalled();
             });
-            
+
             it("should use the '#' selector to match the reference holder", function() {
                 makeContainer({
                     controller: {
@@ -673,7 +837,7 @@ describe("Ext.app.ViewController", function() {
                         xtype: 'component',
                         itemId: 'compA'
                     }
-                });                
+                });
                 spyOn(controller, 'method1');
                 ct.items.first().fireEvent('custom');
                 expect(controller.method1).not.toHaveBeenCalled();
@@ -699,7 +863,7 @@ describe("Ext.app.ViewController", function() {
                 ct.fireEvent('custom');
                 expect(controller.method1).not.toHaveBeenCalled();
             });
-            
+
             describe("hierarchy", function() {
                 var makeController = function(i, control) {
                     return {
@@ -711,6 +875,7 @@ describe("Ext.app.ViewController", function() {
                         }
                     };
                 };
+
                 it("should fire matched events up the hierarchy", function() {
                     makeContainer({
                         controller: makeController(1),
@@ -726,7 +891,8 @@ describe("Ext.app.ViewController", function() {
                                 }
                             }
                         }
-                    }); 
+                    });
+
                     var inner = ct.down('#compA'),
                         ctrl3 = inner.up().getController(),
                         ctrl2 = inner.up().up().getController(),
@@ -735,14 +901,14 @@ describe("Ext.app.ViewController", function() {
                         push = function() {
                             values.push(this.type);
                         };
-                
+
                     spyOn(ctrl1, 'method1').andCallFake(push);
-                    spyOn(ctrl2, 'method1').andCallFake(push);    
+                    spyOn(ctrl2, 'method1').andCallFake(push);
                     spyOn(ctrl3, 'method1').andCallFake(push);
                     inner.fireEvent('custom');
                     expect(values).toEqual(['test3', 'test2', 'test1']);
                 });
-                
+
                 it("should fire parents even if the deepest child doesn't match", function() {
                     makeContainer({
                         controller: makeController(1),
@@ -758,21 +924,21 @@ describe("Ext.app.ViewController", function() {
                                 }
                             }
                         }
-                    }); 
+                    });
                     var inner = ct.down('#compA'),
                         ctrl3 = inner.up().getController(),
                         ctrl2 = inner.up().up().getController(),
                         ctrl1 = inner.up().up().up().getController();
-                
+
                     spyOn(ctrl1, 'method1');
-                    spyOn(ctrl2, 'method1');  
+                    spyOn(ctrl2, 'method1');
                     spyOn(ctrl3, 'method1');
                     inner.fireEvent('custom');
                     expect(ctrl1.method1).toHaveBeenCalled();
                     expect(ctrl2.method1).toHaveBeenCalled();
                     expect(ctrl3.method1).not.toHaveBeenCalled();
                 });
-                
+
                 it("should be able to continue up when a controller in the hierarchy doesn't match", function() {
                     makeContainer({
                         controller: makeController(1),
@@ -788,21 +954,21 @@ describe("Ext.app.ViewController", function() {
                                 }
                             }
                         }
-                    }); 
+                    });
                     var inner = ct.down('#compA'),
                         ctrl3 = inner.up().getController(),
                         ctrl2 = inner.up().up().getController(),
                         ctrl1 = inner.up().up().up().getController();
-                
+
                     spyOn(ctrl1, 'method1');
-                    spyOn(ctrl2, 'method1');   
+                    spyOn(ctrl2, 'method1');
                     spyOn(ctrl3, 'method1');
                     inner.fireEvent('custom');
                     expect(ctrl1.method1).toHaveBeenCalled();
                     expect(ctrl2.method1).not.toHaveBeenCalled();
                     expect(ctrl3.method1).toHaveBeenCalled();
                 });
-                
+
                 it("should not fire parent events if a lower event returns false", function() {
                     makeContainer({
                         controller: makeController(1),
@@ -818,14 +984,14 @@ describe("Ext.app.ViewController", function() {
                                 }
                             }
                         }
-                    }); 
+                    });
                     var inner = ct.down('#compA'),
                         ctrl3 = inner.up().getController(),
                         ctrl2 = inner.up().up().getController(),
                         ctrl1 = inner.up().up().up().getController();
-                
+
                     spyOn(ctrl1, 'method1');
-                    spyOn(ctrl2, 'method1');   
+                    spyOn(ctrl2, 'method1');
                     spyOn(ctrl3, 'method1').andReturn(false);
                     inner.fireEvent('custom');
                     expect(ctrl1.method1).not.toHaveBeenCalled();
@@ -834,7 +1000,7 @@ describe("Ext.app.ViewController", function() {
                 });
             });
         });
-        
+
         describe("mixture of both", function() {
             it("should fire direct events first", function() {
                 makeContainer({
@@ -853,22 +1019,22 @@ describe("Ext.app.ViewController", function() {
                         }
                     }
                 });
-                
+
                 var c = ct.items.first(),
                     ctrl = ct.getController(),
                     values = [];
-                    
+
                 spyOn(ctrl, 'method1').andCallFake(function() {
                     values.push(1);
                 });
                 spyOn(ctrl, 'method2').andCallFake(function() {
                     values.push(2);
                 });
-                
+
                 c.fireEvent('custom');
                 expect(values).toEqual([2, 1]);
             });
-            
+
             it("should not fire bus events if direct handlers return false", function() {
                 makeContainer({
                     controller: {
@@ -886,13 +1052,13 @@ describe("Ext.app.ViewController", function() {
                         }
                     }
                 });
-                
+
                 var c = ct.items.first(),
                     ctrl = ct.getController();
-                    
+
                 spyOn(ctrl, 'method1');
                 spyOn(ctrl, 'method2').andReturn(false);
-                
+
                 c.fireEvent('custom');
                 expect(ctrl.method1).not.toHaveBeenCalled();
             });
@@ -902,7 +1068,7 @@ describe("Ext.app.ViewController", function() {
     describe("fireViewEvent", function() {
         it("view should be first argument", function() {
             makeContainer({
-                controller : {
+                controller: {
                     type: 'test1',
                     control: {
                         '#': {
@@ -922,7 +1088,7 @@ describe("Ext.app.ViewController", function() {
 
         it("view should not add view as first argument", function() {
             makeContainer({
-                controller : {
+                controller: {
                     type: 'test1',
                     control: {
                         '#': {

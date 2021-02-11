@@ -43,15 +43,15 @@ Ext.define('Admin.view.widgets.WidgetB', {
                     items: [
                         {
                             ui: 'facebook',
-                            iconCls: 'x-fa fa-facebook'
+                            iconCls: 'x-fab fa-facebook'
                         },
                         {
                             ui: 'soft-cyan',
-                            iconCls: 'x-fa fa-twitter'
+                            iconCls: 'x-fab fa-twitter'
                         },
                         {
                             ui: 'soft-red',
-                            iconCls: 'x-fa fa-google-plus'
+                            iconCls: 'x-fab fa-google-plus'
                         },
                         {
                             ui: 'soft-purple',

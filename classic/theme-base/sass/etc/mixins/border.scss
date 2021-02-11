@@ -16,7 +16,11 @@
  * @member Global_CSS
  * @private
  */
-@mixin border($width: null, $style: null, $color: null) {
+@mixin border(
+    $width: null,
+    $style: null,
+    $color: null
+) {
     @if $width != null and $style != null and $color != null and
             length($width) == 1 and length($style) == 1 and length($color) == 1 {
         border: $width $style $color;

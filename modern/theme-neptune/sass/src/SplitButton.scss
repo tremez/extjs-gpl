@@ -1,0 +1,117 @@
+@include splitButton-ui(
+    $background-color: $splitButton-background-color,
+    $hovered-background-color: $splitButton-hovered-background-color,
+    $pressed-background-color: $splitButton-pressed-background-color,
+    $focused-background-color: $splitButton-focused-background-color,
+    $disabled-background-color: $splitButton-disabled-background-color,
+    $box-shadow: $splitButton-box-shadow,
+    $hovered-box-shadow: $splitButton-hovered-box-shadow,
+    $pressed-box-shadow: $splitButton-pressed-box-shadow,
+    $focused-box-shadow: $splitButton-focused-box-shadow,
+    $disabled-box-shadow: $splitButton-disabled-box-shadow,
+    $background-gradient: $splitButton-background-gradient,
+    $hovered-background-gradient: $splitButton-hovered-background-gradient,
+    $pressed-background-gradient: $splitButton-pressed-background-gradient,
+    $focused-background-gradient: $splitButton-focused-background-gradient,
+    $disabled-background-gradient: $splitButton-disabled-background-gradient,
+    $color: $splitButton-color,
+    $hovered-color: $splitButton-hovered-color,
+    $pressed-color: $splitButton-pressed-color,
+    $focused-color: $splitButton-focused-color,
+    $disabled-color: $splitButton-disabled-color,
+    $border-color: $splitButton-border-color,
+    $hovered-border-color: $splitButton-hovered-border-color,
+    $pressed-border-color: $splitButton-pressed-border-color,
+    $focused-border-color: $splitButton-focused-border-color,
+    $disabled-border-color: $splitButton-disabled-border-color,
+    $focused-outline-color: $splitButton-focused-outline-color,
+    $focused-outline-style: $splitButton-focused-outline-style,
+    $focused-outline-width: $splitButton-focused-outline-width,
+    $focused-outline-offset: $splitButton-focused-outline-offset,
+    $border-width: $splitButton-border-width,
+    $border-style: $splitButton-border-style,
+    $border-radius: $splitButton-border-radius,
+    $border-radius-big: $splitButton-border-radius-big,
+    $font-weight: $splitButton-font-weight,
+    $font-size: $splitButton-font-size,
+    $font-size-big: $splitButton-font-size-big,
+    $line-height: $splitButton-line-height,
+    $line-height-big: $splitButton-line-height-big,
+    $font-family: $splitButton-font-family,
+    $text-transform: $splitButton-text-transform,
+    $text-transform-big: $splitButton-text-transform-big,
+    $padding: $splitButton-padding,
+    $padding-big: $splitButton-padding-big,
+    $icon-only-padding: $splitButton-icon-only-padding,
+    $icon-only-padding-big: $splitButton-icon-only-padding-big,
+    $icon-color: $splitButton-icon-color,
+    $hovered-icon-color: $splitButton-hovered-icon-color,
+    $pressed-icon-color: $splitButton-pressed-icon-color,
+    $focused-icon-color: $splitButton-focused-icon-color,
+    $disabled-icon-color: $splitButton-disabled-icon-color,
+    $icon-size: $splitButton-icon-size,
+    $icon-size-big: $splitButton-icon-size-big,
+    $icon-font-size: $splitButton-icon-font-size,
+    $icon-font-size-big: $splitButton-icon-font-size-big,
+    $icon-horizontal-spacing: $splitButton-icon-horizontal-spacing,
+    $icon-horizontal-spacing-big: $splitButton-icon-horizontal-spacing-big,
+    $icon-vertical-spacing: $splitButton-icon-vertical-spacing,
+    $icon-vertical-spacing-big: $splitButton-icon-vertical-spacing-big,
+    $disabled-opacity: $splitButton-disabled-opacity,
+    $arrow-icon: $splitButton-arrow-icon,
+    $arrow-icon-color: $splitButton-arrow-icon-color,
+    $hovered-arrow-icon-color: $splitButton-hovered-arrow-icon-color,
+    $pressed-arrow-icon-color: $splitButton-pressed-arrow-icon-color,
+    $focused-arrow-icon-color: $splitButton-focused-arrow-icon-color,
+    $disabled-arrow-icon-color: $splitButton-disabled-arrow-icon-color,
+    $arrow-icon-size: $splitButton-arrow-icon-size,
+    $arrow-icon-size-big: $splitButton-arrow-icon-size-big,
+    $arrow-icon-font-size: $splitButton-arrow-icon-font-size,
+    $arrow-icon-font-size-big: $splitButton-arrow-icon-font-size-big,
+    $arrow-horizontal-spacing: $splitButton-arrow-horizontal-spacing,
+    $arrow-horizontal-spacing-big: $splitButton-arrow-horizontal-spacing-big,
+    $arrow-vertical-spacing: $splitButton-arrow-vertical-spacing,
+    $arrow-vertical-spacing-big: $splitButton-arrow-vertical-spacing-big
+);
+
+@if $enable-default-uis {
+    @if $splitButton-alt-ui {
+        @include splitButton-ui(map-merge((ui: alt), $splitButton-alt-ui)...);
+    }
+
+    @if $splitButton-action-ui {
+        @include splitButton-ui(map-merge((ui: action), $splitButton-action-ui)...);
+    }
+
+    @if $splitButton-confirm-ui {
+        @include splitButton-ui(map-merge((ui: confirm), $splitButton-confirm-ui)...);
+    }
+
+    @if $splitButton-decline-ui {
+        @include splitButton-ui(map-merge((ui: decline), $splitButton-decline-ui)...);
+    }
+
+    @if $splitButton-round-ui {
+        @include splitButton-ui(map-merge((ui: round), $splitButton-round-ui)...);
+    }
+
+    @if $splitButton-square-ui {
+        @include splitButton-ui(map-merge((ui: square), $splitButton-square-ui)...);
+    }
+
+    @if $splitButton-flat-ui {
+        @include splitButton-ui(map-merge((ui: flat), $splitButton-flat-ui)...);
+    }
+
+    @if $splitButton-plain-ui {
+        @include splitButton-ui(map-merge((ui: plain), $splitButton-plain-ui)...);
+    }
+
+    @if $splitButton-raised-ui {
+        @include splitButton-ui(map-merge((ui: raised), $splitButton-raised-ui)...);
+    }
+
+    @if $splitButton-segmented-ui {
+        @include splitButton-ui(map-merge((ui: segmented), $splitButton-segmented-ui)...);
+    }
+}

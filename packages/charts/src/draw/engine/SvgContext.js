@@ -4,7 +4,6 @@
  * A class that imitates a canvas context but generates svg elements instead.
  */
 Ext.define('Ext.draw.engine.SvgContext', {
-
     requires: ['Ext.draw.Color'],
 
     /**
@@ -12,9 +11,9 @@ Ext.define('Ext.draw.engine.SvgContext', {
      * Properties to be saved/restored in the `save` and `restore` methods.
      */
     toSave: ['strokeOpacity', 'strokeStyle', 'fillOpacity', 'fillStyle', 'globalAlpha',
-        'lineWidth', 'lineCap', 'lineJoin', 'lineDash', 'lineDashOffset', 'miterLimit',
-        'shadowOffsetX', 'shadowOffsetY', 'shadowBlur', 'shadowColor',
-        'globalCompositeOperation', 'position', 'fillGradient', 'strokeGradient'],
+             'lineWidth', 'lineCap', 'lineJoin', 'lineDash', 'lineDashOffset', 'miterLimit',
+             'shadowOffsetX', 'shadowOffsetY', 'shadowBlur', 'shadowColor',
+             'globalCompositeOperation', 'position', 'fillGradient', 'strokeGradient'],
 
     strokeOpacity: 1,
     strokeStyle: 'none',
@@ -33,9 +32,9 @@ Ext.define('Ext.draw.engine.SvgContext', {
     shadowColor: 'none',
     globalCompositeOperation: 'src',
 
-    urlStringRe: /^url\(#([\w\-]+)\)$/,
+    urlStringRe: /^url\(#([\w-]+)\)$/,
 
-    constructor: function (SvgSurface) {
+    constructor: function(SvgSurface) {
         var me = this;
 
         me.surface = SvgSurface;
@@ -50,7 +49,7 @@ Ext.define('Ext.draw.engine.SvgContext', {
     /**
      * Clears the context.
      */
-    clear: function () {
+    clear: function() {
         // Current group to put paths into.
         this.group = this.surface.mainGroup;
         // Position within the current group.
@@ -63,14 +62,14 @@ Ext.define('Ext.draw.engine.SvgContext', {
      * @param {String} tag
      * @return {*}
      */
-    getElement: function (tag) {
+    getElement: function(tag) {
         return this.surface.getSvgElement(this.group, tag, this.position++);
     },
 
     /**
      * Pushes the context state to the state stack.
      */
-    save: function () {
+    save: function() {
         var toSave = this.toSave,
             obj = {},
             group = this.getElement('g'),
@@ -78,21 +77,24 @@ Ext.define('Ext.draw.engine.SvgContext', {
 
         for (i = 0; i < toSave.length; i++) {
             key = toSave[i];
+
             if (key in this) {
                 obj[key] = this[key];
             }
         }
+
         this.position = 0;
         obj.matrix = this.matrix.clone();
         this.state.push(obj);
         this.group = group;
+
         return group;
     },
 
     /**
      * Pops the state stack and restores the state.
      */
-    restore: function () {
+    restore: function() {
         var toSave = this.toSave,
             obj = this.state.pop(),
             group = this.group,
@@ -103,11 +105,14 @@ Ext.define('Ext.draw.engine.SvgContext', {
         while (children.length > this.position) {
             group.last().destroy();
         }
+
         for (i = 0; i < toSave.length; i++) {
             key = toSave[i];
+
             if (key in obj) {
                 this[key] = obj[key];
-            } else {
+            }
+            else {
                 delete this[key];
             }
         }
@@ -117,7 +122,8 @@ Ext.define('Ext.draw.engine.SvgContext', {
     },
 
     /**
-     * Changes the transformation matrix to apply the matrix given by the arguments as described below.
+     * Changes the transformation matrix to apply the matrix given by the arguments
+     * as described below.
      * @param {Number} xx
      * @param {Number} yx
      * @param {Number} xy
@@ -125,11 +131,14 @@ Ext.define('Ext.draw.engine.SvgContext', {
      * @param {Number} dx
      * @param {Number} dy
      */
-    transform: function (xx, yx, xy, yy, dx, dy) {
+    transform: function(xx, yx, xy, yy, dx, dy) {
+        var inv;
+
         if (this.path) {
-            var inv = Ext.draw.Matrix.fly([xx, yx, xy, yy, dx, dy]).inverse();
+            inv = Ext.draw.Matrix.fly([xx, yx, xy, yy, dx, dy]).inverse();
             this.path.transform(inv);
         }
+
         this.matrix.append(xx, yx, xy, yy, dx, dy);
     },
 
@@ -142,10 +151,11 @@ Ext.define('Ext.draw.engine.SvgContext', {
      * @param {Number} dx
      * @param {Number} dy
      */
-    setTransform: function (xx, yx, xy, yy, dx, dy) {
+    setTransform: function(xx, yx, xy, yy, dx, dy) {
         if (this.path) {
             this.path.transform(this.matrix);
         }
+
         this.matrix.reset();
         this.transform(xx, yx, xy, yy, dx, dy);
     },
@@ -155,7 +165,7 @@ Ext.define('Ext.draw.engine.SvgContext', {
      * @param {Number} x The horizontal scaling factor, where 1 equals unity or 100% scale.
      * @param {Number} y The vertical scaling factor.
      */
-    scale: function (x, y) {
+    scale: function(x, y) {
         this.transform(x, 0, 0, y, 0, 0);
     },
 
@@ -163,11 +173,12 @@ Ext.define('Ext.draw.engine.SvgContext', {
      * Rotates the current context coordinates (that is, a transformation matrix).
      * @param {Number} angle The rotation angle, in radians.
      */
-    rotate: function (angle) {
+    rotate: function(angle) {
         var xx = Math.cos(angle),
             yx = Math.sin(angle),
             xy = -Math.sin(angle),
             yy = Math.cos(angle);
+
         this.transform(xx, yx, xy, yy, 0, 0);
     },
 
@@ -176,18 +187,18 @@ Ext.define('Ext.draw.engine.SvgContext', {
      * @param {Number} x The value to add to horizontal (or x) coordinates.
      * @param {Number} y The value to add to vertical (or y) coordinates.
      */
-    translate: function (x, y) {
+    translate: function(x, y) {
         this.transform(1, 0, 0, 1, x, y);
     },
 
-    setGradientBBox: function (bbox) {
+    setGradientBBox: function(bbox) {
         this.bbox = bbox;
     },
 
     /**
      * Resets the current default path.
      */
-    beginPath: function () {
+    beginPath: function() {
         this.path = new Ext.draw.Path();
     },
 
@@ -196,23 +207,26 @@ Ext.define('Ext.draw.engine.SvgContext', {
      * @param {Number} x
      * @param {Number} y
      */
-    moveTo: function (x, y) {
+    moveTo: function(x, y) {
         if (!this.path) {
             this.beginPath();
         }
+
         this.path.moveTo(x, y);
         this.path.element = null;
     },
 
     /**
-     * Adds the given point to the current subpath, connected to the previous one by a straight line.
+     * Adds the given point to the current subpath, connected to the previous one by a straight
+     * line.
      * @param {Number} x
      * @param {Number} y
      */
-    lineTo: function (x, y) {
+    lineTo: function(x, y) {
         if (!this.path) {
             this.beginPath();
         }
+
         this.path.lineTo(x, y);
         this.path.element = null;
     },
@@ -224,7 +238,7 @@ Ext.define('Ext.draw.engine.SvgContext', {
      * @param {Number} width
      * @param {Number} height
      */
-    rect: function (x, y, width, height) {
+    rect: function(x, y, width, height) {
         this.moveTo(x, y);
         this.lineTo(x + width, y);
         this.lineTo(x + width, y + height);
@@ -233,13 +247,14 @@ Ext.define('Ext.draw.engine.SvgContext', {
     },
 
     /**
-     * Paints the box that outlines the given rectangle onto the canvas, using the current stroke style.
+     * Paints the box that outlines the given rectangle onto the canvas, using the current
+     * stroke style.
      * @param {Number} x
      * @param {Number} y
      * @param {Number} width
      * @param {Number} height
      */
-    strokeRect: function (x, y, width, height) {
+    strokeRect: function(x, y, width, height) {
         this.beginPath();
         this.rect(x, y, width, height);
         this.stroke();
@@ -252,19 +267,21 @@ Ext.define('Ext.draw.engine.SvgContext', {
      * @param {Number} width
      * @param {Number} height
      */
-    fillRect: function (x, y, width, height) {
+    fillRect: function(x, y, width, height) {
         this.beginPath();
         this.rect(x, y, width, height);
         this.fill();
     },
 
     /**
-     * Marks the current subpath as closed, and starts a new subpath with a point the same as the start and end of the newly closed subpath.
+     * Marks the current subpath as closed, and starts a new subpath with a point the same
+     * as the start and end of the newly closed subpath.
      */
-    closePath: function () {
+    closePath: function() {
         if (!this.path) {
             this.beginPath();
         }
+
         this.path.closePath();
         this.path.element = null;
     },
@@ -279,16 +296,20 @@ Ext.define('Ext.draw.engine.SvgContext', {
      * @param {Number} x2
      * @param {Number} y2
      */
-    arcSvg: function (r1, r2, rotation, large, swipe, x2, y2) {
+    arcSvg: function(r1, r2, rotation, large, swipe, x2, y2) {
         if (!this.path) {
             this.beginPath();
         }
+
         this.path.arcSvg(r1, r2, rotation, large, swipe, x2, y2);
         this.path.element = null;
     },
 
     /**
-     * Adds points to the subpath such that the arc described by the circumference of the circle described by the arguments, starting at the given start angle and ending at the given end angle, going in the given direction (defaulting to clockwise), is added to the path, connected to the previous point by a straight line.
+     * Adds points to the subpath such that the arc described by the circumference of the circle
+     * described by the arguments, starting at the given start angle and ending at the given
+     * end angle, going in the given direction (defaulting to clockwise), is added to the path,
+     * connected to the previous point by a straight line.
      * @param {Number} x
      * @param {Number} y
      * @param {Number} radius
@@ -296,16 +317,20 @@ Ext.define('Ext.draw.engine.SvgContext', {
      * @param {Number} endAngle
      * @param {Number} anticlockwise
      */
-    arc: function (x, y, radius, startAngle, endAngle, anticlockwise) {
+    arc: function(x, y, radius, startAngle, endAngle, anticlockwise) {
         if (!this.path) {
             this.beginPath();
         }
+
         this.path.arc(x, y, radius, startAngle, endAngle, anticlockwise);
         this.path.element = null;
     },
 
     /**
-     * Adds points to the subpath such that the arc described by the circumference of the ellipse described by the arguments, starting at the given start angle and ending at the given end angle, going in the given direction (defaulting to clockwise), is added to the path, connected to the previous point by a straight line.
+     * Adds points to the subpath such that the arc described by the circumference of the ellipse
+     * described by the arguments, starting at the given start angle and ending at the given
+     * end angle, going in the given direction (defaulting to clockwise), is added to the path,
+     * connected to the previous point by a straight line.
      * @param {Number} x
      * @param {Number} y
      * @param {Number} radiusX
@@ -315,18 +340,21 @@ Ext.define('Ext.draw.engine.SvgContext', {
      * @param {Number} endAngle
      * @param {Number} anticlockwise
      */
-    ellipse: function (x, y, radiusX, radiusY, rotation, startAngle, endAngle, anticlockwise) {
+    ellipse: function(x, y, radiusX, radiusY, rotation, startAngle, endAngle, anticlockwise) {
         if (!this.path) {
             this.beginPath();
         }
+
         this.path.ellipse(x, y, radiusX, radiusY, rotation, startAngle, endAngle, anticlockwise);
         this.path.element = null;
     },
 
     /**
-     * Adds an arc with the given control points and radius to the current subpath, connected to the previous point by a straight line.
-     * If two radii are provided, the first controls the width of the arc's ellipse, and the second controls the height. If only one is provided, or if they are the same, the arc is from a circle.
-     * In the case of an ellipse, the rotation argument controls the clockwise inclination of the ellipse relative to the x-axis.
+     * Adds an arc with the given control points and radius to the current subpath, connected
+     * to the previous point by a straight line. If two radii are provided, the first controls
+     * the width of the arc's ellipse, and the second controls the height. If only one is provided,
+     * or if they are the same, the arc is from a circle. In the case of an ellipse, the rotation
+     * argument controls the clockwise inclination of the ellipse relative to the x-axis.
      * @param {Number} x1
      * @param {Number} y1
      * @param {Number} x2
@@ -335,16 +363,18 @@ Ext.define('Ext.draw.engine.SvgContext', {
      * @param {Number} radiusY
      * @param {Number} rotation
      */
-    arcTo: function (x1, y1, x2, y2, radiusX, radiusY, rotation) {
+    arcTo: function(x1, y1, x2, y2, radiusX, radiusY, rotation) {
         if (!this.path) {
             this.beginPath();
         }
+
         this.path.arcTo(x1, y1, x2, y2, radiusX, radiusY, rotation);
         this.path.element = null;
     },
 
     /**
-     * Adds the given point to the current subpath, connected to the previous one by a cubic Bézier curve with the given control points.
+     * Adds the given point to the current subpath, connected to the previous one by a cubic Bézier
+     * curve with the given control points.
      * @param {Number} x1
      * @param {Number} y1
      * @param {Number} x2
@@ -352,25 +382,31 @@ Ext.define('Ext.draw.engine.SvgContext', {
      * @param {Number} x3
      * @param {Number} y3
      */
-    bezierCurveTo: function (x1, y1, x2, y2, x3, y3) {
+    bezierCurveTo: function(x1, y1, x2, y2, x3, y3) {
         if (!this.path) {
             this.beginPath();
         }
+
         this.path.bezierCurveTo(x1, y1, x2, y2, x3, y3);
         this.path.element = null;
     },
 
     /**
-     * Strokes the given text at the given position. If a maximum width is provided, the text will be scaled to fit that width if necessary.
+     * Strokes the given text at the given position. If a maximum width is provided, the text
+     * will be scaled to fit that width if necessary.
      * @param {String} text
      * @param {Number} x
      * @param {Number} y
      */
-    strokeText: function (text, x, y) {
+    strokeText: function(text, x, y) {
+        var element, tspan;
+
         text = String(text);
+
         if (this.strokeStyle) {
-            var element = this.getElement('text'),
-                tspan = this.surface.getSvgElement(element, 'tspan', 0);
+            element = this.getElement('text');
+            tspan = this.surface.getSvgElement(element, 'tspan', 0);
+
             this.surface.setElementAttributes(element, {
                 "x": x,
                 "y": y,
@@ -383,33 +419,42 @@ Ext.define('Ext.draw.engine.SvgContext', {
                 "stroke-dasharray": this.lineDash.join(','),
                 "stroke-dashoffset": this.lineDashOffset
             });
+
             if (this.lineDash.length) {
                 this.surface.setElementAttributes(element, {
                     "stroke-dasharray": this.lineDash.join(','),
                     "stroke-dashoffset": this.lineDashOffset
                 });
             }
+
             if (tspan.dom.firstChild) {
                 tspan.dom.removeChild(tspan.dom.firstChild);
             }
+
             this.surface.setElementAttributes(tspan, {
                 "alignment-baseline": "alphabetic"
             });
+
             tspan.dom.appendChild(document.createTextNode(Ext.String.htmlDecode(text)));
         }
     },
 
     /**
-     * Fills the given text at the given position. If a maximum width is provided, the text will be scaled to fit that width if necessary.
+     * Fills the given text at the given position. If a maximum width is provided, the text
+     * will be scaled to fit that width if necessary.
      * @param {String} text
      * @param {Number} x
      * @param {Number} y
      */
-    fillText: function (text, x, y) {
+    fillText: function(text, x, y) {
+        var element, tspan;
+
         text = String(text);
+
         if (this.fillStyle) {
-            var element = this.getElement('text'),
-                tspan = this.surface.getSvgElement(element, 'tspan', 0);
+            element = this.getElement('text');
+            tspan = this.surface.getSvgElement(element, 'tspan', 0);
+
             this.surface.setElementAttributes(element, {
                 "x": x,
                 "y": y,
@@ -419,19 +464,25 @@ Ext.define('Ext.draw.engine.SvgContext', {
                 "fill-opacity": this.fillOpacity,
                 "style": "font: " + this.font
             });
+
             if (tspan.dom.firstChild) {
                 tspan.dom.removeChild(tspan.dom.firstChild);
             }
+
             this.surface.setElementAttributes(tspan, {
                 "alignment-baseline": "alphabetic"
             });
+
             tspan.dom.appendChild(document.createTextNode(Ext.String.htmlDecode(text)));
         }
     },
 
     /**
      * Draws the given image onto the canvas.
-     * If the first argument isn't an img, canvas, or video element, throws a TypeMismatchError exception. If the image has no image data, throws an InvalidStateError exception. If the one of the source rectangle dimensions is zero, throws an IndexSizeError exception. If the image isn't yet fully decoded, then nothing is drawn.
+     * If the first argument isn't an img, canvas, or video element, throws a TypeMismatchError
+     * exception. If the image has no image data, throws an InvalidStateError exception.
+     * If the one of the source rectangle dimensions is zero, throws an IndexSizeError exception.
+     * If the image isn't yet fully decoded, then nothing is drawn.
      * @param {HTMLElement} image
      * @param {Number} sx
      * @param {Number} sy
@@ -442,13 +493,15 @@ Ext.define('Ext.draw.engine.SvgContext', {
      * @param {Number} dw
      * @param {Number} dh
      */
-    drawImage: function (image, sx, sy, sw, sh, dx, dy, dw, dh) {
+    drawImage: function(image, sx, sy, sw, sh, dx, dy, dw, dh) {
         var me = this,
             element = me.getElement('image'),
-            x = sx, y = sy,
+            x = sx,
+            y = sy,
             width = typeof sw === 'undefined' ? image.width : sw,
             height = typeof sh === 'undefined' ? image.height : sh,
             viewBox = null;
+
         if (typeof dh !== 'undefined') {
             viewBox = sx + " " + sy + " " + sw + " " + sh;
             x = dx;
@@ -456,7 +509,9 @@ Ext.define('Ext.draw.engine.SvgContext', {
             width = dw;
             height = dh;
         }
+
         element.dom.setAttributeNS("http:/" + "/www.w3.org/1999/xlink", "href", image.src);
+
         me.surface.setElementAttributes(element, {
             viewBox: viewBox,
             x: x,
@@ -471,18 +526,18 @@ Ext.define('Ext.draw.engine.SvgContext', {
     /**
      * Fills the subpaths of the current default path or the given path with the current fill style.
      */
-    fill: function () {
-        var me = this;
+    fill: function() {
+        var me = this,
+            path, fillGradient, element, bbox, fill;
 
         if (!me.path) {
             return;
         }
+
         if (me.fillStyle) {
-            var path,
-                fillGradient = me.fillGradient,
-                element = me.path.element,
-                bbox = me.bbox,
-                fill;
+            fillGradient = me.fillGradient;
+            element = me.path.element;
+            bbox = me.bbox;
 
             if (!element) {
                 path = me.path.toString();
@@ -492,14 +547,17 @@ Ext.define('Ext.draw.engine.SvgContext', {
                     "transform": me.matrix.toSvg()
                 });
             }
+
             if (fillGradient && bbox) {
                 // This indirectly calls ctx.createLinearGradient or ctx.createRadialGradient,
                 // depending on the type of gradient, and returns an instance of
                 // Ext.draw.engine.SvgContext.Gradient.
                 fill = fillGradient.generateGradient(me, bbox);
-            } else {
+            }
+            else {
                 fill = me.fillStyle;
             }
+
             me.surface.setElementAttributes(element, {
                 "fill": fill,
                 "fill-opacity": me.fillOpacity * me.globalAlpha
@@ -508,26 +566,29 @@ Ext.define('Ext.draw.engine.SvgContext', {
     },
 
     /**
-     * Strokes the subpaths of the current default path or the given path with the current stroke style.
+     * Strokes the subpaths of the current default path or the given path with the current
+     * stroke style.
      */
-    stroke: function () {
-        var me = this;
+    stroke: function() {
+        var me = this,
+            path, strokeGradient, element, bbox, stroke;
 
         if (!me.path) {
             return;
         }
+
         if (me.strokeStyle) {
-            var path,
-                strokeGradient = me.strokeGradient,
-                element = me.path.element,
-                bbox = me.bbox,
-                stroke;
+            strokeGradient = me.strokeGradient;
+            element = me.path.element;
+            bbox = me.bbox;
 
             if (!element || !me.path.svgString) {
                 path = me.path.toString();
+
                 if (!path) {
                     return;
                 }
+
                 element = me.path.element = me.getElement('path');
                 me.surface.setElementAttributes(element, {
                     "fill": "none",
@@ -535,14 +596,17 @@ Ext.define('Ext.draw.engine.SvgContext', {
                     "transform": me.matrix.toSvg()
                 });
             }
+
             if (strokeGradient && bbox) {
                 // This indirectly calls ctx.createLinearGradient or ctx.createRadialGradient,
                 // depending on the type of gradient, and returns an instance of
                 // Ext.draw.engine.SvgContext.Gradient.
                 stroke = strokeGradient.generateGradient(me, bbox);
-            } else {
+            }
+            else {
                 stroke = me.strokeStyle;
             }
+
             me.surface.setElementAttributes(element, {
                 "stroke": stroke,
                 "stroke-linecap": me.lineCap,
@@ -552,6 +616,7 @@ Ext.define('Ext.draw.engine.SvgContext', {
                 "stroke-dasharray": me.lineDash.join(','),
                 "stroke-dashoffset": me.lineDashOffset
             });
+
             if (me.lineDash.length) {
                 me.surface.setElementAttributes(element, {
                     "stroke-dasharray": me.lineDash.join(','),
@@ -566,10 +631,10 @@ Ext.define('Ext.draw.engine.SvgContext', {
      *
      * Note: After the method guarantees the transform matrix will be inverted.
      * @param {Object} attr The attribute object
-     * @param {Boolean} [transformFillStroke] Indicate whether to transform fill and stroke. If this is not
-     *      given, then uses `attr.transformFillStroke` instead.
+     * @param {Boolean} [transformFillStroke] Indicate whether to transform fill and stroke.
+     * If this is not given, then uses `attr.transformFillStroke` instead.
      */
-    fillStroke: function (attr, transformFillStroke) {
+    fillStroke: function(attr, transformFillStroke) {
         var ctx = this,
             fillStyle = ctx.fillStyle,
             strokeStyle = ctx.strokeStyle,
@@ -593,15 +658,15 @@ Ext.define('Ext.draw.engine.SvgContext', {
         }
     },
 
-    appendPath: function (path) {
+    appendPath: function(path) {
         this.path = path.clone();
     },
 
-    setLineDash: function (lineDash) {
+    setLineDash: function(lineDash) {
         this.lineDash = lineDash;
     },
 
-    getLineDash: function () {
+    getLineDash: function() {
         return this.lineDash;
     },
 
@@ -614,7 +679,7 @@ Ext.define('Ext.draw.engine.SvgContext', {
      * @param {Number} y1
      * @return {Ext.draw.engine.SvgContext.Gradient}
      */
-    createLinearGradient: function (x0, y0, x1, y1) {
+    createLinearGradient: function(x0, y0, x1, y1) {
         var me = this,
             element = me.surface.getNextDef('linearGradient'),
             gradient;
@@ -643,18 +708,18 @@ Ext.define('Ext.draw.engine.SvgContext', {
      * @param {Number} r1
      * @return {Ext.draw.engine.SvgContext.Gradient}
      */
-    createRadialGradient: function (x0, y0, r0, x1, y1, r1) {
+    createRadialGradient: function(x0, y0, r0, x1, y1, r1) {
         var me = this,
             element = me.surface.getNextDef('radialGradient'),
             gradient;
 
         me.surface.setElementAttributes(element, {
-            "fx": x0,
-            "fy": y0,
-            "cx": x1,
-            "cy": y1,
-            "r": r1,
-            "gradientUnits": "userSpaceOnUse"
+            fx: x0,
+            fy: y0,
+            cx: x1,
+            cy: y1,
+            r: r1,
+            gradientUnits: 'userSpaceOnUse'
         });
         gradient = new Ext.draw.engine.SvgContext.Gradient(me, me.surface, element, r0 / r1);
 
@@ -663,7 +728,7 @@ Ext.define('Ext.draw.engine.SvgContext', {
 });
 
 /**
- * @class Ext.draw.engine.SvgContext.Gradient.
+ * @class Ext.draw.engine.SvgContext.Gradient
  *
  * A class that implements native CanvasGradient interface
  * (https://developer.mozilla.org/en/docs/Web/API/CanvasGradient)
@@ -699,7 +764,7 @@ Ext.define('Ext.draw.engine.SvgContext.Gradient', {
 
     isGradient: true,
 
-    constructor: function (ctx, surface, element, compression) {
+    constructor: function(ctx, surface, element, compression) {
         var me = this;
 
         me.ctx = ctx;
@@ -710,11 +775,12 @@ Ext.define('Ext.draw.engine.SvgContext.Gradient', {
     },
 
     /**
-     * Adds a color stop with the given color to the gradient at the given offset. 0.0 is the offset at one end of the gradient, 1.0 is the offset at the other end.
+     * Adds a color stop with the given color to the gradient at the given offset. 0.0 is the offset
+     * at one end of the gradient, 1.0 is the offset at the other end.
      * @param {Number} offset
      * @param {String} color
      */
-    addColorStop: function (offset, color) {
+    addColorStop: function(offset, color) {
         var me = this,
             stop = me.surface.getSvgElement(me.element, 'stop', me.position++),
             compression = me.compression;
@@ -726,13 +792,14 @@ Ext.define('Ext.draw.engine.SvgContext.Gradient', {
         });
     },
 
-    toString: function () {
+    toString: function() {
         var children = this.element.dom.childNodes;
+
         // Removing surplus stops in case existing gradient element with more stops was reused.
         while (children.length > this.position) {
             Ext.fly(children[children.length - 1]).destroy();
         }
+
         return 'url(#' + this.element.getId() + ')';
     }
-
 });

@@ -16,9 +16,9 @@ Ext.onReady(function() {
 
         parseCodes = {
             g: 1,
-            c: "if (/(上午)/i.test(results[{0}])) {\n"
-                + "if (!h || h == 12) { h = 0; }\n"
-                + "} else { if (!h || h < 12) { h = (h || 0) + 12; }}",
+            c: "if (/(上午)/i.test(results[{0}])) {\n" +
+                "if (!h || h == 12) { h = 0; }\n" +
+                "} else { if (!h || h < 12) { h = (h || 0) + 12; }}",
             s: "(上午|下午)",
             calcAtEnd: true
         };
@@ -78,7 +78,7 @@ Ext.define("Ext.locale.zh_TW.picker.Date", {
     ariaTitleDateFormat: 'Y\u5e74m\u6708d\u65e5',
     longDayFormat: 'Y\u5e74m\u6708d\u65e5',
     monthYearFormat: 'Y\u5e74m\u6708',
-    getDayInitial: function (value) {
+    getDayInitial: function(value) {
         // Grab the last character
         return value.substr(value.length - 1);
     }
@@ -169,10 +169,10 @@ Ext.define("Ext.locale.zh_TW.window.MessageBox", {
         cancel: "取消",
         yes: "是",
         no: "否"
-    }    
+    }
 });
 
 // This is needed until we can refactor all of the locales into individual files
-Ext.define("Ext.locale.zh_TW.Component", {	
+Ext.define("Ext.locale.zh_TW.Component", {
     override: "Ext.Component"
 });

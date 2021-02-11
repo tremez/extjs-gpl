@@ -15,3 +15,5 @@ $calendar-selection-color: dynamic(#cff);
 $calendar-tooltip-border-color: $panel-border-color;
 
 $calendar-tooltip-background-color: $panel-body-background-color;
+
+$calendar-today-background-color: dynamic(mix(#fff, $base-color, 65%));

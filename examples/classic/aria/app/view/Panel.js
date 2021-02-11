@@ -2,7 +2,7 @@ Ext.define('Aria.view.Panel', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.mysimplepanel',
     title: 'Content Panel',
-    
+
     items: [{
         xtype: 'panel',
         title: 'Example collapsible panel',
@@ -13,7 +13,7 @@ Ext.define('Aria.view.Panel', {
         height: 150,
         header: true,
         html: 'A simple Panel',
-        
+
         dockedItems: {
             dock: 'bottom',
             items: [{
@@ -21,7 +21,7 @@ Ext.define('Aria.view.Panel', {
                 text: 'OK'
             }]
         },
-        
+
         tools: [{
             type: 'refresh',
             tooltip: 'Refresh form Data',

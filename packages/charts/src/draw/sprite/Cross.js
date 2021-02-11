@@ -44,12 +44,13 @@ Ext.define('Ext.draw.sprite.Cross', {
         }
     },
 
-    updatePath: function (path, attr) {
+    updatePath: function(path, attr) {
         var s = attr.size / 1.7,
             x = attr.x - attr.lineWidth / 2,
             y = attr.y;
 
-        path.fromSvgString('M'.concat(x - s, ',', y, 'l', [-s, -s, s, -s, s, s, s, -s, s, s, -s, s, s, s, -s, s, -s, -s, -s, s, -s, -s, 'z']));
+        path.fromSvgString('M'.concat(x - s, ',', y, 'l', [-s, -s, s, -s, s, s, s, -s, s, s, -s,
+                                                           s, s, s, -s, s, -s, -s, -s, s, -s, -s,
+                                                           'z']));
     }
-
 });

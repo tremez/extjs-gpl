@@ -3,7 +3,7 @@ Ext.define('Ticket.view.main.MainController', {
 
     alias: 'controller.main',
 
-    createTab: function (prefix, rec, cfg) {
+    createTab: function(prefix, rec, cfg) {
         var tabs = this.lookupReference('main'),
             id = prefix + '_' + rec.getId(),
             tab = tabs.items.getByKey(id);
@@ -17,7 +17,7 @@ Ext.define('Ticket.view.main.MainController', {
         tabs.setActiveTab(tab);
     },
 
-    editUser: function (userRecord) {
+    editUser: function(userRecord) {
         var win = new Ticket.view.user.User({
             viewModel: {
                 data: {
@@ -29,21 +29,23 @@ Ext.define('Ticket.view.main.MainController', {
         win.show();
     },
 
-    onClickUserName: function () {
+    onClickUserName: function() {
         var data = this.getViewModel().getData();
+
         this.editUser(data.currentUser);
     },
 
-    onEditUser: function (ctrl, rec) {
+    onEditUser: function(ctrl, rec) {
         this.editUser(rec);
     },
 
-    onProjectSelect: function () {
+    onProjectSelect: function() {
         var tabs = this.lookupReference('main');
+
         tabs.setActiveTab(0);
     },
 
-    onProjectSearchClick: function (view, rowIdx, colIdx, item, e, rec) {
+    onProjectSearchClick: function(view, rowIdx, colIdx, item, e, rec) {
         this.createTab('project', rec, {
             xtype: 'ticketsearch',
             listeners: {
@@ -56,8 +58,8 @@ Ext.define('Ticket.view.main.MainController', {
             }
         });
     },
-    
-    onViewTicket: function (view, rec) {
+
+    onViewTicket: function(view, rec) {
         this.createTab('ticket', rec, {
             xtype: 'ticketdetail',
             session: true,

@@ -26,8 +26,11 @@ $panel-header-icon-width: dynamic(16px);
 $panel-header-icon-height: dynamic(16px);
 $panel-header-icon-spacing: dynamic(6px);
 
+$panel-header-focus-outline-color: dynamic(#fff);
+$panel-header-focus-outline-offset: dynamic(2px);
+
 $panel-tool-focus-outline-color: dynamic(#fff);
-$panel-tool-focus-outline-offset: dynamic(1px);
+$panel-tool-focus-outline-offset: dynamic(2px);
 
 // panel-light vars
 $panel-light-header-font-family: dynamic($font-family);
@@ -37,12 +40,14 @@ $panel-light-header-color: dynamic(#666);
 $panel-light-header-glyph-color: dynamic($panel-light-header-color);
 $panel-light-header-background-color: dynamic(mix($base-light-color, $neutral-light-color, 30%));
 $panel-light-header-text-transform: dynamic(none);
+$panel-light-header-focus-outline-color: dynamic($base-color);
 $panel-light-border-color: dynamic($panel-light-header-background-color);
 $panel-light-header-border-color: dynamic($panel-light-border-color);
 $panel-light-body-border-color: dynamic($panel-light-border-color);
 $panel-light-tool-background-image: dynamic('tools/tool-sprites-dark');
 $panel-light-tool-focus-outline-color: dynamic($base-color);
 $panel-light-tool-glyph-color: dynamic($panel-light-header-color);
+$panel-light-tool-focus-background-image: dynamic($panel-light-tool-background-image);
 
 $panel-light-frame-border-color: dynamic($panel-light-border-color);
 $panel-include-border-management-rules: dynamic(true);

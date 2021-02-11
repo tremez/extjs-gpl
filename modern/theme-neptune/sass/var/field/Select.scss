@@ -1,5 +1,10 @@
 /**
  * @class Ext.field.Select
  */
-$selectfield-selected-item-icon-color: dynamic($color);
-$selectfield-selected-item-icon: dynamic($fa-var-check);
+
+/**
+ * @var {number/list}
+ * Padding value for the inline {@link Ext.dataview.ChipView} used to present
+ * multiple selected values.
+ */
+$selectfield-chipview-padding: 0 0 0 4px;

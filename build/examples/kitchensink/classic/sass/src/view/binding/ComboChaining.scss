@@ -1,0 +1,7 @@
+@if $theme-name == 'theme-material' {
+    .combo-chaining-state {
+        .#{$prefix}form-item-label {
+            transform: translateY(8px);
+        }
+    }
+}

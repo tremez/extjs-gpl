@@ -25,7 +25,7 @@ Ext.onReady(function() {
             "Mai": 4,
             "Juin": 5,
             "Juillet": 6,
-            "Juil": 6, 
+            "Juil": 6,
             "Août": 7,
             "Septembre": 8,
             "Sept": 8,
@@ -126,12 +126,12 @@ Ext.define("Ext.locale.fr_CA.form.field.Number", {
     minText: "La valeur minimum de ce champ doit être de {0}",
     maxText: "La valeur maximum de ce champ doit être de {0}",
     nanText: "{0} n'est pas un nombre valide",
-    negativeText: "La valeur de ce champ ne peut être négative"    
+    negativeText: "La valeur de ce champ ne peut être négative"
 });
 
-Ext.define("Ext.locale.fr_CA.form.field.File", { 
-    override: "Ext.form.field.File", 
-    buttonText: "Parcourir..." 
+Ext.define("Ext.locale.fr_CA.form.field.File", {
+    override: "Ext.form.field.File",
+    buttonText: "Parcourir..."
 });
 
 Ext.define("Ext.locale.fr_CA.form.field.Date", {
@@ -184,10 +184,10 @@ Ext.define("Ext.locale.fr_CA.window.MessageBox", {
         cancel: "Annuler",
         yes: "Oui",
         no: "Non"
-    }    
+    }
 });
 
 // This is needed until we can refactor all of the locales into individual files
-Ext.define("Ext.locale.fr_CA.Component", {	
+Ext.define("Ext.locale.fr_CA.Component", {
     override: "Ext.Component"
 });

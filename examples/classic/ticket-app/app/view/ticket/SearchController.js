@@ -1,11 +1,11 @@
 Ext.define('Ticket.view.ticket.SearchController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.ticketsearch',
-    
+
     onTicketClick: function(view, rowIdx, colIdx, item, e, rec) {
         this.fireViewEvent('viewticket', this.getView(), rec);
     },
-    
+
     onRefreshClick: function() {
         this.getView().getStore().load();
     },

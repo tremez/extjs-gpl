@@ -31,7 +31,7 @@ Ext.define('SimpleTasks.ux.StatusColumn', {
     xtype: 'statuscolumn',
 
     tdCls: Ext.baseCSSPrefix + 'grid-cell-statuscolumn',
-    
+
     /**
      * @event checkchange
      * Fires when the checked state of a row changes
@@ -51,33 +51,38 @@ Ext.define('SimpleTasks.ux.StatusColumn', {
             dataIndex, record, checked;
 
         if (target.hasCls(cssPrefix + 'grid-statusheader-inner')) {
-            if(type === 'mousedown' && e.button === 0) {
+            if (type === 'mousedown' && e.button === 0) {
                 record = e.record;
                 dataIndex = me.dataIndex;
                 checked = !record.get(dataIndex);
                 record.set(dataIndex, checked);
                 me.fireEvent('checkchange', me, record, recordIndex, checked);
+
                 // cancel selection.
                 return false;
-            } else if(type === 'mouseover') {
+            }
+            else if (type === 'mouseover') {
                 target.parent().addCls(cssPrefix + 'grid-statusheader-over');
-            } else if(type === 'mouseout') {
+            }
+            else if (type === 'mouseout') {
                 target.parent().removeCls(cssPrefix + 'grid-statusheader-over');
             }
-        } else {
+        }
+        else {
             return me.callParent(arguments);
         }
     },
 
     // Note: class names are not placed on the prototype bc renderer scope
     // is not in the header.
-    renderer : function(value){
+    renderer: function(value) {
         var cssPrefix = Ext.baseCSSPrefix,
             cls = [cssPrefix + 'grid-statusheader'];
 
         if (value) {
             cls.push(cssPrefix + 'grid-statusheader-checked');
         }
+
         return '<div class="' + cls.join(' ') + '"><div class="' + cssPrefix + 'grid-statusheader-inner' + '">&#160;</div></div>';
     }
 });

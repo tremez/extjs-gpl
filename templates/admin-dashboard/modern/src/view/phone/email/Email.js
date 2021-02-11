@@ -6,51 +6,42 @@ Ext.define('Admin.view.phone.email.Email', {
         type: 'email'
     },
 
-    layout: {
-        type: 'hbox',
-        align: 'stretch'
-    },
+    layout: 'hbox',
 
     listeners: {
         element: 'element',
         edgeswipeend: 'onSwipe'
     },
 
-    items: [
-        {
-            xtype: 'button',
-            iconCls:'x-fa fa-plus',
-            ui: 'bright-blue round',
-            userCls: 'pop-out',
-            bind: {
-                hidden: '{composing}'
-            },
-            width: 50,
-            height: 50,
-
-            // These cause the button to be floated / absolute positioned
-            bottom: 10,
-            right: 10,
-
-            handler: 'onPlusButtonTap',
-            listeners: {
-                scope: 'controller',
-                element: 'element',
-                longpress: 'onLongPressCompose'
-            }
+    items: [{
+        xtype: 'button',
+        iconCls: 'x-fa fa-plus',
+        ui: 'bright-blue round',
+        userCls: 'pop-out',
+        width: 50,
+        height: 50,
+        // These cause the button to be absolute positioned vs in the hbox
+        bottom: 10,
+        right: 10,
+        handler: 'onPlusButtonTap',
+        bind: {
+            hidden: '{composing}'
         },
-        {
-            xtype: 'inbox',
-            flex: 1,
-            bind: {
-                store: '{inbox}',
-                hidden: '{composing}'
-            },
-            reference: 'messages',
-
-            listeners: {
-                select: 'onSelectMessage'
-            }
+        listeners: {
+            scope: 'controller',
+            element: 'element',
+            longpress: 'onLongPressCompose'
         }
-    ]
+    },{
+        xtype: 'inbox',
+        reference: 'messages',
+        flex: 1,
+        bind: {
+            store: '{inbox}',
+            hidden: '{composing}'
+        },
+        listeners: {
+            select: 'onSelectMessage'
+        }
+    }]
 });

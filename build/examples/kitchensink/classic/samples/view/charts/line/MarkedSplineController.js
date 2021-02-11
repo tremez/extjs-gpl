@@ -2,7 +2,7 @@ Ext.define('KitchenSink.view.charts.bar.MarkedSplineController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.line-marked-spline',
 
-    onAxisLabelRender: function (axis, label, layoutContext) {
+    onAxisLabelRender: function(axis, label, layoutContext) {
         return Ext.util.Format.number(label, '0.0');
     },
 
@@ -14,16 +14,21 @@ Ext.define('KitchenSink.view.charts.bar.MarkedSplineController', {
             record.get(item.field) + '%');
     },
 
-    onColumnRender: function (v) {
+    onColumnRender: function(v) {
         return v + '%';
     },
 
-    onPreview: function () {
+    onPreview: function() {
+        var chart;
+
         if (Ext.isIE8) {
             Ext.Msg.alert('Unsupported Operation', 'This operation requires a newer version of Internet Explorer.');
+
             return;
         }
-        var chart = this.lookupReference('chart');
+
+        chart = this.lookup('chart');
+
         chart.preview();
     }
 

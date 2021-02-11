@@ -19,3 +19,49 @@
         background-image: url(images/icons/fam/text_list_bullets.png);
     }
 }
+
+.basic-toolbar {
+    font-family: 'Font Awesome 5 Free'!important;
+    .pasteMaterial {
+        &:before {
+            content: '\f0ea';
+        }
+    }
+
+    .cutMaterial {
+        &:before {
+            content: '\f0c4';
+        }
+    }
+
+    .copyMaterial {
+        &:before {
+            content: '\f0c5';
+        }
+    }
+
+    .formatMaterial {
+        &:before {
+            content: '\f03c';
+        }
+    }
+
+    .listMaterial {
+        &:before {
+            content: '\f0c9';
+        }
+    }
+}
+
+@if $theme-name == 'theme-material' {
+    .#{$prefix}toolbar-default-docked-bottom,
+    .#{$prefix}toolbar-footer  {
+        background-color: #FFFFFF;
+    }
+    .dark-mode {
+        .#{$prefix}toolbar-default-docked-bottom,
+        .#{$prefix}toolbar-footer {
+            background-color: #303030;
+        }
+    }
+}

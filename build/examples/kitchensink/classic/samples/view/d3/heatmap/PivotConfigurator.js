@@ -12,21 +12,21 @@ Ext.define('KitchenSink.view.d3.heatmap.PivotConfigurator', {
         'KitchenSink.store.pivot.Sales'
     ],
 
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     otherContent: [
         {
             type: 'Controller',
             path: 'classic/samples/view/d3/heatmap/PivotController.js'
-        },{
+        }, {
             type: 'Model',
             path: 'classic/samples/model/pivot/Sale.js'
-        },{
+        }, {
             type: 'Store',
             path: 'classic/samples/store/pivot/Sales.js'
         }
     ],
-    // </example>
+    //</example>
 
     title: 'D3 HeatMap and Pivot Matrix integration',
     width: 960,
@@ -68,20 +68,22 @@ Ext.define('KitchenSink.view.d3.heatmap.PivotConfigurator', {
 
     // configurations specific to the pivot configurator plugin
     configurator: {
-        // It is possible to configure a list of fields that can be used to configure the pivot matrix
-        // If no fields list is supplied then all fields from the Store model are fetched automatically
+        // It is possible to configure a list of fields that can be used to 
+        // configure the pivot matrix. If no fields list is supplied then all 
+        // fields from the Store model are fetched automatically
         fields: [{
-            dataIndex:  'quantity',
-            header:     'Qty',
-            // You can even provide a default aggregator function to be used when this field is dropped
-            // on the agg dimensions
+            dataIndex: 'quantity',
+            header: 'Qty',
+            // You can even provide a default aggregator function to be used
+            // when this field is dropped on the agg dimensions
             aggregator: 'sum',
             formatter: 'number("0")',
 
             settings: {
                 // Define here in which areas this field could be used
                 allowed: ['aggregate'],
-                // Set a custom style for this field to inform the user that it can be dragged only to "Values"
+                // Set a custom style for this field to inform the user that it can
+                // be dragged only to "Values"
                 style: {
                     fontWeight: 'bold'
                 },
@@ -92,8 +94,8 @@ Ext.define('KitchenSink.view.d3.heatmap.PivotConfigurator', {
                 }
             }
         }, {
-            dataIndex:  'value',
-            header:     'Value',
+            dataIndex: 'value',
+            header: 'Value',
 
             settings: {
                 // Define here in which areas this field could be used
@@ -101,7 +103,8 @@ Ext.define('KitchenSink.view.d3.heatmap.PivotConfigurator', {
                 // Define here what aggregator functions can be used when this field is
                 // used as an aggregate dimension
                 aggregators: ['sum', 'avg', 'count'],
-                // Set a custom style for this field to inform the user that it can be dragged only to "Values"
+                // Set a custom style for this field to inform the user that it can be
+                // dragged only to "Values"
                 style: {
                     fontWeight: 'bold'
                 },
@@ -115,8 +118,8 @@ Ext.define('KitchenSink.view.d3.heatmap.PivotConfigurator', {
                 }
             }
         }, {
-            dataIndex:  'company',
-            header:     'Company',
+            dataIndex: 'company',
+            header: 'Company',
 
             settings: {
                 // Define here what aggregator functions can be used when this field is
@@ -124,8 +127,8 @@ Ext.define('KitchenSink.view.d3.heatmap.PivotConfigurator', {
                 aggregators: ['count']
             }
         }, {
-            dataIndex:  'country',
-            header:     'Country',
+            dataIndex: 'country',
+            header: 'Country',
 
             settings: {
                 // Define here what aggregator functions can be used when this field is
@@ -142,17 +145,17 @@ Ext.define('KitchenSink.view.d3.heatmap.PivotConfigurator', {
                 aggregators: 'count'
             }
         }, {
-            dataIndex:  'year',
-            header:     'Year',
+            dataIndex: 'year',
+            header: 'Year',
 
             settings: {
                 // Define here in which areas this field could be used
                 allowed: ['leftAxis', 'topAxis']
             }
         }, {
-            dataIndex:      'month',
-            header:         'Month',
-            labelRenderer:  'monthLabelRenderer',
+            dataIndex: 'month',
+            header: 'Month',
+            labelRenderer: 'monthLabelRenderer',
 
             settings: {
                 // Define here in which areas this field could be used
@@ -171,21 +174,22 @@ Ext.define('KitchenSink.view.d3.heatmap.PivotConfigurator', {
         items: [{
             ui: 'default-toolbar',
             xtype: 'button',
+            cls: 'dock-tab-btn',
             text: 'Dock',
             menu: {
                 defaults: {
                     xtype: 'menucheckitem',
-                    group:  'docking',
+                    group: 'docking',
                     checkHandler: 'changeDock'
                 },
                 items: [{
                     text: 'Top'
-                },{
+                }, {
                     text: 'Right',
                     checked: true
-                },{
+                }, {
                     text: 'Bottom'
-                },{
+                }, {
                     text: 'Left'
                 }]
             }

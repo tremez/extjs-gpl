@@ -1,10 +1,10 @@
 Ext.require([
-    //'Ext.panel.Panel',
-    //'Ext.form.field.Number'
+    // 'Ext.panel.Panel',
+    // 'Ext.form.field.Number'
     '*'
 ]);
 
-Ext.onReady(function(){
+Ext.onReady(function() {
     var main = Ext.create('Ext.panel.Panel', {
         renderTo: document.body,
         width: 800,
@@ -65,10 +65,10 @@ Ext.onReady(function(){
                     itemId: 'toLoad'
                 }, {
                     text: 'Load!',
-                    handler: function(){
+                    handler: function() {
                         var dynamic = main.child('#dynamic'),
                             value = dynamic.down('#toLoad').getValue();
-                            
+
                         dynamic.getLoader().load({
                             params: {
                                 total: value
@@ -82,11 +82,12 @@ Ext.onReady(function(){
                 removeAll: true,
                 url: 'boxes.php',
                 renderer: 'component',
-                success: function(loader){
+                success: function(loader) {
                     var panel = loader.getTarget();
+
                     panel.setTitle('Loaded ' + panel.items.getCount() + ' items');
                 }
             }
-        }]    
+        }]
     });
 });

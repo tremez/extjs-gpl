@@ -1,2 +1,4 @@
-# theme-triton - Read Me
+# theme-triton
+
+Flat, borderless theme
 

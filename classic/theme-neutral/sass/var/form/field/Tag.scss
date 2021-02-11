@@ -154,7 +154,7 @@ $tag-field-item-selected-over-close-icon-glyph-color: dynamic($tag-field-item-se
  * @var {string/list}
  * Glyph for the "close" icon when {@link Global_CSS#$enable-font-icons} is `true`.
  */
-$tag-field-item-close-icon-glyph: dynamic($fa-var-close 16px $font-icon-font-family);
+$tag-field-item-close-icon-glyph: dynamic($fa-var-times 16px $font-icon-font-family);
 
 /**
  * @var {color}
@@ -183,7 +183,7 @@ $include-tag-field-default-ui: dynamic($include-text-field-default-ui);
 /**
  * Creates a visual theme for tag fields.  Note this mixin only provides styling
  * for the tag field's items, The label and error are styled by {@link #extjs-label-ui},
- * and the field body is styled by {@link extjs-text-field-ui}
+ * and the field body is styled by {@link #extjs-text-field-ui}
  *
  * @param {string} $ui
  * The name of the UI being created. Can not included spaces or special punctuation

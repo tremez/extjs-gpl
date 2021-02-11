@@ -14,7 +14,7 @@ Ext.define('KitchenSink.view.draw.bounce.BounceController', {
     deceleration: 0.95,
     surface: null,
 
-    onAfterRender: function () {
+    onAfterRender: function() {
         var me = this,
             draw = me.lookupReference('draw'),
             surface = draw.getSurface(),
@@ -36,7 +36,7 @@ Ext.define('KitchenSink.view.draw.bounce.BounceController', {
         Ext.AnimationQueue.start(me.onRender, me);
     },
 
-    getGhostConfig: function () {
+    getGhostConfig: function() {
         var me = this,
             config;
 
@@ -52,7 +52,7 @@ Ext.define('KitchenSink.view.draw.bounce.BounceController', {
         return me.ghostConfig;
     },
 
-    onRender: function () {
+    onRender: function() {
         var me = this,
             rect = me.surface.getRect(),
             bbox = me.logo.getBBox(true),
@@ -70,6 +70,7 @@ Ext.define('KitchenSink.view.draw.bounce.BounceController', {
             me.velocity.setX(-me.velocity.x);
             bounced = true;
         }
+
         if (p.y + bbox.height > rect[3] || p.y < rect[1]) {
             me.velocity.setY(-me.velocity.y);
             bounced = true;
@@ -88,7 +89,7 @@ Ext.define('KitchenSink.view.draw.bounce.BounceController', {
                 opacity: 0.3
             });
             // Configure the animation modifier of the sprite.
-            ghost.fx.setConfig({
+            ghost.setAnimation({
                 duration: 500,
                 easing: 'easeOut'
             });
@@ -101,14 +102,16 @@ Ext.define('KitchenSink.view.draw.bounce.BounceController', {
                 opacity: 0
             });
             // Remove the sprite from the surface when the animation is done.
-            ghost.fx.on('animationend', function () {
+            ghost.getAnimation().on('animationend', function() {
                 ghost.remove();
             });
-        } else {
+        }
+        else {
             // Decrease the logo's acceleration on every move after a bounce.
             if (me.acceleration.length > 1) {
                 me.acceleration = me.acceleration.mul(me.deceleration);
-            } else {
+            }
+            else {
                 me.acceleration.set(0);
             }
         }
@@ -126,7 +129,7 @@ Ext.define('KitchenSink.view.draw.bounce.BounceController', {
 
     },
 
-    destroy: function () {
+    destroy: function() {
         Ext.AnimationQueue.stop(this.onRender, this);
         this.callParent();
     }

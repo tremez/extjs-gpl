@@ -2,8 +2,8 @@
  *
  */
 Ext.define('Ext.ux.DataView.LabelEditor', {
-
     extend: 'Ext.Editor',
+    alias: 'plugin.dataviewlabeleditor',
 
     alignment: 'tl-tl',
 
@@ -27,8 +27,9 @@ Ext.define('Ext.ux.DataView.LabelEditor', {
     constructor: function(config) {
         config.field = config.field || Ext.create('Ext.form.field.Text', {
             allowOnlyWhitespace: false,
-            selectOnFocus:true
+            selectOnFocus: true
         });
+
         this.callParent([config]);
     },
 
@@ -55,11 +56,14 @@ Ext.define('Ext.ux.DataView.LabelEditor', {
 
         if (Ext.fly(target).hasCls(me.labelSelector) && !me.editing && !e.ctrlKey && !e.shiftKey) {
             e.stopEvent();
+
             item = me.view.findItemByChild(target);
             record = me.view.store.getAt(me.view.indexOf(item));
+
             me.startEdit(target, record.data[me.dataIndex]);
             me.activeRecord = record;
-        } else if (me.editing) {
+        }
+        else if (me.editing) {
             me.field.blur();
             e.preventDefault();
         }
@@ -70,4 +74,3 @@ Ext.define('Ext.ux.DataView.LabelEditor', {
         this.activeRecord.set(this.dataIndex, value);
     }
 });
-

@@ -10,7 +10,7 @@ Ext.define('Ext.panel.Title', {
     ],
 
     isTitle: true,
-    
+
     // layout system optimization.  Allows autocomponent layout to measure height without
     // having to first know the width.
     noWrap: true,
@@ -32,7 +32,7 @@ Ext.define('Ext.panel.Title', {
         textAlign: null,
 
         /**
-         * @cfg {String}
+         * @cfg {String} [text='&#160;']
          * The title's text (can contain html tags/entities)
          * @accessor
          */
@@ -65,21 +65,25 @@ Ext.define('Ext.panel.Title', {
          * @accessor
          */
         iconCls: null,
-        
+
         /**
-         * @cfg rotation
+         * @cfg [rotation=0]
          * @inheritdoc Ext.panel.Header#cfg-titleRotation
          * @accessor
          */
         rotation: null
     },
 
+    /**
+     * @cfg autoEl
+     * @inheritdoc
+     */
     autoEl: {
         role: 'presentation',
         // Required for Opera
         unselectable: 'on'
     },
-    
+
     // In most cases the panel header title is purely presentational
     // and does not have any structural significance wrt Assistive Technologies.
     // The only exception is when the panel participates in Accordion layout;
@@ -87,18 +91,30 @@ Ext.define('Ext.panel.Title', {
     // should not have any role to expose the text as the tab's accessible name.
     // Header component is aware of this participation and will reset textElRole.
     textElRole: 'presentation',
-    
+
     // By default, panel title is not focusable; this only happens in Accordion layout.
     // This config option is overridable, and it will prime tabIndex to be used
     // without hardcoding it.
+    /**
+     * @cfg tabIndex
+     * @inheritdoc
+     */
     tabIndex: 0,
 
+    /**
+     * @cfg childEls
+     * @inheritdoc
+     */
     childEls: [
         'textEl',
         'iconEl',
         'iconWrapEl'
     ],
 
+    /**
+     * @cfg renderTpl
+     * @inheritdoc
+     */
     renderTpl:
         '<tpl if="iconMarkup && iconBeforeTitle">{iconMarkup}</tpl>' +
         // unselectable="on" is required for Opera, other browsers
@@ -147,6 +163,10 @@ Ext.define('Ext.panel.Title', {
         2: 270
     },
 
+    /**
+     * @cfg baseCls
+     * @inheritdoc
+     */
     baseCls: Ext.baseCSSPrefix + 'title',
     _titleSuffix: '-title',
     _glyphCls: Ext.baseCSSPrefix + 'title-glyph',
@@ -184,6 +204,7 @@ Ext.define('Ext.panel.Title', {
                 (lastX + ((rotation === 1) ? lastBox.width : -lastBox.height)) + 'px'
             );
         }
+
         this.callParent();
     },
 
@@ -191,9 +212,9 @@ Ext.define('Ext.panel.Title', {
         var me = this,
             rotation = me.getRotation(),
             el = me.el;
-        
+
         me.callParent();
-        
+
         if (rotation) {
             el.setVertical(me._rotationAngles[rotation]);
         }
@@ -210,14 +231,15 @@ Ext.define('Ext.panel.Title', {
         if (!text) {
             text = '&#160;';
         }
+
         return text;
     },
-    
+
     beforeRender: function() {
         var me = this;
-        
+
         me.callParent();
-        
+
         me.addCls(me._rotationClasses[me.getRotation()]);
         me.addCls(me._textAlignClasses[me.getTextAlign()]);
     },
@@ -275,10 +297,10 @@ Ext.define('Ext.panel.Title', {
             renderData.iconMarkup = me.getIconMarkup();
             renderData.iconBeforeTitle = (iconAlign === 'top' || iconAlign === 'left');
         }
-        
+
         return renderData;
     },
-    
+
     onAdded: function(container, pos, instanced) {
         var me = this,
             suffix = me._titleSuffix,
@@ -288,7 +310,7 @@ Ext.define('Ext.panel.Title', {
             baseCls + suffix,
             baseCls + suffix + '-' + container.ui
         ]);
-        
+
         me.callParent([container, pos, instanced]);
     },
 
@@ -297,10 +319,12 @@ Ext.define('Ext.panel.Title', {
             if (!glyph.isGlyph) {
                 glyph = new Ext.Glyph(glyph);
             }
+
             if (glyph.isEqual(oldGlyph)) {
                 glyph = undefined;
             }
         }
+
         return glyph;
     },
 
@@ -317,7 +341,8 @@ Ext.define('Ext.panel.Title', {
                 iconEl.dom.innerHTML = glyph.character;
                 iconEl.addCls(glyphCls);
                 iconEl.setStyle('font-family', glyph.fontFamily);
-            } else if (oldGlyph !== glyph) {
+            }
+            else if (oldGlyph !== glyph) {
                 iconEl.dom.innerHTML = '';
                 iconEl.removeCls(glyphCls);
             }
@@ -329,15 +354,17 @@ Ext.define('Ext.panel.Title', {
     },
 
     updateIcon: function(icon, oldIcon) {
-        icon = icon || '';
         var me = this,
             iconEl;
+
+        icon = icon || '';
 
         if (me.rendered && icon !== oldIcon) {
             me._syncIconVisibility();
             iconEl = me.iconEl;
-            
-            iconEl.setStyle('background-image', icon ? 'url(' + icon + ')': '');
+
+            iconEl.setStyle('background-image', icon ? 'url(' + icon + ')' : '');
+
             if (me._didIconStateChange(oldIcon, icon)) {
                 me.updateLayout();
             }
@@ -356,33 +383,38 @@ Ext.define('Ext.panel.Title', {
             if (oldAlign) {
                 iconWrapEl.removeCls(iconAlignClasses[oldAlign]);
             }
+
             iconWrapEl.addCls(iconAlignClasses[align]);
 
             // here we move the iconWrap to the correct position in the dom - before the
             // title el for top/left alignments, and after the title el for right/bottom
             if (align === 'top' || align === 'left') {
                 el.insertFirst(iconWrapEl);
-            } else {
+            }
+            else {
                 el.appendChild(iconWrapEl);
             }
-            
+
             me.updateLayout();
         }
     },
 
     updateIconCls: function(cls, oldCls) {
-        cls = cls || '';
         var me = this,
             iconEl;
+
+        cls = cls || '';
 
         if (me.rendered && oldCls !== cls) {
             me._syncIconVisibility();
             iconEl = me.iconEl;
-            
+
             if (oldCls) {
                 iconEl.removeCls(oldCls);
             }
+
             iconEl.addCls(cls);
+
             if (me._didIconStateChange(oldCls, cls)) {
                 me.updateLayout();
             }
@@ -392,19 +424,20 @@ Ext.define('Ext.panel.Title', {
     updateRotation: function(rotation, oldRotation) {
         var me = this,
             el, rotationClasses;
-       
+
         if (me.rendered) {
             el = me.el;
             rotationClasses = me._rotationClasses;
-            
+
             me.removeCls(rotationClasses[oldRotation]);
             me.addCls(rotationClasses[rotation]);
 
             el.setHorizontal();
+
             if (rotation) {
                 el.setVertical(me._rotationAngles[rotation]);
             }
-    
+
             // reset styles set by adjustTitlePosition (handles both rtl/ltr), and sizing
             // set by last layout run (this prevents parallel size from becoming perpendicular
             // size after rotation)
@@ -415,7 +448,7 @@ Ext.define('Ext.panel.Title', {
                 height: '',
                 width: ''
             });
-    
+
             me.lastBox = null;
 
             me.updateLayout();
@@ -432,11 +465,12 @@ Ext.define('Ext.panel.Title', {
     updateTextAlign: function(align, oldAlign) {
         var me = this,
             textAlignClasses = me._textAlignClasses;
-        
+
         if (me.rendered) {
             if (oldAlign) {
                 me.removeCls(textAlignClasses[oldAlign]);
             }
+
             me.addCls(textAlignClasses[align]);
 
             me.updateLayout();
@@ -451,6 +485,7 @@ Ext.define('Ext.panel.Title', {
 
         _didIconStateChange: function(old, current) {
             var currentEmpty = Ext.isEmpty(current);
+
             return Ext.isEmpty(old) ? !currentEmpty : currentEmpty;
         },
 
@@ -464,18 +499,18 @@ Ext.define('Ext.panel.Title', {
                 hasIcon = me._hasIcon(),
                 iconWrapEl = me.iconWrapEl,
                 isBefore, iconAlign;
-            
+
             if (hasIcon && !iconWrapEl) {
                 // if an icon was configured, but we have not yet rendered an icon
                 // element, we need to render it now.
                 iconAlign = me.iconAlign;
                 isBefore = (iconAlign === 'left' || iconAlign === 'top');
-                
+
                 el.dom.insertAdjacentHTML(
                     isBefore ? 'afterbegin' : 'beforeend',
                     me.getIconMarkup()
                 );
-            
+
                 iconWrapEl = me.iconWrapEl = el[isBefore ? 'first' : 'last']();
                 me.iconEl = iconWrapEl.first();
             }

@@ -30,7 +30,7 @@ Ext.define('Calendar.view.profile.Side', {
         bind: {
             src: '{icon}'
         }
-    },{
+    }, {
         xtype: 'component',
         cls: 'profile-side-name',
         tpl: 'Google Calendar<br/><b>{name:uppercase}</b>',
@@ -39,21 +39,21 @@ Ext.define('Calendar.view.profile.Side', {
             hidden: '{!user}',
             data: '{user}'
         }
-    },{
+    }, {
         xtype: 'button',
         itemId: 'signin',
         text: 'Sign in with Google',
-        iconCls: 'x-fa fa-google',
+        iconCls: 'x-fab fa-google',
         ui: 'default-toolbar',
         handler: 'onSignIn',
         bind: {
             hidden: '{user}'
         }
-    },{
+    }, {
         xtype: 'button',
         itemId: 'signout',
         text: 'Sign out',
-        iconCls: 'x-fa fa-sign-out',
+        iconCls: 'x-fa fa-sign-out-alt',
         ui: 'default-toolbar',
         hidden: true,
         handler: 'onSignOut',

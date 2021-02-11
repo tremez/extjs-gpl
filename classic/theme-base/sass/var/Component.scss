@@ -19,10 +19,16 @@ $prefix: dynamic('x-');
 $relative-image-path-for-uis: false !default;
 
 /**
- * @var {boolean} $include-not-found-images
+ * @var {boolean} $include-missing-images
  * True to include files which are not found when compiling your SASS
  */
 $include-missing-images: dynamic(true);
+
+/**
+ * @var {boolean} $enable-missing-image-warnings
+ * True to show a warning while including files which are not found when compiling your SASS
+ */
+$enable-missing-image-warnings: dynamic($include-missing-images);
 
 /**
  * @var {boolean} $include-ie
@@ -100,6 +106,7 @@ $image-extension: dynamic('png');
 $slicer-image-extension: dynamic('gif');
 
 /**
+ * @var {string} $image-search-path
  * Default search path for images
  */
 $image-search-path: '.' !default;
@@ -117,7 +124,7 @@ $include-default-uis: dynamic(true);
 $enable-font-smoothing: dynamic(true);
 
 /**
- * @var {string}
+ * @var {string} $theme-resource-path
  * The base path relative to the CSS output directory to use for theme resources.  For example
  * if the theme's images live one directory up from the generated CSS output in a directory
  * named 'foo/images/', you would need to set this variable to '../foo/' in order for the image
@@ -127,6 +134,7 @@ $enable-font-smoothing: dynamic(true);
 $theme-resource-path: dynamic('');
 
 /**
+ * @var {boolean} [$grid-cell-field-src-included=false]
  * @private
  * Flag to ensure GridField rules only get set once
  */

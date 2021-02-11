@@ -1,7 +1,7 @@
 Ext.define('Ticket.view.dashboard.DashboardModel', {
     extend: 'Ext.app.ViewModel',
     alias: 'viewmodel.dashboard',
-    
+
     formulas: {
         theProject: function(get) {
             return get('projects.selection');
@@ -13,7 +13,7 @@ Ext.define('Ticket.view.dashboard.DashboardModel', {
             return !!get('theProject');
         }
     },
-    
+
     stores: {
         ticketStatusSummary: {
             model: 'TicketStatusSummary',
@@ -21,7 +21,7 @@ Ext.define('Ticket.view.dashboard.DashboardModel', {
             remoteFilter: true,
             filters: [{
                 property: 'projectId',
-                value: '{projectId}'    
+                value: '{projectId}'
             }]
         },
         ticketOpenSummary: {
@@ -30,7 +30,7 @@ Ext.define('Ticket.view.dashboard.DashboardModel', {
             remoteFilter: true,
             filters: [{
                 property: 'projectId',
-                value: '{projectId}'    
+                value: '{projectId}'
             }]
         },
         myActiveTickets: {

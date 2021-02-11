@@ -1,12 +1,9 @@
 /** @class Ext.pivot.Grid */
 
-$ext-pivot-trial: false !default; // Updated automatically by the build script.
-
 $grid-header-trigger-border:
     $grid-column-header-border-width
     $grid-column-header-border-style
     $grid-header-border-color;
-
 
 /**
  * @var {number/list}
@@ -28,7 +25,7 @@ $pivot-grid-group-header-border-color: dynamic($grid-row-cell-border-color);
  * @var {color}
  * The background color of group headers
  */
-$pivot-grid-group-header-background-color: dynamic(mix(#fff, $neutral-color, 68%));
+$pivot-grid-group-header-background-color: dynamic(transparent);
 
 /**
  * @var {string}
@@ -111,7 +108,7 @@ $pivot-grid-group-total-font: dynamic($pivot-grid-group-total-font-weight #{$piv
 $pivot-grid-group-total-color: dynamic($pivot-grid-group-title-color);
 
 /**
- * @var {color}
+ * @var {color} $pivot-grid-group-total-background-color
  * The background color of group totals
  */
 //$pivot-grid-group-total-background-color: inherit !dynamic;
@@ -150,12 +147,10 @@ $pivot-grid-grand-total-font: dynamic($pivot-grid-grand-total-font-weight #{$piv
 $pivot-grid-grand-total-color: dynamic($pivot-grid-group-title-color);
 
 /**
- * @var {color}
+ * @var {color} $pivot-grid-grand-total-background-color
  * The background color of grand totals
  */
 //$pivot-grid-grand-total-background-color: inherit !dynamic;
-
-
 
 /* outline view */
 
@@ -182,3 +177,5 @@ $pivot-grid-group-header-compact-border-color: dynamic($pivot-grid-group-header-
  * The background color of group headers in compact view
  */
 $pivot-grid-group-header-compact-background-color: dynamic($pivot-grid-group-header-background-color);
+
+$ext-pivot-trial: false !default; // Updated automatically by the build script.

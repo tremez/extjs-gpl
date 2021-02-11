@@ -6,13 +6,13 @@ Ext.define('KitchenSink.view.pivot.ChartIntegrationController', {
 
     alias: 'controller.chartintegration',
 
-    onPivotDone: function(){
+    onPivotDone: function() {
         var me = this,
             view = me.getView(),
             pivot = view.down('pivotgrid'),
             chart = view.down('chart');
 
-        if(chart){
+        if (chart) {
             view.remove(chart);
         }
 
@@ -33,7 +33,7 @@ Ext.define('KitchenSink.view.pivot.ChartIntegrationController', {
                     return (v * 100).toFixed(0) + '%';
                 },
                 grid: true
-            },{
+            }, {
                 type: 'category',
                 position: 'bottom',
                 grid: true,
@@ -51,24 +51,27 @@ Ext.define('KitchenSink.view.pivot.ChartIntegrationController', {
         });
     },
 
-    chartRenderer: function(axis, v){
+    chartRenderer: function(axis, v) {
         var matrix = this.getMatrix(),
             items = matrix.leftAxis.items,
             totals = matrix.totals,
             len = items.getCount(),
             item, i;
 
-        for(i = 0; i < len; i++){
+        for (i = 0; i < len; i++) {
             item = items.getAt(i);
-            if(item.record && item.record.getId() === v){
+
+            if (item.record && item.record.getId() === v) {
                 return item.name;
             }
         }
 
         len = totals.length;
-        for(i = 0; i < len; i++){
+
+        for (i = 0; i < len; i++) {
             item = totals[i];
-            if(item.record && item.record.getId() === v){
+
+            if (item.record && item.record.getId() === v) {
                 return item.title;
             }
         }
@@ -76,31 +79,33 @@ Ext.define('KitchenSink.view.pivot.ChartIntegrationController', {
         return v;
     },
 
-    getTitles: function(pivot){
+    getTitles: function(pivot) {
         var data = [],
             cols = pivot.getColumns(),
             len = cols.length,
             i;
 
-        for(i = 0; i < len; i++){
-            if(cols[i].topAxis){
+        for (i = 0; i < len; i++) {
+            if (cols[i].topAxis) {
                 data.push(Ext.util.Format.stripTags(cols[i].text));
             }
         }
+
         return data;
     },
 
-    getFields: function(pivot){
+    getFields: function(pivot) {
         var data = [],
             cols = pivot.getColumns(),
             len = cols.length,
             i;
 
-        for(i = 0; i < len; i++){
-            if(cols[i].topAxis && !cols[i].grandTotal){
+        for (i = 0; i < len; i++) {
+            if (cols[i].topAxis && !cols[i].grandTotal) {
                 data.push(cols[i].dataIndex);
             }
         }
+
         return data;
     }
 });

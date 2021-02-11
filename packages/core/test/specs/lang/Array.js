@@ -1,4 +1,4 @@
-describe("Ext.Array", function() {
+topSuite("Ext.Array", ["Ext.JSON"], function() {
     var array;
 
     describe("indexOf", function() {
@@ -7,11 +7,11 @@ describe("Ext.Array", function() {
                 array = [1, 2, 3, 4, 5, 6];
             });
 
-            afterEach(function(){
+            afterEach(function() {
                 array = null;
             });
 
-            it("should always return -1 on an empty array", function(){
+            it("should always return -1 on an empty array", function() {
                 expect(Ext.Array.indexOf([], 1)).toEqual(-1);
             });
 
@@ -23,7 +23,7 @@ describe("Ext.Array", function() {
                 expect(Ext.Array.indexOf(array, 4)).toEqual(3);
             });
 
-            it("should return the first matching index if found", function(){
+            it("should return the first matching index if found", function() {
                 array.push(1);
                 expect(Ext.Array.indexOf(array, 1)).toEqual(0);
             });
@@ -202,7 +202,7 @@ describe("Ext.Array", function() {
     });
 
     describe("contains", function() {
-        it("should always return false with an empty array", function(){
+        it("should always return false with an empty array", function() {
             expect(Ext.Array.contains([], 1)).toBe(false);
         });
 
@@ -214,60 +214,61 @@ describe("Ext.Array", function() {
             expect(Ext.Array.contains([8, 9, 10], 10)).toBe(true);
         });
 
-        it("should only match with strict type checking", function(){
+        it("should only match with strict type checking", function() {
             expect(Ext.Array.contains([1, 2, 3, 4, 5], '1')).toBe(false);
         });
     });
 
-    describe("include", function(){
+    describe("include", function() {
         var myArray;
 
-        it("should always add to an empty array", function(){
+        it("should always add to an empty array", function() {
             myArray = [];
             Ext.Array.include(myArray, 1);
             expect(myArray).toEqual([1]);
         });
 
-        it("should add the item if it doesn't exist", function(){
+        it("should add the item if it doesn't exist", function() {
             myArray = [1];
             Ext.Array.include(myArray, 2);
             expect(myArray).toEqual([1, 2]);
         });
 
-        it("should always add to the end of the array", function(){
+        it("should always add to the end of the array", function() {
             myArray = [9, 8, 7, 6];
             Ext.Array.include(myArray, 10);
             expect(myArray).toEqual([9, 8, 7, 6, 10]);
         });
 
-        it("should match using strict type checking", function(){
+        it("should match using strict type checking", function() {
             myArray = ['1'];
             Ext.Array.include(myArray, 1);
             expect(myArray).toEqual(['1', 1]);
         });
 
-        it("should not modify the array if the value exists", function(){
+        it("should not modify the array if the value exists", function() {
             myArray = [4, 5, 6];
             Ext.Array.include(myArray, 7);
             expect(myArray).toEqual([4, 5, 6, 7]);
         });
     });
 
-    describe("clone", function(){
-        it("should clone an empty array to be empty", function(){
+    describe("clone", function() {
+        it("should clone an empty array to be empty", function() {
             expect(Ext.Array.clone([])).toEqual([]);
         });
 
-        it("should clone an array with items", function(){
+        it("should clone an array with items", function() {
             expect(Ext.Array.clone([1, 3, 5])).toEqual([1, 3, 5]);
         });
 
-        it("should create a new reference", function(){
+        it("should create a new reference", function() {
             var arr = [1, 2, 3];
+
             expect(Ext.Array.clone(arr)).not.toBe(arr);
         });
 
-        it("should do a shallow clone", function(){
+        it("should do a shallow clone", function() {
             var o = {},
                 arr = [o],
                 result;
@@ -277,108 +278,111 @@ describe("Ext.Array", function() {
         });
     });
 
-    describe("clean", function(){
-        it("should return an empty array if cleaning an empty array", function(){
+    describe("clean", function() {
+        it("should return an empty array if cleaning an empty array", function() {
             expect(Ext.Array.clean([])).toEqual([]);
         });
 
-        it("should remove undefined values", function(){
+        it("should remove undefined values", function() {
             expect(Ext.Array.clean([undefined])).toEqual([]);
         });
 
-        it("should remove null values", function(){
+        it("should remove null values", function() {
             expect(Ext.Array.clean([null])).toEqual([]);
         });
 
-        it("should remove empty strings", function(){
+        it("should remove empty strings", function() {
             expect(Ext.Array.clean([''])).toEqual([]);
         });
 
-        it("should remove empty arrays", function(){
+        it("should remove empty arrays", function() {
             expect(Ext.Array.clean([[]])).toEqual([]);
         });
 
-        it("should remove a mixture of empty values", function(){
+        it("should remove a mixture of empty values", function() {
             expect(Ext.Array.clean([null, undefined, '', []])).toEqual([]);
         });
 
-        it("should remove all occurrences of empty values", function(){
+        it("should remove all occurrences of empty values", function() {
             expect(Ext.Array.clean([null, null, null, undefined, '', '', '', undefined])).toEqual([]);
         });
 
-        it("should leave non empty values untouched", function(){
+        it("should leave non empty values untouched", function() {
             expect(Ext.Array.clean([1, 2, 3])).toEqual([1, 2, 3]);
         });
 
-        it("should remove only the empty values", function(){
+        it("should remove only the empty values", function() {
             expect(Ext.Array.clean([undefined, null, 1, null, 2])).toEqual([1, 2]);
         });
 
-        it("should preserve order on removal", function(){
+        it("should preserve order on removal", function() {
             expect(Ext.Array.clean([1, null, 2, null, null, null, 3, undefined, '', '', 4])).toEqual([1, 2, 3, 4]);
         });
     });
 
-    describe("unique", function(){
+    describe("unique", function() {
 
-        it("should return an empty array if run on an empty array", function(){
+        it("should return an empty array if run on an empty array", function() {
             expect(Ext.Array.unique([])).toEqual([]);
         });
 
-        it("should return a new reference", function(){
+        it("should return a new reference", function() {
             var arr = [1, 2, 3];
+
             expect(Ext.Array.unique(arr)).not.toBe(arr);
         });
 
-        it("should return a copy if all items are unique", function(){
+        it("should return a copy if all items are unique", function() {
             expect(Ext.Array.unique([6, 7, 8])).toEqual([6, 7, 8]);
         });
 
-        it("should only use strict typing to match", function(){
+        it("should only use strict typing to match", function() {
             expect(Ext.Array.unique([1, '1'])).toEqual([1, '1']);
         });
 
-        it("should preserve the order when removing", function(){
+        it("should preserve the order when removing", function() {
             expect(Ext.Array.unique([1, 2, 1, 3, 1, 1, 1, 6, 5, 1])).toEqual([1, 2, 3, 6, 5]);
         });
     });
 
-    describe("map", function(){
-        var emptyFn = function(v){
+    describe("map", function() {
+        var emptyFn = function(v) {
                 return v;
             };
 
-        it("should return an empty array if run on an empty array", function(){
-            expect(Ext.Array.map([], function(){})).toEqual([]);
+        it("should return an empty array if run on an empty array", function() {
+            expect(Ext.Array.map([], function() {})).toEqual([]);
         });
 
-        it("should return a new reference", function(){
+        it("should return a new reference", function() {
             var arr = [1, 2];
+
             expect(Ext.Array.map(arr, emptyFn)).not.toBe(arr);
         });
 
-        it("should execute the function for each item in the array", function(){
-            expect(Ext.Array.map([1, 2, 3, 4, 5], function(v){
+        it("should execute the function for each item in the array", function() {
+            expect(Ext.Array.map([1, 2, 3, 4, 5], function(v) {
                 return v * 2;
             })).toEqual([2, 4, 6, 8, 10]);
         });
 
-        it("should get called with the correct scope", function(){
+        it("should get called with the correct scope", function() {
             var scope = {},
                 realScope;
-            Ext.Array.map([1, 2, 3, 4, 5], function(){
+
+            Ext.Array.map([1, 2, 3, 4, 5], function() {
                 realScope = this;
             }, scope);
             expect(realScope).toBe(scope);
         });
 
-        it("should get called with the argument, index and array", function(){
+        it("should get called with the argument, index and array", function() {
             var item,
                 index,
                 arr,
                 data = [1];
 
-            Ext.Array.map(data, function(){
+            Ext.Array.map(data, function() {
                 item = arguments[0];
                 index = arguments[1];
                 arr = arguments[2];
@@ -389,38 +393,162 @@ describe("Ext.Array", function() {
         });
     });
 
-    describe("from", function(){
-        it("should return an empty array for an undefined value", function(){
+    describe('findInsertionIndex', function() {
+        var items = [
+            //    [0]         [1]         [2]         [3]         [4]         [5]
+            { id: 10 }, { id: 20 }, { id: 30 }, { id: 30 }, { id: 40 }, { id: 50 }
+        ];
+
+        function cmpId(a, b) {
+            return a.id - b.id;
+        }
+
+        it('should return largest valid index if no index is given', function() {
+            var ret;
+
+            ret = Ext.Array.findInsertionIndex({ id: 5 }, items, cmpId);
+            expect(ret).toBe(0);
+
+            ret = Ext.Array.findInsertionIndex({ id: 10 }, items, cmpId);
+            expect(ret).toBe(1);
+
+            ret = Ext.Array.findInsertionIndex({ id: 15 }, items, cmpId);
+            expect(ret).toBe(1);
+
+            ret = Ext.Array.findInsertionIndex({ id: 20 }, items, cmpId);
+            expect(ret).toBe(2);
+
+            ret = Ext.Array.findInsertionIndex({ id: 25 }, items, cmpId);
+            expect(ret).toBe(2);
+
+            ret = Ext.Array.findInsertionIndex({ id: 30 }, items, cmpId);
+            expect(ret).toBe(4);
+
+            ret = Ext.Array.findInsertionIndex({ id: 35 }, items, cmpId);
+            expect(ret).toBe(4);
+
+            ret = Ext.Array.findInsertionIndex({ id: 40 }, items, cmpId);
+            expect(ret).toBe(5);
+
+            ret = Ext.Array.findInsertionIndex({ id: 45 }, items, cmpId);
+            expect(ret).toBe(5);
+
+            ret = Ext.Array.findInsertionIndex({ id: 50 }, items, cmpId);
+            expect(ret).toBe(6);
+
+            ret = Ext.Array.findInsertionIndex({ id: 55 }, items, cmpId);
+            expect(ret).toBe(6);
+        });
+
+        it('should ignore index if invalid', function() {
+            var ret;
+
+            ret = Ext.Array.findInsertionIndex({ id: 5 }, items, cmpId, 1);
+            expect(ret).toBe(0);
+
+            ret = Ext.Array.findInsertionIndex({ id: 5 }, items, cmpId, 2);
+            expect(ret).toBe(0);
+
+            ret = Ext.Array.findInsertionIndex({ id: 5 }, items, cmpId, 5);
+            expect(ret).toBe(0);
+
+            ret = Ext.Array.findInsertionIndex({ id: 5 }, items, cmpId, 6);
+            expect(ret).toBe(0);
+
+            ret = Ext.Array.findInsertionIndex({ id: 15 }, items, cmpId, 0);
+            expect(ret).toBe(1);
+
+            ret = Ext.Array.findInsertionIndex({ id: 15 }, items, cmpId, 2);
+            expect(ret).toBe(1);
+
+            ret = Ext.Array.findInsertionIndex({ id: 15 }, items, cmpId, 5);
+            expect(ret).toBe(1);
+
+            ret = Ext.Array.findInsertionIndex({ id: 15 }, items, cmpId, 6);
+            expect(ret).toBe(1);
+
+            ret = Ext.Array.findInsertionIndex({ id: 30 }, items, cmpId, 0);
+            expect(ret).toBe(4);
+
+            ret = Ext.Array.findInsertionIndex({ id: 30 }, items, cmpId, 1);
+            expect(ret).toBe(4);
+
+            ret = Ext.Array.findInsertionIndex({ id: 30 }, items, cmpId, 5);
+            expect(ret).toBe(4);
+
+            ret = Ext.Array.findInsertionIndex({ id: 30 }, items, cmpId, 6);
+            expect(ret).toBe(4);
+
+            ret = Ext.Array.findInsertionIndex({ id: 60 }, items, cmpId, 5);
+            expect(ret).toBe(6);
+        });
+
+        it('should return given index if valid', function() {
+            var ret;
+
+            ret = Ext.Array.findInsertionIndex({ id: 5 }, items, cmpId, 0);
+            expect(ret).toBe(0);
+
+            ret = Ext.Array.findInsertionIndex({ id: 10 }, items, cmpId, 0);
+            expect(ret).toBe(0);
+
+            ret = Ext.Array.findInsertionIndex({ id: 20 }, items, cmpId, 1);
+            expect(ret).toBe(1);
+
+            ret = Ext.Array.findInsertionIndex({ id: 20 }, items, cmpId, 2);
+            expect(ret).toBe(2);
+
+            ret = Ext.Array.findInsertionIndex({ id: 30 }, items, cmpId, 2);
+            expect(ret).toBe(2);
+
+            ret = Ext.Array.findInsertionIndex({ id: 30 }, items, cmpId, 3);
+            expect(ret).toBe(3);
+
+            ret = Ext.Array.findInsertionIndex({ id: 30 }, items, cmpId, 4);
+            expect(ret).toBe(4);
+
+            ret = Ext.Array.findInsertionIndex({ id: 50 }, items, cmpId, 5);
+            expect(ret).toBe(5);
+
+            ret = Ext.Array.findInsertionIndex({ id: 50 }, items, cmpId, 6);
+            expect(ret).toBe(6);
+        });
+    });
+
+    describe("from", function() {
+        it("should return an empty array for an undefined value", function() {
             expect(Ext.Array.from(undefined)).toEqual([]);
         });
 
-        it("should return an empty array for a null value", function(){
+        it("should return an empty array for a null value", function() {
             expect(Ext.Array.from(null)).toEqual([]);
         });
 
-        it("should convert an array", function(){
+        it("should convert an array", function() {
             expect(Ext.Array.from([1, 2, 3])).toEqual([1, 2, 3]);
         });
 
-        it("should preserve the order", function(){
+        it("should preserve the order", function() {
             expect(Ext.Array.from(['a', 'string', 'here'])).toEqual(['a', 'string', 'here']);
         });
 
-        it("should convert a single value to an array", function(){
+        it("should convert a single value to an array", function() {
             expect(Ext.Array.from(true)).toEqual([true]);
             expect(Ext.Array.from(700)).toEqual([700]);
         });
 
-        it("should convert arguments to an array", function(){
-            var test, fn = function(){
-                test = Ext.Array.from(arguments);
-            };
+        it("should convert arguments to an array", function() {
+            var test,
+                fn = function() {
+                    test = Ext.Array.from(arguments);
+                };
+
             fn(1, 2, 3);
             expect(test instanceof Array).toBeTruthy();
             expect(test).toEqual([1, 2, 3]);
         });
 
-        it("should convert a DOM collection to an array", function(){
+        it("should convert a DOM collection to an array", function() {
             var ct = document.body.appendChild(document.createElement('div')),
                 node1 = ct.appendChild(document.createElement('div')),
                 node2 = ct.appendChild(document.createElement('div')),
@@ -432,41 +560,45 @@ describe("Ext.Array", function() {
             expect(result).toEqual([node1, node2, node3]);
             document.body.removeChild(ct);
         });
-        
-        it("should convert a single string", function(){
+
+        it("should convert a single string", function() {
             expect(Ext.Array.from('Foo')).toEqual(['Foo']);
         });
-        
-        it("should convert a single function", function(){
-            var fn = function(){};
+
+        it("should convert a single function", function() {
+            var fn = function() {};
+
             expect(Ext.Array.from(fn)).toEqual([fn]);
         });
     });
 
-    describe("toArray", function(){
-        it("should convert an array", function(){
+    describe("toArray", function() {
+        it("should convert an array", function() {
             expect(Ext.Array.toArray([1, 2, 3, 4])).toEqual([1, 2, 3, 4]);
         });
 
-        it("should convert a string", function(){
+        it("should convert a string", function() {
             expect(Ext.Array.toArray('12345')).toEqual(['1', '2', '3', '4', '5']);
         });
 
-        it("should create a new reference", function(){
+        it("should create a new reference", function() {
             var arr = [6, 7, 8];
+
             expect(Ext.Array.toArray(arr)).not.toBe(arr);
         });
 
-        it("should convert arguments", function(){
-            var test, fn = function(){
-                test = Ext.Array.toArray(arguments);
-            };
+        it("should convert arguments", function() {
+            var test,
+                fn = function() {
+                    test = Ext.Array.toArray(arguments);
+                };
+
             fn(-1, -2, -3);
             expect(test instanceof Array).toBeTruthy();
             expect(test).toEqual([-1, -2, -3]);
         });
 
-        it("should convert a DOM collection", function(){
+        it("should convert a DOM collection", function() {
             var ct = document.body.appendChild(document.createElement('div')),
                 node1 = ct.appendChild(document.createElement('div')),
                 node2 = ct.appendChild(document.createElement('div')),
@@ -479,50 +611,52 @@ describe("Ext.Array", function() {
             document.body.removeChild(ct);
         });
 
-        describe("start/end parameters", function(){
-            it("should default to whole of the array", function(){
+        describe("start/end parameters", function() {
+            it("should default to whole of the array", function() {
                 expect(Ext.Array.toArray([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
             });
 
-            it("should work with only the start parameter specified", function(){
+            it("should work with only the start parameter specified", function() {
                 expect(Ext.Array.toArray([1, 2, 3, 4, 5, 6], 2)).toEqual([3, 4, 5, 6]);
             });
 
-            it("should work with only the end parameter specified", function(){
+            it("should work with only the end parameter specified", function() {
                 expect(Ext.Array.toArray([1, 2, 3, 4, 5, 6], null, 4)).toEqual([1, 2, 3, 4]);
             });
 
-            it("should work with both params specified", function(){
+            it("should work with both params specified", function() {
                 expect(Ext.Array.toArray([1, 2, 3, 4, 5, 6], 2, 4)).toEqual([3, 4]);
             });
 
-            it("should work with nagative end", function(){
+            it("should work with nagative end", function() {
                 expect(Ext.Array.toArray([1, 2, 3, 4, 5, 6], 2, -1)).toEqual([3, 4, 5]);
             });
         });
     });
 
-    describe("pluck", function(){
-        it("should return an empty array when an empty array is passed", function(){
+    describe("pluck", function() {
+        it("should return an empty array when an empty array is passed", function() {
             expect(Ext.Array.pluck([], 'prop')).toEqual([]);
         });
 
-        it("should pull the properties from objects in the array", function(){
-            var arr = [{prop: 1}, {prop: 2}, {prop: 3}];
+        it("should pull the properties from objects in the array", function() {
+            var arr = [{ prop: 1 }, { prop: 2 }, { prop: 3 }];
+
             expect(Ext.Array.pluck(arr, 'prop')).toEqual([1, 2, 3]);
         });
 
-        it("should return a new reference", function(){
-            var arr = [{prop: 1}, {prop: 2}, {prop: 3}];
+        it("should return a new reference", function() {
+            var arr = [{ prop: 1 }, { prop: 2 }, { prop: 3 }];
+
             expect(Ext.Array.pluck(arr, 'prop')).not.toBe(arr);
         });
 
-        it("should work on a DOM collection", function(){
+        it("should work on a DOM collection", function() {
             var ct = document.body.appendChild(document.createElement('div')),
                 i = 0,
                 node;
 
-            for(; i < 5; ++i) {
+            for (; i < 5; ++i) {
                 node = ct.appendChild(document.createElement('div'));
                 node.className = 'node' + i;
             }
@@ -532,47 +666,48 @@ describe("Ext.Array", function() {
         });
     });
 
-    describe("filter", function(){
-        var trueFn = function(){
+    describe("filter", function() {
+        var trueFn = function() {
                 return true;
             };
 
-        it("should return an empty array if filtering an empty array", function(){
+        it("should return an empty array if filtering an empty array", function() {
             expect(Ext.Array.filter([], trueFn)).toEqual([]);
         });
 
-        it("should create a new reference", function(){
+        it("should create a new reference", function() {
             var arr = [1, 2, 3];
+
             expect(Ext.Array.filter(arr, trueFn)).not.toBe(arr);
         });
 
-        it("should add items if the filter function returns true", function(){
-            expect(Ext.Array.filter([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], function(val){
+        it("should add items if the filter function returns true", function() {
+            expect(Ext.Array.filter([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], function(val) {
                 return val % 2 === 0;
             })).toEqual([2, 4, 6, 8, 10]);
         });
 
-        it("should add items if the filter function returns a truthy value", function(){
-            expect(Ext.Array.filter([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], function(val){
+        it("should add items if the filter function returns a truthy value", function() {
+            expect(Ext.Array.filter([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], function(val) {
                 if (val % 2 === 0) {
                     return 1;
                 }
             })).toEqual([2, 4, 6, 8, 10]);
         });
 
-        it("should not add items if the filter function returns a falsy value", function(){
-            expect(Ext.Array.filter([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], function(val){
+        it("should not add items if the filter function returns a falsy value", function() {
+            expect(Ext.Array.filter([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], function(val) {
                 return 0;
             })).toEqual([]);
         });
 
-        it("should pass the correct parameters", function(){
+        it("should pass the correct parameters", function() {
             var values = [],
                 indexes = [],
                 arrs = [],
                 data = [1, 2, 3];
 
-            Ext.Array.filter([1, 2, 3], function(val, index, arr){
+            Ext.Array.filter([1, 2, 3], function(val, index, arr) {
                 values.push(val);
                 indexes.push(index);
                 arrs.push(arr);
@@ -583,60 +718,62 @@ describe("Ext.Array", function() {
             expect(arrs).toEqual([data, data, data]);
         });
 
-        it("should do a shallow copy", function(){
-            var o1 = {prop: 1},
-                o2 = {prop: 2},
-                o3 = {prop: 3};
+        it("should do a shallow copy", function() {
+            var o1 = { prop: 1 },
+                o2 = { prop: 2 },
+                o3 = { prop: 3 };
 
             expect(Ext.Array.filter([o1, o2, o3], trueFn)).toEqual([o1, o2, o3]);
         });
 
-        it("should execute in scope when passed", function(){
+        it("should execute in scope when passed", function() {
             var scope = {},
                 actual;
 
-            expect(Ext.Array.filter([1, 2, 3], function(){
+            expect(Ext.Array.filter([1, 2, 3], function() {
                 actual = this;
             }, scope));
             expect(actual).toBe(scope);
         });
     });
 
-    describe("forEach", function(){
-        it("should not execute on an empty array", function(){
+    describe("forEach", function() {
+        it("should not execute on an empty array", function() {
             var count = 0;
-            Ext.Array.forEach([], function(){
+
+            Ext.Array.forEach([], function() {
                 ++count;
             });
             expect(count).toEqual(0);
         });
 
-        it("should execute for each item in the array", function(){
+        it("should execute for each item in the array", function() {
             var count = 0;
-            Ext.Array.forEach([1, 2, 3, 4, 5], function(){
+
+            Ext.Array.forEach([1, 2, 3, 4, 5], function() {
                 ++count;
             });
             expect(count).toEqual(5);
         });
 
-        it("should execute in the appropriate scope", function(){
+        it("should execute in the appropriate scope", function() {
             var scope = {},
                 actual;
 
-            Ext.Array.forEach([1, 2, 3], function(){
+            Ext.Array.forEach([1, 2, 3], function() {
                 actual = this;
             }, scope);
 
             expect(actual).toBe(scope);
         });
 
-        it("should pass the appropriate params to the callback", function(){
+        it("should pass the appropriate params to the callback", function() {
             var values = [],
                 indexes = [],
                 arrs = [],
                 data = [1, 2, 3];
 
-            Ext.Array.forEach(data, function(val, index, arr){
+            Ext.Array.forEach(data, function(val, index, arr) {
                 values.push(val);
                 indexes.push(index);
                 arrs.push(arr);
@@ -648,43 +785,43 @@ describe("Ext.Array", function() {
         });
     });
 
-    describe("each", function(){
-        describe("return values", function(){
-            xit("should return 0 if the passed value is empty", function(){
+    describe("each", function() {
+        describe("return values", function() {
+            xit("should return 0 if the passed value is empty", function() {
                 expect(Ext.Array.each([])).toEqual(0);
             });
 
-            it("should return the stopping index if iteration is halted", function(){
-                expect(Ext.Array.each([1, 2, 3], function(val){
-                    return val != 2;
+            it("should return the stopping index if iteration is halted", function() {
+                expect(Ext.Array.each([1, 2, 3], function(val) {
+                    return val !== 2;
                 })).toEqual(1);
             });
 
-            it("should return true if iteration is not stopped", function(){
-                expect(Ext.Array.each([4, 5, 6], function(){
+            it("should return true if iteration is not stopped", function() {
+                expect(Ext.Array.each([4, 5, 6], function() {
                     return true;
                 })).toBeTruthy();
             });
         });
 
-        describe("scope/parameters", function(){
-            it("should execute in the specified scope", function(){
+        describe("scope/parameters", function() {
+            it("should execute in the specified scope", function() {
                 var scope = {},
                     actual;
 
-                Ext.Array.each([1, 2, 3], function(){
+                Ext.Array.each([1, 2, 3], function() {
                     actual = this;
                 }, scope);
                 expect(actual).toBe(scope);
             });
 
-            it("should pass the item, index and array", function(){
+            it("should pass the item, index and array", function() {
                 var values = [],
                     indexes = [],
                     arrs = [],
                     data = [1, 2, 3];
 
-                Ext.Array.each(data, function(val, index, arr){
+                Ext.Array.each(data, function(val, index, arr) {
                     values.push(val);
                     indexes.push(index);
                     arrs.push(arr);
@@ -696,46 +833,54 @@ describe("Ext.Array", function() {
             });
         });
 
-        describe("stopping iteration", function(){
-            it("should not stop iteration by default", function(){
+        describe("stopping iteration", function() {
+            it("should not stop iteration by default", function() {
                 var count = 0;
-                Ext.Array.each([1, 2, 3, 4, 5], function(){
+
+                Ext.Array.each([1, 2, 3, 4, 5], function() {
                     ++count;
                 });
                 expect(count).toEqual(5);
             });
 
-            it("should not stop unless an explicit false is returned", function(){
+            it("should not stop unless an explicit false is returned", function() {
                 var count = 0;
-                Ext.Array.each([1, 2, 3, 4, 5], function(){
+
+                Ext.Array.each([1, 2, 3, 4, 5], function() {
                     ++count;
+
                     return null;
                 });
                 expect(count).toEqual(5);
             });
 
-            it("should stop immediately if false is returned", function(){
+            it("should stop immediately if false is returned", function() {
                 var count = 0;
-                Ext.Array.each([1, 2, 3, 4, 5], function(v){
+
+                Ext.Array.each([1, 2, 3, 4, 5], function(v) {
                     ++count;
-                    return v != 2;
+
+                    return v !== 2;
                 });
                 expect(count).toEqual(2);
             });
         });
 
-        describe("other collection types", function(){
-            it("should iterate arguments", function(){
-                var test, values = [], fn = function(){
-                    test = Ext.Array.each(arguments, function(val){
-                        values.push(val);
-                    });
-                };
+        describe("other collection types", function() {
+            it("should iterate arguments", function() {
+                var test,
+                    values = [],
+                    fn = function() {
+                        test = Ext.Array.each(arguments, function(val) {
+                            values.push(val);
+                        });
+                    };
+
                 fn(1, 2, 3);
                 expect(values).toEqual([1, 2, 3]);
             });
 
-            it("should iterate over a DOM collection", function(){
+            it("should iterate over a DOM collection", function() {
                 var ct = document.body.appendChild(document.createElement('div')),
                     node1 = ct.appendChild(document.createElement('div')),
                     node2 = ct.appendChild(document.createElement('div')),
@@ -743,7 +888,7 @@ describe("Ext.Array", function() {
                     collection = ct.getElementsByTagName('div'),
                     result = [];
 
-                Ext.Array.each(collection, function(node){
+                Ext.Array.each(collection, function(node) {
                     result.push(node.tagName.toLowerCase());
                 });
 
@@ -752,14 +897,15 @@ describe("Ext.Array", function() {
             });
         });
 
-        it("should iterate once over a single, non empty value", function(){
+        it("should iterate once over a single, non empty value", function() {
             var count = 0;
-            Ext.Array.each('string', function(){
+
+            Ext.Array.each('string', function() {
                 ++count;
             });
             expect(count).toEqual(1);
         });
-        
+
         describe("reverse iteraction", function() {
             it("should iterate backwards", function() {
                 var output = [],
@@ -767,6 +913,7 @@ describe("Ext.Array", function() {
                     fn = function(number) {
                         output.push(number);
                     };
+
                 Ext.Array.each(input, fn, undefined, true);
                 expect(output).toEqual([3, 2, 1]);
             });
@@ -775,36 +922,39 @@ describe("Ext.Array", function() {
                     input = [1, 2, 3],
                     fn = function(number) {
                         output.push(number);
+
                         if (number === 2) { return false; }
                     };
+
                 Ext.Array.each(input, fn, undefined, true);
                 expect(output).toEqual([3, 2]);
             });
         });
     });
 
-    describe("every", function(){
-        describe("scope/params", function(){
-            it("should execute in the specified scope", function(){
+    describe("every", function() {
+        describe("scope/params", function() {
+            it("should execute in the specified scope", function() {
                 var scope = {},
                     actual;
 
-                Ext.Array.every([1, 2, 3], function(){
+                Ext.Array.every([1, 2, 3], function() {
                     actual = this;
                 }, scope);
                 expect(actual).toBe(scope);
             });
 
-            it("should pass the item, index and array", function(){
+            it("should pass the item, index and array", function() {
                 var values = [],
                     indexes = [],
                     arrs = [],
                     data = [1, 2, 3];
 
-                Ext.Array.every(data, function(val, index, arr){
+                Ext.Array.every(data, function(val, index, arr) {
                     values.push(val);
                     indexes.push(index);
                     arrs.push(arr);
+
                     return true;
                 });
 
@@ -814,57 +964,59 @@ describe("Ext.Array", function() {
             });
         });
 
-        it("should return true on an empty array", function(){
-            expect(Ext.Array.every([], function(){})).toBeTruthy();
+        it("should return true on an empty array", function() {
+            expect(Ext.Array.every([], function() {})).toBeTruthy();
         });
 
-        it("should throw an exception if no fn is passed", function(){
-            expect(function(){
+        it("should throw an exception if no fn is passed", function() {
+            expect(function() {
                 Ext.Array.every([1, 2, 3]);
             }).toThrow();
         });
 
-        it("should stop as soon as a false value is found", function(){
+        it("should stop as soon as a false value is found", function() {
             var count = 0,
                 result;
 
-            result = Ext.Array.every([true, true, false, true], function(v){
+            result = Ext.Array.every([true, true, false, true], function(v) {
                 ++count;
+
                 return v;
             });
             expect(count).toEqual(3);
             expect(result).toBeFalsy();
         });
 
-        it("should return true if all values match the function", function(){
-            expect(Ext.Array.every([1, 2, 3, 4, 5, 6, 7, 8, 9], function(v){
+        it("should return true if all values match the function", function() {
+            expect(Ext.Array.every([1, 2, 3, 4, 5, 6, 7, 8, 9], function(v) {
                 return v < 10;
             })).toBeTruthy();
         });
     });
 
-    describe("some", function(){
-        describe("scope/params", function(){
-            it("should execute in the specified scope", function(){
+    describe("some", function() {
+        describe("scope/params", function() {
+            it("should execute in the specified scope", function() {
                 var scope = {},
                     actual;
 
-                Ext.Array.some([1, 2, 3], function(){
+                Ext.Array.some([1, 2, 3], function() {
                     actual = this;
                 }, scope);
                 expect(actual).toBe(scope);
             });
 
-            it("should pass the item, index and array", function(){
+            it("should pass the item, index and array", function() {
                 var values = [],
                     indexes = [],
                     arrs = [],
                     data = [1, 2, 3];
 
-                Ext.Array.some(data, function(val, index, arr){
+                Ext.Array.some(data, function(val, index, arr) {
                     values.push(val);
                     indexes.push(index);
                     arrs.push(arr);
+
                     return true;
                 });
 
@@ -874,34 +1026,36 @@ describe("Ext.Array", function() {
             });
         });
 
-        it("should return false on an empty array", function(){
-            expect(Ext.Array.some([], function(){})).toBeFalsy();
+        it("should return false on an empty array", function() {
+            expect(Ext.Array.some([], function() {})).toBeFalsy();
         });
 
-        it("should throw an exception if no fn is passed", function(){
-            expect(function(){
+        it("should throw an exception if no fn is passed", function() {
+            expect(function() {
                 Ext.Array.some([1, 2, 3]);
             }).toThrow();
         });
 
-        it("should stop as soon as a matching value is found", function(){
+        it("should stop as soon as a matching value is found", function() {
             var count = 0,
                 result;
 
-            result = Ext.Array.some([1, 2, 3, 4], function(val){
+            result = Ext.Array.some([1, 2, 3, 4], function(val) {
                 ++count;
-                return val == 3;
+
+                return val === 3;
             });
             expect(count).toEqual(3);
             expect(result).toBeTruthy();
         });
 
-        it("should return false if nothing matches the matcher function", function(){
+        it("should return false if nothing matches the matcher function", function() {
             var count = 0,
                 result;
 
-            result = Ext.Array.some([1, 2, 3, 4, 5, 6, 7, 8, 9], function(val){
+            result = Ext.Array.some([1, 2, 3, 4, 5, 6, 7, 8, 9], function(val) {
                 ++count;
+
                 return val > 9;
             });
             expect(count).toEqual(9);
@@ -909,95 +1063,99 @@ describe("Ext.Array", function() {
         });
     });
 
-    describe("merge", function(){
-        it("should return an empty array if run on an empty array", function(){
+    describe("merge", function() {
+        it("should return an empty array if run on an empty array", function() {
             expect(Ext.Array.merge([])).toEqual([]);
         });
 
-        it("should return a new reference", function(){
+        it("should return a new reference", function() {
             var arr = [1, 2, 3];
+
             expect(Ext.Array.merge(arr)).not.toBe(arr);
         });
 
-        it("should return a copy if all items are unique", function(){
+        it("should return a copy if all items are unique", function() {
             expect(Ext.Array.merge([6, 7, 8])).toEqual([6, 7, 8]);
         });
 
-        it("should only use strict typing to match", function(){
+        it("should only use strict typing to match", function() {
             expect(Ext.Array.merge([1, '1'])).toEqual([1, '1']);
         });
 
-        it("should accept two or more arrays and return a unique union with items in order of first appearance", function(){
+        it("should accept two or more arrays and return a unique union with items in order of first appearance", function() {
             expect(Ext.Array.merge([1, 2, 3], ['1', '2', '3'], [4, 1, 5, 2], [6, 3, 7, '1'], [8, '2', 9, '3'])).toEqual([1, 2, 3, '1', '2', '3', 4, 5, 6, 7, 8, 9]);
         });
     });
 
-    describe("intersect", function(){
-        it("should return an empty array if no arrays are passed", function(){
+    describe("intersect", function() {
+        it("should return an empty array if no arrays are passed", function() {
             expect(Ext.Array.intersect()).toEqual([]);
         });
 
-        it("should return an empty array if one empty array is passed", function(){
+        it("should return an empty array if one empty array is passed", function() {
             expect(Ext.Array.intersect([])).toEqual([]);
         });
 
-        it("should return a new reference", function(){
+        it("should return a new reference", function() {
             var arr = [1, 2, 3];
+
             expect(Ext.Array.intersect(arr)).not.toBe(arr);
         });
 
-        it("should return a copy if one array is passed", function(){
+        it("should return a copy if one array is passed", function() {
             expect(Ext.Array.intersect([6, 7, 8])).toEqual([6, 7, 8]);
         });
 
-        it("should return an intersection of two or more arrays with items in order of first appearance", function(){
+        it("should return an intersection of two or more arrays with items in order of first appearance", function() {
             expect(Ext.Array.intersect([1, 2, 3], [4, 3, 2, 5], [2, 6, 3])).toEqual([2, 3]);
         });
 
-        it("should return an empty array if there is no intersecting values", function(){
+        it("should return an empty array if there is no intersecting values", function() {
             expect(Ext.Array.intersect([1, 2, 3], [4, 5, 6])).toEqual([]);
         });
 
-        it("should contain the unique set of intersected values only", function(){
+        it("should contain the unique set of intersected values only", function() {
             expect(Ext.Array.intersect([1, 1, 2, 3, 3], [1, 1, 2, 3, 3])).toEqual([1, 2, 3]);
         });
 
-        it("should only use strict typing to match", function(){
+        it("should only use strict typing to match", function() {
             expect(Ext.Array.intersect([1], ['1'])).toEqual([]);
         });
         it("should handle arrays containing falsy values", function() {
-            expect(Ext.Array.intersect([undefined, null, false, 0, ''], [undefined, null, false, 0, ''])).toEqual([undefined, null, false, 0, '']); 
+            expect(Ext.Array.intersect([undefined, null, false, 0, ''], [undefined, null, false, 0, ''])).toEqual([undefined, null, false, 0, '']);
         });
     });
 
-    describe("difference", function(){
-        it("should return a set difference of two arrays with items in order of first appearance", function(){
+    describe("difference", function() {
+        it("should return a set difference of two arrays with items in order of first appearance", function() {
             expect(Ext.Array.difference([1, 2, 3, 4], [3, 2])).toEqual([1, 4]);
         });
 
-        it("should return the first array unchanged if there is no difference", function(){
+        it("should return the first array unchanged if there is no difference", function() {
             expect(Ext.Array.difference([1, 2, 3], [4, 5, 6])).toEqual([1, 2, 3]);
         });
 
-        it("should return a new reference", function(){
+        it("should return a new reference", function() {
             var arr = [1, 2, 3];
+
             expect(Ext.Array.difference(arr, [3, 2])).not.toBe(arr);
         });
 
-        it("should remove multiples of the same value from the first array", function(){
+        it("should remove multiples of the same value from the first array", function() {
             expect(Ext.Array.difference([1, 2, 3, 2, 4, 1], [2, 1])).toEqual([3, 4]);
         });
 
-        it("should only use strict typing to match", function(){
+        it("should only use strict typing to match", function() {
             expect(Ext.Array.difference([1], ['1'])).toEqual([1]);
         });
     });
 
     describe("sort", function() {
        var sarray, narray;
+
        beforeEach(function() {
           sarray = ['bbb', 'addda', 'erere', 'fff', 'de3'];
-          narray = [1,3,2,4,6,7];
+          narray = [1, 3, 2, 4, 6, 7];
 
        });
 
@@ -1007,13 +1165,13 @@ describe("Ext.Array", function() {
                 expect(sarray).toEqual(['addda', 'bbb', 'de3', 'erere', 'fff']);
            });
 
-
            it("should be able to use a sortFn that returns a Number", function() {
-                Ext.Array.sort(sarray, function(a,b){
+                Ext.Array.sort(sarray, function(a, b) {
                     if (a === b) {
                         return 0;
                     }
-                    return  a > b ? 1: -1;
+
+                    return  a > b ? 1 : -1;
                 });
                 expect(sarray).toEqual(['addda', 'bbb', 'de3', 'erere', 'fff']);
            });
@@ -1022,15 +1180,14 @@ describe("Ext.Array", function() {
        describe("with numbers", function() {
            it("should be able to sort an array without sortFn", function() {
                 Ext.Array.sort(narray);
-                expect(narray).toEqual([1,2,3,4,6,7]);
+                expect(narray).toEqual([1, 2, 3, 4, 6, 7]);
            });
 
-
            it("should be able to use a sortFn that returns a Number", function() {
-                Ext.Array.sort(narray, function(a,b){
+                Ext.Array.sort(narray, function(a, b) {
                     return a - b;
                 });
-                expect(narray).toEqual([1,2,3,4,6,7]);
+                expect(narray).toEqual([1, 2, 3, 4, 6, 7]);
            });
        });
     });
@@ -1038,12 +1195,12 @@ describe("Ext.Array", function() {
     describe("min", function() {
         describe("numbers", function() {
             it("without comparisonFn", function() {
-                expect(Ext.Array.min([1,2,3,4,5,6])).toEqual(1);
-                expect(Ext.Array.min([6,5,4,3,2,1])).toEqual(1);
+                expect(Ext.Array.min([1, 2, 3, 4, 5, 6])).toEqual(1);
+                expect(Ext.Array.min([6, 5, 4, 3, 2, 1])).toEqual(1);
             });
 
             it("with comparisonFn", function() {
-                expect(Ext.Array.min([1,2,3,4,5,6], function(a, b) { return a < b ? 1 : -1; })).toEqual(6);
+                expect(Ext.Array.min([1, 2, 3, 4, 5, 6], function(a, b) { return a < b ? 1 : -1; })).toEqual(6);
             });
         });
     });
@@ -1051,101 +1208,116 @@ describe("Ext.Array", function() {
     describe("max", function() {
         describe("numbers", function() {
             it("without comparisonFn", function() {
-                expect(Ext.Array.max([1,2,3,4,5,6])).toEqual(6);
+                expect(Ext.Array.max([1, 2, 3, 4, 5, 6])).toEqual(6);
             });
 
             it("with comparisonFn", function() {
-                expect(Ext.Array.max([1,2,3,4,5,6], function(a, b) { return a < b ? 1 : -1; })).toEqual(1);
+                expect(Ext.Array.max([1, 2, 3, 4, 5, 6], function(a, b) { return a < b ? 1 : -1; })).toEqual(1);
             });
         });
     });
 
     describe("sum", function() {
         it("should return 21", function() {
-            expect(Ext.Array.sum([1,2,3,4,5,6])).toEqual(21);
+            expect(Ext.Array.sum([1, 2, 3, 4, 5, 6])).toEqual(21);
         });
     });
 
     describe("mean", function() {
         it("should return 3.5", function() {
-            expect(Ext.Array.mean([1,2,3,4,5,6])).toEqual(3.5);
+            expect(Ext.Array.mean([1, 2, 3, 4, 5, 6])).toEqual(3.5);
         });
     });
 
     function testReplace(replaceFn) {
         var replace = replaceFn;
+
         return function() {
-        it('should remove items in the middle', function () {
+        it('should remove items in the middle', function() {
             var array = [0, 1, 2, 3, 4, 5, 6, 7];
+
             replace(array, 2, 2);
             expect(Ext.encode(array)).toEqual('[0,1,4,5,6,7]');
         });
-        it('should insert items in the middle', function () {
+        it('should insert items in the middle', function() {
             var array = [0, 1, 2, 3, 4, 5, 6, 7];
-            replace(array, 2, 0, ['a','b']);
+
+            replace(array, 2, 0, ['a', 'b']);
             expect(Ext.encode(array)).toEqual('[0,1,"a","b",2,3,4,5,6,7]');
         });
-        it('should replace in the middle with more items', function () {
+        it('should replace in the middle with more items', function() {
             var array = [0, 1, 2, 3, 4, 5, 6, 7];
-            replace(array, 2, 2, ['a','b', 'c', 'd']);
+
+            replace(array, 2, 2, ['a', 'b', 'c', 'd']);
             expect(Ext.encode(array)).toEqual('[0,1,"a","b","c","d",4,5,6,7]');
         });
-        it('should replace in the middle with fewer items', function () {
+        it('should replace in the middle with fewer items', function() {
             var array = [0, 1, 2, 3, 4, 5, 6, 7];
-            replace(array, 2, 4, ['a','b']);
+
+            replace(array, 2, 4, ['a', 'b']);
             expect(Ext.encode(array)).toEqual('[0,1,"a","b",6,7]');
         });
-        it('should delete at front', function () {
+        it('should delete at front', function() {
             var array = [0, 1, 2, 3];
+
             replace(array, 0, 2);
             expect(Ext.encode(array)).toEqual('[2,3]');
         });
-        it('should delete at tail', function () {
+        it('should delete at tail', function() {
             var array = [0, 1, 2, 3];
+
             replace(array, 2, 2);
             expect(Ext.encode(array)).toEqual('[0,1]');
         });
-        it('should delete everything', function () {
+        it('should delete everything', function() {
             var array = [0, 1, 2, 3];
+
             replace(array, 0, 4);
             expect(Ext.encode(array)).toEqual('[]');
         });
-        it('should insert at front', function () {
+        it('should insert at front', function() {
             var array = [0, 1];
-            replace(array, 0, 0, ['a','b','c','d','e']);
+
+            replace(array, 0, 0, ['a', 'b', 'c', 'd', 'e']);
             expect(Ext.encode(array)).toEqual('["a","b","c","d","e",0,1]');
         });
-        it('should insert at tail', function () {
+        it('should insert at tail', function() {
             var array = [0, 1];
-            replace(array, array.length, 0, ['a','b','c','d','e']);
+
+            replace(array, array.length, 0, ['a', 'b', 'c', 'd', 'e']);
             expect(Ext.encode(array)).toEqual('[0,1,"a","b","c","d","e"]');
         });
-        it('should insert into empty array', function () {
+        it('should insert into empty array', function() {
             var array = [];
-            replace(array, 0, 0, ['a','b','c','d','e']);
+
+            replace(array, 0, 0, ['a', 'b', 'c', 'd', 'e']);
             expect(Ext.encode(array)).toEqual('["a","b","c","d","e"]');
         });
-        it('should replace at front', function () {
+        it('should replace at front', function() {
             var array = [0, 1];
-            replace(array, 0, 1, ['a','b','c','d','e']);
+
+            replace(array, 0, 1, ['a', 'b', 'c', 'd', 'e']);
             expect(Ext.encode(array)).toEqual('["a","b","c","d","e",1]');
         });
-        it('should replace at tail', function () {
+        it('should replace at tail', function() {
             var array = [0, 1];
-            replace(array, 1, 1, ['a','b','c','d','e']);
+
+            replace(array, 1, 1, ['a', 'b', 'c', 'd', 'e']);
             expect(Ext.encode(array)).toEqual('[0,"a","b","c","d","e"]');
         });
-        it('should replace entire array', function () {
+        it('should replace entire array', function() {
             var array = [0, 1, 2, 3];
-            replace(array, 0, array.length, ['a','b','c','d','e']);
+
+            replace(array, 0, array.length, ['a', 'b', 'c', 'd', 'e']);
             expect(Ext.encode(array)).toEqual('["a","b","c","d","e"]');
         });
-        it('should handle negative index', function () {
+        it('should handle negative index', function() {
             var array = [0, 1, 2, 3];
+
             replace(array, -2, 20); // should clip
             expect(Ext.encode(array)).toEqual('[0,1]');
         });
-        it('should work around the IE8 bug', function () {
+        it('should work around the IE8 bug', function() {
             // see http://social.msdn.microsoft.com/Forums/en-US/iewebdevelopment/thread/6e946d03-e09f-4b22-a4dd-cd5e276bf05a/
             var array = [],
                 lengthBefore,
@@ -1155,7 +1327,7 @@ describe("Ext.Array", function() {
                 array.push("A");
             }
 
-            array.splice(15, 0, "F", "F", "F", "F", "F","F","F","F","F","F","F","F","F","F","F","F","F","F","F","F","F");
+            array.splice(15, 0, "F", "F", "F", "F", "F", "F", "F", "F", "F", "F", "F", "F", "F", "F", "F", "F", "F", "F", "F", "F", "F");
             // the fact that this is an APPLY is not instrumental to reproducing this bug
 
             lengthBefore = array.length; // = 41
@@ -1165,7 +1337,7 @@ describe("Ext.Array", function() {
 
             replace(array, 13, 0, ["XXX"]); // add one element (this was the failure)
 
-            expect(array.length).toEqual(lengthBefore+1);
+            expect(array.length).toEqual(lengthBefore + 1);
         });
         };
     }
@@ -1176,81 +1348,91 @@ describe("Ext.Array", function() {
         // and test the wrapper on other browsers
     describe('replace with native implementation', testReplace(Ext.Array.replace));
 
+    describe('splice', function() {
+        it('returns proper result array at the front', function() {
+            var ret = Ext.Array._spliceSim([1, 2, 3, 4], 0, 2);
 
-    describe('splice', function () {
-        it('returns proper result array at the front', function () {
-            var ret = Ext.Array._spliceSim([1,2,3,4], 0, 2);
             expect(Ext.encode(ret)).toEqual('[1,2]');
         });
-        it('returns proper result array at the end', function () {
-            var ret = Ext.Array._spliceSim([1,2,3,4], 2, 2);
+        it('returns proper result array at the end', function() {
+            var ret = Ext.Array._spliceSim([1, 2, 3, 4], 2, 2);
+
             expect(Ext.encode(ret)).toEqual('[3,4]');
         });
-        it('returns proper result array from the middle', function () {
-            var ret = Ext.Array._spliceSim([1,2,3,4], 1, 2);
+        it('returns proper result array from the middle', function() {
+            var ret = Ext.Array._spliceSim([1, 2, 3, 4], 1, 2);
+
             expect(Ext.encode(ret)).toEqual('[2,3]');
         });
-        it('return an empty array when nothing removed', function () {
-            var ret = Ext.Array._spliceSim([1,2,3,4], 1, 0);
+        it('return an empty array when nothing removed', function() {
+            var ret = Ext.Array._spliceSim([1, 2, 3, 4], 1, 0);
+
             expect(Ext.encode(ret)).toEqual('[]');
         });
     });
 
-    describe('slice', function(){
+    describe('slice', function() {
 
         var array;
 
-        describe('with Array', function(){
-            beforeEach(function(){
-                array = [{0:0}, {1:1}, {2:2}, {3:3}];
+        describe('with Array', function() {
+            beforeEach(function() {
+                array = [{ 0: 0 }, { 1: 1 }, { 2: 2 }, { 3: 3 }];
             });
             tests();
         });
 
-        describe('with arguments', function(){
-            beforeEach(function(){
-                array = (function(){ return arguments; })({0:0}, {1:1}, {2:2}, {3:3});
+        describe('with arguments', function() {
+            beforeEach(function() {
+                array = (function() { return arguments; })({ 0: 0 }, { 1: 1 }, { 2: 2 }, { 3: 3 });
             });
             tests();
         });
 
-        function tests(){
-            it('should shallow clone', function(){
+        function tests() {
+            it('should shallow clone', function() {
                 var newArray = Ext.Array.slice(array, 0);
+
                 expect(newArray === array).toBe(false);
                 expect(newArray[0] === array[0]).toBe(true);
             });
-            it('should not require a begin or end', function(){
+            it('should not require a begin or end', function() {
                 var newArray = Ext.Array.slice(array);
+
                 expect(newArray === array).toBe(false);
                 expect(newArray[0]).toBe(array[0]);
             });
-            it('should slice off the first item', function(){
+            it('should slice off the first item', function() {
                 var newArray = Ext.Array.slice(array, 1);
+
                 expect(newArray.length).toBe(3);
                 expect(newArray[0]).toBe(array[1]);
                 expect(newArray[2]).toBe(array[3]);
             });
-            it('should ignore `end` if undefined', function(){
+            it('should ignore `end` if undefined', function() {
                 var newArray = Ext.Array.slice(array, 1, undefined);
+
                 expect(newArray.length).toBe(3);
                 expect(newArray[0]).toBe(array[1]);
                 expect(newArray[2]).toBe(array[3]);
             });
-            it('should ignore `begin` if undefined', function(){
+            it('should ignore `begin` if undefined', function() {
                 var newArray = Ext.Array.slice(array, undefined);
+
                 expect(newArray.length).toBe(4);
                 expect(newArray[0]).toBe(array[0]);
                 expect(newArray[3]).toBe(array[3]);
             });
-            it('should ignore `begin` and `end` if undefined', function(){
+            it('should ignore `begin` and `end` if undefined', function() {
                 var newArray = Ext.Array.slice(array, undefined, undefined);
+
                 expect(newArray.length).toBe(4);
                 expect(newArray[0]).toBe(array[0]);
                 expect(newArray[3]).toBe(array[3]);
             });
-            it('should slice out the middle', function(){
+            it('should slice out the middle', function() {
                 var newArray = Ext.Array.slice(array, 1, -1);
+
                 expect(newArray.length).toBe(2);
                 expect(newArray[0]).toBe(array[1]);
                 expect(newArray[1]).toBe(array[2]);
@@ -1258,14 +1440,16 @@ describe("Ext.Array", function() {
         }
     });
 
-    describe('toMap', function () {
+    describe('toMap', function() {
         it("should return an empty object with an empty array", function() {
             var map = Ext.Array.toMap([]);
+
             expect(map).toEqual({});
         });
 
-        it('should default the value to the index + 1', function () {
-            var map = Ext.Array.toMap(['a','b','c']);
+        it('should default the value to the index + 1', function() {
+            var map = Ext.Array.toMap(['a', 'b', 'c']);
+
             expect(map).toEqual({
                 a: 1,
                 b: 2,
@@ -1274,7 +1458,7 @@ describe("Ext.Array", function() {
         });
 
         describe("with getKey", function() {
-            it('should extract the property name from the object and default the value to index + 1', function () {
+            it('should extract the property name from the object and default the value to index + 1', function() {
                 var map = Ext.Array.toMap([
                     { name: 'aaa' },
                     { name: 'bbb' },
@@ -1288,12 +1472,12 @@ describe("Ext.Array", function() {
                 });
             });
 
-            it('should use a key extractor fn and default the value to index + 1', function () {
+            it('should use a key extractor fn and default the value to index + 1', function() {
                 var map = Ext.Array.toMap([
                     { name: 'aaa' },
                     { name: 'bbb' },
                     { name: 'ccc' }
-                ], function (obj) {
+                ], function(obj) {
                     return obj.name.toUpperCase();
                 });
 
@@ -1322,10 +1506,10 @@ describe("Ext.Array", function() {
         var a, b, c, aDup;
 
         beforeEach(function() {
-            a = {name: 'a'};
-            b = {name: 'b'};
-            c = {name: 'c'};
-            aDup = {name: 'a'};
+            a = { name: 'a' };
+            b = { name: 'b' };
+            c = { name: 'c' };
+            aDup = { name: 'a' };
         });
 
         afterEach(function() {
@@ -1334,11 +1518,13 @@ describe("Ext.Array", function() {
 
         it("should return an empty object with an empty array", function() {
             var map = Ext.Array.toValueMap([]);
+
             expect(map).toEqual({});
         });
 
-        it("should default the value to the key", function () {
-            var map = Ext.Array.toValueMap(['a','b','c']);
+        it("should default the value to the key", function() {
+            var map = Ext.Array.toValueMap(['a', 'b', 'c']);
+
             expect(map).toEqual({
                 a: 'a',
                 b: 'b',
@@ -1348,6 +1534,7 @@ describe("Ext.Array", function() {
 
         it("should be able to use numeric keys", function() {
             var map = Ext.Array.toValueMap([1, 2, 3]);
+
             expect(map).toEqual({
                 '1': 1,
                 '2': 2,
@@ -1359,6 +1546,7 @@ describe("Ext.Array", function() {
             describe("with getKey as a string", function() {
                 it("should extract the object key", function() {
                     var map = Ext.Array.toValueMap([a, b, c], 'name');
+
                     expect(map).toEqual({
                         a: a,
                         b: b,
@@ -1369,6 +1557,7 @@ describe("Ext.Array", function() {
                 describe("arrayify options", function() {
                     it("should use the last encountered key as a default", function() {
                         var map = Ext.Array.toValueMap([a, b, c, aDup], 'name');
+
                         expect(map).toEqual({
                             a: aDup,
                             b: b,
@@ -1378,15 +1567,17 @@ describe("Ext.Array", function() {
 
                     it("should force all values to arrays when passing arrayify: 1", function() {
                         var map = Ext.Array.toValueMap([a, b, c, aDup], 'name', 1);
+
                         expect(map).toEqual({
                             a: [a, aDup],
                             b: [b],
                             c: [c]
-                        }); 
+                        });
                     });
 
                     it("should only create arrays when dupes exist with arrayify: 2", function() {
                         var map = Ext.Array.toValueMap([a, b, c, aDup], 'name', 2);
+
                         expect(map).toEqual({
                             a: [a, aDup],
                             b: b,
@@ -1403,6 +1594,7 @@ describe("Ext.Array", function() {
 
                 it("should extract the object key", function() {
                     var map = Ext.Array.toValueMap([a, b, c], toUpper);
+
                     expect(map).toEqual({
                         A: a,
                         B: b,
@@ -1413,6 +1605,7 @@ describe("Ext.Array", function() {
                 describe("arrayify options", function() {
                     it("should use the last encountered key as a default", function() {
                         var map = Ext.Array.toValueMap([a, b, c, aDup], toUpper);
+
                         expect(map).toEqual({
                             A: aDup,
                             B: b,
@@ -1422,15 +1615,17 @@ describe("Ext.Array", function() {
 
                     it("should force all values to arrays when passing arrayify: 1", function() {
                         var map = Ext.Array.toValueMap([a, b, c, aDup], toUpper, null, 1);
+
                         expect(map).toEqual({
                             A: [a, aDup],
                             B: [b],
                             C: [c]
-                        }); 
+                        });
                     });
 
                     it("should only create arrays when dupes exist with arrayify: 2", function() {
                         var map = Ext.Array.toValueMap([a, b, c, aDup], toUpper, null, 2);
+
                         expect(map).toEqual({
                             A: [a, aDup],
                             B: b,
@@ -1449,22 +1644,23 @@ describe("Ext.Array", function() {
             });
         });
     });
-    
+
     describe('flatten', function() {
         var flatten = Ext.Array.flatten;
+
         it('should convert a multi-dimensional array into 1-d array', function() {
             expect(flatten([
                             1,
-                            [2,3],
-                            [4,[5,6]]
-                            ])).toEqual([1,2,3,4,5,6]);
+                            [2, 3],
+                            [4, [5, 6]]
+                            ])).toEqual([1, 2, 3, 4, 5, 6]);
         });
     });
 
     describe("push", function() {
         var push = Ext.Array.push;
 
-        it("should create an array", function(){
+        it("should create an array", function() {
             expect(push(undefined, 1)).toEqual([1]);
         });
 
@@ -1476,61 +1672,62 @@ describe("Ext.Array", function() {
             expect(push([1, 2], 3, 4, 5)).toEqual([1, 2, 3, 4, 5]);
         });
 
-        it("should push all items of array arguments onto end", function(){
+        it("should push all items of array arguments onto end", function() {
             expect(push([1, 2], [3, 4], [5])).toEqual([1, 2, 3, 4, 5]);
         });
 
-        it("should push arrays and single items into the end", function(){
+        it("should push arrays and single items into the end", function() {
             expect(push([1, 2], [3, 4], 5)).toEqual([1, 2, 3, 4, 5]);
         });
     });
-    
-    describe("equals", function(){
+
+    describe("equals", function() {
         var equals = Ext.Array.equals;
-        
-        it("should match 2 empty arrays", function(){
-            expect(equals([], [])).toBe(true);    
+
+        it("should match 2 empty arrays", function() {
+            expect(equals([], [])).toBe(true);
         });
-        
-        it("should not match if the arrays are a different size", function(){
+
+        it("should not match if the arrays are a different size", function() {
             expect(equals([1, 2, 3, 4], [1, 2, 3])).toBe(false);
         });
-        
-        it("should use strict equality matching", function(){
+
+        it("should use strict equality matching", function() {
             expect(equals([1], ['1'])).toBe(false);
         });
-        
-        it("should have items in the same order", function(){
+
+        it("should have items in the same order", function() {
             expect(equals(['baz', 'bar', 'foo'], ['foo', 'bar', 'baz'])).toBe(false);
         });
-        
-        it("should match strings", function(){
+
+        it("should match strings", function() {
             expect(equals(['foo', 'bar', 'baz'], ['foo', 'bar', 'baz'])).toBe(true);
         });
-        
-        it("should match numbers", function(){
+
+        it("should match numbers", function() {
             expect(equals([1, 2, 3, 4], [1, 2, 3, 4])).toBe(true);
         });
-        
-        it("should match booleans", function(){
+
+        it("should match booleans", function() {
             expect(equals([false, false, false, true], [false, false, false, true])).toBe(true);
         });
-        
-        it("should match objects", function(){
+
+        it("should match objects", function() {
             var o1 = {},
                 o2 = {},
                 o3 = {};
-                
+
             expect(equals([o1, o2, o3], [o1, o2, o3])).toBe(true);
         });
-        
-        it("should match the same array", function(){
+
+        it("should match the same array", function() {
             var arr = [1, 2, 3];
+
             expect(equals(arr, arr)).toBe(true);
         });
     });
 
-    describe('reduce', function () {
+    describe('reduce', function() {
         var out = [];
 
         //             0  1  2  3  4  5  6  7
@@ -1542,16 +1739,17 @@ describe("Ext.Array", function() {
         delete sparse[4];
         delete sparse[7];
 
-        function reducer (a, b, i) {
+        function reducer(a, b, i) {
             out.push('[' + i + ']: (' + a + ',' + b + ')');
+
             return a * 10 + b;
         }
 
-        beforeEach(function () {
+        beforeEach(function() {
             out.length = 0;
         });
 
-        it('should use initialValue', function () {
+        it('should use initialValue', function() {
             var v = Ext.Array.reduce([2, 3, 4], reducer, 1);
 
             expect(out.length).toBe(3);
@@ -1561,7 +1759,7 @@ describe("Ext.Array", function() {
             expect(v).toBe(1234);
         });
 
-        it('should use first element as initialValue', function () {
+        it('should use first element as initialValue', function() {
             var v = Ext.Array.reduce([2, 3, 4], reducer);
 
             expect(out.length).toBe(2);
@@ -1570,7 +1768,7 @@ describe("Ext.Array", function() {
             expect(v).toBe(234);
         });
 
-        it('should skip undefined elements', function () {
+        it('should skip undefined elements', function() {
             var v = Ext.Array.reduce(sparse, reducer, 5);
 
             expect(out.length).toBe(4);
@@ -1581,7 +1779,7 @@ describe("Ext.Array", function() {
             expect(v).toBe(53724);
         });
 
-        it('should skip undefined elements including the first', function () {
+        it('should skip undefined elements including the first', function() {
             var v = Ext.Array.reduce(sparse, reducer);
 
             expect(out.length).toBe(3);

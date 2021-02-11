@@ -7,5 +7,8 @@
     position: relative;
     .#{$prefix}table-layout-cell {
         vertical-align: top;
+        .#{$prefix}btn {
+            width: 100%;
+        }
     }
 }

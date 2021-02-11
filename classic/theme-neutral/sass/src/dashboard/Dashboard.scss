@@ -6,13 +6,15 @@
     margin-top: $ext-dashboard-column-padding;
 }
 
+// adjacent columns should share the entire padding defined
+// thus padding is set to half the actual value
 .#{$prefix}dashboard-column-first {
-    padding-left: $ext-dashboard-column-padding;
+    padding-left: ceil($ext-dashboard-column-padding/2);
     clear : left;
 }
 
 .#{$prefix}dashboard-column-last {
-    padding-right: $ext-dashboard-column-padding;
+    padding-right: ceil($ext-dashboard-column-padding/2);
 }
 
 .#{$prefix}dashboard .#{$prefix}panel-dd-spacer {
@@ -21,6 +23,12 @@
     border-radius: 4px;
     -moz-border-radius: 4px;
     margin-top: $ext-dashboard-column-padding;
+}
+
+// If a panel is being rendered for dashboard, ensure the container
+// is given overall padding on left and right before rendering any columns
+.#{$prefix}panel .#{$prefix}dashboard{
+    padding: 0 floor($ext-dashboard-column-padding/2);
 }
 
 // Prevent the panel drag operations from causing overflow as that breaks the layout

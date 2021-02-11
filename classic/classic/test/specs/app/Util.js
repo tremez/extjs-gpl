@@ -1,4 +1,4 @@
-describe("Ext.app.Util", function() {
+topSuite("Ext.app.Util", function() {
     it("has namespaces property", function() {
         expect(Ext.app.namespaces).toBeDefined();
     });

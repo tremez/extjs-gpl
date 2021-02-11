@@ -1,19 +1,23 @@
-describe("Ext.grid.filters.filter.String", function () {
+topSuite("Ext.grid.filters.filter.String",
+    ['Ext.grid.Panel', 'Ext.grid.filters.Filters'],
+function() {
     var grid, store, plugin, columnFilter, menu,
         synchronousLoad = true,
         proxyStoreLoad = Ext.data.ProxyStore.prototype.load,
         loadStore = function() {
             proxyStoreLoad.apply(this, arguments);
+
             if (synchronousLoad) {
                 this.flushLoad.apply(this, arguments);
             }
+
             return this;
         };
 
     function createGrid(listCfg, storeCfg, gridCfg) {
         synchronousLoad = false;
         store = new Ext.data.Store(Ext.apply({
-            fields:['name', 'email', 'phone'],
+            fields: ['name', 'email', 'phone'],
             data: [
                 { name: 'Lisa',  email: 'lisa@simpsons.com',  phone: '555-111-1224' },
                 { name: 'Bart',  email: 'bart@simpsons.com',  phone: '555-222-1234' },
@@ -84,16 +88,16 @@ describe("Ext.grid.filters.filter.String", function () {
     function tearDown() {
         // Undo the overrides.
         Ext.data.ProxyStore.prototype.load = proxyStoreLoad;
-        
+
         Ext.destroy(store, grid);
         grid = store = plugin = columnFilter = menu = null;
     }
 
     afterEach(tearDown);
 
-    describe("events", function () {
-        describe("keyup", function () {
-            it("should hide the menu", function () {
+    describe("events", function() {
+        describe("keyup", function() {
+            it("should hide the menu", function() {
                 var field;
 
                 createGrid();
@@ -103,18 +107,18 @@ describe("Ext.grid.filters.filter.String", function () {
                 field.setValue('Molly');
                 jasmine.fireKeyEvent(field.inputEl, 'keyup', 13);
 
-                waitsFor(function () {
+                waitsFor(function() {
                     return menu.hidden;
                 });
 
-                runs(function () {
+                runs(function() {
                     expect(menu.hidden).toBe(true);
                 });
             });
         });
     });
 
-    describe("updateBuffer", function () {
+    describe("updateBuffer", function() {
         // NOTE that teses tests were failing randomly, almost exclusively on older builds of
         // FF and older IE, with times coming in anywhere from 50 - 100 ms below the expected
         // thresholds.  Because of this, we're going to set our expectations even lower for
@@ -126,17 +130,17 @@ describe("Ext.grid.filters.filter.String", function () {
             showFilterMenu();
         }
 
-        beforeEach(function () {
-            spyOn(Ext.grid.filters.filter.String.prototype, 'setValue').andCallFake(function () {
+        beforeEach(function() {
+            spyOn(Ext.grid.filters.filter.String.prototype, 'setValue').andCallFake(function() {
                 endTime = new Date().getTime();
             });
         });
 
-        afterEach(function () {
+        afterEach(function() {
             ms = startTime = endTime = field = null;
         });
 
-        it("should default to 500ms", function () {
+        it("should default to 500ms", function() {
             ms = 500;
             createGrid();
             initiateFilter(ms);
@@ -145,16 +149,16 @@ describe("Ext.grid.filters.filter.String", function () {
             startTime = new Date().getTime();
             jasmine.fireKeyEvent(field.inputEl, 'keyup', 83);
 
-            waitsFor(function () {
+            waitsFor(function() {
                 return endTime;
             });
 
-            runs(function () {
+            runs(function() {
                 expect(endTime - startTime).toBeAtLeast(ms - 100);
             });
         });
 
-        it("should honor a configured updateBuffer", function () {
+        it("should honor a configured updateBuffer", function() {
             // Let's choose something well below the default and then just check to make
             // sure that's it's less than the default. This is safe since we don't know
             // exactly when the callback will be fired, but it still demonstrates that
@@ -170,11 +174,11 @@ describe("Ext.grid.filters.filter.String", function () {
             startTime = new Date().getTime();
             jasmine.fireKeyEvent(field.inputEl, 'keyup', 83);
 
-            waitsFor(function () {
+            waitsFor(function() {
                 return endTime;
             });
 
-            runs(function () {
+            runs(function() {
                 var timer = (endTime - startTime);
 
                 expect(timer).toBeAtLeast(ms - 100);
@@ -183,9 +187,9 @@ describe("Ext.grid.filters.filter.String", function () {
         });
     });
 
-    describe("removing store filters, single filter", function () {
+    describe("removing store filters, single filter", function() {
         // Note that it should only call the onFilterRemove handler if the gridfilters API created the store filter.
-        beforeEach(function () {
+        beforeEach(function() {
             // In short: Removing a store filter on the store itself will trigger the listener bound by the gridfilters API.
             // This was throwing an exception, b/c the delegated handler in the Date filter class was expecting that the
             // menu had already been created.
@@ -194,23 +198,23 @@ describe("Ext.grid.filters.filter.String", function () {
             spyOn(columnFilter, 'onFilterRemove');
 
             // Adding a filter with the same property name as that of a column filter will setup the bug.
-            store.getFilters().add({property: 'name', value: 'Camp Hill'});
+            store.getFilters().add({ property: 'name', value: 'Camp Hill' });
         });
 
-        it("should not throw if removing filters directly on the bound store", function () {
-            expect(function () {
+        it("should not throw if removing filters directly on the bound store", function() {
+            expect(function() {
                 // Trigger the bug by clearing filters directly on the store.
                 store.clearFilter();
             }).not.toThrow();
         });
 
-        it("should not call through to the delegated handler if the store filter was not generated by the class", function () {
+        it("should not call through to the delegated handler if the store filter was not generated by the class", function() {
             store.clearFilter();
 
             expect(columnFilter.onFilterRemove).not.toHaveBeenCalled();
         });
 
-        it("should not call through to the delegated handler when the store filter is replaced", function () {
+        it("should not call through to the delegated handler when the store filter is replaced", function() {
             plugin.addFilter({
                 dataIndex: 'name',
                 value: 'Princeton'
@@ -221,7 +225,7 @@ describe("Ext.grid.filters.filter.String", function () {
             expect(columnFilter.onFilterRemove).not.toHaveBeenCalled();
         });
 
-        it("should call through to the delegated handler when the store filter was generated by the class (when menu has been created)", function () {
+        it("should call through to the delegated handler when the store filter was generated by the class (when menu has been created)", function() {
             // This should call the handler because the gridfilters API created the store filter.
             tearDown();
             createGrid({
@@ -244,13 +248,13 @@ describe("Ext.grid.filters.filter.String", function () {
         });
     });
 
-    describe("adding a column filter, single filter", function () {
-        describe("replacing an existing column filter", function () {
+    describe("adding a column filter, single filter", function() {
+        describe("replacing an existing column filter", function() {
             // See EXTJS-16082.
-            it("should not throw", function () {
+            it("should not throw", function() {
                 createGrid();
 
-                expect(function () {
+                expect(function() {
                     plugin.addFilter({
                         type: 'string',
                         value: 'ben germane'
@@ -258,7 +262,7 @@ describe("Ext.grid.filters.filter.String", function () {
                 }).not.toThrow();
             });
 
-            it("should replace the existing store filter", function () {
+            it("should replace the existing store filter", function() {
                 var filters, filter, basePrefix;
 
                 createGrid({
@@ -290,9 +294,9 @@ describe("Ext.grid.filters.filter.String", function () {
         });
     });
 
-    describe("showing the menu", function () {
+    describe("showing the menu", function() {
         function setActive(state) {
-            it("should not add a filter to the store when shown " + (state ? 'active' : 'inactive'), function () {
+            it("should not add a filter to the store when shown " + (state ? 'active' : 'inactive'), function() {
                 createGrid({
                     active: state,
                     updateBuffer: 0,

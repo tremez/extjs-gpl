@@ -10,8 +10,9 @@ Ext.define('KitchenSink.view.binding.ChildSessionController', {
         'KitchenSink.view.binding.ChildSessionForm'
     ],
 
-    onSessionChangeClick: function () {
+    onSessionChangeClick: function() {
         var changes = this.getView().getSession().getChanges();
+
         if (changes !== null) {
             new Ext.window.Window({
                 autoShow: true,
@@ -25,7 +26,8 @@ Ext.define('KitchenSink.view.binding.ChildSessionController', {
                     value: JSON.stringify(changes, null, 4)
                 }
             });
-        } else {
+        }
+        else {
             Ext.Msg.alert('No Changes', 'There are no changes to the session.');
         }
     },
@@ -62,7 +64,7 @@ Ext.define('KitchenSink.view.binding.ChildSessionController', {
         this.createDialog(null);
     },
 
-    onEditCompanyClick: function (button) {
+    onEditCompanyClick: function(button) {
         this.createDialog(button.getWidgetRecord());
     },
 
@@ -75,18 +77,20 @@ Ext.define('KitchenSink.view.binding.ChildSessionController', {
 
     onAddOrderClick: function() {
         var orders = this.lookupReference('orders').getStore();
+
         orders.insert(0, {
             date: new Date(),
             shipped: false
         });
     },
 
-    onRemoveOrderClick: function (button) {
+    onRemoveOrderClick: function(button) {
         var orders = this.lookupReference('orders').getStore();
+
         orders.remove(button.getWidgetRecord());
     },
 
-    onSaveClick: function () {
+    onSaveClick: function() {
         // Save the changes pending in the dialog's child session back to the
         // parent session.
         var dialog = this.dialog,
@@ -100,17 +104,20 @@ Ext.define('KitchenSink.view.binding.ChildSessionController', {
                 // that record that exists in the child session
                 id = dialog.getViewModel().get('theCompany').id;
             }
+
             dialog.getSession().save();
+
             if (!isEdit) {
                 // Use the id of that child record to find the phantom in the parent session, 
                 // we can then use it to insert the record into our store
                 this.getStore('companies').insert(0, this.getSession().getRecord('Company', id));
             }
+
             this.onCancelClick();
         }
     },
 
-    onCancelClick: function () {
+    onCancelClick: function() {
         this.dialog = Ext.destroy(this.dialog);
     },
 
@@ -118,6 +125,7 @@ Ext.define('KitchenSink.view.binding.ChildSessionController', {
         if (String(v).indexOf('O') > -1) {
             v = v.replace('Order-', 'O');
         }
+
         return v;
     }
 });

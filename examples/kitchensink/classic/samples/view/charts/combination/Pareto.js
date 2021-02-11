@@ -9,7 +9,7 @@ Ext.define('KitchenSink.view.charts.combination.Pareto', {
     xtype: 'combination-pareto',
     controller: 'combination-pareto',
 
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     bodyStyle: 'background: transparent !important',
     layout: {
@@ -21,11 +21,22 @@ Ext.define('KitchenSink.view.charts.combination.Pareto', {
         path: 'classic/samples/view/charts/combination/ParetoController.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/Pareto.js'
+        path: 'app/store/Pareto.js'
     }],
-    // </example>
+    //</example>
     width: 650,
 
+    profiles: {
+        classic: {
+            columnWidth: 100
+        },
+        neptune: {
+            columnWidth: 100
+        },
+        graphite: {
+            columnWidth: 150
+        }
+    },
     dockedItems: [{
         xtype: 'toolbar',
         dock: 'top',
@@ -40,31 +51,19 @@ Ext.define('KitchenSink.view.charts.combination.Pareto', {
     items: [{
         xtype: 'cartesian',
         reference: 'chart',
+        downloadServerUrl: '//svg.sencha.io',
         theme: 'category2',
         width: '100%',
         height: 500,
         store: {
             type: 'pareto'
         },
-        insetPadding: '40 40 20 40',
         legend: {
             docked: 'bottom'
         },
-        sprites: [{
-            type: 'text',
-            text: 'Restaurant Complaints by Reported Cause',
-            fontSize: 22,
-            width: 100,
-            height: 30,
-            x: 40, // the sprite x position
-            y: 20  // the sprite y position
-        }, {
-            type: 'text',
-            text: 'Data: Restaurant Complaints',
-            font: '10px Helvetica',
-            x: 12,
-            y: 480
-        }],
+        captions: {
+            title: 'Restaurant Complaints by Reported Cause'
+        },
         axes: [{
             type: 'numeric',
             position: 'left',
@@ -117,7 +116,7 @@ Ext.define('KitchenSink.view.charts.combination.Pareto', {
             },
             marker: {
                 type: 'cross',
-                fx: {
+                animation: {
                     duration: 200
                 }
             },
@@ -134,7 +133,7 @@ Ext.define('KitchenSink.view.charts.combination.Pareto', {
     }, {
         style: 'padding-top: 10px;',
         xtype: 'gridpanel',
-        columns : {
+        columns: {
             defaults: {
                 sortable: false,
                 menuDisabled: true
@@ -142,7 +141,7 @@ Ext.define('KitchenSink.view.charts.combination.Pareto', {
             items: [
                 { text: 'Complaint', dataIndex: 'complaint', width: 175 },
                 { text: 'Count', dataIndex: 'count' },
-                { text: 'Cumulative', dataIndex: 'cumnumber' },
+                { text: 'Cumulative', dataIndex: 'cumnumber', width: '${columnWidth}' },
                 { text: 'Cumulative %', dataIndex: 'cumpercent', width: 175, renderer: 'onPercentRender' }
             ]
         },

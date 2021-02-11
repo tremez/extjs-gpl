@@ -17,7 +17,8 @@ Ext.define('KitchenSink.view.drag.FileController', {
                     drop: this.onDrop
                 }
             });
-        } else {
+        }
+        else {
             body.down('.drag-file-label').setHtml(
                 'File dragging is not supported by your browser'
             );
@@ -34,21 +35,22 @@ Ext.define('KitchenSink.view.drag.FileController', {
     },
 
     onDrop: function(target, info) {
-        var view = this.getView(),
+        var me = this,
+            view = me.getView(),
             body = view.body,
-            icon = body.down('.drag-file-icon');
+            icon = body.down('.drag-file-icon'),
+            files, len, s;
 
         body.removeCls('active').addCls('dropped');
         icon.addCls('fa-spin');
 
-        var me = this,
-            files = info.files,
-            len = files.length,
-            s;
+        files = info.files;
+        len = files.length;
 
         if (len > 1) {
             s = 'Dropped ' + len + ' files.';
-        } else {
+        }
+        else {
             s = 'Dropped ' + files[0].name;
         }
 
@@ -60,7 +62,7 @@ Ext.define('KitchenSink.view.drag.FileController', {
             minWidth: 400
         });
 
-        me.timer = setTimeout(function() {
+        me.timer = Ext.defer(function() {
             if (!view.destroyed) {
                 icon.removeCls('fa-spin');
                 icon.fadeOut({
@@ -71,12 +73,13 @@ Ext.define('KitchenSink.view.drag.FileController', {
                     }
                 });
             }
+
             me.timer = null;
         }, 2000);
     },
 
     destroy: function() {
-        clearInterval(this.timer);
+        Ext.undefer(this.timer);
         this.target = Ext.destroy(this.target);
         this.callParent();
     }

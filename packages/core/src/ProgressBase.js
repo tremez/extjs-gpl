@@ -15,8 +15,8 @@ Ext.define('Ext.ProgressBase', {
          * @cfg {String/Ext.XTemplate} [textTpl]
          * A template used to create this ProgressBar's background text given two values:
          *
-         *    `value  ' - The raw progress value between 0 and 1
-         *    'percent' - The value as a percentage between 0 and 100
+         * - `value` - The raw progress value between 0 and 1
+         * - `percent` - The value as a percentage between 0 and 100
          */
         textTpl: null
     },
@@ -25,6 +25,7 @@ Ext.define('Ext.ProgressBase', {
         if (!textTpl.isTemplate) {
             textTpl = new Ext.XTemplate(textTpl);
         }
+
         return textTpl;
     },
 

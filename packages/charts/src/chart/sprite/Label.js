@@ -67,7 +67,7 @@ Ext.define('Ext.chart.sprite.Label', {
             },
 
             updaters: {
-                hidden: function (attr) {
+                hidden: function(attr) {
                     attr.hidden = (attr.display === 'none');
                 }
             }
@@ -78,11 +78,27 @@ Ext.define('Ext.chart.sprite.Label', {
         /**
          * @cfg {Object} fx Animation configuration.
          */
-        fx: {
+        animation: {
             customDurations: {
                 callout: 200
             }
         },
+        /**
+         * @cfg {String} field The store record field used by the label sprite.
+         *
+         * Note: the label sprite is typically used indirectly (by a Ext.chart.MarkerHolder
+         * series sprite, via a Ext.chart.Markers sprite, where the latter is passed to the
+         * label renderer), so to get to the label field one has to do:
+         *
+         *     renderer: function (text, sprite, config, data, index) {
+         *         var field = sprite.getTemplate().getField();
+         *     }
+         *
+         * To get the actual label sprite instance one can use:
+         *
+         *     sprite.get(index)
+         *
+         */
         field: null,
         /**
          * @cfg {Boolean|Object} calloutLine
@@ -93,33 +109,45 @@ Ext.define('Ext.chart.sprite.Label', {
          *
          * Default value: false.
          */
-        calloutLine: true
+        calloutLine: true,
+
+        /**
+         * @cfg {Number} [hideLessThan=20]
+         * Hides labels for pie slices with segment length less than this value (in pixels).
+         */
+        hideLessThan: 20
     },
 
-    applyCalloutLine: function (calloutLine) {
+    applyCalloutLine: function(calloutLine) {
         if (calloutLine) {
             return Ext.apply({}, calloutLine);
         }
+
+        return calloutLine;
     },
 
-    prepareModifiers: function () {
-        this.callParent(arguments);
-        this.calloutModifier = new Ext.chart.modifier.Callout({sprite: this});
-        this.fx.setUpper(this.calloutModifier);
-        this.calloutModifier.setUpper(this.topModifier);
+    createModifiers: function() {
+        var me = this,
+            mods = me.callParent(arguments);
+
+        mods.callout = new Ext.chart.modifier.Callout({ sprite: me });
+        mods.animation.setUpper(mods.callout);
+        mods.callout.setUpper(mods.target);
     },
 
-    render: function (surface, ctx) {
+    render: function(surface, ctx) {
         var me = this,
             attr = me.attr,
             calloutColor = attr.calloutColor;
 
         ctx.save();
         ctx.globalAlpha *= attr.callout;
+
         if (ctx.globalAlpha > 0 && attr.calloutHasLine) {
             if (calloutColor && calloutColor.isGradient) {
                 calloutColor = calloutColor.getStops()[0].color;
             }
+
             ctx.strokeStyle = calloutColor;
             ctx.fillStyle = calloutColor;
             ctx.lineWidth = attr.calloutWidth;
@@ -129,13 +157,16 @@ Ext.define('Ext.chart.sprite.Label', {
             ctx.stroke();
 
             ctx.beginPath();
-            ctx.arc(me.attr.calloutStartX, me.attr.calloutStartY, 1 * attr.calloutWidth, 0, 2 * Math.PI, true);
+            ctx.arc(me.attr.calloutStartX, me.attr.calloutStartY, 1 * attr.calloutWidth,
+                    0, 2 * Math.PI, true);
             ctx.fill();
 
             ctx.beginPath();
-            ctx.arc(me.attr.calloutEndX, me.attr.calloutEndY, 1 * attr.calloutWidth, 0, 2 * Math.PI, true);
+            ctx.arc(me.attr.calloutEndX, me.attr.calloutEndY, 1 * attr.calloutWidth,
+                    0, 2 * Math.PI, true);
             ctx.fill();
         }
+
         ctx.restore();
 
         Ext.draw.sprite.Text.prototype.render.apply(me, arguments);

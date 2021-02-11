@@ -56,62 +56,60 @@ Ext.define('Ext.chart.series.Cartesian', {
      *
      *     series.<fieldConfig1>Field, series.<fieldConfig2>Field, ...
      *
+     * See {@link Ext.chart.series.StackedCartesian#getFields}.
+     *
      */
     fieldCategoryX: ['X'],
     fieldCategoryY: ['Y'],
 
-    applyXAxis: function (newAxis, oldAxis) {
+    applyXAxis: function(newAxis, oldAxis) {
         return this.getChart().getAxis(newAxis) || oldAxis;
     },
 
-    applyYAxis: function (newAxis, oldAxis) {
+    applyYAxis: function(newAxis, oldAxis) {
         return this.getChart().getAxis(newAxis) || oldAxis;
     },
 
-    updateXAxis: function (axis) {
+    updateXAxis: function(axis) {
         axis.processData(this);
     },
 
-    updateYAxis: function (axis) {
+    updateYAxis: function(axis) {
         axis.processData(this);
     },
 
-    coordinateX: function () {
+    coordinateX: function() {
         return this.coordinate('X', 0, 2);
     },
 
-    coordinateY: function () {
+    coordinateY: function() {
         return this.coordinate('Y', 1, 2);
     },
 
-    getItemForPoint: function (x, y) {
-        if (this.getSprites()) {
-            var me = this,
-                sprite = me.getSprites()[0],
-                store = me.getStore(),
-                item, index;
+    getItemForPoint: function(x, y) {
+        var me = this,
+            sprite = me.getSprites()[0],
+            store = me.getStore(),
+            point;
 
-            if (me.getHidden()) {
-                return null;
-            }
-            if (sprite) {
-                index = sprite.getIndexNearPoint(x, y);
-                if (index !== -1) {
-                    item = {
-                        series: me,
-                        category: me.getItemInstancing() ? 'items' : 'markers',
-                        index: index,
-                        record: store.getData().items[index],
-                        field: me.getYField(),
-                        sprite: sprite
-                    };
-                    return item;
-                }
-            }
+        if (sprite && !me.getHidden()) {
+            point = sprite.getNearestDataPoint(x, y);
         }
+
+        return point
+            ? {
+                series: me,
+                sprite: sprite,
+                category: me.getItemInstancing() ? 'items' : 'markers',
+                index: point.index,
+                record: store.getData().items[point.index],
+                field: me.getYField(),
+                distance: point.distance
+            }
+            : null;
     },
 
-    createSprite: function () {
+    createSprite: function() {
         var me = this,
             sprite = me.callParent(),
             chart = me.getChart(),
@@ -121,66 +119,40 @@ Ext.define('Ext.chart.series.Cartesian', {
             flipXY: chart.getFlipXY(),
             xAxis: xAxis
         });
+
         if (sprite.setAggregator && xAxis && xAxis.getAggregator) {
             if (xAxis.getAggregator) {
-                sprite.setAggregator({strategy: xAxis.getAggregator()});
-            } else {
+                sprite.setAggregator({ strategy: xAxis.getAggregator() });
+            }
+            else {
                 sprite.setAggregator({});
             }
         }
+
         return sprite;
     },
 
-    getSprites: function () {
+    getSprites: function() {
         var me = this,
             chart = this.getChart(),
-            animation = me.getAnimation() || chart && chart.getAnimation(),
-            itemInstancing = me.getItemInstancing(),
-            sprites = me.sprites,
-            sprite;
+            sprites = me.sprites;
 
         if (!chart) {
-            return [];
+            return Ext.emptyArray;
         }
 
         if (!sprites.length) {
-            sprite = me.createSprite();
-        } else {
-            sprite = sprites[0];
+            me.createSprite();
         }
 
-        if (animation) {
-            if (itemInstancing) {
-                sprite.itemsMarker.getTemplate().setAnimation(animation);
-            }
-            sprite.setAnimation(animation);
-        }
         return sprites;
     },
 
-    provideLegendInfo: function (target) {
-        var me = this,
-            style = me.getSubStyleWithTheme(),
-            fill = style.fillStyle;
-
-        if (Ext.isArray(fill)) {
-            fill = fill[0];
-        }
-        target.push({
-            name: me.getTitle() || me.getYField() || me.getId(),
-            mark: (Ext.isObject(fill) ? fill.stops && fill.stops[0].color : fill) || style.strokeStyle || 'black',
-            disabled: me.getHidden(),
-            series: me.getId(),
-            index: 0
-        });
-    },
-
-    getXRange: function () {
+    getXRange: function() {
         return [this.dataRange[0], this.dataRange[2]];
     },
 
-    getYRange: function () {
+    getYRange: function() {
         return [this.dataRange[1], this.dataRange[3]];
     }
-})
-;
+});

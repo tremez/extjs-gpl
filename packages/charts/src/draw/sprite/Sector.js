@@ -88,14 +88,15 @@ Ext.define('Ext.draw.sprite.Sector', {
         }
     },
 
-    getMidAngle: function () {
+    getMidAngle: function() {
         return this.midAngle || 0;
     },
 
-    updatePath: function (path, attr) {
+    updatePath: function(path, attr) {
         var startAngle = Math.min(attr.startAngle, attr.endAngle),
             endAngle = Math.max(attr.startAngle, attr.endAngle),
             midAngle = this.midAngle = (startAngle + endAngle) * 0.5,
+            fullPie = Ext.Number.isEqual(Math.abs(endAngle - startAngle), Ext.draw.Draw.pi2, 1e-10),
             margin = attr.margin,
             centerX = attr.centerX,
             centerY = attr.centerY,
@@ -106,10 +107,17 @@ Ext.define('Ext.draw.sprite.Sector', {
             centerX += margin * Math.cos(midAngle);
             centerY += margin * Math.sin(midAngle);
         }
-        path.moveTo(centerX + startRho * Math.cos(startAngle), centerY + startRho * Math.sin(startAngle));
-        path.lineTo(centerX + endRho * Math.cos(startAngle), centerY + endRho * Math.sin(startAngle));
+
+        if (!fullPie) {
+            path.moveTo(centerX + startRho * Math.cos(startAngle),
+                        centerY + startRho * Math.sin(startAngle));
+            path.lineTo(centerX + endRho * Math.cos(startAngle),
+                        centerY + endRho * Math.sin(startAngle));
+        }
+
         path.arc(centerX, centerY, endRho, startAngle, endAngle, false);
-        path.lineTo(centerX + startRho * Math.cos(endAngle), centerY + startRho * Math.sin(endAngle));
+        path[fullPie ? 'moveTo' : 'lineTo'](centerX + startRho * Math.cos(endAngle),
+                                            centerY + startRho * Math.sin(endAngle));
         path.arc(centerX, centerY, startRho, endAngle, startAngle, true);
     }
 });

@@ -20,7 +20,7 @@ Ext.define('Ext.sparkline.VmlCanvas', {
         me.owner.groupEl.dom.style.height = height + 'px';
     },
 
-    onOwnerUpdate: function () {
+    onOwnerUpdate: function() {
         var me = this;
 
         me.group = me.owner.groupEl;
@@ -28,59 +28,83 @@ Ext.define('Ext.sparkline.VmlCanvas', {
         me.prerender = [];
     },
 
-    _drawShape: function (shapeid, path, lineColor, fillColor, lineWidth) {
+    _drawShape: function(shapeid, path, lineColor, fillColor, lineWidth) {
         var vpath = [],
             initial, stroke, fill, closed, plen, i;
 
         for (i = 0, plen = path.length; i < plen; i++) {
             vpath[i] = (path[i][0]) + ',' + (path[i][1]);
         }
+
         initial = vpath.splice(0, 1);
         lineWidth = lineWidth == null ? 1 : lineWidth;
-        stroke = lineColor == null ? ' stroked="false" ' : ' strokeWeight="' + lineWidth + 'px" strokeColor="' + lineColor + '" ';
-        fill = fillColor == null ? ' filled="false"' : ' fillColor="' + fillColor + '" filled="true" ';
+
+        stroke = lineColor == null
+            ? ' stroked="false" '
+            : ' strokeWeight="' + lineWidth + 'px" strokeColor="' + lineColor + '" ';
+
+        fill = fillColor == null
+            ? ' filled="false"'
+            : ' fillColor="' + fillColor + '" filled="true" ';
+
         closed = vpath[0] === vpath[vpath.length - 1] ? 'x ' : '';
-        return ['<svml:shape coordorigin="0 0" coordsize="', this.pixelWidth, ' ', this.pixelHeight,
-                '" id="jqsshape', shapeid, '" ',
-                stroke,
-                fill,
-            ' style="position:absolute;height:', this.pixelHeight, 'px;width:', this.pixelWidth, 'px" ',
-            ' path="m ', initial, ' l ', vpath.join(', '), ' ', closed, 'e"></svml:shape>'
+
+        return [
+            '<svml:shape coordorigin="0 0" coordsize="', this.pixelWidth, ' ', this.pixelHeight,
+            '" id="jqsshape', shapeid, '" ', stroke, fill,
+            ' style="position:absolute;height:', this.pixelHeight,
+            'px;width:', this.pixelWidth, 'px" ',
+            ' path="m ', initial, ' l ', vpath.join(', '), ' ', closed,
+            'e"></svml:shape>'
         ].join('');
     },
 
-    _drawCircle: function (shapeid, x, y, radius, lineColor, fillColor, lineWidth) {
+    _drawCircle: function(shapeid, x, y, radius, lineColor, fillColor, lineWidth) {
         var circumference = radius * 2,
             stroke, fill;
 
         x -= radius;
         y -= radius;
-        stroke = lineColor == null ? ' stroked="false" ' : ' strokeWeight="' + lineWidth + 'px" strokeColor="' + lineColor + '" ';
-        fill = fillColor == null ? ' filled="false"' : ' fillColor="' + fillColor + '" filled="true" ';
-        return ['<svml:oval id="jqsshape', shapeid, '" ',
+
+        stroke = lineColor == null
+            ? ' stroked="false" '
+            : ' strokeWeight="' + lineWidth + 'px" strokeColor="' + lineColor + '" ';
+
+        fill = fillColor == null
+            ? ' filled="false"'
+            : ' fillColor="' + fillColor + '" filled="true" ';
+
+        return [
+            '<svml:oval id="jqsshape', shapeid, '" ',
             stroke,
             fill,
-            ' style="position:absolute;top:', y, 'px; left:', x, 'px;width:', circumference, 'px;height:', circumference, 'px"></svml:oval>'
+            ' style="position:absolute;top:', y, 'px; left:', x, 'px;width:',
+            circumference, 'px;height:', circumference, 'px"></svml:oval>'
         ].join('');
     },
 
-    _drawPieSlice: function (shapeid, x, y, radius, startAngle, endAngle, lineColor, fillColor) {
+    _drawPieSlice: function(shapeid, x, y, radius, startAngle, endAngle, lineColor, fillColor) {
         var vpath,
             width = this.pixelWidth,
             height = this.pixelHeight,
-            startx,
-            starty,
-            endx,
-            endy,
-            stroke = lineColor == null ? ' stroked="false" ' : ' strokeWeight="1px" strokeColor="' + lineColor + '" ',
-            fill = fillColor == null ? ' filled="false"' : ' fillColor="' + fillColor + '" filled="true" ';
+            startx, starty, endx, endy, stroke, fill;
+
+        stroke = lineColor == null
+            ? ' stroked="false" '
+            : ' strokeWeight="1px" strokeColor="' + lineColor + '" ';
+
+        fill = fillColor == null
+            ? ' filled="false"'
+            : ' fillColor="' + fillColor + '" filled="true" ';
 
         // VML cannot handle start & end angle the same.
         if (startAngle === endAngle) {
             return '';
         }
+
         if ((endAngle - startAngle) === (2 * Math.PI)) {
-            startAngle = 0.0;  // VML seems to have a problem when drawing a full circle that doesn't start 0
+            // VML seems to have a problem when drawing a full circle that doesn't start 0
+            startAngle = 0.0;
             endAngle = (2 * Math.PI);
         }
 
@@ -94,6 +118,7 @@ Ext.define('Ext.sparkline.VmlCanvas', {
                 // Prevent very small slices from being mistaken as a whole pie
                 return '';
             }
+
             // essentially going to be the entire circle, so ignore startAngle
             startx = endx = x + radius;
             starty = endy = y;
@@ -104,7 +129,9 @@ Ext.define('Ext.sparkline.VmlCanvas', {
         }
 
         vpath = [x - radius, y - radius, x + radius, y + radius, startx, starty, endx, endy];
-        return ['<svml:shape coordorigin="0 0" coordsize="', width, ' ', height,
+
+        return [
+            '<svml:shape coordorigin="0 0" coordsize="', width, ' ', height,
             '" id="jqsshape', shapeid, '" ',
             stroke,
             fill,
@@ -113,28 +140,30 @@ Ext.define('Ext.sparkline.VmlCanvas', {
         ].join('');
     },
 
-    _drawRect: function (shapeid, x, y, width, height, lineColor, fillColor) {
-        return this._drawShape(shapeid, [[x, y], [x, y + height], [x + width, y + height], [x + width, y], [x, y]], lineColor, fillColor);
+    _drawRect: function(shapeid, x, y, width, height, lineColor, fillColor) {
+        return this._drawShape(shapeid, [[x, y], [x, y + height], [x + width, y + height],
+                                         [x + width, y], [x, y]], lineColor, fillColor);
     },
 
-    reset: function () {
+    reset: function() {
         Ext.fly(this.group).empty();
     },
 
-    appendShape: function (shape) {
+    appendShape: function(shape) {
         this.prerender.push(this['_draw' + shape.type].apply(this, shape.args));
         this.lastShapeId = shape.id;
+
         return shape.id;
     },
 
-    replaceWithShape: function (shapeid, shape) {
+    replaceWithShape: function(shapeid, shape) {
         var existing = this.el.getById('jqsshape' + shapeid, true),
             vel = this['_draw' + shape.type].apply(this, shape.args);
 
         existing.outerHTML = vel;
     },
 
-    replaceWithShapes: function (shapeids, shapes) {
+    replaceWithShapes: function(shapeids, shapes) {
         // replace the first shapeid with all the new shapes then toast the remaining old shapes
         var existing = this.el.getById('jqsshape' + shapeids[0], true),
             replace = '',
@@ -144,35 +173,40 @@ Ext.define('Ext.sparkline.VmlCanvas', {
         for (i = 0; i < slen; i++) {
             replace += this['_draw' + shapes[i].type].apply(this, shapes[i].args);
         }
+
         existing.outerHTML = replace;
+
         for (i = 1; i < shapeids.length; i++) {
             this.el.getById('jqsshape' + shapeids[i]).destroy();
         }
     },
 
-    insertAfterShape: function (shapeid, shape) {
+    insertAfterShape: function(shapeid, shape) {
         var existing = this.el.getById('jqsshape' + shapeid, true),
-                vel = this['_draw' + shape.type].apply(this, shape.args);
+            vel = this['_draw' + shape.type].apply(this, shape.args);
+
         existing.insertAdjacentHTML('afterEnd', vel);
     },
 
-    removeShapeId: function (shapeid) {
+    removeShapeId: function(shapeid) {
         var existing = this.el.getById('jqsshape' + shapeid, true);
+
         this.group.removeChild(existing);
     },
 
-    getShapeAt: function (x, y) {
+    getShapeAt: function(x, y) {
         var shapeid = this.el.id.substr(8);
+
         return shapeid;
     },
 
-    render: function () {
+    render: function() {
         this.group.dom.innerHTML = this.prerender.join('');
     }
 }, function() {
     Ext.onInternalReady(function() {
         var doc = document;
-    
+
         if (doc.namespaces && !doc.namespaces.svml) {
             doc.namespaces.add("svml", "urn:schemas-microsoft-com:vml", '#default#VML');
         }

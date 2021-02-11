@@ -1,11 +1,14 @@
 /**
- * This example shows how to create a grid from a store. The grid is stateful so you
- * can move or hide columns, reload the page, and come back to the grid in the same state
- * you left it in.
+ * This example shows how to create a grid from a store.
  *
- * The cells are selectable due to use of the `enableTextSelection` option.
+ * The grid is stateful so you can move or hide columns,
+ * reload the page, and come back to the grid in the same
+ * state you left it in.
  *
- * It uses an ActionColumn to display clickable icons which are linked to controller methods.
+ * Cell text is selectable due to use of the `enableTextSelection`.
+ *
+ * It uses an ActionColumn to display clickable icons
+ * which are linked to controller methods.
  */
 Ext.define('KitchenSink.view.grid.BasicGrid', {
     extend: 'Ext.grid.Panel',
@@ -22,27 +25,55 @@ Ext.define('KitchenSink.view.grid.BasicGrid', {
         path: 'classic/samples/view/grid/BasicGridController.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/Companies.js'
+        path: 'app/store/Companies.js'
     }, {
         type: 'Model',
-        path: 'classic/samples/model/Company.js'
+        path: 'app/model/Company.js'
     }],
     profiles: {
         classic: {
             width: 600,
             priceWidth: 75,
+            pricechangeWidth: 80,
             percentChangeColumnWidth: 75,
             lastUpdatedColumnWidth: 85,
-            green: 'green',
-            red: 'red'
+            gainColor: 'green',
+            lossColor: 'red',
+            headerBorder: false,
+            actionColumnWidth: 50
         },
         neptune: {
             width: 750,
             priceWidth: 95,
+            pricechangeWidth: 80,
             percentChangeColumnWidth: 100,
             lastUpdatedColumnWidth: 115,
-            green: '#73b51e',
-            red: '#cf4c35'
+            gainColor: '#73b51e',
+            lossColor: '#cf4c35',
+            headerBorder: false,
+            actionColumnWidth: 50
+        },
+        graphite: {
+            width: 750,
+            priceWidth: 100,
+            pricechangeWidth: 110,
+            percentChangeColumnWidth: 120,
+            lastUpdatedColumnWidth: 150,
+            gainColor: 'unset',
+            lossColor: 'unset',
+            headerBorder: false,
+            actionColumnWidth: 50
+        },
+        'classic-material': {
+            width: 750,
+            priceWidth: 100,
+            pricechangeWidth: 110,
+            percentChangeColumnWidth: 120,
+            lastUpdatedColumnWidth: 150,
+            gainColor: '#4caf50',
+            lossColor: '#f44336',
+            headerBorder: true,
+            actionColumnWidth: 80
         }
     },
     //</example>
@@ -56,74 +87,51 @@ Ext.define('KitchenSink.view.grid.BasicGrid', {
     collapsible: true,
     multiSelect: true,
     stateId: 'stateGrid',
-    headerBorders: false,
-    signTpl: '<span style="' +
-            'color:{value:sign(\'${red}\',\'${green}\')}"' +
-        '>{text}</span>',
+    headerBorders: '${headerBorder}',
 
     viewConfig: {
         enableTextSelection: true
     },
 
-    // Reusable actions
-    actions: {
-        sell: {
-            iconCls: 'array-grid-sell-col',
-            tooltip: 'Sell stock',
-            handler: 'onSellClick'
-        },
-        buy: {
-            getClass: 'getBuyClass',
-            getTip: 'getBuyTip',
-            handler: 'onBuyClick'
-        },
-        suspendTrading: {
-            tooltip: 'Toggles enabled status of all buy and sell actions anywhere in this view',
-            text: 'Suspend Trading',
-            glyph: 'xf256@FontAwesome',
-            toggleHandler: 'onToggleTrading',
-            enableToggle: true
-        }
-    },
-
     columns: [{
         text: 'Company',
         flex: 1,
-        sortable: false,
         dataIndex: 'name'
     }, {
         text: 'Price',
         width: '${priceWidth}',
-        sortable: true,
         formatter: 'usMoney',
         dataIndex: 'price'
     }, {
         text: 'Change',
-        width: 80,
-        sortable: true,
+        width: '${pricechangeWidth}',
         renderer: 'renderChange',
-        dataIndex: 'change'
+        dataIndex: 'priceChange'
     }, {
         text: '% Change',
         width: '${percentChangeColumnWidth}',
-        sortable: true,
         renderer: 'renderPercent',
-        dataIndex: 'pctChange'
+        dataIndex: 'priceChangePct'
     }, {
         text: 'Last Updated',
         width: '${lastUpdatedColumnWidth}',
-        sortable: true,
         formatter: 'date("m/d/Y")',
-        dataIndex: 'lastChange'
+        dataIndex: 'priceLastChange'
     }, {
+        xtype: 'actioncolumn',
+        width: '${actionColumnWidth}',
         menuDisabled: true,
         sortable: false,
-        xtype: 'actioncolumn',
-        width: 50,
-        items: ['@sell', '@buy']
+        items: [{
+            iconCls: 'x-fa fa-check green icon-margin',
+            handler: 'onApprove'
+        }, {
+            iconCls: 'x-fa fa-ban red',
+            handler: 'onDecline'
+        }]
     }],
 
-    bbar: [
-        '@suspendTrading'
-    ]
+    signTpl: '<span style="' +
+        'color:{value:sign(\'${lossColor}\',\'${gainColor}\')}"' +
+        '>{text}</span>'
 });

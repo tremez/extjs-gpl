@@ -1,9 +1,9 @@
 /**
- * This class encapsulates a _collection_ of DOM elements, providing methods to filter members, or to perform collective
- * actions upon the whole set.
+ * This class encapsulates a _collection_ of DOM elements, providing methods to filter members,
+ * or to perform collective actions upon the whole set.
  *
- * Although they are not listed, this class supports all of the methods of {@link Ext.dom.Element}. The methods from
- * these classes will be performed on all the elements in this collection.
+ * Although they are not listed, this class supports all of the methods of {@link Ext.dom.Element}.
+ * The methods from these classes will be performed on all the elements in this collection.
  *
  * All methods return _this_ and can be chained.
  *
@@ -40,5 +40,4 @@ Ext.define('Ext.dom.CompositeElement', {
     transformElement: function(el) {
         return Ext.get(el);
     }
-
 });

@@ -10,12 +10,27 @@ Ext.define('KitchenSink.view.layout.Border', {
     //<example>
     exampleTitle: 'Border Layout',
     //</example>
+    profiles: {
+        classic: {
+            itemHeight: 100
+        },
+        neptune: {
+            itemHeight: 100
+        },
+        graphite: {
+            itemHeight: 120
+        },
+        'classic-material': {
+            itemHeight: 120
+        }
+    },
     layout: 'border',
     width: 500,
     height: 400,
+    cls: Ext.baseCSSPrefix + 'shadow',
 
     bodyBorder: false,
-    
+
     defaults: {
         collapsible: true,
         split: true,
@@ -26,14 +41,14 @@ Ext.define('KitchenSink.view.layout.Border', {
         {
             title: 'Footer',
             region: 'south',
-            height: 100,
+            height: '${itemHeight}',
             minHeight: 75,
             maxHeight: 150,
             html: '<p>Footer content</p>'
         },
         {
             title: 'Navigation',
-            region:'west',
+            region: 'west',
             floatable: false,
             margin: '5 0 0 0',
             width: 125,

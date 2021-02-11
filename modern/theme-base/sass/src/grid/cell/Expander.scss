@@ -1,10 +1,9 @@
 .#{$prefix}expandercell {
     .#{$prefix}icon-el {
         cursor: pointer;
+
+        .#{$prefix}summaryrow & {
+            display: none;
+        }
     }
 }
-
-div.#{$prefix}expandercell { // increase specificity to override .x-gridcell
-    line-height: 0;
-}
-

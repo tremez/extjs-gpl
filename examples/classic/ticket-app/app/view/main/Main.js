@@ -16,7 +16,7 @@ Ext.define('Ticket.view.main.Main', {
     },
 
     layout: 'border',
-    
+
     items: [{
         xtype: 'container',
         id: 'app-header',
@@ -30,12 +30,12 @@ Ext.define('Ticket.view.main.Main', {
         items: [{
             xtype: 'component',
             id: 'app-header-logo'
-        },{
+        }, {
             xtype: 'component',
             cls: 'app-header-text',
             bind: '{currentOrg.name}',
             flex: 1
-        },{
+        }, {
             xtype: 'component',
             id: 'app-header-username',
             cls: 'app-header-text',

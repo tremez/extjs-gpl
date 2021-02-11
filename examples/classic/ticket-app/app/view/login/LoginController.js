@@ -4,7 +4,7 @@
 Ext.define('Ticket.view.login.LoginController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.login',
-    
+
     loginText: 'Logging in...',
 
     onSpecialKey: function(field, e) {
@@ -12,14 +12,14 @@ Ext.define('Ticket.view.login.LoginController', {
             this.doLogin();
         }
     },
-    
+
     onLoginClick: function() {
         this.doLogin();
     },
-    
+
     doLogin: function() {
         var form = this.lookupReference('form');
-        
+
         if (form.isValid()) {
             Ext.getBody().mask(this.loginText);
 
@@ -38,16 +38,19 @@ Ext.define('Ticket.view.login.LoginController', {
             });
         }
     },
-    
+
     onLoginFailure: function() {
         // Do something
         Ext.getBody().unmask();
     },
 
     onLoginSuccess: function(user) {
+        var org;
+
         Ext.getBody().unmask();
 
-        var org = this.lookupReference('organization').getSelectedRecord();
+        org = this.lookupReference('organization').getSelectedRecord();
+
         this.fireViewEvent('login', this.getView(), user, org, this.loginManager);
     }
 });

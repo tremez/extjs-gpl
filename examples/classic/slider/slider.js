@@ -1,6 +1,6 @@
 Ext.require('Ext.slider.*');
 
-Ext.onReady(function(){
+Ext.onReady(function() {
 
     Ext.create('Ext.slider.Single', {
         renderTo: 'basic-slider',
@@ -16,7 +16,7 @@ Ext.onReady(function(){
         hideLabel: true,
         useTips: false,
         width: 214,
-        value:50,
+        value: 50,
         increment: 10,
         minValue: 0,
         maxValue: 100
@@ -60,7 +60,7 @@ Ext.onReady(function(){
         increment: 10,
         minValue: 0,
         maxValue: 100,
-        tipText: function(thumb){
+        tipText: function(thumb) {
             return Ext.String.format('<b>{0}% complete</b>', thumb.value);
         }
     });
@@ -73,7 +73,7 @@ Ext.onReady(function(){
         minValue: 0,
         maxValue: 100
     });
-    
+
     Ext.create('Ext.slider.Multi', {
         renderTo: 'multi-slider-horizontal',
         hideLabel: true,
@@ -82,7 +82,7 @@ Ext.onReady(function(){
         maxValue: 100,
         values: [10, 50, 90]
     });
-    
+
     Ext.create('Ext.slider.Multi', {
         renderTo: 'multi-slider-vertical',
         hideLabel: true,

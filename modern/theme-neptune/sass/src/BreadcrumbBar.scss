@@ -1,0 +1,12 @@
+@include breadcrumbbar-ui(
+    $button-margin: $breadcrumbbar-button-margin,
+    $leaf-icon: $breadcrumbbar-leaf-icon,
+    $folder-icon: $breadcrumbbar-folder-icon,
+    $background-color: $breadcrumbbar-background-color,
+    $border-color: $breadcrumbbar-border-color,
+    $border-width: $breadcrumbbar-border-width,
+    $border-style: $breadcrumbbar-border-style,
+    $box-shadow: $breadcrumbbar-box-shadow,
+    $padding: $breadcrumbbar-padding,
+    $min-height: $breadcrumbbar-min-height
+);

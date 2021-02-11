@@ -1,0 +1,5 @@
+$window-background-color: dynamic($body-background-color);
+$window-body-background-color: dynamic($body-background-color);
+$window-body-color: dynamic(contrast-color-by($body-background-color, 100));
+$window-header-background-color: dynamic($base-color);
+$window-header-hover-color: dynamic($base-color);

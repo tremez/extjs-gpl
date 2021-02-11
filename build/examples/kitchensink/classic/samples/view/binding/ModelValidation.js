@@ -11,15 +11,34 @@ Ext.define('KitchenSink.view.binding.ModelValidation', {
     //<example>
     otherContent: [{
         type: 'Model',
-        path: 'classic/samples/model/Company.js'
+        path: 'app/model/Company.js'
     }],
 
     defaults: {
         labelWidth: 50
     },
     width: 300,
-    bodyPadding: 10,
+    bodyPadding: '${bodyPadding}',
     //</example>
+
+    profiles: {
+        classic: {
+            width: 'auto',
+            bodyPadding: 10
+        },
+        neptune: {
+            width: 'auto',
+            bodyPadding: 10
+        },
+        graphite: {
+            width: 'auto',
+            bodyPadding: 10
+        },
+        'classic-material': {
+            width: 260,
+            bodyPadding: 20
+        }
+    },
 
     title: 'Company Details',
 
@@ -40,6 +59,7 @@ Ext.define('KitchenSink.view.binding.ModelValidation', {
         xtype: 'textfield',
         fieldLabel: 'Name',
         msgTarget: 'side',
+        width: '${width}',
         bind: '{theCompany.name}'  // three-way: read, write, validate
     }]
 });

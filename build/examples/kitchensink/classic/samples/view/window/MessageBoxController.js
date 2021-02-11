@@ -1,7 +1,7 @@
 Ext.define('KitchenSink.view.window.MessageBoxController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.window-messagebox',
-    
+
     getMaskClickAction: function() {
         return this.lookupReference('hideOnMaskClick').getValue() ? 'hide' : 'focus';
     },
@@ -20,19 +20,20 @@ Ext.define('KitchenSink.view.window.MessageBoxController', {
         Ext.MessageBox.show({
             title: 'Address',
             msg: 'Please enter your address:',
-            width:300,
+            width: 300,
             buttons: Ext.MessageBox.OKCANCEL,
             multiline: true,
             scope: this,
             fn: this.showResultText,
             animateTarget: btn,
+            buttonAlign: 'end',
             maskClickAction: this.getMaskClickAction()
         });
     },
 
     onYesNoCancelClick: function(btn) {
         Ext.MessageBox.show({
-            title:'Save Changes?',
+            title: 'Save Changes?',
             msg: 'You are closing a tab that has unsaved changes. <br />Would you like to save your changes?',
             buttons: Ext.MessageBox.YESNOCANCEL,
             scope: this,
@@ -46,15 +47,15 @@ Ext.define('KitchenSink.view.window.MessageBoxController', {
     onProgressClick: function(btn) {
         var me = this,
             i = 0,
-            fn;
+            fn, val;
 
         Ext.MessageBox.show({
             title: 'Please wait',
             msg: 'Loading items...',
             progressText: 'Initializing...',
-            width:300,
-            progress:true,
-            closable:false,
+            width: 300,
+            progress: true,
+            closable: false,
             animateTarget: btn,
             maskClickAction: me.getMaskClickAction()
         });
@@ -63,15 +64,19 @@ Ext.define('KitchenSink.view.window.MessageBoxController', {
         fn = function() {
             me.timer = null;
             ++i;
+
             if (i === 12 || !Ext.MessageBox.isVisible()) {
                 Ext.MessageBox.hide();
                 me.showToast('Your fake items were loaded', 'Done');
-            } else {
-                var val = i / 11;
+            }
+            else {
+                val = i / 11;
+
                 Ext.MessageBox.updateProgress(val, Math.round(100 * val) + '% completed');
                 me.timer = Ext.defer(fn, 500);
             }
         };
+
         me.timer = Ext.defer(fn, 500);
 
     },
@@ -90,13 +95,13 @@ Ext.define('KitchenSink.view.window.MessageBoxController', {
             maskClickAction: me.getMaskClickAction()
         });
 
-        me.timer = Ext.defer(function(){
-            //This simulates a long-running operation like a database save or XHR call.
-            //In real code, this would be in a callback function.
+        me.timer = Ext.defer(function() {
+            // This simulates a long-running operation like a database save or XHR call.
+            // In real code, this would be in a callback function.
             me.timer = null;
             Ext.MessageBox.hide();
             me.showToast('Your fake data was saved!', 'Done');
-        }, 8000);
+        }, 3000);
     },
 
     onAlertClick: function() {
@@ -116,6 +121,7 @@ Ext.define('KitchenSink.view.window.MessageBoxController', {
             scope: this,
             fn: this.showResult,
             icon: icon,
+            cls: 'show-icon-messagebox',
             maskClickAction: this.getMaskClickAction()
         });
     },
@@ -124,10 +130,11 @@ Ext.define('KitchenSink.view.window.MessageBoxController', {
         Ext.MessageBox.show({
             title: 'What, really?',
             msg: 'Are you sure?',
+            width: Ext.theme.name === "Graphite" ? 300 : 250,
             buttons: Ext.MessageBox.YESNO,
-            buttonText:{ 
-                yes: "Definitely!", 
-                no: "No chance!" 
+            buttonText: {
+                yes: "Definitely!",
+                no: "No chance!"
             },
             buttonTips: {
                 yes: {
@@ -160,8 +167,9 @@ Ext.define('KitchenSink.view.window.MessageBoxController', {
             html: s,
             closable: false,
             align: 't',
-            slideInDuration: 400,
-            minWidth: 400
+            slideInDuration: 400
+            // ,
+            // minHeight: 1
         });
     },
 
@@ -169,6 +177,7 @@ Ext.define('KitchenSink.view.window.MessageBoxController', {
         if (this.timer) {
             window.clearTimeout(this.timer);
         }
+
         Ext.Msg.hide();
         this.callParent();
     }

@@ -3,9 +3,7 @@
  * @class Ext.data.amf.RemotingMessage
  * Represents a remote call to be sent to the server.
  */
-
 Ext.define('Ext.data.amf.RemotingMessage', {
-
     alias: 'data.amf.remotingmessage',
 
     config: {
@@ -57,10 +55,7 @@ Ext.define('Ext.data.amf.RemotingMessage', {
          * @property {Number} timeToLive - how long the message is still valid for passing
          */
         timeToLive: []
-
-
     },
-
 
     /**
      * Creates new message.
@@ -70,17 +65,17 @@ Ext.define('Ext.data.amf.RemotingMessage', {
         this.initConfig(config);
     },
 
-
-
     /**
      * Returns an AMFX encoded version of the message.
      */
     encodeMessage: function() {
         var encoder = Ext.create('Ext.data.amf.XmlEncoder'),
             cleanObj;
+
+        // eslint-disable-next-line max-len
         cleanObj = Ext.copyTo({}, this, "$flexType,body,clientId,destination,headers,messageId,operation,source,timestamp,timeToLive", true);
         encoder.writeObject(cleanObj);
+
         return encoder.body;
     }
-
 });

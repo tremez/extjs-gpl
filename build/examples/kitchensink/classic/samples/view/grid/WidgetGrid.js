@@ -30,8 +30,8 @@ Ext.define('KitchenSink.view.grid.WidgetGrid', {
     xtype: 'widget-grid',
     store: 'Widgets',
     collapsible: true,
-    height: 350,
-    width: 1050,
+    height: '${height}',
+    width: '${width}',
     title: 'Widget Grid',
     viewConfig: {
         stripeRows: true,
@@ -41,18 +41,40 @@ Ext.define('KitchenSink.view.grid.WidgetGrid', {
     trackMouseOver: false,
     disableSelection: true,
     //<example>
+    profiles: {
+        classic: {
+            width: 1050,
+            height: 350,
+            buttonWidth: 120
+        },
+        neptune: {
+            width: 1050,
+            height: 350,
+            buttonWidth: 120
+        },
+        graphite: {
+            width: 1150,
+            height: 450,
+            buttonWidth: 190
+        },
+        'classic-material': {
+            width: 1150,
+            height: 450,
+            buttonWidth: 190
+        }
+    },
     otherContent: [{
         type: 'Store',
         path: 'classic/samples/store/Widgets.js'
-    },{
+    }, {
         type: 'Model',
         path: 'classic/samples/model/Widget.js'
     }],
     //</example>
-    
+
     columns: [{
         text: 'Button',
-        width: 120,
+        width: '${buttonWidth}',
         xtype: 'widgetcolumn',
         widget: {
             textAlign: 'left',
@@ -62,9 +84,9 @@ Ext.define('KitchenSink.view.grid.WidgetGrid', {
             handler: 'onButtonWidgetClick'
         }
     }, {
-        text     : 'Progress',
-        xtype    : 'widgetcolumn',
-        width    : 120,
+        text: 'Progress',
+        xtype: 'widgetcolumn',
+        width: 120,
         widget: {
             bind: '{record.progress}',
             xtype: 'progressbarwidget',
@@ -85,9 +107,9 @@ Ext.define('KitchenSink.view.grid.WidgetGrid', {
             ]
         }
     }, {
-        text     : 'Slider',
-        xtype    : 'widgetcolumn',
-        width    : 120,
+        text: 'Slider',
+        xtype: 'widgetcolumn',
+        width: 120,
         widget: {
             xtype: 'sliderwidget',
             minValue: 0,
@@ -157,34 +179,42 @@ Ext.define('KitchenSink.view.grid.WidgetGrid', {
 
     // Dispatch named listener and handler methods to this instance
     defaultListenerScope: true,
-    
+
     listeners: {
         columnshow: 'onColumnToggle',
         columnhide: 'onColumnToggle'
     },
-    
+
     onButtonWidgetClick: function(btn) {
-        var rec = btn.getViewModel().get('record');
+        var rec = btn.lookupViewModel().get('record');
+
         Ext.Msg.alert("Button clicked", "Hey! " + rec.get('name'));
     },
 
     onButtonToggle: function(btn, pressed) {
+        var header;
+
         if (this.processing) {
             return;
         }
 
         this.processing = true;
-        var header = this.headerCt.child('[text=' + btn.text + ']');
+        header = this.headerCt.child('[text=' + btn.text + ']');
+
         header.setVisible(pressed);
         this.processing = false;
     },
 
     onColumnToggle: function(headerCt, header) {
+        var btn;
+
         if (this.processing) {
             return;
         }
+
         this.processing = true;
-        var btn = this.down('toolbar').child('[text=' + header.text + ']');
+        btn = this.down('toolbar').child('[text=' + header.text + ']');
+
         btn.setPressed(header.isVisible());
         this.processing = false;
     }

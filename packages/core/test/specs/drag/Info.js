@@ -1,4 +1,4 @@
-describe("Ext.drag.Info", function() {
+topSuite("Ext.drag.Info", ['Ext.drag.*', 'Ext.dom.Element'], function() {
     var helper = Ext.testHelper,
         touchId = 0,
         cursorTrack, source, target,
@@ -25,7 +25,7 @@ describe("Ext.drag.Info", function() {
         if (typeof x !== 'number') {
             x = 50;
         }
-        
+
         if (typeof y !== 'number') {
             y = 50;
         }
@@ -46,7 +46,7 @@ describe("Ext.drag.Info", function() {
         if (typeof x !== 'number') {
             x = 100;
         }
-        
+
         if (typeof y !== 'number') {
             y = 100;
         }
@@ -65,23 +65,29 @@ describe("Ext.drag.Info", function() {
 
     function makeSource(cfg) {
         cfg = cfg || {};
+
         if (!cfg.element) {
             if (!dragEl) {
                 makeDragEl();
             }
+
             cfg.element = dragEl;
         }
+
         source = new Ext.drag.Source(cfg);
     }
 
     function makeTarget(cfg) {
         cfg = cfg || {};
+
         if (!cfg.element) {
             if (!dropEl) {
                 makeDropEl();
             }
+
             cfg.element = dropEl;
         }
+
         target = new Ext.drag.Target(cfg);
     }
 
@@ -108,6 +114,7 @@ describe("Ext.drag.Info", function() {
     function startDrag(x, y, target) {
         runs(function() {
             var xy = source.getElement().getXY();
+
             x = x || xy[0];
             y = y || xy[1];
 
@@ -123,6 +130,7 @@ describe("Ext.drag.Info", function() {
      function startOffsetDrag(offsetX, offsetY, target) {
         runs(function() {
             var xy = source.getElement().getXY();
+
             start({
                 id: touchId,
                 x: xy[0] + (offsetX || 0),
@@ -162,6 +170,7 @@ describe("Ext.drag.Info", function() {
 
     function getCenter(el) {
         var xy = el.getXY();
+
         return [xy[0] + (el.getWidth() / 2), xy[1] + (el.getHeight() / 2)];
     }
 
@@ -170,6 +179,7 @@ describe("Ext.drag.Info", function() {
             if (!Ext.isArray(spies)) {
                 spies = [spies];
             }
+
             Ext.Array.forEach(spies, function(spy) {
                 expect(spy.callCount).toBe(n);
             });
@@ -216,6 +226,7 @@ describe("Ext.drag.Info", function() {
             moveBy(50, 50);
             runs(function() {
                 var info = spy.mostRecentCall.args[1];
+
                 clone = info.clone();
 
                 expect(clone.cursor).toEqual(info.cursor);
@@ -230,6 +241,7 @@ describe("Ext.drag.Info", function() {
             moveBy(100, 100);
             runs(function() {
                 var other = spy.mostRecentCall.args[1].clone();
+
                 expect(other.cursor).not.toEqual(clone.cursor);
                 expect(other.data).toEqual(clone.data);
                 expect(other.element).not.toEqual(clone.element);
@@ -264,6 +276,7 @@ describe("Ext.drag.Info", function() {
         function runsExpectTarget(target, valid) {
             runs(function() {
                 var info = spy.mostRecentCall.dragInfo;
+
                 expect(info.target).toBe(target);
                 expect(info.valid).toBe(valid);
             });
@@ -337,16 +350,18 @@ describe("Ext.drag.Info", function() {
             var spy = jasmine.createSpy();
 
             makeDragEl();
-            var child = dragEl.createChild({
+            var child = Ext.fly(dragEl.createChild({
                 width: '20px',
                 height: '20px',
                 left: '40px',
                 top: '40px',
                 position: 'absolute'
-            });
+            }, null, true));
+
             makeSource();
             source.on('dragmove', spy);
             var center = getCenter(child);
+
             startDrag(center[0], center[1], child);
             moveBy(10, 0);
             runs(function() {
@@ -357,23 +372,24 @@ describe("Ext.drag.Info", function() {
     });
 
     describe("data", function() {
-        var spy;
+        var dropSpy;
 
         beforeEach(function() {
-            spy = jasmine.createSpy();
+            dropSpy = jasmine.createSpy();
             makeTarget();
-            target.on('drop', spy);
+            target.on('drop', dropSpy);
         });
 
         afterEach(function() {
-            spy = null;
+            dropSpy = null;
         });
 
         function expectPromiseValue(key, v) {
             var promiseSpy = jasmine.createSpy();
 
             runs(function() {
-                var info = spy.mostRecentCall.args[1];
+                var info = dropSpy.mostRecentCall.args[1];
+
                 info.getData(key).then(promiseSpy);
             });
             waitsFor(function() {
@@ -396,6 +412,8 @@ describe("Ext.drag.Info", function() {
 
             startDrag();
             moveBy(10, 10);
+            endDrag();
+
             runs(function() {
                 expect(describeSpy.callCount).toBe(1);
                 expect(describeSpy.mostRecentCall.args[0]).toBe(dragSpy.mostRecentCall.args[1]);
@@ -426,11 +444,12 @@ describe("Ext.drag.Info", function() {
                         info.setData('foo', 1);
                     }
                 });
-                source.on('dragmove', spy);
+                source.on('dragmove', dropSpy);
                 startDrag(50, 50);
                 moveBy(50, 50);
                 runs(function() {
-                    var info = spy.mostRecentCall.args[1];
+                    var info = dropSpy.mostRecentCall.args[1];
+
                     expect(function() {
                         info.getData('foo');
                     }).toThrow();
@@ -448,7 +467,12 @@ describe("Ext.drag.Info", function() {
                 startDrag();
                 moveBy(50, 50);
                 endDrag();
-                expectPromiseValue('bar', '');
+
+                waitsForSpy(dropSpy);
+
+                runs(function() {
+                    expectPromiseValue('bar', '');
+                });
             });
 
             describe("with static data", function() {
@@ -462,7 +486,12 @@ describe("Ext.drag.Info", function() {
                     startDrag();
                     moveBy(50, 50);
                     endDrag();
-                    expectPromiseValue('foo', 1);
+
+                    waitsForSpy(dropSpy);
+
+                    runs(function() {
+                        expectPromiseValue('foo', 1);
+                    });
                 });
 
                 it("should be able to retrieve data from multiple types", function() {
@@ -476,8 +505,13 @@ describe("Ext.drag.Info", function() {
                     startDrag();
                     moveBy(50, 50);
                     endDrag();
-                    expectPromiseValue('foo', 1);
-                    expectPromiseValue('bar', 2);
+
+                    waitsForSpy(dropSpy);
+
+                    runs(function() {
+                        expectPromiseValue('foo', 1);
+                        expectPromiseValue('bar', 2);
+                    });
                 });
 
                 it("should return complex data", function() {
@@ -492,7 +526,12 @@ describe("Ext.drag.Info", function() {
                     startDrag();
                     moveBy(50, 50);
                     endDrag();
-                    expectPromiseValue('foo', o);
+
+                    waitsForSpy(dropSpy);
+
+                    runs(function() {
+                        expectPromiseValue('foo', o);
+                    });
                 });
             });
 
@@ -509,13 +548,17 @@ describe("Ext.drag.Info", function() {
                     startDrag();
                     moveBy(50, 50);
                     endDrag();
+
+                    waitsForSpy(dropSpy);
+
                     runs(function() {
-                        var info = spy.mostRecentCall.args[1];
+                        var info = dropSpy.mostRecentCall.args[1];
+
                         info.getData('foo');
                         expect(dataSpy.callCount).toBe(1);
                         expect(dataSpy.mostRecentCall.object).toBe(source);
                         // The info from the drop spy
-                        expect(dataSpy.mostRecentCall.args[0]).toBe(spy.mostRecentCall.args[1]); 
+                        expect(dataSpy.mostRecentCall.args[0]).toBe(dropSpy.mostRecentCall.args[1]);
                     });
                 });
 
@@ -531,8 +574,12 @@ describe("Ext.drag.Info", function() {
                     startDrag();
                     moveBy(50, 50);
                     endDrag();
+
+                    waitsForSpy(dropSpy);
+
                     runs(function() {
-                        var info = spy.mostRecentCall.args[1];
+                        var info = dropSpy.mostRecentCall.args[1];
+
                         info.getData('foo');
                         info.getData('foo');
                         info.getData('foo');
@@ -553,7 +600,12 @@ describe("Ext.drag.Info", function() {
                     startDrag();
                     moveBy(50, 50);
                     endDrag();
-                    expectPromiseValue('foo', 2);
+
+                    waitsForSpy(dropSpy);
+
+                    runs(function() {
+                        expectPromiseValue('foo', 2);
+                    });
                 });
 
                 it("should be able to retrieve data from multiple types", function() {
@@ -571,8 +623,13 @@ describe("Ext.drag.Info", function() {
                     startDrag();
                     moveBy(50, 50);
                     endDrag();
-                    expectPromiseValue('foo', 1);
-                    expectPromiseValue('bar', 2);
+
+                    waitsForSpy(dropSpy);
+
+                    runs(function() {
+                        expectPromiseValue('foo', 1);
+                        expectPromiseValue('bar', 2);
+                    });
                 });
 
                 it("should return complex data", function() {
@@ -589,7 +646,12 @@ describe("Ext.drag.Info", function() {
                     startDrag();
                     moveBy(50, 50);
                     endDrag();
-                    expectPromiseValue('foo', o);
+
+                    waitsForSpy(dropSpy);
+
+                    runs(function() {
+                        expectPromiseValue('foo', o);
+                    });
                 });
             });
         });
@@ -624,7 +686,12 @@ describe("Ext.drag.Info", function() {
                 startDrag();
                 moveBy(50, 50);
                 endDrag();
-                expectPromiseValue('type1', '');
+
+                waitsForSpy(dropSpy);
+
+                runs(function() {
+                    expectPromiseValue('type1', '');
+                });
             });
         });
     });
@@ -650,9 +717,11 @@ describe("Ext.drag.Info", function() {
         function runsExpectData(key, initial, current, delta, offset) {
             runs(function() {
                 var data = spy.mostRecentCall.dragInfo[key];
+
                 expect(data.initial).toEqual(makeData(initial));
                 expect(data.current).toEqual(makeData(current));
                 expect(data.delta).toEqual(makeData(delta));
+
                 if (offset) {
                     expect(data.offset).toEqual(makeData(offset));
                 }
@@ -695,7 +764,7 @@ describe("Ext.drag.Info", function() {
                 moveBy(100, 0);
                 runsExpectCursor([50, 50], [110, 110], [60, 60], [0, 0]);
                 endDrag();
-            }); 
+            });
 
             it("should set the offset correctly and calculate the delta based off that", function() {
                 makeDataSource();
@@ -839,7 +908,7 @@ describe("Ext.drag.Info", function() {
                     moveBy(-20, -20);
                     runsExpectProxy([50, 50], [65, 65], [15, 15]);
                     endDrag();
-                })
+                });
             });
         });
 
@@ -915,6 +984,7 @@ describe("Ext.drag.Info", function() {
     describe("source", function() {
         it("should set the source", function() {
             var spy = jasmine.createSpy();
+
             makeSource();
             source.on('dragmove', spy);
             startDrag();

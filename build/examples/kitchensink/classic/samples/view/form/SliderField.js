@@ -24,10 +24,16 @@ Ext.define('KitchenSink.view.form.SliderField', {
         },
         'neptune-touch': {
             labelWidth: 150
+        },
+        graphite: {
+            labelWidth: 160
+        },
+        'classic-material': {
+            labelWidth: 160
         }
     },
     //</example>
-    
+
     title: 'Sound Settings',
     width: 400,
     bodyPadding: 10,
@@ -35,15 +41,15 @@ Ext.define('KitchenSink.view.form.SliderField', {
         'Sounds Effects: <b>{fx}%</b><br />' +
         'Ambient Sounds: <b>{ambient}%</b><br />' +
         'Interface Sounds: <b>{iface}%</b>',
-   
+
     defaults: {
         labelWidth: '${labelWidth}',
         anchor: '95%',
         tipText: 'tipText'
     },
-    
+
     defaultType: 'slider',
-    
+
     items: [{
         fieldLabel: 'Sound Effects',
         value: 50,
@@ -56,6 +62,11 @@ Ext.define('KitchenSink.view.form.SliderField', {
         fieldLabel: 'Interface Sounds',
         value: 25,
         name: 'iface'
+    }, {
+        fieldLabel: 'Space Sounds',
+        value: 40,
+        name: 'space',
+        disabled: true
     }],
 
     bbar: [{

@@ -62,7 +62,9 @@ Ext.define('Ext.selection.DataViewModel', {
                 me.navigationModel = null;
                 Ext.destroy(me.viewListeners, me.navigationListeners);
             }
+
             me.view = view;
+
             if (view) {
                 viewListeners = me.getViewListeners();
                 viewListeners.scope = me;
@@ -83,11 +85,13 @@ Ext.define('Ext.selection.DataViewModel', {
             eventListeners = {};
 
         eventListeners[me.view.triggerCtEvent] = me.onContainerClick;
+
         return eventListeners;
     },
-    
-    onUpdate: function(record){
+
+    onUpdate: function(record) {
         var view = this.view;
+
         if (view && this.isSelected(record)) {
             view.onItemSelect(record);
         }
@@ -106,18 +110,20 @@ Ext.define('Ext.selection.DataViewModel', {
             eventName = isSelected ? 'select' : 'deselect',
             recordIndex = me.store.indexOf(record);
 
-        if ((suppressEvent || me.fireEvent('before' + eventName, me, record, recordIndex)) !== false &&
-                commitFn() !== false) {
-            
+        if ((suppressEvent ||
+            me.fireEvent('before' + eventName, me, record, recordIndex)) !== false &&
+            commitFn() !== false) {
+
             // Event handler could have destroyed the view...
             if (view && !view.destroyed) {
                 if (isSelected) {
                     view.onItemSelect(record);
-                } else {
+                }
+                else {
                     view.onItemDeselect(record);
                 }
             }
-            
+
             // ... and the selection model to go with it
             if (!suppressEvent && !me.destroyed) {
                 me.fireEvent(eventName, me, record, recordIndex);

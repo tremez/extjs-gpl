@@ -3,10 +3,11 @@ Ext.define('KitchenSink.view.charts.line.CrossZoomController', {
     alias: 'controller.line-crosszoom',
 
     onZoomUndo: function() {
-        var chart = this.lookupReference('chart'),
+        var chart = this.lookup('chart'),
             interaction = chart && Ext.ComponentQuery.query('interaction', chart)[0],
             undoButton = interaction && interaction.getUndoButton(),
             handler = undoButton && undoButton.handler;
+
         if (handler) {
             handler();
         }

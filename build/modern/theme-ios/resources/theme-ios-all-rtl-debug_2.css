@@ -1,0 +1,3741 @@
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/Abstract.scss:355 */
+.x-dataview-default-body-el > .x-dataview-item.x-odd {
+    background-color: #f5f5f5;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/outline.scss:62 */
+.x-keyboard-mode .x-dataview-default-body-el > .x-dataview-item.x-focused:after {
+    content: '';
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    pointer-events: none;
+    border: 1px solid #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/Abstract.scss:385 */
+.x-dataview-default-body-el.x-show-selection > .x-dataview-item.x-selected {
+    background-color: #d1d1d1;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/DataItem.scss:326 */
+.x-dataitem-default {
+    color: #000;
+    background-color: #fff;
+    font: 400 14px/18px '-apple-system', 'Helvetica Neue', helvetica, arial, sans-serif;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/DataItem.scss:334 */
+.x-big .x-dataitem-default {
+    font-size: 16px;
+    line-height: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/DataItem.scss:341 */
+.x-dataitem-default.x-odd {
+    background-color: #f5f5f5;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/DataItem.scss:352 */
+.x-show-selection > .x-dataitem-default.x-selected {
+    background-color: #d1d1d1;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/outline.scss:62 */
+.x-keyboard-mode .x-dataitem-default.x-focused:after {
+    content: '';
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    pointer-events: none;
+    border: 1px solid #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/ItemHeader.scss:262 */
+.x-itemheader {
+    color: #000;
+    background-color: #eee;
+    font: 600 14px/18px '-apple-system', 'Helvetica Neue', helvetica, arial, sans-serif;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/ItemHeader.scss:275 */
+.x-big .x-itemheader {
+    font-size: 16px;
+    line-height: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/ItemHeader.scss:281 */
+.x-itemheader.x-pinned {
+    box-shadow: 0 6px 6px -4px rgba(0, 0, 0, 0.2);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/ItemHeader.scss:288 */
+.x-itemheader.x-pinned-bottom {
+    box-shadow: 0 -6px 6px -4px rgba(0, 0, 0, 0.2);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/outline.scss:62 */
+.x-keyboard-mode .x-itemheader.x-focused:after {
+    content: '';
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    pointer-events: none;
+    border: 1px solid #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:30 */
+.x-itemheader-body-el {
+    padding: 2px 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:34 */
+.x-big .x-itemheader-body-el {
+    padding: 4px 15px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:40 */
+.x-itemheader-tool-dock {
+    padding: 0 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:44 */
+.x-big .x-itemheader-tool-dock {
+    padding: 0 15px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:49 */
+.x-itemheader-tool-dock > .x-body-el {
+    padding: 2px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:53 */
+.x-big .x-itemheader-tool-dock > .x-body-el {
+    padding: 4px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/SimpleListItem.scss:412 */
+.x-listitem {
+    color: #000;
+    background-color: #fff;
+    border-width: 1px 0;
+    border-style: solid;
+    border-color: #e8e8e8;
+    margin-bottom: -1px;
+    font: 400 14px/18px '-apple-system', 'Helvetica Neue', helvetica, arial, sans-serif;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/SimpleListItem.scss:497 */
+.x-listitem + .x-scrolldock-end {
+    margin-top: 1px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/SimpleListItem.scss:501 */
+.x-listitem:first-child {
+    border-top-color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/SimpleListItem.scss:508 */
+.x-listitem.x-odd {
+    background-color: #f5f5f5;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/SimpleListItem.scss:519 */
+.x-show-selection > .x-listitem.x-selected {
+    background-color: #d1d1d1;
+    border-color: #d1d1d1;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/SimpleListItem.scss:532 */
+.x-listitem.x-pinned {
+    box-shadow: 0 6px 6px -4px rgba(0, 0, 0, 0.2);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/SimpleListItem.scss:539 */
+.x-listitem.x-pinned-bottom {
+    box-shadow: 0 -6px 6px -4px rgba(0, 0, 0, 0.2);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/SimpleListItem.scss:436 */
+.x-big .x-listitem {
+    font-size: 16px;
+    line-height: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/outline.scss:62 */
+.x-keyboard-mode .x-listitem.x-focused:after {
+    content: '';
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    pointer-events: none;
+    border: 1px solid #007aff;
+    margin: -1px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:30 */
+.x-listitem-inner-el {
+    padding: 7px 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:34 */
+.x-big .x-listitem-inner-el {
+    padding: 12px 15px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:40 */
+.x-listitem-tool-dock {
+    padding: 0 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:44 */
+.x-big .x-listitem-tool-dock {
+    padding: 0 15px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:49 */
+.x-listitem-tool-dock > .x-inner-el {
+    padding: 7px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:53 */
+.x-big .x-listitem-tool-dock > .x-inner-el {
+    padding: 12px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/IndexBar.scss:451 */
+.x-indexbar .x-body-el {
+    color: #007aff;
+    justify-content: center;
+    border-radius: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/IndexBar.scss:476 */
+.x-big .x-indexbar .x-body-el {
+    font-size: 12px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/IndexBar.scss:486 */
+.x-indexbar .x-body-el.x-vertical {
+    width: 15px;
+    padding: 5px 0;
+    margin: 0 8px 0 4px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/IndexBar.scss:492 */
+.x-big .x-indexbar .x-body-el.x-vertical {
+    padding: 7px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/IndexBar.scss:500 */
+.x-indexbar .x-body-el .x-indexbar-item {
+    font-weight: 500;
+    font-size: 10px;
+    font-family: '-apple-system', 'Helvetica Neue', helvetica, arial, sans-serif;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/IndexBar.scss:506 */
+.x-indexbar .x-body-el.x-horizontal {
+    width: 312px;
+    padding: 0 5px;
+    margin: 4px 8px 0 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/IndexBar.scss:512 */
+.x-big .x-indexbar .x-body-el.x-horizontal {
+    width: 312px;
+    padding: 0 7px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/IndexBar.scss:525 */
+.x-list.x-indexed-vertical.x-indexed-no-autohide.x-indexed .x-itemheader-body-el > :last-child,
+.x-list.x-indexed-vertical.x-indexed-no-autohide.x-indexed .x-listitem-inner-el > :last-child,
+.x-list.x-indexed-vertical.x-indexed-no-autohide.x-indexed .x-listswiperitem-body-el {
+    margin-right: calc(15px + 8px);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/IndexBar.scss:538 */
+.x-list.x-indexed-vertical.x-indexed-no-autohide.x-indexed .x-listitem-tool-dock > .x-listitem-inner-el > :last-child {
+    margin-right: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/IndexBar.scss:550 */
+.x-list.x-indexed-vertical.x-indexed-no-autohide.x-indexed .x-listitem-tool-dock > :last-child {
+    margin-right: calc(15px + 8px);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/IndexBar.scss:564 */
+.x-edge .x-indexbar .x-indexbar-indicator {
+    background-color: #eee;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/IndexBar.scss:569 */
+.x-indexbar .x-indexbar-indicator {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+    font-weight: bold;
+    background-color: #eee;
+    border-radius: 7px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/IndexBar.scss:580 */
+.x-big .x-indexbar .x-indexbar-indicator {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/IndexBar.scss:593 */
+.x-edge .x-indexbar .x-indexbar-indicator::before {
+    background-color: #eee;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/IndexBar.scss:598 */
+.x-indexbar .x-indexbar-indicator::before {
+    content: "";
+    width: 12px;
+    height: 12px;
+    transform: rotate(45deg);
+    top: 10px;
+    position: absolute;
+    background-color: #eee;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/IndexBar.scss:608 */
+.x-indexbar.x-horizontal > .x-indexbar-indicator::before {
+    bottom: -3px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/IndexBar.scss:612 */
+.x-indexbar.x-vertical > .x-indexbar-indicator::before {
+    right: -3px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/dataview/listswiper/ListSwiper.scss:1 */
+.x-listswiper-shadow {
+    box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.5);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/listswiper/Stepper.scss:291 */
+.x-listswiperstepper {
+    font: 600 14px/18px '-apple-system', 'Helvetica Neue', helvetica, arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #cacaca;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/listswiper/Stepper.scss:297 */
+.x-big .x-listswiperstepper {
+    font-size: 16px;
+    line-height: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/listswiper/Stepper.scss:304 */
+.x-listswiperstepper-icon-wrap-el .x-icon-el {
+    color: inherit;
+    height: 16px;
+    width: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-listswiperstepper-icon-wrap-el .x-icon-el:before {
+    font-size: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:122 */
+.x-big .x-listswiperstepper-icon-wrap-el .x-icon-el:before {
+    font-size: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/listswiper/Stepper.scss:312 */
+.x-big .x-listswiperstepper-icon-wrap-el .x-icon-el {
+    height: 20px;
+    width: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/listswiper/Stepper.scss:320 */
+.x-listswiperstepper.x-side-left .x-listswiperstepper-icon-wrap-el {
+    margin-right: 5px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/listswiper/Stepper.scss:324 */
+.x-big .x-listswiperstepper.x-side-left .x-listswiperstepper-icon-wrap-el {
+    margin-right: 8px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/listswiper/Stepper.scss:330 */
+.x-listswiperstepper.x-side-right .x-listswiperstepper-icon-wrap-el {
+    margin-left: 5px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/listswiper/Stepper.scss:334 */
+.x-big .x-listswiperstepper.x-side-right .x-listswiperstepper-icon-wrap-el {
+    margin-left: 8px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/listswiper/Stepper.scss:340 */
+.x-listswiperstepper.x-undo {
+    color: #fff;
+    background-color: #c30;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/listswiper/Stepper.scss:344 */
+.x-listswiperstepper.x-undo .x-listswiperstepper-icon-wrap-el .x-icon-el {
+    color: inherit;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/listswiper/Stepper.scss:349 */
+.x-listswiperstepper.x-active {
+    color: #fff;
+    background-color: #0062cc;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/listswiper/Stepper.scss:353 */
+.x-listswiperstepper.x-active .x-listswiperstepper-icon-wrap-el .x-icon-el {
+    color: inherit;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/listswiper/Stepper.scss:359 */
+.x-listswiperstepper-body-el {
+    padding: 7px 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/listswiper/Stepper.scss:363 */
+.x-big .x-listswiperstepper-body-el {
+    padding: 12px 15px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1283 */
+.x-button-listswiperstepper-trigger {
+    color: #fff;
+    font-weight: inherit;
+    font-size: inherit;
+    font-family: inherit;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1297 */
+.x-button-listswiperstepper-trigger .x-inner-el {
+    border-width: 0;
+    border-color: transparent;
+    background-color: transparent;
+    background-image: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1311 */
+.x-button-listswiperstepper-trigger.x-has-text .x-inner-el {
+    padding: 7px 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1315 */
+.x-big .x-button-listswiperstepper-trigger.x-has-text .x-inner-el {
+    padding: 12px 15px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1321 */
+.x-button-listswiperstepper-trigger .x-icon-el {
+    color: #fff;
+    width: 16px;
+    height: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:86 */
+.x-big .x-button-listswiperstepper-trigger .x-icon-el {
+    width: 20px;
+    height: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-button-listswiperstepper-trigger .x-icon-el:before {
+    font-size: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:122 */
+.x-big .x-button-listswiperstepper-trigger .x-icon-el:before {
+    font-size: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1331 */
+.x-button-listswiperstepper-trigger.x-has-text.x-icon-align-left .x-icon-el {
+    margin-right: 5px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1335 */
+.x-big .x-button-listswiperstepper-trigger.x-has-text.x-icon-align-left .x-icon-el {
+    margin-right: 8px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1341 */
+.x-button-listswiperstepper-trigger.x-has-text.x-icon-align-right .x-icon-el {
+    margin-left: 5px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1345 */
+.x-big .x-button-listswiperstepper-trigger.x-has-text.x-icon-align-right .x-icon-el {
+    margin-left: 8px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1371 */
+.x-button-listswiperstepper-trigger .x-arrow-el {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1442 */
+.x-button-listswiperstepper-trigger.x-hovered .x-inner-el {
+    border-color: transparent;
+    background-color: transparent;
+    background-image: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1466 */
+.x-button-listswiperstepper-trigger.x-pressing,
+.x-button-listswiperstepper-trigger.x-pressed {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1475 */
+.x-button-listswiperstepper-trigger.x-pressing .x-inner-el,
+.x-keyboard-mode .x-button-listswiperstepper-trigger.x-pressing .x-inner-el,
+.x-button-listswiperstepper-trigger.x-pressed .x-inner-el,
+.x-keyboard-mode .x-button-listswiperstepper-trigger.x-pressed .x-inner-el {
+    border-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.2);
+    background-image: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1480 */
+.x-button-listswiperstepper-trigger.x-pressing .x-icon-el,
+.x-button-listswiperstepper-trigger.x-pressed .x-icon-el {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1484 */
+.x-button-listswiperstepper-trigger.x-pressing .x-arrow-el,
+.x-button-listswiperstepper-trigger.x-pressed .x-arrow-el {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/listswiper/Stepper.scss:349 */
+.x-listswiperstepper-action.x-active {
+    background-color: #4da2ff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/listswiper/Stepper.scss:349 */
+.x-listswiperstepper-confirm.x-active {
+    background-color: #6c9804;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/listswiper/Stepper.scss:349 */
+.x-listswiperstepper-decline.x-active {
+    background-color: #952804;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:893 */
+.x-tooltip {
+    background-color: #eff7ff;
+    border-radius: 2px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:922 */
+.x-tooltip > .x-anchor-el .x-pointer-el {
+    fill: #fff;
+    stroke: #dcdcdc;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:928 */
+.x-tooltip > .x-anchor-el.x-top {
+    height: 9px;
+    top: -9px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:935 */
+.x-tooltip > .x-anchor-el.x-bottom {
+    height: 9px;
+    bottom: -9px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:942 */
+.x-tooltip > .x-anchor-el.x-left {
+    width: 9px;
+    left: -9px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:953 */
+.x-tooltip > .x-anchor-el.x-right {
+    width: 9px;
+    right: -9px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:959 */
+.x-tooltip > .x-anchor-el.x-right .x-pointer-el {
+    transform-origin: 4.5px 4.5px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:966 */
+.x-tooltip-body-el {
+    padding: 8px;
+    background-color: #fff;
+    color: #000;
+    border-color: #dcdcdc;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:974 */
+.x-big .x-tooltip-body-el {
+    padding: 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:984 */
+.x-tooltip-boxscroller {
+    border-color: #dcdcdc;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:987 */
+.x-tooltip-boxscroller > .x-boxscroller-body > .x-body-el {
+    border: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:2 */
+.x-tooltip-outer-border-l {
+    border-left-color: #dcdcdc !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:7 */
+.x-tooltip-outer-border-b {
+    border-bottom-color: #dcdcdc !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:12 */
+.x-tooltip-outer-border-bl {
+    border-bottom-color: #dcdcdc !important;
+    border-left-color: #dcdcdc !important;
+    border-radius: 0 0 0 2px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:27 */
+.x-tooltip-outer-border-r {
+    border-right-color: #dcdcdc !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:32 */
+.x-tooltip-outer-border-rl {
+    border-right-color: #dcdcdc !important;
+    border-left-color: #dcdcdc !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:39 */
+.x-tooltip-outer-border-rb {
+    border-right-color: #dcdcdc !important;
+    border-bottom-color: #dcdcdc !important;
+    border-radius: 0 0 2px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:54 */
+.x-tooltip-outer-border-rbl {
+    border-right-color: #dcdcdc !important;
+    border-bottom-color: #dcdcdc !important;
+    border-left-color: #dcdcdc !important;
+    border-radius: 0 0 2px 2px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:71 */
+.x-tooltip-outer-border-t {
+    border-top-color: #dcdcdc !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:76 */
+.x-tooltip-outer-border-tl {
+    border-top-color: #dcdcdc !important;
+    border-left-color: #dcdcdc !important;
+    border-radius: 2px 0 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:91 */
+.x-tooltip-outer-border-tb {
+    border-top-color: #dcdcdc !important;
+    border-bottom-color: #dcdcdc !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:98 */
+.x-tooltip-outer-border-tbl {
+    border-top-color: #dcdcdc !important;
+    border-bottom-color: #dcdcdc !important;
+    border-left-color: #dcdcdc !important;
+    border-radius: 2px 0 0 2px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:115 */
+.x-tooltip-outer-border-tr {
+    border-top-color: #dcdcdc !important;
+    border-right-color: #dcdcdc !important;
+    border-radius: 0 2px 0 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:130 */
+.x-tooltip-outer-border-trl {
+    border-top-color: #dcdcdc !important;
+    border-right-color: #dcdcdc !important;
+    border-left-color: #dcdcdc !important;
+    border-radius: 2px 2px 0 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:147 */
+.x-tooltip-outer-border-trb {
+    border-top-color: #dcdcdc !important;
+    border-right-color: #dcdcdc !important;
+    border-bottom-color: #dcdcdc !important;
+    border-radius: 0 2px 2px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:164 */
+.x-tooltip-outer-border-trbl {
+    border-color: #dcdcdc !important;
+    border-radius: 2px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Header.scss:68 */
+.x-tooltipheader {
+    background-color: #fff;
+    background-image: none;
+    border-color: #dcdcdc;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Header.scss:74 */
+.x-tooltipheader.x-horizontal {
+    min-height: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Header.scss:78 */
+.x-big .x-tooltipheader.x-horizontal {
+    min-height: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Header.scss:84 */
+.x-tooltipheader.x-vertical {
+    min-width: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Header.scss:88 */
+.x-big .x-tooltipheader.x-vertical {
+    min-width: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Header.scss:94 */
+.x-tooltipheader > .x-body-el {
+    padding: 8px 8px 3px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Header.scss:98 */
+.x-big .x-tooltipheader > .x-body-el {
+    padding: 10px 10px 3px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Header.scss:104 */
+.x-tooltipheader.x-docked-right {
+    border-color: #dcdcdc;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Header.scss:105 */
+.x-tooltipheader.x-docked-right > .x-body-el {
+    padding: 8px 8px 8px 3px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Header.scss:109 */
+.x-big .x-tooltipheader.x-docked-right > .x-body-el {
+    padding: 10px 10px 10px 3px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Header.scss:118 */
+.x-tooltipheader.x-docked-left {
+    border-color: #dcdcdc;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Header.scss:119 */
+.x-tooltipheader.x-docked-left > .x-body-el {
+    padding: 8px 3px 8px 8px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Header.scss:123 */
+.x-big .x-tooltipheader.x-docked-left > .x-body-el {
+    padding: 10px 3px 10px 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Header.scss:132 */
+.x-tooltipheader.x-docked-bottom {
+    border-color: #dcdcdc;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Title.scss:117 */
+.x-tooltiptitle {
+    color: #000;
+    font-weight: 600;
+    padding: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Title.scss:123 */
+.x-big .x-tooltiptitle {
+    padding: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Title.scss:130 */
+.x-tooltiptitle .x-icon-el {
+    color: rgba(0, 0, 0, 0.5);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Title.scss:188 */
+.x-tooltiptitle.x-rotate-90 {
+    padding: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Title.scss:192 */
+.x-big .x-tooltiptitle.x-rotate-90 {
+    padding: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Title.scss:238 */
+.x-tooltiptitle.x-rotate-270 {
+    padding: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Title.scss:242 */
+.x-big .x-tooltiptitle.x-rotate-270 {
+    padding: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Tool.scss:545 */
+.x-keyboard-mode .x-tooltiptool.x-focused {
+    outline-color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/plugin/ListPaging.scss:175 */
+.x-listpaging {
+    padding: 13px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/plugin/ListPaging.scss:180 */
+.x-big .x-listpaging {
+    padding: 13px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/plugin/ListPaging.scss:187 */
+.x-listpaging.x-disabled .x-message {
+    color: #000;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/plugin/ListPaging.scss:192 */
+.x-listpaging .x-message {
+    color: #0062cc;
+    text-align: center;
+    font-size: 14px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/plugin/ListPaging.scss:197 */
+.x-big .x-listpaging .x-message {
+    font-size: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/plugin/ListPaging.scss:202 */
+.x-listpaging .x-loading-spinner {
+    font-size: 180%;
+    margin: 0 auto;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/plugin/ListPaging.scss:206 */
+.x-big .x-listpaging .x-loading-spinner {
+    font-size: 180%;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/pullrefresh/Bar.scss:75 */
+.x-pullrefreshbar {
+    min-height: 42px;
+    background-color: #eee;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/pullrefresh/Bar.scss:82 */
+.x-big .x-pullrefreshbar {
+    min-height: 44px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/pullrefresh/Bar.scss:87 */
+.x-pullrefreshbar.x-pullrefresh-overlay {
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/pullrefresh/Bar.scss:98 */
+.x-pullrefreshbar .x-pullrefreshbar-loading-wrap .x-pullrefresh-loading {
+    font-size: 150%;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/pullrefresh/Bar.scss:103 */
+.x-big .x-pullrefreshbar .x-pullrefreshbar-loading-wrap {
+    font-size: 150%;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/pullrefresh/Bar.scss:108 */
+.x-big .x-pullrefreshbar .x-pullrefreshbar-loading-wrap .x-pullrefresh-loading {
+    font-size: 150%;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/pullrefresh/Spinner.scss:21 */
+.x-pullrefreshspinner {
+    min-height: 64px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/pullrefresh/Spinner.scss:25 */
+.x-big .x-pullrefreshspinner {
+    min-height: 64px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/pullrefresh/Spinner.scss:30 */
+.x-pullrefreshspinner .x-pullrefreshspinner-main {
+    background-color: #fff;
+    border-radius: 50%;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/pullrefresh/Spinner.scss:35 */
+.x-pullrefreshspinner .x-pullrefreshspinner-arrow-main {
+    border-color: #007aff #007aff transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/pullrefresh/Spinner.scss:37 */
+.x-pullrefreshspinner .x-pullrefreshspinner-arrow-main:before {
+    border-color: #007aff transparent transparent transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/pullrefresh/Spinner.scss:46 */
+.x-pullrefreshspinner .x-pullrefreshspinner-spinner-main .x-pullrefreshspinner-spinner-left .x-pullrefreshspinner-half-circle,
+.x-pullrefreshspinner .x-pullrefreshspinner-spinner-main .x-pullrefreshspinner-spinner-right .x-pullrefreshspinner-half-circle {
+    border-top-color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/pullrefresh/Spinner.scss:52 */
+.x-pullrefreshspinner .x-pullrefreshspinner-spinner-main .x-pullrefreshspinner-spinner-left .x-pullrefreshspinner-half-circle {
+    border-left-color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/pullrefresh/Spinner.scss:58 */
+.x-pullrefreshspinner .x-pullrefreshspinner-spinner-main .x-pullrefreshspinner-spinner-right .x-pullrefreshspinner-half-circle {
+    border-right-color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/Checkbox.scss:249 */
+.x-checkboxfield .x-icon-el {
+    font-family: 'Font Awesome 5 Free Regular';
+    color: #bbb;
+    width: 20px;
+    height: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:86 */
+.x-big .x-checkboxfield .x-icon-el {
+    width: 20px;
+    height: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-checkboxfield .x-icon-el:before {
+    content: "\e908";
+    font-family: iOS;
+    font-size: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:122 */
+.x-big .x-checkboxfield .x-icon-el:before {
+    font-size: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/Checkbox.scss:269 */
+.x-checkboxfield.x-checked .x-icon-el {
+    color: #007aff;
+    font-family: 'Font Awesome 5 Free Regular';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-checkboxfield.x-checked .x-icon-el:before {
+    content: "\e907";
+    font-family: iOS;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/Checkbox.scss:276 */
+.x-keyboard-mode .x-checkboxfield.x-focused .x-icon-el {
+    color: #268eff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/Checkbox.scss:281 */
+.x-checkboxfield.x-disabled .x-icon-el {
+    color: #dcdcdc;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/BoxLabelable.scss:75 */
+.x-checkboxfield .x-box-label-el {
+    color: #000;
+    padding: 3px 0 3px 5px;
+    font: 400 14px/18px '-apple-system', 'Helvetica Neue', helvetica, arial, sans-serif;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/BoxLabelable.scss:87 */
+.x-big .x-checkboxfield .x-box-label-el {
+    font-size: 16px;
+    line-height: 20px;
+    padding: 6px 0 6px 8px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/BoxLabelable.scss:95 */
+.x-checkboxfield.x-box-label-align-before .x-box-label-el {
+    padding: 3px 5px 3px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/BoxLabelable.scss:99 */
+.x-big .x-checkboxfield.x-box-label-align-before .x-box-label-el {
+    padding: 6px 8px 6px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/picker/Picker.scss:6 */
+.x-picker .x-dataview {
+    /**
+ * @class Ext.picker.Picker
+ */
+    background: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/picker/Picker.scss:11 */
+.x-picker-body-el {
+    background-color: #fff;
+    overflow: hidden;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/picker/Picker.scss:16 */
+.x-picker-mask {
+    z-index: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/picker/Picker.scss:20 */
+.x-picker-bar {
+    height: 32px;
+    border: 1px solid #dcdcdc;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/picker/Picker.scss:26 */
+.x-big .x-picker-bar {
+    height: 47px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/picker/Picker.scss:33 */
+.x-use-titles .x-picker-bar {
+    margin: 20px 0 0 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/picker/Picker.scss:38 */
+.x-picker-slot-title {
+    height: 20px;
+    color: #000;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: #dcdcdc;
+    padding: 3px 13px;
+    font-size: 14px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/picker/Picker.scss:45 */
+.x-big .x-picker-slot-title {
+    font-size: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/picker/Picker.scss:49 */
+.x-picker-slot-title > div {
+    color: #000;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/picker/Picker.scss:55 */
+.x-picker-slot .x-dataview-item {
+    z-index: 1;
+    height: 32px;
+    line-height: 32px;
+    padding: 0 8px;
+    color: #bbb;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/picker/Picker.scss:71 */
+.x-picker-slot .x-dataview-item.x-selected {
+    color: #000;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/picker/Picker.scss:78 */
+.x-big .x-picker-slot .x-dataview-item {
+    height: 47px;
+    line-height: 47px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/field/Select.scss:4 */
+.x-selectfield .x-chipview .x-chipview-body-el {
+    padding: 0 0 0 4px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-datetrigger .x-icon-el:before {
+    content: "\e906";
+    font-family: 'iOS';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:987 */
+.x-datepanel-boxscroller > .x-boxscroller-body > .x-body-el {
+    border: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Date.scss:1806 */
+.x-datepanel .x-navigation-tools {
+    right: 1em;
+    left: 1em;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Date.scss:1831 */
+.x-datepanel .x-year-el {
+    font-weight: 500;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Date.scss:1884 */
+.x-datepanel .x-dateview caption {
+    text-align: center;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Date.scss:1904 */
+.x-datepanel .x-dateview .x-cell {
+    padding: 4px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Date.scss:1908 */
+.x-big .x-datepanel .x-dateview .x-cell {
+    padding: cell-spacing-big;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Date.scss:1913 */
+.x-datepanel .x-dateview .x-cell .x-inner {
+    width: 28px;
+    height: 28px;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    -ms-border-radius: 100%;
+    -o-border-radius: 100%;
+    border-radius: 100%;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Date.scss:1936 */
+.x-datepanel .x-dateview thead .x-cell {
+    background-color: #f0f0f0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Date.scss:1939 */
+.x-datepanel .x-dateview thead .x-cell .x-inner {
+    height: 28px;
+    font-weight: normal;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Date.scss:1985 */
+.x-datepanel .x-dateview tbody .x-cell.x-outside .x-inner {
+    color: #d0d0d0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Date.scss:2001 */
+.x-datepanel .x-dateview tbody .x-cell.x-today .x-inner {
+    background-color: #4da2ff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Date.scss:2009 */
+.x-datepanel .x-dateview tbody .x-cell.x-special .x-inner {
+    color: #bfdeff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Date.scss:2017 */
+.x-datepanel .x-dateview tbody .x-cell.x-disabled .x-inner {
+    background-color: #aaa;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Date.scss:2025 */
+.x-datepanel .x-dateview tbody .x-cell.x-selected .x-inner {
+    color: #fff;
+    background-color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/outline.scss:62 */
+.x-datepanel .x-dateview tbody .x-cell:not(.x-hide-focus):focus .x-inner:after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    bottom: 5px;
+    left: 5px;
+    pointer-events: none;
+    border: 1px solid #00254d;
+    border-radius: 100%;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/outline.scss:62 */
+.x-big .x-datepanel .x-dateview tbody .x-cell:not(.x-hide-focus):focus .x-inner:after {
+    content: '';
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    bottom: 1px;
+    left: 1px;
+    pointer-events: none;
+    border: 1px solid #00254d;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/outline.scss:62 */
+.x-datepanel .x-dateview tbody .x-cell.x-selected:not(.x-hide-focus):focus .x-inner:after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    bottom: 5px;
+    left: 5px;
+    pointer-events: none;
+    border: 1px solid #fff;
+    border-radius: 100%;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/outline.scss:62 */
+.x-big .x-datepanel .x-dateview tbody .x-cell.x-selected:not(.x-hide-focus):focus .x-inner:after {
+    content: '';
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    bottom: 1px;
+    left: 1px;
+    pointer-events: none;
+    border: 1px solid #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/Display.scss:162 */
+.x-displayfield .x-body-el {
+    border: 1px solid transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/Display.scss:169 */
+.x-displayfield .x-input-el {
+    font: 400 14px/18px '-apple-system', 'Helvetica Neue', helvetica, arial, sans-serif;
+    padding: 2px 10px;
+    color: #000;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/Display.scss:176 */
+.x-big .x-displayfield .x-input-el {
+    padding: 5px 15px;
+    font-size: 16px;
+    line-height: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-revealtrigger .x-icon-el:before {
+    content: "\e911";
+    font-family: 'iOS';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/Checkbox.scss:249 */
+.x-radiofield .x-icon-el {
+    font-family: 'Font Awesome 5 Free Regular';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-radiofield .x-icon-el:before {
+    content: "\e923";
+    font-family: iOS;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/Checkbox.scss:269 */
+.x-radiofield.x-checked .x-icon-el {
+    font-family: 'Font Awesome 5 Free Regular';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-radiofield.x-checked .x-icon-el:before {
+    content: "\e922";
+    font-family: iOS;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/BoxLabelable.scss:75 */
+.x-radiofield .x-box-label-el {
+    color: #000;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-searchtrigger .x-icon-el:before {
+    content: "\e92a";
+    font-family: 'iOS';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/slider/Thumb.scss:241 */
+.x-thumb {
+    height: 20px;
+    width: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+    margin-top: -10px;
+    border: 1px solid #dcdcdc;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/slider/Thumb.scss:255 */
+.x-big .x-thumb {
+    height: 28px;
+    width: 28px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+    margin-top: -14px;
+    -webkit-border-radius: 14px;
+    -moz-border-radius: 14px;
+    -ms-border-radius: 14px;
+    -o-border-radius: 14px;
+    border-radius: 14px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/slider/Thumb.scss:289 */
+.x-thumb-sizer {
+    height: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/slider/Thumb.scss:293 */
+.x-big .x-thumb-sizer {
+    height: 28px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/slider/Slider.scss:154 */
+.x-slider .x-track-el {
+    height: 2px;
+    background-color: #bbb;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/slider/Slider.scss:162 */
+.x-big .x-slider .x-track-el {
+    height: 2px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/slider/Slider.scss:169 */
+.x-slider .x-fill-el {
+    height: 2px;
+    background-color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/slider/Slider.scss:180 */
+.x-big .x-slider .x-fill-el {
+    height: 2px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/slider/Slider.scss:187 */
+.x-slider.x-disabled {
+    opacity: 0.3;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/Slider.scss:156 */
+.x-sliderfield .x-body-wrap-el {
+    width: 100px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/Slider.scss:160 */
+.x-big .x-sliderfield .x-body-wrap-el {
+    width: 150px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/Slider.scss:166 */
+.x-sliderfield .x-box-el {
+    padding: 1px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/Slider.scss:170 */
+.x-big .x-sliderfield .x-box-el {
+    padding: 2px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/BoxLabelable.scss:75 */
+.x-sliderfield .x-box-label-el {
+    color: #000;
+    padding: 3px 0 3px 8px;
+    font: 400 14px/18px '-apple-system', 'Helvetica Neue', helvetica, arial, sans-serif;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/BoxLabelable.scss:87 */
+.x-big .x-sliderfield .x-box-label-el {
+    font-size: 16px;
+    line-height: 20px;
+    padding: 6px 0 6px 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/BoxLabelable.scss:95 */
+.x-sliderfield.x-box-label-align-before .x-box-label-el {
+    padding: 3px 8px 3px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/BoxLabelable.scss:99 */
+.x-big .x-sliderfield.x-box-label-align-before .x-box-label-el {
+    padding: 6px 10px 6px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/trigger/Trigger.scss:237 */
+.x-spindowntrigger .x-icon-el {
+    width: 12px;
+    height: 12px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-spindowntrigger .x-icon-el:before {
+    content: "\e901";
+    font-family: iOS;
+    font-size: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-big .x-spindowntrigger .x-icon-el:before {
+    content: "\e92b";
+    font-family: iOS;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/trigger/Trigger.scss:237 */
+.x-spinuptrigger .x-icon-el {
+    width: 12px;
+    height: 12px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-spinuptrigger .x-icon-el:before {
+    content: "\e904";
+    font-family: iOS;
+    font-size: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-big .x-spinuptrigger .x-icon-el:before {
+    content: "\e92c";
+    font-family: iOS;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-timetrigger .x-icon-el:before {
+    content: "\e901";
+    font-family: 'iOS';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeHeader.scss:41 */
+.x-header-position-left .x-analogtimeheader {
+    height: 100%;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeHeader.scss:45 */
+.x-header-position-left .x-analogtimeheader .x-header-el {
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    width: 190px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeHeader.scss:52 */
+.x-header-position-left .x-analogtimeheader .x-meridiem-wrapper-el {
+    height: auto;
+    padding-left: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeHeader.scss:57 */
+.x-header-position-left .x-analogtimeheader .x-time-el {
+    font-size: 42px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeHeader.scss:63 */
+.x-analogtimeheader .x-header-el {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    background-color: #007aff;
+    height: 100px;
+    padding: 10px 40px;
+    color: #fff;
+    user-select: none;
+    -o-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: -moz-none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-drag: none;
+    cursor: default;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeHeader.scss:75 */
+.x-analogtimeheader .x-meridiem-wrapper-el {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding-left: 0;
+    height: 100%;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeHeader.scss:83 */
+.x-analogtimeheader .x-time-wrapper-el {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeHeader.scss:89 */
+.x-analogtimeheader .x-time-el {
+    font-size: 68px;
+    line-height: normal;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeHeader.scss:94 */
+.x-analogtimeheader .x-time-el,
+.x-analogtimeheader .x-meridiem-el {
+    user-select: none;
+    cursor: pointer;
+    opacity: 0.7;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeHeader.scss:100 */
+.x-analogtimeheader .x-time-el.active,
+.x-analogtimeheader .x-meridiem-el.active {
+    opacity: 1;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeHeader.scss:104 */
+.x-analogtimeheader .x-time-el.x-minute-el {
+    flex: 1;
+    text-align: left;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeHeader.scss:109 */
+.x-analogtimeheader .x-time-el.x-hour-el {
+    flex: 1;
+    text-align: right;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeView.scss:56 */
+.x-analogtime {
+    background-color: #fff;
+    width: 280px;
+    height: 420px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeView.scss:61 */
+.x-analogtime:not(.x-vertical) {
+    width: 420px;
+    height: 280px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeView.scss:66 */
+.x-analogtime .x-inner-el {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeView.scss:74 */
+.x-wide .x-analogtime .x-inner-el {
+    flex-direction: row;
+    width: 100%;
+    height: auto;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeView.scss:81 */
+.x-analogtime .x-picker-wrap-el {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    width: 100%;
+    height: 100%;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeView.scss:91 */
+.x-analogtime .x-analog-picker-el {
+    position: relative;
+    width: 90%;
+    background-color: #e0e0e0;
+    border-radius: 1000000px;
+    touch-action: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeView.scss:99 */
+.x-analogtime .x-analog-picker-el:before {
+    content: "";
+    display: block;
+    padding-top: 100%;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeView.scss:105 */
+.x-analogtime .x-analog-picker-el.animated .x-analog-picker-hand-el {
+    transition: transform 300ms ease-out;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeView.scss:109 */
+.x-analogtime .x-analog-picker-el.animated-delayed .x-analog-picker-hand-el {
+    transition: transform 300ms 200ms ease-out;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeView.scss:114 */
+.x-analogtime .x-analog-picker-face-el {
+    user-select: none;
+    -o-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: -moz-none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-drag: none;
+    cursor: default;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeView.scss:116 */
+.x-analogtime .x-analog-picker-face-el > div {
+    color: #000;
+    position: absolute;
+    width: 19px;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    margin: -10px;
+    user-select: none;
+    cursor: pointer;
+    transition: color 200ms ease-out;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeView.scss:127 */
+.x-analogtime .x-analog-picker-face-el > div.active {
+    color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeView.scss:138 */
+.x-analogtime .x-analog-picker-12hr-format {
+    display: block;
+    padding-left: 12px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeView.scss:143 */
+.x-analogtime .x-analog-picker-24hr-format {
+    display: none;
+    padding-left: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeView.scss:149 */
+.x-analogtime .hour-picker-el.align-pm-inside {
+    font-size: 14px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeView.scss:153 */
+.x-analogtime .hour-picker-el.inner-track {
+    opacity: 0.7;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeView.scss:160 */
+.x-analogtime.x-header-position-left .x-analog-picker-hand-el.inner-dial {
+    width: 30%;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeView.scss:166 */
+.x-analogtime .x-analog-picker-hand-el {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: #007aff;
+    height: 2px;
+    transform-origin: center left;
+    transform: rotate(0deg);
+    margin-top: -1px;
+    width: 46%;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeView.scss:177 */
+.x-edge .x-analogtime .x-analog-picker-hand-el {
+    background-color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeView.scss:180 */
+.x-edge .x-analogtime .x-analog-picker-hand-el:before,
+.x-edge .x-analogtime .x-analog-picker-hand-el:after {
+    background-color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeView.scss:185 */
+.x-analogtime .x-analog-picker-hand-el.inner-dial {
+    width: 32%;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeView.scss:190 */
+.x-analogtime .x-analog-picker-hand-el.format-24hr:after {
+    box-shadow: 0 0 0 14px #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeView.scss:195 */
+.x-analogtime .x-analog-picker-hand-el:before {
+    position: absolute;
+    top: -3px;
+    left: -4px;
+    content: "";
+    width: 8px;
+    height: 8px;
+    background-color: #007aff;
+    border-radius: 8px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeView.scss:205 */
+.x-analogtime .x-analog-picker-hand-el:after {
+    position: absolute;
+    top: 0;
+    right: 14px;
+    content: "";
+    width: 4px;
+    height: 4px;
+    border-radius: 30px;
+    background-color: #007aff;
+    box-shadow: 0 0 0 15px #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/TimeView.scss:218 */
+.x-analogtime .x-analog-picker-el.x-analog-picker-dot-indicator .x-analog-picker-hand-el:after {
+    background-color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/slider/Slider.scss:154 */
+.x-toggleslider .x-track-el {
+    height: 22px;
+    background-color: #fff;
+    border: 1px solid #dcdcdc;
+    border-radius: 22px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/slider/Slider.scss:162 */
+.x-big .x-toggleslider .x-track-el {
+    height: 30px;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    -ms-border-radius: 30px;
+    -o-border-radius: 30px;
+    border-radius: 30px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/slider/Slider.scss:169 */
+.x-toggleslider .x-fill-el {
+    height: 22px;
+    background-color: #53d769;
+    border: 1px solid #53d769;
+    border-radius: 22px;
+    margin: -1px 0 0 -1px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/slider/Slider.scss:180 */
+.x-big .x-toggleslider .x-fill-el {
+    height: 30px;
+    border-radius: 30px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/slider/Slider.scss:190 */
+.x-toggleslider.x-disabled .x-fill-el {
+    border-width: 1px;
+    border-style: solid;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/slider/Toggle.scss:192 */
+.x-toggleslider {
+    width: 37px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/slider/Toggle.scss:196 */
+.x-big .x-toggleslider {
+    width: 52px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/slider/Toggle.scss:201 */
+.x-toggleslider .x-track-el,
+.x-toggleslider .x-fill-el {
+    border-radius: 22px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/slider/Toggle.scss:206 */
+.x-big .x-toggleslider .x-track-el,
+.x-big .x-toggleslider .x-fill-el {
+    border-radius: 22px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/slider/Toggle.scss:217 */
+.x-toggleslider .x-fill-el {
+    width: calc(100% + 2px);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/slider/Toggle.scss:226 */
+.x-toggleslider .x-thumb-wrap-el {
+    margin: 0 2px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/Slider.scss:156 */
+.x-togglefield .x-body-wrap-el {
+    width: auto;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/Slider.scss:160 */
+.x-big .x-togglefield .x-body-wrap-el {
+    width: auto;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/Slider.scss:166 */
+.x-togglefield .x-box-el {
+    padding: 1px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/field/Slider.scss:170 */
+.x-big .x-togglefield .x-box-el {
+    padding: 2px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/field/trigger/File.scss:1 */
+.x-trigger.x-filetrigger {
+    width: auto;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/form/FieldSet.scss:5 */
+.x-form-fieldset {
+    /**
+ * @class Ext.form.FieldSet
+ */
+    margin: 13px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/form/FieldSet.scss:8 */
+.x-form-fieldset .x-form-fieldset-body-el {
+    border: 1px solid #dcdcdc;
+    padding: 8px;
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    -ms-border-radius: 7px;
+    -o-border-radius: 7px;
+    border-radius: 7px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/form/FieldSet.scss:17 */
+.x-form-fieldset .x-field {
+    background: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/form/FieldSet.scss:21 */
+.x-form-fieldset .x-field:first-child {
+    -moz-border-radius-topleft: 7px;
+    -webkit-border-top-left-radius: 7px;
+    border-top-left-radius: 7px;
+    -moz-border-radius-topright: 7px;
+    -webkit-border-top-right-radius: 7px;
+    border-top-right-radius: 7px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/form/FieldSet.scss:27 */
+.x-form-fieldset .x-field:last-child {
+    border-bottom: 0;
+    -moz-border-radius-bottomleft: 7px;
+    -webkit-border-bottom-left-radius: 7px;
+    border-bottom-left-radius: 7px;
+    -moz-border-radius-bottomright: 7px;
+    -webkit-border-bottom-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/form/FieldSet.scss:39 */
+.x-form-fieldset-title {
+    font-size: 11px;
+    font-family: '-apple-system', 'Helvetica Neue', helvetica, arial, sans-serif;
+    margin: 13px 9px 4px;
+    color: #919191;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/form/FieldSet.scss:44 */
+.x-big .x-form-fieldset-title {
+    font-size: 13px;
+    font-family: '-apple-system', 'Helvetica Neue', helvetica, arial, sans-serif;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/form/FieldSet.scss:51 */
+.x-form-fieldset-instructions {
+    font-size: 14px;
+    color: #c4c4c4;
+    margin: 13px 9px 4px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/form/FieldSet.scss:57 */
+.x-big .x-form-fieldset-instructions {
+    font-size: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/form/FieldSet.scss:65 */
+.x-field.x-label-align-left:first-child .x-label-el {
+    -moz-border-radius-topleft: 7px;
+    -webkit-border-top-left-radius: 7px;
+    border-top-left-radius: 7px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/form/FieldSet.scss:71 */
+.x-field.x-label-align-left:last-child .x-label-el {
+    -moz-border-radius-bottomleft: 7px;
+    -webkit-border-bottom-left-radius: 7px;
+    border-bottom-left-radius: 7px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/form/FieldSet.scss:79 */
+.x-field.x-label-align-right:first-child .x-label-el {
+    -moz-border-radius-topright: 7px;
+    -webkit-border-top-right-radius: 7px;
+    border-top-right-radius: 7px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/form/FieldSet.scss:84 */
+.x-field.x-label-align-right:last-child {
+    border-bottom: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/form/FieldSet.scss:87 */
+.x-field.x-label-align-right:last-child .x-label-el {
+    -moz-border-radius-bottomright: 7px;
+    -webkit-border-bottom-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/form/FieldSet.scss:95 */
+.x-field.x-label-align-top:first-child .x-label-el {
+    -moz-border-radius-topleft: 7px;
+    -webkit-border-top-left-radius: 7px;
+    border-top-left-radius: 7px;
+    -moz-border-radius-topright: 7px;
+    -webkit-border-top-right-radius: 7px;
+    border-top-right-radius: 7px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/form/FieldSet.scss:103 */
+.x-field.x-label-align-bottom:last-child .x-label-el {
+    -moz-border-radius-bottomleft: 7px;
+    -webkit-border-bottom-left-radius: 7px;
+    border-bottom-left-radius: 7px;
+    -moz-border-radius-bottomright: 7px;
+    -webkit-border-bottom-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/form/Panel.scss:5 */
+.x-formpanel-body-el {
+    /**
+ * @class Ext.form.Panel
+ */
+    background-color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/cell/Base.scss:332 */
+.x-gridcell {
+    font: 400 14px/18px '-apple-system', 'Helvetica Neue', helvetica, arial, sans-serif;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/cell/Base.scss:336 */
+.x-big .x-gridcell {
+    font-size: 16px;
+    line-height: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/cell/Base.scss:345 */
+.x-column-lines .x-gridcell {
+    border-right: 1px solid #e8e8e8;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/cell/Base.scss:354 */
+.x-gridcell.x-selected {
+    background-color: #d1d1d1;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/outline.scss:62 */
+.x-keyboard-mode .x-gridcell.x-focused:after {
+    content: '';
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    pointer-events: none;
+    border: 1px solid #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-mark-dirty > * > .x-gridcell.x-dirty:before {
+    color: #c30;
+    width: 14px;
+    height: 14px;
+    content: "\e602";
+    font-family: ExtJS;
+    font-size: 14px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:100 */
+.x-big .x-mark-dirty > * > .x-gridcell.x-dirty:before {
+    width: 18px;
+    height: 18px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:122 */
+.x-big .x-mark-dirty > * > .x-gridcell.x-dirty:before {
+    font-size: 18px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:30 */
+.x-gridcell-body-el,
+.x-roweditorcell {
+    padding: 7px 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:34 */
+.x-big .x-gridcell-body-el,
+.x-big .x-roweditorcell {
+    padding: 12px 15px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:40 */
+.x-gridcell-tool-dock {
+    padding: 0 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:44 */
+.x-big .x-gridcell-tool-dock {
+    padding: 0 15px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:49 */
+.x-gridcell-tool-dock > .x-body-el {
+    padding: 7px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:53 */
+.x-big .x-gridcell-tool-dock > .x-body-el {
+    padding: 12px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/cell/Base.scss:332 */
+.x-gridcell-summary {
+    font-weight: 600;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/RowBody.scss:26 */
+.x-rowbody .x-content-el {
+    padding: 7px 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/HeaderContainer.scss:61 */
+.x-headercontainer {
+    border-width: 0 0 2px;
+    border-style: solid;
+    border-color: #dcdcdc;
+    background-color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/Item.scss:382 */
+.x-menucheckitem .x-body-el {
+    color: #000;
+    font-weight: normal;
+    font-size: 14px;
+    font-family: '-apple-system', 'Helvetica Neue', helvetica, arial, sans-serif;
+    height: 32px;
+    cursor: pointer;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/Item.scss:392 */
+.x-big .x-menucheckitem .x-body-el {
+    font-size: 16px;
+    height: 44px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/Item.scss:399 */
+.x-menucheckitem .x-icon-el {
+    color: #007aff;
+    width: 16px;
+    height: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:86 */
+.x-big .x-menucheckitem .x-icon-el {
+    width: 20px;
+    height: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-menucheckitem .x-icon-el:before {
+    font-size: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:122 */
+.x-big .x-menucheckitem .x-icon-el:before {
+    font-size: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/Item.scss:409 */
+.x-menucheckitem .x-arrow-el {
+    margin: 0 7px;
+    color: #007aff;
+    width: 16px;
+    height: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:86 */
+.x-big .x-menucheckitem .x-arrow-el {
+    width: 20px;
+    height: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-menucheckitem .x-arrow-el:before {
+    content: "\e903";
+    font-size: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:122 */
+.x-big .x-menucheckitem .x-arrow-el:before {
+    font-size: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/Item.scss:422 */
+.x-big .x-menucheckitem .x-arrow-el {
+    margin: 0 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/Item.scss:429 */
+.x-menucheckitem.x-active .x-body-el {
+    color: #000;
+    background-color: #eee;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/Item.scss:434 */
+.x-menucheckitem.x-active .x-icon-el {
+    color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/Item.scss:438 */
+.x-menucheckitem.x-active .x-arrow-el {
+    color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/Item.scss:444 */
+.x-menucheckitem.x-disabled .x-body-el {
+    cursor: default;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/Item.scss:452 */
+.x-menucheckitem.x-disabled .x-text-el {
+    opacity: 0.5;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/Item.scss:456 */
+.x-menucheckitem.x-disabled .x-icon-el {
+    opacity: 0.5;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/Item.scss:461 */
+.x-menucheckitem.x-disabled .x-arrow-el {
+    opacity: 0.5;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/outline.scss:62 */
+.x-keyboard-mode .x-menucheckitem.x-focused .x-body-el:after {
+    content: '';
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    pointer-events: none;
+    border: 1px solid #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/CheckItem.scss:476 */
+.x-menucheckitem .x-checkbox-icon-el {
+    color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-menucheckitem .x-checkbox-icon-el:before {
+    content: "\e908";
+    font-family: iOS;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-menucheckitem.x-checked .x-checkbox-icon-el:before {
+    content: "\e907";
+    font-family: iOS;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/CheckItem.scss:494 */
+.x-menucheckitem.x-active .x-checkbox-icon-el {
+    color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/column/Column.scss:419 */
+.x-gridcolumn > .x-header-el {
+    color: #000;
+    background-color: #fff;
+    font: 600 14px/16px '-apple-system', 'Helvetica Neue', helvetica, arial, sans-serif;
+    border-width: 0 1px 1px 0;
+    border-style: solid;
+    border-color: #dcdcdc;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/column/Column.scss:426 */
+.x-big .x-gridcolumn > .x-header-el {
+    font-size: 16px;
+    line-height: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/column/Column.scss:432 */
+.x-gridcolumn > .x-header-el:hover {
+    background-color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/column/Column.scss:436 */
+.x-gridcolumn > .x-header-el .x-trigger-el {
+    width: 30px;
+    color: #007aff;
+    background-color: #fff;
+    border-width: 0 0 0 1px;
+    border-style: solid;
+    border-color: #dcdcdc;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-gridcolumn > .x-header-el .x-trigger-el:before {
+    content: "\e901";
+    font-size: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:122 */
+.x-big .x-gridcolumn > .x-header-el .x-trigger-el:before {
+    font-size: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/column/Column.scss:449 */
+.x-big .x-gridcolumn > .x-header-el .x-trigger-el {
+    width: 40px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/column/Column.scss:456 */
+.x-gridcolumn > .x-header-el:after {
+    width: 13px;
+    background-color: #f5f5f5;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/column/Column.scss:463 */
+.x-gridcolumn.x-sorted > .x-header-el {
+    background-color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/column/Column.scss:467 */
+.x-gridcolumn.x-sorted .x-sort-icon-el {
+    margin: 0 0 0 3px;
+    height: 13px;
+    width: 13px;
+    color: #bbb;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/column/Column.scss:489 */
+.x-gridcolumn.x-sorted.x-secondary-sort .x-sort-icon-el {
+    color: #ddd;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/column/Column.scss:494 */
+.x-gridcolumn.x-sorted.x-aux-sort .x-sort-icon-el {
+    color: #ebebeb;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-gridcolumn.x-sorted-asc .x-sort-icon-el:before {
+    content: "\e912";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-gridcolumn.x-sorted-desc .x-sort-icon-el:before {
+    content: "\e913";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:30 */
+.x-gridcolumn-title-wrap-el {
+    padding: 8px 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:34 */
+.x-big .x-gridcolumn-title-wrap-el {
+    padding: 12px 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:40 */
+.x-gridcolumn-tool-dock {
+    padding: 0 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:44 */
+.x-big .x-gridcolumn-tool-dock {
+    padding: 0 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:49 */
+.x-gridcolumn-tool-dock > .x-title-wrap-el {
+    padding: 8px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:53 */
+.x-big .x-gridcolumn-tool-dock > .x-title-wrap-el {
+    padding: 12px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-headermenu-sort-asc:before {
+    content: '\f15d';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-headermenu-sort-desc:before {
+    content: '\f15e';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-headermenu-columns-icon:before {
+    content: '\e935';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-headermenu-group-by-this:before {
+    content: '\e936';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/Item.scss:382 */
+.x-menuradioitem .x-body-el {
+    color: #000;
+    font-weight: normal;
+    font-size: 14px;
+    font-family: '-apple-system', 'Helvetica Neue', helvetica, arial, sans-serif;
+    height: 32px;
+    cursor: pointer;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/Item.scss:392 */
+.x-big .x-menuradioitem .x-body-el {
+    font-size: 16px;
+    height: 44px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/Item.scss:399 */
+.x-menuradioitem .x-icon-el {
+    color: #007aff;
+    width: 16px;
+    height: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:86 */
+.x-big .x-menuradioitem .x-icon-el {
+    width: 20px;
+    height: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-menuradioitem .x-icon-el:before {
+    font-size: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:122 */
+.x-big .x-menuradioitem .x-icon-el:before {
+    font-size: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/Item.scss:409 */
+.x-menuradioitem .x-arrow-el {
+    margin: 0 7px;
+    color: #007aff;
+    width: 16px;
+    height: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:86 */
+.x-big .x-menuradioitem .x-arrow-el {
+    width: 20px;
+    height: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-menuradioitem .x-arrow-el:before {
+    content: "\e903";
+    font-size: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:122 */
+.x-big .x-menuradioitem .x-arrow-el:before {
+    font-size: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/Item.scss:422 */
+.x-big .x-menuradioitem .x-arrow-el {
+    margin: 0 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/Item.scss:429 */
+.x-menuradioitem.x-active .x-body-el {
+    color: #000;
+    background-color: #eee;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/Item.scss:434 */
+.x-menuradioitem.x-active .x-icon-el {
+    color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/Item.scss:438 */
+.x-menuradioitem.x-active .x-arrow-el {
+    color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/Item.scss:444 */
+.x-menuradioitem.x-disabled .x-body-el {
+    cursor: default;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/Item.scss:452 */
+.x-menuradioitem.x-disabled .x-text-el {
+    opacity: 0.5;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/Item.scss:456 */
+.x-menuradioitem.x-disabled .x-icon-el {
+    opacity: 0.5;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/Item.scss:461 */
+.x-menuradioitem.x-disabled .x-arrow-el {
+    opacity: 0.5;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/outline.scss:62 */
+.x-keyboard-mode .x-menuradioitem.x-focused .x-body-el:after {
+    content: '';
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    pointer-events: none;
+    border: 1px solid #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/CheckItem.scss:476 */
+.x-menuradioitem .x-checkbox-icon-el {
+    color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-menuradioitem .x-checkbox-icon-el:before {
+    content: '';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-menuradioitem.x-checked .x-checkbox-icon-el:before {
+    content: "\e90b";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/CheckItem.scss:494 */
+.x-menuradioitem.x-active .x-checkbox-icon-el {
+    color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:30 */
+.x-checkcell-body-el {
+    padding: 5px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:34 */
+.x-big .x-checkcell-body-el {
+    padding: 7px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:40 */
+.x-checkcell-tool-dock {
+    padding: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:44 */
+.x-big .x-checkcell-tool-dock {
+    padding: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:49 */
+.x-checkcell-tool-dock > .x-body-el {
+    padding: 5px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:53 */
+.x-big .x-checkcell-tool-dock > .x-body-el {
+    padding: 7px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/cell/Check.scss:156 */
+.x-checkcell .x-checkbox-el {
+    color: #bbb;
+    width: 20px;
+    height: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:86 */
+.x-big .x-checkcell .x-checkbox-el {
+    width: 20px;
+    height: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-checkcell .x-checkbox-el:before {
+    content: "\e908";
+    font-family: iOS;
+    font-size: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:122 */
+.x-big .x-checkcell .x-checkbox-el:before {
+    font-size: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/cell/Check.scss:167 */
+.x-checkcell.x-checked .x-checkbox-el,
+.x-selected > * .x-checkcell.x-selection-cell .x-checkbox-el {
+    color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-checkcell.x-checked .x-checkbox-el:before,
+.x-selected > * .x-checkcell.x-selection-cell .x-checkbox-el:before {
+    content: "\e907";
+    font-family: iOS;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/cell/Check.scss:173 */
+.x-checkcell.x-disabled .x-checkbox-el {
+    color: #dcdcdc;
+    opacity: 0.3;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/cell/Check.scss:178 */
+.x-checkcell .x-checkbox-el:focus {
+    color: #268eff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/column/Check.scss:540 */
+.x-checkcolumn .x-checkbox-el {
+    color: #bbb;
+    width: 20px;
+    height: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:86 */
+.x-big .x-checkcolumn .x-checkbox-el {
+    width: 20px;
+    height: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-checkcolumn .x-checkbox-el:before {
+    content: "\e908";
+    font-family: iOS;
+    font-size: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:122 */
+.x-big .x-checkcolumn .x-checkbox-el:before {
+    font-size: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/column/Check.scss:551 */
+.x-checkcolumn.x-checked .x-checkbox-el {
+    color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-checkcolumn.x-checked .x-checkbox-el:before {
+    content: "\e907";
+    font-family: iOS;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/column/Check.scss:556 */
+.x-checkcolumn.x-disabled .x-checkbox-el {
+    color: #dcdcdc;
+    opacity: 0.3;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/column/Check.scss:561 */
+.x-checkcolumn .x-checkbox-el:focus {
+    color: #268eff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/column/Check.scss:565 */
+.x-checkcolumn.x-checkbox-align-top .x-title-el {
+    margin-top: 2px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/column/Check.scss:569 */
+.x-big .x-checkcolumn.x-checkbox-align-top .x-title-el {
+    margin-top: 3px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/column/Check.scss:575 */
+.x-checkcolumn.x-checkbox-align-right .x-title-el {
+    margin-right: 4px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/column/Check.scss:579 */
+.x-big .x-checkcolumn.x-checkbox-align-right .x-title-el {
+    margin-right: 6px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/column/Check.scss:585 */
+.x-checkcolumn.x-checkbox-align-bottom .x-title-el {
+    margin-bottom: 2px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/column/Check.scss:589 */
+.x-big .x-checkcolumn.x-checkbox-align-bottom .x-title-el {
+    margin-bottom: 3px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/column/Check.scss:595 */
+.x-checkcolumn.x-checkbox-align-left .x-title-el {
+    margin-left: 4px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/column/Check.scss:599 */
+.x-big .x-checkcolumn.x-checkbox-align-left .x-title-el {
+    margin-left: 6px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/plugin/dd/DragDrop.scss:201 */
+.x-proxy-drag-el {
+    border: 1px solid #dcdcdc;
+    padding: 5px;
+    color: #000;
+    background-color: #fff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/plugin/dd/DragDrop.scss:207 */
+.x-proxy-drag-el:before {
+    padding-right: 5px;
+    font-family: 'iOS';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-proxy-drag-el:before {
+    color: #c30;
+    content: "\e90d";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-proxy-drag-el.x-valid-drop:before {
+    color: #92cf00;
+    content: "\e909";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/plugin/dd/DragDrop.scss:136 */
+.x-drop-indicator-before:before {
+    font-family: '-apple-system', 'Helvetica Neue', helvetica, arial, sans-serif;
+    content: '';
+    position: absolute;
+    width: 100%;
+    border-width: 1px 0 0 0;
+    border-style: solid;
+    border-color: #92cf00;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/plugin/dd/DragDrop.scss:145 */
+.x-drop-indicator-after:after {
+    font-family: '-apple-system', 'Helvetica Neue', helvetica, arial, sans-serif;
+    position: absolute;
+    width: 100%;
+    content: '';
+    border-width: 0 0 1px 0;
+    border-style: solid;
+    border-color: #92cf00;
+    bottom: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/plugin/dd/DragDrop.scss:158 */
+.x-big .x-drop-indicator-before:before {
+    border-width: 5px 0 0 0;
+    border-style: solid;
+    border-color: #92cf00;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/plugin/dd/DragDrop.scss:163 */
+.x-big .x-drop-indicator-after:after {
+    border-width: 0 0 5px 0;
+    border-style: solid;
+    border-color: #92cf00;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/plugin/dd/DragDrop.scss:239 */
+.x-listitem.x-drag-indicator,
+.x-show-selection > .x-listitem.x-drag-indicator {
+    background: rgba(77, 162, 255, 0.2);
+    border-color: rgba(77, 162, 255, 0.2);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/plugin/HeaderReorder.scss:56 */
+.x-header-drop-indicator-before:before,
+.x-header-drop-indicator-after:before {
+    content: "\e913";
+    top: 0px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/plugin/HeaderReorder.scss:61 */
+.x-header-drop-indicator-before:after,
+.x-header-drop-indicator-after:after {
+    content: "\e912";
+    bottom: 0px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/plugin/HeaderReorder.scss:66 */
+.x-header-drop-indicator-before:before,
+.x-header-drop-indicator-before:after,
+.x-header-drop-indicator-after:before,
+.x-header-drop-indicator-after:after {
+    font-family: 'iOS';
+    color: #92cf00;
+    font-weight: bold;
+    font-size: 12px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/plugin/HeaderReorder.scss:75 */
+.x-header-drop-indicator-before:before,
+.x-header-drop-indicator-before:after {
+    left: -6px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/plugin/HeaderReorder.scss:81 */
+.x-header-drop-indicator-after:before,
+.x-header-drop-indicator-after:after {
+    right: -6px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/Grid.scss:37 */
+.x-grid .x-resize-marker-el {
+    background-color: #bbb;
+    width: 1px;
+    z-index: 1;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:30 */
+.x-expandercell-body-el {
+    padding: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:34 */
+.x-big .x-expandercell-body-el {
+    padding: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:40 */
+.x-expandercell-tool-dock {
+    padding: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:44 */
+.x-big .x-expandercell-tool-dock {
+    padding: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:49 */
+.x-expandercell-tool-dock > .x-body-el {
+    padding: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:53 */
+.x-big .x-expandercell-tool-dock > .x-body-el {
+    padding: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/cell/Expander.scss:116 */
+.x-expandercell .x-icon-el {
+    color: #007aff;
+    width: 16px;
+    height: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:86 */
+.x-big .x-expandercell .x-icon-el {
+    width: 24px;
+    height: 24px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-expandercell .x-icon-el:before {
+    content: "\e929";
+    font-family: iOS;
+    font-size: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:122 */
+.x-big .x-expandercell .x-icon-el:before {
+    font-size: 24px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-expandercell.x-expanded .x-icon-el:before {
+    content: "\e928";
+    font-family: iOS;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:30 */
+.x-widgetcell-body-el {
+    padding: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:34 */
+.x-big .x-widgetcell-body-el {
+    padding: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:40 */
+.x-widgetcell-tool-dock {
+    padding: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:44 */
+.x-big .x-widgetcell-tool-dock {
+    padding: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:49 */
+.x-widgetcell-tool-dock > .x-body-el {
+    padding: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/mixin/Toolable.scss:53 */
+.x-big .x-widgetcell-tool-dock > .x-body-el {
+    padding: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/grid/column/Drag.scss:2 */
+.x-drag-column .x-header-el {
+    border-right: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/grid/column/Drag.scss:7 */
+.x-row-drag-indicator:before {
+    content: "\e91a";
+    font-family: 'iOS';
+    position: absolute;
+    font-size: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-gridfilters-menu-filters-icon:before {
+    content: 'filter_list';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-gridfilters-menu-filters-manage-icon:before {
+    content: 'settings';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-gridfilters-menu-filters-more-icon:before {
+    content: 'more_horiz';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-gridfilters-menu-filters-save-icon:before {
+    content: 'save';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/locked/Grid.scss:49 */
+.x-lockedgrid .x-lockedgridregion.x-lock-start {
+    border-color: #007aff;
+    border-right-width: 2px;
+    border-style: solid;
+    border-left-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/locked/Grid.scss:59 */
+.x-lockedgrid .x-lockedgridregion.x-lock-end {
+    border-color: #007aff;
+    border-left-width: 2px;
+    border-style: solid;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-pagingtoolbar .x-pagingtoolbar-prev:before {
+    content: "\e902";
+    font-family: iOS;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-pagingtoolbar .x-pagingtoolbar-next:before {
+    content: "\e903";
+    font-family: iOS;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/grid/plugin/ViewOptions.scss:1 */
+.x-gridviewoptions {
+    background-color: #fff;
+    border-color: #dcdcdc;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/grid/plugin/ViewOptions.scss:6 */
+.x-column-options-sortablehandle,
+.x-column-options-visibleindicator,
+.x-column-options-groupindicator,
+.x-column-options-folder,
+.x-column-options-leaf {
+    width: 16px;
+    height: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:86 */
+.x-big .x-column-options-sortablehandle,
+.x-big .x-column-options-visibleindicator,
+.x-big .x-column-options-groupindicator,
+.x-big .x-column-options-folder,
+.x-big .x-column-options-leaf {
+    width: 24px;
+    height: 24px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-column-options-sortablehandle:before,
+.x-column-options-visibleindicator:before,
+.x-column-options-groupindicator:before,
+.x-column-options-folder:before,
+.x-column-options-leaf:before {
+    font-size: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:122 */
+.x-big .x-column-options-sortablehandle:before,
+.x-big .x-column-options-visibleindicator:before,
+.x-big .x-column-options-groupindicator:before,
+.x-big .x-column-options-folder:before,
+.x-big .x-column-options-leaf:before {
+    font-size: 24px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-column-options-sortablehandle:before {
+    content: "\e91a";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/grid/plugin/ViewOptions.scss:22 */
+.x-column-options-sortablehandle.x-icon-el {
+    color: #bbb;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-column-options-visibleindicator:before {
+    content: "\e911";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/grid/plugin/ViewOptions.scss:30 */
+.x-column-options-visibleindicator.x-icon-el {
+    color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-column-options-groupindicator:before {
+    content: '\e933';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/grid/plugin/ViewOptions.scss:37 */
+.x-column-options-groupindicator.x-icon-el {
+    color: #bbb;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/grid/plugin/ViewOptions.scss:44 */
+.x-column-options-folder.x-icon-el,
+.x-column-options-leaf.x-icon-el {
+    color: #91e698;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-column-options-folder:before {
+    content: "\e914";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-column-options-leaf:before {
+    content: '\e917';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/grid/plugin/ViewOptions.scss:61 */
+.x-column-options-hidden .x-column-options-visibleindicator.x-icon-el,
+.x-column-options-hidden .x-column-options-text.x-icon-el,
+.x-column-options-hidden .x-column-options-folder.x-icon-el,
+.x-column-options-hidden .x-column-options-leaf.x-icon-el {
+    color: #bbb;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/grid/plugin/ViewOptions.scss:68 */
+.x-column-options-grouped .x-column-options-groupindicator.x-icon-el {
+    color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:893 */
+.x-panel-roweditor {
+    background-color: #f5f5f5;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:922 */
+.x-panel-roweditor > .x-anchor-el .x-pointer-el {
+    fill: #f5f5f5;
+    stroke-width: 1px 0;
+    stroke: #e8e8e8;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:928 */
+.x-panel-roweditor > .x-anchor-el.x-top {
+    padding-bottom: 1px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:935 */
+.x-panel-roweditor > .x-anchor-el.x-bottom {
+    padding-top: 1px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:942 */
+.x-panel-roweditor > .x-anchor-el.x-left {
+    padding-right: 1px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:953 */
+.x-panel-roweditor > .x-anchor-el.x-right {
+    padding-left: 1px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:966 */
+.x-panel-roweditor-body-el {
+    background-color: #f5f5f5;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:987 */
+.x-panel-roweditor-boxscroller > .x-boxscroller-body > .x-body-el {
+    border: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:2 */
+.x-panel-roweditor-outer-border-l {
+    border-left-color: #e8e8e8 !important;
+    border-left-width: 0 !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:7 */
+.x-panel-roweditor-outer-border-b {
+    border-bottom-color: #e8e8e8 !important;
+    border-bottom-width: 1px !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:12 */
+.x-panel-roweditor-outer-border-bl {
+    border-bottom-color: #e8e8e8 !important;
+    border-bottom-width: 1px !important;
+    border-left-color: #e8e8e8 !important;
+    border-left-width: 0 !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:27 */
+.x-panel-roweditor-outer-border-r {
+    border-right-color: #e8e8e8 !important;
+    border-right-width: 0 !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:32 */
+.x-panel-roweditor-outer-border-rl {
+    border-right-color: #e8e8e8 !important;
+    border-right-width: 0 !important;
+    border-left-color: #e8e8e8 !important;
+    border-left-width: 0 !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:39 */
+.x-panel-roweditor-outer-border-rb {
+    border-right-color: #e8e8e8 !important;
+    border-right-width: 0 !important;
+    border-bottom-color: #e8e8e8 !important;
+    border-bottom-width: 1px !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:54 */
+.x-panel-roweditor-outer-border-rbl {
+    border-right-color: #e8e8e8 !important;
+    border-right-width: 0 !important;
+    border-bottom-color: #e8e8e8 !important;
+    border-bottom-width: 1px !important;
+    border-left-color: #e8e8e8 !important;
+    border-left-width: 0 !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:71 */
+.x-panel-roweditor-outer-border-t {
+    border-top-color: #e8e8e8 !important;
+    border-top-width: 1px !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:76 */
+.x-panel-roweditor-outer-border-tl {
+    border-top-color: #e8e8e8 !important;
+    border-top-width: 1px !important;
+    border-left-color: #e8e8e8 !important;
+    border-left-width: 0 !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:91 */
+.x-panel-roweditor-outer-border-tb {
+    border-top-color: #e8e8e8 !important;
+    border-top-width: 1px !important;
+    border-bottom-color: #e8e8e8 !important;
+    border-bottom-width: 1px !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:98 */
+.x-panel-roweditor-outer-border-tbl {
+    border-top-color: #e8e8e8 !important;
+    border-top-width: 1px !important;
+    border-bottom-color: #e8e8e8 !important;
+    border-bottom-width: 1px !important;
+    border-left-color: #e8e8e8 !important;
+    border-left-width: 0 !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:115 */
+.x-panel-roweditor-outer-border-tr {
+    border-top-color: #e8e8e8 !important;
+    border-top-width: 1px !important;
+    border-right-color: #e8e8e8 !important;
+    border-right-width: 0 !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:130 */
+.x-panel-roweditor-outer-border-trl {
+    border-top-color: #e8e8e8 !important;
+    border-top-width: 1px !important;
+    border-right-color: #e8e8e8 !important;
+    border-right-width: 0 !important;
+    border-left-color: #e8e8e8 !important;
+    border-left-width: 0 !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:147 */
+.x-panel-roweditor-outer-border-trb {
+    border-top-color: #e8e8e8 !important;
+    border-top-width: 1px !important;
+    border-right-color: #e8e8e8 !important;
+    border-right-width: 0 !important;
+    border-bottom-color: #e8e8e8 !important;
+    border-bottom-width: 1px !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:164 */
+.x-panel-roweditor-outer-border-trbl {
+    border-color: #e8e8e8 !important;
+    border-width: 1px 0 !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:893 */
+.x-panel-roweditor-buttons {
+    background-color: #f5f5f5;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:922 */
+.x-panel-roweditor-buttons > .x-anchor-el .x-pointer-el {
+    fill: #f5f5f5;
+    stroke-width: 1px;
+    stroke: #e8e8e8;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:928 */
+.x-panel-roweditor-buttons > .x-anchor-el.x-top {
+    padding-bottom: 1px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:935 */
+.x-panel-roweditor-buttons > .x-anchor-el.x-bottom {
+    padding-top: 1px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:942 */
+.x-panel-roweditor-buttons > .x-anchor-el.x-left {
+    padding-right: 1px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:953 */
+.x-panel-roweditor-buttons > .x-anchor-el.x-right {
+    padding-left: 1px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:966 */
+.x-panel-roweditor-buttons-body-el {
+    padding: 4px 4px 4px 0;
+    background-color: #f5f5f5;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Panel.scss:987 */
+.x-panel-roweditor-buttons-boxscroller > .x-boxscroller-body > .x-body-el {
+    border: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:2 */
+.x-panel-roweditor-buttons-outer-border-l {
+    border-left-color: #e8e8e8 !important;
+    border-left-width: 1px !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:7 */
+.x-panel-roweditor-buttons-outer-border-b {
+    border-bottom-color: #e8e8e8 !important;
+    border-bottom-width: 1px !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:12 */
+.x-panel-roweditor-buttons-outer-border-bl {
+    border-bottom-color: #e8e8e8 !important;
+    border-bottom-width: 1px !important;
+    border-left-color: #e8e8e8 !important;
+    border-left-width: 1px !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:27 */
+.x-panel-roweditor-buttons-outer-border-r {
+    border-right-color: #e8e8e8 !important;
+    border-right-width: 1px !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:32 */
+.x-panel-roweditor-buttons-outer-border-rl {
+    border-right-color: #e8e8e8 !important;
+    border-right-width: 1px !important;
+    border-left-color: #e8e8e8 !important;
+    border-left-width: 1px !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:39 */
+.x-panel-roweditor-buttons-outer-border-rb {
+    border-right-color: #e8e8e8 !important;
+    border-right-width: 1px !important;
+    border-bottom-color: #e8e8e8 !important;
+    border-bottom-width: 1px !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:54 */
+.x-panel-roweditor-buttons-outer-border-rbl {
+    border-right-color: #e8e8e8 !important;
+    border-right-width: 1px !important;
+    border-bottom-color: #e8e8e8 !important;
+    border-bottom-width: 1px !important;
+    border-left-color: #e8e8e8 !important;
+    border-left-width: 1px !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:71 */
+.x-panel-roweditor-buttons-outer-border-t {
+    border-top-color: #e8e8e8 !important;
+    border-top-width: 1px !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:76 */
+.x-panel-roweditor-buttons-outer-border-tl {
+    border-top-color: #e8e8e8 !important;
+    border-top-width: 1px !important;
+    border-left-color: #e8e8e8 !important;
+    border-left-width: 1px !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:91 */
+.x-panel-roweditor-buttons-outer-border-tb {
+    border-top-color: #e8e8e8 !important;
+    border-top-width: 1px !important;
+    border-bottom-color: #e8e8e8 !important;
+    border-bottom-width: 1px !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:98 */
+.x-panel-roweditor-buttons-outer-border-tbl {
+    border-top-color: #e8e8e8 !important;
+    border-top-width: 1px !important;
+    border-bottom-color: #e8e8e8 !important;
+    border-bottom-width: 1px !important;
+    border-left-color: #e8e8e8 !important;
+    border-left-width: 1px !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:115 */
+.x-panel-roweditor-buttons-outer-border-tr {
+    border-top-color: #e8e8e8 !important;
+    border-top-width: 1px !important;
+    border-right-color: #e8e8e8 !important;
+    border-right-width: 1px !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:130 */
+.x-panel-roweditor-buttons-outer-border-trl {
+    border-top-color: #e8e8e8 !important;
+    border-top-width: 1px !important;
+    border-right-color: #e8e8e8 !important;
+    border-right-width: 1px !important;
+    border-left-color: #e8e8e8 !important;
+    border-left-width: 1px !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:147 */
+.x-panel-roweditor-buttons-outer-border-trb {
+    border-top-color: #e8e8e8 !important;
+    border-top-width: 1px !important;
+    border-right-color: #e8e8e8 !important;
+    border-right-width: 1px !important;
+    border-bottom-color: #e8e8e8 !important;
+    border-bottom-width: 1px !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/etc/mixins/border-management.scss:164 */
+.x-panel-roweditor-buttons-outer-border-trbl {
+    border-color: #e8e8e8 !important;
+    border-width: 1px !important;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/rowedit/Editor.scss:120 */
+.x-roweditor {
+    background-color: #f5f5f5;
+    border-width: 1px 0;
+    border-style: solid;
+    border-color: #e8e8e8;
+    margin-bottom: -1px;
+    margin-bottom: 0;
+    transition: top 0.3s;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/SimpleListItem.scss:497 */
+.x-roweditor + .x-scrolldock-end {
+    margin-top: 1px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/dataview/SimpleListItem.scss:501 */
+.x-roweditor:first-child {
+    border-top-color: #f5f5f5;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/rowedit/Editor.scss:126 */
+.x-roweditor.x-roweditor-button-ct-above {
+    box-shadow: 0 -6px 6px -4px rgba(0, 0, 0, 0.2);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/rowedit/Editor.scss:129 */
+.x-roweditor.x-roweditor-button-ct-above .x-roweditor-button-ct {
+    box-shadow: 0 -6px 6px -4px rgba(0, 0, 0, 0.2);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/rowedit/Editor.scss:134 */
+.x-roweditor.x-roweditor-button-ct-below {
+    box-shadow: 0 6px 6px -4px rgba(0, 0, 0, 0.2);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/rowedit/Editor.scss:137 */
+.x-roweditor.x-roweditor-button-ct-below .x-roweditor-button-ct {
+    box-shadow: 0 6px 6px -4px rgba(0, 0, 0, 0.2);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/rowedit/Editor.scss:142 */
+.x-roweditor.x-roweditor-button-ct-above {
+    box-shadow: 0 -6px 6px -4px rgba(0, 0, 0, 0.2);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/rowedit/Editor.scss:146 */
+.x-roweditor.x-roweditor-button-ct-below {
+    box-shadow: 0 6px 6px -4px rgba(0, 0, 0, 0.2);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/rowedit/Editor.scss:150 */
+.x-roweditor .x-roweditor-inner-el {
+    padding: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/rowedit/Editor.scss:155 */
+.x-roweditor .x-roweditor-button-ct .x-button {
+    margin-left: 4px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/layout/Form.scss:1 */
+.x-layout-form {
+    border-spacing: 8px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/layout/Form.scss:5 */
+.x-big .x-layout-form {
+    border-spacing: 12px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/menu/Separator.scss:82 */
+.x-menuseparator {
+    height: 1px;
+    border-width: 1px 0 0;
+    border-style: solid;
+    border-color: #dcdcdc;
+    margin: 2px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Resizer.scss:223 */
+.x-panelresizer.x-north.x-handle,
+.x-panelresizer.x-northeast.x-handle,
+.x-panelresizer.x-southeast.x-handle,
+.x-panelresizer.x-south.x-handle,
+.x-panelresizer.x-southwest.x-handle,
+.x-panelresizer.x-northwest.x-handle {
+    height: 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Resizer.scss:227 */
+.x-big .x-panelresizer.x-north.x-handle,
+.x-big .x-panelresizer.x-northeast.x-handle,
+.x-big .x-panelresizer.x-southeast.x-handle,
+.x-big .x-panelresizer.x-south.x-handle,
+.x-big .x-panelresizer.x-southwest.x-handle,
+.x-big .x-panelresizer.x-northwest.x-handle {
+    height: 15px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Resizer.scss:233 */
+.x-panelresizer.x-north.x-splitter,
+.x-panelresizer.x-northeast.x-splitter,
+.x-panelresizer.x-southeast.x-splitter,
+.x-panelresizer.x-south.x-splitter,
+.x-panelresizer.x-southwest.x-splitter,
+.x-panelresizer.x-northwest.x-splitter {
+    height: 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Resizer.scss:237 */
+.x-big .x-panelresizer.x-north.x-splitter,
+.x-big .x-panelresizer.x-northeast.x-splitter,
+.x-big .x-panelresizer.x-southeast.x-splitter,
+.x-big .x-panelresizer.x-south.x-splitter,
+.x-big .x-panelresizer.x-southwest.x-splitter,
+.x-big .x-panelresizer.x-northwest.x-splitter {
+    height: 15px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Resizer.scss:251 */
+.x-panelresizer.x-northeast.x-handle,
+.x-panelresizer.x-east.x-handle,
+.x-panelresizer.x-southeast.x-handle,
+.x-panelresizer.x-southwest.x-handle,
+.x-panelresizer.x-west.x-handle,
+.x-panelresizer.x-northwest.x-handle {
+    width: 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Resizer.scss:255 */
+.x-big .x-panelresizer.x-northeast.x-handle,
+.x-big .x-panelresizer.x-east.x-handle,
+.x-big .x-panelresizer.x-southeast.x-handle,
+.x-big .x-panelresizer.x-southwest.x-handle,
+.x-big .x-panelresizer.x-west.x-handle,
+.x-big .x-panelresizer.x-northwest.x-handle {
+    width: 15px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Resizer.scss:261 */
+.x-panelresizer.x-northeast.x-splitter,
+.x-panelresizer.x-east.x-splitter,
+.x-panelresizer.x-southeast.x-splitter,
+.x-panelresizer.x-southwest.x-splitter,
+.x-panelresizer.x-west.x-splitter,
+.x-panelresizer.x-northwest.x-splitter {
+    width: 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Resizer.scss:265 */
+.x-big .x-panelresizer.x-northeast.x-splitter,
+.x-big .x-panelresizer.x-east.x-splitter,
+.x-big .x-panelresizer.x-southeast.x-splitter,
+.x-big .x-panelresizer.x-southwest.x-splitter,
+.x-big .x-panelresizer.x-west.x-splitter,
+.x-big .x-panelresizer.x-northwest.x-splitter {
+    width: 15px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Resizer.scss:272 */
+.x-panelresizer.x-handle {
+    background-color: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Resizer.scss:276 */
+.x-panelresizer.x-splitter {
+    background-color: #dcdcdc;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Resizer.scss:283 */
+.x-panelresizer-proxy.x-handle {
+    border: 1px dashed #cecece;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Resizer.scss:289 */
+.x-panelresizer-proxy.x-splitter {
+    background-color: #bbb;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Resizer.scss:294 */
+.x-panelresizer-proxy.x-splitter.x-horizontal {
+    width: 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Resizer.scss:298 */
+.x-panelresizer-proxy.x-splitter.x-vertical {
+    height: 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Resizer.scss:304 */
+.x-panel.x-split-north {
+    padding-top: 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Resizer.scss:307 */
+.x-big .x-panel.x-split-north {
+    padding-top: 15px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Resizer.scss:313 */
+.x-panel.x-split-east {
+    padding-right: 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Resizer.scss:316 */
+.x-big .x-panel.x-split-east {
+    padding-right: 15px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Resizer.scss:322 */
+.x-panel.x-split-south {
+    padding-bottom: 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Resizer.scss:325 */
+.x-big .x-panel.x-split-south {
+    padding-bottom: 15px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Resizer.scss:331 */
+.x-panel.x-split-west {
+    padding-left: 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/panel/Resizer.scss:334 */
+.x-big .x-panel.x-split-west {
+    padding-left: 15px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/src/scroll/indicator/Bar.scss:1 */
+.x-scrollbar-corner {
+    background-color: #f1f1f1;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/scroll/indicator/Overlay.scss:107 */
+.x-scrolloverlay {
+    background-color: #000;
+    opacity: 0.5;
+    border-radius: 9px;
+    margin: 2px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/scroll/indicator/Overlay.scss:113 */
+.x-scrolloverlay.x-vertical {
+    width: 6px;
+    min-height: 24px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/scroll/indicator/Overlay.scss:118 */
+.x-scrolloverlay.x-horizontal {
+    height: 6px;
+    min-width: 24px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/scroll/indicator/Overlay.scss:107 */
+.x-scrolloverlay-ios {
+    background-color: #606060;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/scroll/indicator/Overlay.scss:113 */
+.x-scrolloverlay-ios.x-vertical {
+    width: 3px;
+    min-height: 36px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/scroll/indicator/Overlay.scss:118 */
+.x-scrolloverlay-ios.x-horizontal {
+    height: 3px;
+    min-width: 36px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/scroll/indicator/Overlay.scss:107 */
+.x-scrolloverlay-android {
+    background-color: grey;
+    border-radius: 0;
+    margin: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/scroll/indicator/Overlay.scss:113 */
+.x-scrolloverlay-android.x-vertical {
+    width: 4px;
+    min-height: 8px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/scroll/indicator/Overlay.scss:118 */
+.x-scrolloverlay-android.x-horizontal {
+    height: 4px;
+    min-width: 8px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1283 */
+.x-tab {
+    color: #919191;
+    font: 400 14px/16px '-apple-system', 'Helvetica Neue', helvetica, arial, sans-serif;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1290 */
+.x-big .x-tab {
+    font-size: 16px;
+    line-height: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1297 */
+.x-tab .x-inner-el {
+    padding: 10px;
+    border-width: 0;
+    background-color: transparent;
+    background-image: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1304 */
+.x-big .x-tab .x-inner-el {
+    padding: 12px 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1311 */
+.x-tab.x-has-text .x-inner-el {
+    padding: 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1315 */
+.x-big .x-tab.x-has-text .x-inner-el {
+    padding: 12px 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1321 */
+.x-tab .x-icon-el {
+    color: #919191;
+    width: 16px;
+    height: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:86 */
+.x-big .x-tab .x-icon-el {
+    width: 20px;
+    height: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-tab .x-icon-el:before {
+    font-size: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:122 */
+.x-big .x-tab .x-icon-el:before {
+    font-size: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1331 */
+.x-tab.x-has-text.x-icon-align-left .x-icon-el {
+    margin-right: 5px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1335 */
+.x-big .x-tab.x-has-text.x-icon-align-left .x-icon-el {
+    margin-right: 8px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1341 */
+.x-tab.x-has-text.x-icon-align-right .x-icon-el {
+    margin-left: 5px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1345 */
+.x-big .x-tab.x-has-text.x-icon-align-right .x-icon-el {
+    margin-left: 8px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1351 */
+.x-tab.x-has-text.x-icon-align-top .x-icon-el {
+    margin-bottom: 2px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1355 */
+.x-big .x-tab.x-has-text.x-icon-align-top .x-icon-el {
+    margin-bottom: 3px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1361 */
+.x-tab.x-has-text.x-icon-align-bottom .x-icon-el {
+    margin-top: 2px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1365 */
+.x-big .x-tab.x-has-text.x-icon-align-bottom .x-icon-el {
+    margin-top: 3px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1371 */
+.x-tab .x-arrow-el {
+    color: #919191;
+    width: 16px;
+    height: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:86 */
+.x-big .x-tab .x-arrow-el {
+    width: 20px;
+    height: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-tab .x-arrow-el:before {
+    font-size: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:122 */
+.x-big .x-tab .x-arrow-el:before {
+    font-size: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1382 */
+.x-tab.x-arrow-align-right .x-arrow-el {
+    margin-left: 5px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1386 */
+.x-big .x-tab.x-arrow-align-right .x-arrow-el {
+    margin-left: 8px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1402 */
+.x-tab .x-text-el {
+    min-height: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1408 */
+.x-big .x-tab .x-text-el {
+    min-height: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1415 */
+.x-tab .x-badge-el {
+    color: #fff;
+    border-color: #cb0000;
+    border-radius: 140px;
+    top: 0;
+    left: 53%;
+    padding: 1px 6px;
+    max-width: 75%;
+    font-size: 12px;
+    line-height: 14px;
+    font-family: '-apple-system', 'Helvetica Neue', helvetica, arial, sans-serif;
+    background-color: #fe0000;
+    background-image: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1429 */
+.x-big .x-tab .x-badge-el {
+    font-size: 14px;
+    line-height: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1438 */
+.x-tab.x-hovered {
+    color: #919191;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1442 */
+.x-tab.x-hovered .x-inner-el {
+    background-color: transparent;
+    background-image: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1447 */
+.x-tab.x-hovered .x-icon-el {
+    color: #919191;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1451 */
+.x-tab.x-hovered .x-arrow-el {
+    color: #919191;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1466 */
+.x-tab.x-pressing,
+.x-tab.x-pressed {
+    color: #919191;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1475 */
+.x-tab.x-pressing .x-inner-el,
+.x-keyboard-mode .x-tab.x-pressing .x-inner-el,
+.x-tab.x-pressed .x-inner-el,
+.x-keyboard-mode .x-tab.x-pressed .x-inner-el {
+    background-color: transparent;
+    background-image: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1480 */
+.x-tab.x-pressing .x-icon-el,
+.x-tab.x-pressed .x-icon-el {
+    color: #919191;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1484 */
+.x-tab.x-pressing .x-arrow-el,
+.x-tab.x-pressed .x-arrow-el {
+    color: #919191;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1493 */
+.x-keyboard-mode .x-tab.x-focused {
+    color: #919191;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1502 */
+.x-keyboard-mode .x-tab.x-focused .x-icon-el {
+    color: #919191;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1506 */
+.x-keyboard-mode .x-tab.x-focused .x-arrow-el {
+    color: #919191;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1535 */
+.x-tab.x-disabled {
+    opacity: 0.5;
+    color: #919191;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1545 */
+.x-tab.x-disabled .x-icon-el {
+    color: #919191;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Button.scss:1549 */
+.x-tab.x-disabled .x-arrow-el {
+    color: #919191;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/tab/Tab.scss:1442 */
+.x-tab .x-close-icon-el {
+    border-radius: 3px;
+    margin: 3px;
+    width: 16px;
+    height: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:86 */
+.x-big .x-tab .x-close-icon-el {
+    width: 20px;
+    height: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-tab .x-close-icon-el:before {
+    content: "\e90d";
+    font-size: 14px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:122 */
+.x-big .x-tab .x-close-icon-el:before {
+    font-size: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/tab/Tab.scss:1474 */
+.x-tab.x-active {
+    color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/tab/Tab.scss:1478 */
+.x-tab.x-active .x-inner-el {
+    background-color: transparent;
+    background-image: none;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/tab/Tab.scss:1483 */
+.x-tab.x-active .x-icon-el {
+    color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/tab/Tab.scss:1487 */
+.x-tab.x-active .x-arrow-el {
+    color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/tab/Tab.scss:1512 */
+.x-tab.x-active.x-focused {
+    color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/tab/Tab.scss:1521 */
+.x-tab.x-active.x-focused .x-icon-el {
+    color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/tab/Tab.scss:1525 */
+.x-tab.x-active.x-focused .x-arrow-el {
+    color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/tab/Tab.scss:1530 */
+.x-keyboard-mode .x-tab.x-active.x-focused:after {
+    border-color: rgba(0, 122, 255, 0.8);
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/tab/Tab.scss:1538 */
+.x-tab.x-icon-align-top.x-has-icon,
+.x-tab.x-icon-align-bottom.x-has-icon {
+    font-size: 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/tab/Tab.scss:1542 */
+.x-big .x-tab.x-icon-align-top.x-has-icon,
+.x-big .x-tab.x-icon-align-bottom.x-has-icon {
+    font-size: 10px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/tab/Tab.scss:1549 */
+.x-tab.x-closable .x-body-el {
+    margin-right: 15px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/tab/Tab.scss:1553 */
+.x-big .x-tab.x-closable .x-body-el {
+    margin-right: 20px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/tab/Tab.scss:1562 */
+.x-tab.x-tab-rotate-left .x-text-el {
+    margin-right: 4px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/tab/Tab.scss:1568 */
+.x-tab.x-tab-position-left.x-active .x-active-indicator-el {
+    width: 4px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/tab/Tab.scss:1574 */
+.x-tab.x-tab-position-right.x-active .x-active-indicator-el {
+    width: 4px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/tab/Tab.scss:1581 */
+.x-tab.x-has-text.x-tab-rotate-left .x-inner-el,
+.x-tab.x-has-text.x-tab-rotate-right .x-inner-el {
+    padding: 8px 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/tab/Tab.scss:1588 */
+.x-tab.x-has-text.x-tab-rotate-left .x-text-el,
+.x-tab.x-has-text.x-tab-rotate-right .x-text-el {
+    min-width: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Toolbar.scss:330 */
+.x-tabbar {
+    background-color: #f5f5f5;
+    background-image: none;
+    border-color: #dcdcdc;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Toolbar.scss:344 */
+.x-tabbar .x-title {
+    color: #919191;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Toolbar.scss:362 */
+.x-tabbar-body-el {
+    padding: 0;
+    min-height: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Toolbar.scss:367 */
+.x-big .x-tabbar-body-el {
+    padding: 0;
+    min-height: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Toolbar.scss:374 */
+.x-tabbar-body-el.x-horizontal > .x-component {
+    margin-right: 4px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Toolbar.scss:378 */
+.x-big .x-tabbar-body-el.x-horizontal > .x-component {
+    margin-right: 4px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/Toolbar.scss:383 */
+.x-tabbar-body-el.x-horizontal > .x-component:last-child {
+    margin-right: 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/tab/Bar.scss:335 */
+.x-strip-el {
+    background-color: transparent;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/cell/Tree.scss:504 */
+.x-treecell {
+    padding: 0 10px;
+    background-position: 21px 0%;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/cell/Tree.scss:508 */
+.x-big .x-treecell {
+    padding: 0 15px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/cell/Tree.scss:513 */
+.x-treecell .x-expander-el {
+    color: #007aff;
+    width: 16px;
+    height: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:86 */
+.x-big .x-treecell .x-expander-el {
+    width: 24px;
+    height: 24px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-treecell .x-expander-el:before {
+    content: "\e903";
+    font-size: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:122 */
+.x-big .x-treecell .x-expander-el:before {
+    font-size: 24px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-treecell.x-expanded .x-expander-el:before {
+    content: "\e901";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/cell/Tree.scss:528 */
+.x-treecell .x-icon-el {
+    color: #007aff;
+    width: 16px;
+    height: 16px;
+    margin: 0 5px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:86 */
+.x-big .x-treecell .x-icon-el {
+    width: 24px;
+    height: 24px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-treecell .x-icon-el:before {
+    font-size: 16px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:122 */
+.x-big .x-treecell .x-icon-el:before {
+    font-size: 24px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/cell/Tree.scss:540 */
+.x-big .x-treecell .x-icon-el {
+    margin: 0 8px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-treecell.x-no-icon .x-icon-el:before {
+    content: "\e914";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-treecell.x-no-icon.x-expanded .x-icon-el:before {
+    content: "\e914";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-treecell.x-no-icon.x-leaf .x-icon-el:before {
+    content: '\e917';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/cell/Tree.scss:562 */
+.x-treecell.x-treecell-checkable .x-check-el {
+    font-size: 18px;
+    height: 18px;
+    margin: 0 5px;
+    font-family: 'Font Awesome 5 Free Regular';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/cell/Tree.scss:570 */
+.x-treecell.x-treecell-checkable.x-treecell-checked .x-check-el {
+    color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-treecell.x-treecell-checkable.x-treecell-checked .x-check-el:before {
+    content: "\e907";
+    font-family: iOS;
+    font-size: 18px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/cell/Tree.scss:580 */
+.x-treecell.x-treecell-checkable.x-treecell-trimode .x-check-el {
+    color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-treecell.x-treecell-checkable.x-treecell-trimode .x-check-el:before {
+    content: '\f146';
+    font-size: 18px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/cell/Tree.scss:590 */
+.x-treecell.x-treecell-checkable.x-treecell-unchecked .x-check-el {
+    color: #bbb;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-base/sass/etc/mixins/icon.scss:93 */
+.x-treecell.x-treecell-checkable.x-treecell-unchecked .x-check-el:before {
+    content: "\e908";
+    font-family: iOS;
+    font-size: 18px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/cell/Tree.scss:601 */
+.x-treecell.x-leaf .x-expander-el + .x-check-el:before {
+    padding-left: 5px;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/cell/Tree.scss:610 */
+.x-big .x-treecell {
+    background-position: 32px 0%;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/cell/Tree.scss:616 */
+.x-treecell-body-el,
+.x-treecell-tool-dock > .x-body-el {
+    padding: 7px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-neptune/sass/var/grid/cell/Tree.scss:621 */
+.x-big .x-treecell-body-el,
+.x-big .x-treecell-tool-dock > .x-body-el {
+    padding: 12px 0;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:3 */
+@font-face {
+    font-family: 'iOS';
+    src: url('font-ios/fonts/iOS.ttf?z4ok3n') format('truetype'), url('font-ios/fonts/iOS.woff?z4ok3n') format('woff'), url('font-ios/fonts/iOS.svg?z4ok3n#iOS') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:12 */
+.x-ios {
+    font-family: 'iOS';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:17 */
+.ios-add:before {
+    content: "\e900";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:23 */
+.ios-arrow-down:before {
+    content: "\e901";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:29 */
+.ios-arrow-left:before {
+    content: "\e902";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:35 */
+.ios-arrow-right:before {
+    content: "\e903";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:41 */
+.ios-arrow-up:before {
+    content: "\e904";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:47 */
+.ios-back-arrow:before {
+    content: "\e905";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:53 */
+.ios-calendar:before {
+    content: "\e906";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:59 */
+.ios-check-box-checked:before {
+    content: "\e907";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:65 */
+.ios-check-box-unchecked:before {
+    content: "\e908";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:71 */
+.ios-check-circle-checked:before {
+    content: "\e909";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:77 */
+.ios-check-cricle-unchecked:before {
+    content: "\e90a";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:83 */
+.ios-check:before {
+    content: "\e90b";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:89 */
+.ios-close-hollow:before {
+    content: "\e90c";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:95 */
+.ios-close:before {
+    content: "\e90d";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:101 */
+.ios-collapse:before {
+    content: "\e90e";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:107 */
+.ios-down:before {
+    content: "\e90f";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:113 */
+.ios-expand:before {
+    content: "\e910";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:119 */
+.ios-eye:before {
+    content: "\e911";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:125 */
+.ios-filter-arrow-down:before {
+    content: "\e912";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:131 */
+.ios-filter-arrow-up:before {
+    content: "\e913";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:137 */
+.ios-folder:before {
+    content: "\e914";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:143 */
+.ios-gear:before {
+    content: "\e915";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:149 */
+.ios-help:before {
+    content: "\e916";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:155 */
+.ios-leaf:before {
+    content: '\e917';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:161 */
+.ios-left:before {
+    content: "\e918";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:167 */
+.ios-maximize:before {
+    content: "\e919";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:173 */
+.ios-menu:before {
+    content: "\e91a";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:179 */
+.ios-minus:before {
+    content: "\e91b";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:185 */
+.ios-move:before {
+    content: "\e91c";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:191 */
+.ios-next:before {
+    content: "\e91d";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:197 */
+.ios-pin:before {
+    content: "\e91e";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:203 */
+.ios-plus:before {
+    content: "\e91f";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:209 */
+.ios-previous:before {
+    content: "\e920";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:215 */
+.ios-print:before {
+    content: "\e921";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:221 */
+.ios-radio-button-checked:before {
+    content: "\e922";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:227 */
+.ios-radio-button-unchecked:before {
+    content: "\e923";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:233 */
+.ios-refresh:before {
+    content: "\e924";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:239 */
+.ios-remove:before {
+    content: "\e925";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:245 */
+.ios-restore:before {
+    content: "\e926";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:251 */
+.ios-right:before {
+    content: "\e927";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:257 */
+.ios-row-expander-collapse:before {
+    content: "\e928";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:263 */
+.ios-row-expander-expand:before {
+    content: "\e929";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:269 */
+.ios-search:before {
+    content: "\e92a";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:275 */
+.ios-spinner-minus:before {
+    content: "\e92b";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:281 */
+.ios-spinner-plus:before {
+    content: "\e92c";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:287 */
+.ios-spinner:before {
+    content: "\e92d";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:293 */
+.ios-toggle-down:before {
+    content: "\e92e";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:299 */
+.ios-toggle-up:before {
+    content: "\e92f";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:305 */
+.ios-unpin:before {
+    content: "\e930";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:311 */
+.ios-up:before {
+    content: "\e931";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:317 */
+.ios-user:before {
+    content: "\e932";
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/packages/font-ios/sass/src/all.scss:323 */
+.ios-group:before {
+    content: '\e933';
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-ios/sass/src/Button.scss:2 */
+.x-button-menu .x-icon-el {
+    display: flex;
+    color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-ios/sass/src/Button.scss:5 */
+.x-button-menu .x-icon-el:before {
+    content: "\e91a" !important;
+    font-family: 'iOS' !important;
+    font-size: 20px;
+    line-height: 0;
+    padding-right: 3px;
+    position: relative;
+    top: 2px;
+    font-weight: bold;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-ios/sass/src/Button.scss:17 */
+.x-button-menu.x-pressing .x-icon-el {
+    color: #bfdeff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-ios/sass/src/Button.scss:21 */
+.x-button-menu.x-disabled .x-icon-el {
+    color: #bbb;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-ios/sass/src/Button.scss:27 */
+.x-button-back.x-pressing .x-icon-el {
+    color: #bfdeff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-ios/sass/src/Button.scss:31 */
+.x-button-back.x-disabled .x-icon-el {
+    color: #bbb;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-ios/sass/src/Button.scss:35 */
+.x-button-back .x-icon-el {
+    display: flex;
+    color: #007aff;
+}
+/* /home/teamcity/buildAgent/work/ad7452ab2017f48b/sencha/ext/modern/theme-ios/sass/src/Button.scss:38 */
+.x-button-back .x-icon-el:before {
+    content: "\e905";
+    font-family: 'iOS';
+    font-size: 16px;
+    line-height: 20px;
+    position: relative;
+    top: 1px;
+    font-weight: bold;
+}

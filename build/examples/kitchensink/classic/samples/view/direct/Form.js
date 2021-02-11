@@ -5,13 +5,13 @@ Ext.define('KitchenSink.view.direct.Form', {
     extend: 'Ext.panel.Panel',
     xtype: 'direct-form',
     controller: 'directform',
-    
+
     requires: [
         'Ext.layout.container.Anchor',
         'Ext.layout.container.Accordion',
         'KitchenSink.view.direct.FormController'
     ],
-    
+
     //<example>
     exampleTitle: 'Ext Direct Form integration',
     exampleDescription: [
@@ -19,12 +19,12 @@ Ext.define('KitchenSink.view.direct.Form', {
         '<p>Notice that Direct requests will batch together if they occur within the enableBuffer delay period (in milliseconds).</p>',
         "<p>The Ext Direct Form api also supports submit in addition to load. The server-side must mark the submit handler as a 'formHandler' and will not be batched.</p>"
     ].join(''),
-    
+
     otherContent: [{
-        type: 'ViewController',
+        type: 'Controller',
         path: 'classic/samples/view/direct/FormController.js'
     }, {
-        type: 'Base ViewController',
+        type: 'Base Controller',
         path: 'classic/samples/view/direct/DirectVC.js'
     }, {
         type: 'Server Profile class',
@@ -34,18 +34,18 @@ Ext.define('KitchenSink.view.direct.Form', {
         path: 'data/direct/source.php?file=config'
     }],
     //</example>
-    
+
     title: 'My Profile',
     width: 500,
-    height: 400,
-    
+    height: 500,
+
     layout: 'accordion',
-    
+
     defaults: {
         xtype: 'form',
         border: false,
         bodyPadding: 10,
-        
+
         // These defaults will be applied to the children of this Panel,
         // i.e. form panels. This is a neat way to reduce clutter
         // and keep the code clean and declarative.
@@ -54,37 +54,37 @@ Ext.define('KitchenSink.view.direct.Form', {
             anchor: '100%'
         }
     },
-    
+
     items: [{
         title: 'Basic Information',
         reference: 'basicInfo',
-        
+
         // configs for BasicForm
         api: {
             // The server-side method to call for load() requests
             load: 'Profile.getBasicInfo',
-            
+
             // The server-side must mark the submit handler as a 'formHandler'
             submit: 'Profile.updateBasicInfo'
         },
-        
+
         // specify the order for the passed params
         paramOrder: ['uid', 'foo'],
-        
+
         buttons: [{
             text: 'Submit',
             listeners: {
                 click: 'onBasicInfoSubmit'
             }
         }],
-        
+
         items: [{
             fieldLabel: 'Name',
             name: 'name'
         }, {
             fieldLabel: 'Email',
             msgTarget: 'side',
-            vtype:'email',
+            vtype: 'email',
             name: 'email'
         }, {
             fieldLabel: 'Company',
@@ -93,7 +93,7 @@ Ext.define('KitchenSink.view.direct.Form', {
     }, {
         title: 'Phone Numbers',
         reference: 'phoneInfo',
-        
+
         api: {
             // Note that the method names are quoted in all forms of this
             // example. This makes use of thelazy method resolution feature
@@ -110,9 +110,9 @@ Ext.define('KitchenSink.view.direct.Form', {
             // ensuring correct processing order.
             load: 'Profile.getPhoneInfo'
         },
-        
+
         paramOrder: ['uid'],
-        
+
         items: [{
             fieldLabel: 'Office',
             name: 'office'
@@ -126,23 +126,23 @@ Ext.define('KitchenSink.view.direct.Form', {
     }, {
         title: 'Location Information',
         reference: 'locationInfo',
-        
+
         api: {
             load: 'Profile.getLocationInfo'
         },
-        
+
         paramOrder: ['uid'],
-        
+
         items: [{
             fieldLabel: 'Street',
             name: 'street'
-        },{
+        }, {
             fieldLabel: 'City',
             name: 'city'
-        },{
+        }, {
             fieldLabel: 'State',
             name: 'state'
-        },{
+        }, {
             fieldLabel: 'Zip',
             name: 'zip'
         }]

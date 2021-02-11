@@ -10,11 +10,11 @@ Ext.define('Ticket.view.ticket.DetailController', {
     requires: [
         'Ext.window.Toast'
     ],
-    
+
     onSaveClick: function() {
         var form = this.lookupReference('form'),
             rec;
-        
+
         if (form.isValid()) {
             rec = this.getViewModel().get('theTicket');
             Ext.Msg.wait('Saving', 'Saving ticket...');

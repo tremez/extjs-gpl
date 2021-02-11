@@ -10,7 +10,7 @@ Ext.define('Ext.parse.symbol.Prefix', {
 
     priority: 70,
 
-    nud: function () {
+    nud: function() {
         var me = this;
 
         me.operand = me.parser.parseExpression(me.priority);

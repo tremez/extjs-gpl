@@ -14,7 +14,7 @@ Ext.define('KitchenSink.view.toolbar.StatusBarController', {
             fp.getForm().submit({
                 waitMsg: new String,
                 url: '/kitchensink/success.php',
-                success: function(){
+                success: function() {
                     sb.setStatus({
                         text: 'Form saved!',
                         iconCls: '',
@@ -32,7 +32,7 @@ Ext.define('KitchenSink.view.toolbar.StatusBarController', {
         statusBar.showBusy();
 
         Ext.defer(function() {
-            if (!statusBar.destroyed) { 
+            if (!statusBar.destroyed) {
                 statusBar.clearStatus({
                     useDefaults: true
                 });
@@ -41,21 +41,21 @@ Ext.define('KitchenSink.view.toolbar.StatusBarController', {
         }, 2000);
     },
 
-    showWarning: function () {
+    showWarning: function() {
         this.lookupReference('basic-statusbar').setStatus({
             text: 'Oops!',
             iconCls: 'x-status-error',
             clear: true // auto-clear after a set interval
         });
     },
-    
-    showBusy: function () {
+
+    showBusy: function() {
         // Set the status bar to show that something is processing:
         this.lookupReference('basic-statusbar').showBusy();
     },
-    
-    clearStatus: function () {
-        this.lookupReference('basic-statusbar').clearStatus(); 
+
+    clearStatus: function() {
+        this.lookupReference('basic-statusbar').clearStatus();
     },
 
     onWpRender: function() {
@@ -64,16 +64,16 @@ Ext.define('KitchenSink.view.toolbar.StatusBarController', {
             wordStatus = this.lookupReference('wordStatus'),
             wordCount = this.lookupReference('wordCount'),
             charCount = this.lookupReference('charCount'),
-            event = Ext.isOpera ? 'keypress' : 'keydown', // opera behaves a little weird with keydown
-            clockTask;
+            event = Ext.isOpera ? 'keypress' : 'keydown'; // opera behaves a little weird with keydown
 
         // Kick off the clock timer that updates the clock el every second:
-        clockTask = Ext.TaskManager.start({
+        Ext.TaskManager.start({
             run: function() {
                 // If it gets destroyed, we stop the task
                 if (clock.destroyed) {
                     return false;
                 }
+
                 Ext.fly(clock.getEl()).update(Ext.Date.format(new Date(), 'g:i:s A'));
             },
             interval: 1000
@@ -91,20 +91,21 @@ Ext.define('KitchenSink.view.toolbar.StatusBarController', {
                     text: 'Draft auto-saved at ' + Ext.Date.format(new Date(), 'g:i:s A')
                 });
             }, 4000);
-        }, null, {buffer:1500});
+        }, null, { buffer: 1500 });
 
         // Set up our event for updating the word/char count
         textArea.on(event, function(comp) {
             var v = comp.getValue(),
-                wc = 0, 
+                wc = 0,
                 cc = v.length ? v.length : 0;
 
             if (cc > 0) {
                 wc = v.match(/\b/g);
                 wc = wc ? wc.length / 2 : 0;
             }
+
             wordCount.update('Words: ' + wc);
             charCount.update('Chars: ' + cc);
-        }, null, {buffer: 1});
+        }, null, { buffer: 1 });
     }
 });

@@ -1,5 +1,22 @@
 /**
- * @private
+ * This class provides a flexible means to control the
+ * `{@link Ext.util.Collection#cfg!sorters sorters}` of a
+ * `{@link Ext.util.Collection Collection}`. Instances of this class are created
+ * automatically when sorters are added to added to Collections.
+ *
+ * This collection can be directly manipulated by application code to gain full
+ * control over the sorters of the owner collection. Be aware that some components
+ * create sorters internally (such as grids) so be careful in such cases to not disturb
+ * these additional sorters.
+ *
+ * Items in this collection are `Ext.util.Sorter` instances and can be managed
+ * individually by their `id`. This is the recommended way to manage application
+ * filters while preserving sorter applied from other sources.
+ *
+ * Bulk changes to this collection should be wrapped in
+ * `{@link Ext.util.Collection#method!beginUpdate beginUpdate}` and
+ * `{@link Ext.util.Collection#method!endUpdate endUpdate}` (as with any collection).
+ * During these bulk updates all reactions to sorter changes will be suspended.
  */
 Ext.define('Ext.util.SorterCollection', {
     extend: 'Ext.util.Collection',
@@ -26,7 +43,7 @@ Ext.define('Ext.util.SorterCollection', {
      * @readonly
      */
     sortFn: null,
-    
+
     config: {
         /**
          * @cfg {Function} applySorterOptionsFn
@@ -34,7 +51,7 @@ Ext.define('Ext.util.SorterCollection', {
          * @private
          */
         sorterOptionsFn: null,
-        
+
         /**
          * @cfg {Object} applySorterOptionsScope
          * The scope to execute the {@link #applySorterOptionsFn}
@@ -43,7 +60,7 @@ Ext.define('Ext.util.SorterCollection', {
         sorterOptionsScope: null
     },
 
-    constructor: function (config) {
+    constructor: function(config) {
         var me = this;
 
         me.sortFn = Ext.util.Sorter.createComparator(me);
@@ -52,7 +69,7 @@ Ext.define('Ext.util.SorterCollection', {
         me.setDecoder(me.decodeSorter);
     },
 
-    addSort: function (property, direction, mode) {
+    addSort: function(property, direction, mode) {
         var me = this,
             count, index, limit, options, primary, sorter, sorters;
 
@@ -60,28 +77,33 @@ Ext.define('Ext.util.SorterCollection', {
             // nothing specified so just trigger a sort...
             me.beginUpdate();
             me.endUpdate();
-        } else {
+        }
+        else {
             options = me.getOptions();
 
             if (property instanceof Array) {
                 sorters = property;
                 mode = direction;
                 direction = null;
-            } else if (Ext.isString(property)) {
+            }
+            else if (Ext.isString(property)) {
                 if (!(sorter = me.get(property))) {
                     sorters = [{
                         property: property,
                         direction: direction || options.getDefaultSortDirection()
                     }];
-                } else {
+                }
+                else {
                     sorters = [sorter];
                 }
-            } else if (Ext.isFunction(property)) {
+            }
+            else if (Ext.isFunction(property)) {
                 sorters = [{
                     sorterFn: property,
                     direction: direction || options.getDefaultSortDirection()
                 }];
-            } else {
+            }
+            else {
                 //<debug>
                 if (!Ext.isObject(property)) {
                     Ext.raise('Invalid sort descriptor: ' + property);
@@ -95,11 +117,11 @@ Ext.define('Ext.util.SorterCollection', {
 
             //<debug>
             if (mode && !me._sortModes[mode]) {
-                Ext.raise(
-                    'Sort mode should be "multi", "append", "prepend" or "replace", not "' +
-                                mode + '"');
+                Ext.raise('Sort mode should be "multi", "append", "prepend" or "replace", not "' +
+                          mode + '"');
             }
             //</debug>
+
             mode = me._sortModes[mode || 'replace'];
 
             primary = me.getAt(0);
@@ -125,7 +147,8 @@ Ext.define('Ext.util.SorterCollection', {
 
             if (sorter && direction) {
                 sorter.setDirection(direction);
-            } else if (index === 0 && primary && primary === me.getAt(0)) {
+            }
+            else if (index === 0 && primary && primary === me.getAt(0)) {
                 // If we just adjusted the sorters at the front and the primary sorter is
                 // still the primary sorter, toggle its direction:
                 primary.toggle();
@@ -147,10 +170,10 @@ Ext.define('Ext.util.SorterCollection', {
      * Returns an up to date sort function.
      * @return {Function} The sort function.
      */
-    getSortFn: function () {
+    getSortFn: function() {
         return this.sortFn;
     },
-    
+
     /**
      * Get the first matching sorter with a matching property.
      * @param {String} prop The property name
@@ -161,13 +184,15 @@ Ext.define('Ext.util.SorterCollection', {
         var items = this.items,
             len = items.length,
             i, item;
-        
+
         for (i = 0; i < len; ++i) {
             item = items[i];
+
             if (item.getProperty() === prop) {
                 return item;
             }
         }
+
         return null;
     },
 
@@ -175,13 +200,13 @@ Ext.define('Ext.util.SorterCollection', {
     // Private
 
     _sortModes: {
-        append:  { append:  1 },
-        multi:   { multi:   1 },
+        append: { append: 1 },
+        multi: { multi: 1 },
         prepend: { prepend: 1 },
         replace: { replace: 1 }
     },
 
-    decodeSorter: function (sorter, xclass) {
+    decodeSorter: function(sorter, xclass) {
         var me = this,
             options = me.getOptions(),
             root = options.getRootProperty(),
@@ -192,7 +217,8 @@ Ext.define('Ext.util.SorterCollection', {
             if (!sorter.getRoot()) {
                 sorter.setRoot(root);
             }
-        } else {
+        }
+        else {
             sorterConfig = {
                 direction: options.getDefaultSortDirection(),
                 root: root
@@ -202,6 +228,7 @@ Ext.define('Ext.util.SorterCollection', {
             // If we are dealing with a string we assume it is a property they want to sort on.
             if (type === 'string') {
                 currentSorter = me.get(sorter);
+
                 if (currentSorter) {
                     return currentSorter;
                 }
@@ -216,11 +243,11 @@ Ext.define('Ext.util.SorterCollection', {
             // this case we create an instance of Sorter passing this configuration.
             else {
                 // Finally we get to the point where it has to be invalid
-                // <debug>
+                //<debug>
                 if (!Ext.isObject(sorter)) {
                     Ext.raise('Invalid sorter specified: ' + sorter);
                 }
-                // </debug>
+                //</debug>
 
                 sorterConfig = Ext.apply(sorterConfig, sorter);
 
@@ -231,7 +258,7 @@ Ext.define('Ext.util.SorterCollection', {
             }
 
             // If a sorter config was created, make it an instance
-            sorter = Ext.create(xclass || 'Ext.util.Sorter', sorterConfig);
+            sorter = Ext.create(xclass || Ext.util.Sorter, sorterConfig);
         }
 
         if (sorterOptionsFn) {
@@ -240,13 +267,13 @@ Ext.define('Ext.util.SorterCollection', {
 
         return sorter;
     },
-    
+
     setSorterConfigure: function(fn, scope) {
         this.setSorterOptionsFn(fn);
         this.setSorterOptionsScope(scope);
     },
 
-    decodeRemoveItems: function (args, index) {
+    decodeRemoveItems: function(args, index) {
         var me = this,
             ret = (index === undefined) ? args : args[index];
 
@@ -255,6 +282,7 @@ Ext.define('Ext.util.SorterCollection', {
                 ret = Ext.Array.slice(args, index);
             }
 
+            // eslint-disable-next-line vars-on-top
             var currentSorters = me.items,
                 ln = ret.length,
                 remove = [],
@@ -265,18 +293,21 @@ Ext.define('Ext.util.SorterCollection', {
 
                 if (sorter && sorter.isSorter) {
                     remove.push(sorter);
-                } else {
+                }
+                else {
                     type = typeof sorter;
 
                     if (type === 'string') {
                         sorter = me.get(sorter);
+
                         if (sorter) {
                             remove.push(sorter);
                         }
                     }
                     else if (type === 'function') {
-                        for (n = currentSorters.length; n-- > 0; ) {
+                        for (n = currentSorters.length; n-- > 0;) {
                             item = currentSorters[n];
+
                             if (item.getSorterFn() === sorter) {
                                 remove.push(item);
                             }
@@ -297,7 +328,7 @@ Ext.define('Ext.util.SorterCollection', {
         return ret;
     },
 
-    getOptions: function () {
+    getOptions: function() {
         // Odd thing this. We need a Sortable to know how to manage our collection, but
         // we may not have one. Of course as a Collection, we *are* one as well... just
         // that is not really useful to sort the sorters themselves, but we do have the

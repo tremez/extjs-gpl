@@ -34,11 +34,9 @@
  *   function. A writeByteArray method is provided for writing out ByteArray objects.
  *
  * For more information on working with AMF data please refer to the
- * [AMF Guide](#/guide/amf).
+ * [AMF Guide](../guides/backend_connectors/amf.html).
  */
-
 Ext.define('Ext.data.amf.XmlEncoder', {
-
     alias: 'data.amf.xmlencoder',
 
     /**
@@ -49,43 +47,56 @@ Ext.define('Ext.data.amf.XmlEncoder', {
     statics: {
         /**
          * Utility function to generate a flex-friendly UID
-         * @param {Number} id used in the first 8 chars of the id. If not provided, a random number will be used.
+         * @param {Number} id used in the first 8 chars of the id. If not provided, a random number
+         * will be used.
          * @return {String} a string-encoded opaque UID
          */
         generateFlexUID: function(id) {
             var uid = "",
                 i, j, t;
+
             if (id === undefined) {
                 id = Ext.Number.randomInt(0, 0xffffffff);
             }
+
             // The format of a UID is XXXXXXXX-XXXX-XXXX-XXXX-YYYYYYYYXXXX
-            // where each X is a random hex digit and each Y is a hex digit from the least significant part of a time stamp.
-            t =  (id + 0x100000000).toString(16).toUpperCase(); // padded
+            // where each X is a random hex digit and each Y is a hex digit
+            // from the least significant part of a time stamp.
+            t = (id + 0x100000000).toString(16).toUpperCase(); // padded
             uid = t.substr(t.length - 8, 8); // last 8 chars
 
             for (j = 0; j < 3; j++) {
                 // 3 -XXXX segments
                 uid += "-";
+
                 for (i = 0; i < 4; i++) {
                     uid += Ext.Number.randomInt(0, 15).toString(16).toUpperCase();
                 }
             }
+
             uid += "-";
+
             // add timestamp
-            t = new Number(new Date()).valueOf().toString(16).toUpperCase(); // get the String representation of milliseconds in hex format
+            // get the String representation of milliseconds in hex format
+            // eslint-disable-next-line newline-per-chained-call
+            t = new Number(new Date()).valueOf().toString(16).toUpperCase();
             j = 0;
+
             if (t.length < 8) { // pad with "0" if needed
                 for (i = 0; i < t.length - 8; i++) {
                     j++;
                     uid += "0";
                 }
             }
+
             // actual timestamp:
-            uid += t.substr(-(8-j)); // last few chars
+            uid += t.substr(-(8 - j)); // last few chars
+
             // and last 4 random digits
             for (i = 0; i < 4; i++) {
                 uid += Ext.Number.randomInt(0, 15).toString(16).toUpperCase();
             }
+
             return uid;
         }
     },
@@ -140,11 +151,14 @@ Ext.define('Ext.data.amf.XmlEncoder', {
      */
     encodeBoolean: function(val) {
         var str;
+
         if (val) {
             str = "<true />";
-        } else {
+        }
+        else {
             str = "<false />";
         }
+
         return str;
     },
 
@@ -156,18 +170,20 @@ Ext.define('Ext.data.amf.XmlEncoder', {
         this.write(this.encodeBoolean(val));
     },
 
-
     /**
      * Returns an encoded string
      * @param {String} str the string to encode
      */
     encodeString: function(str) {
         var ret;
+
         if (str === "") {
             ret = "<string />";
-        } else {
-            ret ="<string>"+str+"</string>";
         }
+        else {
+            ret = "<string>" + str + "</string>";
+        }
+
         return ret;
     },
 
@@ -218,21 +234,24 @@ Ext.define('Ext.data.amf.XmlEncoder', {
     encodeNumber: function(num) {
         var maxInt = 0x1fffffff,
             minSignedInt = -0xfffffff;
+
         //<debug>
         if (typeof(num) !== "number" && !(num instanceof Number)) {
             Ext.log.warn("Encoder: writeNumber argument is not numeric. Can't coerce.");
         }
-        // </debug>
+        //</debug>
 
         // switch to the primitive value for handling:
         if (num instanceof Number) {
             num = num.valueOf();
         }
+
         // Determine if this is an integer or a float.
         if (num % 1 === 0 && num >= minSignedInt && num <= maxInt) {
             // The number has no decimal point and is within bounds. Let's encode it.
             return this.encodeInt(num);
-        } else {
+        }
+        else {
             return this.encodeDouble(num);
         }
     },
@@ -270,6 +289,7 @@ Ext.define('Ext.data.amf.XmlEncoder', {
      */
     encodeEcmaElement: function(key, value) {
         var str = '<item name="' + key.toString() + '">' + this.encodeObject(value) + '</item>';
+
         return str;
     },
 
@@ -278,60 +298,73 @@ Ext.define('Ext.data.amf.XmlEncoder', {
      * @param {Array} array the array to encode
      */
     encodeArray: function(array) {
-        var ordinals=[],
+        var ordinals = [],
             firstNonOrdinal,
-            ecmaElements=[],
-            length = array.length, // length is of ordinal section only
+            ecmaElements = [],
             i, str;
+
         for (i in array) {
-            if (Ext.isNumeric(i) && (i % 1 == 0)) {
-                //this is an integer. Add to ordinals array
+            if (Ext.isNumeric(i) && (i % 1 === 0)) {
+                // this is an integer. Add to ordinals array
                 ordinals[i] = this.encodeObject(array[i]);
-            } else {
+            }
+            else {
                 ecmaElements.push(this.encodeEcmaElement(i, array[i]));
             }
         }
-        firstNonOrdinal=ordinals.length;
+
+        firstNonOrdinal = ordinals.length;
+
         // now, check if we have consecutive numbers in the ordinals array
         for (i = 0; i < ordinals.length; i++) {
             if (ordinals[i] === undefined) {
                 //  we have a gap in the array. Mark it - the rest of the items become ECMA elements
                 firstNonOrdinal = i;
+
                 break;
             }
         }
+
         if (firstNonOrdinal < ordinals.length) {
             // transfer some of the elements to the ecma array
-            for (i = firstNonOrdinals; i < ordinals.length; i++) {
+            for (i = firstNonOrdinal; i < ordinals.length; i++) {
                 if (ordinals[i] !== undefined) {
                     ecmaElements.push(this.encodeEcmaElement(i, ordinals[i]));
                 }
             }
+
             ordinals = ordinals.slice(0, firstNonOrdinal);
         }
 
         // finally start constructing the string
         str = '<array length="' + ordinals.length + '"';
+
         if (ecmaElements.length > 0) {
             str += ' ecma="true"';
         }
+
         str += '>';
 
         // first add the oridnals in consecutive order:
-        for (i = 0; i < ordinals.length; i++) { // iterate by counting since we need to guarantee the order
+        // iterate by counting since we need to guarantee the order
+        for (i = 0; i < ordinals.length; i++) {
             str += ordinals[i];
         }
+
         // Now add ECMA items
         for (i in ecmaElements) {
             str += ecmaElements[i];
         }
+
         // And close the array:
         str += '</array>';
+
         return str;
     },
 
     /**
-     * Writes an array to the string, marking it as an ECMA array if it has associative (non-ordinal) indices
+     * Writes an array to the string, marking it as an ECMA array if it has associative
+     * (non-ordinal) indices
      * @param {Array} array the array to encode
      */
     writeArray: function(array) {
@@ -340,23 +373,27 @@ Ext.define('Ext.data.amf.XmlEncoder', {
 
     /**
      * Encodes an xml document into a CDATA section
-     * @param {XMLElement/HTMLElement} xml an XML document or element (Document type in some browsers)
+     * @param {XMLElement/HTMLElement} xml an XML document or element
+     * (Document type in some browsers)
      */
     encodeXml: function(xml) {
         var str = this.convertXmlToString(xml);
+
         return "<xml><![CDATA[" + str + "]]></xml>";
     },
 
     /**
      * Write an XML document to the string
-     * @param {XMLElement/HTMLElement} xml an XML document or element (Document type in some browsers)
+     * @param {XMLElement/HTMLElement} xml an XML document or element
+     * (Document type in some browsers)
      */
     writeXml: function(xml) {
         this.write(this.encodeXml(xml));
     },
 
     /**
-     * Encodes a generic object into AMFX format. If a <tt>$flexType</tt> member is defined, list that as the object type.
+     * Encodes a generic object into AMFX format. If a `$flexType` member is defined,
+     * list that as the object type.
      * @param {Object} obj the object to encode
      * @return {String} the encoded text
      */
@@ -365,33 +402,42 @@ Ext.define('Ext.data.amf.XmlEncoder', {
             values = [],
             flexType = null,
             i, str;
+
         for (i in obj) {
-            if (i == "$flexType") {
+            if (i === "$flexType") {
                 flexType = obj[i];
-            } else {
+            }
+            else {
                 traits.push(this.encodeString(new String(i)));
                 values.push(this.encodeObject(obj[i]));
             }
         }
+
         if (flexType) {
-            str = '<object type="' +flexType + '">';
-        } else {
-            str="<object>";
+            str = '<object type="' + flexType + '">';
         }
+        else {
+            str = "<object>";
+        }
+
         if (traits.length > 0) {
             str += "<traits>";
             str += traits.join("");
             str += "</traits>";
-        } else {
+        }
+        else {
             str += "<traits />";
         }
+
         str += values.join("");
         str += "</object>";
+
         return str;
     },
 
     /**
-     * Writes a generic object to the string. If a <tt>$flexType</tt> member is defined, list that as the object type.
+     * Writes a generic object to the string. If a `$flexType` member is defined,
+     * list that as the object type.
      * @param {Object} obj the object to encode
      */
     writeGenericObject: function(obj) {
@@ -404,32 +450,42 @@ Ext.define('Ext.data.amf.XmlEncoder', {
      */
     encodeByteArray: function(array) {
         var str, i, h;
+
         if (array.length > 0) {
             str = "<bytearray>";
+
             for (i = 0; i < array.length; i++) {
                 //<debug>
                 if (!Ext.isNumber(array[i])) {
-                    Ext.raise("Byte array contains a non-number: " + array[i]  + " in index: " + i);
+                    Ext.raise("Byte array contains a non-number: " + array[i] + " in index: " + i);
                 }
+
                 if (array[i] < 0 || array[i] > 255) {
                     Ext.raise("Byte array value out of bounds: " + array[i]);
                 }
                 //</debug>
+
                 h = array[i].toString(16).toUpperCase();
+
                 if (array[i] < 0x10) {
                     h = "0" + h;
                 }
+
                 str += h;
             }
+
             str += "</bytearray>";
-        } else {
+        }
+        else {
             str = "<bytearray />";
         }
+
         return str;
     },
 
     /**
-     * Writes an AMFX byte array to the string. This is for convenience only and is not called automatically by writeObject.
+     * Writes an AMFX byte array to the string. This is for convenience only and is not
+     * called automatically by writeObject.
      * @param {Array} array the byte array to encode
      */
     writeByteArray: function(array) {
@@ -444,7 +500,8 @@ Ext.define('Ext.data.amf.XmlEncoder', {
      * - integer
      * - double
      * - UTF-8 string
-     * - XML Document (identified by being instaneof Document. Can be generated with: new DOMParser()).parseFromString(xml, "text/xml");
+     * - XML Document (identified by being instaneof Document.
+     * Can be generated with: new DOMParser()).parseFromString(xml, "text/xml");
      * - Date
      * - Array
      * - Generic object
@@ -453,34 +510,46 @@ Ext.define('Ext.data.amf.XmlEncoder', {
      */
     encodeObject: function(item) {
         var t = typeof(item);
-        //Ext.log("Writing " + item + " of type " + t);
+
         if (t === "undefined") {
             return this.encodeUndefined();
-        } else if (item === null) { // can't check type since typeof(null) returns "object"
+        }
+        else if (item === null) { // can't check type since typeof(null) returns "object"
             return this.encodeNull();
-        } else if (Ext.isBoolean(item)) {
+        }
+        else if (Ext.isBoolean(item)) {
             return this.encodeBoolean(item);
-        } else if (Ext.isString(item)) {
+        }
+        else if (Ext.isString(item)) {
             return this.encodeString(item);
-        } else if (t === "number" || item instanceof Number) { // Can't use Ext.isNumeric since it accepts strings as well
+        }
+        // Can't use Ext.isNumeric since it accepts strings as well
+        else if (t === "number" || item instanceof Number) {
             return this.encodeNumber(item);
-        } else if (t === "object") {
+        }
+        else if (t === "object") {
             // Figure out which object this is
             if (item instanceof Date) {
                 return this.encodeDate(item);
-            } else if (Ext.isArray(item)) {
+            }
+            else if (Ext.isArray(item)) {
                 return this.encodeArray(item);
-            } else if (this.isXmlDocument(item)) {
+            }
+            else if (this.isXmlDocument(item)) {
                 return this.encodeXml(item);
-            } else {
+            }
+            else {
                 // Treat this as a generic object with name/value pairs of data.
                 return this.encodeGenericObject(item);
             }
-        } else {
+        }
+        else {
             //<debug>
-            Ext.log.warn("AMFX Encoder: Unknown item type " + t + " can't be written to stream: " + item);
+            Ext.log.warn("AMFX Encoder: Unknown item type " + t +
+                         " can't be written to stream: " + item);
             //</debug>
         }
+
         return null; // if we reached here, return null
     },
 
@@ -492,7 +561,8 @@ Ext.define('Ext.data.amf.XmlEncoder', {
      * - integer
      * - double
      * - UTF-8 string
-     * - XML Document (identified by being instaneof Document. Can be generated with: new DOMParser()).parseFromString(xml, "text/xml");
+     * - XML Document (identified by being instaneof Document.
+     * Can be generated with: new DOMParser()).parseFromString(xml, "text/xml");
      * - Date
      * - Array
      * - Generic object
@@ -507,10 +577,10 @@ Ext.define('Ext.data.amf.XmlEncoder', {
      * @param {Ext.data.amf.RemotingMessage} message the message to pass on to serialize.
      */
     encodeAmfxRemotingPacket: function(message) {
-        var msg, str;
-        str = '<amfx ver="3" xmlns="http://www.macromedia.com/2005/amfx"><body>';
-        str += message.encodeMessage();
-        str += '</body></amfx>';
+        var str = '<amfx ver="3" xmlns="http://www.macromedia.com/2005/amfx"><body>' +
+                  message.encodeMessage() +
+                  '</body></amfx>';
+
         return str;
     },
 
@@ -518,8 +588,8 @@ Ext.define('Ext.data.amf.XmlEncoder', {
      * Writes an AMFX remoting message with the AMFX envelope to the string.
      * @param {Ext.data.amf.RemotingMessage} message the message to pass on to serialize.
      */
-    writeAmfxRemotingPacket: function(params) {
-        this.write(this.encodeAmfxRemotingPacket(params));
+    writeAmfxRemotingPacket: function(message) {
+        this.write(this.encodeAmfxRemotingPacket(message));
     },
 
     /**
@@ -530,33 +600,39 @@ Ext.define('Ext.data.amf.XmlEncoder', {
      */
     convertXmlToString: function(xml) {
         var str;
+
         if (window.XMLSerializer) {
             // this is not IE, so:
             str = new window.XMLSerializer().serializeToString(xml);
-        } else {
-            //no XMLSerializer, might be an old version of IE
+        }
+        else {
+            // no XMLSerializer, might be an old version of IE
             str = xml.xml;
         }
+
         return str;
     },
-    
+
     /**
      * Tries to determine if an object is an XML document
      * @param {Object} item to identify
      * @return {Boolean} true if it's an XML document, false otherwise
      */
     isXmlDocument: function(item) {
-        // We can't test if Document is defined since IE just throws an exception. Instead rely on the DOMParser object
+        // We can't test if Document is defined since IE just throws an exception.
+        // Instead rely on the DOMParser object
         if (window.DOMParser) {
             if (Ext.isDefined(item.doctype)) {
                 return true;
             }
         }
+
         // Otherwise, check if it has an XML field
         if (Ext.isString(item.xml)) {
             // and we can get the xml
             return true;
         }
+
         return false;
     },
 

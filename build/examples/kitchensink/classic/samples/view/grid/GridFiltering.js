@@ -19,7 +19,7 @@ Ext.define('KitchenSink.view.grid.GridFiltering', {
     otherContent: [{
         type: 'Store',
         path: 'classic/samples/store/Products.js'
-    },{
+    }, {
         type: 'Model',
         path: 'classic/samples/model/grid/Product.js'
     }],
@@ -28,7 +28,9 @@ Ext.define('KitchenSink.view.grid.GridFiltering', {
     minHeight: 200,
     //</example>
 
-    plugins: 'gridfilters',
+    plugins: {
+        gridfilters: true
+    },
 
     emptyText: 'No Matching Records',
     loadMask: true,
@@ -107,24 +109,26 @@ Ext.define('KitchenSink.view.grid.GridFiltering', {
         filter: 'boolean'
     }],
 
-    onClearFilters: function () {
+    onClearFilters: function() {
         // The "filters" property is added to the grid (this) by gridfilters
         this.filters.clearFilters();
     },
 
-    onShowFilters: function () {
-        var data = [];
+    onShowFilters: function() {
+        var data = [],
+            i, r;
 
         // The actual record filters are placed on the Store.
-        this.store.getFilters().each(function (filter) {
+        this.store.getFilters().each(function(filter) {
             data.push(filter.serialize());
         });
 
         // Pretty it up for presentation
-        data = Ext.JSON.encodeValue(data, '\n').replace(/^[ ]+/gm, function (s) {
-            for (var r = '', i = s.length; i--; ) {
+        data = Ext.JSON.encodeValue(data, '\n').replace(/^[ ]+/gm, function(s) {
+            for (r = '', i = s.length; i--;) {
                 r += '&#160;';
             }
+
             return r;
         });
         data = data.replace(/\n/g, '<br>');

@@ -20,7 +20,7 @@ Ext.define('Post', {
     }, {
         name: "userid",
         convert: undefined
-    },  {
+    }, {
         name: "dateline",
         type: 'date',
         dateFormat: 'timestamp'
@@ -48,17 +48,21 @@ Ext.define('Post', {
 });
 
 Ext.onReady(function() {
+    var store;
+
     Ext.tip.QuickTipManager.init();
 
     function renderTitle(value, p, record) {
-        return value ? Ext.String.format(
-            '<a href="http://sencha.com/forum/showthread.php?t={1}" target="_blank">{0}</a>',
-            value,
-            record.data.threadid
-        ) : '';
+        return value
+            ? Ext.String.format(
+                '<a href="http://sencha.com/forum/showthread.php?t={1}" target="_blank">{0}</a>',
+                value,
+                record.data.threadid
+            )
+            : '';
     }
 
-    var store = Ext.create('Ext.data.TreeStore', {
+    store = Ext.create('Ext.data.TreeStore', {
         model: 'Post',
         proxy: {
             type: 'ajax',
@@ -81,13 +85,13 @@ Ext.onReady(function() {
         store: store,
         animate: false,
         columns: [{
-            xtype: 'treecolumn', //this is so we know which column will show the tree
+            xtype: 'treecolumn', // this is so we know which column will show the tree
             text: 'Forum',
             width: 275,
             sortable: true,
             locked: true,
             dataIndex: 'forumtitle'
-        },{
+        }, {
             text: 'User',
             width: 120,
             dataIndex: 'username',

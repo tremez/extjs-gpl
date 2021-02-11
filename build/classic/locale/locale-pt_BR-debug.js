@@ -1,7 +1,8 @@
 // This is needed until we can refactor all of the locales into individual files
-Ext.define("Ext.locale.pt_BR.Component", {	
+Ext.define("Ext.locale.pt_BR.Component", {
     override: "Ext.Component"
-});/**
+});
+/**
  * Portuguese/Brazil Translation by Weber Souza
  * 08 April 2007
  * Updated by Allan Brazute Alves (EthraZa)
@@ -59,7 +60,8 @@ Ext.onReady(function() {
 Ext.define("Ext.locale.pt_BR.form.field.Base", {
     override: "Ext.form.field.Base",
     invalidText: "O valor para este campo é inválido"
-});Ext.define("Ext.locale.pt_BR.form.field.ComboBox", {
+});
+Ext.define("Ext.locale.pt_BR.form.field.ComboBox", {
     override: "Ext.form.field.ComboBox",
     valueNotFoundText: undefined
 }, function() {
@@ -154,12 +156,14 @@ Ext.define("Ext.locale.pt_BR.form.field.HtmlEditor", {
             }
         }
     });
-});Ext.define("Ext.locale.pt_BR.form.field.Number", {
+});
+Ext.define("Ext.locale.pt_BR.form.field.Number", {
     override: "Ext.form.field.Number",
     minText: "O valor mínimo para este campo é {0}",
     maxText: "O valor máximo para este campo é {0}",
     nanText: "{0} não é um número válido"
-});Ext.define("Ext.locale.pt_BR.form.field.Text", {
+});
+Ext.define("Ext.locale.pt_BR.form.field.Text", {
     override: "Ext.form.field.Text",
     minLengthText: "O tamanho mínimo para este campo é {0}",
     maxLengthText: "O tamanho máximo para este campo é {0}",
@@ -179,30 +183,33 @@ Ext.define("Ext.locale.pt_BR.grid.PropertyColumnModel", {
     nameText: "Nome",
     valueText: "Valor",
     dateFormat: "d/m/Y"
-});Ext.define('Ext.locale.pt_BR.grid.feature.Grouping', {
+});
+Ext.define('Ext.locale.pt_BR.grid.feature.Grouping', {
     override: 'Ext.grid.feature.Grouping',
     emptyGroupText: '(Nenhum)',
     groupByText: 'Agrupar por este campo',
     showGroupsText: 'Mostrar agrupado'
-});Ext.define('Ext.locale.pt_BR.grid.filters.Filters', {
+});
+Ext.define('Ext.locale.pt_BR.grid.filters.Filters', {
     override: 'Ext.grid.filters.Filters',
     menuFilterText: 'Filtros'
 });
 Ext.define('Ext.locale.pt_BR.grid.filters.filter.Boolean', {
     override: 'Ext.grid.filters.filter.Boolean',
     yesText: 'Sim',
-    noText : 'Não'
+    noText: 'Não'
 });
 Ext.define('Ext.locale.pt_BR.grid.filters.filter.Date', {
     override: 'Ext.grid.filters.filter.Date',
     getFields: function() {
         return {
-            lt: {text: 'Antes'},
-            gt: {text: 'Depois'},
-            eq: {text: 'Em'}
+            lt: { text: 'Antes' },
+            gt: { text: 'Depois' },
+            eq: { text: 'Em' }
         };
     }
-});Ext.define('Ext.locale.pt_BR.grid.filters.filter.List', {
+});
+Ext.define('Ext.locale.pt_BR.grid.filters.filter.List', {
     override: 'Ext.grid.filters.filter.List',
     loadingText: 'Carregando...'
 });
@@ -213,19 +220,23 @@ Ext.define('Ext.locale.pt_BR.grid.filters.filter.Number', {
 Ext.define('Ext.locale.pt_BR.grid.filters.filter.String', {
     override: 'Ext.grid.filters.filter.String',
     emptyText: 'Digite o texto de filtro...'
-});Ext.define('Ext.locale.pt_BR.grid.header.Container', {
+});
+Ext.define('Ext.locale.pt_BR.grid.header.Container', {
     override: 'Ext.grid.header.Container',
     sortAscText: 'Ordem Ascendente',
     sortDescText: 'Ordem Descendente',
     columnsText: 'Colunas'
-});Ext.define('Ext.locale.pt_BR.grid.locking.Lockable', {
+});
+Ext.define('Ext.locale.pt_BR.grid.locking.Lockable', {
     override: 'Ext.grid.locking.Lockable',
     lockText: 'Bloquear Coluna',
     unlockText: 'Desbloquear Coluna'
-});Ext.define("Ext.locale.pt_BR.grid.plugin.DragDrop", {
+});
+Ext.define("Ext.locale.pt_BR.grid.plugin.DragDrop", {
     override: "Ext.grid.plugin.DragDrop",
     dragText: "{0} linha(s) selecionada(s)"
-});/**
+});
+/**
  * Portuguese/Brazil Translation by Guilherme Portela
  * 07 March 2016
  */
@@ -233,8 +244,9 @@ Ext.define("Ext.locale.pt_BR.panel.Panel", {
     override: "Ext.panel.Panel",
     closeToolText: "Fechar painel",
     collapseToolText: "Recolher painel",
-    expandToolText: "Expandir painel"   
-});Ext.define("Ext.locale.pt_BR.picker.Date", {
+    expandToolText: "Expandir painel"
+});
+Ext.define("Ext.locale.pt_BR.picker.Date", {
     override: "Ext.picker.Date",
     todayText: "Hoje",
     minText: "Esta data é anterior a menor data",
@@ -247,14 +259,17 @@ Ext.define("Ext.locale.pt_BR.panel.Panel", {
     todayTip: "{0} (Espaço)",
     format: "d/m/Y",
     startDay: 0
-});Ext.define("Ext.locale.pt_BR.picker.Month", {
+});
+Ext.define("Ext.locale.pt_BR.picker.Month", {
     override: "Ext.picker.Month",
     okText: "&#160;OK&#160;",
     cancelText: "Cancelar"
-});Ext.define("Ext.locale.pt_BR.tab.Tab", {
+});
+Ext.define("Ext.locale.pt_BR.tab.Tab", {
     override: "Ext.tab.Tab",
     closeText: "Fechar"
-});Ext.define("Ext.locale.pt_BR.toolbar.Paging", {
+});
+Ext.define("Ext.locale.pt_BR.toolbar.Paging", {
     override: "Ext.PagingToolbar",
     beforePageText: "Página",
     afterPageText: "de {0}",
@@ -265,19 +280,22 @@ Ext.define("Ext.locale.pt_BR.panel.Panel", {
     refreshText: "Atualizar",
     displayMsg: "<b>{0} à {1} de {2} registro(s)</b>",
     emptyMsg: 'Sem registros para exibir'
-});// changing the msg text below will affect the LoadMask
+});
+// changing the msg text below will affect the LoadMask
 Ext.define("Ext.locale.pt_BR.view.AbstractView", {
     override: "Ext.view.AbstractView",
     loadingText: "Carregando..."
-});Ext.define("Ext.locale.pt_BR.view.View", {
+});
+Ext.define("Ext.locale.pt_BR.view.View", {
     override: "Ext.view.View",
     emptyText: ""
-});Ext.define("Ext.locale.pt_BR.window.MessageBox", {
+});
+Ext.define("Ext.locale.pt_BR.window.MessageBox", {
     override: "Ext.window.MessageBox",
     buttonText: {
         ok: "OK",
         cancel: "Cancelar",
         yes: "Sim",
         no: "Não"
-    }    
+    }
 });

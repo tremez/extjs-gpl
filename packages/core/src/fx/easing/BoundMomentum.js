@@ -2,8 +2,9 @@
  * @private
  *
  * This easing is typically used for {@link Ext.scroll.Scroller}. It's a combination of
- * {@link Ext.fx.easing.Momentum} and {@link Ext.fx.easing.Bounce}, which emulates deceleration when the animated element
- * is still within its boundary, then bouncing back (snapping) when it's out-of-bound.
+ * {@link Ext.fx.easing.Momentum} and {@link Ext.fx.easing.Bounce}, which emulates deceleration
+ * when the animated element is still within its boundary, then bouncing back (snapping) when
+ * it's out-of-bound.
  */
 Ext.define('Ext.fx.easing.BoundMomentum', {
     extend: 'Ext.fx.easing.Abstract',
@@ -86,7 +87,7 @@ Ext.define('Ext.fx.easing.BoundMomentum', {
             direction = startVelocity > 0 ? 1 : -1,
             minValue = this.getMinMomentumValue(),
             maxValue = this.getMaxMomentumValue(),
-            boundedValue = (direction == 1) ? maxValue : minValue,
+            boundedValue = (direction === 1) ? maxValue : minValue,
             lastValue = this.lastValue,
             value, velocity;
 
@@ -109,8 +110,8 @@ Ext.define('Ext.fx.easing.BoundMomentum', {
             this.isOutOfBound = true;
 
             bounce.setStartTime(Ext.Date.now())
-                  .setStartVelocity(velocity)
-                  .setStartValue(boundedValue);
+                .setStartVelocity(velocity)
+                .setStartValue(boundedValue);
         }
 
         value = bounce.getValue();
@@ -118,13 +119,14 @@ Ext.define('Ext.fx.easing.BoundMomentum', {
         if (!this.isEnded) {
             if (!this.isBouncingBack) {
                 if (lastValue !== null) {
-                    if ((direction == 1 && value < lastValue) || (direction == -1 && value > lastValue)) {
+                    if ((direction === 1 && value < lastValue) ||
+                        (direction === -1 && value > lastValue)) {
                         this.isBouncingBack = true;
                     }
                 }
             }
             else {
-                if (Math.round(value) == boundedValue) {
+                if (Math.round(value) === boundedValue) {
                     this.isEnded = true;
                 }
             }

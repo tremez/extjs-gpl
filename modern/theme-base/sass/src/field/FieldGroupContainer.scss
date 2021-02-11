@@ -1,0 +1,34 @@
+.#{$prefix}field-group-container {
+    /**
+     * Flex box behaves unexpectedly with max-height property.
+     * (in case of vertical: true and have added maxHeight for checkboxgroup
+     * then items won’t wrap for next column if we won’t add min-height)
+     */
+    min-height: 0;
+
+    .#{$prefix}group-inner-container {
+        > .#{$prefix}body-el {
+            display: flex;
+            flex-wrap: wrap;
+            align-content: flex-start;
+        }
+
+        .#{$prefix}field {
+            &.#{$prefix}label-align-right {
+                > .#{$prefix}label-el {
+                    flex: 1 1 auto;
+                }
+            }
+
+            > .#{$prefix}body-wrap-el {
+                flex: inherit;
+            }
+        }
+
+        &.#{$prefix}field-group-vertical {
+            > .#{$prefix}body-el {
+                flex-direction: column;
+            }
+        }
+    }
+}

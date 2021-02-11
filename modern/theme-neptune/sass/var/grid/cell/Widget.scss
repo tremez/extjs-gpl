@@ -14,20 +14,31 @@ $widgetcell-padding: dynamic(0);
  */
 $widgetcell-padding-big: dynamic(0);
 
+/**
+ * Creates a visual theme for a Widget cell.
+ *
+ * @param {string} $ui
+ * The name of the UI being created. Can not included spaces or special punctuation
+ * (used in CSS class names).
+ *
+ * @param {String} [$xtype=checkcell] (protected) The {@link Ext.Class#xtype} to use
+ * in CSS selectors.  For use by UI mixins of derived classes.
+ *
+ * @param {number/list} $padding
+ * Widget cell padding
+ *
+ * @param {number/list} $padding-big
+ * Widget cell padding in the {@link Global_CSS#$enable-big big} sizing scheme
+ */
 @mixin widgetcell-ui(
     $ui: null,
+    $xtype: widgetcell,
     $padding: null,
     $padding-big: null
 ) {
     $ui-suffix: ui-suffix($ui);
 
-    .#{$prefix}widgetcell#{$ui-suffix} {
-        padding: $padding;
+    $arguments: intersect-arguments(widgetcell-ui, gridcell-ui);
 
-        @if $enable-big {
-            .#{$prefix}big & {
-                padding: $padding-big;
-            }
-        }
-    }
+    @include gridcell-ui($arguments...);
 }

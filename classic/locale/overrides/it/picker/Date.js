@@ -13,10 +13,10 @@ Ext.define("Ext.locale.it.picker.Date", {
     ariaDisabledDaysText: 'Questo giorno \u00E8 disabilitato',
     disabledDatesText: 'Disabilitato',
     ariaDisabledDatesText: 'Questa data \u00E8 disabilitata',
-    nextText: 'Mese successivo (CTRL+Destra)', 
-    prevText: 'Mese precedente (CTRL+Sinistra)', 
-    monthYearText: 'Scegli un Mese (CTRL+Sopra/Sotto per cambiare anno)', 
-    monthYearFormat: 'F Y', 
+    nextText: 'Mese successivo (CTRL+Destra)',
+    prevText: 'Mese precedente (CTRL+Sinistra)',
+    monthYearText: 'Scegli un Mese (CTRL+Sopra/Sotto per cambiare anno)',
+    monthYearFormat: 'F Y',
     startDay: 0,
     longDayFormat: 'd F Y'
 });

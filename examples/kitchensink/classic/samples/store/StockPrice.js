@@ -3,50 +3,57 @@ Ext.define('KitchenSink.store.StockPrice', {
     model: 'KitchenSink.model.StockPrice',
     alias: 'store.stock-price',
 
-    data: [],
+    generateData: function(count) {
+        var first = {
+                time: Ext.Date.now(),
+                close: 100
+            },
+            records = [],
+            previous, i;
 
-    seed: 1.4,
-
-    generateData: function (count) {
-        var me = this;
-        function random() {
-            // Controllable random.
-            me.seed *= 42.7;
-            me.seed -= Math.floor(me.seed);
-            return me.seed * 2 - 1;
+        for (i = 0; i < count; i++) {
+            previous = records[i - 1] || first;
+            records.push(Ext.apply({
+                time: previous.time + 24 * 60 * 60 * 1000 // day interval
+            }, this.getNextPrice(previous.close)));
         }
 
-        var data = [], i, record = {
-            time: new Date('Jan 1 2010').getTime(),
-            close: 600
+        return records;
+    },
+
+    getNextPrice: function(previousClose) {
+        var open = previousClose - 2 + Math.random() * 8,
+            high = open + Math.random() * 2,
+            close = open - Math.random() * 4,
+            low = close - Math.random() * 2,
+            min = Math.min(open, high, low, close);
+
+        if (min < 0) {
+            open -= min;
+            high -= min;
+            low -= min;
+            close -= min;
+        }
+
+        return {
+            open: open,
+            high: high,
+            low: low,
+            close: close
         };
-        for (i = 0; i < (count || 1000); i++) {
-            var ohlc = [random() * 25, random() * 25, random() * 25];
-            record = {
-                time: record.time + 3600000,
-                open: record.close,
-                high: record.close + Math.max.apply(Math, ohlc),
-                low: record.close + Math.min.apply(Math, ohlc),
-                close: record.close + ohlc[1]
-            };
-            if (record.open < record.low) {
-                record.low = record.open;
-            } else if (record.open > record.high) {
-                record.high = record.open;
-            }
-            data.push(record);
-        }
-        return data;
     },
 
-    refreshData: function () {
-        this.setData(this.generateData(1000));
+    refreshData: function() {
+        this.setData(this.generateData(2 * 365));
     },
 
-    constructor: function (config) {
+    constructor: function(config) {
+
         config = Ext.apply({
-            data: this.generateData()
+            data: this.generateData(2 * 365)
         }, config);
+
         this.callParent([config]);
+
     }
 });

@@ -10,28 +10,36 @@ Ext.define('Ext.util.Audio', {
     },
 
     oscillate: function(duration, type, callback) {
+        var osc;
+
         if (!this.ctx) {
             this.ctx = new (window.audioContext || window.webkitAudioContext);
         }
 
         if (!this.ctx) {
             console.log("BEEP");
+
             return;
         }
 
         type = (type % 5) || 0;
 
         try {
-            var osc = this.ctx.createOscillator();
+            osc = this.ctx.createOscillator();
+
             osc.type = type;
             osc.connect(this.ctx.destination);
             osc.noteOn(0);
 
             Ext.defer(function() {
                 osc.noteOff(0);
-                if(callback) callback();
+
+                if (callback) {
+                    callback();
+                }
             }, duration);
-        } catch (e) {
+        }
+        catch (e) {
             throw new Error("[Ext.util.Audio.oscillate] Error with Oscillator playback");
         }
 
@@ -39,6 +47,4 @@ Ext.define('Ext.util.Audio', {
 
 })
 ;
-
-
 

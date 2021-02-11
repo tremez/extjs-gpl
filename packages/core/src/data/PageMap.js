@@ -26,9 +26,11 @@ Ext.define('Ext.data.PageMap', {
         rootProperty: ''
     },
 
-    // Maintain a generation counter, so that the Store can reject incoming pages destined for the previous generation
+    // Maintain a generation counter, so that the Store can reject incoming pages destined
+    // for the previous generation
     clear: function(initial) {
         var me = this;
+
         me.pageMapGeneration = (me.pageMapGeneration || 0) + 1;
 
         // Map of internalId to recordIndex
@@ -50,20 +52,20 @@ Ext.define('Ext.data.PageMap', {
             pageNumbers = Ext.Object.getKeys(me.map),
             pageCount = pageNumbers.length,
             pageSize = me.getPageSize(),
-            i, j,
-            pageNumber,
-            page,
-            len;
+            pageNumber, page, i, j, len;
 
         for (i = 0; i < pageCount; i++) {
             pageNumbers[i] = +pageNumbers[i];
         }
+
         Ext.Array.sort(pageNumbers, Ext.Array.numericSortFn);
         scope = scope || me;
+
         for (i = 0; i < pageCount; i++) {
             pageNumber = pageNumbers[i];
             page = me.getPage(pageNumber);
             len = page.length;
+
             for (j = 0; j < len; j++) {
                 if (fn.call(scope, page[j], (pageNumber - 1) * pageSize + j) === false) {
                     return;
@@ -76,18 +78,22 @@ Ext.define('Ext.data.PageMap', {
     * Returns the first record in this page map which elicits a true return value from the
     * passed selection function.
     *
-    * **IMPORTANT
-    * This can ONLY find records which happen to be cached in the page cache. This will be parts of the dataset around the currently
-    * visible zone, or recently visited zones if the pages have not yet been purged from the cache.
-    * 
-    * This CAN NOT find records which have not been loaded into the cache.**
+    * **IMPORTANT**
     *
-    * If full client side searching is required, do not use a buffered store, instead use a regular, fully loaded store and
-    * use the {@link Ext.grid.plugin.BufferedRenderer BufferedRenderer} plugin to minimize DOM footprint.
+    * **This can ONLY find records which happen to be cached in the page cache. This will be parts
+    * of the dataset around the currently visible zone, or recently visited zones if the pages
+    * have not yet been purged from the cache.**
+    * 
+    * **This CAN NOT find records which have not been loaded into the cache.**
+    *
+    * If full client side searching is required, do not use a buffered store, instead use a regular,
+    * fully loaded store and use the {@link Ext.grid.plugin.BufferedRenderer BufferedRenderer}
+    * plugin to minimize DOM footprint.
     * @param {Function} fn The selection function to execute for each item.
     *  @param {Mixed} fn.rec The record.
     *  @param {Mixed} fn.index The index in the total dataset of the record.
-    * @param {Object} [scope] The scope (`this` reference) in which the function is executed. Defaults to this PageMap.
+    * @param {Object} [scope] The scope (`this` reference) in which the function is executed.
+    * Defaults to this PageMap.
     * @return {Object} The first record in this page map which returned true from the selection
     * function, or null if none was found.
     */
@@ -96,70 +102,82 @@ Ext.define('Ext.data.PageMap', {
             result = null;
 
         scope = scope || me;
+
         me.forEach(function(rec, index) {
             if (fn.call(scope, rec, index)) {
                 result = rec;
+
                 return false;
             }
         });
+
         return result;
     },
 
     /**
-    * Returns the index *in the whole dataset* of the first record in this page map which elicits a true return value from the
-    * passed selection function.
+    * Returns the index *in the whole dataset* of the first record in this page map which elicits
+    * a true return value from the passed selection function.
     *
-    * **IMPORTANT
-    * This can ONLY find records which happen to be cached in the page cache. This will be parts of the dataset around the currently
-    * visible zone, or recently visited zones if the pages have not yet been purged from the cache.
+    * **IMPORTANT**
+    *
+    * **This can ONLY find records which happen to be cached in the page cache. This will be parts
+    * of the dataset around the currently visible zone, or recently visited zones if the pages
+    * have not yet been purged from the cache.**
     * 
-    * This CAN NOT find records which have not been loaded into the cache.**
+    * **This CAN NOT find records which have not been loaded into the cache.**
     *
-    * If full client side searching is required, do not use a buffered store, instead use a regular, fully loaded store and
-    * use the {@link Ext.grid.plugin.BufferedRenderer BufferedRenderer} plugin to minimize DOM footprint.
+    * If full client side searching is required, do not use a buffered store, instead use a regular,
+    * fully loaded store and use the {@link Ext.grid.plugin.BufferedRenderer BufferedRenderer}
+    * plugin to minimize DOM footprint.
     * @param {Function} fn The selection function to execute for each item.
     *  @param {Mixed} fn.rec The record.
     *  @param {Mixed} fn.index The index in the total dataset of the record.
-    * @param {Object} [scope] The scope (`this` reference) in which the function is executed. Defaults to this PageMap.
-    * @return {Number} The index first record in this page map which returned true from the selection
-    * function, or -1 if none was found.
+    * @param {Object} [scope] The scope (`this` reference) in which the function is executed.
+    * Defaults to this PageMap.
+    * @return {Number} The index first record in this page map which returned true from the
+    * selection function, or -1 if none was found.
     */
     findIndexBy: function(fn, scope) {
         var me = this,
             result = -1;
 
         scope = scope || me;
+
         me.forEach(function(rec, index) {
             if (fn.call(scope, rec)) {
                 result = index;
+
                 return false;
             }
         });
+
         return result;
     },
 
-    find: function (property, value, start, startsWith, endsWith, ignoreCase) {
+    find: function(property, value, start, startsWith, endsWith, ignoreCase) {
         if (Ext.isEmpty(value, false)) {
             return null;
         }
 
+        /* eslint-disable-next-line vars-on-top */
         var regex = Ext.String.createRegex(value, startsWith, endsWith, ignoreCase),
             root = this.getRootProperty();
 
-        return this.findBy(function (item) {
+        return this.findBy(function(item) {
             return item && regex.test((root ? item[root] : item)[property]);
         }, null, start);
     },
 
-    findIndex: function (property, value, start, startsWith, endsWith, ignoreCase) {
+    findIndex: function(property, value, start, startsWith, endsWith, ignoreCase) {
         if (Ext.isEmpty(value, false)) {
             return null;
         }
 
+        /* eslint-disable-next-line vars-on-top */
         var regex = Ext.String.createRegex(value, startsWith, endsWith, ignoreCase),
             root = this.getRootProperty();
 
-        return this.findIndexBy(function (item) {
+        return this.findIndexBy(function(item) {
             return item && regex.test((root ? item[root] : item)[property]);
         }, null, start);
     },
@@ -174,6 +192,7 @@ Ext.define('Ext.data.PageMap', {
             Ext.raise('Cannot addAll to a non-empty PageMap');
         }
         //</debug>
+
         this.addPage(1, records);
     },
 
@@ -194,6 +213,7 @@ Ext.define('Ext.data.PageMap', {
             for (i = 0, len = page.length; i < len; i++) {
                 indexMap[page[i].internalId] = storeIndex++;
             }
+
             me.add(pageNumber, page);
             me.fireEvent('pageadd', me, pageNumber, page);
         }
@@ -201,14 +221,17 @@ Ext.define('Ext.data.PageMap', {
 
     getCount: function() {
         var result = this.callParent();
+
         if (result) {
             result = (result - 1) * this.getPageSize() + this.last.value.length;
         }
+
         return result;
     },
 
     getByInternalId: function(internalId) {
         var index = this.indexMap[internalId];
+
         if (index != null) {
             return this.getAt(index);
         }
@@ -216,12 +239,15 @@ Ext.define('Ext.data.PageMap', {
 
     indexOf: function(record) {
         var result = -1;
+
         if (record) {
             result = this.indexMap[record.internalId];
+
             if (result == null) {
                 result = -1;
             }
         }
+
         return result;
     },
 
@@ -243,20 +269,20 @@ Ext.define('Ext.data.PageMap', {
         //</debug>
     },
 
-    removeAtKey: function (page) {
+    removeAtKey: function(page) {
         // Allow observers to veto
         var me = this,
             thePage = me.getPage(page),
-            len,
-            i,
-            result;
+            result, i, len;
 
         if (thePage) {
             if (me.fireEvent('beforepageremove', me, page, thePage) !== false) {
                 len = thePage.length;
+
                 for (i = 0; i < len; i++) {
                     delete me.indexMap[thePage[i].internalId];
                 }
+
                 result = me.callParent(arguments);
                 me.fireEvent('pageremove', me, page, thePage);
 
@@ -264,6 +290,7 @@ Ext.define('Ext.data.PageMap', {
                 thePage.length = 0;
             }
         }
+
         return result;
     },
 
@@ -281,12 +308,14 @@ Ext.define('Ext.data.PageMap', {
                 return false;
             }
         }
+
         // Check that the last page is filled enough to encapsulate the range.
         return (endPageNumber - 1) * me._pageSize + me.getPage(endPageNumber).length > end;
     },
 
     hasPage: function(pageNumber) {
-        // We must use this.get to trigger an access so that the page which is checked for presence is not eligible for pruning
+        // We must use this.get to trigger an access so that the page which is checked for presence
+        // is not eligible for pruning
         return !!this.get(pageNumber);
     },
 
@@ -300,12 +329,16 @@ Ext.define('Ext.data.PageMap', {
 
     getRange: function(start, end) {
         // Store's backing Collection now uses EXCLUSIVE endIndex
-        // So store will always pass the endIndex+1
-        end--;
+        // So store will always pass the endIndex+1 unless it's 0
+        if (end) {
+            end--;
+        }
 
         if (!this.hasRange(start, end)) {
             Ext.raise('PageMap asked for range which it does not have');
         }
+
+        /* eslint-disable-next-line vars-on-top */
         var me = this,
             Array = Ext.Array,
             pageSize = me.getPageSize(),
@@ -323,10 +356,12 @@ Ext.define('Ext.data.PageMap', {
             if (pageNumber === startPageNumber) {
                 sliceBegin = start - dataStart;
                 doSlice = sliceBegin > 0;
-            } else {
+            }
+            else {
                 sliceBegin = 0;
                 doSlice = false;
             }
+
             if (pageNumber === endPageNumber) {
                 sliceEnd = pageSize - (dataEnd - end);
                 doSlice = doSlice || sliceEnd < pageSize;
@@ -335,10 +370,12 @@ Ext.define('Ext.data.PageMap', {
             // First and last pages will need slicing
             if (doSlice) {
                 Array.push(result, Array.slice(me.getPage(pageNumber), sliceBegin, sliceEnd));
-            } else {
+            }
+            else {
                 Array.push(result, me.getPage(pageNumber));
             }
         }
+
         return result;
     }
 });

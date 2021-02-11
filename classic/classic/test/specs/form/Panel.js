@@ -1,4 +1,4 @@
-describe("Ext.form.Panel", function() {
+topSuite("Ext.form.Panel", function() {
     var panel;
 
     function createPanel(config) {
@@ -16,13 +16,13 @@ describe("Ext.form.Panel", function() {
         });
 
         it("should be registered with the 'form' xtype", function() {
-            var component = Ext.create("Ext.form.Panel", {name: 'test'});
+            var component = Ext.create("Ext.form.Panel", { name: 'test' });
+
             expect(component instanceof Ext.form.Panel).toBe(true);
             expect(Ext.getClass(component).xtype).toBe("form");
             component.destroy();
         });
     });
-
 
     describe("form property", function() {
         it("should instantiate a Ext.form.Basic as its 'form' property", function() {
@@ -35,7 +35,6 @@ describe("Ext.form.Panel", function() {
             expect(panel.getForm() instanceof Ext.form.Basic).toBeTruthy();
         });
     });
-
 
     describe("default configs", function() {
         var undef,
@@ -66,10 +65,10 @@ describe("Ext.form.Panel", function() {
         }
     });
 
-
     describe("event relaying", function() {
         function testRelay(eventName) {
             var spy = jasmine.createSpy(eventName + ' handler');
+
             createPanel();
             panel.on(eventName, spy);
             panel.getForm().fireEvent(eventName);
@@ -93,18 +92,16 @@ describe("Ext.form.Panel", function() {
         });
     });
 
-
     describe("destroying", function() {
         it("should call its form object's destroy method", function() {
             createPanel();
             var spy = spyOn(panel.getForm(), 'destroy');
-            
+
             panel.destroy();
-            
+
             expect(spy).toHaveBeenCalled();
         });
     });
-
 
     describe("fieldDefaults", function() {
         it("should copy properties to a sub-field if those properties are not already configured on the field", function() {
@@ -114,7 +111,8 @@ describe("Ext.form.Panel", function() {
                 },
                 renderTo: Ext.getBody()
             });
-            var field = panel.add({xtype: 'textfield', name: 'myfield'});
+            var field = panel.add({ xtype: 'textfield', name: 'myfield' });
+
             expect(field.dummyConfig).toBe('foo');
         });
 
@@ -124,10 +122,11 @@ describe("Ext.form.Panel", function() {
                     dummyConfig: 'foo'
                 }
             });
-            var field = panel.add({xtype: 'textfield', name: 'myfield', dummyConfig: 'bar'});
+            var field = panel.add({ xtype: 'textfield', name: 'myfield', dummyConfig: 'bar' });
+
             expect(field.dummyConfig).toBe('bar');
         });
-        
+
         it("should copy fieldDefaults deep", function() {
             createPanel({
                 renderTo: Ext.getBody(),
@@ -149,11 +148,11 @@ describe("Ext.form.Panel", function() {
                 }
             });
             var field = panel.down('#foo');
+
             expect(field.dummyConfig).toBe('foo');
         });
 
     });
-
 
     describe("minButtonWidth config", function() {
         it("should copy to items in the 'buttons' legacy toolbar config", function() {
@@ -163,8 +162,10 @@ describe("Ext.form.Panel", function() {
                         text: 'foo'
                     }]
                 };
+
             createPanel(panelCfg);
             var docked = panel.getDockedItems();
+
             expect(docked[docked.length - 1].child('button').minWidth).toBe(1234);
         });
 
@@ -176,19 +177,20 @@ describe("Ext.form.Panel", function() {
                         minWidth: 2345
                     }]
                 };
+
             createPanel(panelCfg);
             var docked = panel.getDockedItems();
+
             expect(docked[docked.length - 1].child('button').minWidth).toBe(2345);
         });
     });
-
 
     describe("load method", function() {
         it("should call the load method of the BasicForm", function() {
             createPanel();
             spyOn(panel.getForm(), 'load');
-            panel.load({foo:'bar'});
-            expect(panel.getForm().load).toHaveBeenCalledWith({foo:'bar'});
+            panel.load({ foo: 'bar' });
+            expect(panel.getForm().load).toHaveBeenCalledWith({ foo: 'bar' });
         });
     });
 
@@ -196,8 +198,8 @@ describe("Ext.form.Panel", function() {
         it("should call the submit method of the BasicForm", function() {
             createPanel();
             spyOn(panel.getForm(), 'submit');
-            panel.submit({foo:'bar'});
-            expect(panel.getForm().submit).toHaveBeenCalledWith({foo:'bar'});
+            panel.submit({ foo: 'bar' });
+            expect(panel.getForm().submit).toHaveBeenCalledWith({ foo: 'bar' });
         });
     });
 
@@ -237,7 +239,7 @@ describe("Ext.form.Panel", function() {
                 renderTo: Ext.getBody()
             });
         });
-        
+
         describe("attributes", function() {
             it("should have form role on the body", function() {
                 expect(panel.body).toHaveAttr('role', 'form');

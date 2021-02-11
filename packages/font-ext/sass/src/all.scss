@@ -54,7 +54,7 @@ $ext-font-path: get-resource-path('fonts');
 .ext-equals-vertical:before {
 	content: "\e612";
 }
-.ext-collapse:before {
+.ext-expand:before {
 	content: "\e600";
 }
 .ext-columns:before {
@@ -72,7 +72,7 @@ $ext-font-path: get-resource-path('fonts');
 .ext-equals:before {
 	content: "\e605";
 }
-.ext-expand:before {
+.ext-collapse:before {
 	content: "\e606";
 }
 .ext-group-by:before {

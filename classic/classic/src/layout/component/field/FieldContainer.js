@@ -2,14 +2,8 @@
  * @private
  */
 Ext.define('Ext.layout.component.field.FieldContainer', {
-
-    /* Begin Definitions */
-
     extend: 'Ext.layout.component.Auto',
-
     alias: 'layout.fieldcontainer',
-
-    /* End Definitions */
 
     type: 'fieldcontainer',
 
@@ -21,7 +15,8 @@ Ext.define('Ext.layout.component.field.FieldContainer', {
 
         this.callParent([ownerContext]);
 
-        // Tell Component.measureAutoDimensions to measure the DOM when containerChildrenSizeDone is true
+        // Tell Component.measureAutoDimensions to measure the DOM
+        // when containerChildrenSizeDone is true
         ownerContext.hasRawContent = true;
         containerEl.setStyle('width', '');
         containerEl.setStyle('height', '');
@@ -30,32 +25,38 @@ Ext.define('Ext.layout.component.field.FieldContainer', {
 
     calculateOwnerHeightFromContentHeight: function(ownerContext, contentHeight) {
         var h = this.callParent([ownerContext, contentHeight]);
+
         return h + this.getHeightAdjustment();
     },
 
     calculateOwnerWidthFromContentWidth: function(ownerContext, contentWidth) {
         var w = this.callParent([ownerContext, contentWidth]);
+
         return w + this.getWidthAdjustment();
     },
 
-    measureContentHeight: function (ownerContext) {
+    measureContentHeight: function(ownerContext) {
         // since we are measuring the outer el, we have to wait for whatever is in our
         // container to be flushed to the DOM... especially for things like box layouts
         // that size the innerCt since that is all that will contribute to our size!
-        return ownerContext.hasDomProp('containerLayoutDone') ? this.callParent([ownerContext]) : NaN;
+        return ownerContext.hasDomProp('containerLayoutDone')
+            ? this.callParent([ownerContext])
+            : NaN;
     },
 
-    measureContentWidth: function (ownerContext) {
+    measureContentWidth: function(ownerContext) {
         // see measureContentHeight
-        return ownerContext.hasDomProp('containerLayoutDone') ? this.callParent([ownerContext]) : NaN;
+        return ownerContext.hasDomProp('containerLayoutDone')
+            ? this.callParent([ownerContext])
+            : NaN;
     },
 
-    publishInnerHeight: function (ownerContext, height) {
+    publishInnerHeight: function(ownerContext, height) {
         height -= this.getHeightAdjustment();
         ownerContext.containerElContext.setHeight(height);
     },
 
-    publishInnerWidth: function (ownerContext, width) {
+    publishInnerWidth: function(ownerContext, width) {
         width -= this.getWidthAdjustment();
         ownerContext.containerElContext.setWidth(width);
     },

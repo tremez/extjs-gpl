@@ -1,4 +1,4 @@
-/*!
+/* !
 * Copyright(c) 2006-2014 Sencha Inc.
 * licensing@sencha.com
 * http://www.sencha.com/license
@@ -13,21 +13,22 @@ Ext.define('Desktop.VideoWindow', {
         'Ext.ux.desktop.Video'
     ],
 
-    id:'video',
+    id: 'video',
     windowId: 'video-window',
 
     tipWidth: 160,
     tipHeight: 96,
 
-    init : function(){
+    init: function() {
         this.launcher = {
             text: 'About Ext JS',
-            iconCls:'video'
-        }
+            iconCls: 'video'
+        };
     },
 
-    createWindow : function(){
-        var me = this, desktop = me.app.getDesktop(),
+    createWindow: function() {
+        var me = this,
+            desktop = me.app.getDesktop(),
             win = desktop.getWindow(me.windowId);
 
         if (!win) {
@@ -53,8 +54,8 @@ Ext.define('Desktop.VideoWindow', {
                         ],
                         poster: 'http://b.vimeocdn.com/ts/148/397/148397103_640.jpg',
                         autobuffer: true,
-                        autoplay : true,
-                        controls : true,
+                        autoplay: true,
+                        controls: true,
                         /* default */
                         listeners: {
                             afterrender: function(video) {
@@ -62,13 +63,13 @@ Ext.define('Desktop.VideoWindow', {
 
                                 if (video.supported) {
                                     me.tip = new Ext.tip.ToolTip({
-                                        anchor   : 'bottom',
-                                        dismissDelay : 0,
-                                        height   : me.tipHeight,
-                                        width    : me.tipWidth,
+                                        anchor: 'bottom',
+                                        dismissDelay: 0,
+                                        height: me.tipHeight,
+                                        width: me.tipWidth,
                                         renderTpl: [
                                             '<canvas width="', me.tipWidth,
-                                                  '" height="', me.tipHeight, '">'
+                                            '" height="', me.tipHeight, '">'
                                         ],
                                         renderSelectors: {
                                             body: 'canvas'
@@ -99,9 +100,11 @@ Ext.define('Desktop.VideoWindow', {
         return win;
     },
 
-    onTooltipRender: function (tip) {
+    onTooltipRender: function(tip) {
         // get the canvas 2d context
-        var el = tip.body.dom, me = this;
+        var el = tip.body.dom,
+            me = this;
+
         me.ctx = el.getContext && el.getContext('2d');
     },
 
@@ -115,10 +118,12 @@ Ext.define('Desktop.VideoWindow', {
         if (me.ctx) {
             try {
                 me.ctx.drawImage(me.videoEl, 0, 0, me.tipWidth, me.tipHeight);
-            } catch(e) {}
+            }
+            // eslint-disable-next-line
+            catch (e) {}
         }
 
         // 20ms to keep the tooltip video smooth
-        Ext.Function.defer(me.renderPreview, 20, me);
+        Ext.defer(me.renderPreview, 20, me);
     }
 });

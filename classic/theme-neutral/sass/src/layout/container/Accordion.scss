@@ -8,6 +8,27 @@
     font-weight: $accordion-header-font-weight;
     font-family: $accordion-header-font-family;
     text-transform: $accordion-header-text-transform;
+    
+    &.#{$prefix}title-focus {
+        .#{$prefix}keyboard-mode & {
+            @if not is-null($accordion-header-focus-color) {
+                color: $accordion-header-focus-color;
+            }
+
+            @if not is-null($accordion-header-focus-background-color) {
+                background-color: $accordion-header-focus-background-color;
+            }
+
+            @if not is-null($accordion-header-focus-outline-width) {
+                @include css-outline(
+                    $width: $accordion-header-focus-outline-width,
+                    $style: $accordion-header-focus-outline-style,
+                    $color: $accordion-header-focus-outline-color,
+                    $offset: $accordion-header-focus-outline-offset
+                );
+            }
+        }
+    }
 }
 
 .#{$prefix}accordion-item {
@@ -23,6 +44,10 @@
     @if $accordion-header-over-background-color != $accordion-header-background-color {
         .#{$prefix}accordion-hd-over {
             background-color: $accordion-header-over-background-color;
+            
+            .#{$prefix}tool-tool-el {
+                background-color: $accordion-header-over-background-color;
+            }
         }
     }
 
@@ -41,17 +66,21 @@
 }
 
 .#{$prefix}accordion-hd {
+    // EXTJSIV-8846: partially transparent png images do not display correctly
+    // in winXP/IE8m when the image element has a transparent background.
+    // to fix this, we give the element the same background-color as the header.
+    .#{$prefix}tool-tool-el {
+        background-color: $accordion-header-background-color;
+        color: $accordion-tool-glyph-color;
+    }
+    
     .#{$prefix}tool-img {
-        @if $accordion-tool-background-image != $tool-background-image {
+        @if $accordion-tool-background-image != $panel-tool-background-image {
             background-image: theme-background-image($accordion-tool-background-image);
         }
-        // EXTJSIV-8846: partially transparent png images do not display correctly
-        // in winXP/IE8m when the image element has a transparent background.
-        // to fix this, we give the element the same background-color as the header.
-        background-color: $accordion-header-background-color;
 
         @if $enable-font-icons {
-            color: $accordion-tool-glyph-color;
+            background-image: none;
         }
     }
 
@@ -59,14 +88,17 @@
     .#{$prefix}tool-collapse-bottom {
         @if $enable-font-icons and ($accordion-tool-collapse-glyph != null) {
             @include font-icon($accordion-tool-collapse-glyph);
-            background: none;
+            background-image: none;
         } @else {
             background-position: 0 ($accordion-header-tool-size * -17);
-
-            @if $tool-include-hover-icons {
-                .#{$prefix}tool-over & {
-                    background-position: (-$accordion-header-tool-size) ($accordion-header-tool-size * -17);
-                }
+        }
+    }
+    
+    @if $tool-include-hover-icons {
+        .#{$prefix}tool-over {
+            .#{$prefix}tool-collapse-top,
+            .#{$prefix}tool-collapse-bottom {
+                background-position: (-$accordion-header-tool-size) ($accordion-header-tool-size * -17);
             }
         }
     }
@@ -75,18 +107,51 @@
     .#{$prefix}tool-expand-bottom {
         @if $enable-font-icons and ($accordion-tool-expand-glyph != null) {
             @include font-icon($accordion-tool-expand-glyph);
-            background: none;
+            background-image: none;
         } @else {
             background-position: 0 ($accordion-header-tool-size * -16);
-
-            @if $tool-include-hover-icons {
-                .#{$prefix}tool-over & {
-                    background-position: (-$accordion-header-tool-size) ($accordion-header-tool-size * -16);
-                }
+        }
+    }
+    
+    @if $tool-include-hover-icons {
+        .#{$prefix}tool-over {
+            .#{$prefix}tool-expand-top,
+            .#{$prefix}tool-expand-bottom {
+                background-position: (-$accordion-header-tool-size) ($accordion-header-tool-size * -16);
             }
         }
     }
 
+    .#{$prefix}tool-focus {
+        .#{$prefix}keyboard-mode & {
+            .#{$prefix}tool-tool-el {
+                @if not is-null($accordion-tool-focus-color) {
+                    color: $accordion-tool-focus-color;
+                }
 
+                @if not is-null($accordion-tool-focus-background-color) {
+                    background-color: $accordion-tool-focus-background-color;
+                }
+            }
 
+            @if $accordion-tool-focus-background-image != $accordion-tool-background-image {
+                .#{$prefix}tool-img {
+                    background-image: theme-background-image($accordion-tool-focus-background-image);
+                }
+
+                @if $enable-font-icons {
+                    background-image: none;
+                }
+            }
+
+            @if not is-null($accordion-tool-focus-outline-width) {
+                @include css-outline(
+                    $width: $accordion-tool-focus-outline-width,
+                    $style: $accordion-tool-focus-outline-style,
+                    $color: $accordion-tool-focus-outline-color,
+                    $offset: $accordion-tool-focus-outline-offset
+                );
+            }
+        }
+    }
 }

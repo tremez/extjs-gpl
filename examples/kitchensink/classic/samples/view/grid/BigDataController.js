@@ -6,7 +6,7 @@
  * 
  */
 Ext.define('KitchenSink.view.grid.BigDataController', {
-    extend: 'KitchenSink.view.grid.ExporterController',
+    extend: 'Ext.app.ViewController',
     alias: 'controller.bigdata',
 
     init: function() {
@@ -31,7 +31,7 @@ Ext.define('KitchenSink.view.grid.BigDataController', {
         return "<b>" + v + "</b>";
     },
 
-    nameSorter: function (rec1, rec2) {
+    nameSorter: function(rec1, rec2) {
         // Sort prioritizing surname over forename as would be expected.
         var rec1Name = rec1.get('surname') + rec1.get('forename'),
             rec2Name = rec2.get('surname') + rec2.get('forename');
@@ -39,13 +39,15 @@ Ext.define('KitchenSink.view.grid.BigDataController', {
         if (rec1Name > rec2Name) {
             return 1;
         }
+
         if (rec1Name < rec2Name) {
             return -1;
         }
+
         return 0;
     },
 
-    onBeforeRenderNoticeEditor: function (editor) {
+    onBeforeRenderNoticeEditor: function(editor) {
         var view = this.getView(),
             store = view.store;
 
@@ -72,13 +74,14 @@ Ext.define('KitchenSink.view.grid.BigDataController', {
 
         if (filterField.value) {
             this.nameFilter = filters.add({
-                id            : 'nameFilter',
-                property      : 'name',
-                value         : filterField.value,
-                anyMatch      : true,
-                caseSensitive : false
+                id: 'nameFilter',
+                property: 'name',
+                value: filterField.value,
+                anyMatch: true,
+                caseSensitive: false
             });
-        } else if (this.nameFilter) {
+        }
+        else if (this.nameFilter) {
             filters.remove(this.nameFilter);
             this.nameFilter = null;
         }
@@ -87,9 +90,30 @@ Ext.define('KitchenSink.view.grid.BigDataController', {
     onShowHeadersToggle: function(checkItem, checked) {
         this.getView().setHeaderBorders(checked);
     },
-    
-    renderMailto: function (v) {
-        return '<a href="mailto:' + encodeURIComponent(v) + '">' + 
+
+    renderMailto: function(v) {
+        return '<a href="mailto:' + encodeURIComponent(v) + '">' +
             Ext.htmlEncode(v) + '</a>';
+    },
+
+    exportTo: function(btn) {
+        var cfg = Ext.merge({
+            title: 'Grid export demo',
+            fileName: 'GridExport' + '.' + (btn.cfg.ext || btn.cfg.type)
+        }, btn.cfg);
+
+        this.getView().saveDocumentAs(cfg);
+    },
+
+    onBeforeDocumentSave: function(view) {
+        view.mask({
+            xtype: 'loadmask',
+            message: 'Document is prepared for export. Please wait ...'
+        });
+    },
+
+    onDocumentSave: function(view) {
+        view.unmask();
     }
+
 });

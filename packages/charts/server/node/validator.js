@@ -5,22 +5,23 @@ function verifyConfig(config, rules) {
         return null;
     }
     var result = {};
+
     for (var name in config) {
         var rule = rules[name];
+
         if (rule && (
-            ( typeof rule === 'function' && rule(config[name]) ) ||
-            ( rule instanceof RegExp && typeof config[name] === 'string' && config[name].match(rule) ) ||
-            ( typeof config[name] === rule )
+            (typeof rule === 'function' && rule(config[name])) ||
+            (rule instanceof RegExp && typeof config[name] === 'string' && config[name].match(rule)) ||
+            (typeof config[name] === rule)
         )) {
             result[name] = config[name];
         }
     }
+
     return result;
 }
-
 
 module.exports = {
     verifyConfig: verifyConfig
 };
-
 

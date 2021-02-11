@@ -24,6 +24,7 @@ Ext.define('Neptune.view.form.widget.RadioButtons', {
                 defaultMargins: '0 3'
             };
         }
+
         this.callParent(arguments);
     }
 });

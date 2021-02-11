@@ -8,38 +8,43 @@ Ext.define('Ext.ux.ajax.SimXhr', {
     mgr: null,
     simlet: null,
 
-    constructor: function (config) {
+    constructor: function(config) {
         var me = this;
 
         Ext.apply(me, config);
         me.requestHeaders = {};
     },
 
-    abort: function () {
+    abort: function() {
         var me = this;
 
         if (me.timer) {
-            clearTimeout(me.timer);
+            Ext.undefer(me.timer);
             me.timer = null;
         }
+
         me.aborted = true;
     },
 
-    getAllResponseHeaders: function () {
+    getAllResponseHeaders: function() {
         var headers = [];
-        Ext.Object.each(this.responseHeaders, function (name, value) {
+
+        Ext.Object.each(this.responseHeaders, function(name, value) {
             headers.push(name + ': ' + value);
         });
+
         return headers.join('\x0d\x0a');
     },
 
-    getResponseHeader: function (header) {
+    getResponseHeader: function(header) {
         var headers = this.responseHeaders;
+
         return (headers && headers[header]) || null;
     },
 
-    open: function (method, url, async, user, password) {
+    open: function(method, url, async, user, password) {
         var me = this;
+
         me.method = method;
         me.url = url;
         me.async = async !== false;
@@ -49,44 +54,47 @@ Ext.define('Ext.ux.ajax.SimXhr', {
         me.setReadyState(1);
     },
 
-    overrideMimeType: function (mimeType) {
+    overrideMimeType: function(mimeType) {
         this.mimeType = mimeType;
     },
 
-    schedule: function () {
+    schedule: function() {
         var me = this,
             delay = me.mgr.delay;
-            
+
         if (delay) {
-            me.timer = Ext.defer(function () {
+            me.timer = Ext.defer(function() {
                 me.onTick();
             }, delay);
-        } else {
+        }
+        else {
             me.onTick();
         }
     },
 
-    send: function (body) {
+    send: function(body) {
         var me = this;
 
         me.body = body;
 
         if (me.async) {
             me.schedule();
-        } else {
+        }
+        else {
             me.onComplete();
         }
     },
 
-    setReadyState: function (state) {
+    setReadyState: function(state) {
         var me = this;
-        if (me.readyState != state) {
+
+        if (me.readyState !== state) {
             me.readyState = state;
             me.onreadystatechange();
         }
     },
 
-    setRequestHeader: function (header, value) {
+    setRequestHeader: function(header, value) {
         this.requestHeaders[header] = value;
     },
 
@@ -94,7 +102,7 @@ Ext.define('Ext.ux.ajax.SimXhr', {
 
     onreadystatechange: Ext.emptyFn,
 
-    onComplete: function () {
+    onComplete: function() {
         var me = this,
             callback;
 
@@ -102,17 +110,22 @@ Ext.define('Ext.ux.ajax.SimXhr', {
         Ext.apply(me, me.simlet.exec(me));
 
         callback = me.jsonpCallback;
+
         if (callback) {
             var text = callback + '(' + me.responseText + ')';
+
             eval(text);
         }
     },
 
-    onTick: function () {
+    onTick: function() {
         var me = this;
 
         me.timer = null;
         me.onComplete();
-        me.onreadystatechange && me.onreadystatechange();
+
+        if (me.onreadystatechange) {
+            me.onreadystatechange();
+        }
     }
 });

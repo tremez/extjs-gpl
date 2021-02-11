@@ -11,7 +11,7 @@ Ext.define('Admin.view.charts.Stacked', {
     ],
 
     title: 'Stacked Bar Chart',
-    iconCls: 'x-fa fa-bar-chart',
+    iconCls: 'x-fa fa-chart-bar',
 
     items: [{
         xtype: 'cartesian',

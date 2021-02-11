@@ -21,10 +21,10 @@ Ext.define('Portal.view.PortalPanel', {
 
     manageHeight: false,
 
-    initComponent : function() {
+    initComponent: function() {
         // Implement a Container beforeLayout call from the layout to this Container
         this.layout = {
-            type : 'column'
+            type: 'column'
         };
         this.callParent();
     },
@@ -39,19 +39,22 @@ Ext.define('Portal.view.PortalPanel', {
         for (i = 0; i < len; i++) {
             item = items[i];
             item.columnWidth = 1 / len;
-            last = (i == len-1);
+            last = (i === len - 1);
 
             if (!i) { // if (first)
                 if (last) {
                     item.addCls(firstAndLast);
-                } else {
+                }
+                else {
                     item.addCls('x-portal-column-first');
                     item.removeCls('x-portal-column-last');
                 }
-            } else if (last) {
+            }
+            else if (last) {
                 item.addCls('x-portal-column-last');
                 item.removeCls('x-portal-column-first');
-            } else {
+            }
+            else {
                 item.removeCls(firstAndLast);
             }
         }
@@ -60,16 +63,17 @@ Ext.define('Portal.view.PortalPanel', {
     },
 
     // private
-    initEvents : function(){
+    initEvents: function() {
         this.callParent();
         this.dd = Ext.create('Portal.view.PortalDropZone', this, this.dropConfig);
     },
 
     // private
-    beforeDestroy : function() {
+    beforeDestroy: function() {
         if (this.dd) {
             this.dd.unreg();
         }
+
         this.callParent();
     }
 });

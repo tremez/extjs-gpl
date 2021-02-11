@@ -26,6 +26,7 @@ Ext.define('Ext.fx.easing.Linear', {
 
         if (deltaTime > duration) {
             this.isEnded = true;
+
             return this.getEndValue();
         }
         else {

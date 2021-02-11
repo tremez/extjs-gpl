@@ -3,3 +3,4 @@ Ext.define('Ext.theme.touchsizing.selection.CheckboxModel', {
 
     headerWidth: 45
 });
+

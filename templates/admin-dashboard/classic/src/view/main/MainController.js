@@ -111,6 +111,7 @@ Ext.define('Admin.view.main.MainController', {
                 // text of the items in the navlist will be revealed by the animation.
                 navigationList.setMicro(false);
             }
+            navigationList.canMeasure = false;
 
             // Start this layout first since it does not require a layout
             refs.senchaLogo.animate({dynamic: true, to: {width: new_width}});
@@ -130,6 +131,7 @@ Ext.define('Admin.view.main.MainController', {
                     afterlayoutanimation: function () {
                         navigationList.setMicro(true);
                         navigationList.el.removeCls('nav-tree-animating');
+                        navigationList.canMeasure = true;
                     },
                     single: true
                 });
@@ -158,7 +160,7 @@ Ext.define('Admin.view.main.MainController', {
 
     onSwitchToModernConfirmed: function (choice) {
         if (choice === 'yes') {
-            var s = location.search;
+            var s = window.location.search;
 
             // Strip "?classic" or "&classic" with optionally more "&foo" tokens
             // following and ensure we don't start with "?".
@@ -166,7 +168,7 @@ Ext.define('Admin.view.main.MainController', {
 
             // Add "?modern&" before the remaining tokens and strip & if there are
             // none.
-            location.search = ('?modern&' + s).replace(/&$/, '');
+            window.location.search = ('?modern&' + s).replace(/&$/, '');
         }
     },
 

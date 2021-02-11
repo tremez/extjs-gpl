@@ -1,11 +1,11 @@
 Ext.define('Ticket.view.user.Group', {
     extend: 'Ext.window.Window',
-    
+
     controller: 'user-group',
     viewModel: {
         type: 'user-group'
     },
-    
+
     width: 450,
     minHeight: 250,
     height: 350,
@@ -15,7 +15,7 @@ Ext.define('Ticket.view.user.Group', {
         type: 'hbox',
         align: 'stretch'
     },
-    
+
     title: 'Edit Groups',
     modal: true,
 
@@ -56,7 +56,7 @@ Ext.define('Ticket.view.user.Group', {
         listeners: {
             click: 'onAddGroup'
         }
-    },'->',{
+    }, '->', {
         text: 'Close',
         listeners: {
             click: 'closeView'

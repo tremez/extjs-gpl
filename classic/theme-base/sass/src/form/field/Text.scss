@@ -2,8 +2,11 @@
     display: table;
     // fill body width
     width: 100%;
-    // expand to fill body height when the field's main element has a height
-    height: 100%;
+
+    .#{$prefix}form-text-heighted & {
+        // expand to fill body height when the field's main element has a height
+        height: 100%;
+    }
 
     @if $include-ff {
         // https://sencha.jira.com/browse/EXTJS-13752
@@ -16,6 +19,38 @@
             display: inline-flex;
             vertical-align: top;
         }
+    }
+}
+
+// These are required because of the way the fields are structured, the
+// min-height must cascade for the input to be able to size correctly
+.#{$prefix}form-type-text.#{$prefix}has-min-height {
+    // this is required because fields with min-height
+    // without a height fail to layout properly.
+    height: 1px;
+
+    .#{$prefix}form-text-field-body,
+    .#{$prefix}form-trigger-wrap,
+    .#{$prefix}form-text-wrap {
+        min-height: inherit;
+
+        @if $include-ie {
+            // IE8 has a rule that sets the min-height as a default,
+            // need a more specific rule
+            .#{$prefix}ie8 & {
+                min-height: inherit;
+            }
+        }
+    }
+
+    @if $include-ie {
+        .#{$prefix}ie8 & .#{$prefix}form-text {
+            min-height: inherit;
+        }
+    }
+
+    .#{$prefix}form-text {
+        height: 100%;
     }
 }
 
@@ -59,13 +94,6 @@
     background: repeat-x 0 0;
     width: 100%;
     height: 100%;
-    @if $include-webkit {
-        .#{$prefix}webkit & {
-            // webkit adds a mysterious extra 3px of space under the textarea when it
-            // is height:100% of its parent
-            height: calc(100% + 3px);
-        }
-    }
 }
 
 .#{$prefix}form-trigger {

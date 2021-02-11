@@ -12,7 +12,7 @@ Ext.define('KitchenSink.view.d3.TreeMapTooltip', {
         'KitchenSink.view.d3.StocksViewModel',
         'Ext.d3.hierarchy.TreeMap'
     ],
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     otherContent: [
         {
@@ -21,7 +21,7 @@ Ext.define('KitchenSink.view.d3.TreeMapTooltip', {
         },
         {
             type: 'Model',
-            path: 'classic/samples/model/Stock.js'
+            path: 'app/model/Stock.js'
         },
         {
             type: 'View Model',
@@ -29,14 +29,14 @@ Ext.define('KitchenSink.view.d3.TreeMapTooltip', {
         },
         {
             type: 'Data',
-            path: 'data/tree/tree.json'
+            path: 'data/tree/stocks.json'
         },
         {
             type: 'Styles',
             path: 'classic/sass/src/view/d3/TreeMapTooltip.scss'
         }
     ],
-    // </example>
+    //</example>
 
     width: 930,
     height: 600,
@@ -46,10 +46,9 @@ Ext.define('KitchenSink.view.d3.TreeMapTooltip', {
         type: 'stocks'
     },
 
-    session: true,
-
     items: {
         xtype: 'd3-treemap',
+        rootVisible: false,
         interactions: {
             type: 'panzoom',
             pan: {
@@ -63,12 +62,13 @@ Ext.define('KitchenSink.view.d3.TreeMapTooltip', {
             store: '{store}',
             selection: '{selection}'
         },
-        rootVisible: false,
         selectEventName: null,
         expandEventName: null,
-        nodeValue: function (node) {
+        nodeValue: function(node) {
             return node.data.cap;
         },
+        noParentValue: true,
+        scaleLabels: true,
         tooltip: {
             cls: 'tip',
             ui: 'd3-treemap',
@@ -82,8 +82,10 @@ Ext.define('KitchenSink.view.d3.TreeMapTooltip', {
                 range: ['#E45649', '#ECECEC', '#50A14F']
             },
             field: 'change',
-            processor: function (axis, scale, node, field) {
-                return node.isLeaf() ? scale(node.data[field]) : '#ececec';
+            processor: function(axis, scale, node, field) {
+                var record = node.data;
+
+                return record.isLeaf() ? scale(record.get(field)) : '#ececec';
             }
         }
     },

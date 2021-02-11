@@ -5,26 +5,28 @@ Ext.define('KitchenSink.view.grid.GroupedGrid', {
     extend: 'Ext.grid.Panel',
     xtype: 'grouped-grid',
     controller: 'grouped-grid',
-    
+
     requires: [
         'Ext.grid.feature.Grouping'
     ],
-    
+
     //<example>
     otherContent: [{
         type: 'Controller',
         path: 'classic/samples/view/grid/GroupedGridController.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/Restaurants.js'
-    },{
+        path: 'app/store/Restaurants.js'
+    }, {
         type: 'Model',
-        path: 'classic/samples/model/Restaurant.js'
+        path: 'app/model/Restaurant.js'
     }],
     profiles: {
         classic: {
         },
         neptune: {
+        },
+        'classic-material': {
         }
     },
     //</example>
@@ -60,7 +62,7 @@ Ext.define('KitchenSink.view.grid.GroupedGrid', {
         dataIndex: 'name',
 
         flex: 1
-    },{
+    }, {
         text: 'Cuisine',
         dataIndex: 'cuisine',
 

@@ -17,7 +17,8 @@ Ext.define('KitchenSink.controller.Samples', {
         'Pie',
         'StockPrice',
         'LinearGeoData',
-        'CheckTree'
+        'CheckTree',
+        'BufferForum'
     ],
 
     controllers: [

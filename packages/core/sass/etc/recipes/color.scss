@@ -3,6 +3,14 @@
  */
 
 /**
+ * @var [$color-by-background-dark-color=null]
+ */
+$color-by-background-dark-color: dynamic(null);
+
+$color-by-background-light-color: dynamic(null);
+
+/**
+ * @method brightness
  * @ignore
  * Returns the brightness (out of 100) of a specified color.
  * @param {color} $color The color you want the brightness value of
@@ -19,6 +27,9 @@
 }
 
 /**
+ * @method color-difference
+ * @param {color} $c1
+ * @param {color} $c2
  * @private
  * @ignore
  */
@@ -27,6 +38,8 @@
 }
 
 /**
+ * @method color-luminance
+ * @param {color} $value
  * @private
  * @ignore
  */
@@ -39,6 +52,7 @@
 }
 
 /**
+ * @method luminosity
  * @ignore
  * Returns the luminosity for a specified color
  * @param {color} color The color to check
@@ -54,10 +68,11 @@
 }
 
 /**
+ * @method contrast-ratio
  * @ignore
  * Returns the contrast ratio between two colors
- * @param {color} color1 The color to check
- * @param {color} color2 The color to check against
+ * @param {color} $color1 The color to check
+ * @param {color} $color2 The color to check against
  * @return {number}
  */
 @function contrast-ratio($color1, $color2) {
@@ -72,7 +87,7 @@
 }
 
 @function get-color-mode($color) {
-    @if brightness($color) > 55 {
+    @if brightness($color) > 65 {
         @return light;
     } @else {
         @return dark;
@@ -81,7 +96,7 @@
 
 $color-mode: 'inverse';
 
-@function color-offset($color, $contrast: 85%, $mode: $color-mode, $inverse: false) {
+@function color-offset($color, $contrast: 85%, $mode: $color-mode, $inverse: false, $light-color: null, $dark-color: null) {
     $flat_color: check-opacity($color);
 
     @if $mode == inverse {
@@ -93,9 +108,9 @@ $color-mode: 'inverse';
     }
 
     @if ($mode == light) {
-        @return rgba(lighten($flat_color, $contrast), opacity($color));
+        @return $light-color or $color-by-background-light-color or rgba(lighten($flat_color, $contrast), opacity($color));
     } @else if ($mode == dark) {
-        @return rgba(darken($flat_color, $contrast), opacity($color));
+        @return $dark-color or $color-by-background-dark-color or rgba(darken($flat_color, $contrast), opacity($color));
     } @else {
         @debug $mode + " is not a valid color mode. Use light, dark, or inverse.";
         @return white;
@@ -120,11 +135,22 @@ $color-mode: 'inverse';
     @return $color;
 }
 
-@function color-by-background($bg-color, $contrast: $default-text-contrast) {
+@function color-by-background($bg-color, $contrast: $default-text-contrast, $light-color: null, $dark-color: null) {
+    @if $bg-color == null {
+        @return null;
+    }
+
     $bg-color: check-opacity($bg-color);
     $tmpmode: get-color-mode($bg-color);
 
-    @return color-offset($bg-color, $contrast, $tmpmode, $inverse: true);
+    @return color-offset(
+        $color: $bg-color,
+        $contrast: $contrast,
+        $mode: $tmpmode,
+        $inverse: true,
+        $light-color: $light-color,
+        $dark-color: $dark-color
+    );
 }
 
 @function get-inset-offset($mode){
@@ -155,22 +181,31 @@ $color-mode: 'inverse';
  *     }
  *
  * @param {color} $bg-color Background color of element.
- * @param {percent} $contrast Contrast of text color to its background.
+ * @param {percent} [$contrast=$default-text-contrast] Contrast of text color to its background.
+ * @param {boolean} [$default-color=false]
+ * @param {boolean} [$inset-text=false]
  *
  */
-@mixin color-by-background($bg-color, $contrast: $default-text-contrast, $default-color: false, $inset-text: false) {
-    @if $default-color {
-        color: color-by-background(hsla(hue($default-color), saturation($default-color), lightness($bg-color), opacity($bg-color)), $contrast);
-    } @else {
-        color: color-by-background($bg-color, $contrast);
-    }
+@mixin color-by-background(
+    $bg-color,
+    $contrast: $default-text-contrast,
+    $default-color: false,
+    $inset-text: false
+) {
+    @if $bg-color != null {
+        @if $default-color {
+            color: color-by-background(hsla(hue($default-color), saturation($default-color), lightness($bg-color), opacity($bg-color)), $contrast);
+        } @else {
+            color: color-by-background($bg-color, $contrast);
+        }
 
-    @if $inset-text {
-        @include inset-by-background($bg-color);
+        @if $inset-text {
+            @include inset-by-background($bg-color);
+        }
     }
 }
 
-@mixin inset-by-background($bg-color, $contrast: 10%, $box: false){
+@mixin inset-by-background($bg-color, $contrast: 10%, $box: false) {
     $bg-color: check-opacity($bg-color);
     $offset: get-inset-offset(get-color-mode($bg-color));
 

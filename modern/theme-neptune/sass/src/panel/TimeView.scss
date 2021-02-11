@@ -1,0 +1,8 @@
+@include timeview-ui(
+    $background-color: $timeview-background-color,
+    $analog-picker-background-color: $timeview-analog-picker-background-color,
+    $analog-picker-color: $timeview-analog-picker-color,
+    $analog-picker-active-color: $timeview-analog-picker-active-color,
+    $analog-picker-hand-color: $timeview-analog-picker-hand-color,
+    $analog-picker-hand-dot-color: $timeview-analog-picker-hand-dot-color
+);

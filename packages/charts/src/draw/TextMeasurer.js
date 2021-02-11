@@ -21,11 +21,13 @@ Ext.define('Ext.draw.TextMeasurer', {
     precise: Ext.isIE8,
 
     measureDivTpl: {
+        id: 'ext-draw-text-measurer',
         tag: 'div',
         style: {
             overflow: 'hidden',
             position: 'relative',
-            'float': 'left', // 'float' is a reserved word. Don't unquote, or it will break the CMD build.
+            // 'float' is a reserved word. Don't unquote, or it will break the CMD build.
+            'float': 'left',
             width: 0,
             height: 0
         },
@@ -58,14 +60,14 @@ Ext.define('Ext.draw.TextMeasurer', {
      * @return {Number} return.width
      * @return {Number} return.height
      */
-    actualMeasureText: function (text, font) {
+    actualMeasureText: function(text, font) {
         var me = Ext.draw.TextMeasurer,
             measureDiv = me.measureDiv,
             FARAWAY = 100000,
-            size;
+            size, parent;
 
         if (!measureDiv) {
-            var parent = Ext.Element.create({
+            parent = Ext.Element.create({
                 //<debug>
                 // Tell the spec runner to ignore this element when checking if the dom is clean.
                 'data-sticky': true,
@@ -78,6 +80,7 @@ Ext.define('Ext.draw.TextMeasurer', {
                     "height": 0
                 }
             });
+
             me.measureDiv = measureDiv = Ext.Element.create({
                 style: {
                     "position": 'absolute',
@@ -90,19 +93,23 @@ Ext.define('Ext.draw.TextMeasurer', {
                     "margin": 0
                 }
             });
+
             Ext.getBody().appendChild(parent);
             parent.appendChild(measureDiv);
         }
+
         if (font) {
             measureDiv.setStyle({
                 font: font,
                 lineHeight: 'normal'
             });
         }
+
         measureDiv.setText('(' + text + ')');
         size = measureDiv.getSize();
         measureDiv.setText('()');
         size.width -= measureDiv.getSize().width;
+
         return size;
     },
 
@@ -116,20 +123,23 @@ Ext.define('Ext.draw.TextMeasurer', {
      * @return {Number} return.width
      * @return {Number} return.height
      */
-    measureTextSingleLine: function (text, font) {
+    measureTextSingleLine: function(text, font) {
+        var width = 0,
+            height = 0,
+            cache, cachedItem, chars, charactor, i, ln, size;
+
         if (this.precise) {
             return this.preciseMeasureTextSingleLine(text, font);
         }
+
         text = text.toString();
-        var cache = this.measureCache,
-            chars = text.split(''),
-            width = 0,
-            height = 0,
-            cachedItem, charactor, i, ln, size;
+        cache = this.measureCache;
+        chars = text.split('');
 
         if (!cache[font]) {
             cache[font] = {};
         }
+
         cache = cache[font];
 
         if (cache[text]) {
@@ -138,13 +148,16 @@ Ext.define('Ext.draw.TextMeasurer', {
 
         for (i = 0, ln = chars.length; i < ln; i++) {
             charactor = chars[i];
+
             if (!(cachedItem = cache[charactor])) {
                 size = this.actualMeasureText(charactor, font);
                 cachedItem = cache[charactor] = size;
             }
+
             width += cachedItem.width;
             height = Math.max(height, cachedItem.height);
         }
+
         return cache[text] = {
             width: width,
             height: height
@@ -152,11 +165,16 @@ Ext.define('Ext.draw.TextMeasurer', {
     },
 
     // A more precise but slower version of the measureTextSingleLine method.
-    preciseMeasureTextSingleLine: function (text, font) {
+    preciseMeasureTextSingleLine: function(text, font) {
+        var measureDiv;
+
         text = text.toString();
-        var measureDiv = this.measureDiv ||
+
+        measureDiv = this.measureDiv ||
             (this.measureDiv = Ext.getBody().createChild(this.measureDivTpl).down('div'));
-        measureDiv.setStyle({font: font || ''});
+
+        measureDiv.setStyle({ font: font || '' });
+
         return Ext.util.TextMetrics.measure(measureDiv, text);
     },
 
@@ -169,9 +187,10 @@ Ext.define('Ext.draw.TextMeasurer', {
      * @return {Object} An object with `width`, `height` and `sizes` properties.
      * @return {Number} return.width
      * @return {Number} return.height
-     * @return {Object} return.sizes Results of individual line measurements, in case of multiline text.
+     * @return {Object} return.sizes Results of individual line measurements, in case of multiline
+     * text.
      */
-    measureText: function (text, font) {
+    measureText: function(text, font) {
         var lines = text.split('\n'),
             ln = lines.length,
             height = 0,
@@ -184,6 +203,7 @@ Ext.define('Ext.draw.TextMeasurer', {
         }
 
         sizes = [];
+
         for (i = 0; i < ln; i++) {
             line = this.measureTextSingleLine(lines[i], font);
             sizes.push(line);

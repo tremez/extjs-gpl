@@ -9,7 +9,7 @@ Ext.define('KitchenSink.view.charts.bar.Stacked100', {
     xtype: 'bar-stacked-100',
     controller: 'bar-stacked-100',
 
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     bodyStyle: 'background: transparent !important',
     layout: {
@@ -21,9 +21,9 @@ Ext.define('KitchenSink.view.charts.bar.Stacked100', {
         path: 'classic/samples/view/charts/bar/Stacked100Controller.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/Browsers.js'
+        path: 'app/store/Browsers.js'
     }],
-    // </example>
+    //</example>
 
     width: 650,
 
@@ -32,35 +32,21 @@ Ext.define('KitchenSink.view.charts.bar.Stacked100', {
         reference: 'chart',
         width: '100%',
         height: 500,
+        captions: {
+            title: 'Bar Charts - 100% Stacked Bars',
+            credits: {
+                text: 'Data: Browser Stats 2012\n' +
+                    'Source: http://www.w3schools.com/',
+                align: 'left'
+            }
+        },
         legend: {
             docked: 'right'
         },
         store: {
             type: 'browsers'
         },
-        insetPadding: 40,
         flipXY: true,
-        sprites: [{
-            type: 'text',
-            text: 'Bar Charts - 100% Stacked Bars',
-            fontSize: 22,
-            width: 100,
-            height: 30,
-            x: 40, // the sprite x position
-            y: 20  // the sprite y position
-        }, {
-            type: 'text',
-            text: 'Data: Browser Stats 2012',
-            fontSize: 10,
-            x: 12,
-            y: 480
-        }, {
-            type: 'text',
-            text: 'Source: http://www.w3schools.com/',
-            fontSize: 10,
-            x: 12,
-            y: 495
-        }],
         axes: [{
             type: 'numeric',
             fields: 'data1',
@@ -96,27 +82,6 @@ Ext.define('KitchenSink.view.charts.bar.Stacked100', {
             }
         }]
         //<example>
-    }, {
-        style: 'margin-top: 10px;',
-        xtype: 'gridpanel',
-        columns: {
-            defaults: {
-                sortable: false,
-                menuDisabled: true,
-                renderer: 'onColumnRender'
-            },
-            items: [
-                { text: 'Month', dataIndex: 'month', renderer: Ext.identityFn },
-                { text: 'IE', dataIndex: 'data1' },
-                { text: 'Firefox', dataIndex: 'data2' },
-                { text: 'Chrome', dataIndex: 'data3' },
-                { text: 'Safari', dataIndex: 'data4' },
-                { text: 'Other', dataIndex: 'other' }
-            ]
-        },
-        store: {type: 'browsers'},
-        width: '100%'
-        //</example>
     }],
 
     tbar: [

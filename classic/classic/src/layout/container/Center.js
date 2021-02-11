@@ -34,15 +34,16 @@
  */
 Ext.define('Ext.layout.container.Center', {
     extend: 'Ext.layout.container.Fit',
-    alias: [ 
+    alternateClassName: 'Ext.ux.layout.Center',
+
+    alias: [
         'layout.center',
         'layout.ux.center'
     ],
 
-    alternateClassName: 'Ext.ux.layout.Center',
     type: 'center',
-    
-    percentRe: /^\d+(?:\.\d+)?\%$/,
+
+    percentRe: /^\d+(?:\.\d+)?%$/,
 
     itemCls: Ext.baseCSSPrefix + 'center-layout-item',
 
@@ -50,31 +51,33 @@ Ext.define('Ext.layout.container.Center', {
         'targetEl'
     ],
 
+    /* eslint-disable indent, max-len */
     renderTpl: [
         '<div id="{ownerId}-targetEl" data-ref="targetEl" class="{targetElCls}" role="presentation">' +
             '{%this.renderBody(out, values)%}' +
         '</div>'
     ],
+    /* eslint-enable indent, max-len */
 
     targetElCls: Ext.baseCSSPrefix + 'center-target',
 
     beginLayout: function(ownerContext) {
         var me = this,
             percentRe = me.percentRe,
-            childItems, len, i, itemContext, item,
-            widthModel, heightModel;
+            childItems, len, i, itemContext, item;
 
         me.callParent([ownerContext]);
-        
+
         childItems = ownerContext.childItems;
+
         for (i = 0, len = childItems.length; i < len; ++i) {
             itemContext = childItems[i];
             item = itemContext.target;
-            widthModel = itemContext.widthModel;
-            heightModel = itemContext.heightModel;
+
             if (percentRe.test(item.width)) {
                 item.getEl().setStyle('width', '');
             }
+
             if (percentRe.test(item.height)) {
                 item.getEl().setStyle('height', '');
             }
@@ -85,6 +88,7 @@ Ext.define('Ext.layout.container.Center', {
 
     beginLayoutCycle: function(ownerContext, firstCycle) {
         var targetEl = this.targetEl;
+
         this.callParent([ownerContext, firstCycle]);
         targetEl.setStyle('width', '');
         targetEl.setStyle('height', '');
@@ -102,11 +106,11 @@ Ext.define('Ext.layout.container.Center', {
         return this.targetEl;
     },
 
-    getItemSizePolicy: function (item, ownerSizeModel) {
+    getItemSizePolicy: function(item, ownerSizeModel) {
         var me = this,
             sizeModel = ownerSizeModel || me.owner.getSizeModel(),
             percentRe = me.percentRe,
-            mode = ((sizeModel.width.shrinkWrap || !percentRe.test(item.width)) ? 0 : 1) | // jshint ignore:line
+            mode = ((sizeModel.width.shrinkWrap || !percentRe.test(item.width)) ? 0 : 1) |
                   ((sizeModel.height.shrinkWrap || !percentRe.test(item.height)) ? 0 : 2);
 
         return me.sizePolicies[mode];
@@ -122,6 +126,7 @@ Ext.define('Ext.layout.container.Center', {
 
         this.callParent([ownerContext]);
         info = ownerContext.state.info;
+
         if (ownerContext.widthModel.shrinkWrap) {
             targetElContext.setWidth(info.contentWidth);
         }
@@ -131,41 +136,47 @@ Ext.define('Ext.layout.container.Center', {
         }
     },
 
-    getPos: function (itemContext, info, dimension) {
+    getPos: function(itemContext, info, dimension) {
         var modelName = dimension + 'Model',
             size = itemContext.props[dimension],
             pos = 0;
 
         if (!itemContext[modelName].calculated) {
-             size += info.margins[dimension];
+            size += info.margins[dimension];
         }
 
         if (!info.ownerContext[modelName].shrinkWrap) {
             pos = Math.round((info.targetSize[dimension] - size) / 2);
+
             if (isNaN(pos)) {
                 this.done = false;
             }
         }
+
         return Math.max(pos, 0);
     },
 
-    positionItemX: function (itemContext, info) {
+    positionItemX: function(itemContext, info) {
         var left = this.getPos(itemContext, info, 'width');
+
         itemContext.setProp('x', left);
     },
 
-    positionItemY: function (itemContext, info) {
+    positionItemY: function(itemContext, info) {
         var top = this.getPos(itemContext, info, 'height');
+
         itemContext.setProp('y', top);
     },
 
-    setItemHeight: function (itemContext, info) {
+    setItemHeight: function(itemContext, info) {
         var ratio = parseFloat(itemContext.target.height) / 100;
+
         itemContext.setHeight(Math.round((info.targetSize.height - info.margins.height) * ratio));
     },
 
-    setItemWidth: function (itemContext, info) {
+    setItemWidth: function(itemContext, info) {
         var ratio = parseFloat(itemContext.target.width) / 100;
+
         itemContext.setWidth(Math.round((info.targetSize.width - info.margins.width) * ratio));
     }
 });

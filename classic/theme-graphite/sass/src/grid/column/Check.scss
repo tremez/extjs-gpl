@@ -1,0 +1,18 @@
+.#{$prefix}keyboard-mode {
+    .#{$prefix}grid-cell {
+        .#{$prefix}grid-checkcolumn:focus {
+            background-color: $grid-row-cell-focus-background-color;
+            
+            &:after {
+                color: $checkbox-focus-glyph-color;
+            }
+        }
+    }
+}
+
+.#{$prefix}grid-item-selected, 
+.#{$prefix}grid-cell-selected {
+    .#{$prefix}grid-checkcolumn:after {
+        color: $checkbox-glyph-color;
+    }
+}

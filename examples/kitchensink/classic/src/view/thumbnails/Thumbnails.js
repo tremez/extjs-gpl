@@ -27,19 +27,20 @@ Ext.define('KitchenSink.view.thumbnails.Thumbnails', {
         '<div class="thumbnail-text">{text}</div>',
         {
             bkgnd: {
-                crisp:           'border-circle',
-                material:        'square',
-                'crisp-touch':   'circle',
-                neptune:         'border-square',
+                crisp: 'border-circle',
+                material: 'square',
+                'crisp-touch': 'circle',
+                neptune: 'border-square',
                 'neptune-touch': 'square',
-                classic:         'rounded-square',
-                gray:            'rounded-square',
-                triton:          'square'
+                classic: 'rounded-square',
+                gray: 'rounded-square',
+                triton: 'square',
+                'classic-material': 'square'
             },
             styles: {
                 // Bring the star close enough to the circle bkgnd to look connected
-                crisp:           'style="margin: 8px"',
-                'crisp-touch':   'style="margin: 8px"'
+                crisp: 'style="margin: 8px"',
+                'crisp-touch': 'style="margin: 8px"'
             }
         }
     ]

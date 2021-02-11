@@ -1,5 +1,5 @@
 /**
- * @deprecated Please use {@link Ext.data.field.Field field types} instead.
+ * @deprecated 5.0 Please use {@link Ext.data.field.Field field types} instead.
  */
 Ext.define('Ext.data.Types', {
     singleton: true,
@@ -13,11 +13,12 @@ Ext.define('Ext.data.Types', {
          * A regular expression for stripping non-numeric characters from a numeric value.
          * This should be overridden for localization.
          */
-        stripRe: /[\$,%]/g,
+        stripRe: /[$,%]/g,
 
         /**
          * @property {Object} AUTO
-         * This data type means that no conversion is applied to the raw data before it is placed into a Record.
+         * This data type means that no conversion is applied to the raw data before it is placed
+         * into a Record.
          */
         AUTO: {
             sortType: SortTypes.none,
@@ -26,11 +27,13 @@ Ext.define('Ext.data.Types', {
 
         /**
          * @property {Object} STRING
-         * This data type means that the raw data is converted into a String before it is placed into a Record.
+         * This data type means that the raw data is converted into a String before it is placed
+         * into a Record.
          */
         STRING: {
             convert: function(v) {
                 var defaultValue = this.getAllowNull() ? null : '';
+
                 return (v === undefined || v === null) ? defaultValue : String(v);
             },
             sortType: SortTypes.asUCString,
@@ -39,7 +42,8 @@ Ext.define('Ext.data.Types', {
 
         /**
          * @property {Object} INT
-         * This data type means that the raw data is converted into an integer before it is placed into a Record.
+         * This data type means that the raw data is converted into an integer before it is placed
+         * into a Record.
          *
          * The synonym `INTEGER` is equivalent.
          */
@@ -51,8 +55,10 @@ Ext.define('Ext.data.Types', {
                 if (typeof v === 'number') {
                     return parseInt(v, 10);
                 }
-                return v !== undefined && v !== null && v !== '' ?
-                    parseInt(String(v).replace(Types.stripRe, ''), 10) : (this.getAllowNull() ? null : 0);
+
+                return v !== undefined && v !== null && v !== ''
+                    ? parseInt(String(v).replace(Types.stripRe, ''), 10)
+                    : (this.getAllowNull() ? null : 0);
             },
             sortType: SortTypes.none,
             type: 'int'
@@ -60,7 +66,8 @@ Ext.define('Ext.data.Types', {
 
         /**
          * @property {Object} FLOAT
-         * This data type means that the raw data is converted into a number before it is placed into a Record.
+         * This data type means that the raw data is converted into a number before it is placed
+         * into a Record.
          *
          * The synonym `NUMBER` is equivalent.
          */
@@ -69,8 +76,10 @@ Ext.define('Ext.data.Types', {
                 if (typeof v === 'number') {
                     return v;
                 }
-                return v !== undefined && v !== null && v !== '' ?
-                    parseFloat(String(v).replace(Types.stripRe, ''), 10) : (this.getAllowNull() ? null : 0);
+
+                return v !== undefined && v !== null && v !== ''
+                    ? parseFloat(String(v).replace(Types.stripRe, ''), 10)
+                    : (this.getAllowNull() ? null : 0);
             },
             sortType: SortTypes.none,
             type: 'float'
@@ -78,8 +87,8 @@ Ext.define('Ext.data.Types', {
 
         /**
          * @property {Object} BOOL
-         * This data type means that the raw data is converted into a boolean before it is placed into
-         * a Record. The string "true" and the number 1 are converted to boolean true.
+         * This data type means that the raw data is converted into a boolean before it is placed
+         * into a Record. The string "true" and the number 1 are converted to boolean true.
          *
          * The synonym `BOOLEAN` is equivalent.
          */
@@ -88,10 +97,12 @@ Ext.define('Ext.data.Types', {
                 if (typeof v === 'boolean') {
                     return v;
                 }
+
                 if (this.getAllowNull() && (v === undefined || v === null || v === '')) {
                     return null;
                 }
-                return v === 'true' || v == 1;
+
+                return v === 'true' || v == 1; // eslint-disable-line eqeqeq
             },
             sortType: SortTypes.none,
             type: 'bool'
@@ -99,9 +110,9 @@ Ext.define('Ext.data.Types', {
 
         /**
          * @property {Object} DATE
-         * This data type means that the raw data is converted into a Date before it is placed into a Record.
-         * The date format is specified in the constructor of the {@link Ext.data.Field} to which this type is
-         * being applied.
+         * This data type means that the raw data is converted into a Date before it is placed
+         * into a Record. The date format is specified in the constructor of the
+         * {@link Ext.data.Field} to which this type is being applied.
          */
         DATE: {
             convert: function(v) {
@@ -111,15 +122,19 @@ Ext.define('Ext.data.Types', {
                 if (!v) {
                     return null;
                 }
-                // instanceof check ~10 times faster than Ext.isDate. Values here will not be cross-document objects
+
+                // instanceof check ~10 times faster than Ext.isDate. Values here will not
+                // be cross-document objects
                 if (v instanceof Date) {
                     return v;
                 }
+
                 if (df) {
                     return Ext.Date.parse(v, df);
                 }
 
                 parsed = Date.parse(v);
+
                 return parsed ? new Date(parsed) : null;
             },
             sortType: SortTypes.asDate,
@@ -128,6 +143,7 @@ Ext.define('Ext.data.Types', {
     });
 
     /**
+     * @member Ext.data.Types
      * @property {Object} BOOLEAN
      * This data type means that the raw data is converted into a boolean before it is placed into
      * a Record. The string "true" and the number 1 are converted to boolean `true`.
@@ -137,16 +153,20 @@ Ext.define('Ext.data.Types', {
     Types.BOOLEAN = Types.BOOL;
 
     /**
+     * @member Ext.data.Types
      * @property {Object} INTEGER
-     * This data type means that the raw data is converted into an integer before it is placed into a Record.
+     * This data type means that the raw data is converted into an integer before it is placed
+     * into a Record.
      *
      * The synonym `INT` is equivalent.
      */
     Types.INTEGER = Types.INT;
 
     /**
+     * @member Ext.data.Types
      * @property {Object} NUMBER
-     * This data type means that the raw data is converted into a number before it is placed into a Record.
+     * This data type means that the raw data is converted into a number before it is placed
+     * into a Record.
      *
      * The synonym `FLOAT` is equivalent.
      */

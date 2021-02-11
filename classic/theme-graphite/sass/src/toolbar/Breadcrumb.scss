@@ -1,0 +1,26 @@
+@if $include-breadcrumb-default-ui {
+    @include extjs-breadcrumb-graphite-ui(
+        $ui: $breadcrumb-button-ui,
+        
+        $color: $button-breadcrumb-color,
+        $color-over: $button-breadcrumb-color-over,
+        $color-focus: $button-breadcrumb-color-focus,
+        $color-focus-over: $button-breadcrumb-color-focus-over,
+        $color-pressed: $button-breadcrumb-color-pressed,
+        $color-pressed-over: $button-breadcrumb-color-pressed-over,
+        $color-focus-pressed: $button-breadcrumb-color-focus-pressed,
+        
+        $background-color: $button-breadcrumb-background-color,
+        $background-color-over: $button-breadcrumb-background-color-over,
+        $background-color-focus: $button-breadcrumb-background-color-focus,
+        $background-color-focus-over: $button-breadcrumb-background-color-focus-over,
+        $background-color-pressed: $button-breadcrumb-background-color-pressed,
+        $background-color-pressed-over: $button-breadcrumb-background-color-pressed-over,
+        $background-color-focus-pressed: $button-breadcrumb-background-color-focus-pressed,
+        
+        $inner-border-width-focus-over: $button-breadcrumb-focus-over-border-width,
+        $inner-border-color-focus-over: $button-breadcrumb-focus-over-border-color,
+        
+        $opacity-disabled: $button-breadcrumb-opacity-disabled
+    );
+}

@@ -1,8 +1,12 @@
-describe("Ext.plugin.Viewport", function() {
+topSuite("Ext.plugin.Viewport",
+    ['Ext.container.Viewport', 'Ext.Panel', 'Ext.app.ViewModel',
+     'Ext.app.ViewController'],
+function() {
     var c;
 
     function makeComponent(cfg, ComponentClass) {
         var Cls = ComponentClass || Ext.Component;
+
         c = new Cls(Ext.apply({
             renderTo: Ext.getBody(),
             plugins: 'viewport'
@@ -31,6 +35,7 @@ describe("Ext.plugin.Viewport", function() {
         it("should be configured after render", function() {
             makeComponent();
             var sizeModel = c.getSizeModel();
+
             expect(sizeModel.width.configured).toBe(true);
             expect(sizeModel.height.configured).toBe(true);
         });
@@ -64,6 +69,7 @@ describe("Ext.plugin.Viewport", function() {
                     bind: '{foo}',
                     renderTo: Ext.getBody()
                 });
+
                 expect(other.lookupViewModel()).toBe(vm);
                 other.destroy();
             });
@@ -91,6 +97,7 @@ describe("Ext.plugin.Viewport", function() {
                 var other = new Ext.Component({
                     renderTo: Ext.getBody()
                 });
+
                 expect(other.lookupSession()).toBe(session);
                 other.destroy();
             });
@@ -118,6 +125,7 @@ describe("Ext.plugin.Viewport", function() {
                 var other = new Ext.Component({
                     renderTo: Ext.getBody()
                 });
+
                 expect(other.lookupController()).toBe(controller);
                 other.destroy();
             });
@@ -128,6 +136,7 @@ describe("Ext.plugin.Viewport", function() {
         describe("inheritedState", function() {
             it("should not pollute the rootInheritedState with a viewmodel", function() {
                 var vm = new Ext.app.ViewModel();
+
                 makeComponent({
                     viewModel: vm
                 });
@@ -137,6 +146,7 @@ describe("Ext.plugin.Viewport", function() {
 
             it("should not pollute the rootInheritedState with a session", function() {
                 var session = new Ext.data.Session();
+
                 makeComponent({
                     session: session
                 });
@@ -147,6 +157,7 @@ describe("Ext.plugin.Viewport", function() {
 
             it("should not pollute the rootInheritedState with a controller", function() {
                 var controller = new Ext.app.ViewController();
+
                 makeComponent({
                     controller: controller
                 });
@@ -222,9 +233,13 @@ describe("Ext.plugin.Viewport", function() {
                 afterEach(function() {
                     document.documentElement.style.height = document.documentElement.style.overflow = '';
                 });
-                
+
                 it('should only fire one global scroll event per scroll', function() {
                     c.scrollTo(null, 500);
+
+                    // Read to force synchronous layout
+                    // eslint-disable-next-line no-unused-expressions
+                    document.body.offsetHeight;
 
                     // Wait for potentially asynchronous scroll events to fire.
                     waitsFor(function() {
@@ -237,6 +252,7 @@ describe("Ext.plugin.Viewport", function() {
                 });
             });
         }
+
         makeSuite('Container', Ext.container.Container);
         makeSuite('Panel', Ext.panel.Panel);
     });
@@ -244,15 +260,17 @@ describe("Ext.plugin.Viewport", function() {
     describe("global DOM scroll viewport", function() {
         function makeSuite(name, cls) {
             describe("auto layout " + name, function() {
-                var viewportScrollCount = 0;
+                var viewportScrollCount = 0,
+                    incrementFn = function() {
+                        viewportScrollCount++;
+                    };
 
                 beforeEach(function() {
                     document.documentElement.style.height = '2000px';
                     document.documentElement.style.overflow = 'auto';
 
-                    Ext.on('scroll', function() {
-                        viewportScrollCount++;
-                    });
+                    Ext.on('scroll', incrementFn);
+
                     makeComponent({
                         scrollable: true,
                         items: {
@@ -265,8 +283,9 @@ describe("Ext.plugin.Viewport", function() {
 
                 afterEach(function() {
                     document.documentElement.style.height = document.documentElement.style.overflow = '';
+                    Ext.un('scroll', incrementFn);
                 });
-                
+
                 it('should only fire one global scroll event per scroll', function() {
                     c.scrollTo(null, 500);
 
@@ -281,7 +300,8 @@ describe("Ext.plugin.Viewport", function() {
                 });
             });
         }
-        //makeSuite('Container', Ext.container.Container);
+
+        // makeSuite('Container', Ext.container.Container);
         makeSuite('Panel', Ext.panel.Panel);
     });
 });

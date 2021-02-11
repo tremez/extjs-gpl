@@ -1,15 +1,15 @@
 Ext.define('Neptune.view.menu.Menus', function() {
-    var count = 0,
-        container, item;
+    var count = 0;
 
     function getItems() {
         count++;
+
         return [
             { text: 'icon', iconCls: 'feed' },
             { checked: true, text: 'check item' },
             { text: 'plain item', plain: true },
             { text: 'Sub Menu', menu: [
-                { text: 'no icon' },
+                { text: 'no icon' }
             ] },
             { xtype: 'menucheckitem', text: 'check icon', iconCls: 'feed' },
             { checked: false, text: 'check icon right', iconCls: 'feed', iconAlign: 'right' },
@@ -27,16 +27,16 @@ Ext.define('Neptune.view.menu.Menus', function() {
             { xtype: 'textfield' },
             { xtype: 'combo' },
             { xtype: 'numberfield' },
-            {text: 'Checked Option', checked: true,  group: 'opts' + count},
-            {text: 'Unchecked Option', checked: false, group: 'opts' + count},
-            {text: 'Ck Option Menu', checked: true,  group: 'grp' + count, menu: [
+            { text: 'Checked Option', checked: true, group: 'opts' + count },
+            { text: 'Unchecked Option', checked: false, group: 'opts' + count },
+            { text: 'Ck Option Menu', checked: true, group: 'grp' + count, menu: [
                 { text: 'fubar' }
             ] },
-            {text: 'Ck Opt Menu Icon', iconCls: 'feed', checked: true,  group: 'foo' + count, menu: [
+            { text: 'Ck Opt Menu Icon', iconCls: 'feed', checked: true, group: 'foo' + count, menu: [
                 { text: 'fubar' }
             ] },
-            {text: 'Ck Opt Icon', iconCls: 'feed', checked: true, group: 'bar' + count},
-            {text: 'Ck Opt Icon Right', iconCls: 'feed', iconAlign: 'right', checked: true, group: 'baz' + count}
+            { text: 'Ck Opt Icon', iconCls: 'feed', checked: true, group: 'bar' + count },
+            { text: 'Ck Opt Icon Right', iconCls: 'feed', iconAlign: 'right', checked: true, group: 'baz' + count }
         ];
     }
 

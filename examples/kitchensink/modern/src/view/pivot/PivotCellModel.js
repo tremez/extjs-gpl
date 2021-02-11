@@ -1,22 +1,26 @@
 Ext.define('KitchenSink.view.pivot.PivotCellModel', {
     extend: 'Ext.app.ViewModel',
-
     alias: 'viewmodel.pivot-cell-model',
 
     formulas: {
-        cellStyle: function (get) {
+        cellStyle: function(get) {
             var isGrandTotal = get('record.isRowGrandTotal') || get('column.isColGrandTotal'),
                 isHeader = get('record.isRowGroupHeader') || get('column.isColGroupTotal'),
                 isFooter = get('record.isRowGroupTotal'),
                 value = get('value'),
-                cls = get('column.topAxisColumn') ? (value >= 500 ? 'pivotCellAbove500' : 'pivotCellUnder500') : '';
+                cls;
 
-            if(isGrandTotal){
+            if (isGrandTotal) {
                 cls = 'pivotCellGrandTotal';
-            }else if(isFooter){
+            }
+            else if (isFooter) {
                 cls = 'pivotCellGroupFooter';
-            }else if(isHeader){
+            }
+            else if (isHeader) {
                 cls = 'pivotCellGroupHeader';
+            }
+            else {
+                cls = get('column.topAxisColumn') ? (value >= 500 ? 'pivotCellAbove500' : 'pivotCellUnder500') : '';
             }
 
             return cls;

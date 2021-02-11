@@ -27,14 +27,16 @@ Ext.env.OS = function(userAgent, platform, browserScope) {
         if (prefixes.hasOwnProperty(i)) {
             prefix = prefixes[i];
 
-            match = userAgent.match(new RegExp('(?:'+prefix+')([^\\s;]+)'));
+            match = userAgent.match(new RegExp('(?:' + prefix + ')([^\\s;]+)'));
 
             if (match) {
                 name = names[i];
                 match1 = match[1];
 
-                // This is here because some HTC android devices show an OSX Snow Leopard userAgent by default.
-                // And the Kindle Fire doesn't have any indicator of Android as the OS in its User Agent
+                // This is here because some HTC android devices show an OSX Snow Leopard
+                // userAgent by default.
+                // And the Kindle Fire doesn't have any indicator of Android as the OS in its
+                // User Agent
                 if (match1 && match1 === "HTC_") {
                     version = new Ext.Version("2.3");
                 }
@@ -96,6 +98,7 @@ Ext.env.OS = function(userAgent, platform, browserScope) {
         if (this.is.Android2 || this.is.Android3 || browserScope.version.shortVersion === 501) {
             browserScope.setFlag("AndroidStock");
         }
+
         if (this.is.Android4) {
             browserScope.setFlag("AndroidStock");
             browserScope.setFlag("AndroidStock4");
@@ -129,8 +132,9 @@ Ext.env.OS.prototype = {
      *         // Equivalent to (Ext.os.is.iOS && Ext.os.version.equals(3.2))
      *     }
      *
-     * Note that only {@link Ext.Version#getMajor major component} and {@link Ext.Version#getShortVersion simplified}
-     * value of the version are available via direct property checking. Supported values are:
+     * Note that only {@link Ext.Version#getMajor major component} and
+     * {@link Ext.Version#getShortVersion simplified} value of the version are available
+     * via direct property checking. Supported values are:
      *
      * - iOS
      * - iPad
@@ -149,7 +153,7 @@ Ext.env.OS.prototype = {
      * @param {String} name The OS name to check.
      * @return {Boolean}
      */
-    is: function (name) {
+    is: function(name) {
         return !!this[name];
     },
 
@@ -178,7 +182,7 @@ Ext.env.OS.prototype = {
      */
     version: null,
 
-    setFlag: function (name, value) {
+    setFlag: function(name, value) {
         if (value === undefined) {
             value = true;
         }
@@ -186,6 +190,7 @@ Ext.env.OS.prototype = {
         if (this.flags) {
             this.flags[name] = value;
         }
+
         this.is[name] = value;
         this.is[name.toLowerCase()] = value;
 
@@ -194,93 +199,95 @@ Ext.env.OS.prototype = {
 };
 
 (function() {
-    var navigation = Ext.global.navigator,
-        userAgent = navigation.userAgent,
-        OS = Ext.env.OS,
-        is = (Ext.is || (Ext.is = {})),
-        osEnv, osName, deviceType;
+var navigation = Ext.global.navigator,
+    userAgent = navigation.userAgent,
+    OS = Ext.env.OS,
+    is = (Ext.is || (Ext.is = {})),
+    osEnv, osName, deviceType;
 
-    OS.prototype.flags = is;
+OS.prototype.flags = is;
 
-    /**
-     * @class Ext.os
-     * @extends Ext.env.OS
-     * @singleton
-     * Provides useful information about the current operating system environment.
-     *
-     * Example:
-     *
-     *     if (Ext.os.is.Windows) {
-     *         // Windows specific code here
-     *     }
-     *
-     *     if (Ext.os.is.iOS) {
-     *         // iPad, iPod, iPhone, etc.
-     *     }
-     *
-     *     console.log("Version " + Ext.os.version);
-     *
-     * For a full list of supported values, refer to the {@link #is} property/method.
-     *
-     */
-    Ext.os = osEnv = new OS(userAgent, navigation.platform);
+/**
+ * @class Ext.os
+ * @extends Ext.env.OS
+ * @singleton
+ * Provides useful information about the current operating system environment.
+ *
+ * Example:
+ *
+ *     if (Ext.os.is.Windows) {
+ *         // Windows specific code here
+ *     }
+ *
+ *     if (Ext.os.is.iOS) {
+ *         // iPad, iPod, iPhone, etc.
+ *     }
+ *
+ *     console.log("Version " + Ext.os.version);
+ *
+ * For a full list of supported values, refer to the {@link #is} property/method.
+ *
+ */
+Ext.os = osEnv = new OS(userAgent, navigation.platform);
 
-    osName = osEnv.name;
+osName = osEnv.name;
 
-    // A couple compatible flavors:
-    Ext['is' + osName] = true; // e.g., Ext.isWindows
-    Ext.isMac = is.Mac = is.MacOS;
+// A couple compatible flavors:
+Ext['is' + osName] = true; // e.g., Ext.isWindows
+Ext.isMac = is.Mac = is.MacOS;
+Ext.isApple = Ext.isMac || Ext.isiOS;
 
-    var search = window.location.search.match(/deviceType=(Tablet|Phone)/),
-        nativeDeviceType = window.deviceType;
+// eslint-disable-next-line vars-on-top
+var search = window.location.search.match(/deviceType=(Tablet|Phone)/),
+    nativeDeviceType = window.deviceType;
 
-    // Override deviceType by adding a get variable of deviceType. NEEDED FOR DOCS APP.
-    // E.g: example/kitchen-sink.html?deviceType=Phone
-    if (search && search[1]) {
-        deviceType = search[1];
+// Override deviceType by adding a get variable of deviceType. NEEDED FOR DOCS APP.
+// E.g: example/kitchen-sink.html?deviceType=Phone
+if (search && search[1]) {
+    deviceType = search[1];
+}
+else if (nativeDeviceType === 'iPhone') {
+    deviceType = 'Phone';
+}
+else if (nativeDeviceType === 'iPad') {
+    deviceType = 'Tablet';
+}
+else {
+    if (!osEnv.is.Android && !osEnv.is.iOS && !osEnv.is.WindowsPhone && /Windows|Linux|MacOS|ChromeOS/.test(osName)) {
+        deviceType = 'Desktop';
+
+        // always set it to false when you are on a desktop not using Ripple Emulation
+        Ext.browser.is.WebView = !!Ext.browser.is.Ripple;
     }
-    else if (nativeDeviceType === 'iPhone') {
-        deviceType = 'Phone';
-    }
-    else if (nativeDeviceType === 'iPad') {
+    else if (osEnv.is.iPad || osEnv.is.RIMTablet || osEnv.is.Android3 ||
+             Ext.browser.is.Silk ||
+            (osEnv.is.Android && userAgent.search(/mobile/i) === -1)) {
         deviceType = 'Tablet';
     }
     else {
-        if (!osEnv.is.Android && !osEnv.is.iOS && !osEnv.is.WindowsPhone && /Windows|Linux|MacOS/.test(osName)) {
-            deviceType = 'Desktop';
-
-            // always set it to false when you are on a desktop not using Ripple Emulation
-            Ext.browser.is.WebView = !!Ext.browser.is.Ripple;
-        }
-        else if (osEnv.is.iPad || osEnv.is.RIMTablet || osEnv.is.Android3 ||
-                 Ext.browser.is.Silk ||
-                (osEnv.is.Android && userAgent.search(/mobile/i) === -1)) {
-            deviceType = 'Tablet';
-        }
-        else {
-            deviceType = 'Phone';
-        }
+        deviceType = 'Phone';
     }
+}
 
-    /**
-     * @property {String} deviceType
-     * The generic type of the current device.
-     *
-     * Possible values:
-     *
-     * - Phone
-     * - Tablet
-     * - Desktop
-     *
-     * For testing purposes the deviceType can be overridden by adding
-     * a deviceType parameter to the URL of the page, like so:
-     *
-     *     http://localhost/mypage.html?deviceType=Tablet
-     *
-     * @member Ext.os
-     */
-    osEnv.setFlag(deviceType, true);
-    osEnv.deviceType = deviceType;
+/**
+ * @property {String} deviceType
+ * The generic type of the current device.
+ *
+ * Possible values:
+ *
+ * - Phone
+ * - Tablet
+ * - Desktop
+ *
+ * For testing purposes the deviceType can be overridden by adding
+ * a deviceType parameter to the URL of the page, like so:
+ *
+ *     http://localhost/mypage.html?deviceType=Tablet
+ *
+ * @member Ext.os
+ */
+osEnv.setFlag(deviceType, true);
+osEnv.deviceType = deviceType;
 
-    delete OS.prototype.flags;
+delete OS.prototype.flags;
 }());

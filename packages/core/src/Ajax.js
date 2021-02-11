@@ -73,33 +73,33 @@ Ext.define('Ext.Ajax', {
      * @property {Boolean} disableCaching
      * True to add a unique cache-buster param to GET requests. Defaults to true.
      */
-    
+
     /**
      * @property {String} url
      * The default URL to be used for requests to the server.
      * If the server receives all requests through one URL, setting this once is easier than
      * entering it on every request.
      */
-    
+
     /**
      * @property {Object} extraParams
      * An object containing properties which are used as extra parameters to each request made
      * by this object. Session information and other data that you need
      * to pass with each request are commonly put here.
      */
-    
+
     /**
      * @property {Object} defaultHeaders
      * An object containing request headers which are added to each request made by this object.
      */
-    
+
     /**
      * @property {String} method
      * The default HTTP method to be used for requests. Note that this is case-sensitive and
      * should be all caps (if not set but params are present will use `POST`, otherwise will
      * use `GET`.)
      */
-    
+
     /**
      * @property {Number} timeout
      * The timeout in milliseconds to be used for requests. Defaults to 30000.

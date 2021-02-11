@@ -3,11 +3,9 @@ Ext.define('KitchenSink.profile.Tablet', {
 
     controllers: ['Main'],
 
-    views: ['Main', 'TouchEvents'],
+    mainView: 'tablet.Main',
 
-    mainView: 'KitchenSink.view.tablet.Main',
-
-    isActive: function () {
+    isActive: function() {
         return Ext.os.is.Tablet;
     }
 });

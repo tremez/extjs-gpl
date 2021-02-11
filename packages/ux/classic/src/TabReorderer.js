@@ -9,7 +9,7 @@ Ext.define('Ext.ux.TabReorderer', {
 
     init: function(tabPanel) {
         var me = this;
-        
+
         me.callParent([tabPanel.getTabBar()]);
 
         // Ensure reorderable property is copied into dynamically added tabs
@@ -17,16 +17,15 @@ Ext.define('Ext.ux.TabReorderer', {
     },
 
     onBoxReady: function() {
-        var tabs,
-            len,
-            i = 0,
-            tab;
+        var tabs, tab, len,
+            i = 0;
 
         this.callParent(arguments);
 
         // Copy reorderable property from card into tab
         for (tabs = this.container.items.items, len = tabs.length; i < len; i++) {
             tab = tabs[i];
+
             if (tab.card) {
                 tab.reorderable = tab.card.reorderable;
             }
@@ -40,7 +39,8 @@ Ext.define('Ext.ux.TabReorderer', {
     afterBoxReflow: function() {
         var me = this;
 
-        // Cannot use callParent, this is not called in the scope of this plugin, but that of its Ext.dd.DD object
+        // Cannot use callParent, this is not called in the scope of this plugin,
+        // but that of its Ext.dd.DD object
         Ext.ux.BoxReorderer.prototype.afterBoxReflow.apply(me, arguments);
 
         // Move the associated card to match the tab order

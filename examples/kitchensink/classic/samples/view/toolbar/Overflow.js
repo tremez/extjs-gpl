@@ -17,23 +17,43 @@ Ext.define('KitchenSink.view.toolbar.Overflow', {
     profiles: {
         classic: {
             width: 380,
-            height: 150
+            height: 150,
+            topHeight: 100,
+            bottomHeight: 100
         },
         neptune: {
             width: 475,
-            height: 244
+            height: 244,
+            topHeight: 100,
+            bottomHeight: 100
         },
         triton: {
             width: 555,
-            height: 250
+            height: 250,
+            topHeight: 100,
+            bottomHeight: 100
         },
         'neptune-touch': {
             width: 620,
-            height: 250
+            height: 250,
+            topHeight: 100,
+            bottomHeight: 100
+        },
+        graphite: {
+            width: 680,
+            height: 350,
+            topHeight: 155,
+            bottomHeight: 135
+        },
+        'classic-material': {
+            width: 555,
+            height: 250,
+            topHeight: 155,
+            bottomHeight: 135
         }
+
     },
     //</example>
-
     width: '${width}',
     layout: {
         type: 'vbox',
@@ -47,7 +67,7 @@ Ext.define('KitchenSink.view.toolbar.Overflow', {
     },
 
     items: [{
-        height: 100,
+        height: '${topHeight}',
 
         dockedItems: [{
             xtype: 'toolbar-overflowbar',
@@ -63,7 +83,7 @@ Ext.define('KitchenSink.view.toolbar.Overflow', {
             overflowHandler: 'scroller'
         }]
     }, {
-        height: 100,
+        height: '${bottomHeight}',
 
         dockedItems: [{
             xtype: 'toolbar-overflowbar',

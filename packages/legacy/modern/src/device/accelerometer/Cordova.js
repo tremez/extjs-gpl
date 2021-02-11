@@ -8,15 +8,19 @@ Ext.define('Ext.device.accelerometer.Cordova', {
     getCurrentAcceleration: function(config) {
         config = this.callParent(arguments);
         navigator.accelerometer.getCurrentAcceleration(config.success, config.failure);
+
         return config;
     },
 
     watchAcceleration: function(config) {
         config = this.callParent(arguments);
+
         if (this.activeWatchID) {
             this.clearWatch();
         }
+
         this.activeWatchID = navigator.accelerometer.watchAcceleration(config.callback, config.failure, config);
+
         return config;
     },
 

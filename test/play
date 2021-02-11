@@ -1,0 +1,41 @@
+#!/bin/bash
+
+die () {
+    echo $* >&2
+    exit 1
+}
+
+if $(readlink -e /dev/null &>/dev/null); then
+    SELFPATH=$(dirname $(readlink -e $0))
+elif $(which perl >/dev/null); then
+    SELFPATH=$(perl -MFile::Basename -MFile::Spec -e "print File::Spec->rel2abs(dirname '$0')")
+fi
+
+[ ! "$SELFPATH" -o ! -d "$SELFPATH" ] && die "Cannot find self path!"
+
+SCRIPTPATH="$SELFPATH/conductor"
+
+[ ! "$SCRIPTPATH" -o ! -d "$SCRIPTPATH" ] && die "Cannot find script path!"
+
+NPM=${NPM:=$(which npm)}
+NODEJS=${NODEJS:=$(which node)}
+NGINX=${NGINX:=$(which nginx)}
+
+[ ! -x "$NPM" ] && die "Cannot find npm binary!"
+[ ! -x "$NODEJS" ] && die "Cannot find node binary!"
+
+pushd "$SCRIPTPATH" &>/dev/null
+echo "Installing NPM modules..."
+$NPM install || die "Cannot install NPM modules!"
+popd &>/dev/null
+
+NGINX_ARGS=""
+
+if [ "$NGINX" ]; then
+    NGINX_ARGS="--nginx-path $NGINX"
+fi
+
+# TODO change this to a node binary
+# TODO remove this forked code and change to the Jazzman library
+# Node will run Jazzman
+$NODEJS $SCRIPTPATH/index.js $NGINX_ARGS "$@"

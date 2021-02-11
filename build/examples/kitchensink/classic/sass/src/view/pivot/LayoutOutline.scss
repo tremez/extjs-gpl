@@ -1,0 +1,24 @@
+@if $theme-name == 'theme-material'  {
+    .#{$prefix}pivot-grid-group-header {
+        border-width: 0;
+    }
+
+    .#{$prefix}pivot-grid-group-header-compact {
+        .#{$prefix}grid-cell-inner {
+            border-width: 0px;
+        }
+    } 
+
+    .#{$prefix}grid-with-col-lines {
+        .#{$prefix}grid-cell {
+            border-width: 0px;
+        }
+    } 
+
+    .#{$prefix}pivot-grid-group-header-collapsed,
+    .#{$prefix}pivot-grid-group-header-collapsible {
+        .#{$prefix}pivot-grid-group {
+            background-image: none;
+        }
+    }
+}

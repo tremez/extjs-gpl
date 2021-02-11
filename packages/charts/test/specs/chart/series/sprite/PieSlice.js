@@ -1,7 +1,7 @@
-describe('Ext.chart.series.sprite.PieSlice', function () {
+topSuite("Ext.chart.series.sprite.PieSlice", ['Ext.draw.Surface'], function() {
 
-    describe('destroy', function () {
-        it("should remove itself from the surface", function () {
+    describe('destroy', function() {
+        it("should remove itself from the surface", function() {
             var surface = new Ext.draw.Surface({}),
                 // PieSlice uses the MarkerHolder mixin, if a MarkerHolder
                 // calls callParent in its 'destroy' method,

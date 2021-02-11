@@ -2,26 +2,73 @@
  * Demonstrates a NestedList, which uses a TreeStore to drill down through hierarchical data
  */
 Ext.define('KitchenSink.view.lists.NestedList', {
-    extend: 'Ext.NestedList',
+    extend: 'Ext.dataview.NestedList',
+    xtype: 'nested-list',
+    controller: 'nested-list',
+
     requires: [
-        'Ext.data.TreeStore',
-        'KitchenSink.view.lists.EditorPanel',
-        'KitchenSink.model.Cars'
+        'Ext.Dialog'
     ],
 
-    // <example>
+    viewModel: {},
+
+    //<example>
     otherContent: [{
-        type: 'View',
-        path: 'modern/src/view/lists/EditorPanel.js'
+        type: 'Controller',
+        path: 'modern/src/view/lists/NestedListController.js'
     }, {
         type: 'Model',
         path: 'modern/src/model/Cars.js'
     }],
-    // </example>
+
+    profiles: {
+        defaults: {
+            height: 400,
+            maxDialogWidth: 200,
+            width: 300
+        },
+        phone: {
+            defaults: {
+                height: undefined,
+                maxDialogWidth: '80vw',
+                width: undefined
+            }
+        }
+    },
+    //</example>
+
+    height: '${height}',
+    width: '${width}',
+
+    dialog: {
+        xtype: 'dialog',
+        title: 'Dialog',
+
+        closable: true,
+        defaultFocus: 'textfield',
+        maskTapHandler: 'onCancel',
+
+        bodyPadding: 20,
+        maxWidth: '${maxDialogWidth}',
+
+        items: [{
+            xtype: 'textfield',
+            reference: 'textField',
+            name: 'text',
+            label: 'Name',
+            bind: '{selected.text}'
+        }],
+
+        // We are using standard buttons on the button
+        // toolbar, so their text and order are consistent.
+        buttons: {
+            ok: 'onOK',
+            cancel: 'onCancel'
+        }
+    },
 
     store: {
         type: 'tree',
-        id: 'NestedListStore',
         model: 'KitchenSink.model.Cars',
         root: {},
         proxy: {
@@ -29,17 +76,8 @@ Ext.define('KitchenSink.view.lists.NestedList', {
             url: 'data/carregions.json'
         }
     },
-    displayField: 'text',
-    shadow: true,
-    cls: 'demo-solid-background',
+
     listeners: {
-        leafitemtap: function(me, list, index, item) {
-            var editorPanel = Ext.getCmp('editorPanel') || new KitchenSink.view.lists.EditorPanel();
-            editorPanel.setRecord(list.getStore().getAt(index));
-            if (!editorPanel.getParent()) {
-                Ext.Viewport.add(editorPanel);
-            }
-            editorPanel.show();
-        }
+        leafchildtap: 'onLeafChildTap'
     }
 });

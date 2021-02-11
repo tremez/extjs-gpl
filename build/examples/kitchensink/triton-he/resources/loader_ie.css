@@ -1,0 +1,72 @@
+#loadingSplash {
+    z-index: 10000;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+#loadingSplashTop,
+#loadingSplashBottom {
+    background-color: #5fa2dd;
+    position: absolute;
+    right: 0;
+    left: 0;
+    height: 51%;
+    transition: all 500ms;
+    transition-delay: 200ms;
+}
+
+#loadingSplashTop {
+    top: 0;
+}
+
+#loadingSplashBottom {
+    bottom: 0;
+}
+
+.loading-fading-circle {
+    background-image: url(images/loading.gif);
+    background-repeat: no-repeat;
+    background-size: 100%;
+    margin: auto;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+}
+
+/* theme color overrides start */
+.neptune #loadingSplashBottom,
+.neptune #loadingSplashTop,
+.neptune-touch #loadingSplashBottom,
+.neptune-touch #loadingSplashTop {
+    background-color: #157fcc;
+}
+
+.crisp #loadingSplashBottom,
+.crisp #loadingSplashTop,
+.crisp-touch #loadingSplashBottom,
+.crisp-touch #loadingSplashTop {
+    background-color: #2a3f5d;
+}
+
+.classic #loadingSplashBottom,
+.classic #loadingSplashTop {
+    background-color: #d3e1f1;
+}
+
+.gray #loadingSplashBottom,
+.gray #loadingSplashTop {
+    background-color: #d8d8d8;
+}
+
+.aria #loadingSplashBottom,
+.aria #loadingSplashTop {
+    background-color: #303030;
+}
+/* theme color overrides end */

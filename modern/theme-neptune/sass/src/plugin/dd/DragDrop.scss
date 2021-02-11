@@ -1,0 +1,27 @@
+@include dd-ui(
+    $dd-proxy-placeholder-border: $proxy-placeholder-border,
+    $dd-proxy-placeholder-padding: $proxy-placeholder-padding,
+    $dd-proxy-color:  $gridcolumn-color,
+    $dd-proxy-background-color: $gridcolumn-background-color,
+    $dd-proxy-valid-icon: $proxy-valid-icon,
+    $dd-proxy-invalid-icon: $proxy-invalid-icon,
+    $dd-confirm-color: $confirm-color
+);
+
+@include dragIcon(
+    $before-suffix: 'drop-indicator-before',
+    $after-suffix: 'drop-indicator-after',
+    $content: $drag-icon-content,
+    $width: $drag-indicator-width,
+    $border-color: $border-indicator-color,
+    $border-style: $border-indicator-style,
+    $border-before-width: $indicator-before-border,
+    $border-after-width: $indicator-after-border,
+    $bottom: $drag-indicator-bottom,
+    $border-before-width-size-big: $indicator-before-border-size-big,
+    $border-after-width-size-big: $indicator-after-border-size-big
+);
+
+@include drag-indicator(
+    $background-color: $drag-indicator-background-color
+)

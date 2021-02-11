@@ -4,7 +4,7 @@ Ext.define('Admin.view.pages.FAQ', {
 
     requires: [
         'Ext.panel.Panel',
-        'Ext.plugin.Responsive',
+        'Ext.Responsive',
         'Ext.button.Button',
         'Ext.layout.container.Accordion'
     ],
@@ -43,7 +43,7 @@ Ext.define('Admin.view.pages.FAQ', {
                     title: 'Useful Tips',
                     ui: 'light',
                     cls: 'shadow pages-faq-container',
-                    iconCls: 'x-fa fa-lightbulb-o',
+                    iconCls: 'x-fa fa-lightbulb',
                     html: '<p>We have created the following list of tips for our users. We hope that they will help you get the most of this website.</p> \n<ul class=\'faq-tips-list\'><li class=\'pointone\'>Point One</li><li class=\'pointtwo\'>Point Two</li><li class=\'pointthree\'>Point Three</li>\n<li class=\'pointfour\'>Point Four</li></ul>',
                     bodyPadding: 15
                 },
@@ -71,13 +71,8 @@ Ext.define('Admin.view.pages.FAQ', {
                         }
                     ]
                 }
-            ],
-            plugins: [
-                {
-                    ptype: 'responsive'
-                }
             ]
-        },
+    },
         {
             xtype: 'panel',
             ui: 'light',

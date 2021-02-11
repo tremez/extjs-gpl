@@ -1,0 +1,25 @@
+$chip-height: dynamic(26px);
+$chip-height-big: dynamic(32px);
+$chip-text-margin: 6px;
+$chip-text-margin-big: 12px;
+$chip-margin: 0 3px 3px 0;
+$chip-margin-big: 0 5px 5px 0;
+$font-size: dynamic(14px);
+$font-size-big: dynamic(16px);
+$chip-border-radius: dynamic($chip-height / 2);
+$chip-border-radius-big: dynamic($chip-height-big / 2);
+$chip-icon-border-radius: dynamic(50%);
+
+$chip-close-icon-hovered-color: dynamic($chip-close-icon-color);
+$chip-close-icon-selected-hovered-color: dynamic($chip-close-icon-color);
+$chip-close-icon-background-color: dynamic(#ccc);
+$chip-close-icon-hovered-background-color: dynamic(#fff);
+$chip-close-icon: dynamic('clear');
+$chip-close-icon-size: dynamic(18px);
+$chip-close-icon-size-big: dynamic(24px);
+$chip-close-icon-border-radius: dynamic($chip-close-icon-size / 2);
+$chip-close-icon-border-radius-big: dynamic($chip-close-icon-size-big / 2);
+$chip-close-icon-font-size: dynamic(14px);
+$chip-close-icon-font-size-big: dynamic(16px);
+$chip-close-icon-margin: dynamic(4px);
+$chip-close-icon-margin-big: dynamic(4px);

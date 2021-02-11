@@ -64,7 +64,7 @@ Ext.define('Ext.dom.ButtonElement', {
                 );
             }
         }
-        
+
         return me;
     },
 

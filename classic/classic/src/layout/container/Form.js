@@ -1,5 +1,6 @@
 /**
- * This is a layout that will render form Fields, one under the other all stretched to the Container width.
+ * This is a layout that will render form Fields, one under the other all stretched to the Container
+ * width.
  *
  *     @example
  *     Ext.create('Ext.Panel', {
@@ -76,6 +77,7 @@ Ext.define('Ext.layout.container.Form', {
 
     childEls: ['formWrap', 'labelColumn'],
 
+    /* eslint-disable max-len */
     beforeBodyTpl:
         '<div id="{ownerId}-formWrap" data-ref="formWrap" class="{formWrapCls}"' +
             '<tpl if="itemSpacing"> style="border-spacing:{itemSpacing}px"</tpl>>' +
@@ -85,6 +87,7 @@ Ext.define('Ext.layout.container.Form', {
                 '</div>' +
                 '<div class="{formColumnCls}"></div>' +
             '</div>',
+    /* eslint-enable max-len */
 
     afterBodyTpl: '</div>',
 
@@ -98,9 +101,11 @@ Ext.define('Ext.layout.container.Form', {
             if (typeof labelWidth === 'number') {
                 labelWidth += 'px';
             }
+
             data.labelWidth = labelWidth;
             formWrapCls += ' ' + me.formWrapSizedLabelCls;
-        } else {
+        }
+        else {
             formWrapCls += ' ' + me.formWrapAutoLabelCls;
         }
 

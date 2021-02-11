@@ -19,8 +19,9 @@
  *     console.log(packet.version, packet.headers, packet.messages);
  *
  * For more information on working with AMF data please refer to the
- * [AMF Guide](#/guide/amf).
+ * [AMF Guide](../guides/backend_connectors/amf.html).
  */
+/* global ActiveXObject */
 Ext.define('Ext.data.amf.Packet', function() {
     var twoPowN52 = Math.pow(2, -52),
         twoPow8 = Math.pow(2, 8),
@@ -158,6 +159,7 @@ Ext.define('Ext.data.amf.Packet', function() {
                     byteLength: me.readUInt(4),
                     value: me.readValue()
                 });
+
                 // reset references (reference indices are local to each header)
                 strings = me.strings = [];
                 objects = me.objects = [];
@@ -172,6 +174,7 @@ Ext.define('Ext.data.amf.Packet', function() {
                     byteLength: me.readUInt(4),
                     body: me.readValue()
                 });
+
                 // reset references (reference indices are local to each message)
                 strings = me.strings = [];
                 objects = me.objects = [];
@@ -180,13 +183,13 @@ Ext.define('Ext.data.amf.Packet', function() {
 
             // reset the pointer
             pos = 0;
+
             // null the bytes array and reference arrays to free up memory.
             bytes = strings = objects = traits =
                 me.bytes = me.strings = me.objects = me.traits = null;
 
             return me;
         },
-
 
         /**
          * Decodes an AMF3 byte array and that has one value and returns it.
@@ -231,8 +234,6 @@ Ext.define('Ext.data.amf.Packet', function() {
             return me.readValue();
         },
 
-
-
         /**
          * Parses an xml string and returns an xml document
          * @private
@@ -243,7 +244,8 @@ Ext.define('Ext.data.amf.Packet', function() {
 
             if (window.DOMParser) {
                 doc = (new DOMParser()).parseFromString(xml, "text/xml");
-            } else {
+            }
+            else {
                 doc = new ActiveXObject("Microsoft.XMLDOM");
                 doc.loadXML(xml);
             }
@@ -257,10 +259,12 @@ Ext.define('Ext.data.amf.Packet', function() {
          */
         readAmf0Date: function() {
             var date = new Date(this.readDouble());
+
             // An AMF0 date type ends with a 16 bit integer time-zone, but
             // according to the spec time-zone is "reserved, not supported,
             // should be set to 0x000".
             pos += 2; // discard the time zone
+
             return date;
         },
 
@@ -320,34 +324,41 @@ Ext.define('Ext.data.amf.Packet', function() {
                 // remaining 1-28 bits are used to encode the length of the
                 // dense portion of the array.
                 count = (header >> 1);
+
                 // First read the associative portion of the array (if any).  If
                 // there is an associative portion, the array will be read as a
                 // javascript object, otherwise it will be a javascript array.
                 key = me.readAmf3String();
+
                 if (key) {
                     // First key is not an empty string - this is an associative
                     // array.  Read keys and values from the byte array until
                     // we get to an empty string key
                     array = {};
                     objects.push(array);
+
                     do {
                         array[key] = me.readValue();
-                    } while((key = me.readAmf3String()));
+                    } while ((key = me.readAmf3String()));
+
                     // The dense portion of the array is then read into the
                     // associative object, keyed by ordinal index.
                     for (i = 0; i < count; i++) {
                         array[i] = me.readValue();
                     }
-                } else {
+                }
+                else {
                     // First key is an empty string - this is an array with
                     // ordinal indices.
                     array = [];
                     objects.push(array);
+
                     for (i = 0; i < count; i++) {
                         array.push(me.readValue());
                     }
                 }
-            } else {
+            }
+            else {
                 // If the first (low) bit is a 0 read an array reference. The
                 // remaining 1-28 bits are used to encode the reference index
                 array = objects[header >> 1];
@@ -369,7 +380,8 @@ Ext.define('Ext.data.amf.Packet', function() {
                 // If the first (low) bit is a 1, this is a date instance.
                 date = new Date(me.readDouble());
                 objects.push(date);
-            } else {
+            }
+            else {
                 // If the first (low) bit is a 0, this is a date reference.
                 // The remaining 1-28 bits encode the reference index
                 date = objects[header >> 1];
@@ -401,31 +413,38 @@ Ext.define('Ext.data.amf.Packet', function() {
                 // first (low) bit of 1, denotes an encoded object instance
                 // The next string is the class name.
                 headerLast3Bits = (header & 0x07);
+
                 if (headerLast3Bits === 3) {
                     // If the 3 least significant bits of the header are "011"
                     // then trait information follows.
+
                     className = me.readAmf3String();
                     // A 1 in the header's 4th least significant byte position
                     // indicates that dynamic members may follow the sealed
                     // members.
                     dynamic = !!(header & 0x08);
+
                     // Shift off the 4 least significant bits, and the remaining
                     // 1-25 bits encode the number of sealed member names. Read
                     // as many strings from the byte array as member names.
                     memberCount = (header >> 4);
+
                     for (i = 0; i < memberCount; i++) {
                         members.push(me.readAmf3String());
                     }
+
                     objectTraits = {
                         className: className,
                         dynamic: dynamic,
                         members: members
                     };
+
                     // An objects traits are cached in the traits array enabling
                     // the traits for a given class to only be encoded once for
                     // a series of instances.
                     traits.push(objectTraits);
-                } else if ((header & 0x03) === 1) {
+                }
+                else if ((header & 0x03) === 1) {
                     // If the 2 least significant bits are "01", then a traits
                     // reference follows.  The remaining 1-27 bits are used
                     // to encode the trait reference index.
@@ -434,7 +453,8 @@ Ext.define('Ext.data.amf.Packet', function() {
                     dynamic = objectTraits.dynamic;
                     members = objectTraits.members;
                     memberCount = members.length;
-                } else if (headerLast3Bits === 7) {
+                }
+                else if (headerLast3Bits === 7) {
                     // if the 3 lease significant bits are "111" then
                     // externalizable trait data follows
 
@@ -443,10 +463,12 @@ Ext.define('Ext.data.amf.Packet', function() {
 
                 if (className) {
                     klass = Ext.ClassManager.getByAlias('amf.' + className);
-                    obj = klass ? new klass() : {$className: className};
-                } else {
+                    obj = klass ? new klass() : { $className: className };
+                }
+                else {
                     obj = {};
                 }
+
                 objects.push(obj);
 
                 // read the sealed member values
@@ -469,7 +491,8 @@ Ext.define('Ext.data.amf.Packet', function() {
                     obj = this.converters[className](obj);
                 }
 
-            } else {
+            }
+            else {
                 // If the first (low) bit of the header is a 0, this is an
                 // object reference. The remaining 1-28 significant bits are
                 // used to encode an object reference index.
@@ -493,12 +516,15 @@ Ext.define('Ext.data.amf.Packet', function() {
                 // Discard the low bit.  The remaining 1-28 bits are used to
                 // encode the string's byte-length.
                 value = me.readUtf8(header >> 1);
+
                 if (value) {
                     // the emtpy string is never encoded by reference
                     strings.push(value);
                 }
+
                 return value;
-            } else {
+            }
+            else {
                 // If the first (low) bit is a 0, this is a string reference.
                 // Discard the low bit, then look up and return the reference
                 // from the strings array using the remaining 1-28 bits as the
@@ -521,7 +547,8 @@ Ext.define('Ext.data.amf.Packet', function() {
                 // remaining 1-28 bits encode the byte-length of the xml string.
                 doc = me.parseXml(me.readUtf8(header >> 1));
                 objects.push(doc);
-            } else {
+            }
+            else {
                 // if the first (low) bit is a 1, this is an xml reference. The
                 // remaining 1-28 bits encode the reference index.
                 doc = objects[header >> 1];
@@ -550,15 +577,18 @@ Ext.define('Ext.data.amf.Packet', function() {
                 // If the first (low) bit is a 1, this is a ByteArray instance.
                 // The remaining 1-28 bits encode the ByteArray's byte-length.
                 end = pos + (header >> 1);
+
                 // Depending on the browser, "bytes" may be either a Uint8Array
                 // or an Array.  Uint8Arrays don't have Array methods, so
                 // we have to use Array.prototype.slice to get the byteArray
                 byteArray = Array.prototype.slice.call(bytes, pos, end);
                 objects.push(byteArray);
+
                 // move the pointer to the first byte after the byteArray that
                 // was just read
                 pos = end;
-            } else {
+            }
+            else {
                 // if the first (low) bit is a 1, this is a ByteArray reference.
                 // The remaining 1-28 bits encode the reference index.
                 byteArray = objects[header >> 1];
@@ -578,18 +608,21 @@ Ext.define('Ext.data.amf.Packet', function() {
                 // We read this bit by shifting the 7 least significant bits of
                 // byte1 off to the right.
                 sign = (byte1 >> 7) ? -1 : 1,
+
                 // the exponent takes up the next 11 bits.
                 exponent =
                     // extract the 7 least significant bits from byte1 and then
                     // shift them left by 4 bits to make room for the 4 remaining
                     // bits from byte 2
-                    (((byte1 & 0x7F) << 4)
+                    (((byte1 & 0x7F) << 4) |
                      // add the 4 most significant bits from byte 2 to complete
                      // the exponent
-                     | (byte2 >> 4)),
+                     (byte2 >> 4)),
+
                 // the remaining 52 bits make up the significand. read the 4
                 // least significant bytes of byte 2 to begin the significand
                 significand = (byte2 & 0x0F),
+
                 // The most significant bit of the significand is always 1 for
                 // a normalized number, therefore it is not stored. This bit is
                 // referred to as the "hidden bit". The true bit width of the
@@ -615,6 +648,7 @@ Ext.define('Ext.data.amf.Packet', function() {
                     // if both exponent and significand are 0, the number is 0
                     return 0;
                 }
+
                 // If the exponent is 0, but the significand is not 0, this
                 // is a subnormal number. Subnormal numbers are encoded with a
                 // biased exponent of 0, but are interpreted with the value of
@@ -633,6 +667,7 @@ Ext.define('Ext.data.amf.Packet', function() {
                 // representation with the zero offset being 0x3FF (1023),
                 // so we have to subtract 0x3FF to get the true exponent
                 Math.pow(2, exponent - 0x3FF) *
+
                 // convert the significand to its decimal value by multiplying
                 // it by 2^52 and then add the hidden bit
                 (hiddenBit + twoPowN52 * significand);
@@ -648,6 +683,7 @@ Ext.define('Ext.data.amf.Packet', function() {
             // We handle emca arrays by just throwing away the count and then
             // letting the object decoder handle the rest.
             pos += 4;
+
             return this.readAmf0Object();
         },
 
@@ -723,7 +759,9 @@ Ext.define('Ext.data.amf.Packet', function() {
                 klass, instance, modified;
 
             klass = Ext.ClassManager.getByAlias('amf.' + className);
-            instance = klass ? new klass() : {$className: className}; // if there is no klass, mark the classname for easier parsing of returned results
+
+            // if there is no klass, mark the classname for easier parsing of returned results
+            instance = klass ? new klass() : { $className: className };
 
             modified = me.readAmf0Object(instance);
 
@@ -731,6 +769,7 @@ Ext.define('Ext.data.amf.Packet', function() {
             if ((!klass) && this.converters[className]) {
                 modified = this.converters[className](instance);
             }
+
             return modified;
         },
 
@@ -747,6 +786,7 @@ Ext.define('Ext.data.amf.Packet', function() {
 
             // read the first byte
             result = bytes[pos++];
+
             // if this is a multi-byte int, loop over the remaining bytes
             for (; i < byteCount; ++i) {
                 // shift the result 8 bits to the left and add the next byte.
@@ -783,18 +823,23 @@ Ext.define('Ext.data.amf.Packet', function() {
                 // if the high order bit of the first byte is a 1, the next byte
                 // is also part of this integer.
                 nextByte = bytes[pos++];
+
                 // remove the high order bit from both bytes before combining them
                 value = ((value & 0x7F) << 7) | (nextByte & 0x7F);
+
                 if (nextByte & 0x80) {
                     // if the high order byte of the 2nd byte is a 1, then
                     // there is a 3rd byte
                     nextByte = bytes[pos++];
+
                     // remove the high order bit from the 3rd byte before
                     // adding it to the value
                     value = (value << 7) | (nextByte & 0x7F);
+
                     if (nextByte & 0x80) {
                         // 4th byte is also part of the integer
                         nextByte = bytes[pos++];
+
                         // use all 8 bits of the 4th byte
                         value = (value << 8) | nextByte;
                     }
@@ -865,6 +910,7 @@ Ext.define('Ext.data.amf.Packet', function() {
                 // read a byte from the byte array - if the byte's value is less
                 // than 128 we are dealing with a single byte character
                 charCode = bytes[pos++];
+
                 if (charCode > 127) {
                     // if the byte's value is greater than 127 we are dealing
                     // with a multi-byte character.
@@ -872,6 +918,7 @@ Ext.define('Ext.data.amf.Packet', function() {
                         // a leading-byte value greater than 239 means this is a
                         // 4-byte character
                         byteCount = 4;
+
                         // Use only the 3 least-significant bits of the leading
                         // byte of a 4-byte character. This is achieved by
                         // applying the following bit mask:
@@ -880,10 +927,12 @@ Ext.define('Ext.data.amf.Packet', function() {
                         //     11110xxx (the byte)
                         // AND 00000111 (the mask)
                         charCode = (charCode & 0x07);
-                    } else if (charCode > 223) {
+                    }
+                    else if (charCode > 223) {
                         // a leading-byte value greater than 223 but less than
                         // 240 means this is a 3-byte character
                         byteCount = 3;
+
                         // Use only the 4 least-significant bits of the leading
                         // byte of a 3-byte character. This is achieved by
                         // applying the following bit mask:
@@ -892,10 +941,12 @@ Ext.define('Ext.data.amf.Packet', function() {
                         //     1110xxxx (the byte)
                         // AND 00001111 (the mask)
                         charCode = (charCode & 0x0F);
-                    } else {
+                    }
+                    else {
                         // a leading-byte value less than 224 but (implicitly)
                         // greater than 191 means this is a 2-byte character
                         byteCount = 2;
+
                         // Use only the 5 least-significant bits of the first
                         // byte of a 2-byte character. This is achieved by
                         // applying the following bit mask:
@@ -971,9 +1022,9 @@ Ext.define('Ext.data.amf.Packet', function() {
          */
         converters: {
             'flex.messaging.io.ArrayCollection': function(obj) {
-                return obj.source || []; // array collections have a source var that contains the actual data
+                // array collections have a source var that contains the actual data
+                return obj.source || [];
             }
         }
-
     };
 });

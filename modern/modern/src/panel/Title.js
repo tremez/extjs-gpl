@@ -9,35 +9,46 @@ Ext.define('Ext.panel.Title', {
 
     isPanelTitle: true,
 
-    // For performance reasons we give the following configs their default values on
-    // the class body.  This prevents the updaters from running on initialization in the
-    // default configuration scenario
-
-    _textAlign: 'left',
-    _iconAlign: 'left',
-    _text: '&#160;',
-
     cachedConfig: {
         /**
-         * @cfg [textAlign='left']
+         * @cfg textAlign
          * @inheritdoc Ext.panel.Header#cfg-titleAlign
          * @accessor
          */
-        textAlign: null,
+        textAlign: 'left',
 
         /**
-         * @cfg {String}
+         * @cfg iconAlign
+         * @inheritdoc Ext.panel.Header#cfg-iconAlign
+         * @accessor
+         */
+        iconAlign: 'left',
+
+        /**
+         * @cfg {'90'/'270'/'0'} rotation
+         * The rotation of the {@link #cfg-text}.
+         *
+         * - `'0'` - no rotation
+         * - `'90'` - rotate 90 degrees clockwise
+         * - `'270'` - rotate 270 degrees clockwise
+         */
+        rotation: 0,
+
+        /**
+         * @cfg {Boolean} [rotateIcon=false]
+         * `true to rotate the icon in the same direction as the text when the text is rotated
+         * By default the icon always remains unrotated even when the text is rotated.
+         */
+        rotateIcon: null
+    },
+
+    config: {
+        /**
+         * @cfg {String} text
          * The title's text (can contain html tags/entities)
          * @accessor
          */
-        text: null,
-
-        /**
-         * @cfg glyph
-         * @inheritdoc Ext.panel.Header#cfg-glyph
-         * @accessor
-         */
-        glyph: null,
+        text: '',
 
         /**
          * @cfg icon
@@ -47,13 +58,6 @@ Ext.define('Ext.panel.Title', {
         icon: null,
 
         /**
-         * @cfg {'top'/'right'/'bottom'/'left'} [iconAlign='left']
-         * alignment of the icon
-         * @accessor
-         */
-        iconAlign: null,
-
-        /**
          * @cfg iconCls
          * @inheritdoc Ext.panel.Header#cfg-iconCls
          * @accessor
@@ -61,118 +65,113 @@ Ext.define('Ext.panel.Title', {
         iconCls: null
     },
 
+    /**
+     * @cfg weight
+     * @inheritdoc
+     */
     weight: -10,
 
+    /**
+     * @property inheritUi
+     * @inheritdoc
+     */
+    inheritUi: true,
+
+    /**
+     * @property element
+     * @inheritdoc
+     */
     element: {
-        unselectable: 'on',
         reference: 'element',
-        cls: Ext.baseCSSPrefix + 'panel-title-align-left',
+        cls: Ext.baseCSSPrefix + 'unselectable'
+    },
+
+    /**
+     * @property template
+     * @inheritdoc
+     */
+    template: [{
+        reference: 'bodyElement',
+        cls: Ext.baseCSSPrefix + 'body-el',
 
         children: [{
             reference: 'iconElement',
-            style: 'display:none',
-            cls: Ext.baseCSSPrefix + 'panel-title-icon ' +
-                Ext.baseCSSPrefix + 'panel-title-icon-left'
+            cls: Ext.baseCSSPrefix + 'icon-el ' + Ext.baseCSSPrefix + 'font-icon'
         }, {
             reference: 'textElement',
-            cls: Ext.baseCSSPrefix + 'panel-title-text'
+            cls: Ext.baseCSSPrefix + 'text-el'
         }]
-    },
+    }],
+
+    verticalCls: Ext.baseCSSPrefix + 'vertical',
+    horizontalCls: Ext.baseCSSPrefix + 'horizontal',
+    rotateIconCls: Ext.baseCSSPrefix + 'rotate-icon',
+    iconAlignVerticalCls: Ext.baseCSSPrefix + 'icon-align-vertical',
+    hasIconCls: Ext.baseCSSPrefix + 'has-icon',
 
     _textAlignClasses: {
-        left: Ext.baseCSSPrefix + 'panel-title-align-left',
-        center: Ext.baseCSSPrefix + 'panel-title-align-center',
-        right: Ext.baseCSSPrefix + 'panel-title-align-right'
+        left: Ext.baseCSSPrefix + 'text-align-left',
+        center: Ext.baseCSSPrefix + 'text-align-center',
+        right: Ext.baseCSSPrefix + 'text-align-right'
     },
 
     _iconAlignClasses: {
-        top: Ext.baseCSSPrefix + 'panel-title-icon-top',
-        right: Ext.baseCSSPrefix + 'panel-title-icon-right',
-        bottom: Ext.baseCSSPrefix + 'panel-title-icon-bottom',
-        left: Ext.baseCSSPrefix + 'panel-title-icon-left'
+        top: Ext.baseCSSPrefix + 'icon-align-top',
+        right: Ext.baseCSSPrefix + 'icon-align-right',
+        bottom: Ext.baseCSSPrefix + 'icon-align-bottom',
+        left: Ext.baseCSSPrefix + 'icon-align-left'
     },
 
-    baseCls: Ext.baseCSSPrefix + 'panel-title',
+    _rotationClasses: {
+        90: Ext.baseCSSPrefix + 'rotate-90',
+        270: Ext.baseCSSPrefix + 'rotate-270'
+    },
+
+    /**
+     * @property classCls
+     * @inheritdoc
+     */
+    classCls: Ext.baseCSSPrefix + 'paneltitle',
     _titleSuffix: '-title',
-    _glyphCls: Ext.baseCSSPrefix + 'panel-title-glyph',
-    _verticalCls: Ext.baseCSSPrefix + 'panel-title-vertical',
 
-    applyText: function (text) {
-        return text || '&#160;';
-    },
-
-    updateGlyph: function(glyph, oldGlyph) {
-        glyph = glyph || 0;
-
-        var me = this,
-            glyphCls = me._glyphCls,
-            iconEl = me.iconElement,
-            fontFamily, glyphParts;
-
-        me.glyph = glyph;
-
-        me._syncIconVisibility();
-
-        if (typeof glyph === 'string') {
-            glyphParts = glyph.split('@');
-            glyph = glyphParts[0];
-            fontFamily = glyphParts[1] || Ext._glyphFontFamily;
+    afterRender: function() {
+        if (Ext.isSafari) {
+            this.repaintBodyElement();
         }
 
-        if (!glyph) {
-            iconEl.dom.innerHTML = '';
-            iconEl.removeCls(glyphCls);
-        } else {
-            iconEl.dom.innerHTML = '&#' + glyph + ';';
-            iconEl.addCls(glyphCls);
-        }
-
-        if (fontFamily) {
-            iconEl.setStyle('font-family', fontFamily);
-        }
+        this.callParent();
     },
 
     updateIcon: function(icon, oldIcon) {
         var me = this,
             iconEl;
 
-        me._syncIconVisibility();
+        me.syncIconVisibility();
         iconEl = me.iconElement;
 
-        iconEl.setStyle('background-image', icon ? 'url(' + icon + ')': '');
+        iconEl.setStyle('background-image', icon ? 'url(' + icon + ')' : '');
     },
 
     updateIconAlign: function(align, oldAlign) {
         var me = this,
-            iconEl = me.iconElement,
             iconAlignClasses = me._iconAlignClasses,
             el = me.el;
 
         if (oldAlign) {
-            iconEl.removeCls(iconAlignClasses[oldAlign]);
+            el.removeCls(iconAlignClasses[oldAlign]);
         }
 
-        iconEl.addCls(iconAlignClasses[align]);
-
-        // here we move the icon to the correct position in the dom - before the
-        // title el for top/left alignments, and after the title el for right/bottom
-        if (align === 'top' || align === 'left') {
-            el.insertFirst(iconEl);
-        } else {
-            el.appendChild(iconEl);
+        if (align) {
+            el.addCls(iconAlignClasses[align]);
         }
 
-        if (align === 'top' || align === 'bottom') {
-            el.addCls(me._verticalCls);
-        } else {
-            el.removeCls(me._verticalCls);
-        }
+        el.toggleCls(me.iconAlignVerticalCls, align === 'top' || align === 'bottom');
     },
 
     updateIconCls: function(cls, oldCls) {
         var iconEl = this.iconElement;
 
-        this._syncIconVisibility();
+        this.syncIconVisibility();
 
         if (oldCls) {
             iconEl.removeCls(oldCls);
@@ -183,8 +182,40 @@ Ext.define('Ext.panel.Title', {
         }
     },
 
+    updateRotation: function(rotation, oldRotation) {
+        var me = this,
+            verticalCls = me.verticalCls,
+            horizontalCls = me.horizontalCls,
+            el = me.el;
+
+        oldRotation = parseInt(oldRotation, 10);
+        rotation = parseInt(rotation, 10);
+
+        if (oldRotation !== 0) {
+            el.removeCls(me._rotationClasses[oldRotation]);
+        }
+
+        if (rotation === 0) {
+            el.replaceCls(verticalCls, horizontalCls);
+        }
+        else {
+            el.replaceCls(horizontalCls, [verticalCls, me._rotationClasses[rotation]]);
+        }
+
+        if (Ext.isSafari && this.rendered) {
+            this.repaintBodyElement();
+        }
+    },
+
+    updateRotateIcon: function(rotateIcon) {
+        this.el.toggleCls(this.rotateIconCls, !!rotateIcon);
+    },
+
     updateText: function(text) {
-        this.textElement.setHtml(text);
+        var el = this.textElement.dom;
+
+        el.innerHTML = text || '&#160;';
+        el.setAttribute('data-title', text);
     },
 
     updateTextAlign: function(align, oldAlign) {
@@ -195,21 +226,44 @@ Ext.define('Ext.panel.Title', {
             me.removeCls(textAlignClasses[oldAlign]);
         }
 
-        me.addCls(textAlignClasses[align]);
+        if (align) {
+            me.addCls(textAlignClasses[align]);
+        }
     },
 
     privates: {
-        _getVerticalAdjustDirection: function() {
-            // rtl hook
-            return 'left';
+        repaintBodyElement: function() {
+            var bodyElement = this.bodyElement.dom,
+                bodyStyle = bodyElement.style;
+
+            // When iconAlign is 'top' or 'bottom' with vertically rotated text, Safari
+            // does not initially layout the title with the correct width.  Setting the
+            // width to -webkit-min-content and back to '' with a read of offsetWidth in
+            // between forces a synchronous reflow and corrects the issue.  Unfortunately
+            // a static width or min-width in the stylesheet does not help.
+            // We use -webkit-min-content so that the next reflow after resetting the
+            // min-width to '' hopefully ends up with everything the same size as before
+            // thus minimizing the effect on the surrounding dom.
+            bodyStyle.width = '-webkit-min-content';
+            // eslint-disable-next-line no-unused-expressions
+            bodyElement.offsetWidth;
+            bodyStyle.width = '';
         },
 
-        _hasIcon: function() {
-            return !!(this.getIcon() || this.getIconCls() || this.getGlyph());
-        },
+        syncIconVisibility: function() {
+            this.el.toggleCls(this.hasIconCls, !!(this.getIcon() || this.getIconCls()));
+        }
+    },
 
-        _syncIconVisibility: function() {
-            this.iconElement.setDisplayed(this._hasIcon());
+    deprecated: {
+        '6.5': {
+            configs: {
+                /**
+                 * @cfg {Number/String} glyph
+                 * @removed 6.5.0 Use {@link #iconCls} instead
+                 */
+                glyph: null
+            }
         }
     }
 });

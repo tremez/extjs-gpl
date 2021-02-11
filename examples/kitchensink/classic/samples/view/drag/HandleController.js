@@ -6,7 +6,7 @@ Ext.define('KitchenSink.view.drag.HandleController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.drag-handle',
 
-    afterRender: function (view) {
+    afterRender: function(view) {
         // This source uses handles to represent a repeating element,
         // so when the item is dragged, contextual information can
         // be gained from the item.

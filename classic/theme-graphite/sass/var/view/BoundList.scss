@@ -1,0 +1,8 @@
+$boundlist-background-color: dynamic(#1b1b1b);
+$boundlist-border-width: dynamic(0px);
+$boundlist-item-border-style: dynamic(none);
+$boundlist-item-border-width: dynamic(0px);
+$boundlist-item-over-background-color: dynamic(rgba(242, 242, 242, 0.7));
+$boundlist-item-over-text-color: dynamic($body-background-color);
+$boundlist-item-selected-background-color: dynamic(#f2f2f2);
+$boundlist-item-selected-text-color: dynamic($body-background-color);

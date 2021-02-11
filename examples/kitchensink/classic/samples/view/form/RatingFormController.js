@@ -2,20 +2,21 @@ Ext.define('KitchenSink.view.form.RatingFormController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.form-rating',
 
-    onKeyPlus: function () {
+    onKeyPlus: function() {
         this.adjustRating(1);
     },
 
-    onKeyMinus: function () {
+    onKeyMinus: function() {
         this.adjustRating(-1);
     },
 
-    adjustRating: function (delta) {
+    adjustRating: function(delta) {
         var employeeGrid = this.lookup('employeeGrid'),
             selection = employeeGrid.getSelection(),
             rating;
 
         selection = selection && selection.length === 1 && selection[0];
+
         if (selection) {
             rating = selection.get('ratingThisYear');
             rating += delta;

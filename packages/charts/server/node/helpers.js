@@ -8,18 +8,23 @@ function isNumber(value) {
 
 function interpolate(string, object) {
     var pattern = /(#\{(.*?)\})/g;
-    return string.replace(pattern, function () {
-        var name = arguments[2];
-        var value = object[name];
+
+    return string.replace(pattern, function() {
+        var name = arguments[2],
+            value = object[name];
+
         if (isNumber(value)) {
             value = value.toString();
-        } else if (isObject(value)) {
+        }
+        else if (isObject(value)) {
             try {
                 value = JSON.stringify(value);
-            } catch (e) {
+            }
+            catch (e) {
                 console.error("Stringifying object (likely a circular structure) failed.");
             }
         }
+
         return typeof value === 'string' ? value : '';
     });
 }
@@ -41,6 +46,7 @@ function apply(object, config, defaults) {
         if (enumerables) {
             for (j = enumerables.length; j--;) {
                 k = enumerables[j];
+
                 if (config.hasOwnProperty(k)) {
                     object[k] = config[k];
                 }
@@ -50,7 +56,6 @@ function apply(object, config, defaults) {
 
     return object;
 }
-
 
 module.exports = {
     isObject: isObject,

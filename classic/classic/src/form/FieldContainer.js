@@ -1,22 +1,23 @@
 /**
  * FieldContainer is a derivation of {@link Ext.container.Container Container} that implements the
- * {@link Ext.form.Labelable Labelable} mixin. This allows it to be configured so that it is rendered with
- * a {@link #fieldLabel field label} and optional {@link #msgTarget error message} around its sub-items.
- * This is useful for arranging a group of fields or other components within a single item in a form, so
- * that it lines up nicely with other fields. A common use is for grouping a set of related fields under
- * a single label in a form.
+ * {@link Ext.form.Labelable Labelable} mixin. This allows it to be configured so that it is
+ * rendered with a {@link #fieldLabel field label} and optional {@link #msgTarget error message}
+ * around its sub-items. This is useful for arranging a group of fields within a single item
+ * in a form, so that it lines up nicely with other fields. A common use is for grouping a set
+ * of related fields under a single label in a form.
  * 
- * The container's configured {@link #cfg-items} will be layed out within the field body area according to the
- * configured {@link #layout} type. The default layout is `'autocontainer'`.
+ * The container's configured {@link #cfg-items} will be layed out within the field body area
+ * according to the configured {@link #layout} type. The default layout is `'autocontainer'`.
  * 
  * Like regular fields, FieldContainer can inherit its decoration configuration from the
  * {@link Ext.form.Panel#fieldDefaults fieldDefaults} of an enclosing FormPanel. In addition,
  * FieldContainer itself can pass {@link #fieldDefaults} to any {@link Ext.form.Labelable fields}
  * it may itself contain.
  * 
- * If you are grouping a set of {@link Ext.form.field.Checkbox Checkbox} or {@link Ext.form.field.Radio Radio}
- * fields in a single labeled container, consider using a {@link Ext.form.CheckboxGroup}
- * or {@link Ext.form.RadioGroup} instead as they are specialized for handling those types.
+ * If you are grouping a set of {@link Ext.form.field.Checkbox Checkbox} or
+ * {@link Ext.form.field.Radio Radio} fields in a single labeled container, consider using
+ * a {@link Ext.form.CheckboxGroup} or {@link Ext.form.RadioGroup} instead as they are specialized
+ * for handling those types.
  *
  * # Example
  * 
@@ -93,20 +94,21 @@
  */
 Ext.define('Ext.form.FieldContainer', {
     extend: 'Ext.container.Container',
+    alias: 'widget.fieldcontainer',
+
+    requires: [
+        'Ext.layout.component.field.FieldContainer'
+    ],
+
     mixins: {
         labelable: 'Ext.form.Labelable',
         fieldAncestor: 'Ext.form.FieldAncestor'
     },
-    requires: 'Ext.layout.component.field.FieldContainer',
-
-    alias: 'widget.fieldcontainer',
 
     componentLayout: 'fieldcontainer',
-
     componentCls: Ext.baseCSSPrefix + 'form-fieldcontainer',
-
     shrinkWrap: true,
-    
+
     autoEl: {
         tag: 'div',
         role: 'presentation'
@@ -118,33 +120,35 @@ Ext.define('Ext.form.FieldContainer', {
 
     /**
      * @cfg {Boolean} combineLabels
-     * If set to true, and there is no defined {@link #fieldLabel}, the field container will automatically
-     * generate its label by combining the labels of all the fields it contains. Defaults to false.
+     * If set to true, and there is no defined {@link #fieldLabel}, the field container will
+     * automatically generate its label by combining the labels of all the fields it contains.
+     * Defaults to false.
      */
     combineLabels: false,
 
-    //<locale>
     /**
      * @cfg {String} labelConnector
-     * The string to use when joining the labels of individual sub-fields, when {@link #combineLabels} is
-     * set to true. Defaults to ', '.
+     * The string to use when joining the labels of individual sub-fields, when
+     * {@link #combineLabels} is set to true. Defaults to ', '.
+     * @locale
      */
     labelConnector: ', ',
-    //</locale>
 
     /**
      * @cfg {Boolean} combineErrors
-     * If set to true, the field container will automatically combine and display the validation errors from
-     * all the fields it contains as a single error on the container, according to the configured
-     * {@link #msgTarget}. Defaults to false.
+     * If set to true, the field container will automatically combine and display the validation
+     * errors from all the fields it contains as a single error on the container, according to the
+     * configured {@link #msgTarget}. Defaults to false.
      */
     combineErrors: false,
 
     maskOnDisable: false,
+
     // If we allow this to mark with the invalidCls it will cascade to all
     // child fields, let them handle themselves
     invalidCls: '',
 
+    /* eslint-disable indent */
     fieldSubTpl: [
         '<div id="{id}-containerEl" data-ref="containerEl" class="{containerElCls}"',
             '<tpl if="ariaAttributes">',
@@ -156,6 +160,7 @@ Ext.define('Ext.form.FieldContainer', {
             '{%this.renderContainer(out,values)%}',
         '</div>'
     ],
+    /* eslint-enable indent */
 
     initComponent: function() {
         var me = this;
@@ -163,47 +168,45 @@ Ext.define('Ext.form.FieldContainer', {
         // Init mixins
         me.initLabelable();
         me.initFieldAncestor();
-        
+
         me.callParent();
         me.initMonitor();
     },
-    
-    /**
-     * @protected
-     * Called when a {@link Ext.form.Labelable} instance is added to the container's subtree.
-     * @param {Ext.form.Labelable} labelItem The instance that was added
-     */
+
     onAdd: function(labelItem) {
         var me = this;
 
-        // Fix for https://sencha.jira.com/browse/EXTJSIV-6424 Which was *sneakily* fixed fixed in version 37
+        // Fix for https://sencha.jira.com/browse/EXTJSIV-6424 Which was *sneakily* fixed
+        // in version 37
         // In FF < 37, positioning absolutely within a TD positions relative to the TR!
         // So we must add the width of a visible, left-aligned label cell to the x coordinate.
-        if (labelItem.isLabelable && Ext.isGecko && Ext.firefoxVersion < 37 && me.layout.type === 'absolute' && !me.hideLabel && me.labelAlign !== 'top') {
+        if (labelItem.isLabelable && Ext.isGecko && Ext.firefoxVersion < 37 &&
+            me.layout.type === 'absolute' && !me.hideLabel && me.labelAlign !== 'top') {
             labelItem.x += (me.labelWidth + me.labelPad);
         }
+
         me.callParent(arguments);
+
         if (labelItem.isLabelable && me.combineLabels) {
             labelItem.oldHideLabel = labelItem.hideLabel;
             labelItem.hideLabel = true;
         }
+
         me.updateLabel();
     },
 
-    /**
-     * @protected
-     * Called when a {@link Ext.form.Labelable} instance is removed from the container's subtree.
-     * @param {Ext.form.Labelable} labelItem The instance that was removed
-     */
     onRemove: function(labelItem, isDestroying) {
         var me = this;
+
         me.callParent(arguments);
+
         if (!isDestroying) {
             if (labelItem.isLabelable && me.combineLabels) {
                 labelItem.hideLabel = labelItem.oldHideLabel;
             }
+
             me.updateLabel();
-        }   
+        }
     },
 
     initRenderData: function() {
@@ -212,10 +215,13 @@ Ext.define('Ext.form.FieldContainer', {
 
         data.containerElCls = me.containerElCls;
         data = Ext.applyIf(data, me.getLabelableRenderData());
+
         if (me.labelAlign === 'top' || me.msgTarget === 'under') {
             data.extraFieldBodyCls += ' ' + Ext.baseCSSPrefix + 'field-container-body-vertical';
         }
+
         data.tipAnchorTarget = me.id + '-containerEl';
+
         return data;
     },
 
@@ -228,11 +234,13 @@ Ext.define('Ext.form.FieldContainer', {
      */
     getFieldLabel: function() {
         var label = this.fieldLabel || '';
+
         if (!label && this.combineLabels) {
             label = Ext.Array.map(this.query('[isFieldLabelable]'), function(field) {
                 return field.getFieldLabel();
             }).join(this.labelConnector);
         }
+
         return label;
     },
 
@@ -240,6 +248,7 @@ Ext.define('Ext.form.FieldContainer', {
         var ret = this.initRenderData();
 
         Ext.apply(ret, this.subTplData);
+
         return ret;
     },
 
@@ -253,6 +262,7 @@ Ext.define('Ext.form.FieldContainer', {
         }
 
         html = tpl.apply(me.getSubTplData(fieldData));
+
         return html;
     },
 
@@ -263,12 +273,11 @@ Ext.define('Ext.form.FieldContainer', {
     updateLabel: function() {
         var me = this,
             label = me.labelEl;
-            
+
         if (label) {
             me.setFieldLabel(me.getFieldLabel());
         }
     },
-
 
     /**
      * @private
@@ -277,6 +286,7 @@ Ext.define('Ext.form.FieldContainer', {
      */
     onFieldErrorChange: function() {
         if (this.combineErrors) {
+            // eslint-disable-next-line vars-on-top
             var me = this,
                 oldError = me.getActiveError(),
                 invalidFields = Ext.Array.filter(me.query('[isFormField]'), function(field) {
@@ -286,7 +296,8 @@ Ext.define('Ext.form.FieldContainer', {
 
             if (newErrors) {
                 me.setActiveErrors(newErrors);
-            } else {
+            }
+            else {
                 me.unsetActiveError();
             }
 
@@ -297,25 +308,24 @@ Ext.define('Ext.form.FieldContainer', {
     },
 
     /**
-     * Takes an Array of invalid {@link Ext.form.field.Field} objects and builds a combined list of error
-     * messages from them. Defaults to prepending each message by the field name and a colon. This
-     * can be overridden to provide custom combined error message handling, for instance changing
-     * the format of each message or sorting the array (it is sorted in order of appearance by default).
-     * @param {Ext.form.field.Field[]} invalidFields An Array of the sub-fields which are currently invalid.
+     * Takes an Array of invalid {@link Ext.form.field.Field} objects and builds a combined list
+     * of error messages from them. Defaults to prepending each message by the field name
+     * and a colon. This can be overridden to provide custom combined error message handling,
+     * for instance changing the format of each message or sorting the array (it is sorted
+     * in order of appearance by default).
+     * @param {Ext.form.field.Field[]} invalidFields An Array of the sub-fields which are currently
+     * invalid.
      * @return {String[]} The combined list of error messages
      */
     getCombinedErrors: function(invalidFields) {
         var errors = [],
-            f,
-            fLen   = invalidFields.length,
-            field,
-            activeErrors, a, aLen,
-            error, label;
+            fLen = invalidFields.length,
+            f, field, activeErrors, a, aLen, error, label;
 
         for (f = 0; f < fLen; f++) {
             field = invalidFields[f];
             activeErrors = field.getActiveErrors();
-            aLen         = activeErrors.length;
+            aLen = activeErrors.length;
 
             for (a = 0; a < aLen; a++) {
                 error = activeErrors[a];
@@ -341,9 +351,11 @@ Ext.define('Ext.form.FieldContainer', {
 
         initRenderTpl: function() {
             var me = this;
+
             if (!me.hasOwnProperty('renderTpl')) {
                 me.renderTpl = me.lookupTpl('labelableRenderTpl');
             }
+
             return me.callParent();
         }
     }

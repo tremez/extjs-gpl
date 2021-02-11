@@ -9,7 +9,7 @@ Ext.define('KitchenSink.view.charts.column.Stacked100', {
     xtype: 'column-stacked-100',
     controller: 'column-stacked-100',
     requires: ['Ext.chart.theme.Muted'],
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     bodyStyle: 'background: transparent !important',
     layout: {
@@ -21,9 +21,9 @@ Ext.define('KitchenSink.view.charts.column.Stacked100', {
         path: 'classic/samples/view/charts/column/Stacked100Controller.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/Cars.js'
+        path: 'app/store/Cars.js'
     }],
-    // </example>
+    //</example>
 
     width: 650,
 
@@ -31,13 +31,20 @@ Ext.define('KitchenSink.view.charts.column.Stacked100', {
         '->',
         {
             text: 'Preview',
-            handler: 'onPreview'
+            platformConfig: {
+                desktop: {
+                    text: 'Download'
+                }
+            },
+            handler: 'onDownload'
         }
     ],
 
     items: [{
         xtype: 'cartesian',
         reference: 'chart',
+
+        downloadServerUrl: '//svg.sencha.io',
 
         width: '100%',
         height: 460,
@@ -57,27 +64,10 @@ Ext.define('KitchenSink.view.charts.column.Stacked100', {
         },
         theme: 'Muted',
 
-        insetPadding: {
-            top: 40,
-            left: 40,
-            right: 40,
-            bottom: 40
+        captions: {
+            title: 'Car production by largest manufacturers',
+            credits: 'Source: International Organization of Motor Vehicle Manufacturers'
         },
-        sprites: [{
-            type: 'text',
-            text: 'Car production by largest manufacturers',
-            fontSize: 22,
-            width: 100,
-            height: 30,
-            x: 40, // the sprite x position
-            y: 20  // the sprite y position
-        }, {
-            type: 'text',
-            text: 'Source: International Organization of Motor Vehicle Manufacturers',
-            fontSize: 10,
-            x: 12,
-            y: 395
-        }],
         axes: [{
             type: 'numeric',
             position: 'left',
@@ -111,33 +101,11 @@ Ext.define('KitchenSink.view.charts.column.Stacked100', {
                 fillStyle: 'yellow'
             },
             tooltip: {
-                trackMouse: true,
+                trackMouse: false,
                 renderer: 'onBarTipRender'
             }
         }]
         //<example>
-    }, {
-        style: 'margin-top: 10px;',
-        xtype: 'gridpanel',
-        columns : {
-            defaults: {
-                sortable: false,
-                menuDisabled: true
-            },
-            items: [
-                { text: 'Year', dataIndex: 'year' },
-                { text: 'Toyota', dataIndex: 'to' },
-                { text: 'GM', dataIndex: 'gm' },
-                { text: 'Volkswagen', dataIndex: 'vw' },
-                { text: 'Hyundai', dataIndex: 'hy' },
-                { text: 'Ford', dataIndex: 'fo' }
-            ]
-        },
-        store: {
-            type: 'cars'
-        },
-        width: '100%'
-        //</example>
     }]
 
 });

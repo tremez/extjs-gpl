@@ -55,6 +55,7 @@ Ext.define('Ext.device.Connection', {
                 return Ext.create('Ext.device.connection.Cordova');
             }
         }
+
         return Ext.create('Ext.device.connection.Simulator');
     }
 });

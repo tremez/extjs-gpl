@@ -3,11 +3,8 @@ Ext.define('Admin.view.faq.ItemsController', {
     alias: 'controller.faqitems',
 
     animateBody: function (body, from, to) {
-        var view = this.getView();
-
         body.animate({
             duration: 200,
-
             from: {
                 height: from
             },
@@ -17,52 +14,58 @@ Ext.define('Admin.view.faq.ItemsController', {
         });
     },
 
-    collapseBody: function (node) {
+    doCollapseExpand: function (node, expand) {
         var body = node.down('.faq-body'),
-            height = body.getHeight();
+            from, to;
 
-        // Removing this class will restore height:0, so we need to pass the measured
-        // height as "from" when we animate.
-        node.removeCls('faq-expanded');
+        // The body has height:0 in CSS, so block that so we can measure it.
+        if (expand) {
+            body.setStyle('height', 'auto');
 
-        this.animateBody(body, height, 0);
+            from = 0;
+            to = body.getHeight();
+        } else {
+            from = body.getHeight();
+            to = 0;
+        }
+
+        // When collapsing, removing this class will restore height:0,
+        // so we need to pass the measured height as "from" when we animate.
+        //
+        // When expanding, adding this class will also block the height:0
+        // so we'll need to pass "from" to animate.
+        node.toggleCls('faq-expanded', expand);
+
+        this.animateBody(body, from, to);
+    },
+
+    collapseBody: function (node) {
+        this.doCollapseExpand(node, false);
     },
 
     expandBody: function (node) {
-        var body = node.down('.faq-body'),
-            height;
-
-        // The body has height:0 in CSS, so block that so we can measure it.
-        body.setStyle('height', 'auto');
-        height = body.getHeight();
-
-        // This class will also block the height:0 so we'll need to pass "from"
-        // to animate.
-        node.addCls('faq-expanded');
-
-        this.animateBody(body, 0, height);
+        this.doCollapseExpand(node, true);
     },
 
-    onItemTap: function (sender, index, target, record, event) {
-        var me = this,
-            hit = event.getTarget(),
-            cursor = hit && Ext.fly(hit).getStyle('cursor'),
+    onChildTap: function (view, context) {
+        var title = context.event.getTarget('.faq-title', 2),
+            child = context.child,
             expanded;
 
         // Check if the element tapped is styled as a pointer and toggle if so.
-        if (cursor === 'pointer') {
-            if (target.hasCls('faq-expanded')) {
-                me.collapseBody(target);
+        if (title) {
+            if (child.hasCls('faq-expanded')) {
+                this.collapseBody(child);
             } else {
                 // If the target is not expanded, we may need to collapse the currently
                 // expanded item.
+                expanded = view.element.down('.faq-expanded');
 
-                expanded = sender.element.down('.faq-expanded');
                 if (expanded) {
-                    me.collapseBody(expanded);
+                    this.collapseBody(expanded);
                 }
 
-                me.expandBody(target);
+                this.expandBody(child);
             }
         }
     }

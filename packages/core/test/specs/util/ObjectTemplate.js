@@ -1,4 +1,4 @@
-describe('Ext.util.ObjectTemplate', function () {
+topSuite('Ext.util.ObjectTemplate', function() {
     var tpl, output,
         context = Ext.Object.chain({
             direct: false,
@@ -15,7 +15,7 @@ describe('Ext.util.ObjectTemplate', function () {
         fn4 = function() {},
         fn5 = function() {};
 
-    beforeEach(function () {
+    beforeEach(function() {
         tpl = new Ext.util.ObjectTemplate({
             foo: 42,
             rootFn: fn1,
@@ -49,7 +49,7 @@ describe('Ext.util.ObjectTemplate', function () {
                     fn5
                 ],
                 aNull: null,
-                aZero: 0,   
+                aZero: 0,
                 aBool: false
             },
             aNull: null,
@@ -60,16 +60,16 @@ describe('Ext.util.ObjectTemplate', function () {
         output = tpl.apply(context);
     });
 
-    describe('the root', function () {
-        it('should pass through numbers', function () {
+    describe('the root', function() {
+        it('should pass through numbers', function() {
             expect(output.foo).toBe(42);
         });
 
-        it('should apply Ext.Template', function () {
+        it('should apply Ext.Template', function() {
             expect(output.bar).toBe('Hello Don');
         });
 
-        it('should map values', function () {
+        it('should map values', function() {
             expect(output.baz).toBe(false);
         });
 
@@ -90,24 +90,24 @@ describe('Ext.util.ObjectTemplate', function () {
         });
     });
 
-    describe('array on the root', function () {
-        it('should have the correct length', function () {
+    describe('array on the root', function() {
+        it('should have the correct length', function() {
             expect(output.array.length).toBe(8);
         });
 
-        it('should pass through numbers', function () {
+        it('should pass through numbers', function() {
             expect(output.array[0]).toBe(427);
         });
 
-        it('should apply templates', function () {
+        it('should apply templates', function() {
             expect(output.array[1]).toBe('Hey Don 456');
         });
 
-        it('should pull single values through dotted template expansions', function () {
+        it('should pull single values through dotted template expansions', function() {
             expect(output.array[2]).toBe(456);
         });
 
-        it('should pull primitives through simple name expansions', function () {
+        it('should pull primitives through simple name expansions', function() {
             expect(output.array[3]).toBe(false);
         });
 
@@ -128,21 +128,21 @@ describe('Ext.util.ObjectTemplate', function () {
         });
     });
 
-    describe('object off the root', function () {
-        describe('properties', function () {
-            it('should pass through numbers', function () {
+    describe('object off the root', function() {
+        describe('properties', function() {
+            it('should pass through numbers', function() {
                 expect(output.object.prop).toBe(3);
             });
 
-            it('should apply XTemplate', function () {
+            it('should apply XTemplate', function() {
                 expect(output.object.tpl).toBe('Yo Don');
             });
 
-            it('should map values', function () {
+            it('should map values', function() {
                 expect(output.object.value).toBe(false);
             });
 
-            it('should pass through functions', function () {
+            it('should pass through functions', function() {
                 expect(output.object.objFn).toBe(fn3);
             });
 
@@ -159,35 +159,35 @@ describe('Ext.util.ObjectTemplate', function () {
             });
         });
 
-        describe('an array property', function () {
-            it('should have the correct length', function () {
+        describe('an array property', function() {
+            it('should have the correct length', function() {
                 expect(output.object.items.length).toBe(5);
             });
-            it('should pass through numbers', function () {
+            it('should pass through numbers', function() {
                 expect(output.object.items[0]).toBe(77);
             });
-            it('should pull primitives through simple name expansions', function () {
+            it('should pull primitives through simple name expansions', function() {
                 expect(output.object.items[1]).toBe(false);
             });
-            it('should apply XTemplate', function () {
+            it('should apply XTemplate', function() {
                 expect(output.object.items[3]).toBe('Oy Don');
             });
-            it('should pass through functions', function () {
+            it('should pass through functions', function() {
                 expect(output.object.items[4]).toBe(fn5);
             });
         });
 
-        describe('an object element of an array property', function () {
-            it('should pull primitives through simple name expansions', function () {
+        describe('an object element of an array property', function() {
+            it('should pull primitives through simple name expansions', function() {
                 expect(output.object.items[2].v).toBe(false);
             });
-            it('should pass through numbers', function () {
+            it('should pass through numbers', function() {
                 expect(output.object.items[2].x).toBe(1);
             });
-            it('should apply XTemplate', function () {
+            it('should apply XTemplate', function() {
                 expect(output.object.items[2].s).toBe('-- Don');
             });
-            it('should pass through functions', function () {
+            it('should pass through functions', function() {
                 expect(output.object.items[2].innerFn).toBe(fn4);
             });
         });

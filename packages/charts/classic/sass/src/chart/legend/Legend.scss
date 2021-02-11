@@ -1,7 +1,7 @@
 .#{$prefix}legend-inner {
     display: table; // for IE8 vertical centering
     text-align: center;
-    padding: 5px;
+    padding: $chart-legend-padding;
 }
 
 .#{$prefix}legend-horizontal {

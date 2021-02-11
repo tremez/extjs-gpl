@@ -1,20 +1,34 @@
 .d3-heatmap {
-  rect.bordered {
-    stroke: #e6e6e6;
-    stroke-width: 2px;
-  }
+    rect.bordered {
+        stroke: #e6e6e6;
+        stroke-width: 2px;
+    }
 
-  text.mono {
-    font-size: 9pt;
-    font-family: Consolas, courier;
-    fill: #aaa;
-  }
+    text.mono {
+        font-size: 9pt;
+        font-family: Consolas, courier;
+        fill: #aaa;
+    }
 
-  text.axis-workweek {
-    fill: #000;
-  }
+    text.axis-workweek {
+        fill: #000;
+    }
 
-  text.axis-worktime {
-    fill: #000;
-  }
+    text.axis-worktime {
+        fill: #000;
+    }
+
+    @if $theme-name == 'theme-graphite' {
+        text.mono {
+            fill: #fff;
+        }
+ 
+        text.axis-workweek {
+            fill: #fff;
+        }
+ 
+        text.axis-worktime {
+            fill: #fff;
+        }
+    }
 }

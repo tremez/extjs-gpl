@@ -1,0 +1,23 @@
+.#{$prefix}boundlistitem {
+    .#{$prefix}selected-icon {
+        visibility: hidden;
+    }
+}
+
+// The selected icon is hidden by default, in non-multiselevct BoundLists
+:not(.#{$prefix}show-selection), :not(.#{$prefix}multi-select) {
+    > .#{$prefix}boundlistitem {
+        .#{$prefix}selected-icon {
+            display: none;
+        }
+    }
+}
+
+// The selected icon is only shown in multiselect BoundLists
+.#{$prefix}show-selection, .#{$prefix}multi-select {
+    .#{$prefix}boundlistitem.#{$prefix}selected {
+        .#{$prefix}selected-icon {
+            visibility: visible;
+        }
+    }
+}

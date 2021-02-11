@@ -15,7 +15,9 @@
         } @else if theme_image_exists($image-search-path, $path) {
             $background-image: $path;
         } @else {
-            @warn "@theme-background-image: Theme image not found: #{$path}";
+            @if $enable-missing-image-warnings {
+                @warn "@theme-background-image: Theme image not found: #{$path}";
+            }
             @if $include-missing-images {
                 $background-image: $path;
             }

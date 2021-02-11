@@ -2,6 +2,9 @@
  * @class Ext.list.TreeItem
  */
 
+/**
+ * @var {Color} $treelist-background-color
+ */
 $treelist-background-color: dynamic($grid-body-background-color);
 
 $treelist-color: dynamic($grid-row-cell-color);

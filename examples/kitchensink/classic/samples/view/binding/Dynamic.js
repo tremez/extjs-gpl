@@ -11,9 +11,27 @@ Ext.define('KitchenSink.view.binding.Dynamic', {
         path: 'classic/samples/view/binding/DynamicController.js'
     }],
     //</example>
-    
-    width: 300,
-    bodyPadding: 10,
+
+    profiles: {
+        classic: {
+            width: 300,
+            bodyPadding: 10
+        },
+        neptune: {
+            width: 300,
+            bodyPadding: 10
+        },
+        graphite: {
+            width: 400,
+            bodyPadding: 10
+        },
+        'classic-material': {
+            width: 400,
+            bodyPadding: 20
+        }
+    },
+    width: '${width}',
+    bodyPadding: '${bodyPadding}',
     controller: 'binding-dynamic',
 
     viewModel: {
@@ -22,12 +40,12 @@ Ext.define('KitchenSink.view.binding.Dynamic', {
             content: 'Some Content'
         }
     },
-    
+
     bind: {
         title: 'Info - {title}',
         html: 'Stuff: {content}'
     },
-    
+
     tbar: [{
         text: 'Change title',
         listeners: {

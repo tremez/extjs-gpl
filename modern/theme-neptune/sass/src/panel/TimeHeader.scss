@@ -1,0 +1,6 @@
+@include timeheader-ui(
+    $background-color: $timeheader-background-color,
+    $color: $timeheader-color,
+    $minutes-width: $timeheader-minutes-width,
+    $padding: $timeheader-padding
+);

@@ -52,7 +52,7 @@ Ext.define('KitchenSink.view.draw.Protractor', {
                 // Inside this updater we calculate and set the values of the attributes
                 // of the children of the composite based on the values of the composite's
                 // attributes.
-                recalculate: function (attr) {
+                recalculate: function(attr) {
                     // Please see this ticket https://sencha.jira.com/browse/EXTJS-15521
                     // for a graphical representation of what's going on in this function.
                     var me = this,
@@ -63,33 +63,36 @@ Ext.define('KitchenSink.view.draw.Protractor', {
                         dx = toX - fromX,
                         dy = toY - fromY,
                         PI = Math.PI,
-                        radius = Math.sqrt(dx*dx + dy*dy);
+                        radius = Math.sqrt(dx * dx + dy * dy),
+                        alpha, sin, cos, arcRadius, beta, x, y, ax, ay,
+                        mat, angleArrowThreshold, isSmallAngle, angleTextRadius,
+                        isSmallRadius, radiusTextFlip, fontSize, theta;
 
                     if (dx === 0 || dy === 0) {
                         return;
                     }
 
-                    var alpha = Math.atan2(dy, dx),
-                        sin = Math.sin,
-                        cos = Math.cos,
-                        arcRadius = attr.arcRadius,
-                        beta = PI - attr.arrowAngle,
-                        x = attr.arrowLength * cos(beta),
-                        y = attr.arrowLength * sin(beta),
-                        // Coordinates of the arc arrow tip.
-                        ax = arcRadius * cos(alpha) + fromX,
-                        ay = arcRadius * sin(alpha) + fromY,
-                        mat = Ext.draw.Matrix.fly([cos(alpha), sin(alpha), -sin(alpha), cos(alpha), toX, toY]),
-                        angleArrowThreshold = Ext.draw.Draw.radian * me.getAngleArrowThreshold(),
-                        isSmallAngle = alpha < angleArrowThreshold && alpha > -angleArrowThreshold,
-                        angleTextRadius = arcRadius * 1.2,
-                        isSmallRadius = radius < angleTextRadius,
-                        radiusTextFlip, fontSize,
-                        theta = 0;
+                    alpha = Math.atan2(dy, dx);
+                    sin = Math.sin;
+                    cos = Math.cos;
+                    arcRadius = attr.arcRadius;
+                    beta = PI - attr.arrowAngle;
+                    x = attr.arrowLength * cos(beta);
+                    y = attr.arrowLength * sin(beta);
+                    // Coordinates of the arc arrow tip;
+                    ax = arcRadius * cos(alpha) + fromX;
+                    ay = arcRadius * sin(alpha) + fromY;
+                    mat = Ext.draw.Matrix.fly([cos(alpha), sin(alpha), -sin(alpha), cos(alpha), toX, toY]);
+                    angleArrowThreshold = Ext.draw.Draw.radian * me.getAngleArrowThreshold();
+                    isSmallAngle = alpha < angleArrowThreshold && alpha > -angleArrowThreshold;
+                    angleTextRadius = arcRadius * 1.2;
+                    isSmallRadius = radius < angleTextRadius;
+                    theta = 0;
 
                     if (alpha > 0) {
                         theta = alpha + PI / 2 - attr.arrowAngle / (arcRadius * 0.1);
-                    } else if (alpha < 0) {
+                    }
+                    else if (alpha < 0) {
                         theta = alpha - PI / 2 + attr.arrowAngle / (arcRadius * 0.1);
                     }
 
@@ -162,7 +165,6 @@ Ext.define('KitchenSink.view.draw.Protractor', {
                     me.radiusText.setAttributes({
                         x: x,
                         y: y,
-                        rotationRads: alpha,
                         rotationRads: radiusTextFlip === 1 ? alpha : alpha - PI,
                         rotationCenterX: x,
                         rotationCenterY: y,
@@ -192,48 +194,48 @@ Ext.define('KitchenSink.view.draw.Protractor', {
     // updater needs them.
     // So we define the 'createSprites' function that is called inside the 'recalculate'
     // updater before the sprites are used.
-    createSprites: function () {
+    createSprites: function() {
         var me = this;
 
         // Only create sprites if they haven't been created yet.
         if (!me.baseLine) {
-            me.baseLine = me.add({
+            me.baseLine = me.addSprite({
                 type: 'line',
                 lineDash: [2, 2]
             });
-            me.radiusLine = me.add({
+            me.radiusLine = me.addSprite({
                 type: 'line'
             });
             // Left line of the radius arrow.
-            me.radiusArrowLeft = me.add({
+            me.radiusArrowLeft = me.addSprite({
                 type: 'line'
             });
             // Right line of the radius arrow.
-            me.radiusArrowRight = me.add({
+            me.radiusArrowRight = me.addSprite({
                 type: 'line'
             });
-            me.angleLine = me.add({
+            me.angleLine = me.addSprite({
                 type: 'arc',
                 strokeStyle: 'black',
                 lineDash: [2, 2]
             });
             // Left line of the angle arrow.
-            me.angleArrowLeft = me.add({
+            me.angleArrowLeft = me.addSprite({
                 type: 'line',
                 lineDash: [2, 2]
             });
             // Right line of the angle arrow.
-            me.angleArrowRight = me.add({
+            me.angleArrowRight = me.addSprite({
                 type: 'line',
                 lineDash: [2, 2]
             });
-            me.radiusText = me.add({
+            me.radiusText = me.addSprite({
                 type: 'text',
                 textAlign: 'center',
                 textBaseline: 'middle',
                 font: '12px'
             });
-            me.angleText = me.add({
+            me.angleText = me.addSprite({
                 type: 'text',
                 textBaseline: 'middle',
                 font: '12px'

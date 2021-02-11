@@ -7,7 +7,7 @@ Ext.onReady(function() {
 
     if (Ext.Date) {
         Ext.Date.defaultFormat = 'd.m.Y';
-        
+
         Ext.Date.monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
 
         Ext.Date.shortMonthNames = ["Янв", "Февр", "Март", "Апр", "Май", "Июнь", "Июль", "Авг", "Сент", "Окт", "Нояб", "Дек"];
@@ -273,7 +273,7 @@ Ext.define("Ext.locale.ru.window.MessageBox", {
         cancel: "Отмена",
         yes: "Да",
         no: "Нет"
-    }    
+    }
 });
 
 Ext.define("Ext.locale.ru.form.field.File", {
@@ -282,6 +282,6 @@ Ext.define("Ext.locale.ru.form.field.File", {
 });
 
 // This is needed until we can refactor all of the locales into individual files
-Ext.define("Ext.locale.ru.Component", {	
+Ext.define("Ext.locale.ru.Component", {
     override: "Ext.Component"
 });

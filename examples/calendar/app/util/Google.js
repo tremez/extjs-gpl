@@ -17,7 +17,8 @@ Ext.define('Calendar.util.Google', {
             .then(function(auth) {
                 if (auth.status.signed_in) {
                     return true;
-                } else {
+                }
+                else {
                     throw false;
                 }
             });
@@ -29,9 +30,9 @@ Ext.define('Calendar.util.Google', {
 
     getProfile: function() {
         return Ext.Deferred.resolved(
-                gapi.client.people.people.get({
-                    resourceName: 'people/me'
-                }))
+            gapi.client.people.people.get({
+                resourceName: 'people/me'
+            }))
             .then(function(data) {
                 return data.result;
             });
@@ -42,7 +43,7 @@ Ext.define('Calendar.util.Google', {
             var manifest = Ext.manifest,
                 scopes = [
                     "https://www.googleapis.com/auth/userinfo.profile",
-                    "https://www.googleapis.com/auth/calendar" ]
+                    "https://www.googleapis.com/auth/calendar" ],
                 options = {
                     'client_id': manifest.google.client_id,
                     'cookie_policy': 'single_host_origin',
@@ -50,9 +51,10 @@ Ext.define('Calendar.util.Google', {
                 };
 
             if (immediate) {
-                options['immediate'] = true;
-            } else {
-                options['prompt'] = 'login';
+                options.immediate = true;
+            }
+            else {
+                options.prompt = 'login';
             }
 
             return Ext.Deferred.resolved(gapi.auth.authorize(options));

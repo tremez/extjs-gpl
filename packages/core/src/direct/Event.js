@@ -16,7 +16,7 @@ Ext.define('Ext.direct.Event', {
     constructor: function(config) {
         Ext.apply(this, config);
     },
-    
+
     /**
      * Return the name for this event.
      * @return {String} The name of event

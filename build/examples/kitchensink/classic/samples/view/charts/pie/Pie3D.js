@@ -11,16 +11,16 @@ Ext.define('KitchenSink.view.charts.pie.Pie3D', {
     requires: [
         'Ext.chart.PolarChart'
     ],
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     otherContent: [{
         type: 'Controller',
         path: 'classic/samples/view/charts/pie/Pie3DController.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/Pie.js'
+        path: 'app/store/Pie.js'
     }],
-    // </example>
+    //</example>
 
     layout: 'vbox',
     width: 650,
@@ -60,6 +60,7 @@ Ext.define('KitchenSink.view.charts.pie.Pie3D', {
     items: [{
         xtype: 'polar',
         reference: 'chart',
+        downloadServerUrl: '//svg.sencha.io',
         innerPadding: 40,
         width: '100%',
         height: 500,
@@ -67,7 +68,7 @@ Ext.define('KitchenSink.view.charts.pie.Pie3D', {
             type: 'device-market-share'
         },
         theme: 'Muted',
-        interactions: ['itemhighlight', 'rotatePie3d'],
+        interactions: ['itemhighlight', 'rotate'],
         legend: {
             type: 'sprite',
             docked: 'bottom'

@@ -21,13 +21,15 @@ Ext.define('Ext.event.gesture.MultiTouch', {
 
         if (touchesCount === requiredTouchesCount) {
             me.isTracking = true;
-        } else if (touchesCount > requiredTouchesCount) {
+        }
+        else if (touchesCount > requiredTouchesCount) {
             return me.cancel(e);
         }
     },
 
     reset: function() {
         this.isTracking = false;
+
         return this.callParent();
     }
 });

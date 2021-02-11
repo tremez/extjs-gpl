@@ -1,0 +1,65 @@
+.#{$prefix}tagfield-empty-input,
+.#{$prefix}tagfield-input-field {
+    color: $tag-field-color;
+    
+    @include selection-color($tag-field-selection-color);
+    @include placeholder-text-color($tag-field-placeholder-color);
+}
+
+.#{$prefix}tagfield .#{$prefix}tagfield-list {
+    .#{$prefix}tagfield-item.#{$prefix}tagfield-item-selected {
+        background-color: $tag-field-item-selected-background-color;
+        color: $tag-field-item-selected-color;
+        
+        .#{$prefix}tagfield-item-close {
+            color: $tag-field-item-selected-color;
+        }
+        
+        &:hover {
+            background-color: $tag-field-item-selected-over-background-color;
+            color: $tag-field-item-selected-over-color;
+            
+            .#{$prefix}tagfield-item-close {
+                color: $tag-field-item-selected-over-color;
+            }
+        }
+    }
+    
+    .#{$prefix}keyboard-mode .#{$prefix}field-focus & {
+        .#{$prefix}tagfield-item {
+            background-color: $tag-field-item-focus-background-color;
+            color: $tag-field-item-focus-color;
+
+            .#{$prefix}tagfield-item-close {
+                color: $tag-field-item-focus-color;
+            }
+            
+            &:hover {
+                background-color: $tag-field-item-focus-over-background-color;
+                color: $tag-field-item-focus-over-color;
+                
+                .#{$prefix}tagfield-item-close {
+                    color: $tag-field-item-focus-over-color;
+                }
+            }
+            
+            &.#{$prefix}tagfield-item-selected {
+                background-color: $tag-field-item-selected-focus-background-color;
+                color: $tag-field-item-selected-focus-color;
+                
+                .#{$prefix}tagfield-item-close {
+                    color: $tag-field-item-selected-focus-color;
+                }
+                
+                &:hover {
+                    background-color: $tag-field-item-selected-focus-over-background-color;
+                    color: $tag-field-item-selected-focus-over-color;
+                    
+                    .#{$prefix}tagfield-item-close {
+                        color: $tag-field-item-selected-focus-over-color;
+                    }
+                }
+            }
+        }
+    }
+}

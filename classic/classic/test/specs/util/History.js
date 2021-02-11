@@ -1,4 +1,4 @@
-xdescribe('Ext.util.History', function() {
+xtopSuite('Ext.util.History', function() {
     var fooLink, barLink, bletchLink;
 
     beforeEach(function() {
@@ -12,6 +12,16 @@ xdescribe('Ext.util.History', function() {
         location.hash = '';
     });
 
+    describe("alternate class name", function() {
+        it("should have Ext.History as the alternate class name", function() {
+            expect(Ext.util.History.alternateClassName).toEqual("Ext.History");
+        });
+
+        it("should allow the use of Ext.History", function() {
+            expect(Ext.History).toBeDefined();
+        });
+    });
+
     it('should track history', function() {
         fooLink = document.createElement('a');
         barLink = document.createElement('a');
@@ -20,16 +30,21 @@ xdescribe('Ext.util.History', function() {
         var hashHistory = [],
             useClickEvent = Ext.isWebKit || Ext.isGecko,
             useClickMethod = fooLink.click,
-            navigate = useClickEvent ? function(link) {
-                if (Ext.isGecko) {
-                    link.focus();
+            navigate = useClickEvent
+                ? function(link) {
+                    if (Ext.isGecko) {
+                        link.focus();
+                    }
+
+                    jasmine.fireMouseEvent(link, 'click');
                 }
-                jasmine.fireMouseEvent(link, 'click');
-            } : useClickMethod ? function(link) {
-                link.click();
-            } : function(link) {
-                Ext.util.History.setHash(link.hash.substr(1));
-            };
+                : useClickMethod
+                    ? function(link) {
+                        link.click();
+                    }
+                    : function(link) {
+                        Ext.util.History.setHash(link.hash.substr(1));
+                    };
 
         fooLink.href = "#foo";
         barLink.href = "#bar";
@@ -62,7 +77,7 @@ xdescribe('Ext.util.History', function() {
             return hashHistory.length === 2;
         }, 'Hash history change #bar', 200);
 
-        runs(function(){
+        runs(function() {
             expect(location.hash).toBe('#bar');
 
             // Navigate to #bletch
@@ -95,7 +110,7 @@ xdescribe('Ext.util.History', function() {
             return hashHistory.length === 5;
         }, 'Hash history change #foo', 200);
 
-        runs(function(){
+        runs(function() {
             expect(location.hash).toBe('#foo');
             expect(hashHistory).toEqual(["foo", "bar", "bletch", "bar", "foo"]);
         });

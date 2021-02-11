@@ -1,7 +1,257 @@
 /**
  * Miscellaneous rules for Kitchen Sink application
  */
+$focus-font-color: #FFFFFF;
+
 .binding-selection-view .#{$prefix}item-selected {
     color: $grid-row-cell-selected-color;
     background-color: $grid-row-cell-selected-background-color;
+}
+
+@if $theme-name == 'theme-material' {
+    @mixin white-font-color {
+        color: $focus-font-color;
+    }
+
+    @mixin dark-font-color {
+        color: #111111;
+    }
+
+    //to fix line height issue in edge browsers for labels
+    @supports (-ms-ime-align: auto) {
+        .#{$prefix}form-type-text .#{$prefix}form-item-label, 
+        .#{$prefix}form-type-password .#{$prefix}form-item-label {
+            line-height: 1;
+        }
+    }
+
+    //to fix line height issue in IE10 and IE11  for labels
+    @media screen and (-ms-high-contrast: none)  {
+        .#{$prefix}form-type-text .#{$prefix}form-item-label, 
+        .#{$prefix}form-type-password .#{$prefix}form-item-label {
+            line-height: 1;
+        }
+    }
+
+    .#{$prefix}shadow {
+        -webkit-box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.18), 2px 2px 5px 0 rgba(0, 0, 0, 0.12);
+        box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.18), 2px 2px 5px 0 rgba(0, 0, 0, 0.12);
+    }
+
+    .#{$prefix}tree-icon {
+        color: #9E9E9E;
+    }
+
+    .#{$prefix}btn.#{$prefix}split-button.#{$prefix}btn-menu-active.#{$prefix}btn-default-small {
+        .#{$prefix}btn-inner,
+        .#{$prefix}btn-icon-el {
+            color: $base-color;
+        }
+    }
+
+    .#{$prefix}btn.#{$prefix}split-button.#{$prefix}btn-focus {
+        .#{$prefix}btn-arrow-el::before {
+            background-color: transparent;
+        }  
+    }
+
+    .tool-icon-size {
+        .#{$prefix}tool-tool-el {
+            width: 18px;
+            height: 18px
+        }
+    }
+
+    .#{$prefix}tab-default.#{$prefix}tab-focus,
+    .#{$prefix}tab-default.#{$prefix}tab-active {
+        .#{$prefix}tab-close-btn {
+            color: #919191 !important;
+        }
+    } 
+
+    .#{$prefix}grid-item-selected {
+        .#{$prefix}selmodel-column {
+            .#{$prefix}grid-checkcolumn:after {
+                color: #2196f3;
+            }  
+        } 
+    } 
+
+    .dock-tab-btn {
+        .#{$prefix}btn-arrow-right:after,
+        .#{$prefix}btn-inner {
+            @include white-font-color;
+        }
+    }
+
+    .#{$prefix}dd-drop-icon::before {
+        @include font-icon($statusproxy-ok-glyph, $color: $statusproxy-ok-glyph-color);
+    }
+
+    .#{$prefix}dd-drop-ok {
+        .#{$prefix}dd-drop-icon {
+            font: 16px $font-family;
+        }
+    }
+
+    .padding-text-btn-left {
+        &.button-home-small,
+        &.button-home-medium,
+        &.button-home-large {
+            margin-right: 16px !important;
+        }
+    }
+
+    .padding-text-btn-right {
+        &.#{$prefix}btn-icon-el {
+            padding: 0 0 0 4px;
+        }
+    }
+
+    .panels-container {
+        .#{$prefix}tool-tool-el {
+            width: 18px;
+            height: 18px;
+        }
+    }
+
+    .input-label-zero-transform {
+        .#{$prefix}form-item-label {
+            transform: translateY(0px);
+        }
+    }
+
+    .icons-button-padding {
+        .#{$prefix}btn-text.#{$prefix}btn-icon-top {
+            > .#{$prefix}btn-icon-el-default-small,
+            > .#{$prefix}btn-icon-el-default-medium,
+            > .#{$prefix}btn-icon-el-default-large {
+                margin-bottom: 16px
+            }
+        } 
+        .#{$prefix}btn-text.#{$prefix}btn-icon-bottom {
+            > .#{$prefix}btn-icon-el-default-small,
+            > .#{$prefix}btn-icon-el-default-medium,
+            > .#{$prefix}btn-icon-el-default-large {
+                margin-top: 16px
+            }
+        } 
+    }
+
+    .dark-mode {
+        .#{$prefix}form-spinner-default {
+            background-color: transparent;
+            @include white-font-color;
+        }
+        .#{$prefix}form-item-label-default {
+            @include white-font-color;
+        }
+        
+        .#{$prefix}calendar-header,
+        .calendar-view {
+            .#{$prefix}panel-header-title-light > .#{$prefix}title-text-light {
+                @include dark-font-color;
+            }
+            .#{$prefix}calendar-header-cell {
+                @include dark-font-color;
+            }
+        }
+
+        .#{$prefix}dd-drag-proxy {
+            @include dark-font-color;
+        }
+
+        .#{$prefix}boundlist {
+            background-color: #3a3a3a;
+        }
+
+        .#{$prefix}pivot-grid-grand-total,
+        .#{$prefix}pivot-grid-group-total {
+            .#{$prefix}grid-cell-inner,
+            .#{$prefix}column-header-inner {
+                @include white-font-color;
+            }
+        }
+
+        .#{$prefix}pivot-grid-group-title {
+                @include white-font-color;
+        }
+
+        .search-item {
+           &, h3 {
+                &, a {
+                    @include white-font-color;
+                }
+            }
+        }
+
+        .ajax-cls {
+            pre {
+                @include dark-font-color;
+            }
+        }
+
+        .#{$prefix}form-text-default {
+            .#{$prefix}tagfield-item {
+                @include dark-font-color;
+            }
+        }
+
+        .#{$prefix}colorpicker {
+            .#{$prefix}form-text-default {
+                @include dark-font-color;
+            }
+        }
+
+        .group-target {
+            @include white-font-color;  
+        }
+
+        .#{$prefix}toolbar-default {
+            .#{$prefix}toolbar-text-default {
+                    @include white-font-color;
+                }
+            .#{$prefix}btn-disabled {
+                .#{$prefix}btn-icon-el {
+                    color: #666666;
+                }
+            }
+        }
+      
+        .#{$prefix}btn.#{$prefix}btn-disabled {
+            .#{$prefix}btn-inner,
+            .#{$prefix}btn-icon-el,
+            .#{$prefix}btn-arrow:after,
+            .#{$prefix}btn-split-right:after,
+            .#{$prefix}btn-split-bottom:after {
+                color: rgba(255, 255, 255, 0.35) !important;
+            }
+        }
+
+        .#{$prefix}split-button.#{$prefix}btn-focus {
+            &.#{$prefix}btn-default-small,
+            &.#{$prefix}btn-default-medium,
+            &.#{$prefix}btn-default-large {
+                @include white-font-color;
+            }
+        }
+
+        .#{$prefix}datepicker-month {
+            .#{$prefix}btn-over {
+                background: transparent;
+            }
+        }
+
+        .#{$prefix}d3-label {
+           fill: #FFFFFF !important;
+        }
+
+        .#{$prefix}accordion-item {
+            .#{$prefix}accordion-hd-over {
+                &, .#{$prefix}tool-tool-el {
+                    background-color: #3a3a3a;
+                }
+            }
+        }
+    }
 }

@@ -1,0 +1,8 @@
+.auth-locked-body-el {
+    background-image: url('images/lock-screen-background.jpg');
+    background-size: cover;
+
+    .x-panel-body-el.auth-locked-body-el {
+        background-color: transparent;
+    }
+}

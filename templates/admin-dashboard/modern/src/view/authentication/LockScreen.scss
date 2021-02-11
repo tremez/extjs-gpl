@@ -1,0 +1,13 @@
+.lockscreen-header {
+    background-color: $base-color;
+    color: white;
+
+    .x-paneltitle {
+        .x-icon-el {
+            background-size: cover;
+            border-radius: 50%;
+            height: 64px;
+            width: 64px;
+        }
+    }
+}

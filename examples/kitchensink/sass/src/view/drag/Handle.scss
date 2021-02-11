@@ -1,15 +1,13 @@
-.stretch-html .x-innerhtml {
-    height: 100%;
-}
-
 .handle-source {
     width: 120px;
     height: 120px;
     text-align: center;
-    position: absolute;
+    position: relative;
     left: 10px;
     top: 10px;
     color: #FFF;
+    padding: 5px 10px;
+    margin-bottom: 10px;
     @include border-radius(5px);
     @include user-select(none);
 
@@ -18,11 +16,16 @@
         background-color: #6CAE3F;
         @include border-radius(5px);
         padding: 3px;
-        width: 90px;
-        margin: 10px 0 10px 15px;
+        width: 100%;
+        margin-top: 10px;
     }
 }
 
+@if $theme-name == 'theme-graphite' {
+    .handle-source {
+        height: 140px;     
+    }
+}
 
 .handle-proxy {
     color: #FFF;
@@ -35,7 +38,7 @@
 
 .handle-handles {
     background-color: #FFEB3B;
-    top: 160px;
+    top: 10px;
     left: 10px;
 
     .handle {

@@ -1,0 +1,27 @@
+.#{$prefix}header-drop-indicator-before,
+.#{$prefix}header-drop-indicator-after {
+    &:before, &:after {
+        z-index: 1;
+        position: absolute;
+    }
+}
+
+.#{$prefix}header-drop-indicator-before {
+    &:last-child {
+        overflow: visible;
+    }
+    
+    &:first-child {
+        &:before, &:after {
+            left: 0;
+        }
+    }
+}
+
+.#{$prefix}header-drop-indicator-after {
+    &:last-child {
+        &:before, &:after {
+            right: 0;
+        }
+    }
+}

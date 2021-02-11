@@ -1,36 +1,53 @@
 Ext.define('KitchenSink.view.binding.Formula', {
-    extend: 'Ext.form.Panel',
+    extend: 'Ext.Container',
+    xtype: 'binding-formulas',
 
-    // <example>
+    viewModel: {
+        type: 'binding-formula'
+    },
+
+    //<example>
     otherContent: [{
         type: 'ViewModel',
         path: 'modern/src/view/binding/FormulaModel.js'
     }],
-    // </example>
-    
-    viewModel: 'binding-formula',
 
-    shadow: true,
+    profiles: {
+        defaults: {
+            width: 400
+        },
+        phone: {
+            defaults: {
+                width: undefined
+            }
+        }
+    },
+
     cls: 'demo-solid-background',
+    //</example>
 
-    items: {
-        xtype: 'fieldset',
-        instructions: 'As the field changes, the formula calculates the 2x and 4x values.',
-        items: [{
-            xtype: 'spinnerfield',
-            label: 'Number',
-            stepValue: 1,
-            bind: '{x}'
-        }, {
-            xtype: 'textfield',
-            readOnly: true,
-            label: 'Times 2',
-            bind: '{x} * 2 = {twice}'
-        }, {
-            xtype: 'textfield',
-            readOnly: true,
-            label: 'Times 4',
-            bind: '{x} * 4 = {quad}'
-        }]
-    }
+    padding: 20,
+    width: '${width}',
+    autoSize: true,
+
+    items: [{
+        xtype: 'spinnerfield',
+        label: 'Number',
+        stepValue: 1,
+        bind: '{x}'
+    }, {
+        xtype: 'textfield',
+        readOnly: true,
+        label: 'Times 2',
+        bind: '{x} * 2 = {twice}'
+    }, {
+        xtype: 'textfield',
+        readOnly: true,
+        label: 'Times 4',
+        bind: '{x} * 4 = {quad}'
+    }, {
+        xtype: 'component',
+        margin: '10 0 0',
+        instructions: 'As the field changes, the formula calculates the 2x and 4x values.'
+    }]
 });

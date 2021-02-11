@@ -2,9 +2,13 @@
  * @class Ext.calendar.form.CalendarPicker
  */
 
-$calendarpicker-icon-width: dynamic(1.5em);
+/**
+ * @var {string} [$calendarpicker-icon-width]
+ */
+$calendarpicker-icon-width: dynamic(($textfield-input-line-height + vertical($textfield-input-padding)) * 0.8);
+
 $calendarpicker-icon-height: dynamic($calendarpicker-icon-width);
-$calendarpicker-icon-spacer: dynamic(0.5em);
+$calendarpicker-icon-spacer: dynamic(8px);
 $calendarpicker-slot-icon-margin: dynamic(null);
 
 @mixin ext-calendar-calendarpicker(

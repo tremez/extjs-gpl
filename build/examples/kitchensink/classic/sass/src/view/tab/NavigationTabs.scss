@@ -1,39 +1,136 @@
 /**
  * Generates a set of style rules for the "navigation" tab UI.
  */
-@include extjs-tab-panel-ui(
-    $ui: 'navigation',
-    $ui-tab-background-color: transparent,
-    $ui-tab-background-color-over: #505050,
-    $ui-tab-background-color-active: #303030,
-    $ui-tab-background-gradient: 'none',
-    $ui-tab-background-gradient-over: 'none',
-    $ui-tab-background-gradient-active: 'none',
-    $ui-tab-color: #acacac,
-    $ui-tab-color-over: #c4c4c4,
-    $ui-tab-color-active: #fff,
-    $ui-tab-glyph-color: #acacac,
-    $ui-tab-glyph-color-over: #c4c4c4,
-    $ui-tab-glyph-color-active: #fff,
-    $ui-tab-glyph-opacity: 1,
-    $ui-tab-border-radius: 0,
-    $ui-tab-border-color: transparent,
-    $ui-tab-border-color-over: transparent,
-    $ui-tab-border-width: 1px,
-    $ui-tab-inner-border-width: 0,
-    $ui-tab-padding: 24px,
-    $ui-tab-margin: 0,
-    $ui-tab-font-size: 15px,
-    $ui-tab-font-size-over: 15px,
-    $ui-tab-font-size-active: 15px,
-    $ui-tab-line-height: 19px,
-    $ui-tab-font-weight: bold,
-    $ui-tab-font-weight-over: bold,
-    $ui-tab-font-weight-active: bold,
-    $ui-tab-icon-width: 24px,
-    $ui-tab-icon-height: 24px,
-    $ui-bar-background-color: #404040,
-    $ui-bar-background-gradient: 'none',
-    $ui-bar-padding: 0,
-    $ui-strip-height: 0
-);
+@if $theme-name != 'theme-graphite' {
+    // Graphite theme provides several mixins not available in other themes.
+    // Fashion resolves mixin dependencies at compilation time so a missing
+    // plugin is a compile time error. To work around this we provide a stub
+    // mixin in themes other than Graphite.
+    @mixin extjs-graphite-tab-ui(
+        $ui: null,
+        $base-color-active-over: null,
+        $background-opacity-active-over: null,
+        $color-active-over: null,
+        $opacity-active-over: null,
+        $glyph-color-active-over: null,
+        $glyph-opacity-active-over: null,
+        $closable-icon-glyph-color-active-over: null,
+        $closable-icon-opacity-active-over: null,
+        $color-pressed-focus: null,
+        $opacity-pressed-focus: null,
+        $inner-border-width-focus-over: null,
+        $inner-border-color-focus-over: null
+   ) {}
+}
+
+@if $theme-name == 'theme-graphite' {
+    @include extjs-tab-panel-ui(
+        $ui: 'navigation',
+        $ui-tab-background-color: #686868,
+        $ui-tab-background-color-over: #aeaeae,
+        $ui-tab-background-color-active: #f2f2f2,
+        $ui-tab-background-color-focus-active: #56b4e9,
+        $ui-tab-background-gradient: 'none',
+        $ui-tab-background-gradient-over: 'none',
+        $ui-tab-background-gradient-active: 'none',
+        $ui-tab-background-opacity-over: null,
+        $ui-tab-color: #ffffff,
+        $ui-tab-color-focus: #56b4e9,
+        $ui-tab-color-over: rgba(27, 27, 27, 0.7),
+        $ui-tab-color-active: #1b1b1b,
+        $ui-tab-color-focus-active: #ffffff,
+        $ui-tab-glyph-color: #ffffff,
+        $ui-tab-glyph-color-over: rgba(27, 27, 27, 0.7),
+        $ui-tab-glyph-color-active: #1b1b1b,
+        $ui-tab-glyph-color-focus-active: #ffffff,
+        $ui-tab-glyph-opacity: 1,
+        $ui-tab-border-radius: 0,
+        $ui-tab-border-color: transparent,
+        $ui-tab-border-color-over: transparent,
+        $ui-tab-border-color-focus-active: #56b4e9,
+        $ui-tab-border-width: 0,
+        $ui-tab-inner-border-width: 0,
+        $ui-tab-padding: 24px,
+        $ui-tab-margin: 0,
+        $ui-tab-font-size: 15px,
+        $ui-tab-font-size-over: 15px,
+        $ui-tab-font-size-active: 15px,
+        $ui-tab-line-height: 19px,
+        $ui-tab-font-weight: bold,
+        $ui-tab-font-weight-over: bold,
+        $ui-tab-font-weight-active: bold,
+        $ui-tab-icon-width: 24px,
+        $ui-tab-icon-height: 24px,
+        $ui-bar-background-color: #404040,
+        $ui-bar-background-gradient: 'none',
+        $ui-bar-padding: 0,
+        $ui-strip-height: 0
+    );
+
+    @include extjs-graphite-tab-ui(
+        $ui: 'navigation',
+        
+        $base-color-active-over: #bcbcbc,
+        $background-opacity-active-over: 1,
+        
+        $color-active-over: #1b1b1b,
+        $opacity-active-over: 1,
+        
+        $glyph-color-active-over: #1b1b1b,
+        $glyph-opacity-active-over: 1,
+        
+        $closable-icon-glyph-color-active-over: #1b1b1b,
+        $closable-icon-opacity-active-over: 1,
+        
+        $color-pressed-focus: #1b1b1b,
+        $opacity-pressed-focus: 0.7,
+        
+        $inner-border-width-focus-over: 3px,
+        $inner-border-color-focus-over: #fff
+    );
+}
+
+@if $theme-name == 'theme-material' {
+    @include extjs-tab-panel-ui(
+        $ui: 'navigation',
+        $ui-tab-background-color: $base-color
+    );
+}
+@else {
+    @include extjs-tab-panel-ui(
+        $ui: 'navigation',
+        $ui-tab-background-color: transparent,
+        $ui-tab-background-color-over: #505050,
+        $ui-tab-background-color-active: #303030,
+        $ui-tab-background-gradient: 'none',
+        $ui-tab-background-gradient-over: 'none',
+        $ui-tab-background-gradient-active: 'none',
+        $ui-tab-color: #acacac,
+        $ui-tab-color-over: #c4c4c4,
+        $ui-tab-color-active: #fff,
+        $ui-tab-glyph-color: #acacac,
+        $ui-tab-glyph-color-over: #c4c4c4,
+        $ui-tab-glyph-color-active: #fff,
+        $ui-tab-glyph-opacity: 1,
+        $ui-tab-border-radius: 0,
+        $ui-tab-border-color: transparent,
+        $ui-tab-border-color-over: transparent,
+        $ui-tab-border-width: 1px,
+        $ui-tab-inner-border-width: 0,
+        $ui-tab-padding: 24px,
+        $ui-tab-margin: 0,
+        $ui-tab-font-size: 15px,
+        $ui-tab-font-size-over: 15px,
+        $ui-tab-font-size-active: 15px,
+        $ui-tab-line-height: 19px,
+        $ui-tab-font-weight: bold,
+        $ui-tab-font-weight-over: bold,
+        $ui-tab-font-weight-active: bold,
+        $ui-tab-icon-width: 24px,
+        $ui-tab-icon-height: 24px,
+        $ui-bar-background-color: #404040,
+        $ui-bar-background-gradient: 'none',
+        $ui-bar-padding: 0,
+        $ui-strip-height: 0
+    );
+}

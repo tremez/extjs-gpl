@@ -1,4 +1,4 @@
-describe("Ext.util.Filter", function () {
+topSuite("Ext.util.Filter", function() {
     var filter;
 
     describe("construction", function() {
@@ -9,23 +9,23 @@ describe("Ext.util.Filter", function () {
         };
 
         it("should accept a property and value", function() {
-            expect(createFilter({property: 'test', value: 'a'})).not.toThrow();
+            expect(createFilter({ property: 'test', value: 'a' })).not.toThrow();
         });
 
         it("should accept a false", function() {
-            expect(createFilter({property: 'test', value: false})).not.toThrow();
+            expect(createFilter({ property: 'test', value: false })).not.toThrow();
         });
 
         it("should accept a 0", function() {
-            expect(createFilter({property: 'test', value: 0})).not.toThrow();
+            expect(createFilter({ property: 'test', value: 0 })).not.toThrow();
         });
 
         it("should accept a ''", function() {
-            expect(createFilter({property: 'test', value: ''})).not.toThrow();
+            expect(createFilter({ property: 'test', value: '' })).not.toThrow();
         });
 
         it("should accept a filter function", function() {
-            expect(createFilter({filterFn: Ext.emptyFn})).not.toThrow();
+            expect(createFilter({ filterFn: Ext.emptyFn })).not.toThrow();
         });
 
         it("should require at least a filter function or a property/value combination", function() {
@@ -99,15 +99,15 @@ describe("Ext.util.Filter", function () {
         });
     });
 
-    describe('creating filter functions', function () {
-        var edRecord = {name: 'Ed'},
-            tedRecord = {name: 'Ted'},
-            abeRecord = {name: 'Abe'},
-            edwardRecord = {name: 'Edward'};
+    describe('creating filter functions', function() {
+        var edRecord = { name: 'Ed' },
+            tedRecord = { name: 'Ted' },
+            abeRecord = { name: 'Abe' },
+            edwardRecord = { name: 'Edward' };
 
-        describe('generatedFilterFn property', function () {
+        describe('generatedFilterFn property', function() {
             function doTest(cfg, msg, expectValue, callSetter) {
-                it(msg, function () {
+                it(msg, function() {
                     filter = new Ext.util.Filter(cfg);
                     filter.getFilterFn();
 
@@ -134,7 +134,7 @@ describe("Ext.util.Filter", function () {
             }, 'should not mark as generated when setFilterFn is called', undefined, true);
         });
 
-        it('should honor a simple property matcher', function () {
+        it('should honor a simple property matcher', function() {
             filter = new Ext.util.Filter({
                 property: 'name',
                 value: 'Ed'
@@ -148,7 +148,7 @@ describe("Ext.util.Filter", function () {
             expect(fn(abeRecord)).toBe(false);
         });
 
-        it('should honor anyMatch', function () {
+        it('should honor anyMatch', function() {
             filter = new Ext.util.Filter({
                 anyMatch: true,
                 property: 'name',
@@ -163,7 +163,7 @@ describe("Ext.util.Filter", function () {
             expect(fn(abeRecord)).toBe(false);
         });
 
-        it('should honor exactMatch', function () {
+        it('should honor exactMatch', function() {
             filter = new Ext.util.Filter({
                 exactMatch: true,
                 property: 'name',
@@ -178,7 +178,7 @@ describe("Ext.util.Filter", function () {
             expect(fn(abeRecord)).toBe(false);
         });
 
-        it('should honor case sensitivity', function () {
+        it('should honor case sensitivity', function() {
             filter = new Ext.util.Filter({
                 caseSensitive: true,
                 property: 'name',
@@ -192,7 +192,7 @@ describe("Ext.util.Filter", function () {
             expect(fn(tedRecord)).toBe(false);
         });
 
-        it('should honor case sensitivity and anyMatch', function () {
+        it('should honor case sensitivity and anyMatch', function() {
             filter = new Ext.util.Filter({
                 caseSensitive: true,
                 anyMatch: true,
@@ -207,15 +207,15 @@ describe("Ext.util.Filter", function () {
             expect(fn(edwardRecord)).toBe(false);
         });
 
-        it('should honor the root property', function () {
+        it('should honor the root property', function() {
             var users = [{
-                    data: {name: 'Ed'}
+                    data: { name: 'Ed' }
                 }, {
-                    data: {name: 'Ted'}
+                    data: { name: 'Ted' }
                 }, {
-                    data: {name: 'Edward'}
+                    data: { name: 'Edward' }
                 }, {
-                    data: {name: 'Abe'}
+                    data: { name: 'Abe' }
                 }],
                 filter = new Ext.util.Filter({
                     root: 'data',
@@ -245,7 +245,8 @@ describe("Ext.util.Filter", function () {
                 operator: operator,
                 value: candidate
             }, cfg));
-            return filter.filter({value: v});
+
+            return filter.filter({ value: v });
         }
 
         afterEach(function() {
@@ -319,7 +320,7 @@ describe("Ext.util.Filter", function () {
                             return Ext.Date.clearTime(v, true).getTime();
                         };
 
-                    expect(match('<', d1, d2, {convert: convert})).toBe(false);
+                    expect(match('<', d1, d2, { convert: convert })).toBe(false);
                 });
             });
 
@@ -397,7 +398,7 @@ describe("Ext.util.Filter", function () {
                             return Ext.Date.clearTime(v, true).getTime();
                         };
 
-                    expect(match('lt', d1, d2, {convert: convert})).toBe(false);
+                    expect(match('lt', d1, d2, { convert: convert })).toBe(false);
                 });
             });
 
@@ -475,7 +476,7 @@ describe("Ext.util.Filter", function () {
                             return Ext.Date.clearTime(v, true).getTime();
                         };
 
-                    expect(match('<=', d1, d2, {convert: convert})).toBe(true);
+                    expect(match('<=', d1, d2, { convert: convert })).toBe(true);
                 });
             });
 
@@ -553,7 +554,7 @@ describe("Ext.util.Filter", function () {
                             return Ext.Date.clearTime(v, true).getTime();
                         };
 
-                    expect(match('le', d1, d2, {convert: convert})).toBe(true);
+                    expect(match('le', d1, d2, { convert: convert })).toBe(true);
                 });
             });
 
@@ -631,28 +632,28 @@ describe("Ext.util.Filter", function () {
                             return Ext.Date.clearTime(v, true).getTime();
                         };
 
-                    expect(match('=', d1, d2, {convert: convert})).toBe(true);
+                    expect(match('=', d1, d2, { convert: convert })).toBe(true);
                 });
             });
 
-            describe('value coercion', function () {
+            describe('value coercion', function() {
                 it('should coerce the candidate value based on the value', function() {
                     expect(match('=', '10', 10)).toBe(true);
                 });
 
-                describe('when one of the operands is a boolean', function () {
-                    describe('the other operand is a string', function () {
-                        it('should coerce Boolean if the other operand is anything else', function () {
+                describe('when one of the operands is a boolean', function() {
+                    describe('the other operand is a string', function() {
+                        it('should coerce Boolean if the other operand is anything else', function() {
                             expect(match('=', '0', false)).toBe(true);
                         });
                     });
 
-                    describe('the other operand is a number', function () {
-                        it('should coerce Boolean if the other operand is anything else', function () {
+                    describe('the other operand is a number', function() {
+                        it('should coerce Boolean if the other operand is anything else', function() {
                             expect(match('=', false, 0)).toBe(true);
                         });
 
-                        it('should coerce Number if the other operand is anything else', function () {
+                        it('should coerce Number if the other operand is anything else', function() {
                             expect(match('=', 0, false)).toBe(true);
                         });
                     });
@@ -727,7 +728,7 @@ describe("Ext.util.Filter", function () {
                             return Ext.Date.clearTime(v, true).getTime();
                         };
 
-                    expect(match('eq', d1, d2, {convert: convert})).toBe(true);
+                    expect(match('eq', d1, d2, { convert: convert })).toBe(true);
                 });
             });
 
@@ -805,7 +806,7 @@ describe("Ext.util.Filter", function () {
                             return Ext.Date.clearTime(v, true).getTime();
                         };
 
-                    expect(match('===', d1, d2, {convert: convert})).toBe(true);
+                    expect(match('===', d1, d2, { convert: convert })).toBe(true);
                 });
             });
 
@@ -883,7 +884,7 @@ describe("Ext.util.Filter", function () {
                             return Ext.Date.clearTime(v, true).getTime();
                         };
 
-                    expect(match('>', d1, d2, {convert: convert})).toBe(false);
+                    expect(match('>', d1, d2, { convert: convert })).toBe(false);
                 });
             });
 
@@ -961,7 +962,7 @@ describe("Ext.util.Filter", function () {
                             return Ext.Date.clearTime(v, true).getTime();
                         };
 
-                    expect(match('gt', d1, d2, {convert: convert})).toBe(false);
+                    expect(match('gt', d1, d2, { convert: convert })).toBe(false);
                 });
             });
 
@@ -1039,7 +1040,7 @@ describe("Ext.util.Filter", function () {
                             return Ext.Date.clearTime(v, true).getTime();
                         };
 
-                    expect(match('>=', d1, d2, {convert: convert})).toBe(true);
+                    expect(match('>=', d1, d2, { convert: convert })).toBe(true);
                 });
             });
 
@@ -1117,7 +1118,7 @@ describe("Ext.util.Filter", function () {
                             return Ext.Date.clearTime(v, true).getTime();
                         };
 
-                    expect(match('ge', d1, d2, {convert: convert})).toBe(true);
+                    expect(match('ge', d1, d2, { convert: convert })).toBe(true);
                 });
             });
 
@@ -1195,7 +1196,7 @@ describe("Ext.util.Filter", function () {
                             return Ext.Date.clearTime(v, true).getTime();
                         };
 
-                    expect(match('!=', d1, d2, {convert: convert})).toBe(false);
+                    expect(match('!=', d1, d2, { convert: convert })).toBe(false);
                 });
             });
 
@@ -1273,7 +1274,7 @@ describe("Ext.util.Filter", function () {
                             return Ext.Date.clearTime(v, true).getTime();
                         };
 
-                    expect(match('ne', d1, d2, {convert: convert})).toBe(false);
+                    expect(match('ne', d1, d2, { convert: convert })).toBe(false);
                 });
             });
 
@@ -1351,7 +1352,7 @@ describe("Ext.util.Filter", function () {
                             return Ext.Date.clearTime(v, true).getTime();
                         };
 
-                    expect(match('!==', d1, d2, {convert: convert})).toBe(false);
+                    expect(match('!==', d1, d2, { convert: convert })).toBe(false);
                 });
             });
 
@@ -1374,8 +1375,9 @@ describe("Ext.util.Filter", function () {
             it("should call the convert fn", function() {
                 var convert = function(v) {
                     return v + 1;
-                }
-                expect(match('in', 0, [1, 2, 3, 4], {convert: convert})).toBe(true);
+                };
+
+                expect(match('in', 0, [1, 2, 3, 4], { convert: convert })).toBe(true);
             });
         });
 
@@ -1391,8 +1393,9 @@ describe("Ext.util.Filter", function () {
             it("should call the convert fn", function() {
                 var convert = function(v) {
                     return v + 1;
-                }
-                expect(match('notin', 0, [1, 2, 3, 4], {convert: convert})).toBe(false);
+                };
+
+                expect(match('notin', 0, [1, 2, 3, 4], { convert: convert })).toBe(false);
             });
         });
 

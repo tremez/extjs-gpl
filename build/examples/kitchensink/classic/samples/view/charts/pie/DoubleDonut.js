@@ -11,21 +11,21 @@ Ext.define('KitchenSink.view.charts.pie.DoubleDonut', {
     xtype: 'pie-double-donut',
     controller: 'pie-double-donut',
 
-    // <example>
+    //<example>
     // Content between example tags is omitted from code preview.
     otherContent: [{
         type: 'Controller',
         path: 'classic/samples/view/charts/pie/DoubleDonutController.js'
     }, {
         type: 'Store',
-        path: 'classic/samples/store/DoubleDonut.js'
+        path: 'app/store/DoubleDonut.js'
     }],
     bodyStyle: 'background: transparent !important',
     layout: {
         type: 'vbox',
         pack: 'center'
     },
-    // </example>
+    //</example>
     width: 650,
 
     tbar: [
@@ -41,17 +41,10 @@ Ext.define('KitchenSink.view.charts.pie.DoubleDonut', {
         reference: 'chart',
         width: '100%',
         height: 500,
-        insetPadding: 20,
         innerPadding: 20,
-        sprites: [{
-            type: 'text',
-            text: 'Double Donut Chart',
-            fontSize: 22,
-            width: 100,
-            height: 30,
-            x: 40,
-            y: 20
-        }],
+        captions: {
+            title: 'Double Donut Chart'
+        },
         series: [{
             // Outer ring series.
             type: 'pie',

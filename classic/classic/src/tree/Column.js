@@ -43,7 +43,8 @@ Ext.define('Ext.tree.Column', {
      * used or modified by the renderer. Recognized properties are: `tdCls`, `tdAttr`, 
      * `tdStyle`, `icon`, `iconCls` and `glyph`.
      *
-     * For the standard grid column metaData propertyes see {@link Ext.grid.column.Column#cfg-renderer column renderer}
+     * For the standard grid column metaData propertyes see
+     * {@link Ext.grid.column.Column#cfg-renderer column renderer}
      *
      * To change the icon used in the node, you can use the glyph metaData property as below. 
      *
@@ -117,9 +118,9 @@ Ext.define('Ext.tree.Column', {
      * 
      * @return {String}
      * The HTML string to be rendered into the text portion of the tree node.
-     * @declarativeHandler
      */
 
+    /* eslint-disable indent, max-len */
     cellTpl: [
         '<tpl for="lines">',
             '<div class="{parent.childCls} {parent.elbowCls}-img ',
@@ -153,6 +154,7 @@ Ext.define('Ext.tree.Column', {
             '<span class="{textCls} {childCls}">{value}</span>',
         '</tpl>'
     ],
+    /* eslint-enable indent, max-len */
 
     // fields that will trigger a change in the ui that aren't likely to be bound to a column
     uiFields: {
@@ -188,11 +190,9 @@ Ext.define('Ext.tree.Column', {
         me.callParent();
 
         me.scope = me;
-        
-        me.hasCustomRenderer = me.innerRenderer && me.innerRenderer.length > 1;
     },
 
-    treeRenderer: function(value, metaData, record, rowIdx, colIdx, store, view){
+    treeRenderer: function(value, metaData, record, rowIdx, colIdx, store, view) {
         var me = this,
             cls = record.get('cls'),
             rendererData;
@@ -203,8 +203,9 @@ Ext.define('Ext.tree.Column', {
             metaData.tdCls += ' ' + cls;
         }
 
-        rendererData = me.initTemplateRendererData(value, metaData, record, rowIdx, colIdx, store, view);
-        
+        rendererData =
+            me.initTemplateRendererData(value, metaData, record, rowIdx, colIdx, store, view);
+
         return me.lookupTpl('cellTpl').apply(rendererData);
     },
 
@@ -218,7 +219,7 @@ Ext.define('Ext.tree.Column', {
             parentData,
             glyph,
             glyphFontFamily;
-        
+
         while (parent && (rootVisible || parent.data.depth > 0)) {
             parentData = parent.data;
             lines[rootVisible ? parentData.depth : parentData.depth - 1] =
@@ -233,16 +234,18 @@ Ext.define('Ext.tree.Column', {
         // default renderer with no extra params.
         if (metaData) {
             metaData.iconCls = metaData.icon = metaData.glyph = null;
-        } else {
+        }
+        else {
             metaData = {};
         }
-        
+
         // Call renderer now so that we can use metaData properties that it may set.
         value = innerRenderer ? innerRenderer.apply(me.rendererScope, arguments) : value;
 
         // If a glyph was specified, then
         // transform glyph to the useful parts
         glyph = metaData.glyph || data.glyph;
+
         if (glyph) {
             glyph = Ext.Glyph.fly(glyph);
             glyphFontFamily = glyph.fontFamily;
@@ -276,7 +279,7 @@ Ext.define('Ext.tree.Column', {
             // expander, elbow, checkbox).  This is used by the rtl override to add the
             // "x-rtl" class to these elements.
             childCls: me.getChildCls ? me.getChildCls() + ' ' : '',
-            value: value
+            value: value || store.defaultRootText
         };
     },
 
@@ -293,11 +296,13 @@ Ext.define('Ext.tree.Column', {
         if (me.hasCustomRenderer) {
             return 1;
         }
+
         if (changedFieldNames) {
             len = changedFieldNames.length;
 
             for (; i < len; ++i) {
                 field = changedFieldNames[i];
+
                 // Check for fields which always require a full row update.
                 if (me.rowFields[field]) {
                     return 1;
@@ -312,5 +317,11 @@ Ext.define('Ext.tree.Column', {
         }
 
         return me.callParent([record, changedFieldNames]);
+    },
+
+    privates: {
+        shouldFlagCustomRenderer: function() {
+            return this.hasCustomRenderer || (this.innerRenderer && this.innerRenderer.length > 1);
+        }
     }
 });
